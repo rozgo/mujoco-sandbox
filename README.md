@@ -1,49 +1,81 @@
 # Sixlegs
 
-A physically modeled hexapod with two independent Kinova Gen3 arms and Robotiq 2F-85 grippers in MuJoCo.
+A physically simulated hexapod with two independent Kinova Gen3 arms and Robotiq 2F-85 grippers. It walks from an offset start, grasps a mug and a block, carries both around a barrier, then places and releases them on a second table.
 
-**Current milestone: static scene for review, before movement.** The floating robot, contact geometry, actuator limits, source clutter, hollow mug, target block, barrier, destination and six cameras are ready. Walking, picking, carrying and releasing are pending scene review.
+**The full transfer runs now.** The approved scene is preserved. The floating base moves through leg contact forces; the objects are held by finger contact. The nominal task takes about 113 simulated seconds.
 
-![Scene preview](previews/preview.png)
+[Watch the transfer with head and wrist camera views](previews/transfer.mp4) · [Original static preview](previews/preview.png)
+
+![Physical transfer checkpoints](previews/transfer_checkpoints.png)
 
 ## Run on macOS
 
-Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git LFS. Tested locally on Apple Silicon macOS with Python 3.12.12 and MuJoCo 3.12.0. No ROS, Conda or source-built MuJoCo required.
+Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git LFS. Tested on Apple Silicon macOS with Python 3.12.12 and MuJoCo 3.12.0. No ROS, Conda or source-built MuJoCo required.
 
 ```sh
 # On a fresh clone, retrieve the mesh and preview binaries:
 git lfs install
 git lfs pull
-
 uv sync --locked
-uv run sixlegs render
-uv run sixlegs inspect
+
+# Live physical demo, starts moving automatically:
+uv run sixlegs view
+
+# Optional: twice real-time, starting in the head camera:
+uv run sixlegs view --speed 2 --camera head
+
+# Frozen scene inspection:
+uv run sixlegs view --static
+
+# Headless complete task; writes trajectory and success report into outputs/:
+uv run sixlegs run
+
+# All seven tests, including the complete physical transfer (about 25 seconds here):
 uv run pytest -q
 
-# Interactive frozen preview; rotate/zoom or select cameras in the viewer UI:
-uv run sixlegs view
+# Static camera PNGs and model properties:
+uv run sixlegs render
+uv run sixlegs inspect
+
+# Record a new run (bundled FFmpeg, no separate installation needed):
+uv run sixlegs record --speed 2
+
+# Render an existing physical trajectory without repeating simulation:
+uv run sixlegs record --trajectory outputs/transfer.npz --speed 2
 ```
 
-The `view` command automatically launches through `mjpython` on macOS: [MuJoCo requires it for passive viewers on macOS](https://mujoco.readthedocs.io/en/stable/python.html#passive-viewer). It also supplies the uv-managed Python library directory to the launcher, fixing the `libpython3.12.dylib` lookup failure reproduced on this machine ([upstream issue](https://github.com/google-deepmind/mujoco/issues/1923)). No global shell changes are needed. Rendering PNGs works with the ordinary `uv run` command on this Mac. Leave `MUJOCO_GL` unset on macOS; EGL/OSMesa are Linux backends. The interactive viewer requires a logged-in graphical session. On Linux, the same `uv run sixlegs view` command runs directly; offscreen rendering may need an appropriate installed backend. Intel macOS and Linux have not been tested here.
+Viewer controls:
 
-The viewer deliberately does not step physics. Its third-person view is selected initially. The five-second stability test advances actual physics separately without a task controller.
+| Key | Action |
+| --- | --- |
+| **1** | Full scene |
+| **2** | Head camera |
+| **3** | Left wrist camera (block) |
+| **4** | Right wrist camera (mug) |
+| **5** | Overhead |
+| **6** | Following third-person view; mouse orbit/zoom |
+| **Space** | Pause / resume |
+| **R** | Restart the complete task |
 
-## Files
+The on-screen overlay shows the active phase. The viewer holds the final successful state until closed or restarted. Camera images are rendered from the scene: wrists show their own fingers and the objects. Control uses simulator state and known task coordinates, not image-based object detection. This is a deterministic demonstration for this scene, not a general-purpose navigation or vision policy.
+
+The launcher automatically uses `mjpython` because [MuJoCo requires it for passive viewers on macOS](https://mujoco.readthedocs.io/en/stable/python.html#passive-viewer). It supplies the uv-managed Python library directory to fix the `libpython3.12.dylib` lookup failure reproduced here ([upstream issue](https://github.com/google-deepmind/mujoco/issues/1923)). No global shell changes are needed. Leave `MUJOCO_GL` unset on macOS; the native viewer needs a logged-in graphical session. Linux uses the same CLI without the macOS trampoline; Intel macOS and Linux have not been tested here.
+
+## Implementation and evidence
 
 - [Original prompt](docs/INITIAL_PROMPT.md)
-- [Masses, limits, contact design, layout and asset attribution](docs/DESIGN.md)
+- [Masses, joint and torque limits, controller and contact design](docs/DESIGN.md)
+- [Validation results and limitations](docs/VALIDATION.md)
+- [Machine-readable nominal success report](docs/TRANSFER_REPORT.json)
 - [Time log](docs/TIME_LOG.md)
-- `src/sixlegs/scene.py`: reproducible MJCF assembly, including complete preview keyframe
-- `src/sixlegs/cli.py`: static viewer, six camera renders, inspection
+- `src/sixlegs/scene.py`: reproducible MJCF assembly and preview keyframe
+- `src/sixlegs/control.py`: five-foot-support gait, leg IK, independent arm IK
+- `src/sixlegs/task.py`: approach / grasp / carry / place state machine and success checks
+- `src/sixlegs/simulation.py`: shared physical stepping for viewer, CLI and tests
+- `src/sixlegs/recording.py`: multi-camera video of a saved dynamic trajectory
 - `assets/menagerie/`: pinned models, original licenses and integrity manifest
-- `tests/test_scene.py`: vendor integrity, independent controls, contact/clearance checks and physics hold
-- `previews/`: saved PNGs for all cameras plus the contact sheet
-- `build/scene.xml`: generated on load, ignored by Git; uses local absolute mesh paths
+- `build/scene.xml`: generated locally; ignored, with absolute local mesh paths
 
-`uv.lock` pins the environment. Git LFS tracks mesh, image and video binaries. Virtual environments, caches, generated XML/build artifacts, and ad hoc `outputs/` are ignored. This is a local repository; no remote is configured.
+`uv.lock` pins the environment. Git LFS tracks mesh, image and video binaries. Virtual environments, caches, generated build artifacts and `outputs/` are ignored. The repository is local; no remote is configured.
 
-To restore vendored assets from their pinned upstream revision, run `uv run python scripts/fetch_assets.py`. Normal runs use the checked-in assets and need no asset download.
-
-## Validation at this checkpoint
-
-Five tests verify asset hashes, 34 independent actuator channels, initial six-foot contact without self-intersection, 150 sampled leg poses in a documented swing envelope, and five seconds of bounded-torque physics without warnings or lost objects. Six camera views render successfully on this Mac. These checks validate scene assembly and static support; task completion remains untested until a controller exists.
+To restore the vendored assets at the pinned upstream revision, run `uv run python scripts/fetch_assets.py`. Normal runs use the checked-in assets and need no asset download.

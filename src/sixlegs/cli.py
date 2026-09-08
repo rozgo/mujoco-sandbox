@@ -1,9 +1,10 @@
-"""Static preview tools. No locomotion or manipulation controller yet."""
+"""Live physical transfer demo, static previews, and recordings."""
 import argparse
 import json
 import os
 import sys
 import sysconfig
+from queue import SimpleQueue
 from pathlib import Path
 import time
 
@@ -61,7 +62,7 @@ def inspect():
                       "initial_contacts":contacts},indent=2))
 
 
-def view(seconds=None):
+def view(seconds=None, static=False, speed=1., camera="third_person"):
     # uv's standalone CPython dylib is outside the venv. Supply its actual
     # location before mjpython execs its Cocoa launcher (upstream issue #1923).
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
@@ -70,34 +71,102 @@ def view(seconds=None):
         paths += env.get("DYLD_FALLBACK_LIBRARY_PATH", "/usr/local/lib:/usr/lib").split(":")
         env["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(dict.fromkeys(p for p in paths if p))
         launcher = Path(sys.executable).parent / "mjpython"
-        argv = [sys.executable, str(launcher), "-m", "sixlegs.cli", "view"]
+        argv = [sys.executable, str(launcher), "-m", "sixlegs.cli", "view", "--speed", str(speed), "--camera", camera]
+        if static:
+            argv += ["--static"]
         if seconds is not None:
             argv += ["--seconds", str(seconds)]
         os.execve(sys.executable, argv, env)
     import mujoco.viewer
-    model, data = load_scene()
-    with mujoco.viewer.launch_passive(model,data) as viewer:
+    from sixlegs.simulation import Simulation
+    sim = None if static else Simulation()
+    model, data = load_scene() if static else (sim.model, sim.data)
+    events = SimpleQueue()
+    paused = False
+    cameras = {49:"third_person", 50:"head", 51:"left_wrist", 52:"right_wrist", 53:"overhead"}
+    with mujoco.viewer.launch_passive(model, data, key_callback=events.put,
+                                      show_left_ui=False, show_right_ui=False) as viewer:
         viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
-        viewer.cam.fixedcamid = model.camera("third_person").id
+        viewer.cam.fixedcamid = model.camera(camera).id
         viewer.opt.geomgroup[3] = 0
         viewer.opt.sitegroup[:] = 0
-        start = time.monotonic()
+        start = last = time.monotonic()
+        budget = 0.
+        reported = False
         while viewer.is_running() and (seconds is None or time.monotonic()-start < seconds):
-            # Explicitly frozen for design review; no mj_step or state animation.
+            now = time.monotonic()
+            elapsed = min(now-last, .1)
+            last = now
+            while not events.empty():
+                key = events.get()
+                if key == 32:
+                    paused = not paused
+                elif key in cameras:
+                    viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
+                    viewer.cam.fixedcamid = model.camera(cameras[key]).id
+                elif key == 54:
+                    viewer.cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
+                    viewer.cam.trackbodyid = model.body("chassis").id
+                    viewer.cam.distance = 3.6
+                    viewer.cam.azimuth = 135
+                    viewer.cam.elevation = -25
+                elif key in (82,114) and sim is not None:
+                    from sixlegs.task import TransferDemo
+                    mujoco.mj_resetDataKeyframe(model,data,0)
+                    mujoco.mj_forward(model,data)
+                    sim.demo=TransferDemo(model,data)
+                    sim.ticks=0
+                    sim.maximum_torque_fraction=0.
+                    paused=False
+                    reported=False
+                    budget=0.
+            if sim is not None and not paused and not sim.demo.done:
+                budget += elapsed*speed
+                while budget >= model.opt.timestep and not sim.demo.done:
+                    sim.step()
+                    budget -= model.opt.timestep
+            else:
+                budget=0.
+            status = "STATIC PREVIEW" if static else sim.demo.phase.name
+            if sim is not None and sim.demo.done:
+                status = "PASS - both objects placed and released" if sim.demo.success else "FAILED - inspect terminal report"
+                if not reported:
+                    print(json.dumps(sim.report(),indent=2),flush=True)
+                    reported=True
+            viewer.set_texts((None,None,
+                f"SIXLEGS | {data.time:.1f}s | {'PAUSED' if paused else status}",
+                "1 Scene   2 Head   3 Left wrist   4 Right wrist   5 Overhead   6 Follow\nSpace Pause / Resume   R Restart"))
             viewer.sync()
-            time.sleep(1/60)
+            time.sleep(.005)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("render","view","inspect"), default="render", nargs="?")
+    parser.add_argument("command", choices=("render","view","inspect","run","record"), default="render", nargs="?")
     parser.add_argument("--seconds", type=float, help="Close the viewer after this duration (smoke test)")
-    parser.add_argument("--output", type=Path, default=ROOT/"previews")
+    parser.add_argument("--output", type=Path, help="Output directory (render/run), or MP4 path (record)")
+    parser.add_argument("--static", action="store_true", help="Freeze the viewer for scene inspection")
+    parser.add_argument("--speed", type=float, default=1., help="Live simulation / video playback speed")
+    parser.add_argument("--camera", default="third_person", choices=("third_person","robot_detail","overhead","head","left_wrist","right_wrist"))
+    parser.add_argument("--trajectory", type=Path, help="Saved NPZ to record instead of rerunning simulation")
     args = parser.parse_args()
+    if args.speed <= 0:
+        parser.error("--speed must be positive")
     if args.command == "render":
-        render(args.output)
+        render(args.output or ROOT/"previews")
     elif args.command == "view":
-        view(args.seconds)
+        view(args.seconds,args.static,args.speed,args.camera)
+    elif args.command == "run":
+        from sixlegs.simulation import run_headless
+        run_headless(args.output or ROOT/"outputs")
+    elif args.command == "record":
+        from sixlegs.simulation import run_headless
+        from sixlegs.recording import render_video
+        trajectory=args.trajectory
+        if trajectory is None:
+            run_headless(ROOT/"outputs")
+            trajectory=ROOT/"outputs/transfer.npz"
+        render_video(trajectory,args.output or ROOT/"previews/transfer.mp4",speed=args.speed)
     else:
         inspect()
 
