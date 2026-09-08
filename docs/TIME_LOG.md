@@ -39,3 +39,14 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - All-view video finished and verified: **2026-09-07 20:46:29 PDT**.
 - Video follow-up elapsed: **4 minutes 40 seconds**.
 - Total elapsed since the approximate initial session start, including review pauses and this follow-up: **44 minutes 58 seconds**.
+
+## New goal: physical RC rovers and communications
+
+- Goal created and implementation started: **2026-09-07 21:57:21 PDT** (2026-09-08 04:57:21 UTC).
+- A separate six-rover inspection yard was built and previewed before motion control.
+- Implemented contact-driven steering/suspension, independent local-evidence agents, packet-level LoRa, optional six-process real Reticulum integration, cameras, metrics and a full recording.
+- Fixed steering clearance, local avoidance deadlock and marker overshoot during testing.
+- Validation: **16 tests passed**, **18/18** paired 150-second rover missions completed, direct and Reticulum native macOS viewer smoke tests passed.
+- The 78.07-second 1920 × 1080 video covers the complete 150-second degraded Reticulum run at 2× speed with seven simultaneous camera views and a three-second final hold. The complete H.264 stream decoded without errors; outage and final frames were visually inspected.
+- Implementation and validation complete, immediately before the repository commit: **2026-09-07 22:33:11 PDT** (2026-09-08 05:33:11 UTC).
+- Elapsed for this new goal: **35 minutes 50 seconds**. Includes development, experiments, tests, rendering and communication; the interval since the earlier hexapod goal is excluded.

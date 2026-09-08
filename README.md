@@ -1,5 +1,12 @@
 # Sixlegs
 
+**New scene: six RC rovers communicating over simulated LoRa, with optional real Reticulum stacks.** [Watch the complete rover demo](previews/rovers/reticulum_degraded.mp4) · [Run it and read the measured comparison](docs/rovers/README.md)
+
+```sh
+uv sync --locked --extra reticulum
+uv run --extra reticulum rover-comms view --reticulum --case degraded
+```
+
 A physically simulated hexapod with two independent Kinova Gen3 arms and Robotiq 2F-85 grippers. It walks from an offset start, grasps a mug and a block, carries both around a barrier, then places and releases them on a second table.
 
 **The full transfer runs now.** The approved scene is preserved. The floating base moves through leg contact forces; the objects are held by finger contact. The nominal task takes about 113 simulated seconds.
@@ -30,7 +37,7 @@ uv run sixlegs view --static
 # Headless complete task; writes trajectory and success report into outputs/:
 uv run sixlegs run
 
-# All seven tests, including the complete physical transfer (about 25 seconds here):
+# Tests include the complete physical transfer and rover missions:
 uv run pytest -q
 
 # Static camera PNGs and model properties:

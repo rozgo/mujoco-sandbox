@@ -1,7 +1,7 @@
 [project]
 name = "sixlegs"
 version = "0.1.0"
-description = "A dual-arm hexapod manipulation scene in MuJoCo"
+description = "Physical hexapod manipulation and RC-rover communications demos in MuJoCo"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
@@ -20,6 +20,12 @@ build-backend = "hatchling.build"
 
 [project.scripts]
 sixlegs = "sixlegs.cli:main"
+rover-comms = "sixlegs.rovers.cli:main"
+
+[project.optional-dependencies]
+reticulum = [
+    "rns>=1.5.2,<1.6",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
