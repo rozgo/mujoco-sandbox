@@ -4,7 +4,7 @@ A physically simulated hexapod with two independent Kinova Gen3 arms and Robotiq
 
 **The full transfer runs now.** The approved scene is preserved. The floating base moves through leg contact forces; the objects are held by finger contact. The nominal task takes about 113 simulated seconds.
 
-[Watch the transfer with head and wrist camera views](previews/transfer.mp4) · [Original static preview](previews/preview.png)
+[Watch the full task with all six views, real time](previews/transfer_all_views.mp4) · [Watch the shorter 2× overview](previews/transfer.mp4) · [Original static preview](previews/preview.png)
 
 ![Physical transfer checkpoints](previews/transfer_checkpoints.png)
 
@@ -40,7 +40,10 @@ uv run sixlegs inspect
 # Record a new run (bundled FFmpeg, no separate installation needed):
 uv run sixlegs record --speed 2
 
-# Render an existing physical trajectory without repeating simulation:
+# Render the entire task with all six views, at real time:
+uv run sixlegs record --trajectory outputs/transfer.npz --layout all --speed 1 --output previews/transfer_all_views.mp4
+
+# Render the shorter overview without repeating simulation:
 uv run sixlegs record --trajectory outputs/transfer.npz --speed 2
 ```
 
@@ -56,6 +59,8 @@ Viewer controls:
 | **6** | Following third-person view; mouse orbit/zoom |
 | **Space** | Pause / resume |
 | **R** | Restart the complete task |
+
+The all-view video shows the full scene, a following close-up, overhead, head, and both wrist cameras simultaneously in 1920 × 1080. It covers the entire run and holds the final placement for four seconds.
 
 The on-screen overlay shows the active phase. The viewer holds the final successful state until closed or restarted. Camera images are rendered from the scene: wrists show their own fingers and the objects. Control uses simulator state and known task coordinates, not image-based object detection. This is a deterministic demonstration for this scene, not a general-purpose navigation or vision policy.
 

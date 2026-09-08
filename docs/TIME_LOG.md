@@ -28,3 +28,14 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Elapsed since explicit tracking started: **32 minutes 45 seconds**.
 - Movement implementation and validation since scene approval: **16 minutes 47 seconds**.
 - Approximate elapsed excluding the recorded scene-review pause: **29 minutes 42 seconds**. This still includes tools, tests, rendering and communication, not just compute.
+
+
+## Full-length all-view video
+
+- User requested a full video of the task with all views.
+- Work started: **2026-09-07 20:41:49 PDT** (2026-09-08 03:41:49 UTC).
+- Rendering the saved, validated physical trajectory at real time with six synchronized views.
+
+- All-view video finished and verified: **2026-09-07 20:46:29 PDT**.
+- Video follow-up elapsed: **4 minutes 40 seconds**.
+- Total elapsed since the approximate initial session start, including review pauses and this follow-up: **44 minutes 58 seconds**.

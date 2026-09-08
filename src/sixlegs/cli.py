@@ -148,6 +148,7 @@ def main():
     parser.add_argument("--static", action="store_true", help="Freeze the viewer for scene inspection")
     parser.add_argument("--speed", type=float, default=1., help="Live simulation / video playback speed")
     parser.add_argument("--camera", default="third_person", choices=("third_person","robot_detail","overhead","head","left_wrist","right_wrist"))
+    parser.add_argument("--layout", choices=("overview","all"), default="overview", help="Video: overview + wrists/head, or all six views")
     parser.add_argument("--trajectory", type=Path, help="Saved NPZ to record instead of rerunning simulation")
     args = parser.parse_args()
     if args.speed <= 0:
@@ -166,7 +167,7 @@ def main():
         if trajectory is None:
             run_headless(ROOT/"outputs")
             trajectory=ROOT/"outputs/transfer.npz"
-        render_video(trajectory,args.output or ROOT/"previews/transfer.mp4",speed=args.speed)
+        render_video(trajectory,args.output or ROOT/"previews/transfer.mp4",speed=args.speed,layout=args.layout)
     else:
         inspect()
 

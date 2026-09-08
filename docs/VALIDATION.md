@@ -39,3 +39,16 @@ The final success check requires physical support, release, low velocity, uprigh
 ## Limits
 
 This is a deterministic demonstration with fixed task coordinates and state feedback. Cameras produce actual scene images but are not used for visual object detection. The nominal task is validated; robustness to arbitrary object relocation, changed friction or masses, external pushes, and general route planning is not claimed. Joint limits and torque caps are simulation parameters, not hardware certification.
+
+
+## Full-length all-view video
+
+`previews/transfer_all_views.mp4` contains the complete validated trajectory at real time, plus a four-second final-state hold. All six views are synchronized: scene, following detail, overhead, head, left wrist and right wrist.
+
+Verified with FFprobe: **1920 × 1080, H.264, 20 fps, 2,338 frames, 116.9 seconds, 29,239,955 bytes**. The entire file decoded without errors. Encoded frames from the lift and final placement were visually inspected; labels, camera panels and completion status are readable. Rendering uses the saved successful physical run, so no new physics behavior was introduced.
+
+Reproduce with:
+
+```sh
+uv run sixlegs record --trajectory outputs/transfer.npz --layout all --speed 1 --output previews/transfer_all_views.mp4
+```
