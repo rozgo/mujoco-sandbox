@@ -56,6 +56,22 @@ def main():
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--case", default="short_fl")
     p.add_argument("--seconds", type=float, default=0)
+    p = sub.add_parser(
+        "grid",
+        help="Record all trained body families using one policy in a synchronized 4K grid",
+    )
+    p.add_argument(
+        "--checkpoint",
+        type=Path,
+        default=ROOT / "assets/locomotion/checkpoints/paired_selected_545s_seed2.pt",
+    )
+    p.add_argument(
+        "--output",
+        type=Path,
+        default=ROOT / "previews/locomotion/all_trained_cases.mp4",
+    )
+    p.add_argument("--seconds", type=float, default=12)
+    p.add_argument("--seed", type=int, default=9137)
     p = sub.add_parser("walk", help="View the dedicated healthy-only walking policy")
     p.add_argument("--seconds", type=float, default=0)
     p.add_argument(
@@ -94,6 +110,12 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         view(**kwargs)
+    elif args.command == "grid":
+        from .grid import grid
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        grid(**kwargs)
     elif args.command == "walk":
         from .record import view
 
