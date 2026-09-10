@@ -58,6 +58,8 @@ def record(
         "unseen_steps": "Shortened calf over physical 6 / 9 / 6 cm steps",
         "missing_calf": "Front-left calf and its joint removed",
     }
+    if saved["config"].get("stride_weight", 0):
+        captions["healthy"] = "Healthy dog / longer strides on level ground"
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1280, 720),
@@ -260,6 +262,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                             if saved["config"].get("support_weight", 0)
                             else "ORIGINAL WALK"
                         )
+                        if any(r[0]["config"].get("stride_weight", 0) for r in runs):
+                            label = (
+                                "LONGER STRIDES"
+                                if saved["config"].get("stride_weight", 0)
+                                else "ORIGINAL STRIDES"
+                            )
                 draw.text(
                     (j * 640 + 24, 64),
                     f"{label} / {saved['cumulative_training_seconds']:.1f} s training",

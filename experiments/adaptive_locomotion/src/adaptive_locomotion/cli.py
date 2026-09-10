@@ -43,6 +43,7 @@ def main():
     p.add_argument("--seconds", type=float, default=0)
     p = sub.add_parser("walk", help="View the dedicated healthy-only walking policy")
     p.add_argument("--seconds", type=float, default=0)
+    p.add_argument("--style", choices=("longer", "compact"), default="longer")
     p = sub.add_parser("compare")
     p.add_argument("--left", type=Path, required=True)
     p.add_argument("--right", type=Path, required=True)
@@ -80,7 +81,13 @@ def main():
         from .record import view
 
         view(
-            ROOT / "assets/locomotion/checkpoints/healthy_feet_210s_seed2.pt",
+            ROOT
+            / "assets/locomotion/checkpoints"
+            / (
+                "healthy_stride_300s_seed2.pt"
+                if args.style == "longer"
+                else "healthy_feet_210s_seed2.pt"
+            ),
             case="healthy",
             seconds=args.seconds,
         )

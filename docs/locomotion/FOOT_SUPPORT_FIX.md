@@ -53,10 +53,10 @@ From the repository root:
 ```sh
 git lfs pull
 cd experiments/adaptive_locomotion
-uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk --style compact
 ```
 
-The shortcut selects `healthy_feet_210s_seed2.pt`. To repeat the refinement as a new run:
+The compact style selects `healthy_feet_210s_seed2.pt`. The default `walk` now selects the subsequent [longer-stride refinement](LONGER_STRIDE.md). To repeat the refinement as a new run:
 
 ```sh
 uv tool run --from uv==0.12.12 uv run --locked adaptive-dog train \

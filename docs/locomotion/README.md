@@ -8,7 +8,7 @@ Implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned
 
 All clips play at **1×** from actual MuJoCo rollouts. The main video uses the same checkpoint for all four cases, with following, head and overview cameras. RGB is observer output, not policy input. The comparison clips retain incomplete trials. This is useful locomotion traction, **not general quadruped parkour or arbitrary-damage recovery**.
 
-For a normal, intact dog, use the **[corrected healthy walking policy](FOOT_SUPPORT_FIX.md)**, with 209 seconds of total training and 64/64 trials passing the new foot-support test. [Watch it walk](../../previews/locomotion/healthy_walk_feet.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
+For a normal, intact dog, use the **[longer-stride healthy policy](LONGER_STRIDE.md)**, with 298 seconds of total training, 67% longer strides at the same speed and 64/64 trials passing the foot-support test. [Watch it walk](../../previews/locomotion/healthy_walk_longer.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
 
 ## Run on Mac or Linux
 
@@ -44,6 +44,8 @@ uv tool run --from uv==0.12.12 uv run --locked adaptive-dog record \
 uv tool run --from uv==0.12.12 uv run --locked pytest -q
 uv tool run --from uv==0.12.12 uv run --locked pytest -q third_party/mjbatch/tests
 ```
+
+`walk --style compact` selects the previous 209-second foot-valid policy. The optional longer-stride reward is enabled for training with `--stride-weight 1`; it defaults to zero.
 
 New training now defaults to `--support-weight 2`: nonterminal ground support is penalized according to the actual body geometry. Use `--support-weight 0` to retain the original reward behavior when reproducing the older runs. See the [support rule and evaluation criteria](FOOT_SUPPORT_FIX.md).
 

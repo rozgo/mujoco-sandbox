@@ -1,6 +1,6 @@
 # Dedicated healthy-dog walking baseline
 
-**Correction:** the original 119-second policy described below used its rear-right knee housing for ground support. The original distance and trunk checks missed that defect. `adaptive-dog walk` now selects the [corrected 209-second policy](FOOT_SUPPORT_FIX.md), which passed 64/64 trials with no unintended support forces. [Watch the corrected video](../../previews/locomotion/healthy_walk_feet.mp4). The original reports and clips remain available as failure evidence.
+**Correction:** the original 119-second policy described below used its rear-right knee housing for ground support. The original distance and trunk checks missed that defect. `adaptive-dog walk --style compact` selects the [corrected 209-second policy](FOOT_SUPPORT_FIX.md), which passed 64/64 trials with no unintended support forces. [Watch the corrected video](../../previews/locomotion/healthy_walk_feet.mp4). The original reports and clips remain available as failure evidence.
 
 Follow-up started September 10, 2026 at 14:48:45 UTC.
 
@@ -58,10 +58,10 @@ From the repository root:
 ```sh
 git lfs pull
 cd experiments/adaptive_locomotion
-uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk --style compact
 ```
 
-`walk --seconds 5` is a bounded viewer check. The shortcut selects
+`walk --style compact --seconds 5` is a bounded viewer check. The shortcut selects
 `assets/locomotion/checkpoints/healthy_feet_210s_seed2.pt` and the healthy scene.
 The native Mac launcher was tested.
 
