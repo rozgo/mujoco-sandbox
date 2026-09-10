@@ -26,6 +26,8 @@ def main():
     p.add_argument("--reward-profile", choices=("adaptive", "walk"), default="adaptive")
     p.add_argument("--support-weight", type=float, default=2.0)
     p.add_argument("--stride-weight", type=float, default=0.0)
+    p.add_argument("--balance-weight", type=float, default=0.0)
+    p.add_argument("--body-motion-weight", type=float, default=0.0)
     p = sub.add_parser("evaluate")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)

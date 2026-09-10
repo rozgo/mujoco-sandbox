@@ -46,6 +46,8 @@ def train(
     reward_profile="adaptive",
     support_weight=2.0,
     stride_weight=0.0,
+    balance_weight=0.0,
+    body_motion_weight=0.0,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -78,6 +80,8 @@ def train(
         reward_profile=reward_profile,
         support_weight=support_weight,
         stride_weight=stride_weight,
+        balance_weight=balance_weight,
+        body_motion_weight=body_motion_weight,
     )
     ancestry = 0.0
     parent = None
@@ -129,6 +133,8 @@ def train(
         "reward_profile": reward_profile,
         "support_weight": support_weight,
         "stride_weight": stride_weight,
+        "balance_weight": balance_weight,
+        "body_motion_weight": body_motion_weight,
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
         "randomized_motor_strength": bodies != "healthy",
         "epochs": epochs,
