@@ -13,6 +13,7 @@ from queue import SimpleQueue
 from sixlegs.scene import ROOT
 
 from .flow import dataset
+from .profiles import PROFILES
 from .scene import preview
 from .simulation import Simulation, run
 from .weather import Weather, prepare
@@ -20,29 +21,53 @@ from .weather import Weather, prepare
 
 def ensure_weather(args, seed=None):
     seed = args.seed if seed is None else seed
-    folder = ROOT / f"outputs/wind/weather-{seed}"
+    folder = experiment_dir(args) / f"weather-{seed}"
+    duration = max(46.0, args.profile.wind_scale * (args.duration + 3))
+    horizon = 2.5 * args.profile.wind_scale
     valid = False
     if (folder / "weather.json").exists():
         meta = json.loads((folder / "weather.json").read_text())
-        valid = all(
-            meta["models"][k].get("sha256")
-            == hashlib.sha256((args.models / f"{k}.pt").read_bytes()).hexdigest()
-            for k in ("fno", "pino")
+        valid = (
+            meta["duration"] >= duration
+            and meta.get("forecast_horizon_s", 2.5) >= horizon
+            and all(
+                meta["models"][k].get("sha256")
+                == hashlib.sha256((args.models / f"{k}.pt").read_bytes()).hexdigest()
+                for k in ("fno", "pino")
+            )
         )
     if not valid:
-        prepare(seed, args.models, folder, backend=args.device)
+        prepare(
+            seed,
+            args.models,
+            folder,
+            backend=args.device,
+            duration=duration,
+            horizon=horizon,
+        )
     return folder
+
+
+def experiment_dir(args):
+    return (
+        ROOT
+        / "outputs/wind"
+        / ("" if args.profile.name == "standard" else args.profile.name)
+    )
 
 
 def compare(args):
     result = []
-    folder = args.output or ROOT / "outputs/wind/comparison"
+    folder = args.output or experiment_dir(args) / "comparison"
     folder.mkdir(parents=True, exist_ok=True)
     for seed in range(args.seed, args.seed + args.seeds):
         weather = ensure_weather(args, seed)
         for kind in ("persistence", "fno", "pino", "oracle"):
             report = run(
-                Weather(weather, kind), folder / f"{seed}-{kind}", args.duration
+                Weather(weather, kind, args.profile.wind_scale),
+                folder / f"{seed}-{kind}",
+                args.duration,
+                args.profile,
             )
             report.update(seed=seed, forecast=kind)
             result.append(report)
@@ -77,8 +102,8 @@ def view(args):
     from .visuals import add_flow, follow
 
     folder = ensure_weather(args)
-    weather = Weather(folder, args.kind)
-    sim = Simulation(weather)
+    weather = Weather(folder, args.kind, args.profile.wind_scale)
+    sim = Simulation(weather, args.profile)
     events = SimpleQueue()
     paused = args.static
     camera = 1
@@ -114,7 +139,7 @@ def view(args):
             else:
                 budget = 0.0
             if camera == 1:
-                cam = follow(sim.data)
+                cam = follow(sim.data, profile=args.profile)
                 viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
                 viewer.cam.lookat[:] = cam.lookat
                 viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = (
@@ -158,26 +183,38 @@ def main():
         nargs="?",
         default="view",
     )
-    parser.add_argument("--seed", type=int, default=300)
+    parser.add_argument("--profile", choices=tuple(PROFILES), default="standard")
+    parser.add_argument("--seed", type=int)
     parser.add_argument("--seeds", type=int, default=6)
     parser.add_argument(
         "--kind", choices=("persistence", "fno", "pino", "oracle"), default="pino"
     )
     parser.add_argument("--models", type=Path, default=ROOT / "assets/wind")
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--duration", type=float, default=43.0)
+    parser.add_argument("--duration", type=float)
     parser.add_argument("--output", type=Path)
-    parser.add_argument(
-        "--run-dir", type=Path, default=ROOT / "outputs/wind/comparison"
-    )
+    parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--speed", type=float, default=1.0)
     parser.add_argument("--static", action="store_true")
     parser.add_argument("--seconds", type=float)
     args = parser.parse_args()
+    args.profile = PROFILES[args.profile]
+    args.duration = args.profile.duration if args.duration is None else args.duration
+    args.seed = (
+        (300 if args.profile.name == "standard" else 400)
+        if args.seed is None
+        else args.seed
+    )
+    args.run_dir = args.run_dir or experiment_dir(args) / "comparison"
+    preview_dir = (
+        ROOT
+        / "previews/wind"
+        / ("" if args.profile.name == "standard" else args.profile.name)
+    )
     if args.duration <= 0 or args.speed <= 0 or args.seeds < 1:
         parser.error("Duration, speed and seed count must be positive")
     if args.command == "preview":
-        print(preview(args.output or ROOT / "previews/wind"))
+        print(preview(args.output or preview_dir))
     elif args.command == "dataset":
         print(dataset(args.output or ROOT / "outputs/wind/training.npz"))
     elif args.command == "validate":
@@ -198,15 +235,18 @@ def main():
             prepare(
                 args.seed,
                 args.models,
-                args.output or ROOT / f"outputs/wind/weather-{args.seed}",
+                args.output or experiment_dir(args) / f"weather-{args.seed}",
                 backend=args.device,
+                duration=max(46.0, args.profile.wind_scale * (args.duration + 3)),
+                horizon=2.5 * args.profile.wind_scale,
             )
         )
     elif args.command == "run":
         result = run(
-            Weather(ensure_weather(args), args.kind),
-            args.output or ROOT / f"outputs/wind/{args.seed}-{args.kind}",
+            Weather(ensure_weather(args), args.kind, args.profile.wind_scale),
+            args.output or experiment_dir(args) / f"{args.seed}-{args.kind}",
             args.duration,
+            args.profile,
         )
         print(json.dumps(result, indent=2))
         if not result["success"]:
@@ -221,8 +261,9 @@ def main():
             record(
                 args.run_dir,
                 ensure_weather(args),
-                args.output or ROOT / "previews/wind/comparison.mp4",
+                args.output or preview_dir / "comparison.mp4",
                 args.seed,
+                profile=args.profile,
             )
         )
     else:

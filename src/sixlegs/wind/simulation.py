@@ -8,7 +8,12 @@ import mujoco
 import numpy as np
 
 from .control import DRAG_DRONE, DRAG_LOAD, Controller, drag, reference, swing_angle
+from .profiles import STANDARD
 from .scene import DT, load_scene
+
+
+class FlightEnvelopeError(RuntimeError):
+    """A physically simulated flight failure, distinct from a numerical error."""
 
 
 class Calm:
@@ -20,9 +25,10 @@ class Calm:
 
 
 class Simulation:
-    def __init__(self, weather=None):
+    def __init__(self, weather=None, profile=STANDARD):
         self.model, self.data = load_scene()
-        self.control = Controller(self.model)
+        self.profile = profile
+        self.control = Controller(self.model, profile)
         self.weather = weather or Calm()
         self.ticks = 0
         self.snapshots = []
@@ -35,6 +41,8 @@ class Simulation:
         self.collisions = set()
         self.max_motor = 0.0
         self.max_cable_error = 0.0
+        self.max_wind = 0.0
+        self.peak_tilt = 0.0
         self.velocity = np.zeros(6)
         self.plan_seconds = 0.0
         self.settled = False
@@ -48,6 +56,7 @@ class Simulation:
             + [d.body("payload").xpos.copy()]
         )
         wind = self.weather.at(d.time, points[:, :2])
+        self.max_wind = max(self.max_wind, float(np.linalg.norm(wind, axis=1).max()))
         for i, p in enumerate(points):
             body = m.body("drone" if i < 4 else "payload").id
             mujoco.mj_objectVelocity(
@@ -77,7 +86,7 @@ class Simulation:
         if not np.isfinite(d.qpos).all() or d.warning.number.any():
             raise RuntimeError(f"Unstable rigid-body simulation at {d.time:.2f}s")
         if d.qpos[2] < 0.15 or abs(d.qpos[:2]).max() > 5.8:
-            raise RuntimeError(
+            raise FlightEnvelopeError(
                 f"Aircraft left flight envelope at {d.time:.2f}s: {d.qpos[:3]}"
             )
         if not c.released:
@@ -85,16 +94,19 @@ class Simulation:
                 self.max_cable_error,
                 float(max(0.0, d.ten_length[0] - m.tendon_range[0, 1])),
             )
-            if 6 < d.time < 32:
+            if 6 < d.time < self.profile.lower_start:
                 self.peak_swing = max(self.peak_swing, swing_angle(d))
                 self.tracking.append(
                     float(
                         np.linalg.norm(
-                            d.body("payload").xpos[:2] - reference(d.time)[0][:2]
+                            d.body("payload").xpos[:2]
+                            - reference(d.time, self.profile)[0][:2]
                         )
                     )
                 )
         self.max_motor = max(self.max_motor, float(d.actuator_force.max()))
+        tilt = float(np.degrees(np.arccos(np.clip(d.body("drone").xmat[8], -1, 1))))
+        self.peak_tilt = max(self.peak_tilt, tilt)
         for con in d.contact:
             names = [m.geom(int(g)).name for g in con.geom]
             if con.dist < 0 and any(n.startswith("gate_") for n in names if n):
@@ -108,7 +120,8 @@ class Simulation:
                     "phase": c.phase,
                     "released": c.released,
                     "swing_deg": swing_angle(d) if not c.released else 0.0,
-                    "reference": reference(d.time)[0].tolist(),
+                    "reference": reference(d.time, self.profile)[0].tolist(),
+                    "tilt_deg": tilt,
                     "rotor_n": d.actuator_force.tolist(),
                     "wind_force_n": self.forces.tolist(),
                     "predicted_load": c.predicted_load.tolist(),
@@ -126,6 +139,11 @@ class Simulation:
             for con in d.contact
         )
         return {
+            "tracking_window_complete": bool(d.time >= self.profile.lower_start),
+            "profile": self.profile.metadata(),
+            "tracking_window_s": [6.0, self.profile.lower_start],
+            "max_wind_speed_m_s": self.max_wind,
+            "peak_aircraft_tilt_deg": self.peak_tilt,
             "weather": getattr(self.weather, "provenance", {"kind": "calm"}),
             "success": bool(
                 c.released
@@ -149,12 +167,18 @@ class Simulation:
         }
 
 
-def run(weather=None, output=None, duration=43.0):
-    sim = Simulation(weather)
+def run(weather=None, output=None, duration=None, profile=STANDARD):
+    duration = profile.duration if duration is None else duration
+    sim = Simulation(weather, profile)
     begin = time.monotonic()
     next_log = 0
+    termination = None
     while sim.data.time < duration:
-        sim.step(record=output is not None)
+        try:
+            sim.step(record=output is not None)
+        except FlightEnvelopeError as error:
+            termination = str(error)
+            break
         if sim.data.time >= next_log:
             print(
                 f"{sim.data.time:5.1f}s {sim.control.phase:14} drone={sim.data.qpos[:3].round(2)} swing={swing_angle(sim.data):.1f}",
@@ -162,6 +186,10 @@ def run(weather=None, output=None, duration=43.0):
             )
             next_log += 5
     report = sim.report()
+    report["requested_duration_s"] = duration
+    report["termination_reason"] = termination
+    if termination:
+        report["success"] = False
     report["wall_seconds"] = time.monotonic() - begin
     if output:
         output = Path(output)

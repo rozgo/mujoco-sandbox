@@ -2,6 +2,8 @@
 
 **Learning the wind:** a quadrotor delivers a suspended parcel through changing crosswinds. Trained FNO/PINO forecasts drive a fair predictive-control comparison in independent numerical wind. [Full multi-view video](previews/wind/comparison.mp4) · [Results and physics](docs/wind/README.md). Start with `uv run --extra wind wind-demo view`.
 
+**Wind demo Version 2:** [Stronger crosswinds and faster delivery](previews/wind/aggressive/comparison.mp4) · [Stress-test results](docs/wind/aggressive/README.md). Run `uv run --extra wind wind-demo view --profile aggressive`; the original remains the default.
+
 **Amphibious attachment scene:** a quadruped walks into water, extends its front legs and floats, crosses the basin, and walks out. [Video](previews/amphibious/crossing.mp4) · [Model assumptions and run instructions](docs/amphibious/README.md). Start with `uv run amphibious view`.
 
 **New scene: six RC rovers communicating over simulated LoRa, with optional real Reticulum stacks.** [Watch the complete rover demo](previews/rovers/reticulum_degraded.mp4) · [Run it and read the measured comparison](docs/rovers/README.md)

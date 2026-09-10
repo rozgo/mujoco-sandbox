@@ -1,5 +1,7 @@
 # Learning the wind: a physical delivery experiment
 
+**Version 2 is available separately:** [Stronger wind and faster motion](aggressive/README.md) · [Watch Version 2](../../previews/wind/aggressive/comparison.mp4). The original video and default preset below are preserved.
+
 A quadrotor carries a suspended package through two gates, lowers it onto a platform, releases the cable after contact, and climbs away. A learned wind forecast improves the same predictive controller's payload tracking. Every flight is driven by an **independent numerical fluid solver**, including the flights using neural forecasts.
 
 [Watch the complete multi-view video](../../previews/wind/comparison.mp4) · [Static scene](../../previews/wind/overview.png) · [Measured results](RESULTS.md) · [Goal brief](BRIEF.md) · [Time log](../TIME_LOG.md)

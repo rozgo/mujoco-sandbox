@@ -5,6 +5,7 @@ import math
 import numpy as np
 from scipy.linalg import expm
 
+from .profiles import STANDARD
 from .scene import CABLE, DRONE_MASS, LOAD_MASS, ROTOR_XY, START, YAW_SIGNS
 
 HORIZON = 20
@@ -13,7 +14,7 @@ DRAG_DRONE = 0.14
 DRAG_LOAD = 0.045
 
 
-def reference(t):
+def reference(t, profile=STANDARD):
     x = START[0]
     z = START[2]
     vx = vz = 0.0
@@ -24,13 +25,13 @@ def reference(t):
         if p < 1:
             vz = (0.1 + 1.8 - START[2]) * 6 * p * (1 - p) / 3
     if t > 6:
-        p = np.clip((t - 6) / 24, 0, 1)
+        p = np.clip((t - 6) / profile.cruise_seconds, 0, 1)
         s = p * p * (3 - 2 * p)
         x = START[0] + 5.4 * s
         if p < 1:
-            vx = 5.4 * 6 * p * (1 - p) / 24
-    if t > 32:
-        p = np.clip((t - 32) / 5, 0, 1)
+            vx = 5.4 * 6 * p * (1 - p) / profile.cruise_seconds
+    if t > profile.lower_start:
+        p = np.clip((t - profile.lower_start) / 5, 0, 1)
         s = p * p * (3 - 2 * p)
         z = 1.9 + (1.185 - 1.9) * s
         if p < 1:
@@ -44,8 +45,9 @@ def drag(wind, velocity, coefficient):
 
 
 class Controller:
-    def __init__(self, model):
+    def __init__(self, model, profile=STANDARD):
         self.model = model
+        self.profile = profile
         self.phase = "LIFT"
         self.released = False
         self.release_time = None
@@ -110,14 +112,20 @@ class Controller:
         vel = d.qvel[:3]
         loadvel = d.qvel[6:9]
         refs = np.array(
-            [reference(d.time + (i + 1) * CONTROL_DT)[0] for i in range(HORIZON)]
+            [
+                reference(d.time + (i + 1) * CONTROL_DT, self.profile)[0]
+                for i in range(HORIZON)
+            ]
         )
         refvel = np.array(
-            [reference(d.time + (i + 1) * CONTROL_DT)[1] for i in range(HORIZON)]
+            [
+                reference(d.time + (i + 1) * CONTROL_DT, self.profile)[1]
+                for i in range(HORIZON)
+            ]
         )
         # Both controllers receive the same current full-field observation.
         # Forecast may advance it with FNO/PINO or persist it unchanged.
-        points = refs[:, :2] + (pos[:2] - reference(d.time)[0][:2]) * 0.5
+        points = refs[:, :2] + (pos[:2] - reference(d.time, self.profile)[0][:2]) * 0.5
         winds = forecast(np.arange(1, HORIZON + 1) * CONTROL_DT, points)
         self.wind_prediction = winds.copy()
         fd = drag(winds, refvel[:, :2], DRAG_DRONE)
@@ -150,12 +158,12 @@ class Controller:
             self.predicted_load[:, axis] = predicted[:, 0] + CABLE * predicted[:, 2]
 
     def update(self, d):
-        ref, rv = reference(d.time)
+        ref, rv = reference(d.time, self.profile)
         if d.time < 6:
             self.phase = "LIFT"
-        elif d.time < 30:
+        elif d.time < self.profile.cruise_end:
             self.phase = "CROSSWINDS"
-        elif d.time < 32:
+        elif d.time < self.profile.lower_start:
             self.phase = "ALIGN"
         else:
             self.phase = "LOWER PACKAGE"
@@ -191,7 +199,11 @@ class Controller:
             and c.dist < 0.001
             for c in d.contact
         )
-        if d.time > 35 and touching and np.linalg.norm(d.qvel[6:9]) < 0.15:
+        if (
+            d.time > self.profile.lower_start + 3
+            and touching
+            and np.linalg.norm(d.qvel[6:9]) < 0.15
+        ):
             self.released = True
             self.release_time = self.release_time or float(d.time)
             self.model.tendon_range[0, 1] = 1000.0

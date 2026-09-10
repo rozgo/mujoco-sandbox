@@ -13,7 +13,8 @@ from PIL import Image, ImageDraw
 from sixlegs.recording import font
 
 from .control import reference
-from .flow import DOMAIN, FORECAST_DT
+from .flow import DOMAIN
+from .profiles import STANDARD
 from .scene import load_scene
 from .weather import Weather
 
@@ -23,13 +24,15 @@ INK = "#10202b"
 TEXT = "#e9f2f5"
 
 
-def follow(d, close=False):
+def follow(d, close=False, profile=STANDARD):
     cam = mujoco.MjvCamera()
     cam.lookat[:] = (
-        d.body("payload").xpos if close else reference(d.time)[0] + [0, 0, -0.35]
+        d.body("payload").xpos
+        if close
+        else reference(d.time, profile)[0] + [0, 0, -0.35]
     )
     cam.distance = 0.95 if close else 2.65
-    cam.azimuth = 100 if close else 125
+    cam.azimuth = 100 if close else (110 if profile.name == "aggressive" else 125)
     cam.elevation = -12 if close else -18
     return cam
 
@@ -92,14 +95,14 @@ def add_flow(scene, weather, t):
         line(scene, position - np.r_[wind, 0.0] * 0.10, position, color, 1.3)
 
 
-def add_evidence(scene, d, snapshot, color):
+def add_evidence(scene, d, snapshot, color, future=True):
     base = d.body("drone").xpos.copy()
     payload = d.body("payload").xpos.copy()
     forces = np.array(snapshot["wind_force_n"])
     for p, f in ((base, forces[:4].sum(axis=0)), (payload, forces[4])):
         if np.linalg.norm(f) > 0.08:
             line(scene, p, p + 0.14 * f, (*color, 0.9), 0.012, True)
-    if not snapshot["released"]:
+    if future and not snapshot["released"]:
         predicted = np.array(snapshot["predicted_load"])
         points = np.column_stack((predicted, np.full(len(predicted), payload[2])))
         for a, b in pairwise(points):
@@ -125,11 +128,8 @@ def heatmap(array, size=190, error=False):
 def flow_panel(frame, weather, t):
     draw = ImageDraw.Draw(frame)
     draw.text((20, 690), "WIND FORECAST / ONE SECOND AHEAD", font=font(20), fill=TEAL)
-    obs = min(int((t + 1e-8) / FORECAST_DT), len(weather.predictions) - 1)
-    lead = 4
-    future = obs * FORECAST_DT + 1.0
-    truth = weather.field(future)
-    prediction = weather.predictions[obs, lead]
+    truth = weather.field(t + 1.0)
+    prediction = weather.forecast_field(t, 1.0)
     arrays = [
         vorticity(truth),
         vorticity(prediction),
@@ -162,6 +162,7 @@ def metrics_panel(frame, snapshots, trajectories, i, reports):
     width, height = 580, 200
     draw.text((1300, 690), "PAYLOAD TRACKING ERROR", font=font(21), fill=TEXT)
     last = max(i, 1)
+    duration = float(trajectories["pino"]["time"][-1])
     peak = max(
         np.max(
             np.linalg.norm(
@@ -193,7 +194,7 @@ def metrics_panel(frame, snapshots, trajectories, i, reports):
         if len(ids) > 1:
             points = [
                 (
-                    left + float(tr["time"][j]) / 43 * width,
+                    left + float(tr["time"][j]) / duration * width,
                     top + height - height * min(v / limit, 1.0),
                 )
                 for j, v in zip(ids, vals)
@@ -201,7 +202,10 @@ def metrics_panel(frame, snapshots, trajectories, i, reports):
             draw.line(points, fill=color, width=3)
     draw.text((left - 5, top - 23), f"{limit:g} cm", font=font(16), fill="#8fabba")
     draw.text(
-        (left + width - 40, top + height + 5), "43 s", font=font(16), fill="#8fabba"
+        (left + width - 40, top + height + 5),
+        f"{duration:.0f} s",
+        font=font(16),
+        fill="#8fabba",
     )
     for j, (k, color, label) in enumerate(
         (("persistence", AMBER, "Frozen wind"), ("pino", TEAL, "PINO forecast"))
@@ -216,12 +220,27 @@ def metrics_panel(frame, snapshots, trajectories, i, reports):
 
 
 def dashboard(
-    main, small, models, datas, snapshots, trajectories, index, weather, reports
+    main,
+    small,
+    models,
+    datas,
+    snapshots,
+    trajectories,
+    index,
+    weather,
+    reports,
+    profile=STANDARD,
 ):
     frame = Image.new("RGB", (1920, 1080), INK)
     draw = ImageDraw.Draw(frame)
     t = snapshots["pino"][index]["time"]
-    draw.text((22, 16), "LEARNING THE WIND", font=font(31), fill=TEXT)
+    aggressive = profile.name == "aggressive"
+    draw.text(
+        (22, 16),
+        "LEARNING THE WIND / STRONG CROSSWINDS" if aggressive else "LEARNING THE WIND",
+        font=font(31),
+        fill=TEXT,
+    )
     draw.text(
         (1160, 22),
         f"Identical reference wind + actuator limits  |  {t:04.1f}s",
@@ -241,9 +260,22 @@ def dashboard(
         m.tendon_width[0] = 0 if ss["released"] else 0.003
         mujoco.mj_forward(m, d)
         renderer = main[kind]
-        renderer.update_scene(d, camera=follow(d), scene_option=opt)
+        renderer.update_scene(d, camera=follow(d, profile=profile), scene_option=opt)
         add_flow(renderer.scene, weather, t)
-        add_evidence(renderer.scene, d, ss, rgb)
+        add_evidence(renderer.scene, d, ss, rgb, future=not aggressive)
+        if aggressive and not ss["released"]:
+            history = trajectories[kind]["qpos"][
+                max(0, index - 75) : index + 1 : 2, 7:10
+            ]
+            for a, b in pairwise(history):
+                line(renderer.scene, a, b, (*rgb, 0.8), 3)
+            target = np.r_[ss["reference"][:2], d.body("payload").xpos[2]]
+            for delta in (
+                np.array([0.08, 0, 0]),
+                np.array([0, 0.08, 0]),
+                np.array([0, 0, 0.08]),
+            ):
+                line(renderer.scene, target - delta, target + delta, (1, 1, 1, 0.9), 2)
         frame.paste(Image.fromarray(renderer.render()), (j * 960, 108))
         label = (
             "FROZEN-FIELD FORECAST"
@@ -263,18 +295,23 @@ def dashboard(
     draw.line((960, 66, 960, 657), fill="#33505c", width=2)
     draw.text(
         (22, 656),
-        "Wind tracers follow the numerical field · arrows show applied forces · paths show controller predictions",
+        (
+            "White cross = horizontal target · trails = actual motion · arrows = applied wind forces · all positions shown at true scale"
+            if aggressive
+            else "Wind tracers follow the numerical field · arrows show applied forces · paths show controller predictions"
+        ),
         font=font(19),
         fill="#9db9c8",
     )
     flow_panel(frame, weather, t)
-    if t < 5:
+    movie_clock = t * 43 / profile.duration
+    if movie_clock < 5:
         camera, camera_label = "overview", "COURSE OVERVIEW / PINO"
-    elif t < 12:
+    elif movie_clock < 12:
         camera, camera_label = "loadcam", "DOWNWARD PAYLOAD CAMERA / PINO"
-    elif t < 20:
+    elif movie_clock < 20:
         camera, camera_label = "front", "FORWARD ONBOARD CAMERA / PINO"
-    elif t < 26:
+    elif movie_clock < 26:
         camera, camera_label = "overhead", "OVERHEAD CAMERA / PINO"
     else:
         camera, camera_label = follow(datas["pino"], True), "PAYLOAD CLOSE-UP / PINO"
@@ -290,7 +327,7 @@ def dashboard(
         font=font(21),
         fill=TEAL,
     )
-    if t >= 26:
+    if movie_clock >= 26:
         draw.text(
             (660, 1004),
             "Physical cable tension, contact and release",
@@ -300,14 +337,18 @@ def dashboard(
     metrics_panel(frame, snapshots, trajectories, index, reports)
     draw.text(
         (20, 1054),
-        "MuJoCo rigid bodies + 2D background flow · 64² training data + 128² physics loss · Full flight shown at real time",
+        (
+            f"Version 2 · {profile.wind_scale:g}× wind speed + field evolution · {24 / profile.cruise_seconds:g}× crossing speed · Same controller and 10 N rotor limits · REAL TIME"
+            if aggressive
+            else "MuJoCo rigid bodies + 2D background flow · 64² training data + 128² physics loss · Full flight shown at real time"
+        ),
         font=font(18),
         fill="#8aa8b8",
     )
     return frame
 
 
-def result_card(reports, comparison, validation):
+def result_card(reports, comparison, validation, profile=STANDARD):
     frame = Image.new("RGB", (1920, 1080), INK)
     d = ImageDraw.Draw(frame)
     d.text((90, 80), "PREDICT THE FIELD. TEST THE FLIGHT.", font=font(49), fill=TEXT)
@@ -317,16 +358,28 @@ def result_card(reports, comparison, validation):
         font=font(28),
         fill="#b9d0dd",
     )
-    d.text(
-        (92, 207),
-        "Mean payload tracking RMSE · crossing t = 6–32 s · lower is better",
-        font=font(24),
-        fill="#8aa8b8",
-    )
-    grouped = {
+    all_groups = {
         k: [r for r in comparison if r["forecast"] == k]
         for k in ("persistence", "fno", "pino", "oracle")
     }
+    shared = set.intersection(
+        *(
+            {r["seed"] for r in group if r.get("tracking_window_complete", True)}
+            for group in all_groups.values()
+        )
+    )
+    if not shared:
+        raise ValueError("No complete paired tracking windows to compare")
+    grouped = {
+        k: [r for r in group if r["seed"] in shared] for k, group in all_groups.items()
+    }
+    n = len(all_groups["pino"])
+    d.text(
+        (92, 207),
+        f"Mean payload tracking RMSE · t = 6–{profile.lower_start:g} s · {len(shared)}/{n} complete paired windows · lower is better",
+        font=font(24),
+        fill="#8aa8b8",
+    )
     maxerr = max(
         np.mean([r["payload_tracking_rmse_m"] for r in group])
         for group in grouped.values()
@@ -347,24 +400,31 @@ def result_card(reports, comparison, validation):
         error = np.mean([r["payload_tracking_rmse_m"] for r in group]) * 100
         y = 280 + j * 110
         d.text((92, y), label, font=font(29), fill=color)
+        if profile.name == "aggressive":
+            delivered = sum(r["success"] for r in all_groups[kind])
+            d.text(
+                (92, y + 42),
+                f"{delivered}/{n} deliveries completed",
+                font=font(21),
+                fill="#8aa8b8",
+            )
         d.rounded_rectangle(
             (640, y + 2, 640 + 850 * error / (maxerr * 100), y + 40),
             radius=6,
             fill=color,
         )
         d.text((1570, y), f"{error:.2f} cm", font=font(32), fill=color)
-    n = len(grouped["pino"])
-    success = sum(r["success"] for r in grouped["pino"])
+    success = sum(r["success"] for r in all_groups["pino"])
     reduction = 1 - np.mean(
         [r["payload_tracking_rmse_m"] for r in grouped["pino"]]
     ) / np.mean([r["payload_tracking_rmse_m"] for r in grouped["persistence"]])
     d.text(
         (92, 765),
-        f"{n} held-out wind cases   |   PINO deliveries {success}/{n}   |   Tracking RMSE {reduction:.0%} lower",
+        f"{n} held-out wind cases   |   PINO deliveries {success}/{n}   |   Paired tracking RMSE {reduction:.0%} lower",
         font=font(34),
         fill=TEAL,
     )
-    if validation:
+    if validation and profile.name == "standard":
         rows = [
             r
             for r in validation["rows"]
@@ -377,6 +437,21 @@ def result_card(reports, comparison, validation):
             font=font(27),
             fill="#b9d0dd",
         )
+    elif profile.name == "aggressive":
+        d.text(
+            (92, 843),
+            f"Version 2: {profile.wind_scale:g}× wind speed/evolution, {24 / profile.cruise_seconds:g}× crossing speed; original version preserved.",
+            font=font(27),
+            fill="#b9d0dd",
+        )
+        failed_seeds = sorted({r["seed"] for r in comparison if not r["success"]})
+        if failed_seeds:
+            d.text(
+                (92, 887),
+                f"Failures retained in results: wind cases {', '.join(map(str, failed_seeds))}. Incomplete paired windows excluded from RMSE bars.",
+                font=font(22),
+                fill="#f4b659",
+            )
     d.text(
         (92, 927),
         "One-way flow coupling, approximate drag, idealized rotors; no resolved rotor wash.",
@@ -392,7 +467,7 @@ def result_card(reports, comparison, validation):
     return frame
 
 
-def record(run_dir, weather_dir, output, seed=300, fps=25):
+def record(run_dir, weather_dir, output, seed=300, fps=25, profile=STANDARD):
     run_dir = Path(run_dir)
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -410,9 +485,12 @@ def record(run_dir, weather_dir, output, seed=300, fps=25):
         reports[kind] = json.loads((folder / "report.json").read_text())
         if not reports[kind]["success"]:
             raise ValueError(f"{kind} delivery did not complete")
-    weather = Weather(weather_dir, "pino")
+    weather = Weather(weather_dir, "pino", profile.wind_scale)
     for kind in kinds:
-        if reports[kind].get("weather") != weather.provenance:
+        if (
+            reports[kind].get("weather") != weather.provenance
+            or reports[kind].get("profile", STANDARD.metadata()) != profile.metadata()
+        ):
             raise ValueError(
                 "Flight and weather provenance differ. Re-run wind-demo compare "
                 "with the selected model checkpoints before recording."
@@ -421,6 +499,16 @@ def record(run_dir, weather_dir, output, seed=300, fps=25):
     vp = Path(__file__).parents[3] / "docs/wind/operator_validation.json"
     validation = json.loads(vp.read_text()) if vp.exists() else None
     count = len(snapshots["pino"])
+    thumbnail_index = 500
+    if profile.name == "aggressive":
+        refs = np.array([s["reference"][:2] for s in snapshots["persistence"]])
+        thumbnail_index = int(
+            np.argmax(
+                np.linalg.norm(
+                    trajectories["persistence"]["qpos"][:, 7:9] - refs, axis=1
+                )
+            )
+        )
     frames = [0] * (4 * fps) + list(range(count)) + [count - 1] * (5 * fps)
     writer = imageio_ffmpeg.write_frames(
         str(output),
@@ -451,6 +539,7 @@ def record(run_dir, weather_dir, output, seed=300, fps=25):
                     i,
                     weather,
                     reports,
+                    profile,
                 )
                 writer.send(np.asarray(frame))
                 phase = snapshots["pino"][i]["phase"]
@@ -459,17 +548,18 @@ def record(run_dir, weather_dir, output, seed=300, fps=25):
                         output.parent / f"frame-{phase.lower().replace(' ', '-')}.png"
                     )
                     saved.add(phase)
-                if i == 500:
+                if i == thumbnail_index:
                     frame.save(output.with_suffix(".png"))
                 if n % 100 == 0:
                     print(f"{n}/{len(frames) + 10 * fps} frames", flush=True)
-            card = result_card(reports, comparison, validation)
+            card = result_card(reports, comparison, validation, profile)
             card.save(output.parent / "results.png")
             for _ in range(10 * fps):
                 writer.send(np.asarray(card))
         finally:
             writer.close()
     info = {
+        "profile": profile.metadata(),
         "weather": weather.provenance,
         "fps": fps,
         "frames": len(frames) + 10 * fps,
