@@ -94,6 +94,6 @@ The launcher automatically uses `mjpython` because [MuJoCo requires it for passi
 - `assets/menagerie/`: pinned models, original licenses and integrity manifest
 - `build/scene.xml`: generated locally; ignored, with absolute local mesh paths
 
-`uv.lock` pins the environment. Git LFS tracks mesh, image and video binaries. Virtual environments, caches, generated build artifacts and `outputs/` are ignored. The repository is local; no remote is configured.
+`uv.lock` pins the environment. Git LFS tracks meshes, images, videos and model checkpoints. Virtual environments, caches, generated build artifacts and `outputs/` are ignored. The shared repository is [rozgo/mujoco-sandbox](https://github.com/rozgo/mujoco-sandbox); Mac and GPU work is synchronized through Git commits. See the [multi-machine workflow](docs/DEVELOPMENT.md).
 
 To restore the vendored assets at the pinned upstream revision, run `uv run python scripts/fetch_assets.py`. Normal runs use the checked-in assets and need no asset download.

@@ -107,6 +107,7 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 
 ## Artifacts, documentation and Git
 
+- The shared origin is `git@github.com:rozgo/mujoco-sandbox.git`. Synchronize Mac/GPU work through commits and Git LFS; follow [the multi-machine workflow](docs/DEVELOPMENT.md). Pull with `--ff-only` before starting work, preserve local changes, and record the source commit for training. Use separate branches/worktrees for concurrent jobs rather than changing a running job's checkout.
 - Keep reproducible source in `src/` and scripts, authoritative assets/checkpoints in `assets/`, scenario documentation and concise result reports in `docs/`, and selected review images/videos in `previews/`.
 - Keep generated MJCF, datasets, weather caches, trajectories, scratch renders and logs in ignored `build/` or `outputs/`. Do not commit virtual environments, secrets or temporary machine configuration.
 - Use the existing `.gitattributes` LFS patterns for meshes, images, MP4, checkpoints and NPZ files. Update LFS patterns when introducing another large binary format. Verify binary availability and `git lfs fsck` at a completed asset/video checkpoint.
