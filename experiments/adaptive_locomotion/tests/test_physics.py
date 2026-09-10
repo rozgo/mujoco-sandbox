@@ -6,6 +6,7 @@ from adaptive_locomotion.bodies import (
     LIMITS,
     PRESETS,
     STAND,
+    allowed_support_names,
     build_model,
     initialize,
 )
@@ -78,6 +79,59 @@ def test_healthy_only_randomization_retains_full_motor_strength():
         np.testing.assert_array_equal(env.strength, np.ones((16, 12)))
         assert np.all(env.fault_at > 500)
     env.close()
+
+
+def test_ground_support_sensor_catches_loaded_knee_and_allows_only_distal_stump():
+    env = DogEnv(
+        1, bodies=[PRESETS["healthy"]], randomize=False, faults=False, threads=1
+    )
+    g = env.groups[0]
+    pose = STAND.copy()
+    pose[1::3] = 1.3
+    pose[2::3] = -2.7
+    pose[10:12] = [0, -1.6]
+    g.qpos[0, g.qadr] = pose
+    g.qpos[0, 2] = 0.224  # knee loaded; the four terminals are clear
+    g.batch.forward()
+    knee = g.support_names.index("RR_housing")
+    sensed = np.linalg.norm(g.support_data[0, knee, 1:4])
+    assert sensed > 1 and not g.support_allowed[knee]
+    data = mujoco.MjData(g.model)
+    data.qpos[:] = g.qpos[0]
+    data.qvel[:] = g.qvel[0]
+    data.ctrl[:] = g.ctrl[0]
+    mujoco.mj_forward(g.model, data)
+    force = np.zeros(6)
+    total = np.zeros(3)
+    geom = g.model.geom("RR_housing").id
+    for i, c in enumerate(data.contact):
+        if geom in (c.geom1, c.geom2) and 0 in (
+            g.model.geom_bodyid[c.geom1],
+            g.model.geom_bodyid[c.geom2],
+        ):
+            mujoco.mj_contactForce(g.model, data, i, force)
+            total += (1 if geom == c.geom2 else -1) * (
+                c.frame.reshape(3, 3).T @ force[:3]
+            )
+    np.testing.assert_allclose(sensed, np.linalg.norm(total), rtol=1e-8, atol=1e-8)
+    env.refresh()
+    assert env.support_cost[0] > 0
+    env.close()
+    assert "FL_stump" in allowed_support_names(PRESETS["missing_fl"])
+    assert "FR_housing" not in allowed_support_names(PRESETS["missing_fl"])
+    assert "FL_terminal" in allowed_support_names(PRESETS["short_fl"])
+
+
+def test_contact_instrumentation_does_not_change_dynamics():
+    models = [build_model(support_sensing=x) for x in (False, True)]
+    data = [mujoco.MjData(m) for m in models]
+    for m, d in zip(models, data):
+        initialize(m, d)
+        d.ctrl[:] = STAND
+        for _ in range(100):
+            mujoco.mj_step(m, d)
+    np.testing.assert_array_equal(data[0].qpos, data[1].qpos)
+    np.testing.assert_array_equal(data[0].qvel, data[1].qvel)
 
 
 def test_private_context_and_failure_event_do_not_leak_to_actor():

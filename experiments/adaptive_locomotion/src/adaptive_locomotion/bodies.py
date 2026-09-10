@@ -53,8 +53,20 @@ def add(parent, tag, **attrs):
     return ET.SubElement(parent, tag, {k: str(v) for k, v in attrs.items()})
 
 
+def allowed_support_names(body):
+    """A present terminal surface, or the designated distal stump after removal."""
+    return tuple(
+        f"{leg}_{'stump' if leg in body.absent else 'terminal'}" for leg in LEGS
+    )
+
+
 def build_model(
-    body=None, terrain="flat", timestep=DT, sensing=True, contact_profile="firm"
+    body=None,
+    terrain="flat",
+    timestep=DT,
+    sensing=True,
+    contact_profile="firm",
+    support_sensing=True,
 ):
     body = body or BodySpec()
     root = ET.parse(VENDOR / "go2.xml").getroot()
@@ -262,6 +274,25 @@ def build_model(
             if geom.get("class") == "visual" or geom.get("contype") == "0":
                 continue
             geom.attrib.update(solref=".006 1", solimp=".95 .99 .001", margin="0")
+    if support_sensing:
+        # Native contact-force sensors are reward/diagnostic truth only. They
+        # preserve physical collisions and do not add channels to actor input.
+        for element in world.iter("body"):
+            for i, geom in enumerate(element.findall("geom")):
+                if geom.get("class") == "visual" or geom.get("contype") == "0":
+                    continue
+                if not geom.get("name"):
+                    geom.set("name", f"{element.get('name')}_collision_{i}")
+                add(
+                    sensor,
+                    "contact",
+                    name="support_" + geom.get("name"),
+                    geom1=geom.get("name"),
+                    body2="world",
+                    data="found force",
+                    reduce="netforce",
+                    num="1",
+                )
     spec = mujoco.MjSpec.from_string(ET.tostring(root, encoding="unicode"))
     model = spec.compile()
     model.vis.global_.bvactive = 0

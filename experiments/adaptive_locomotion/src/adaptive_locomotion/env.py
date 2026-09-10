@@ -15,6 +15,7 @@ from .bodies import (
     LIMITS,
     PRESETS,
     STAND,
+    allowed_support_names,
     build_model,
     initialize,
     joint_mapping,
@@ -58,6 +59,21 @@ class Group:
             for k in ("actuator_gainprm", "actuator_biasprm", "actuator_forcerange")
         )
         self.original_gain, self.original_bias = self.gain.copy(), self.bias.copy()
+        sensor_ids = [
+            i
+            for i in range(self.model.nsensor)
+            if self.model.sensor(i).name.startswith("support_")
+        ]
+        self.support_names = [
+            self.model.sensor(i).name.removeprefix("support_") for i in sensor_ids
+        ]
+        first = self.model.sensor_adr[sensor_ids[0]]
+        self.support_data = self.batch.bind("sensordata")[
+            :, first : first + 4 * len(sensor_ids)
+        ].reshape(n, -1, 4)
+        self.support_allowed = np.array(
+            [name in allowed_support_names(body) for name in self.support_names]
+        )
         self.rays = (
             [self.batch.sensor(f"range_{i}") for i in range(9)] if sensing else []
         )
@@ -90,6 +106,7 @@ class DogEnv:
         sensing=None,
         randomize_strength=True,
         reward_profile="adaptive",
+        support_weight=2.0,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
@@ -97,6 +114,7 @@ class DogEnv:
             raise ValueError(reward_profile)
         self.randomize_strength = randomize_strength
         self.reward_profile = reward_profile
+        self.support_weight = support_weight
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -150,6 +168,8 @@ class DogEnv:
         self.last_x = np.zeros(num_envs)
         self.max_x = np.zeros(num_envs)
         self.returns = np.zeros(num_envs)
+        self.bad_support_force = np.zeros(num_envs)
+        self.support_cost = np.zeros(num_envs)
         self.reset(np.arange(num_envs))
 
     def refresh(self):
@@ -168,6 +188,14 @@ class DogEnv:
             if g.rays:
                 values = np.concatenate(g.rays, axis=1)
                 self.scan[s] = np.where(values >= 0, np.minimum(values, 2), 2)
+            force = np.linalg.norm(g.support_data[:, ~g.support_allowed, 1:4], axis=-1)
+            self.bad_support_force[s] = force.sum(1)
+            weight = float(g.model.body_mass.sum() * 9.81)
+            # Both load and contact persistence matter. A weak incidental brush
+            # costs less than using a knee to carry the body. No contact is hidden.
+            self.support_cost[s] = 0.25 * np.minimum(force / 5, 1).sum(
+                1
+            ) + 2 * np.minimum(force.sum(1) / weight, 2)
 
     def reset(self, ids):
         ids = np.asarray(ids, dtype=int)
@@ -296,6 +324,7 @@ class DogEnv:
         )
         reward -= 0.02 * np.sum(self.gyro[:, :2] ** 2, 1)
         reward -= 0.1 * self.vel[:, 2] ** 2
+        reward -= self.support_weight * self.support_cost
         if self.reward_profile == "walk":
             # Healthy-only posture preferences, never a prescribed gait phase or
             # target foot trajectory. These terms leave the adaptive task intact.
@@ -324,6 +353,7 @@ class DogEnv:
                 "speed": self.vel[:, 0],
                 "progress": self.pos[:, 0] - self.start_x,
                 "faults": len(events),
+                "bad_support_force_n": self.bad_support_force.copy(),
             },
         )
 
