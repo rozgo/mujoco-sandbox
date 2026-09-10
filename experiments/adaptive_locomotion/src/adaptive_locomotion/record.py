@@ -217,11 +217,11 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
         for i in range(round(seconds * fps)):
             canvas = Image.new("RGB", (1280, 720), (14, 23, 30))
             draw = ImageDraw.Draw(canvas)
-            title = (
-                "MISSING FRONT-LEFT CALF"
-                if case == "missing_calf"
-                else "SHORTENED CALF / 4, 6, 4 CM STEPS"
-            )
+            title = {
+                "missing_calf": "MISSING FRONT-LEFT CALF",
+                "short_steps": "SHORTENED CALF / 4, 6, 4 CM STEPS",
+                "healthy": "HEALTHY DOG / LEVEL GROUND",
+            }.get(case, case.replace("_", " ").upper())
             draw.text(
                 (24, 15),
                 title + "  |  SAME START, SAME PHYSICS",
