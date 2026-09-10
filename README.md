@@ -18,6 +18,8 @@ A shared learned controller handles shortened calves, weakened motors and low st
 
 **[Two damaged calves: before and after training](previews/locomotion/paired_damage_comparison.mp4)** · [Paired-damage results](docs/locomotion/PAIRED_DAMAGE.md) · [Three-camera video](previews/locomotion/paired_damage.mp4) · [Healthy gait retained](previews/locomotion/paired_healthy_retention.mp4)
 
+**[One policy, fourteen conditions at once — 4K video](previews/locomotion/all_trained_cases.mp4)** · [Conditions and recording details](docs/locomotion/ALL_CASES_GRID.md). All thirteen trained body variants plus a representative motor fault, synchronized at 1× with the same checkpoint in every panel.
+
 *Real-time motion with three synchronized cameras. Learned joint control follows scripted velocity commands; general parkour and arbitrary-damage recovery remain open.*
 
 ## Learning the wind

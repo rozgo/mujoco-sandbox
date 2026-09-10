@@ -16,3 +16,17 @@ uv tool run --from uv==0.12.12 uv run --locked adaptive-dog grid
 ```
 
 The command defaults to the selected checkpoint and writes `previews/locomotion/all_trained_cases.mp4`. Its sidecar records the shared checkpoint hash, cases, physical outcomes, trajectory hashes, timings and rendering source commit. Subsequent calls reuse this grid's saved capture when the checkpoint, seed and duration match. Use another output name for a different capture.
+
+## Delivered result
+
+[Watch the 4K video](../../previews/locomotion/all_trained_cases.mp4) · [Encoded preview](../../previews/locomotion/all_trained_cases.png) · [Capture and outcomes](../../previews/locomotion/all_trained_cases.json) · [Delivery checks](ALL_CASES_GRID_DELIVERY.json)
+
+All fourteen fixed demonstration trials reached 5 m, survived twelve seconds and used only allowed foot/stump support, checked every 2 ms physics step. Measured torques stayed within the physical caps. All recorded timestamps and trajectory hashes matched. Two existing trajectories were reused and twelve were newly simulated. Capture took 5.438 seconds; rendering/export took 51.925 seconds, excluding renderer/context setup. The selected policy retains its 540.622-second cumulative training ancestry; this recording required zero training.
+
+All 300 encoded frames decoded at 3840×2160, 25 fps and twelve seconds. Encoded opening, motor-fault, middle-stride and ending frames were visually inspected. All panels begin moving promptly and remain framed. This is a fixed demonstration, not a new robustness study: the broader [paired-damage evaluation](PAIRED_DAMAGE.md) still includes one failed front-pair trial out of 32.
+
+Open on macOS from the repository root:
+
+```sh
+open previews/locomotion/all_trained_cases.mp4
+```
