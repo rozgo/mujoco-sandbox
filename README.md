@@ -6,7 +6,9 @@ Explore the demos below. Click a screenshot to watch the video, or open its guid
 
 ## Experimental adaptive locomotion
 
-A shared learned controller handles shortened calves, weakened motors and low steps after 329 seconds of training. This experimental branch compares reactive control, a sensor-history estimator and a longer missing-calf fine-tune; the failures are retained alongside the successes.
+**[One policy walking with missing lower legs and entire legs — 4K video](previews/locomotion/limb_loss_all_cases.mp4)** · [Complete-removal results and run guide](docs/locomotion/LIMB_LOSS.md). The latest experiment passes 254/256 removal trials and retains healthy walking after 9 min 57 s of additional training. Two trials miss the timed goal requirement; all stay upright with allowed support. The video shows nine synchronized conditions using one checkpoint.
+
+The original pilot's shared learned controller handles shortened calves, weakened motors and low steps after 329 seconds of training. This experimental branch retains its reactive/history comparisons and unsuccessful longer missing-calf fine-tune alongside the later results.
 
 [![Learned Go2 control over physical low steps with a shortened calf](previews/locomotion/frame-steps.png)](previews/locomotion/reactive_5m30s.mp4)
 

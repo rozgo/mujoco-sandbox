@@ -1,0 +1,177 @@
+{
+  "development_seed": 9141,
+  "final_seed": 20260917,
+  "demonstration_seed": 9143,
+  "selected": {
+    "checkpoint": "assets/locomotion/checkpoints/limb_selected_seed2.pt",
+    "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/iteration_0050.pt",
+    "source_sha256": "ba062e1e9918b5dd83da323350fbbe831d6da7392d12355656c846b3c4ba1cd1",
+    "sha256": "148e910fa050a5146d8e025406eeb89de68ade53c5862f62f85d7724d03d3930",
+    "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+    "cumulative_training_seconds": 764.6829211669974,
+    "stage_training_seconds_at_checkpoint": 31.73521554202307,
+    "iterations": 50,
+    "transitions": 614400
+  },
+  "rule": "Require all healthy gates; maximize support-valid removal completions across eight cases, then select earliest evaluated tied checkpoint. Consolidation iterations 50 and 150 pass 64/64; select 50.",
+  "all_new_training_seconds": 597.2331974169938,
+  "all_new_transitions": 11968512,
+  "artifacts": [
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_one_60s_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_one_60s_seed2/policy.pt",
+      "source_sha256": "7b79bec761d60aefd4a9f4a78e125882b70811a896f7af8e0d91400b75314f72",
+      "sha256": "5a983db54099eeb151ee34d3b6d480ee42d512c423052bbef0e6396416f0b184",
+      "parent": "assets/locomotion/checkpoints/healthy_balanced_405s_seed2.pt",
+      "cumulative_training_seconds": 462.59513825003523,
+      "stage_training_seconds_at_checkpoint": 59.2661348329857,
+      "iterations": 100,
+      "transitions": 1228800
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_lower_90s_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_lower_90s_seed2/policy.pt",
+      "source_sha256": "0ff6df0aab318cd8829337553134fa6047afea85569249bd50f6007cc5be4e70",
+      "sha256": "1faecbda17a5a9e8bab1716ddf52512a22eea919ed869913215efb933187b851",
+      "parent": "assets/locomotion/checkpoints/limb_one_60s_seed2.pt",
+      "cumulative_training_seconds": 551.9403178329812,
+      "stage_training_seconds_at_checkpoint": 89.345179582946,
+      "iterations": 144,
+      "transitions": 1769472
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_whole_150s_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_whole_150s_seed2/policy.pt",
+      "source_sha256": "a88ca402a47469e540d213a24e56d77f1635c8ff2a626f57ec59dcaa7f38f654",
+      "sha256": "d4cd99e7df90ef8b90d22d4703e00cb4fef0bf913f09a9e8e389e0f1535e3151",
+      "parent": "assets/locomotion/checkpoints/limb_lower_90s_seed2.pt",
+      "cumulative_training_seconds": 701.2959216249874,
+      "stage_training_seconds_at_checkpoint": 149.35560379200615,
+      "iterations": 251,
+      "transitions": 3084288
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_front_150s_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_front_150s_seed2/policy.pt",
+      "source_sha256": "a6494d058196ea232ca88e7a13562caf20afafc1bdb5f50de5dc65f0fea15f2b",
+      "sha256": "162ba9147c95276539a5c2650daad1f1a813c41311cea763be24476949799b18",
+      "parent": "assets/locomotion/checkpoints/limb_whole_iter100_seed2.pt",
+      "cumulative_training_seconds": 760.1680709169013,
+      "stage_training_seconds_at_checkpoint": 149.54478237498552,
+      "iterations": 242,
+      "transitions": 2973696
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_consolidate_150s_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/policy.pt",
+      "source_sha256": "87d3e4ce1ca402fb502ec3747b4354083f03a3b940bcdbda552856389df09ed0",
+      "sha256": "df420193a58872d53fb110a56f3c8e93cf8a4f9a0b6679cbc752f82e4e9c8952",
+      "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "cumulative_training_seconds": 882.6692024590448,
+      "stage_training_seconds_at_checkpoint": 149.72149683407042,
+      "iterations": 237,
+      "transitions": 2912256
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_whole_iter100_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_whole_150s_seed2/iteration_0100.pt",
+      "source_sha256": "6e61de1c5b1650b86e044d548b7191f4b80c7751a3de9f9ea1a6da5193dac89a",
+      "sha256": "3b053be42fb3b928908cda9d09142179634c90e483e64d1fec36baa8446cbefb",
+      "parent": "assets/locomotion/checkpoints/limb_lower_90s_seed2.pt",
+      "cumulative_training_seconds": 610.6232885419158,
+      "stage_training_seconds_at_checkpoint": 58.68297070893459,
+      "iterations": 100,
+      "transitions": 1228800
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_whole_iter200_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_whole_150s_seed2/iteration_0200.pt",
+      "source_sha256": "44497ffdf182ced5ed88396119bf38ad7d6b1d1ac447f2b391b36e2404ff334d",
+      "sha256": "6162407dbb933f0f98c75f03cf96f28f17c7c97905e7380e126c8de5643b8374",
+      "parent": "assets/locomotion/checkpoints/limb_lower_90s_seed2.pt",
+      "cumulative_training_seconds": 669.7800615829183,
+      "stage_training_seconds_at_checkpoint": 117.83974374993704,
+      "iterations": 200,
+      "transitions": 2457600
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_front_iter100_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_front_150s_seed2/iteration_0100.pt",
+      "source_sha256": "5ad9928c40b8bf2a1068c7e01894bb069f2621a88d5e0e78ede3052244ee436a",
+      "sha256": "d298a7774dba976d9bbe713c30377d16affda44e19bbdccaca801643716850e0",
+      "parent": "assets/locomotion/checkpoints/limb_whole_iter100_seed2.pt",
+      "cumulative_training_seconds": 670.0315379579552,
+      "stage_training_seconds_at_checkpoint": 59.408249416039325,
+      "iterations": 100,
+      "transitions": 1228800
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_front_iter150_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_front_150s_seed2/iteration_0150.pt",
+      "source_sha256": "5ef714a75bcf985b296dc947dad42430ae28087d13034f0c0b2636cf3046d68f",
+      "sha256": "f341f3b66fb4dfc48d6ac13a7f1400b2d94533dff29724d0693e017fd5cb9807",
+      "parent": "assets/locomotion/checkpoints/limb_whole_iter100_seed2.pt",
+      "cumulative_training_seconds": 701.6651508749928,
+      "stage_training_seconds_at_checkpoint": 91.041862333077,
+      "iterations": 150,
+      "transitions": 1843200
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_front_150s_seed2/iteration_0200.pt",
+      "source_sha256": "911b5e77c7f8ea3ea7fc74eddcde7c9326f82e1353ebcd8a6b2e9e6aff82bfed",
+      "sha256": "93268fd4184e6c462fde5b9c77643e7cf3a7b8fbc437e8f16738c760297ac2d0",
+      "parent": "assets/locomotion/checkpoints/limb_whole_iter100_seed2.pt",
+      "cumulative_training_seconds": 732.9477056249743,
+      "stage_training_seconds_at_checkpoint": 122.3244170830585,
+      "iterations": 200,
+      "transitions": 2457600
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_selected_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/iteration_0050.pt",
+      "source_sha256": "ba062e1e9918b5dd83da323350fbbe831d6da7392d12355656c846b3c4ba1cd1",
+      "sha256": "148e910fa050a5146d8e025406eeb89de68ade53c5862f62f85d7724d03d3930",
+      "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "cumulative_training_seconds": 764.6829211669974,
+      "stage_training_seconds_at_checkpoint": 31.73521554202307,
+      "iterations": 50,
+      "transitions": 614400
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_consolidate_iter100_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/iteration_0100.pt",
+      "source_sha256": "e6740d26437ed45dea841eb7aaaba6095fe5abd843e12fd86ffcc5ab782df9b5",
+      "sha256": "fe5763f17794cb7ce98eca84390cda55b7c8d5f1a481ff3a4852b6791f9790d1",
+      "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "cumulative_training_seconds": 795.9015202090377,
+      "stage_training_seconds_at_checkpoint": 62.953814584063366,
+      "iterations": 100,
+      "transitions": 1228800
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_consolidate_iter150_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/iteration_0150.pt",
+      "source_sha256": "e3c97e46256fcddf948ba01530cd33138e7efced0f0d1572c4479c195609c888",
+      "sha256": "1c6a441f394b110e5fd57aa8bfe8db4f7bcf0c04a0eefe6dcb1c9545f97ae692",
+      "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "cumulative_training_seconds": 827.543097750051,
+      "stage_training_seconds_at_checkpoint": 94.59539212507661,
+      "iterations": 150,
+      "transitions": 1843200
+    },
+    {
+      "checkpoint": "assets/locomotion/checkpoints/limb_consolidate_iter200_seed2.pt",
+      "source_checkpoint": "outputs/locomotion/limb_consolidate_150s_seed2/iteration_0200.pt",
+      "source_sha256": "148cef4edbb9c1262c3dc080463d79c912c96f29ebd577865c92c70540704fb1",
+      "sha256": "c4fbdf409e42922b080a1118a709991b79ffc948fa682ef14719ba72b528e42e",
+      "parent": "assets/locomotion/checkpoints/limb_front_iter200_seed2.pt",
+      "cumulative_training_seconds": 859.0125732090091,
+      "stage_training_seconds_at_checkpoint": 126.0648675840348,
+      "iterations": 200,
+      "transitions": 2457600
+    }
+  ],
+  "new_training_stopped": true,
+  "split": "Selected before fresh final evaluation; training-only references are not deployed"
+}
