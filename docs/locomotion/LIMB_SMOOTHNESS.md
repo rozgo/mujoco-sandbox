@@ -26,3 +26,24 @@ compare on fresh seed 20260918, 32 initial conditions per body. Record seed
 9143 again for the matched video. Report failures and any unmet targets.
 Start with 150 seconds of new training; extend only if the measured trend
 justifies it. Record all attempted training separately from selected ancestry.
+
+## User steering: general behavior, not side-specific tuning
+
+The user requested general symmetry-encouraging rewards during the first
+150-second diagnostic run. Preserve that run and count its cost, but do not
+select it. Restart from the original selected policy, remove side-specific
+reference weighting, and add soft bilateral policy consistency for all bodies.
+The reflected observation includes joint validity, so a missing left limb maps
+to a missing right limb; this does not constrain two different limbs within
+one damaged body to move alike. Inference remains one unmodified MLP call.
+
+The mirror-loss concept follows [RSL-RL's symmetry extension](https://github.com/leggedrobotics/rsl_rl/blob/main/rsl_rl/extensions/symmetry.py),
+which references Mittal et al., ICRA 2024. This repository implements its own
+observation mapping and active-joint MSE; it does not install another trainer.
+The reflection is a soft inductive bias: vendor visual meshes and range hits
+are approximately bilateral, not a proof of exact physical equivalence.
+
+Use the same smoothness weights, reference strength, and mirror-loss weight
+for all missing-limb bodies. Compare all four left/right pairs, healthy gait
+retention, completion, speed and motion quality. Do not optimize a hand-picked
+side. The previously declared final seed and demonstration seed remain fixed.

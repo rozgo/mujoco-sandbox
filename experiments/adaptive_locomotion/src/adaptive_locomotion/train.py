@@ -20,6 +20,7 @@ from .bodies import PRESETS, ROOT
 from .env import CONTEXT_DIM, HISTORY, OBS_DIM, DogEnv
 from .policy import Policy, log_density
 from .retention import healthy_mask, reference_bonus, reference_loss, single_damage_mask
+from .symmetry import mirror_loss
 
 
 def load_checkpoint(path, mode=None):
@@ -64,6 +65,7 @@ def train(
     initial_std=None,
     front_reference=None,
     front_reference_scale=1.0,
+    symmetry_weight=0.0,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -87,6 +89,8 @@ def train(
         raise ValueError("Single-damage retention also requires a healthy reference")
     if not 0 <= front_reference_scale <= 1:
         raise ValueError("Front reference scale must be in [0, 1]")
+    if symmetry_weight < 0 or (symmetry_weight and mode != "blind"):
+        raise ValueError("Mirror loss needs a reactive policy and nonnegative weight")
     if front_reference and (not single_reference or limb_stage != "consolidate"):
         raise ValueError(
             "Front reference requires the balanced limb consolidation stage"
@@ -222,6 +226,7 @@ def train(
         "damage_action_rate_weight": damage_action_rate_weight,
         "damage_angular_rate_weight": damage_angular_rate_weight,
         "front_reference_scale": front_reference_scale,
+        "symmetry_weight": symmetry_weight,
         "retention_curriculum": retention_curriculum,
         "pair_level": pair_level,
         "limb_stage": limb_stage,
@@ -450,6 +455,10 @@ def train(
                 if single_teacher is not None:
                     loss += single_reference_weight * reference_loss(
                         mean, flat["single_reference"][ids], flat["single"][ids]
+                    )
+                if symmetry_weight:
+                    loss += symmetry_weight * mirror_loss(
+                        learner, flat["obs"][ids], mean
                     )
                 opt.zero_grad(set_to_none=True)
                 loss.backward()

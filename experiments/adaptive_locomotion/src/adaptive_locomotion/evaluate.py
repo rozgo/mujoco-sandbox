@@ -11,6 +11,7 @@ from .env import DogEnv
 from .limb_loss import LOSS_BODIES
 from .paired import PAIR_CASES, training_pairs
 from .train import load_checkpoint
+from .motion_quality import measure
 
 CASES = {
     "healthy": (PRESETS["healthy"], "flat", None),
@@ -91,6 +92,7 @@ def rollout(
     torch.set_num_threads(1)
     env = make_case(case, trials, seed, timestep, support_substeps)
     frames = []
+    motion = [[] for _ in range(6)]
     alive = np.ones(trials, bool)
     fail_time = np.full(trials, np.nan)
     max_distance = np.zeros(trials)
@@ -137,6 +139,20 @@ def rollout(
         in_goal = (distance >= 5) & alive & (np.abs(env.pos[:, 1]) <= 1)
         controlled_after_goal = np.where(in_goal, controlled_after_goal + 1, 0)
         completed |= controlled_after_goal >= 50
+        if (k + 1) * CONTROL_DT >= 1.0:
+            for samples, value in zip(
+                motion,
+                (
+                    env.q[:, support_group.slot],
+                    env.action[:, support_group.slot],
+                    env.gyro,
+                    env.vel,
+                    env.pos[:, 2],
+                    env.tip_forces,
+                ),
+                strict=True,
+            ):
+                samples.append(value.copy())
         if capture:
             g = env.groups[0]
             frames.append(
@@ -212,6 +228,9 @@ def rollout(
         "mean_distance_m": float(end_distance.mean()),
         "rows": rows,
     }
+    if len(motion[0]) >= 3:
+        result["motion_quality"] = measure(*motion)
+        result["motion_quality"]["window_s"] = [1.0, seconds]
     model = env.groups[0].model
     env.close()
     return result, frames, model

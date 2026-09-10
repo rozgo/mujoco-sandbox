@@ -149,8 +149,15 @@ class DogEnv:
         if stride_weight < 0:
             raise ValueError("Stride weight must be nonnegative")
         self.stride_weight = stride_weight
-        if min(balance_weight, body_motion_weight, damage_action_rate_weight,
-               damage_angular_rate_weight) < 0:
+        if (
+            min(
+                balance_weight,
+                body_motion_weight,
+                damage_action_rate_weight,
+                damage_angular_rate_weight,
+            )
+            < 0
+        ):
             raise ValueError("Gait regularization weights must be nonnegative")
         self.balance_weight = balance_weight
         self.body_motion_weight = body_motion_weight
