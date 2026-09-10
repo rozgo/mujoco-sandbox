@@ -113,11 +113,14 @@ def build_model(body=None, terrain="flat", timestep=DT, sensing=True):
             contype="0",
             conaffinity="0",
         )
-    if terrain not in ("flat", "steps", "test_steps"):
+    if terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
         raise ValueError(terrain)
     if terrain != "flat":
         h = 0.04 if terrain == "steps" else 0.06
-        for x, length, height in ((1.6, 0.32, h), (2.8, 0.5, 1.5 * h), (4.1, 0.4, h)):
+        obstacles = ((1.6, 0.32, h), (2.8, 0.5, 1.5 * h), (4.1, 0.4, h))
+        if terrain == "heldout_steps":
+            obstacles = ((1.4, 0.25, 0.035), (2.55, 0.35, 0.05), (3.75, 0.28, 0.045))
+        for x, length, height in obstacles:
             add(
                 world,
                 "geom",

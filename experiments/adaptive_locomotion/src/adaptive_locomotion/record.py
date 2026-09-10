@@ -13,7 +13,7 @@ import numpy as np
 import torch
 from PIL import Image, ImageDraw, ImageFont
 
-from .bodies import CONTROL_DT
+from .bodies import CONTROL_DT, ROOT
 from .evaluate import lane_command, make_case, rollout
 from .train import load_checkpoint
 
@@ -40,6 +40,14 @@ def record(
     net, saved = load_checkpoint(checkpoint)
     records = []
     count = 0
+    trajectory_dir = ROOT / "outputs/locomotion/recordings" / output.stem
+    trajectory_dir.mkdir(parents=True, exist_ok=True)
+    captions = {
+        "short_fl": "Front-left calf: 70% remaining",
+        "unseen_pair": "Two shortened calves: 75% and 65% remaining",
+        "unseen_weak": "Front-right thigh torque drops to 25% at t = 3 s",
+        "short_steps": "Shortened calf over physical 4 / 6 / 4 cm steps",
+    }
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1280, 720),
@@ -70,6 +78,7 @@ def record(
                     state = frames[k]
                     data.qpos[:] = state["qpos"]
                     data.qvel[:] = state["qvel"]
+                    data.time = state["time"]
                     mujoco.mj_forward(model, data)
                     follow = mujoco.MjvCamera()
                     follow.lookat[:] = data.qpos[:3]
@@ -91,7 +100,8 @@ def record(
                     draw = ImageDraw.Draw(canvas)
                     draw.text(
                         (24, 20),
-                        "ADAPTIVE DOG  /  " + case.replace("_", " ").upper(),
+                        "ADAPTIVE DOG  /  "
+                        + captions.get(case, case.replace("_", " ")),
                         font=title_font,
                         fill="white",
                     )
@@ -132,7 +142,7 @@ def record(
                     writer.send(np.asarray(canvas))
                     count += 1
             np.savez_compressed(
-                output.with_name(output.stem + "_" + case + ".npz"),
+                trajectory_dir / (case + ".npz"),
                 **{key: np.asarray([f[key] for f in frames]) for key in frames[0]},
             )
             print(
@@ -205,6 +215,8 @@ def view(checkpoint, case="short_fl", seconds=0):
                 env.step(action.numpy())
                 data.qpos[:] = group.qpos[0]
                 data.qvel[:] = group.qvel[0]
+                data.ctrl[:] = group.ctrl[0]
+                data.time = float(env.steps[0] * CONTROL_DT)
                 mujoco.mj_forward(group.model, data)
                 viewer.cam.lookat[:] = data.qpos[:3]
                 viewer.sync()
