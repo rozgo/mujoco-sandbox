@@ -1,6 +1,8 @@
 # Adaptive dog: minute-scale RL pilot
 
-Implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned controller moves a Go2-derived robot with shortened calves and weakened motors over low steps. A 329-second reactive policy is the strongest candidate. Adding a sensor-history estimator did not improve this pilot, and extending training to 599 seconds introduced forgetting.
+Latest: **[damage training with healthy gait retention](DAMAGE_RETENTION.md)**. In 89.6 additional training seconds, the balanced walker learned all four single shortened-calf positions: **128/128** support-valid trials while retaining **32/32** healthy completions and approximately 31 cm strides. [Watch the new demo](../../previews/locomotion/damage_retention.mp4), [healthy before/after](../../previews/locomotion/damage_healthy_retention.mp4), or [shortened-calf before/after](../../previews/locomotion/damage_short_fr_comparison.mp4). Two shortened calves remain unreliable (1/32). Total selected-policy training: 493 seconds.
+
+The original pilot below was implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned controller moves a Go2-derived robot with shortened calves and weakened motors over low steps. A 329-second reactive policy was the strongest original pilot candidate. Adding a sensor-history estimator did not improve that pilot, and extending training to 599 seconds introduced forgetting.
 
 **[Watch the 48-second three-camera demonstration](../../previews/locomotion/reactive_5m30s.mp4)** · [History versus reactive controller](../../previews/locomotion/history_vs_reactive.mp4) · [What the extra training did](../../previews/locomotion/extra_training.mp4)
 

@@ -1,0 +1,74 @@
+{
+  "tests_passed": 58,
+  "native_macos_viewer": "short_fr, 5 seconds, exit 0",
+  "videos": [
+    {
+      "path": "previews/locomotion/damage_retention.mp4",
+      "sha256": "6c6a10ccab40c608d042a4b882b46e68ac614f0382e71659a6bd64ca92771101",
+      "frames_decoded": 900,
+      "duration_seconds": 36.0,
+      "fps": 25.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "playback": 1
+    },
+    {
+      "path": "previews/locomotion/damage_healthy_retention.mp4",
+      "sha256": "cc5593800797e387a789cdb2ad6e98bb0d90103a219395bb846e359301a5e3ca",
+      "frames_decoded": 300,
+      "duration_seconds": 12.0,
+      "fps": 25.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "playback": 1
+    },
+    {
+      "path": "previews/locomotion/damage_short_fr_comparison.mp4",
+      "sha256": "bf2e295af0f8713bae689fe5d9a0b6c9fefd90d8d9cdcb844c8bf0184c12e819",
+      "frames_decoded": 300,
+      "duration_seconds": 12.0,
+      "fps": 25.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "playback": 1
+    }
+  ],
+  "physical_recordings": [
+    {
+      "case": "healthy",
+      "frames": 600,
+      "max_sampled_penetration_m": 0.003771190324345676,
+      "all_support_valid": true,
+      "no_resets": true,
+      "peak_torque_limit_ratio": 0.9876584894259948,
+      "trajectory_sha256": "48aa75c0bd6991dbaa777d68f9c1be7aef10591c7e763a35b1724811ba563f62"
+    },
+    {
+      "case": "short_fr",
+      "frames": 600,
+      "max_sampled_penetration_m": 0.0023681974540051345,
+      "all_support_valid": true,
+      "no_resets": true,
+      "peak_torque_limit_ratio": 1.0,
+      "trajectory_sha256": "9aa51a12bf62f69a83ff2c520893b4433ee3525faf8a5baeb9c4f4f834bf0889"
+    },
+    {
+      "case": "unseen_weak",
+      "frames": 600,
+      "max_sampled_penetration_m": 0.004093551095830421,
+      "all_support_valid": true,
+      "no_resets": true,
+      "peak_torque_limit_ratio": 1.0,
+      "trajectory_sha256": "6af9b78d2bb0345ae4135e332d8ef1e4c787d99908766f49e497df47fc098811"
+    }
+  ],
+  "cpu_mps_max_action_difference": 1.9073486328125e-06,
+  "checkpoint_sha256": "805514f704f5fc262c4c6153c7cd4a9c2624c7362bc62b659ac7a5ca07263f3e",
+  "visual_inspection": "Encoded opening, stride and ending of each segment and both comparisons; observer labels fit. Overview reframed using the saved physical trajectory."
+}

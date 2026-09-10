@@ -43,6 +43,11 @@ def main():
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--cases", default="short_fl,unseen_pair,unseen_weak,short_steps")
+    p.add_argument(
+        "--replay",
+        action="store_true",
+        help="Rerender this output's existing validated trajectories",
+    )
     p.add_argument("--seconds", type=float, default=12)
     p = sub.add_parser("view")
     p.add_argument("--checkpoint", type=Path, required=True)

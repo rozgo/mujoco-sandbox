@@ -14,6 +14,8 @@ A shared learned controller handles shortened calves, weakened motors and low st
 
 **[Healthy dog with improved gait balance](previews/locomotion/healthy_walk_balanced.mp4)** · [Known rewards and validation](docs/locomotion/BALANCED_GAIT.md) · [Gait comparison](previews/locomotion/healthy_gait_balance.mp4) · [Earlier stride experiment](docs/locomotion/LONGER_STRIDE.md)
 
+**[Damage training that retains healthy walking](previews/locomotion/damage_retention.mp4)** · [Recipe and measured limits](docs/locomotion/DAMAGE_RETENTION.md) · [Healthy gait retained](previews/locomotion/damage_healthy_retention.mp4) · [Shortened-calf comparison](previews/locomotion/damage_short_fr_comparison.mp4)
+
 *Real-time motion with three synchronized cameras. Learned joint control follows scripted velocity commands; general parkour and arbitrary-damage recovery remain open.*
 
 ## Learning the wind

@@ -58,6 +58,7 @@ def record(
     cases="short_fl,unseen_pair,unseen_weak,short_steps",
     seconds=12,
     fps=25,
+    replay=False,
 ):
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -66,9 +67,20 @@ def record(
     count = 0
     trajectory_dir = ROOT / "outputs/locomotion/recordings" / output.stem
     trajectory_dir.mkdir(parents=True, exist_ok=True)
+    previous = None
+    if replay:
+        previous = json.loads(output.with_suffix(".json").read_text())
+        if (
+            previous["checkpoint_sha256"]
+            != hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest()
+        ):
+            raise ValueError("Replay checkpoint does not match recorded trajectories")
     captions = {
         "healthy": "Healthy dog / learned walking on level ground",
         "short_fl": "Front-left calf: 70% remaining",
+        "short_fr": "Front-right calf: 70% remaining",
+        "short_rl": "Rear-left calf: 70% remaining",
+        "short_rr": "Rear-right calf: 70% remaining",
         "unseen_pair": "Two shortened calves: 75% and 65% remaining",
         "unseen_weak": "Front-right thigh torque drops to 25% at t = 3 s",
         "short_steps": "Shortened calf over physical 4 / 6 / 4 cm steps",
@@ -79,6 +91,8 @@ def record(
         captions["healthy"] = "Healthy dog / longer strides on level ground"
     if saved["config"].get("balance_weight", 0):
         captions["healthy"] = "Healthy dog / stance and swing balance rewards"
+    if saved["config"].get("reference_checkpoint"):
+        captions["healthy"] = "Healthy walk retained after damage training"
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1280, 720),
@@ -93,9 +107,27 @@ def record(
     title_font, body_font = font(27), font(20)
     try:
         for case in cases.split(","):
-            result, frames, model = rollout(
-                net, case, trials=1, seconds=seconds, capture=True
-            )
+            if previous is None:
+                result, frames, model = rollout(
+                    net, case, trials=1, seconds=seconds, capture=True
+                )
+            else:
+                result = next(r for r in previous["cases"] if r["case"] == case)
+                env = make_case(case, trials=1)
+                model = env.groups[0].model
+                env.close()
+                if (
+                    model_hash(model) != result["model_mjb_sha256"]
+                    or seconds != result["seconds"]
+                ):
+                    raise ValueError(
+                        "Replay model or duration differs from recorded run"
+                    )
+                with np.load(trajectory_dir / (case + ".npz")) as capture:
+                    frames = [
+                        {key: capture[key][i] for key in capture.files}
+                        for i in range(len(capture["time"]))
+                    ]
             result["model_mjb_sha256"] = model_hash(model)
             records.append(result)
             data = mujoco.MjData(model)
@@ -127,10 +159,9 @@ def record(
                         90,
                         -58,
                     )
-                    if case == "healthy":
-                        course_end = float(frames[-1]["qpos"][0])
-                        overview.lookat[0] = max(3, course_end * 0.5)
-                        overview.distance = max(7.4, course_end * 1.25)
+                    course_end = max(float(f["qpos"][0]) for f in frames)
+                    overview.lookat[0] = max(3, course_end * 0.5)
+                    overview.distance = max(7.4, course_end * 1.25)
                     small.update_scene(data, camera=overview, scene_option=option)
                     canvas.paste(Image.fromarray(small.render()), (854, 310))
                     draw = ImageDraw.Draw(canvas)
@@ -170,6 +201,13 @@ def record(
                     )
                     status = "5 m COMPLETED" if state["completed"] else "RUNNING"
                     foot_contact_strip(draw, 900, 625, state, result)
+                    if case == "unseen_weak":
+                        draw.text(
+                            (870, 576),
+                            f"FR THIGH: {state['strength'][4] * 100:.0f}% TORQUE",
+                            font=font(20),
+                            fill=(255, 193, 105),
+                        )
                     if not state["alive"]:
                         status = "TRIAL FAILED — NO RESET"
                     elif not state["support_valid"]:
@@ -182,10 +220,11 @@ def record(
                     )
                     writer.send(np.asarray(canvas))
                     count += 1
-            np.savez_compressed(
-                trajectory_dir / (case + ".npz"),
-                **{key: np.asarray([f[key] for f in frames]) for key in frames[0]},
-            )
+            if previous is None:
+                np.savez_compressed(
+                    trajectory_dir / (case + ".npz"),
+                    **{key: np.asarray([f[key] for f in frames]) for key in frames[0]},
+                )
             print(
                 json.dumps({"recorded": case, "result": result["completed_5m"]}),
                 flush=True,
@@ -202,6 +241,7 @@ def record(
         "duration_seconds": count / fps,
         "cases": records,
         "camera_pixels_used_by_policy": False,
+        "rerendered_from_saved_trajectory": replay,
         "navigation": "scripted lane follower with ideal localization",
         "physics": "CPU MuJoCo through mjbatch, no pose control; recorded states replayed for rendering",
     }
@@ -294,6 +334,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                                 if saved["config"].get("balance_weight", 0)
                                 else "LONGER STRIDES"
                             )
+                if any(r[0]["config"].get("reference_checkpoint") for r in runs):
+                    label = (
+                        "DAMAGE + RETENTION"
+                        if saved["config"].get("reference_checkpoint")
+                        else "HEALTHY REFERENCE"
+                    )
                 draw.text(
                     (j * 640 + 24, 64),
                     f"{label} / {saved['cumulative_training_seconds']:.1f} s training",
