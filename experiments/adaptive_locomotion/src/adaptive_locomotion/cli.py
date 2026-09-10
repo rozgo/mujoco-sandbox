@@ -73,6 +73,7 @@ def main():
     )
     p.add_argument("--seconds", type=float, default=12)
     p.add_argument("--seed", type=int, default=9137)
+    p.add_argument("--family", choices=("partial", "limb_loss"), default="partial")
     p = sub.add_parser("walk", help="View the dedicated healthy-only walking policy")
     p.add_argument("--seconds", type=float, default=0)
     p.add_argument(

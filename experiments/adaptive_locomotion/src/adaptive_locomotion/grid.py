@@ -47,8 +47,34 @@ GRID_CASES = (
 )
 
 
-def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
+def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
     """Capture physical runs, then replay a common timestamp in every panel."""
+    if family not in ("partial", "limb_loss"):
+        raise ValueError(family)
+    limb = family == "limb_loss"
+    cases = GRID_CASES
+    if limb:
+        cases = (
+            ("healthy", "HEALTHY", "Four intact legs", 0, 0),
+            *(
+                (f"{kind}_{leg.lower()}", f"{label} / {leg}", detail, row, i)
+                for kind, label, detail, row in (
+                    (
+                        "lower",
+                        "LOWER LEG REMOVED",
+                        "Entire calf + foot absent / 11 actuators",
+                        1,
+                    ),
+                    (
+                        "whole",
+                        "ENTIRE LEG REMOVED",
+                        "Hip + thigh + calf absent / 9 actuators",
+                        2,
+                    ),
+                )
+                for i, leg in enumerate(("FL", "FR", "RL", "RR"))
+            ),
+        )
     start = time.perf_counter()
     checkpoint, output = Path(checkpoint), Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -65,6 +91,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
         cache["checkpoint_sha256"] != digest
         or cache["seed"] != seed
         or cache["seconds"] != seconds
+        or cache.get("family", "partial") != family
     ):
         raise ValueError(
             "Existing grid capture uses different weights, seed or duration; use another output name"
@@ -72,7 +99,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
     prior_path = ROOT / "previews/locomotion/paired_damage.json"
     prior = json.loads(prior_path.read_text()) if prior_path.exists() else None
     entries, runs = [], []
-    for case, title, subtitle, row, col in GRID_CASES:
+    for case, title, subtitle, row, col in cases:
         result, states, source = None, None, None
         if cache:
             entry = next((c for c in cache["cases"] if c["case"] == case), None)
@@ -156,6 +183,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
         )
     capture_seconds = time.perf_counter() - start
     manifest = {
+        "family": family,
         "checkpoint_sha256": digest,
         "seed": seed,
         "seconds": seconds,
@@ -165,7 +193,9 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
 
     width, height = 3840, 2160
     tile_w, tile_h, gap, margin, top = 936, 472, 16, 24, 148
-    image_h = 352
+    if limb:
+        tile_h = 632
+    image_h = tile_h - 120
     renderers = [mujoco.Renderer(run[2], height=image_h, width=tile_w) for run in runs]
     option = mujoco.MjvOption()
     option.flags[mujoco.mjtVisFlag.mjVIS_RANGEFINDER] = False
@@ -193,13 +223,17 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
             draw = ImageDraw.Draw(canvas)
             draw.text(
                 (28, 24),
-                "ONE POLICY / FOURTEEN CONDITIONS",
+                "ONE POLICY / COMPLETE LIMB LOSS"
+                if limb
+                else "ONE POLICY / FOURTEEN CONDITIONS",
                 font=font(52),
                 fill="white",
             )
             draw.text(
                 (29, 89),
-                "Synchronized MuJoCo rollouts   |   Every trained body variant   |   Representative motor fault",
+                "Healthy + four lower-leg removals + four whole-leg removals   |   All outcomes shown"
+                if limb
+                else "Synchronized MuJoCo rollouts   |   Every trained body variant   |   Representative motor fault",
                 font=body,
                 fill=(157, 180, 190),
             )
@@ -239,7 +273,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
                 elif states["completed"][k]:
                     status, color = "5 m COMPLETE", (109, 224, 204)
                 draw.text(
-                    (x + 16, y + 436),
+                    (x + 16, y + tile_h - 36),
                     f"{data.qpos[0]:.2f} m  |  {status}",
                     font=small,
                     fill=color,
@@ -247,14 +281,23 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
                 allowed = entry["outcome"]["allowed_support_geom_names"]
                 names = entry["outcome"]["support_geom_names"]
                 for i, leg in enumerate(("FL", "FR", "RL", "RR")):
-                    name = next(n for n in allowed if n.startswith(leg))
-                    loaded = states["support_peak_forces_n"][k, names.index(name)] > 1
+                    name = next((n for n in allowed if n.startswith(leg)), None)
+                    loaded = (
+                        name is not None
+                        and states["support_peak_forces_n"][k, names.index(name)] > 1
+                    )
                     dx = x + 568 + i * 90
                     draw.ellipse(
-                        (dx, y + 441, dx + 14, y + 455),
+                        (dx, y + tile_h - 31, dx + 14, y + tile_h - 17),
                         fill=(109, 224, 204) if loaded else (61, 76, 85),
                     )
-                    draw.text((dx + 23, y + 435), leg, font=small, fill="white")
+                    draw.text((dx + 23, y + tile_h - 37), leg, font=small, fill="white")
+                    if name is None:
+                        draw.line(
+                            (dx, y + tile_h - 31, dx + 14, y + tile_h - 17),
+                            fill=(230, 140, 80),
+                            width=2,
+                        )
             # Two explanatory cards keep the four single/mild/strong columns aligned.
             for col in (2, 3):
                 x = margin + col * (tile_w + gap)
@@ -273,7 +316,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
             )
             draw.text(
                 (x + 32, top + 165),
-                "14 physical conditions",
+                "9 physical conditions" if limb else "14 physical conditions",
                 font=font(44),
                 fill="white",
             )
@@ -310,6 +353,32 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
                 "Contact dots = measured foot support",
                 "Following cameras / flat ground",
             ]
+            if limb:
+                lines = [
+                    "Lower = everything below knee removed",
+                    "Whole = entire leg chain removed",
+                    "Orange = exposed upper-leg stump",
+                    "Crossed dot = no supporting limb",
+                    "FL / FR = front left / right",
+                    "RL / RR = rear left / right",
+                ]
+                lx = margin + tile_w + gap
+                draw.rectangle(
+                    (lx, top, lx + tile_w - 1, top + tile_h - 1), fill=(17, 29, 38)
+                )
+                for j, line in enumerate(
+                    [
+                        "COMPLETE REMOVALS",
+                        "One fixed checkpoint in all nine panels",
+                        "No policy switching or online training",
+                        "Physical contact / original torque caps",
+                        "Failed attempts remain visible",
+                        "Flat ground / scripted velocity commands",
+                    ]
+                ):
+                    draw.text(
+                        (lx + 32, top + 26 + j * 65), line, font=heading, fill="white"
+                    )
             for j, line in enumerate(lines):
                 draw.text(
                     (x + 32, top + 100 + j * 55), line, font=heading, fill="white"
@@ -344,7 +413,9 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137):
         "single_shared_policy": True,
         "camera_pixels_used_by_policy": False,
         "contact_indicator": "Allowed terminal force >1 N anywhere in the current 20 ms control window",
-        "scope": "All 13 geometry variants across mild/strong training, plus one representative 60% motor fault; not every randomized fault, command or initial condition",
+        "scope": "Healthy plus all eight single complete-removal conditions; fixed demonstrations, no claim of arbitrary limb-loss recovery"
+        if limb
+        else "All 13 geometry variants across mild/strong training, plus one representative 60% motor fault; not every randomized fault, command or initial condition",
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_source_commit": source_commit,
     }

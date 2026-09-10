@@ -441,9 +441,12 @@ class DogEnv:
                 )
             speed = np.linalg.norm(world_command, axis=1)
             direction = world_command / np.maximum(speed[:, None], 1e-8)
-            reward += self.stride_weight * self.stride.update(
+            stride_reward = self.stride.update(
                 self.tip_positions, self.tip_forces, direction, speed > 0.15
             )
+            if self.limb_stage:
+                stride_reward *= (self.context[:, :4] == 1).all(1)
+            reward += self.stride_weight * stride_reward
         if self.reward_profile == "walk":
             # Healthy-only posture preferences, never a prescribed gait phase or
             # target foot trajectory. These terms leave the adaptive task intact.
@@ -461,7 +464,7 @@ class DogEnv:
         finite = np.isfinite(self.q).all(1) & np.isfinite(self.vel).all(1)
         fell = (self.up[:, 2] < 0.15) | (self.pos[:, 2] < 0.09) | ~finite
         timeout = self.steps >= 500
-        reward[fell] -= 2
+        reward[fell] -= 10 if self.limb_stage else 2
         self.last_x[:] = self.pos[:, 0]
         self.max_x = np.maximum(self.max_x, self.pos[:, 0])
         self.returns += reward
