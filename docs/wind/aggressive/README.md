@@ -34,8 +34,10 @@ The comparison command finishes all four forecast methods on all six seeds and r
 | Crossing acceleration scale | 1× | 4×, due to the shorter smooth trajectory |
 | Crossing metric window | 6–32 s | 6–20 s |
 | Complete flight | 43 s | 31 s |
-| Video | 62 s | 50 s, with the physical flight at real time |
+| Video | 62 s | 41 s, with the physical flight at real time |
 | Wind seeds | 300–305 | 400–405 |
+
+The edit starts immediately with the full 31-second flight and then shows the results card for 10 seconds. The former 4-second opening freeze and 5-second delivery freeze have been removed.
 
 Masses, cable geometry, contact parameters, controller gains and four 0–10 N rotor limits remain the same. Both sides experience the same wind and follow the same reference trajectory. The main camera is oriented to expose lateral tracking error. Colored trails show the parcel's actual last three seconds of motion, and a white cross shows the horizontal target at the parcel's current height. These are overlays on unmodified physical poses.
 
@@ -64,4 +66,4 @@ PINO reduces error **77.0% on those five complete paired windows**. This is cond
 
 The movie uses **seed 400**, selected as the first new evaluation seed before the final results. Both flights complete. The baseline parcel's maximum horizontal error reaches **47.7 cm**, versus **11.4 cm** for PINO. Crossing RMSE is **20.17 cm vs 5.99 cm**. Peak sling angles are **46.2° vs 43.4°**: the clearest improvement is the parcel staying closer to its target, not elimination of the wind-induced cable angle. Peak aircraft tilt is **21.2° vs 16.9°**.
 
-[All 24 trial reports, including failures](comparison.json). All **32 tests passed**, including both flight presets, forecast causality and the Navier–Stokes scaling check. The original standard trajectory was rerun and matched exactly, and the original MP4's hash is unchanged. The native macOS viewer passed its smoke test. The scene and motion were inspected from multiple camera angles; all **1,250 frames** of the new MP4 decoded without error. Time spent on this follow-up is recorded separately in the [time log](../../TIME_LOG.md).
+[All 24 trial reports, including failures](comparison.json). All **32 tests passed**, including both flight presets, forecast causality and the Navier–Stokes scaling check. The original standard trajectory was rerun and matched exactly, and the original MP4's hash is unchanged. The native macOS viewer passed its smoke test. The scene and motion were inspected from multiple camera angles; all **1,025 frames** of the trimmed MP4 decoded without error. Time spent on this follow-up is recorded separately in the [time log](../../TIME_LOG.md).

@@ -509,7 +509,14 @@ def record(run_dir, weather_dir, output, seed=300, fps=25, profile=STANDARD):
                 )
             )
         )
-    frames = [0] * (4 * fps) + list(range(count)) + [count - 1] * (5 * fps)
+    intro_hold_s = 0 if profile.name == "aggressive" else 4
+    delivery_hold_s = 0 if profile.name == "aggressive" else 5
+    results_hold_s = 10
+    frames = (
+        [0] * (intro_hold_s * fps)
+        + list(range(count))
+        + [count - 1] * (delivery_hold_s * fps)
+    )
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1920, 1080),
@@ -551,10 +558,12 @@ def record(run_dir, weather_dir, output, seed=300, fps=25, profile=STANDARD):
                 if i == thumbnail_index:
                     frame.save(output.with_suffix(".png"))
                 if n % 100 == 0:
-                    print(f"{n}/{len(frames) + 10 * fps} frames", flush=True)
+                    print(
+                        f"{n}/{len(frames) + results_hold_s * fps} frames", flush=True
+                    )
             card = result_card(reports, comparison, validation, profile)
             card.save(output.parent / "results.png")
-            for _ in range(10 * fps):
+            for _ in range(results_hold_s * fps):
                 writer.send(np.asarray(card))
         finally:
             writer.close()
@@ -562,8 +571,11 @@ def record(run_dir, weather_dir, output, seed=300, fps=25, profile=STANDARD):
         "profile": profile.metadata(),
         "weather": weather.provenance,
         "fps": fps,
-        "frames": len(frames) + 10 * fps,
-        "duration_s": (len(frames) + 10 * fps) / fps,
+        "frames": len(frames) + results_hold_s * fps,
+        "duration_s": (len(frames) + results_hold_s * fps) / fps,
+        "intro_hold_s": intro_hold_s,
+        "delivery_hold_s": delivery_hold_s,
+        "results_hold_s": results_hold_s,
         "flight_speed": 1.0,
         "seed": seed,
         "resolution": [1920, 1080],
