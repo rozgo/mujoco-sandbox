@@ -4,6 +4,16 @@ Robotics simulation demos exploring manipulation, amphibious locomotion, rover c
 
 Explore the demos below. Click a screenshot to watch the video, or open its guide for run instructions, physical assumptions, and measured results.
 
+## Experimental adaptive locomotion
+
+A shared learned controller handles shortened calves, weakened motors and low steps after 329 seconds of training. This experimental branch compares reactive control, a sensor-history estimator and a longer missing-calf fine-tune; the failures are retained alongside the successes.
+
+[![Learned Go2 control over physical low steps with a shortened calf](previews/locomotion/frame-steps.png)](previews/locomotion/reactive_5m30s.mp4)
+
+**[Watch the RL pilot](previews/locomotion/reactive_5m30s.mp4)** · [Results and isolated uv setup](docs/locomotion/README.md) · [History comparison](previews/locomotion/history_vs_reactive.mp4) · [Extra-training comparison](previews/locomotion/extra_training.mp4)
+
+*Real-time motion with three synchronized cameras. Learned joint control follows scripted velocity commands; general parkour and arbitrary-damage recovery remain open.*
+
 ## Learning the wind
 
 A quadrotor carries a suspended parcel through crosswinds, lowers it onto a platform, and releases it. Watch a learned wind forecast and a frozen-field forecast drive the same predictive controller in a matched delivery comparison.

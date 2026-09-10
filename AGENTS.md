@@ -20,6 +20,7 @@ These instructions apply throughout this repository. Follow explicit user instru
 | RC rovers and communications | `src/sixlegs/rovers/` | `rover-comms` | [Rover documentation](docs/rovers/README.md) |
 | Amphibious attachments | `src/sixlegs/amphibious/` | `amphibious` | [Amphibious documentation](docs/amphibious/README.md) |
 | Neural wind and payload delivery | `src/sixlegs/wind/` | `wind-demo` | [Wind documentation](docs/wind/README.md), [aggressive variant](docs/wind/aggressive/README.md) |
+| Experimental adaptive locomotion | `experiments/adaptive_locomotion/` | `adaptive-dog` | [Pilot results and isolated uv commands](docs/locomotion/README.md) |
 
 Use `uv`, `pyproject.toml` and `uv.lock` for Python dependencies. Keep optional stacks in extras. Avoid global Python installs and unrelated dependency upgrades.
 

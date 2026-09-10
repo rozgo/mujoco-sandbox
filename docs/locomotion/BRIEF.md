@@ -16,6 +16,10 @@ Training speed is an acceptance gate. Start with a five-minute cumulative traini
 
 The user subsequently authorized extending the default budget when measured learning progress justifies it. Record the evidence, chosen extension and full cumulative training time; preserve fast learning as the priority. A stalled curve calls for diagnosis rather than automatically adding hours.
 
+> should we consider increase to 10 mins?
+
+Used that allowance for one additional missing-calf experiment, preserving the 329-second policies. Its complete lineage consumed 598.60 seconds. The extension improved missing-calf progress but lost earlier skills; it was not promoted over the shorter policy. See [the measured result](README.md).
+
 ## User direction
 
 > what about partial leg? you see the point? im trying to make a general controller that learns to adapt no matter the state of the dogs leg

@@ -19,6 +19,12 @@ from .evaluate import lane_command, make_case, rollout
 from .train import load_checkpoint
 
 
+def model_hash(model):
+    buffer = np.empty(mujoco.mj_sizeModel(model), dtype=np.uint8)
+    mujoco.mj_saveModel(model, buffer=buffer)
+    return hashlib.sha256(buffer.tobytes()).hexdigest()
+
+
 def font(size):
     for path in (
         "/System/Library/Fonts/Supplemental/Arial.ttf",
@@ -68,6 +74,7 @@ def record(
             result, frames, model = rollout(
                 net, case, trials=1, seconds=seconds, capture=True
             )
+            result["model_mjb_sha256"] = model_hash(model)
             records.append(result)
             data = mujoco.MjData(model)
             option = mujoco.MjvOption()
@@ -168,6 +175,117 @@ def record(
         "camera_pixels_used_by_policy": False,
         "navigation": "scripted lane follower with ideal localization",
         "physics": "CPU MuJoCo through mjbatch, no pose control; recorded states replayed for rendering",
+    }
+    output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
+def compare(left, right, output, case="short_steps", seconds=12, fps=25):
+    """Matched initial conditions and cameras, including unsuccessful rollouts."""
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    runs = []
+    directory = ROOT / "outputs/locomotion/recordings" / output.stem
+    directory.mkdir(parents=True, exist_ok=True)
+    for i, checkpoint in enumerate((left, right)):
+        net, saved = load_checkpoint(checkpoint)
+        outcome, frames, model = rollout(
+            net, case, trials=1, seconds=seconds, capture=True
+        )
+        outcome["model_mjb_sha256"] = model_hash(model)
+        np.savez_compressed(
+            directory / f"policy_{i}.npz",
+            **{key: np.asarray([f[key] for f in frames]) for key in frames[0]},
+        )
+        runs.append((saved, outcome, frames, model, mujoco.MjData(model)))
+    writer = imageio_ffmpeg.write_frames(
+        str(output),
+        (1280, 720),
+        fps=fps,
+        codec="libx264",
+        quality=8,
+        pix_fmt_in="rgb24",
+        pix_fmt_out="yuv420p",
+        output_params=["-movflags", "+faststart"],
+    )
+    writer.send(None)
+    option = mujoco.MjvOption()
+    option.flags[mujoco.mjtVisFlag.mjVIS_RANGEFINDER] = False
+    renderers = [mujoco.Renderer(r[3], height=480, width=640) for r in runs]
+    try:
+        for i in range(round(seconds * fps)):
+            canvas = Image.new("RGB", (1280, 720), (14, 23, 30))
+            draw = ImageDraw.Draw(canvas)
+            title = (
+                "MISSING FRONT-LEFT CALF"
+                if case == "missing_calf"
+                else "SHORTENED CALF / 4, 6, 4 CM STEPS"
+            )
+            draw.text(
+                (24, 15),
+                title + "  |  SAME START, SAME PHYSICS",
+                font=font(25),
+                fill="white",
+            )
+            for j, (saved, outcome, frames, model, data) in enumerate(runs):
+                state = frames[min(round(i / fps / CONTROL_DT), len(frames) - 1)]
+                data.qpos[:] = state["qpos"]
+                data.qvel[:] = state["qvel"]
+                data.time = state["time"]
+                mujoco.mj_forward(model, data)
+                camera = mujoco.MjvCamera()
+                camera.lookat[:] = data.qpos[:3]
+                camera.distance, camera.azimuth, camera.elevation = 1.6, 50, -18
+                renderers[j].update_scene(data, camera=camera, scene_option=option)
+                canvas.paste(Image.fromarray(renderers[j].render()), (j * 640, 105))
+                label = (
+                    "REACTIVE" if saved["mode"] == "blind" else saved["mode"].upper()
+                )
+                draw.text(
+                    (j * 640 + 24, 64),
+                    f"{label} / {saved['cumulative_training_seconds']:.1f} s training",
+                    font=font(26),
+                    fill=(105, 215, 199),
+                )
+                status = (
+                    "5 m COMPLETED"
+                    if state["completed"]
+                    else "5 m TARGET NOT YET REACHED"
+                )
+                if not state["alive"]:
+                    status = "FAILED / NO RESET"
+                draw.text(
+                    (j * 640 + 24, 610),
+                    f"x = {data.qpos[0]:.2f} m  |  {status}",
+                    font=font(20),
+                    fill="white",
+                )
+            draw.text(
+                (24, 672),
+                f"t = {state['time']:.2f} s  |  1x playback  |  Learned joint control; scripted lane commands",
+                font=font(21),
+                fill="white",
+            )
+            writer.send(np.asarray(canvas))
+    finally:
+        writer.close()
+        for renderer in renderers:
+            renderer.close()
+    report = {
+        "case": case,
+        "seconds": seconds,
+        "fps": fps,
+        "contact_profile": "firm",
+        "seed": 9137,
+        "policies": [
+            {
+                "checkpoint": str(path),
+                "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+                "training_seconds": r[0]["cumulative_training_seconds"],
+                "outcome": r[1],
+            }
+            for path, r in zip((left, right), runs, strict=True)
+        ],
     }
     output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
     return report

@@ -38,6 +38,12 @@ def main():
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--case", default="short_fl")
     p.add_argument("--seconds", type=float, default=0)
+    p = sub.add_parser("compare")
+    p.add_argument("--left", type=Path, required=True)
+    p.add_argument("--right", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--case", default="short_steps")
+    p.add_argument("--seconds", type=float, default=12)
     args = parser.parse_args()
     if args.command == "preview":
         print(preview(args.output))
@@ -65,6 +71,12 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         view(**kwargs)
+    elif args.command == "compare":
+        from .record import compare
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        compare(**kwargs)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,69 @@
+{
+  "case": "short_steps",
+  "seconds": 12,
+  "fps": 25,
+  "contact_profile": "firm",
+  "seed": 9137,
+  "policies": [
+    {
+      "checkpoint": "../../assets/locomotion/checkpoints/history_steps_330s_seed0.pt",
+      "sha256": "8f5a2616f876f36498577e7ebd39c8a080c6b6a02b090faa69d9552ccfa020cb",
+      "training_seconds": 329.3489217919996,
+      "outcome": {
+        "case": "short_steps",
+        "seed": 9137,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 0,
+        "mean_distance_m": 1.4919960754078248,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": false,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 1.5153559676772752,
+            "end_distance_before_failure_m": 1.4919960754078248,
+            "velocity_rmse_while_alive": 0.4928270814529298,
+            "peak_actuator_torque_nm": 29.327912834548947,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "model_mjb_sha256": "fe2f926fafc9c7ed7fc3dd66b7a4fa374357939580f507d5f1aa5877915c3b17"
+      }
+    },
+    {
+      "checkpoint": "../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt",
+      "sha256": "071c6af8956704aa896c00825c33407921ed449208380ce2bf357ebb0d44f319",
+      "training_seconds": 329.0513480830123,
+      "outcome": {
+        "case": "short_steps",
+        "seed": 9137,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "mean_distance_m": 7.5168516185512395,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 7.5168516185512395,
+            "end_distance_before_failure_m": 7.5168516185512395,
+            "velocity_rmse_while_alive": 0.0974083164484753,
+            "peak_actuator_torque_nm": 33.02969753943403,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "model_mjb_sha256": "fe2f926fafc9c7ed7fc3dd66b7a4fa374357939580f507d5f1aa5877915c3b17"
+      }
+    }
+  ]
+}
