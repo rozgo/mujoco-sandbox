@@ -20,6 +20,7 @@ from .bodies import (
     initialize,
     joint_mapping,
 )
+from .stride import StrideTracker
 
 OBS_DIM, CONTEXT_DIM, HISTORY = 66, 20, 25
 
@@ -74,6 +75,11 @@ class Group:
         self.support_allowed = np.array(
             [name in allowed_support_names(body) for name in self.support_names]
         )
+        self.tip_geoms = [self.model.geom(n).id for n in allowed_support_names(body)]
+        self.tip_sensors = [
+            self.support_names.index(n) for n in allowed_support_names(body)
+        ]
+        self.geom_positions = self.batch.bind("geom_xpos")
         self.rays = (
             [self.batch.sensor(f"range_{i}") for i in range(9)] if sensing else []
         )
@@ -108,6 +114,7 @@ class DogEnv:
         reward_profile="adaptive",
         support_weight=2.0,
         support_substeps=False,
+        stride_weight=0.0,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
@@ -117,6 +124,9 @@ class DogEnv:
         self.reward_profile = reward_profile
         self.support_weight = support_weight
         self.support_substeps = support_substeps
+        if stride_weight < 0:
+            raise ValueError("Stride weight must be nonnegative")
+        self.stride_weight = stride_weight
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -172,6 +182,9 @@ class DogEnv:
         self.returns = np.zeros(num_envs)
         self.bad_support_force = np.zeros(num_envs)
         self.support_cost = np.zeros(num_envs)
+        self.tip_positions = np.zeros((num_envs, 4, 3))
+        self.tip_forces = np.zeros((num_envs, 4))
+        self.stride = StrideTracker(num_envs)
         self.reset(np.arange(num_envs))
 
     def refresh(self):
@@ -198,6 +211,10 @@ class DogEnv:
             self.support_cost[s] = 0.25 * np.minimum(force / 5, 1).sum(
                 1
             ) + 2 * np.minimum(force.sum(1) / weight, 2)
+            self.tip_positions[s] = g.geom_positions[:, g.tip_geoms]
+            self.tip_forces[s] = np.linalg.norm(
+                g.support_data[:, g.tip_sensors, 1:4], axis=-1
+            )
 
     def reset(self, ids):
         ids = np.asarray(ids, dtype=int)
@@ -248,6 +265,7 @@ class DogEnv:
         self.context[ids, 4:16] = self.strength[ids]
         self.context[ids, 16:] = 1
         self.refresh()
+        self.stride.reset(ids, self.tip_positions, self.tip_forces)
         self.start_x[ids] = self.pos[ids, 0]
         self.max_x[ids] = self.last_x[ids] = self.pos[ids, 0]
         self.history[ids] = self.obs()[ids, None, :]
@@ -338,6 +356,20 @@ class DogEnv:
         reward -= 0.02 * np.sum(self.gyro[:, :2] ** 2, 1)
         reward -= 0.1 * self.vel[:, 2] ** 2
         reward -= self.support_weight * self.support_cost
+        if self.stride_weight:
+            # The task command expressed in world coordinates supplies direction,
+            # not a desired foot trajectory or a phase shared across the legs.
+            world_command = np.empty((self.n, 2))
+            for g, s in zip(self.groups, self.slices, strict=True):
+                rot = rotation(g.qpos[:, 3:7])
+                world_command[s] = np.einsum(
+                    "nij,nj->ni", rot[:, :2, :2], self.commands[s, :2]
+                )
+            speed = np.linalg.norm(world_command, axis=1)
+            direction = world_command / np.maximum(speed[:, None], 1e-8)
+            reward += self.stride_weight * self.stride.update(
+                self.tip_positions, self.tip_forces, direction, speed > 0.15
+            )
         if self.reward_profile == "walk":
             # Healthy-only posture preferences, never a prescribed gait phase or
             # target foot trajectory. These terms leave the adaptive task intact.

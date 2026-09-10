@@ -45,6 +45,7 @@ def train(
     extension_reason="",
     reward_profile="adaptive",
     support_weight=2.0,
+    stride_weight=0.0,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -76,6 +77,7 @@ def train(
         randomize_strength=bodies != "healthy",
         reward_profile=reward_profile,
         support_weight=support_weight,
+        stride_weight=stride_weight,
     )
     ancestry = 0.0
     parent = None
@@ -126,6 +128,7 @@ def train(
         "terrain": terrain,
         "reward_profile": reward_profile,
         "support_weight": support_weight,
+        "stride_weight": stride_weight,
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
         "randomized_motor_strength": bodies != "healthy",
         "epochs": epochs,
