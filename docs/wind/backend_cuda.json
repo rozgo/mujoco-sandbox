@@ -1,0 +1,37 @@
+{
+  "backend": "cuda",
+  "torch": "2.14.0+cu130",
+  "lead_s": 2,
+  "rows": [
+    {
+      "model": "fno",
+      "grid": 64,
+      "max_abs_omega_error": 4.76837158203125e-06
+    },
+    {
+      "model": "fno",
+      "grid": 128,
+      "max_abs_omega_error": 6.794929504394531e-06
+    },
+    {
+      "model": "fno",
+      "grid": 256,
+      "max_abs_omega_error": 7.033348083496094e-06
+    },
+    {
+      "model": "pino",
+      "grid": 64,
+      "max_abs_omega_error": 5.125999450683594e-06
+    },
+    {
+      "model": "pino",
+      "grid": 128,
+      "max_abs_omega_error": 6.198883056640625e-06
+    },
+    {
+      "model": "pino",
+      "grid": 256,
+      "max_abs_omega_error": 8.225440979003906e-06
+    }
+  ]
+}

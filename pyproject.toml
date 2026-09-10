@@ -22,11 +22,21 @@ build-backend = "hatchling.build"
 sixlegs = "sixlegs.cli:main"
 rover-comms = "sixlegs.rovers.cli:main"
 amphibious = "sixlegs.amphibious.cli:main"
+wind-demo = "sixlegs.wind.cli:main"
 
 [project.optional-dependencies]
 reticulum = [
     "rns>=1.5.2,<1.6",
 ]
+wind = [
+    "matplotlib>=3.10,<4",
+    "neuraloperator>=2.0,<3",
+    "scipy>=1.15,<2",
+    "torch>=2.8,<3",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv.sources]
+neuraloperator = { git = "https://github.com/neuraloperator/neuraloperator.git", rev = "00b7d86f8d74ff0af55da53eb585fe26df9c71f0" }
