@@ -43,6 +43,7 @@ def train(
     horizon=24,
     allowance=300,
     extension_reason="",
+    reward_profile="adaptive",
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -71,6 +72,8 @@ def train(
         threads=threads,
         randomize=True,
         faults=bodies != "healthy",
+        randomize_strength=bodies != "healthy",
+        reward_profile=reward_profile,
     )
     ancestry = 0.0
     parent = None
@@ -119,6 +122,8 @@ def train(
         "num_envs": num_envs,
         "bodies": bodies,
         "terrain": terrain,
+        "reward_profile": reward_profile,
+        "randomized_motor_strength": bodies != "healthy",
         "epochs": epochs,
         "horizon": horizon,
         "budget_seconds": seconds,

@@ -63,6 +63,23 @@ def test_foot_drop_does_not_bury_terminal_geometry():
     assert not np.any(data.warning.number)
 
 
+def test_healthy_only_randomization_retains_full_motor_strength():
+    env = DogEnv(
+        16,
+        bodies=[PRESETS["healthy"]],
+        randomize=True,
+        faults=False,
+        randomize_strength=False,
+        reward_profile="walk",
+        threads=1,
+    )
+    for _ in range(5):
+        env.reset(np.arange(env.n))
+        np.testing.assert_array_equal(env.strength, np.ones((16, 12)))
+        assert np.all(env.fault_at > 500)
+    env.close()
+
+
 def test_private_context_and_failure_event_do_not_leak_to_actor():
     env = DogEnv(
         2, bodies=[PRESETS["healthy"]], randomize=False, faults=False, threads=1

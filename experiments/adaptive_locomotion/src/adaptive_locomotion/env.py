@@ -88,9 +88,15 @@ class DogEnv:
         timestep=DT,
         history=HISTORY,
         sensing=None,
+        randomize_strength=True,
+        reward_profile="adaptive",
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
+        if reward_profile not in ("adaptive", "walk"):
+            raise ValueError(reward_profile)
+        self.randomize_strength = randomize_strength
+        self.reward_profile = reward_profile
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -177,11 +183,12 @@ class DogEnv:
             self.commands[ids, 0] = self.rng.uniform(0.3, 0.8, n)
             self.commands[ids, 1] = self.rng.uniform(-0.1, 0.1, n)
             self.commands[ids, 2] = self.rng.uniform(-0.3, 0.3, n)
-            affected = self.rng.random(n) < 0.5
-            j = self.rng.integers(0, 12, n)
-            self.strength[ids[affected], j[affected]] = self.rng.uniform(
-                0.5, 1, affected.sum()
-            )
+            if self.randomize_strength:
+                affected = self.rng.random(n) < 0.5
+                j = self.rng.integers(0, 12, n)
+                self.strength[ids[affected], j[affected]] = self.rng.uniform(
+                    0.5, 1, affected.sum()
+                )
         self.fault_at[ids] = self.rng.integers(100, 300, n) if self.faults else 100000
         self.fault_joint[ids] = self.rng.integers(0, 12, n)
         self.fault_strength[ids] = self.rng.uniform(0.4, 0.8, n)
@@ -289,6 +296,15 @@ class DogEnv:
         )
         reward -= 0.02 * np.sum(self.gyro[:, :2] ** 2, 1)
         reward -= 0.1 * self.vel[:, 2] ** 2
+        if self.reward_profile == "walk":
+            # Healthy-only posture preferences, never a prescribed gait phase or
+            # target foot trajectory. These terms leave the adaptive task intact.
+            reward -= 40 * (self.pos[:, 2] - 0.30) ** 2
+            reward -= 3 * upright
+            reward -= 0.08 * np.sum((self.q - STAND) ** 2, 1)
+            reward -= 0.6 * np.sum((self.q[:, ::3] - STAND[::3]) ** 2, 1)
+            reward -= 0.014 * rate
+            reward -= 0.08 * np.sum(self.gyro[:, :2] ** 2, 1)
         finite = np.isfinite(self.q).all(1) & np.isfinite(self.vel).all(1)
         fell = (self.up[:, 2] < 0.15) | (self.pos[:, 2] < 0.09) | ~finite
         timeout = self.steps >= 500

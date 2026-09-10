@@ -50,6 +50,7 @@ def record(
     trajectory_dir = ROOT / "outputs/locomotion/recordings" / output.stem
     trajectory_dir.mkdir(parents=True, exist_ok=True)
     captions = {
+        "healthy": "Healthy dog / learned walking on level ground",
         "short_fl": "Front-left calf: 70% remaining",
         "unseen_pair": "Two shortened calves: 75% and 65% remaining",
         "unseen_weak": "Front-right thigh torque drops to 25% at t = 3 s",
