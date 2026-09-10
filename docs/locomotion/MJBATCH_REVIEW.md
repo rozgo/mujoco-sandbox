@@ -2,6 +2,8 @@
 
 Reviewed 2026-09-10 UTC. This direction supersedes the proposed SWAP architecture. The completed work is a dependency/source audit and a bounded benchmark of an upstream example, not a three-legged policy or a new simulation goal.
 
+The user has since expanded the objective to partial geometry and general adaptation across body states. The current [brief](BRIEF.md) and [implementation plan](ADAPTIVE_LOCOMOTION_PLAN.md) supersede the narrower next-experiment proposal below; the benchmark remains unchanged.
+
 ## User direction
 
 > SWAP doesnt seem mature enough, and im not convinced the simmetry is a good thing... what if we want the dog to learn to walk with three legsm after it lost one... i want something more generic, and I want something it can learn in a few minutes... check https://github.com/kevinzakka/mjbatch it says it can train fast

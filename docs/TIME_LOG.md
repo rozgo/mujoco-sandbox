@@ -151,3 +151,11 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Added a rule to review public artifacts for private context before committing or publishing. Cleaned both development clones, pruned old reflogs and unreachable Git objects, and verified zero matches across all 344 remaining Git objects in each clone.
 - Recreated the public GitHub repository under the same name at the user's request, with only `main` to be published. Uploaded all **85 Git LFS assets, approximately 221 MB**, to the new repository. The old raw-file URLs checked after recreation returned HTTP 404. No support request was submitted.
 - Elapsed to publication preparation: **11 minutes 18 seconds**, including review, history rewriting, synchronization, repository recreation, and asset transfer. Simulation time: **0 s**; training time: **0 s**; rendering time: **0 s**. No simulation behavior or media changed; physics tests were not rerun.
+
+## Follow-up: general adaptation plan for partial leg damage
+
+- Started **2026-09-10 06:41:02 UTC**; research, plan and document checks completed **2026-09-10 06:48:07 UTC**, before commit and synchronization.
+- Expanded the user brief from leg-count variants to one controller adapting across partial geometry, restricted joints, degraded actuation and unseen combinations. Saved the implementation plan and linked it from the existing mjbatch review.
+- Read the August 2026 embodiment-adaptation paper and current official learner/modeling references. Inspected existing scene composition, Go2 properties, dependency constraints and mjbatch model/state handling. Identified observability, realistic stump/inertia modeling, topology batching, native servo/sensing cost, estimator feedback errors and evaluation leakage as implementation risks.
+- Defined staged body/terrain curricula, sensor and policy interfaces, a current-tool integration strategy, optimizer comparison gates, held-out evaluation and proposed success criteria. No new environment, policy or video was implemented; no training goal was started.
+- Checked three documents, six local links, code fences and whitespace. Recorded interval: **7 minutes 5 seconds**. Simulation time: **0 s**; training time: **0 s**; rendering time: **0 s**. Physics tests were not rerun for this documentation-only work.
