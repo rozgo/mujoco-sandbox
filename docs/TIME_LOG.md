@@ -116,6 +116,15 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Elapsed to setup verification: **6 minutes 9 seconds**.
 
 
+## Follow-up: SWAP parkour research and environment proposal
+
+- First recorded timestamp for this follow-up: **2026-09-10 05:43:38 UTC**. Research and proposal checks completed **2026-09-10 05:56:54 UTC**, before commit and synchronization. Earlier RL-method discussion and initial reading before the first timestamp are excluded.
+- Read the SWAP paper, inspected its public project repository and sampled its gap, climbing and architecture videos. Recorded missing reproduction dependencies and separated author results from our proposed implementation.
+- Audited the existing Go2 model's mass, actuator count and bilateral symmetry. Identified a front-calf collision discrepancy and a small base-inertia asymmetry; vendor assets remain unchanged.
+- Saved the user's direction and a proposed terrain, sensor, learning, evaluation and video specification in `docs/parkour/`. Checked local documentation links and whitespace. No parkour scene or policy was built, no learning dependencies were installed, and no training was run.
+- Recorded research interval: **13 minutes 16 seconds**. This is research/documentation elapsed time, not training time or a completed simulation goal.
+
+
 ## Follow-up: demo gallery README
 
 - Started **2026-09-10 05:47:35 UTC**; content and verification completed **2026-09-10 05:50:59 UTC**.
