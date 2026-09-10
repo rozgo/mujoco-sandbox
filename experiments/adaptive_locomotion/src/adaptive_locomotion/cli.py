@@ -27,6 +27,15 @@ def main():
     p.add_argument("--cases", default="all")
     p.add_argument("--trials", type=int, default=16)
     p.add_argument("--seconds", type=float, default=12)
+    p = sub.add_parser("record")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--cases", default="short_fl,unseen_pair,unseen_weak,short_steps")
+    p.add_argument("--seconds", type=float, default=12)
+    p = sub.add_parser("view")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--case", default="short_fl")
+    p.add_argument("--seconds", type=float, default=0)
     args = parser.parse_args()
     if args.command == "preview":
         print(preview(args.output))
@@ -42,6 +51,18 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         evaluate(**kwargs)
+    elif args.command == "record":
+        from .record import record
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        record(**kwargs)
+    elif args.command == "view":
+        from .record import view
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        view(**kwargs)
 
 
 if __name__ == "__main__":

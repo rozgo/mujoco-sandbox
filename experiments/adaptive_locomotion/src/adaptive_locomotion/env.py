@@ -110,7 +110,7 @@ class DogEnv:
                     n,
                     max(1, threads // len(self.bodies)),
                     terrain,
-                    terrain != "flat" if sensing is None else sensing,
+                    True if sensing is None else sensing,
                     timestep,
                 )
             )
