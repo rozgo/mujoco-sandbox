@@ -125,6 +125,7 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
                     "strength": env.strength[0].copy(),
                     "context": env.context[0].copy(),
                     "alive": bool(alive[0]),
+                    "completed": bool(completed[0]),
                 }
             )
     rows = []

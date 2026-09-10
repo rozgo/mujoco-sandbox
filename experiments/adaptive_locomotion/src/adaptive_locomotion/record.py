@@ -1,5 +1,6 @@
 """Record genuine rollouts and render synchronized observer cameras."""
 
+import hashlib
 import json
 import os
 import sys
@@ -47,6 +48,8 @@ def record(
         "unseen_pair": "Two shortened calves: 75% and 65% remaining",
         "unseen_weak": "Front-right thigh torque drops to 25% at t = 3 s",
         "short_steps": "Shortened calf over physical 4 / 6 / 4 cm steps",
+        "unseen_steps": "Shortened calf over physical 6 / 9 / 6 cm steps",
+        "missing_calf": "Front-left calf and its joint removed",
     }
     writer = imageio_ffmpeg.write_frames(
         str(output),
@@ -59,7 +62,7 @@ def record(
         output_params=["-movflags", "+faststart"],
     )
     writer.send(None)
-    title_font, body_font = font(29), font(20)
+    title_font, body_font = font(27), font(20)
     try:
         for case in cases.split(","):
             result, frames, model = rollout(
@@ -122,7 +125,7 @@ def record(
                     )
                     draw.text(
                         (24, 575),
-                        f"{saved['mode'].upper()} POLICY   |   {saved['cumulative_training_seconds']:.1f} s total training",
+                        f"{'REACTIVE' if saved['mode'] == 'blind' else saved['mode'].upper()} POLICY   |   {saved['cumulative_training_seconds']:.1f} s total training",
                         font=title_font,
                         fill=(105, 215, 199),
                     )
@@ -132,7 +135,9 @@ def record(
                         font=body_font,
                         fill="white",
                     )
-                    status = "RUNNING" if state["alive"] else "TRIAL FAILED — NO RESET"
+                    status = "5 m COMPLETED" if state["completed"] else "RUNNING"
+                    if not state["alive"]:
+                        status = "TRIAL FAILED — NO RESET"
                     draw.text(
                         (24, 660),
                         f"{status}  |  1x playback  |  Learned locomotion; scripted lane commands",
@@ -153,6 +158,8 @@ def record(
         writer.close()
     report = {
         "checkpoint": str(checkpoint),
+        "checkpoint_sha256": hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
+        "contact_profile": "firm: solref=.006 1; solimp=.95 .99 .001",
         "policy_training_seconds": saved["cumulative_training_seconds"],
         "fps": fps,
         "frames": count,

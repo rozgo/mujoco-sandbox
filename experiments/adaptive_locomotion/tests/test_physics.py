@@ -7,6 +7,7 @@ from adaptive_locomotion.bodies import (
     PRESETS,
     STAND,
     build_model,
+    initialize,
 )
 from adaptive_locomotion.env import OBS_DIM, DogEnv
 
@@ -45,6 +46,21 @@ def test_scalar_batch_native_servo_agreement(body):
         np.testing.assert_allclose(group.qvel[0], data.qvel, atol=1e-9, rtol=1e-9)
     assert env.obs().shape == (1, OBS_DIM)
     env.close()
+
+
+def test_foot_drop_does_not_bury_terminal_geometry():
+    model = build_model(PRESETS["short_fl"], sensing=False)
+    data = mujoco.MjData(model)
+    initialize(model, data)
+    data.qpos[2] += 0.06
+    data.ctrl[:] = STAND
+    worst = 0.0
+    for _ in range(1000):
+        mujoco.mj_step(model, data)
+        if data.ncon:
+            worst = min(worst, float(np.min(data.contact.dist)))
+    assert worst > -0.008
+    assert not np.any(data.warning.number)
 
 
 def test_private_context_and_failure_event_do_not_leak_to_actor():

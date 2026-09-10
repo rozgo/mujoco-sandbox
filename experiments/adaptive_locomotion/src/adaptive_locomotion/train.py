@@ -11,6 +11,7 @@ import subprocess
 import time
 from pathlib import Path
 
+import mujoco
 import numpy as np
 import torch
 from torch import nn
@@ -139,6 +140,11 @@ def train(
         "python": platform.python_version(),
         "torch": torch.__version__,
         "physics": "CPU MuJoCo/mjbatch",
+        "mujoco": mujoco.__version__,
+        "contact_profile": "firm",
+        "threads": threads,
+        "physics_timestep_s": env.timestep,
+        "control_timestep_s": 0.02,
         "setup_seconds": time.perf_counter() - setup_start,
     }
     (output / "config.json").write_text(json.dumps(config, indent=2) + "\n")

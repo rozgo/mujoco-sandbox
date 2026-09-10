@@ -53,7 +53,9 @@ def add(parent, tag, **attrs):
     return ET.SubElement(parent, tag, {k: str(v) for k, v in attrs.items()})
 
 
-def build_model(body=None, terrain="flat", timestep=DT, sensing=True):
+def build_model(
+    body=None, terrain="flat", timestep=DT, sensing=True, contact_profile="firm"
+):
     body = body or BodySpec()
     root = ET.parse(VENDOR / "go2.xml").getroot()
     root.set("model", "adaptive_go2_" + body.name)
@@ -215,7 +217,7 @@ def build_model(body=None, terrain="flat", timestep=DT, sensing=True):
     add(sensor, "gyro", name="gyro", site="imu")
     add(sensor, "velocimeter", name="velocity_truth", site="imu")
     # Range sensors point down and forward from a mast on the body. Native rays
-    # intersect physical collision geoms; returned distances are delivered at 20 Hz.
+    # intersect scene geometry; returned distances are delivered at 20 Hz.
     for i, (x, y) in enumerate(
         (x, y) for x in (0.25, 0.55, 0.85) for y in (-0.2, 0, 0.2)
     ):
@@ -250,6 +252,16 @@ def build_model(body=None, terrain="flat", timestep=DT, sensing=True):
         xyaxes="1 0 0 0 .52 .85",
         fovy="58",
     )
+    if contact_profile not in ("firm", "legacy_soft"):
+        raise ValueError(contact_profile)
+    if contact_profile == "firm":
+        # Newly composed feet otherwise inherit MuJoCo's 20 ms contact time
+        # constant, permitting centimetres of penetration. Set every physical
+        # surface explicitly, including the floor, obstacle and stump surfaces.
+        for geom in world.iter("geom"):
+            if geom.get("class") == "visual" or geom.get("contype") == "0":
+                continue
+            geom.attrib.update(solref=".006 1", solimp=".95 .99 .001", margin="0")
     spec = mujoco.MjSpec.from_string(ET.tostring(root, encoding="unicode"))
     model = spec.compile()
     model.vis.global_.bvactive = 0
