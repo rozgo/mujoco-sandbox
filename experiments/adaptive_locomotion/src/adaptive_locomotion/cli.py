@@ -35,6 +35,7 @@ def main():
     p.add_argument("--learning-rate", type=float, default=0.001)
     p.add_argument("--pair-level", choices=("mild", "hard"))
     p.add_argument("--limb-stage", choices=("one", "lower", "whole"))
+    p.add_argument("--neutralize-validity", choices=("all", "hips_thighs"))
     p.add_argument("--single-reference", type=Path)
     p.add_argument("--single-reference-weight", type=float, default=0.0)
     p = sub.add_parser("evaluate")

@@ -58,6 +58,7 @@ def train(
     single_reference=None,
     single_reference_weight=0.0,
     limb_stage=None,
+    neutralize_validity=None,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -123,6 +124,20 @@ def train(
             )
     else:
         learner = Policy(mode)
+    if neutralize_validity:
+        # Healthy pretraining never changes these bits: their normalized inputs
+        # are exactly zero and the corresponding random weights are untrained.
+        # Neutral initialization avoids an arbitrary 10-sigma reaction when a
+        # new joint disappears; subsequent PPO updates learn these weights.
+        slots = [j for j in range(12) if neutralize_validity == "all" or j % 3 != 2]
+        columns = [45 + j for j in slots]
+        if not torch.all(learner.mean[columns] == 1):
+            raise ValueError(
+                "Only previously constant validity channels may be neutralized"
+            )
+        with torch.no_grad():
+            learner.actor[0].weight[:, columns] = 0
+            learner.critic[0].weight[:, columns] = 0
     actor = copy.deepcopy(learner).to(actor_device)
     learner = learner.to(device)
     teacher = None
@@ -183,6 +198,7 @@ def train(
         "retention_curriculum": retention_curriculum,
         "pair_level": pair_level,
         "limb_stage": limb_stage,
+        "neutralize_validity": neutralize_validity,
         "single_reference_checkpoint": str(
             Path(single_reference).resolve().relative_to(ROOT)
         )
