@@ -40,9 +40,13 @@ def train(
     threads=16,
     epochs=4,
     horizon=24,
+    allowance=300,
+    extension_reason="",
 ):
-    if not 0 < seconds <= 300:
-        raise ValueError("Each policy is limited to 300 total training seconds")
+    if not 0 < seconds <= allowance:
+        raise ValueError("Invalid training duration for the chosen allowance")
+    if allowance > 300 and not extension_reason:
+        raise ValueError("An extension requires a recorded learning-based reason")
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
@@ -72,9 +76,9 @@ def train(
     if resume:
         learner, parent = load_checkpoint(resume, mode)
         ancestry = float(parent["cumulative_training_seconds"])
-        if ancestry + seconds > 300.01:
+        if ancestry + seconds > allowance + 0.01:
             raise ValueError(
-                f"Resume exceeds 300-second lineage budget ({ancestry:.2f}+{seconds})"
+                f"Resume exceeds {allowance}-second lineage budget ({ancestry:.2f}+{seconds})"
             )
     else:
         learner = Policy(mode)
@@ -117,6 +121,8 @@ def train(
         "epochs": epochs,
         "horizon": horizon,
         "budget_seconds": seconds,
+        "total_allowance_seconds": allowance,
+        "extension_reason": extension_reason,
         "ancestry_seconds": ancestry,
         "device": device,
         "actor_device": actor_device,
@@ -162,7 +168,7 @@ def train(
     transitions = 0
     records = []
     start = time.perf_counter()
-    deadline = start + min(seconds, 300 - ancestry) - 0.2
+    deadline = start + min(seconds, allowance - ancestry) - 0.8
     save("initial.pt", 0)
     while time.perf_counter() < deadline:
         rollout_start = time.perf_counter()
@@ -179,6 +185,7 @@ def train(
             actions = mean + np.exp(log_std) * noise
             logp = log_density(noise, log_std)
             reward, done, fell, terms = env.step(actions)
+            raw_reward = float(reward.mean())
             timeout = done & ~fell
             if timeout.any():
                 ex = np.concatenate((env.vel, env.pos[:, 2:3]), 1).astype(np.float32)
@@ -198,9 +205,7 @@ def train(
                 vals["hist"] = history
             for k, v in vals.items():
                 buf[k][t] = v
-            metrics.append(
-                [terms["track"].mean(), terms["speed"].mean(), reward.mean()]
-            )
+            metrics.append([terms["track"].mean(), terms["speed"].mean(), raw_reward])
             falls += fell.sum()
             completed += done.sum()
             env.reset(np.flatnonzero(done))

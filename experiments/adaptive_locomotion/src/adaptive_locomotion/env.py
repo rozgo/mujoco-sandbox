@@ -51,6 +51,7 @@ class Group:
             self.batch.bind(k) for k in ("qpos", "qvel", "ctrl")
         )
         self.torque = self.batch.bind("actuator_force")
+        self.warnings = self.batch.bind("warning")
         self.slot, self.qadr, self.dadr, self.aadr = joint_mapping(self.model)
         self.gain, self.bias, self.force_range = (
             self.batch.expand(k)
@@ -257,6 +258,10 @@ class DogEnv:
             )
         else:
             self.groups[0].batch.step(nstep=self.decimation)
+        if any(np.any(g.warnings[:, :, 1]) for g in self.groups):
+            raise FloatingPointError(
+                "MuJoCo numerical warning; refusing an automatically corrected trajectory"
+            )
         self.steps += 1
         previous_scan = self.scan.copy()
         self.refresh()

@@ -21,6 +21,8 @@ def main():
     p.add_argument("--device", default="auto", choices=("auto", "cpu", "mps", "cuda"))
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--epochs", type=int, default=4)
+    p.add_argument("--allowance", type=float, default=300)
+    p.add_argument("--extension-reason", default="")
     p = sub.add_parser("evaluate")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
