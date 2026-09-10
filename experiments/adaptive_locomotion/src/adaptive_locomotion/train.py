@@ -59,6 +59,7 @@ def train(
     single_reference_weight=0.0,
     limb_stage=None,
     neutralize_validity=None,
+    initial_std=None,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -124,6 +125,11 @@ def train(
             )
     else:
         learner = Policy(mode)
+    if initial_std is not None:
+        if not 0 < initial_std <= 1:
+            raise ValueError("Initial exploration std must be in (0, 1]")
+        with torch.no_grad():
+            learner.log_std.fill_(float(np.log(initial_std)))
     if neutralize_validity:
         # Healthy pretraining never changes these bits: their normalized inputs
         # are exactly zero and the corresponding random weights are untrained.
@@ -199,6 +205,7 @@ def train(
         "pair_level": pair_level,
         "limb_stage": limb_stage,
         "neutralize_validity": neutralize_validity,
+        "initial_std": initial_std,
         "single_reference_checkpoint": str(
             Path(single_reference).resolve().relative_to(ROOT)
         )

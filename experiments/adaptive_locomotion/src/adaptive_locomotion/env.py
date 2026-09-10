@@ -415,6 +415,9 @@ class DogEnv:
             - 0.006 * rate
         )
         reward -= 0.02 * np.sum(self.gyro[:, :2] ** 2, 1)
+        if self.limb_stage == "front":
+            # Escape the valid-but-stationary solution in the focused extension.
+            reward += 0.7 * progress * (self.context[:, :4] < 1).any(1)
         reward -= 0.1 * self.vel[:, 2] ** 2
         reward -= self.support_weight * self.support_cost
         if self.balance_weight:

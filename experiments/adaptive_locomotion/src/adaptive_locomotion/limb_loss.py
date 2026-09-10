@@ -24,6 +24,14 @@ def curriculum(stage, n):
         return [PRESETS["healthy"], *LOSS_BODIES], [n // 4] + [n // 16] * 4 + [
             n // 8
         ] * 4
+    if stage == "front":
+        small = n // 32
+        healthy = n // 4
+        focus = (n - healthy - 6 * small) // 2
+        counts = [n - 6 * small - 2 * focus] + [
+            focus if b.name in ("lower_fr", "whole_fr") else small for b in LOSS_BODIES
+        ]
+        return [PRESETS["healthy"], *LOSS_BODIES], counts
     raise ValueError(stage)
 
 
