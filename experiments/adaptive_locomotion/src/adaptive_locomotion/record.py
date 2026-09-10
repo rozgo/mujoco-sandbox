@@ -35,6 +35,23 @@ def font(size):
     return ImageFont.load_default(size=size)
 
 
+def foot_contact_strip(draw, x, y, state, outcome):
+    """Observer-only indicators: force exceeded 1 N within this control window."""
+    draw.text((x, y), "CONTACT", font=font(14), fill="white")
+    names = outcome["support_geom_names"]
+    for i, leg in enumerate(("FL", "FR", "RL", "RR")):
+        name = next(
+            n for n in outcome["allowed_support_geom_names"] if n.startswith(leg)
+        )
+        loaded = state["support_peak_forces_n"][names.index(name)] > 1
+        bx = x + 82 + i * 65
+        draw.ellipse(
+            (bx, y + 2, bx + 12, y + 14),
+            fill=(105, 215, 199) if loaded else (60, 65, 70),
+        )
+        draw.text((bx + 18, y), leg, font=font(14), fill="white")
+
+
 def record(
     checkpoint,
     output,
@@ -60,6 +77,8 @@ def record(
     }
     if saved["config"].get("stride_weight", 0):
         captions["healthy"] = "Healthy dog / longer strides on level ground"
+    if saved["config"].get("balance_weight", 0):
+        captions["healthy"] = "Healthy dog / stance and swing balance rewards"
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1280, 720),
@@ -150,6 +169,7 @@ def record(
                         fill="white",
                     )
                     status = "5 m COMPLETED" if state["completed"] else "RUNNING"
+                    foot_contact_strip(draw, 900, 625, state, result)
                     if not state["alive"]:
                         status = "TRIAL FAILED — NO RESET"
                     elif not state["support_valid"]:
@@ -268,6 +288,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                                 if saved["config"].get("stride_weight", 0)
                                 else "ORIGINAL STRIDES"
                             )
+                        if any(r[0]["config"].get("balance_weight", 0) for r in runs):
+                            label = (
+                                "BALANCE REWARDS"
+                                if saved["config"].get("balance_weight", 0)
+                                else "LONGER STRIDES"
+                            )
                 draw.text(
                     (j * 640 + 24, 64),
                     f"{label} / {saved['cumulative_training_seconds']:.1f} s training",
@@ -289,6 +315,7 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                     font=font(20),
                     fill="white",
                 )
+                foot_contact_strip(draw, j * 640 + 24, 642, state, outcome)
             draw.text(
                 (24, 672),
                 f"t = {state['time']:.2f} s  |  1x playback  |  Learned joint control; scripted lane commands",

@@ -38,7 +38,7 @@ From the repository root:
 ```sh
 git lfs pull
 cd experiments/adaptive_locomotion
-uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk --style longer
 # The previous good version remains directly available:
 uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk --style compact
 ```
@@ -53,6 +53,6 @@ uv tool run --from uv==0.12.12 uv run --locked adaptive-dog train \
   --resume ../../assets/locomotion/checkpoints/healthy_feet_210s_seed2.pt
 ```
 
-Wall-time budgets can yield different update counts on different machines; resuming restarts Adam. The compact policy and previous videos are unchanged. `--stride-weight 0` is the training default; this optional style was only trained and validated on the healthy body.
+Wall-time budgets can yield different update counts on different machines; resuming restarts Adam. The compact policy and previous videos are unchanged. The default `walk` now selects the subsequent [gait-balance refinement](BALANCED_GAIT.md); `--style longer` retains this 298-second version. `--stride-weight 0` is the training default; this optional style was only trained and validated on the healthy body.
 
 **54 tests passed**, including preference for longer forward swings, no reward for hovering/sliding, reset-state handling, original support-force tests and the native batch suite. CPU/MPS action disagreement was below **9.54e-7**. The native macOS viewer passed a five-second check. Both videos play at 1×, 1280×720, 25 fps, twelve seconds; all **600 frames** decode. Opening, stride and final frames were visually checked. Following, head and overview cameras are synchronized observer output. [Delivery checks](LONGER_STRIDE_DELIVERY.json), [elapsed time](../TIME_LOG.md).
