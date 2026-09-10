@@ -2,6 +2,8 @@
 
 Research date: 2026-09-10 UTC. This is an engineering proposal, not a reproduction result or a tested training configuration.
 
+Superseded as the immediate direction by [rapid body-change adaptation](../locomotion/MJBATCH_REVIEW.md). Terrain-generation ideas may remain useful, but the user no longer wants the SWAP-specific symmetry architecture.
+
 ## Evidence and reproduction boundary
 
 The [SWAP paper](https://arxiv.org/html/2606.19928v1) describes a 72 kg Apollo, an adversarial motion prior, privileged training signals, and approximately ten hours of training on an RTX 4090. Inspect Figure 2 and Tables I–II for the sensor/network interfaces; Section III-D for rewards and curriculum; Section IV for experiments. These are author-reported results, not estimates for our implementation.

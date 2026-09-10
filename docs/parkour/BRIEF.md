@@ -2,6 +2,8 @@
 
 Status: research and proposed environment design, 2026-09-10 UTC. No parkour environment or policy has been implemented or trained.
 
+Later steering: the user moved to generic body-change adaptation and minute-scale learning. See [mjbatch review](../locomotion/MJBATCH_REVIEW.md). The SWAP-specific architecture below is preserved as research history, not the current implementation direction.
+
 ## User direction
 
 > SWAP for real quadruped parkor is absolutely what we want now. This is the type of innovation im looking for. Lets dig deeper here. This affects the environments we want to build.

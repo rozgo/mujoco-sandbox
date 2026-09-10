@@ -132,3 +132,14 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Preserved the Sixlegs controls, recording commands, platform notes, implementation map, and evidence links in `docs/hexapod/README.md`; added the guide to the `AGENTS.md` repository map.
 - Verified **43 local links**, **11 available PNG/MP4 assets**, all four CLI help entry points and documented launch flags, Git LFS integrity, and whitespace. Existing screenshots were visually reviewed during the preceding proposal; no media files changed.
 - Elapsed for this implementation follow-up: **3 minutes 24 seconds**, excluding the earlier proposal and intervening wait. Simulation time: **0 s**; training time: **0 s**; media rendering time: **0 s**. Physics tests and viewer runs were not repeated for this documentation-only change.
+
+
+## Follow-up: mjbatch source audit and minute-scale training benchmark
+
+- Started **2026-09-10 06:04:57 UTC**; research, benchmark and report checks completed **2026-09-10 06:17:47 UTC**, before commit and synchronization.
+- Inspected mjbatch's batching implementation, dependency pins and Go1 example. Recorded the example's trot reward, mirrored-action policy and simplified contact scope; revised the immediate direction toward body-change adaptation.
+- Built an isolated checkout using uv 0.12.12, Python 3.14.7, MuJoCo 3.13.0 and PyTorch 2.14.0. Removed its obsolete CUDA package index for current dependency resolution. All 38 upstream tests passed; existing project dependencies were unchanged.
+- Ran **60.0123 seconds** of Go1 PPO training from random weights on the M3 Max: CPU simulation/actor, MPS learner, 294 updates and 7,225,344 control transitions. No RTX training was used.
+- Evaluated matched initial/final policies on 16 predetermined ten-second trials. Upright survival was 12/16 then 16/16; forward velocity RMSE on four complete paired trials changed from 0.7200 to 0.1532 m/s. Inspected rendered trained-policy poses. This does not demonstrate three-leg adaptation.
+- Saved a source review, measured report and proposed adaptation experiment. Marked the earlier SWAP-specific plan as superseded. Documentation links, JSON consistency and whitespace checks passed.
+- Elapsed research/setup/benchmark interval: **12 minutes 50 seconds**. Training time is the separate 60.0123-second measurement above.
