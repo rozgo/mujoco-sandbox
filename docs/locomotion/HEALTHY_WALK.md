@@ -20,3 +20,65 @@ as well as scheduled faults.
 Start with 60 seconds of PPO using 512 batched environments, CPU MuJoCo and an MPS
 learner. Continue only if evaluation indicates more training is useful, keeping
 the complete checkpoint ancestry within the agreed short-run allowance.
+
+## Result
+
+**[Watch the healthy dog](../../previews/locomotion/healthy_walk.mp4)** · [Compare with the earlier generalist](../../previews/locomotion/healthy_vs_generalist.mp4)
+
+The selected policy trained from random weights for **119.161 seconds total**
+(59.642 s plus 59.519 s), collecting **2,801,664 control transitions**. No teacher,
+vendor walking policy or pretrained checkpoint was used. Training ran on the Mac:
+512 native CPU environments and MPS neural-network updates, with the corrected
+firm contact model throughout.
+
+It completed **64/64** fresh-seed, twelve-second healthy trials and **16/16** at
+half the physics timestep, reaching 5 m and staying controlled for one second.
+This is one training seed on level ground. [Full final evaluation](HEALTHY_VALIDATION.json).
+
+In the inspected rollout, mean body height is **27.7 cm**, versus **21.4 cm** for
+the earlier generalist on the same healthy body. All four terminal feet make and
+break ground contact: measured support fractions are 34%, 58%, 65% and 22%.
+There is no sampled trunk-ground contact, maximum sampled penetration is 3.44 mm,
+and actuator torque remains within the same hardware limits. The gait is still
+asymmetric; we have not imposed a canonical footfall pattern or validated it on
+hardware. The command remains a scripted lane-following velocity request.
+
+An additional minute reduced the inspected rollout's forward-speed RMSE from
+0.254 to 0.126 m/s; it still travels faster than the 0.55 m/s request on average.
+Both one- and two-minute checkpoints are retained, along with their training and
+development reports. The comparison is between different training tasks and
+budgets, not an algorithm ablation.
+
+## Watch or retrain
+
+From the repository root:
+
+```sh
+git lfs pull
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk
+```
+
+`walk --seconds 5` is a bounded viewer check. The shortcut selects
+`assets/locomotion/checkpoints/healthy_walk_120s_seed2.pt` and the healthy scene.
+The native Mac launcher was tested.
+
+To reproduce the experiment with a new seed:
+
+```sh
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog train \
+  --output ../../outputs/locomotion/healthy_seed3 --seconds 120 \
+  --mode blind --bodies healthy --terrain flat --reward-profile walk \
+  --seed 3 --num-envs 512 --threads 16
+```
+
+This fresh 120-second run has a different seed and no intermediate optimizer
+restart, so it is a new experiment rather than a bitwise reproduction. Exact
+staged settings, source commits, checkpoint hashes and parent links are in
+[the 60-second report](runs/healthy_walk_60s_seed2.json) and
+[the selected policy report](runs/healthy_walk_120s_seed2.json).
+
+Both 12-second videos use actual recorded trajectories at 1×, 1280×720 and
+25 fps. The main video has synchronized following, head and overview cameras;
+camera pixels are not actor inputs. All 600 encoded frames decoded successfully.
+The project plus vendored batch suite passed **48 tests**.

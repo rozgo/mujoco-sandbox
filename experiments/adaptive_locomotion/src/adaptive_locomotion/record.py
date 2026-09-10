@@ -106,6 +106,10 @@ def record(
                         90,
                         -58,
                     )
+                    if case == "healthy":
+                        course_end = float(frames[-1]["qpos"][0])
+                        overview.lookat[0] = max(3, course_end * 0.5)
+                        overview.distance = max(7.4, course_end * 1.25)
                     small.update_scene(data, camera=overview, scene_option=option)
                     canvas.paste(Image.fromarray(small.render()), (854, 310))
                     draw = ImageDraw.Draw(canvas)
@@ -242,6 +246,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                 label = (
                     "REACTIVE" if saved["mode"] == "blind" else saved["mode"].upper()
                 )
+                if case == "healthy":
+                    label = (
+                        "HEALTHY WALKING"
+                        if saved["config"]["bodies"] == "healthy"
+                        else "GENERALIST"
+                    )
                 draw.text(
                     (j * 640 + 24, 64),
                     f"{label} / {saved['cumulative_training_seconds']:.1f} s training",

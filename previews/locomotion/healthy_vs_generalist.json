@@ -1,0 +1,69 @@
+{
+  "case": "healthy",
+  "seconds": 12,
+  "fps": 25,
+  "contact_profile": "firm",
+  "seed": 9137,
+  "policies": [
+    {
+      "checkpoint": "../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt",
+      "sha256": "071c6af8956704aa896c00825c33407921ed449208380ce2bf357ebb0d44f319",
+      "training_seconds": 329.0513480830123,
+      "outcome": {
+        "case": "healthy",
+        "seed": 9137,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "mean_distance_m": 7.097921854467012,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 7.097921854467012,
+            "end_distance_before_failure_m": 7.097921854467012,
+            "velocity_rmse_while_alive": 0.06969026779792678,
+            "peak_actuator_torque_nm": 33.96181339748719,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "model_mjb_sha256": "8893dc4c141e5d5f28610a8c5a9966a68ace5543ad98002cba636576ee20cd84"
+      }
+    },
+    {
+      "checkpoint": "../../assets/locomotion/checkpoints/healthy_walk_120s_seed2.pt",
+      "sha256": "68117e808419073fa6aa551cafc6c8ca230a771ab4e3c4e05036838c353047df",
+      "training_seconds": 119.16119224997237,
+      "outcome": {
+        "case": "healthy",
+        "seed": 9137,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "mean_distance_m": 7.925348622689486,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 7.925348622689486,
+            "end_distance_before_failure_m": 7.925348622689486,
+            "velocity_rmse_while_alive": 0.12557402263005116,
+            "peak_actuator_torque_nm": 23.471003300799083,
+            "peak_torque_limit_ratio": 0.981955162963185
+          }
+        ],
+        "model_mjb_sha256": "8893dc4c141e5d5f28610a8c5a9966a68ace5543ad98002cba636576ee20cd84"
+      }
+    }
+  ]
+}

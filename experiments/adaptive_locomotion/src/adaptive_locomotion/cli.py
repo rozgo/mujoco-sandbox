@@ -39,6 +39,8 @@ def main():
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--case", default="short_fl")
     p.add_argument("--seconds", type=float, default=0)
+    p = sub.add_parser("walk", help="View the dedicated healthy-only walking policy")
+    p.add_argument("--seconds", type=float, default=0)
     p = sub.add_parser("compare")
     p.add_argument("--left", type=Path, required=True)
     p.add_argument("--right", type=Path, required=True)
@@ -72,6 +74,14 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         view(**kwargs)
+    elif args.command == "walk":
+        from .record import view
+
+        view(
+            ROOT / "assets/locomotion/checkpoints/healthy_walk_120s_seed2.pt",
+            case="healthy",
+            seconds=args.seconds,
+        )
     elif args.command == "compare":
         from .record import compare
 

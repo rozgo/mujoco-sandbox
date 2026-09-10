@@ -8,6 +8,8 @@ Implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned
 
 All clips play at **1×** from actual MuJoCo rollouts. The main video uses the same checkpoint for all four cases, with following, head and overview cameras. RGB is observer output, not policy input. The comparison clips retain incomplete trials. This is useful locomotion traction, **not general quadruped parkour or arbitrary-damage recovery**.
 
+For a normal, intact dog, use the separate **[healthy walking baseline](HEALTHY_WALK.md)**, trained from random weights in 119 seconds. [Watch it walk](../../previews/locomotion/healthy_walk.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
+
 ## Run on Mac or Linux
 
 From the repository root:
