@@ -1,99 +1,77 @@
-# Sixlegs
+# MuJoCo Sandbox
 
-**Learning the wind:** a quadrotor delivers a suspended parcel through changing crosswinds. Trained FNO/PINO forecasts drive a fair predictive-control comparison in independent numerical wind. [Full multi-view video](previews/wind/comparison.mp4) · [Results and physics](docs/wind/README.md). Start with `uv run --extra wind wind-demo view`.
+Robotics simulation demos exploring manipulation, amphibious locomotion, rover communication, and drone delivery with learned wind forecasts.
 
-**Wind demo Version 2:** [Stronger crosswinds and faster delivery](previews/wind/aggressive/comparison.mp4) · [Stress-test results](docs/wind/aggressive/README.md). Run `uv run --extra wind wind-demo view --profile aggressive`; the original remains the default.
+Explore the demos below. Click a screenshot to watch the video, or open its guide for run instructions, physical assumptions, and measured results.
 
-**Amphibious attachment scene:** a quadruped walks into water, extends its front legs and floats, crosses the basin, and walks out. [Video](previews/amphibious/crossing.mp4) · [Model assumptions and run instructions](docs/amphibious/README.md). Start with `uv run amphibious view`.
+## Learning the wind
 
-**New scene: six RC rovers communicating over simulated LoRa, with optional real Reticulum stacks.** [Watch the complete rover demo](previews/rovers/reticulum_degraded.mp4) · [Run it and read the measured comparison](docs/rovers/README.md)
+A quadrotor carries a suspended parcel through crosswinds, lowers it onto a platform, and releases it. Watch a learned wind forecast and a frozen-field forecast drive the same predictive controller in a matched delivery comparison.
+
+[![Side-by-side drone deliveries in strong crosswinds, with payload cameras and tracking error](previews/wind/aggressive/frame-crosswinds.png)](previews/wind/aggressive/comparison.mp4)
+
+**[Watch stronger-wind demo](previews/wind/aggressive/comparison.mp4)** · [Run & technical details](docs/wind/aggressive/README.md) · [Original video](previews/wind/comparison.mp4) · [Original experiment](docs/wind/README.md)
+
+*Featured video: stronger crosswinds and faster delivery, with the physical flight at real time. The original remains the default preset.*
+
+## Amphibious quadruped
+
+A quadruped with leg-mounted floats walks into a basin, extends its front legs, floats across, and walks out. The concept demo combines contact-driven walking with modeled buoyancy, drag, and water thrust.
+
+[![Quadruped floating without ground contact, shown from following, side, and overview cameras](previews/amphibious/frame-floating.png)](previews/amphibious/crossing.mp4)
+
+**[Watch the crossing](previews/amphibious/crossing.mp4)** · [Run & technical details](docs/amphibious/README.md)
+
+*Three synchronized views. Walking plays at 8×; flotation and its transitions play at 2×.*
+
+## Communicating rovers
+
+Six RC rovers survey an inspection yard and share discoveries over simulated LoRa. The featured run uses real Reticulum stacks over the simulated channel, showing how delivered messages change a rover's decisions during radio outages.
+
+[![Six-rover inspection dashboard with front cameras, radio links, and each rover's local knowledge](previews/rovers/reticulum_degraded.png)](previews/rovers/reticulum_degraded.mp4)
+
+**[Watch the rover demo](previews/rovers/reticulum_degraded.mp4)** · [Run & technical details](docs/rovers/README.md)
+
+*The complete 150-second mission at 2× playback, with an overview and all six front cameras.*
+
+## Sixlegs manipulation
+
+The original project: a hexapod with two independent Kinova Gen3 arms and Robotiq grippers. It grasps a mug and a block, carries both around a barrier, and places and releases them on a second table using physical foot and finger contacts.
+
+[![Sixlegs lifting two objects, carrying them around a barrier, and releasing them at the destination](previews/transfer_checkpoints.png)](previews/transfer_all_views.mp4)
+
+**[Watch the full transfer](previews/transfer_all_views.mp4)** · [Shorter 2× overview](previews/transfer.mp4) · [Run & technical details](docs/hexapod/README.md)
+
+*The full transfer plays at real time with six synchronized views, including head and wrist cameras.*
+
+## Run locally
+
+Tested on Apple Silicon macOS. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git LFS, then run from the repository root:
 
 ```sh
-uv sync --locked --extra reticulum
-uv run --extra reticulum rover-comms view --reticulum --case degraded
-```
-
-A physically simulated hexapod with two independent Kinova Gen3 arms and Robotiq 2F-85 grippers. It walks from an offset start, grasps a mug and a block, carries both around a barrier, then places and releases them on a second table.
-
-**The full transfer runs now.** The approved scene is preserved. The floating base moves through leg contact forces; the objects are held by finger contact. The nominal task takes about 113 simulated seconds.
-
-[Watch the full task with all six views, real time](previews/transfer_all_views.mp4) · [Watch the shorter 2× overview](previews/transfer.mp4) · [Original static preview](previews/preview.png)
-
-![Physical transfer checkpoints](previews/transfer_checkpoints.png)
-
-## Run on macOS
-
-Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git LFS. Tested on Apple Silicon macOS with Python 3.12.12 and MuJoCo 3.12.0. No ROS, Conda or source-built MuJoCo required.
-
-```sh
-# On a fresh clone, retrieve the mesh and preview binaries:
 git lfs install
 git lfs pull
 uv sync --locked
-
-# Live physical demo, starts moving automatically:
-uv run sixlegs view
-
-# Optional: twice real-time, starting in the head camera:
-uv run sixlegs view --speed 2 --camera head
-
-# Frozen scene inspection:
-uv run sixlegs view --static
-
-# Headless complete task; writes trajectory and success report into outputs/:
-uv run sixlegs run
-
-# Tests include the complete physical transfer and rover missions:
-uv run pytest -q
-
-# Static camera PNGs and model properties:
-uv run sixlegs render
-uv run sixlegs inspect
-
-# Record a new run (bundled FFmpeg, no separate installation needed):
-uv run sixlegs record --speed 2
-
-# Render the entire task with all six views, at real time:
-uv run sixlegs record --trajectory outputs/transfer.npz --layout all --speed 1 --output previews/transfer_all_views.mp4
-
-# Render the shorter overview without repeating simulation:
-uv run sixlegs record --trajectory outputs/transfer.npz --speed 2
 ```
 
-Viewer controls:
+Choose a demo; the `--extra` flags install its optional dependencies:
 
-| Key | Action |
-| --- | --- |
-| **1** | Full scene |
-| **2** | Head camera |
-| **3** | Left wrist camera (block) |
-| **4** | Right wrist camera (mug) |
-| **5** | Overhead |
-| **6** | Following third-person view; mouse orbit/zoom |
-| **Space** | Pause / resume |
-| **R** | Restart the complete task |
+```sh
+# Learning the wind — featured stronger-wind version
+uv run --locked --extra wind wind-demo view --profile aggressive
 
-The all-view video shows the full scene, a following close-up, overhead, head, and both wrist cameras simultaneously in 1920 × 1080. It covers the entire run and holds the final placement for four seconds.
+# Amphibious quadruped — real-time motion
+uv run --locked amphibious view --speed 1
 
-The on-screen overlay shows the active phase. The viewer holds the final successful state until closed or restarted. Camera images are rendered from the scene: wrists show their own fingers and the objects. Control uses simulator state and known task coordinates, not image-based object detection. This is a deterministic demonstration for this scene, not a general-purpose navigation or vision policy.
+# Communicating rovers — real Reticulum over simulated LoRa
+uv run --locked --extra reticulum rover-comms view --reticulum --case degraded
 
-The launcher automatically uses `mjpython` because [MuJoCo requires it for passive viewers on macOS](https://mujoco.readthedocs.io/en/stable/python.html#passive-viewer). It supplies the uv-managed Python library directory to fix the `libpython3.12.dylib` lookup failure reproduced here ([upstream issue](https://github.com/google-deepmind/mujoco/issues/1923)). No global shell changes are needed. Leave `MUJOCO_GL` unset on macOS; the native viewer needs a logged-in graphical session. Linux uses the same CLI without the macOS trampoline; Intel macOS and Linux have not been tested here.
+# Sixlegs manipulation
+uv run --locked sixlegs view
+```
 
-## Implementation and evidence
+Viewer controls, recording commands, setup notes, and validation live in each demo's guide above.
 
-- [Original prompt](docs/INITIAL_PROMPT.md)
-- [Masses, joint and torque limits, controller and contact design](docs/DESIGN.md)
-- [Validation results and limitations](docs/VALIDATION.md)
-- [Machine-readable nominal success report](docs/TRANSFER_REPORT.json)
-- [Time log](docs/TIME_LOG.md)
-- `src/sixlegs/scene.py`: reproducible MJCF assembly and preview keyframe
-- `src/sixlegs/control.py`: five-foot-support gait, leg IK, independent arm IK
-- `src/sixlegs/task.py`: approach / grasp / carry / place state machine and success checks
-- `src/sixlegs/simulation.py`: shared physical stepping for viewer, CLI and tests
-- `src/sixlegs/recording.py`: multi-camera video of a saved dynamic trajectory
-- `assets/menagerie/`: pinned models, original licenses and integrity manifest
-- `build/scene.xml`: generated locally; ignored, with absolute local mesh paths
+## Documentation
 
-`uv.lock` pins the environment. Git LFS tracks meshes, images, videos and model checkpoints. Virtual environments, caches, generated build artifacts and `outputs/` are ignored. The shared repository is [rozgo/mujoco-sandbox](https://github.com/rozgo/mujoco-sandbox); Mac and GPU work is synchronized through Git commits. See the [multi-machine workflow](docs/DEVELOPMENT.md).
-
-To restore the vendored assets at the pinned upstream revision, run `uv run python scripts/fetch_assets.py`. Normal runs use the checked-in assets and need no asset download.
+[Development workflow](docs/DEVELOPMENT.md) · [Simulation guidelines (AGENTS.md)](AGENTS.md) · [Hexapod validation](docs/VALIDATION.md) · [Wind results](docs/wind/RESULTS.md) · [Project time log](docs/TIME_LOG.md)

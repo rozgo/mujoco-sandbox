@@ -15,7 +15,7 @@ These instructions apply throughout this repository. Follow explicit user instru
 
 | Demo | Implementation | CLI | Read first |
 | --- | --- | --- | --- |
-| Hexapod transfer | `src/sixlegs/` | `sixlegs` | [Design](docs/DESIGN.md), [validation](docs/VALIDATION.md) |
+| Hexapod transfer | `src/sixlegs/` | `sixlegs` | [Run guide](docs/hexapod/README.md), [design](docs/DESIGN.md), [validation](docs/VALIDATION.md) |
 | RC rovers and communications | `src/sixlegs/rovers/` | `rover-comms` | [Rover documentation](docs/rovers/README.md) |
 | Amphibious attachments | `src/sixlegs/amphibious/` | `amphibious` | [Amphibious documentation](docs/amphibious/README.md) |
 | Neural wind and payload delivery | `src/sixlegs/wind/` | `wind-demo` | [Wind documentation](docs/wind/README.md), [aggressive variant](docs/wind/aggressive/README.md) |

@@ -114,3 +114,12 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Added the multi-machine workflow and expanded LFS coverage for additional image/video and policy formats. Fast-forward-only pulls protect shared history; machine-specific connection details and credentials remain outside Git.
 - LFS integrity, local documentation links and file attributes checked. No simulation behavior or finished video changed.
 - Elapsed to setup verification: **6 minutes 9 seconds**.
+
+
+## Follow-up: demo gallery README
+
+- Started **2026-09-10 05:47:35 UTC**; content and verification completed **2026-09-10 05:50:59 UTC**.
+- Reframed the root README as MuJoCo Sandbox, with four demo sections, screenshots linked to existing videos, playback captions, concise descriptions, and one launch command per demo. Featured the stronger-wind version while retaining links to the original experiment and video.
+- Preserved the Sixlegs controls, recording commands, platform notes, implementation map, and evidence links in `docs/hexapod/README.md`; added the guide to the `AGENTS.md` repository map.
+- Verified **43 local links**, **11 available PNG/MP4 assets**, all four CLI help entry points and documented launch flags, Git LFS integrity, and whitespace. Existing screenshots were visually reviewed during the preceding proposal; no media files changed.
+- Elapsed for this implementation follow-up: **3 minutes 24 seconds**, excluding the earlier proposal and intervening wait. Simulation time: **0 s**; training time: **0 s**; media rendering time: **0 s**. Physics tests and viewer runs were not repeated for this documentation-only change.
