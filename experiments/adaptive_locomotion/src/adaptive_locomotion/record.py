@@ -150,6 +150,8 @@ def record(
                     status = "5 m COMPLETED" if state["completed"] else "RUNNING"
                     if not state["alive"]:
                         status = "TRIAL FAILED — NO RESET"
+                    elif not state["support_valid"]:
+                        status = "UNINTENDED SUPPORT — INVALID WALK"
                     draw.text(
                         (24, 660),
                         f"{status}  |  1x playback  |  Learned locomotion; scripted lane commands",
@@ -252,6 +254,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                         if saved["config"]["bodies"] == "healthy"
                         else "GENERALIST"
                     )
+                    if all(r[0]["config"]["bodies"] == "healthy" for r in runs):
+                        label = (
+                            "FOOT SUPPORT COST"
+                            if saved["config"].get("support_weight", 0)
+                            else "ORIGINAL WALK"
+                        )
                 draw.text(
                     (j * 640 + 24, 64),
                     f"{label} / {saved['cumulative_training_seconds']:.1f} s training",
@@ -265,6 +273,8 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                 )
                 if not state["alive"]:
                     status = "FAILED / NO RESET"
+                elif not state["support_valid"]:
+                    status = "INVALID SUPPORT"
                 draw.text(
                     (j * 640 + 24, 610),
                     f"x = {data.qpos[0]:.2f} m  |  {status}",

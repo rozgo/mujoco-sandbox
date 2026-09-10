@@ -107,6 +107,7 @@ class DogEnv:
         randomize_strength=True,
         reward_profile="adaptive",
         support_weight=2.0,
+        support_substeps=False,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
@@ -115,6 +116,7 @@ class DogEnv:
         self.randomize_strength = randomize_strength
         self.reward_profile = reward_profile
         self.support_weight = support_weight
+        self.support_substeps = support_substeps
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -285,14 +287,25 @@ class DogEnv:
             if len(local):
                 g.set_strength(local, self.strength[local + s.start])
             g.ctrl[:] = STAND[g.slot] + ACTION_SCALE * action[s][:, g.slot]
+
+        def advance(g):
+            if not self.support_substeps:
+                g.batch.step(nstep=self.decimation)
+                g.support_peaks = np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
+                g.support_impulses = g.support_peaks * CONTROL_DT
+                return
+            g.support_peaks = np.zeros((g.n, len(g.support_names)))
+            g.support_impulses = np.zeros_like(g.support_peaks)
+            for _ in range(self.decimation):
+                g.batch.step(nstep=1)
+                force = np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
+                np.maximum(g.support_peaks, force, out=g.support_peaks)
+                g.support_impulses += force * self.timestep
+
         if self.pool:
-            list(
-                self.pool.map(
-                    lambda g: g.batch.step(nstep=self.decimation), self.groups
-                )
-            )
+            list(self.pool.map(advance, self.groups))
         else:
-            self.groups[0].batch.step(nstep=self.decimation)
+            advance(self.groups[0])
         if any(np.any(g.warnings[:, :, 1]) for g in self.groups):
             raise FloatingPointError(
                 "MuJoCo numerical warning; refusing an automatically corrected trajectory"

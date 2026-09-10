@@ -8,7 +8,7 @@ Implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned
 
 All clips play at **1×** from actual MuJoCo rollouts. The main video uses the same checkpoint for all four cases, with following, head and overview cameras. RGB is observer output, not policy input. The comparison clips retain incomplete trials. This is useful locomotion traction, **not general quadruped parkour or arbitrary-damage recovery**.
 
-For a normal, intact dog, use the separate **[healthy walking baseline](HEALTHY_WALK.md)**, trained from random weights in 119 seconds. [Watch it walk](../../previews/locomotion/healthy_walk.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
+For a normal, intact dog, use the **[corrected healthy walking policy](FOOT_SUPPORT_FIX.md)**, with 209 seconds of total training and 64/64 trials passing the new foot-support test. [Watch it walk](../../previews/locomotion/healthy_walk_feet.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
 
 ## Run on Mac or Linux
 
@@ -45,6 +45,8 @@ uv tool run --from uv==0.12.12 uv run --locked pytest -q
 uv tool run --from uv==0.12.12 uv run --locked pytest -q third_party/mjbatch/tests
 ```
 
+New training now defaults to `--support-weight 2`: nonterminal ground support is penalized according to the actual body geometry. Use `--support-weight 0` to retain the original reward behavior when reproducing the older runs. See the [support rule and evaluation criteria](FOOT_SUPPORT_FIX.md).
+
 Use `--device cuda` on Linux for the learner, or `--device mps` on Apple Silicon. **Physics remains CPU MuJoCo in mjbatch**, not MuJoCo Warp. Multiple native simulation pools run concurrently across body variants. A GPU accelerates neural-network updates but cannot remove this implementation's CPU simulation bottleneck. This environment exposes a direct batched Python API, not a Gymnasium wrapper.
 
 ## What was actually learned
@@ -56,6 +58,8 @@ The actor sees 66 channels: twelve joint angles, twelve joint velocities, gyro, 
 The reactive actor is a 128×128 MLP with a fixed context. The history variant adds a learned 64-wide estimator over 0.5 seconds of causal feedback, pooled into five chronological windows. Its training uses privileged geometry/strength labels as auxiliary supervision. Both have an asymmetric critic that can see exact body velocity, height and damage; those extra values do not enter the deployed actors. The Mac policies share a 59.81-second oracle-context pretraining stage; its time is included below. The independent GPU history run started from random weights without that stage.
 
 ## Measured results with corrected contacts
+
+**These original pilot scores measure progress, not foot-only or designated-stump support.** The user subsequently caught knee-supported walking in the healthy-only baseline. The new [support-force validation](FOOT_SUPPORT_FIX.md) detects this and the corrected healthy policy passes it; the generalist results below have not been certified under that stricter criterion.
 
 Completion means reaching 5 m within a 12-second trial and remaining controlled in the goal lane for one second. Failures remain in the denominator; no reset occurs inside a trial. The final cases and seed were frozen before the initial comparison. We then repeated that same evaluation after fixing contact stiffness, without changing either 329-second policy's weights.
 
@@ -92,7 +96,7 @@ Physics uses a 2 ms `implicitfast` step, Newton solver with 30 iterations and py
 
 The first primitive implementation inherited a 20 ms contact constant and allowed approximately 22 mm sampled foot penetration in the selected rollout. That was corrected before final recording. The selected step rollout now has a sampled maximum of **7.95 mm**, no trunk-contact frames, and **16/16** step completions when rerun at 1 ms. Penetration is reconstructed every 20 ms, not bounded at every substep; these compliant contacts are still an approximation. [Contact report](CONTACTS.json). The earlier [soft-contact results](LEGACY_SOFT_VALIDATION.json) are retained and are not the final physics claim.
 
-Nine project tests cover scalar/batch agreement, partial-body topology and inertia, sensor/private-context isolation, zero-strength actuation, history causality and foot-drop penetration. The 38 vendored mjbatch tests cover the native state/batch interface. MuJoCo warnings reject a run; actual measured actuator torque remains within its effective caps. Native macOS viewing and complete MP4 decoding are checked separately.
+Fourteen project tests cover scalar/batch agreement, partial-body topology and inertia, sensor/private-context isolation, zero-strength actuation, history causality, foot-drop penetration, loaded knee/stump support and contact-sensor dynamics equivalence. The 38 vendored mjbatch tests cover the native state/batch interface. MuJoCo warnings reject a run; actual measured actuator torque remains within its effective caps. Native macOS viewing and complete MP4 decoding are checked separately.
 
 ## Artifacts and time accounting
 

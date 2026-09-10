@@ -134,6 +134,47 @@ def test_contact_instrumentation_does_not_change_dynamics():
     np.testing.assert_array_equal(data[0].qvel, data[1].qvel)
 
 
+def test_loaded_distal_stump_is_valid_when_calf_is_absent():
+    env = DogEnv(
+        1, bodies=[PRESETS["missing_fl"]], randomize=False, faults=False, threads=1
+    )
+    g = env.groups[0]
+    pose = STAND.copy()
+    pose[1::3] = 1.3
+    pose[2::3] = -2.7
+    pose[1] = 0
+    g.qpos[0, g.qadr] = pose[g.slot]
+    g.qpos[0, 2] = 0.215
+    g.batch.forward()
+    env.refresh()
+    stump = g.support_names.index("FL_stump")
+    assert np.linalg.norm(g.support_data[0, stump, 1:4]) > 1
+    assert g.support_allowed[stump]
+    assert env.support_cost[0] == 0
+    env.close()
+
+
+def test_substep_support_checks_preserve_physics():
+    envs = [
+        DogEnv(
+            2,
+            bodies=[PRESETS["healthy"]],
+            randomize=False,
+            faults=False,
+            threads=1,
+            support_substeps=x,
+        )
+        for x in (False, True)
+    ]
+    for _ in range(20):
+        for env in envs:
+            env.step(np.full((2, 12), 0.1))
+    np.testing.assert_array_equal(envs[0].groups[0].qpos, envs[1].groups[0].qpos)
+    np.testing.assert_array_equal(envs[0].groups[0].qvel, envs[1].groups[0].qvel)
+    for env in envs:
+        env.close()
+
+
 def test_private_context_and_failure_event_do_not_leak_to_actor():
     env = DogEnv(
         2, bodies=[PRESETS["healthy"]], randomize=False, faults=False, threads=1

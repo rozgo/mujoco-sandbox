@@ -19,7 +19,12 @@ def curate(names):
         original = source / "policy.pt"
         saved = torch.load(original, map_location="cpu", weights_only=False)
         if saved["parent"]:
-            parent_name = Path(saved["parent"]).parent.name
+            parent_path = Path(saved["parent"])
+            parent_name = (
+                parent_path.parent.name
+                if parent_path.name == "policy.pt"
+                else parent_path.stem
+            )
             saved["parent"] = f"assets/locomotion/checkpoints/{parent_name}.pt"
         checkpoint = target / f"{name}.pt"
         torch.save(saved, checkpoint)

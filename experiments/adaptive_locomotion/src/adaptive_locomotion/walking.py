@@ -3,7 +3,7 @@
 import mujoco
 import numpy as np
 
-from .bodies import LEGS
+from .bodies import ACTION_SCALE, LEGS, STAND
 from .evaluate import rollout
 from .train import load_checkpoint
 
@@ -21,6 +21,7 @@ def inspect_walk(checkpoint, seconds=12):
     for state in frames:
         data.qpos[:] = state["qpos"]
         data.qvel[:] = state["qvel"]
+        data.ctrl[:] = STAND + ACTION_SCALE * state["action"]
         mujoco.mj_forward(model, data)
         if state["time"] < 1:
             continue
@@ -58,6 +59,18 @@ def inspect_walk(checkpoint, seconds=12):
             "mean_tilt_degrees": float(np.mean(tilts)),
             "trunk_contact_frames": int(trunk_frames),
             "maximum_sampled_penetration_m": float(max(penetrations)),
+            "allowed_support_test": {
+                "completed": outcome["completed_with_allowed_support"],
+                "checked_every_physics_step": outcome[
+                    "support_checked_every_physics_step"
+                ],
+                "force_threshold_n": outcome["support_force_threshold_n"],
+                "unintended_force_by_geom_n": {
+                    n: f
+                    for n, f in outcome["maximum_force_by_geom_n"].items()
+                    if n not in outcome["allowed_support_geom_names"] and f > 0
+                },
+            },
         },
         frames,
         model,

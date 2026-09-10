@@ -12,7 +12,7 @@ A shared learned controller handles shortened calves, weakened motors and low st
 
 **[Watch the RL pilot](previews/locomotion/reactive_5m30s.mp4)** · [Results and isolated uv setup](docs/locomotion/README.md) · [History comparison](previews/locomotion/history_vs_reactive.mp4) · [Extra-training comparison](previews/locomotion/extra_training.mp4)
 
-**[Healthy dog walking](previews/locomotion/healthy_walk.mp4)** · [Dedicated 119-second training baseline](docs/locomotion/HEALTHY_WALK.md)
+**[Healthy dog walking on its feet](previews/locomotion/healthy_walk_feet.mp4)** · [209-second policy and contact validation](docs/locomotion/FOOT_SUPPORT_FIX.md) · [Before/after correction](previews/locomotion/healthy_support_fix.mp4)
 
 *Real-time motion with three synchronized cameras. Learned joint control follows scripted velocity commands; general parkour and arbitrary-damage recovery remain open.*
 

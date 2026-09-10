@@ -40,7 +40,7 @@ def lane_command(env, speed=0.55):
     env.commands[:, 2] = np.clip(-1.5 * yaw, -0.5, 0.5)
 
 
-def make_case(case, trials=16, seed=9137, timestep=0.002):
+def make_case(case, trials=16, seed=9137, timestep=0.002, support_substeps=False):
     body, terrain, fault = CASES[case]
     env = DogEnv(
         trials,
@@ -51,6 +51,7 @@ def make_case(case, trials=16, seed=9137, timestep=0.002):
         faults=False,
         threads=min(trials, 12),
         timestep=timestep,
+        support_substeps=support_substeps,
     )
     # Predetermined perturbations of the initial condition, identical across policies.
     rng = np.random.default_rng(seed)
@@ -71,9 +72,18 @@ def make_case(case, trials=16, seed=9137, timestep=0.002):
     return env
 
 
-def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep=0.002):
+def rollout(
+    net,
+    case,
+    trials=16,
+    seed=9137,
+    seconds=12,
+    capture=False,
+    timestep=0.002,
+    support_substeps=True,
+):
     torch.set_num_threads(1)
-    env = make_case(case, trials, seed, timestep)
+    env = make_case(case, trials, seed, timestep, support_substeps)
     frames = []
     alive = np.ones(trials, bool)
     fail_time = np.full(trials, np.nan)
@@ -87,6 +97,10 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
     completed = np.zeros(trials, bool)
     fell_once = np.zeros(trials, bool)
     off_course_once = np.zeros(trials, bool)
+    support_group = env.groups[0]
+    peak_support = np.zeros((trials, len(support_group.support_names)))
+    support_impulse = np.zeros_like(peak_support)
+    bad_support_windows = np.zeros(trials, int)
     for k in range(round(seconds / CONTROL_DT)):
         lane_command(env)
         with torch.no_grad():
@@ -96,6 +110,10 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
                 torch.as_tensor(env.history),
             )
         _, _, fell, _ = env.step(action.numpy())
+        peak_support = np.maximum(peak_support, support_group.support_peaks)
+        support_impulse += support_group.support_impulses
+        bad_peak = support_group.support_peaks[:, ~support_group.support_allowed].max(1)
+        bad_support_windows += bad_peak > 1.0
         off_course = np.abs(env.pos[:, 1]) > 1.5
         fell_once |= alive & fell
         off_course_once |= alive & off_course
@@ -126,6 +144,9 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
                     "context": env.context[0].copy(),
                     "alive": bool(alive[0]),
                     "completed": bool(completed[0]),
+                    "support_valid": bool(bad_support_windows[0] == 0),
+                    "bad_support_peak_n": float(bad_peak[0]),
+                    "support_peak_forces_n": support_group.support_peaks[0].copy(),
                 }
             )
     rows = []
@@ -135,6 +156,16 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
                 "trial": i,
                 "survived": bool(alive[i]),
                 "completed_5m": bool(completed[i]),
+                "completed_with_allowed_support": bool(
+                    completed[i] and not bad_support_windows[i] and alive[i]
+                ),
+                "bad_support_control_windows": int(bad_support_windows[i]),
+                "peak_unintended_support_n": float(
+                    peak_support[i, ~support_group.support_allowed].max()
+                ),
+                "unintended_support_impulse_ns": float(
+                    support_impulse[i, ~support_group.support_allowed].sum()
+                ),
                 "fell": bool(fell_once[i]),
                 "left_course": bool(off_course_once[i]),
                 "failure_time_s": None
@@ -156,6 +187,22 @@ def rollout(net, case, trials=16, seed=9137, seconds=12, capture=False, timestep
         "trials": trials,
         "survived": int(alive.sum()),
         "completed_5m": int(completed.sum()),
+        "completed_with_allowed_support": int(
+            (completed & (bad_support_windows == 0) & alive).sum()
+        ),
+        "support_checked_every_physics_step": support_substeps,
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": support_group.support_names,
+        "allowed_support_geom_names": [
+            n
+            for n, valid in zip(
+                support_group.support_names, support_group.support_allowed
+            )
+            if valid
+        ],
+        "maximum_force_by_geom_n": dict(
+            zip(support_group.support_names, peak_support.max(0).tolist())
+        ),
         "mean_distance_m": float(end_distance.mean()),
         "rows": rows,
     }

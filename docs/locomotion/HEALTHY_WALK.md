@@ -1,5 +1,7 @@
 # Dedicated healthy-dog walking baseline
 
+**Correction:** the original 119-second policy described below used its rear-right knee housing for ground support. The original distance and trunk checks missed that defect. `adaptive-dog walk` now selects the [corrected 209-second policy](FOOT_SUPPORT_FIX.md), which passed 64/64 trials with no unintended support forces. [Watch the corrected video](../../previews/locomotion/healthy_walk_feet.mp4). The original reports and clips remain available as failure evidence.
+
 Follow-up started September 10, 2026 at 14:48:45 UTC.
 
 User request: "do we have a normal dog trained?" / "if not lets train a normal dog and normal walk".
@@ -13,7 +15,7 @@ The `walk` reward profile adds healthy posture preferences: a soft 0.30 m base-h
 target, stronger upright and roll/pitch angular-velocity costs, a modest nominal
 joint-posture cost, a hip-spread cost, and smoother actions. These are optimization
 costs, not enforced poses, phase clocks, foot trajectories or mirrored actions.
-MuJoCo dynamics and torque limits are unchanged. The default `adaptive` reward is
+MuJoCo dynamics and torque limits are unchanged. At this initial stage the `adaptive` reward was
 unchanged; healthy-only training now explicitly disables initial motor weakening
 as well as scheduled faults.
 
@@ -21,9 +23,9 @@ Start with 60 seconds of PPO using 512 batched environments, CPU MuJoCo and an M
 learner. Continue only if evaluation indicates more training is useful, keeping
 the complete checkpoint ancestry within the agreed short-run allowance.
 
-## Result
+## Original result (superseded)
 
-**[Watch the healthy dog](../../previews/locomotion/healthy_walk.mp4)** · [Compare with the earlier generalist](../../previews/locomotion/healthy_vs_generalist.mp4)
+**[Original knee-supported gait](../../previews/locomotion/healthy_walk.mp4)** · [Compare with the earlier generalist](../../previews/locomotion/healthy_vs_generalist.mp4)
 
 The selected policy trained from random weights for **119.161 seconds total**
 (59.642 s plus 59.519 s), collecting **2,801,664 control transitions**. No teacher,
@@ -49,7 +51,7 @@ Both one- and two-minute checkpoints are retained, along with their training and
 development reports. The comparison is between different training tasks and
 budgets, not an algorithm ablation.
 
-## Watch or retrain
+## Watch the corrected policy or reproduce the original training
 
 From the repository root:
 
@@ -60,16 +62,16 @@ uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk
 ```
 
 `walk --seconds 5` is a bounded viewer check. The shortcut selects
-`assets/locomotion/checkpoints/healthy_walk_120s_seed2.pt` and the healthy scene.
+`assets/locomotion/checkpoints/healthy_feet_210s_seed2.pt` and the healthy scene.
 The native Mac launcher was tested.
 
-To reproduce the experiment with a new seed:
+To reproduce the original reward experiment with a new seed (including its missing support penalty):
 
 ```sh
 uv tool run --from uv==0.12.12 uv run --locked adaptive-dog train \
   --output ../../outputs/locomotion/healthy_seed3 --seconds 120 \
   --mode blind --bodies healthy --terrain flat --reward-profile walk \
-  --seed 3 --num-envs 512 --threads 16
+  --seed 3 --num-envs 512 --threads 16 --support-weight 0
 ```
 
 This fresh 120-second run has a different seed and no intermediate optimizer
@@ -78,7 +80,7 @@ staged settings, source commits, checkpoint hashes and parent links are in
 [the 60-second report](runs/healthy_walk_60s_seed2.json) and
 [the selected policy report](runs/healthy_walk_120s_seed2.json).
 
-Both 12-second videos use actual recorded trajectories at 1×, 1280×720 and
+Both original 12-second videos use actual recorded trajectories at 1×, 1280×720 and
 25 fps. The main video has synchronized following, head and overview cameras;
 camera pixels are not actor inputs. All 600 encoded frames decoded successfully.
 The project plus vendored batch suite passed **48 tests**.

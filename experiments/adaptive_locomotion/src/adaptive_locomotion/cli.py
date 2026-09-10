@@ -79,7 +79,7 @@ def main():
         from .record import view
 
         view(
-            ROOT / "assets/locomotion/checkpoints/healthy_walk_120s_seed2.pt",
+            ROOT / "assets/locomotion/checkpoints/healthy_feet_210s_seed2.pt",
             case="healthy",
             seconds=args.seconds,
         )
