@@ -143,3 +143,11 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Evaluated matched initial/final policies on 16 predetermined ten-second trials. Upright survival was 12/16 then 16/16; forward velocity RMSE on four complete paired trials changed from 0.7200 to 0.1532 m/s. Inspected rendered trained-policy poses. This does not demonstrate three-leg adaptation.
 - Saved a source review, measured report and proposed adaptation experiment. Marked the earlier SWAP-specific plan as superseded. Documentation links, JSON consistency and whitespace checks passed.
 - Elapsed research/setup/benchmark interval: **12 minutes 50 seconds**. Training time is the separate 60.0123-second measurement above.
+
+## Follow-up: public documentation hygiene
+
+- Started **2026-09-10 06:24:42 UTC**; content and repository preparation completed **2026-09-10 06:36:00 UTC**, before the final documentation commit and push.
+- Replaced private-source provenance with a public task summary in two rover documents throughout repository history. Retained all 13 existing commits and verified that every other tracked file object was unchanged by the content rewrite.
+- Added a rule to review public artifacts for private context before committing or publishing. Cleaned both development clones, pruned old reflogs and unreachable Git objects, and verified zero matches across all 344 remaining Git objects in each clone.
+- Recreated the public GitHub repository under the same name at the user's request, with only `main` to be published. Uploaded all **85 Git LFS assets, approximately 221 MB**, to the new repository. The old raw-file URLs checked after recreation returned HTTP 404. No support request was submitted.
+- Elapsed to publication preparation: **11 minutes 18 seconds**, including review, history rewriting, synchronization, repository recreation, and asset transfer. Simulation time: **0 s**; training time: **0 s**; rendering time: **0 s**. No simulation behavior or media changed; physics tests were not rerun.

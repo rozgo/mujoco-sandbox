@@ -6,6 +6,7 @@ These instructions apply throughout this repository. Follow explicit user instru
 
 - Read the relevant demo documentation and inspect the existing code before changing it. Check `git status` and preserve unrelated user work.
 - For a new experience, save the user's brief in `docs/<demo>/INITIAL_PROMPT.md` or `BRIEF.md`. Record assumptions, required actions, cameras and measurable completion criteria.
+- Save a public-safe task summary when a request includes private context. Never commit client identifiers, private project or repository names, local paths to private sources, or copied private-source provenance. Check documentation, prompts, logs, source comments, and media metadata before committing or publishing.
 - Build and compile the static scene first. Render an overview and close views of the mechanism, object interactions and clearance; inspect the actual images and show a preview before adding movement.
 - Respect a user-requested scene review. Existing approval and authorization persist; do not add repeated confirmation steps for routine implementation, testing or recording.
 - Use a separate package, CLI and output directory for a new demo. Use a named preset and separate artifacts for variants, keeping the approved original available. The wind `standard` and `aggressive` profiles are the existing example.
