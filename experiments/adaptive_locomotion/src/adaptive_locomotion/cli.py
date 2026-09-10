@@ -21,6 +21,12 @@ def main():
     p.add_argument("--device", default="auto", choices=("auto", "cpu", "mps", "cuda"))
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--epochs", type=int, default=4)
+    p = sub.add_parser("evaluate")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--cases", default="all")
+    p.add_argument("--trials", type=int, default=16)
+    p.add_argument("--seconds", type=float, default=12)
     args = parser.parse_args()
     if args.command == "preview":
         print(preview(args.output))
@@ -30,6 +36,12 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         train(**kwargs)
+    elif args.command == "evaluate":
+        from .evaluate import evaluate
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        evaluate(**kwargs)
 
 
 if __name__ == "__main__":

@@ -10,7 +10,11 @@ Implementation started September 10, 2026 at 06:53:59 UTC on `experiment/adaptiv
 
 > fast rl through batching, or GPU, or just from vectorized environment or gym... anything, but if training takes hours then we cant continue this path
 
-Training speed is an acceptance gate. Interpret a few minutes as a maximum five-minute cumulative training budget per final policy, including teacher/pretraining, estimator training, fine-tuning and resumed ancestry. Compare independent bounded experiments and CPU/GPU backends; do not conceal longer training in a chain of short runs. Record setup, compilation and evaluation separately and also report full time-to-result. If the learning gate fails, report it and reassess the approach rather than extending a policy to hours. Do not merge experimental work into main.
+Training speed is an acceptance gate. Start with a five-minute cumulative training budget per final policy, including teacher/pretraining, estimator training, fine-tuning and resumed ancestry. Compare independent bounded experiments and CPU/GPU backends; do not conceal longer training in a chain of short runs. Record setup, compilation and evaluation separately and also report full time-to-result. Do not merge experimental work into main.
+
+> ok, even after the 5 minutes, if you think its worth giving more allowance then lets do it. i leave that decision to you and your insight from the runs
+
+The user subsequently authorized extending the default budget when measured learning progress justifies it. Record the evidence, chosen extension and full cumulative training time; preserve fast learning as the priority. A stalled curve calls for diagnosis rather than automatically adding hours.
 
 ## User direction
 
