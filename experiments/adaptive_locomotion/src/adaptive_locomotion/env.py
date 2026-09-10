@@ -21,6 +21,7 @@ from .bodies import (
     joint_mapping,
 )
 from .gait_balance import ContactTiming, body_motion_cost
+from .limb_loss import curriculum
 from .paired import training_pairs
 from .stride import StrideTracker
 
@@ -78,6 +79,7 @@ class Group:
             [name in allowed_support_names(body) for name in self.support_names]
         )
         self.tip_geoms = [self.model.geom(n).id for n in allowed_support_names(body)]
+        self.tip_slots = [LEGS.index(n[:2]) for n in allowed_support_names(body)]
         self.tip_sensors = [
             self.support_names.index(n) for n in allowed_support_names(body)
         ]
@@ -121,6 +123,7 @@ class DogEnv:
         body_motion_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
+        limb_stage=None,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
@@ -129,6 +132,11 @@ class DogEnv:
         self.randomize_strength = randomize_strength
         self.retention_curriculum = retention_curriculum
         self.pair_level = pair_level
+        self.limb_stage = limb_stage
+        if limb_stage and (retention_curriculum or pair_level or bodies is not None):
+            raise ValueError(
+                "Limb-loss curriculum is separate from partial-damage stages"
+            )
         if pair_level is not None and (not retention_curriculum or num_envs < 16):
             raise ValueError(
                 "Paired stages require retention curriculum and at least 16 environments"
@@ -159,10 +167,15 @@ class DogEnv:
             raise ValueError("At least one environment per body")
         if pair_level:
             self.bodies += training_pairs(pair_level)
+        if limb_stage:
+            self.bodies, counts = curriculum(limb_stage, num_envs)
+            self.faults = self.randomize_strength = False
         self.groups, self.slices = [], []
         start = 0
         for i, body in enumerate(self.bodies):
-            if pair_level:
+            if limb_stage:
+                n = counts[i]
+            elif pair_level:
                 small_n = num_envs // 16
                 n = num_envs - 8 * small_n if i == 0 else small_n
             elif retention_curriculum:
@@ -177,7 +190,7 @@ class DogEnv:
                     body,
                     n,
                     max(1, round(threads * n / num_envs))
-                    if pair_level
+                    if pair_level or limb_stage
                     else max(1, threads // len(self.bodies)),
                     terrain,
                     True if sensing is None else sensing,
@@ -245,8 +258,10 @@ class DogEnv:
             self.support_cost[s] = 0.25 * np.minimum(force / 5, 1).sum(
                 1
             ) + 2 * np.minimum(force.sum(1) / weight, 2)
-            self.tip_positions[s] = g.geom_positions[:, g.tip_geoms]
-            self.tip_forces[s] = np.linalg.norm(
+            self.tip_positions[s] = 0
+            self.tip_forces[s] = 0
+            self.tip_positions[s, g.tip_slots] = g.geom_positions[:, g.tip_geoms]
+            self.tip_forces[s, g.tip_slots] = np.linalg.norm(
                 g.support_data[:, g.tip_sensors, 1:4], axis=-1
             )
 
@@ -305,7 +320,7 @@ class DogEnv:
             g.batch.forward(local)
             self.valid[global_ids[:, None], g.slot] = 1
             self.context[global_ids, :4] = g.body.calf
-            for leg in g.body.absent:
+            for leg in (*g.body.absent, *g.body.absent_legs):
                 self.context[global_ids, LEGS.index(leg)] = 0
         self.context[ids, 4:16] = self.strength[ids]
         self.context[ids, 16:] = 1
@@ -432,12 +447,17 @@ class DogEnv:
         if self.reward_profile == "walk":
             # Healthy-only posture preferences, never a prescribed gait phase or
             # target foot trajectory. These terms leave the adaptive task intact.
-            reward -= 40 * (self.pos[:, 2] - 0.30) ** 2
-            reward -= 3 * upright
-            reward -= 0.08 * np.sum((self.q - STAND) ** 2, 1)
-            reward -= 0.6 * np.sum((self.q[:, ::3] - STAND[::3]) ** 2, 1)
-            reward -= 0.014 * rate
-            reward -= 0.08 * np.sum(self.gyro[:, :2] ** 2, 1)
+            posture = (
+                40 * (self.pos[:, 2] - 0.30) ** 2
+                + 3 * upright
+                + 0.08 * np.sum((self.q - STAND) ** 2, 1)
+                + 0.6 * np.sum((self.q[:, ::3] - STAND[::3]) ** 2, 1)
+                + 0.014 * rate
+                + 0.08 * np.sum(self.gyro[:, :2] ** 2, 1)
+            )
+            if self.limb_stage:
+                posture *= (self.context[:, :4] == 1).all(1)
+            reward -= posture
         finite = np.isfinite(self.q).all(1) & np.isfinite(self.vel).all(1)
         fell = (self.up[:, 2] < 0.15) | (self.pos[:, 2] < 0.09) | ~finite
         timeout = self.steps >= 500

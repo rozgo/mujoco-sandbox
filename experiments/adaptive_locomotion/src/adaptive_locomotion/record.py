@@ -41,15 +41,20 @@ def foot_contact_strip(draw, x, y, state, outcome):
     names = outcome["support_geom_names"]
     for i, leg in enumerate(("FL", "FR", "RL", "RR")):
         name = next(
-            n for n in outcome["allowed_support_geom_names"] if n.startswith(leg)
+            (n for n in outcome["allowed_support_geom_names"] if n.startswith(leg)),
+            None,
         )
-        loaded = state["support_peak_forces_n"][names.index(name)] > 1
+        loaded = (
+            name is not None and state["support_peak_forces_n"][names.index(name)] > 1
+        )
         bx = x + 82 + i * 65
         draw.ellipse(
             (bx, y + 2, bx + 12, y + 14),
             fill=(105, 215, 199) if loaded else (60, 65, 70),
         )
         draw.text((bx + 18, y), leg, font=font(14), fill="white")
+        if name is None:
+            draw.line((bx, y + 2, bx + 12, y + 14), fill=(230, 140, 80), width=2)
 
 
 def record(

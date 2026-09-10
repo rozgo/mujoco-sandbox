@@ -28,6 +28,7 @@ class BodySpec:
     name: str = "healthy"
     calf: tuple[float, ...] = (1.0, 1.0, 1.0, 1.0)
     absent: tuple[str, ...] = ()
+    absent_legs: tuple[str, ...] = ()
 
     def __post_init__(self):
         if len(self.calf) != 4 or not all(0.2 <= x <= 1 for x in self.calf):
@@ -36,6 +37,10 @@ class BodySpec:
             )
         if not set(self.absent) <= set(LEGS):
             raise ValueError("Unknown absent calf")
+        if not set(self.absent_legs) < set(LEGS):
+            raise ValueError("Unknown absent leg, or no remaining support limbs")
+        if set(self.absent) & set(self.absent_legs):
+            raise ValueError("A removal must specify either calf or whole leg")
 
 
 PRESETS = {
@@ -56,7 +61,9 @@ def add(parent, tag, **attrs):
 def allowed_support_names(body):
     """A present terminal surface, or the designated distal stump after removal."""
     return tuple(
-        f"{leg}_{'stump' if leg in body.absent else 'terminal'}" for leg in LEGS
+        f"{leg}_{'stump' if leg in body.absent else 'terminal'}"
+        for leg in LEGS
+        if leg not in body.absent_legs
     )
 
 
@@ -147,6 +154,9 @@ def build_model(
                 condim="3",
             )
     for i, leg in enumerate(LEGS):
+        if leg in body.absent_legs:
+            base.remove(root.find(f".//body[@name='{leg}_hip']"))
+            continue
         calf = root.find(f".//body[@name='{leg}_calf']")
         thigh = root.find(f".//body[@name='{leg}_thigh']")
         if leg in body.absent:
@@ -316,7 +326,8 @@ def initialize(model, data):
     slot, qadr, _, _ = joint_mapping(model)
     data.qpos[qadr] = STAND[slot]
     mujoco.mj_forward(model, data)
-    z = min(data.site_xpos[model.site(f"{leg}_tip").id, 2] for leg in LEGS)
+    tips = [i for i in range(model.nsite) if model.site(i).name.endswith("_tip")]
+    z = min(data.site_xpos[i, 2] for i in tips)
     data.qpos[2] += 0.024 - z
     mujoco.mj_forward(model, data)
 

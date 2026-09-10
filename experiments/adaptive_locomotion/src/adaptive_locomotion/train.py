@@ -57,6 +57,7 @@ def train(
     pair_level=None,
     single_reference=None,
     single_reference_weight=0.0,
+    limb_stage=None,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -109,6 +110,7 @@ def train(
         body_motion_weight=body_motion_weight,
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
+        limb_stage=limb_stage,
     )
     ancestry = 0.0
     parent = None
@@ -180,6 +182,7 @@ def train(
         "body_motion_weight": body_motion_weight,
         "retention_curriculum": retention_curriculum,
         "pair_level": pair_level,
+        "limb_stage": limb_stage,
         "single_reference_checkpoint": str(
             Path(single_reference).resolve().relative_to(ROOT)
         )
@@ -203,7 +206,7 @@ def train(
         "normalization_frozen": teacher is not None,
         "body_environment_counts": {g.body.name: g.n for g in env.groups},
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
-        "randomized_motor_strength": bodies != "healthy",
+        "randomized_motor_strength": env.randomize_strength,
         "epochs": epochs,
         "horizon": horizon,
         "budget_seconds": seconds,
@@ -410,7 +413,7 @@ def train(
             print(json.dumps(row), flush=True)
         if iteration % 25 == 0:
             save("latest.pt", elapsed)
-            if retention_curriculum:
+            if retention_curriculum or limb_stage:
                 save(f"iteration_{iteration:04d}.pt", elapsed)
     if device == "cuda":
         torch.cuda.synchronize()

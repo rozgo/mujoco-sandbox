@@ -8,6 +8,7 @@ import torch
 
 from .bodies import CONTROL_DT, LIMITS, PRESETS, BodySpec
 from .env import DogEnv
+from .limb_loss import LOSS_BODIES
 from .paired import PAIR_CASES, training_pairs
 from .train import load_checkpoint
 
@@ -27,6 +28,7 @@ CASES = {
 CASES.update(PAIR_CASES)
 CASES.update({body.name: (body, "flat", None) for body in training_pairs("mild")})
 CASES["weak_fr_thigh_60"] = (PRESETS["healthy"], "flat", (3.0, 4, 0.60))
+CASES.update({b.name: (b, "flat", None) for b in LOSS_BODIES})
 
 
 def lane_command(env, speed=0.55):
