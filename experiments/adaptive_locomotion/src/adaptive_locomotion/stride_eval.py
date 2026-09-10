@@ -8,10 +8,10 @@ from .evaluate import lane_command, make_case
 from .train import load_checkpoint
 
 
-def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12):
+def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy"):
     torch.set_num_threads(1)
     net, saved = load_checkpoint(checkpoint)
-    env = make_case("healthy", trials=trials, seed=seed)
+    env = make_case(case, trials=trials, seed=seed)
     positions, forces, base, velocity, angular_velocity = [], [], [], [], []
     try:
         for _ in range(round(seconds / CONTROL_DT)):
@@ -124,6 +124,7 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12):
         "checkpoint": str(checkpoint),
         "training_seconds": saved["cumulative_training_seconds"],
         "trials": trials,
+        "case": case,
         "seed": seed,
         "seconds": seconds,
         "measurement": "after first second; 20 ms positions/contact forces; consecutive landings per foot, one-sample contact debounce",

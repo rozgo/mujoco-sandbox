@@ -19,6 +19,7 @@ from torch import nn
 from .bodies import PRESETS, ROOT
 from .env import CONTEXT_DIM, HISTORY, OBS_DIM, DogEnv
 from .policy import Policy, log_density
+from .retention import healthy_mask, reference_bonus, reference_loss
 
 
 def load_checkpoint(path, mode=None):
@@ -48,11 +49,24 @@ def train(
     stride_weight=0.0,
     balance_weight=0.0,
     body_motion_weight=0.0,
+    retention_curriculum=False,
+    reference=None,
+    reference_reward_weight=0.0,
+    reference_loss_weight=0.0,
+    learning_rate=0.001,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
     if allowance > 300 and not extension_reason:
         raise ValueError("An extension requires a recorded learning-based reason")
+    if min(reference_reward_weight, reference_loss_weight) < 0 or learning_rate <= 0:
+        raise ValueError(
+            "Reference weights must be nonnegative and learning rate positive"
+        )
+    if (reference_reward_weight or reference_loss_weight) and reference is None:
+        raise ValueError("Reference weights require a frozen reference checkpoint")
+    if retention_curriculum and bodies != "all":
+        raise ValueError("Retention curriculum requires --bodies all")
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
@@ -82,6 +96,7 @@ def train(
         stride_weight=stride_weight,
         balance_weight=balance_weight,
         body_motion_weight=body_motion_weight,
+        retention_curriculum=retention_curriculum,
     )
     ancestry = 0.0
     parent = None
@@ -96,8 +111,14 @@ def train(
         learner = Policy(mode)
     actor = copy.deepcopy(learner).to(actor_device)
     learner = learner.to(device)
+    teacher = None
+    if reference:
+        teacher, _ = load_checkpoint(reference)
+        if teacher.mode != "blind" or mode != "blind":
+            raise ValueError("Reference retention currently supports reactive policies")
+        teacher = teacher.to(actor_device).eval().requires_grad_(False)
     opt = torch.optim.Adam(
-        learner.parameters(), lr=0.001, fused=device in ("cuda", "mps")
+        learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
     normal_rng = np.random.default_rng(seed + 12345)
     shapes = {
@@ -112,6 +133,8 @@ def train(
     }
     if mode == "history":
         shapes["hist"] = (HISTORY, OBS_DIM)
+    if teacher is not None:
+        shapes.update(reference=(12,), healthy=())
     buf = {
         k: np.empty((horizon, num_envs, *shape), np.float32)
         for k, shape in shapes.items()
@@ -135,6 +158,18 @@ def train(
         "stride_weight": stride_weight,
         "balance_weight": balance_weight,
         "body_motion_weight": body_motion_weight,
+        "retention_curriculum": retention_curriculum,
+        "reference_checkpoint": str(Path(reference).resolve().relative_to(ROOT))
+        if reference
+        else None,
+        "reference_sha256": hashlib.sha256(Path(reference).read_bytes()).hexdigest()
+        if reference
+        else None,
+        "reference_reward_weight": reference_reward_weight,
+        "reference_loss_weight": reference_loss_weight,
+        "learning_rate": learning_rate,
+        "normalization_frozen": teacher is not None,
+        "body_environment_counts": {g.body.name: g.n for g in env.groups},
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
         "randomized_motor_strength": bodies != "healthy",
         "epochs": epochs,
@@ -204,11 +239,22 @@ def train(
             extra = np.concatenate((env.vel, env.pos[:, 2:3]), 1).astype(np.float32)
             history = env.history.copy() if mode == "history" else None
             mean, val = infer(obs, ctx, history, extra)
+            if teacher is not None:
+                with torch.no_grad():
+                    target, _ = teacher(torch.as_tensor(obs, device=actor_device))
+                target = target.cpu().numpy()
             log_std = actor.log_std.detach().cpu().numpy()
             noise = normal_rng.standard_normal(mean.shape, dtype=np.float32)
             actions = mean + np.exp(log_std) * noise
             logp = log_density(noise, log_std)
             reward, done, fell, terms = env.step(actions)
+            if teacher is not None:
+                # Read health after stepping so a fault at this step immediately
+                # disables imitation. No strength/geometry labels enter the actor.
+                healthy = healthy_mask(env.context).astype(np.float32)
+                reward += reference_reward_weight * reference_bonus(
+                    actions, target, healthy
+                )
             raw_reward = float(reward.mean())
             timeout = done & ~fell
             if timeout.any():
@@ -227,6 +273,8 @@ def train(
             }
             if history is not None:
                 vals["hist"] = history
+            if teacher is not None:
+                vals.update(reference=target, healthy=healthy)
             for k, v in vals.items():
                 buf[k][t] = v
             metrics.append([terms["track"].mean(), terms["speed"].mean(), raw_reward])
@@ -282,13 +330,18 @@ def train(
                         .square()
                         .mean()
                     )
+                if teacher is not None:
+                    loss += reference_loss_weight * reference_loss(
+                        mean, flat["reference"][ids], flat["healthy"][ids]
+                    )
                 opt.zero_grad(set_to_none=True)
                 loss.backward()
                 nn.utils.clip_grad_norm_(learner.parameters(), 1.0)
                 opt.step()
                 with torch.no_grad():
                     learner.log_std.clamp_(-2, 0)
-        learner.absorb(flat["obs"])
+        if teacher is None:
+            learner.absorb(flat["obs"])
         actor.load_state_dict(learner.state_dict())
         iteration += 1
         transitions += num_envs * horizon
@@ -310,6 +363,8 @@ def train(
             print(json.dumps(row), flush=True)
         if iteration % 25 == 0:
             save("latest.pt", elapsed)
+            if retention_curriculum:
+                save(f"iteration_{iteration:04d}.pt", elapsed)
     if device == "cuda":
         torch.cuda.synchronize()
     elif device == "mps":

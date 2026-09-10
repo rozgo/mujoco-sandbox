@@ -118,12 +118,14 @@ class DogEnv:
         stride_weight=0.0,
         balance_weight=0.0,
         body_motion_weight=0.0,
+        retention_curriculum=False,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
         if reward_profile not in ("adaptive", "walk"):
             raise ValueError(reward_profile)
         self.randomize_strength = randomize_strength
+        self.retention_curriculum = retention_curriculum
         self.reward_profile = reward_profile
         self.support_weight = support_weight
         self.support_substeps = support_substeps
@@ -142,12 +144,22 @@ class DogEnv:
             PRESETS[k]
             for k in ("healthy", "short_fl", "short_fr", "short_rl", "short_rr")
         ]
+        if retention_curriculum and (
+            len(self.bodies) != 5 or self.bodies[0] != PRESETS["healthy"]
+        ):
+            raise ValueError("Retention curriculum requires the five default bodies")
         if num_envs < len(self.bodies):
             raise ValueError("At least one environment per body")
         self.groups, self.slices = [], []
         start = 0
         for i, body in enumerate(self.bodies):
-            n = num_envs // len(self.bodies) + (i < num_envs % len(self.bodies))
+            if retention_curriculum:
+                # 75% intact geometry: two thirds remain healthy, one third gets
+                # a motor fault. The other 25% has a shortened calf, one per leg.
+                short_n = max(1, num_envs // 16)
+                n = num_envs - 4 * short_n if i == 0 else short_n
+            else:
+                n = num_envs // len(self.bodies) + (i < num_envs % len(self.bodies))
             self.groups.append(
                 Group(
                     body,
@@ -238,7 +250,7 @@ class DogEnv:
             self.commands[ids, 0] = self.rng.uniform(0.3, 0.8, n)
             self.commands[ids, 1] = self.rng.uniform(-0.1, 0.1, n)
             self.commands[ids, 2] = self.rng.uniform(-0.3, 0.3, n)
-            if self.randomize_strength:
+            if self.randomize_strength and not self.retention_curriculum:
                 affected = self.rng.random(n) < 0.5
                 j = self.rng.integers(0, 12, n)
                 self.strength[ids[affected], j[affected]] = self.rng.uniform(
@@ -247,6 +259,17 @@ class DogEnv:
         self.fault_at[ids] = self.rng.integers(100, 300, n) if self.faults else 100000
         self.fault_joint[ids] = self.rng.integers(0, 12, n)
         self.fault_strength[ids] = self.rng.uniform(0.4, 0.8, n)
+        if self.retention_curriculum:
+            self.fault_at[ids] = 100000
+            intact = ids[ids < self.slices[0].stop]
+            affected = intact[self.rng.random(len(intact)) < 1 / 3]
+            # Half start weak; half lose torque during a continuous walk.
+            split = self.rng.random(len(affected)) < 0.5
+            initial, delayed = affected[split], affected[~split]
+            self.strength[initial, self.fault_joint[initial]] = self.fault_strength[
+                initial
+            ]
+            self.fault_at[delayed] = self.rng.integers(100, 250, len(delayed))
         for g, s in zip(self.groups, self.slices, strict=True):
             global_ids = ids[(ids >= s.start) & (ids < s.stop)]
             local = global_ids - s.start
