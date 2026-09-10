@@ -264,7 +264,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                 if entry["case"] == "weak_fr_thigh_60":
                     subtitle = f"FR thigh: {states['strength'][k, 4] * 100:.0f}% torque  |  fault at 3 s"
                 draw.text((x + 16, y + 46), subtitle, font=small, fill="white")
-                status = "WALKING"
+                status = "RUNNING" if limb else "WALKING"
                 color = (180, 198, 208)
                 if not states["alive"][k]:
                     status, color = "FAILED / NO RESET", (255, 136, 116)
@@ -272,6 +272,8 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                     status, color = "INVALID SUPPORT", (255, 136, 116)
                 elif states["completed"][k]:
                     status, color = "5 m COMPLETE", (109, 224, 204)
+                elif limb and frame_no >= round(seconds * fps) - fps:
+                    status, color = "INCOMPLETE", (255, 136, 116)
                 draw.text(
                     (x + 16, y + tile_h - 36),
                     f"{data.qpos[0]:.2f} m  |  {status}",

@@ -32,6 +32,12 @@ def curriculum(stage, n):
             focus if b.name in ("lower_fr", "whole_fr") else small for b in LOSS_BODIES
         ]
         return [PRESETS["healthy"], *LOSS_BODIES], counts
+    if stage == "consolidate":
+        healthy = n // 4
+        remaining = n - healthy
+        return [PRESETS["healthy"], *LOSS_BODIES], [healthy] + [
+            remaining // 8 + (i < remaining % 8) for i in range(8)
+        ]
     raise ValueError(stage)
 
 

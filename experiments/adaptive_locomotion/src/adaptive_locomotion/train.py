@@ -60,6 +60,7 @@ def train(
     limb_stage=None,
     neutralize_validity=None,
     initial_std=None,
+    front_reference=None,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -81,6 +82,10 @@ def train(
         )
     if single_reference and not reference:
         raise ValueError("Single-damage retention also requires a healthy reference")
+    if front_reference and (not single_reference or limb_stage != "consolidate"):
+        raise ValueError(
+            "Front reference requires the balanced limb consolidation stage"
+        )
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
@@ -158,6 +163,12 @@ def train(
         if single_teacher.mode != "blind" or mode != "blind":
             raise ValueError("Single-damage retention requires reactive policies")
         single_teacher = single_teacher.to(actor_device).eval().requires_grad_(False)
+    front_teacher = None
+    if front_reference:
+        front_teacher, _ = load_checkpoint(front_reference)
+        if front_teacher.mode != "blind":
+            raise ValueError("Limb references must use reactive policies")
+        front_teacher = front_teacher.to(actor_device).eval().requires_grad_(False)
     opt = torch.optim.Adam(
         learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
@@ -206,6 +217,16 @@ def train(
         "limb_stage": limb_stage,
         "neutralize_validity": neutralize_validity,
         "initial_std": initial_std,
+        "front_reference_checkpoint": str(
+            Path(front_reference).resolve().relative_to(ROOT)
+        )
+        if front_reference
+        else None,
+        "front_reference_sha256": hashlib.sha256(
+            Path(front_reference).read_bytes()
+        ).hexdigest()
+        if front_reference
+        else None,
         "single_reference_checkpoint": str(
             Path(single_reference).resolve().relative_to(ROOT)
         )
@@ -307,6 +328,18 @@ def train(
                         torch.as_tensor(obs, device=actor_device)
                     )
                 single_target = single_target.cpu().numpy()
+                if front_teacher is not None:
+                    with torch.no_grad():
+                        front_target, _ = front_teacher(
+                            torch.as_tensor(obs, device=actor_device)
+                        )
+                    # Training-only targets: both FR removals use the successful
+                    # focused reference; other missing limbs use the earlier one.
+                    single_target = np.where(
+                        (ctx[:, 1] == 0)[:, None],
+                        front_target.cpu().numpy(),
+                        single_target,
+                    )
             log_std = actor.log_std.detach().cpu().numpy()
             noise = normal_rng.standard_normal(mean.shape, dtype=np.float32)
             actions = mean + np.exp(log_std) * noise
