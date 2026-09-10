@@ -121,6 +121,8 @@ class DogEnv:
         stride_weight=0.0,
         balance_weight=0.0,
         body_motion_weight=0.0,
+        damage_action_rate_weight=0.0,
+        damage_angular_rate_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -147,10 +149,13 @@ class DogEnv:
         if stride_weight < 0:
             raise ValueError("Stride weight must be nonnegative")
         self.stride_weight = stride_weight
-        if min(balance_weight, body_motion_weight) < 0:
+        if min(balance_weight, body_motion_weight, damage_action_rate_weight,
+               damage_angular_rate_weight) < 0:
             raise ValueError("Gait regularization weights must be nonnegative")
         self.balance_weight = balance_weight
         self.body_motion_weight = body_motion_weight
+        self.damage_action_rate_weight = damage_action_rate_weight
+        self.damage_angular_rate_weight = damage_angular_rate_weight
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -433,6 +438,14 @@ class DogEnv:
             )
         if self.body_motion_weight:
             reward -= self.body_motion_weight * body_motion_cost(self.vel, self.gyro)
+        # Soft training costs only: no action filter, phase template or change to
+        # the physical servo. Ignore semantic outputs for nonexistent joints.
+        damaged = (self.valid < 1).any(1)
+        reward -= damaged * (
+            self.damage_action_rate_weight
+            * np.sum(((action - old_action) * self.valid) ** 2, 1)
+            + self.damage_angular_rate_weight * np.sum(self.gyro[:, :2] ** 2, 1)
+        )
         if self.stride_weight:
             # The task command expressed in world coordinates supplies direction,
             # not a desired foot trajectory or a phase shared across the legs.

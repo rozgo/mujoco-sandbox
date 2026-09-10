@@ -49,6 +49,8 @@ def train(
     stride_weight=0.0,
     balance_weight=0.0,
     body_motion_weight=0.0,
+    damage_action_rate_weight=0.0,
+    damage_angular_rate_weight=0.0,
     retention_curriculum=False,
     reference=None,
     reference_reward_weight=0.0,
@@ -61,6 +63,7 @@ def train(
     neutralize_validity=None,
     initial_std=None,
     front_reference=None,
+    front_reference_scale=1.0,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -82,6 +85,8 @@ def train(
         )
     if single_reference and not reference:
         raise ValueError("Single-damage retention also requires a healthy reference")
+    if not 0 <= front_reference_scale <= 1:
+        raise ValueError("Front reference scale must be in [0, 1]")
     if front_reference and (not single_reference or limb_stage != "consolidate"):
         raise ValueError(
             "Front reference requires the balanced limb consolidation stage"
@@ -115,6 +120,8 @@ def train(
         stride_weight=stride_weight,
         balance_weight=balance_weight,
         body_motion_weight=body_motion_weight,
+        damage_action_rate_weight=damage_action_rate_weight,
+        damage_angular_rate_weight=damage_angular_rate_weight,
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
         limb_stage=limb_stage,
@@ -212,6 +219,9 @@ def train(
         "stride_weight": stride_weight,
         "balance_weight": balance_weight,
         "body_motion_weight": body_motion_weight,
+        "damage_action_rate_weight": damage_action_rate_weight,
+        "damage_angular_rate_weight": damage_angular_rate_weight,
+        "front_reference_scale": front_reference_scale,
         "retention_curriculum": retention_curriculum,
         "pair_level": pair_level,
         "limb_stage": limb_stage,
@@ -375,7 +385,8 @@ def train(
             if single_teacher is not None:
                 vals.update(
                     single_reference=single_target,
-                    single=single_damage_mask(env.context).astype(np.float32),
+                    single=single_damage_mask(env.context).astype(np.float32)
+                    * np.where(env.context[:, 1] == 0, front_reference_scale, 1),
                 )
             for k, v in vals.items():
                 buf[k][t] = v
