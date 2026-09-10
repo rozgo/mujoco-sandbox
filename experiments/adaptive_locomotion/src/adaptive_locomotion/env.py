@@ -21,6 +21,7 @@ from .bodies import (
     joint_mapping,
 )
 from .gait_balance import ContactTiming, body_motion_cost
+from .paired import training_pairs
 from .stride import StrideTracker
 
 OBS_DIM, CONTEXT_DIM, HISTORY = 66, 20, 25
@@ -119,6 +120,7 @@ class DogEnv:
         balance_weight=0.0,
         body_motion_weight=0.0,
         retention_curriculum=False,
+        pair_level=None,
     ):
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
@@ -126,6 +128,11 @@ class DogEnv:
             raise ValueError(reward_profile)
         self.randomize_strength = randomize_strength
         self.retention_curriculum = retention_curriculum
+        self.pair_level = pair_level
+        if pair_level is not None and (not retention_curriculum or num_envs < 16):
+            raise ValueError(
+                "Paired stages require retention curriculum and at least 16 environments"
+            )
         self.reward_profile = reward_profile
         self.support_weight = support_weight
         self.support_substeps = support_substeps
@@ -150,10 +157,15 @@ class DogEnv:
             raise ValueError("Retention curriculum requires the five default bodies")
         if num_envs < len(self.bodies):
             raise ValueError("At least one environment per body")
+        if pair_level:
+            self.bodies += training_pairs(pair_level)
         self.groups, self.slices = [], []
         start = 0
         for i, body in enumerate(self.bodies):
-            if retention_curriculum:
+            if pair_level:
+                small_n = num_envs // 16
+                n = num_envs - 8 * small_n if i == 0 else small_n
+            elif retention_curriculum:
                 # 75% intact geometry: two thirds remain healthy, one third gets
                 # a motor fault. The other 25% has a shortened calf, one per leg.
                 short_n = max(1, num_envs // 16)
@@ -164,7 +176,9 @@ class DogEnv:
                 Group(
                     body,
                     n,
-                    max(1, threads // len(self.bodies)),
+                    max(1, round(threads * n / num_envs))
+                    if pair_level
+                    else max(1, threads // len(self.bodies)),
                     terrain,
                     True if sensing is None else sensing,
                     timestep,

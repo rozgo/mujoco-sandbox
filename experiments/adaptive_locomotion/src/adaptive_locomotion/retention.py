@@ -7,6 +7,10 @@ def healthy_mask(context):
     return (context[:, :4] == 1).all(1) & (context[:, 4:16] >= 0.99).all(1)
 
 
+def single_damage_mask(context):
+    return ((context[:, :4] < 1).sum(1) == 1) & (context[:, 4:16] >= 0.99).all(1)
+
+
 def reference_bonus(actions, reference_actions, healthy):
     """Bounded healthy-only similarity bonus, with no target phase or trajectory."""
     error = np.mean((np.clip(actions, -3, 3) - reference_actions) ** 2, axis=1)

@@ -8,6 +8,7 @@ import torch
 
 from .bodies import CONTROL_DT, LIMITS, PRESETS, BodySpec
 from .env import DogEnv
+from .paired import PAIR_CASES
 from .train import load_checkpoint
 
 CASES = {
@@ -23,6 +24,7 @@ CASES = {
     "unseen_steps": (BodySpec("unseen_short", (0.82, 1, 1, 1)), "test_steps", None),
     "missing_calf": (PRESETS["missing_fl"], "flat", None),
 }
+CASES.update(PAIR_CASES)
 
 
 def lane_command(env, speed=0.55):

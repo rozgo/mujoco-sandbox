@@ -86,6 +86,8 @@ def record(
         "short_steps": "Shortened calf over physical 4 / 6 / 4 cm steps",
         "unseen_steps": "Shortened calf over physical 6 / 9 / 6 cm steps",
         "missing_calf": "Front-left calf and its joint removed",
+        "pair_fl_rr_hard": "FL + RR calves: 75% / 65% remaining",
+        "pair_holdout_left": "Held-out left calves: 78% / 68% remaining",
     }
     if saved["config"].get("stride_weight", 0):
         captions["healthy"] = "Healthy dog / longer strides on level ground"
@@ -93,6 +95,8 @@ def record(
         captions["healthy"] = "Healthy dog / stance and swing balance rewards"
     if saved["config"].get("reference_checkpoint"):
         captions["healthy"] = "Healthy walk retained after damage training"
+    if saved["config"].get("pair_level"):
+        captions["healthy"] = "Healthy walk after paired-damage training"
     writer = imageio_ffmpeg.write_frames(
         str(output),
         (1280, 720),
@@ -289,6 +293,7 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                 "missing_calf": "MISSING FRONT-LEFT CALF",
                 "short_steps": "SHORTENED CALF / 4, 6, 4 CM STEPS",
                 "healthy": "HEALTHY DOG / LEVEL GROUND",
+                "pair_fl_rr_hard": "FL + RR CALVES / 75% AND 65% REMAINING",
             }.get(case, case.replace("_", " ").upper())
             draw.text(
                 (24, 15),
@@ -339,6 +344,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
                         "DAMAGE + RETENTION"
                         if saved["config"].get("reference_checkpoint")
                         else "HEALTHY REFERENCE"
+                    )
+                if any(r[0]["config"].get("pair_level") for r in runs):
+                    label = (
+                        "PAIRED-DAMAGE TRAINED"
+                        if saved["config"].get("pair_level")
+                        else "SINGLE-DAMAGE TRAINED"
                     )
                 draw.text(
                     (j * 640 + 24, 64),

@@ -19,7 +19,7 @@ from torch import nn
 from .bodies import PRESETS, ROOT
 from .env import CONTEXT_DIM, HISTORY, OBS_DIM, DogEnv
 from .policy import Policy, log_density
-from .retention import healthy_mask, reference_bonus, reference_loss
+from .retention import healthy_mask, reference_bonus, reference_loss, single_damage_mask
 
 
 def load_checkpoint(path, mode=None):
@@ -54,6 +54,9 @@ def train(
     reference_reward_weight=0.0,
     reference_loss_weight=0.0,
     learning_rate=0.001,
+    pair_level=None,
+    single_reference=None,
+    single_reference_weight=0.0,
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -67,6 +70,14 @@ def train(
         raise ValueError("Reference weights require a frozen reference checkpoint")
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
+    if single_reference_weight < 0 or (
+        single_reference_weight and not single_reference
+    ):
+        raise ValueError(
+            "Single-damage retention needs a reference and nonnegative weight"
+        )
+    if single_reference and not reference:
+        raise ValueError("Single-damage retention also requires a healthy reference")
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
@@ -97,6 +108,7 @@ def train(
         balance_weight=balance_weight,
         body_motion_weight=body_motion_weight,
         retention_curriculum=retention_curriculum,
+        pair_level=pair_level,
     )
     ancestry = 0.0
     parent = None
@@ -117,6 +129,12 @@ def train(
         if teacher.mode != "blind" or mode != "blind":
             raise ValueError("Reference retention currently supports reactive policies")
         teacher = teacher.to(actor_device).eval().requires_grad_(False)
+    single_teacher = None
+    if single_reference:
+        single_teacher, _ = load_checkpoint(single_reference)
+        if single_teacher.mode != "blind" or mode != "blind":
+            raise ValueError("Single-damage retention requires reactive policies")
+        single_teacher = single_teacher.to(actor_device).eval().requires_grad_(False)
     opt = torch.optim.Adam(
         learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
@@ -135,6 +153,8 @@ def train(
         shapes["hist"] = (HISTORY, OBS_DIM)
     if teacher is not None:
         shapes.update(reference=(12,), healthy=())
+    if single_teacher is not None:
+        shapes.update(single_reference=(12,), single=())
     buf = {
         k: np.empty((horizon, num_envs, *shape), np.float32)
         for k, shape in shapes.items()
@@ -159,6 +179,18 @@ def train(
         "balance_weight": balance_weight,
         "body_motion_weight": body_motion_weight,
         "retention_curriculum": retention_curriculum,
+        "pair_level": pair_level,
+        "single_reference_checkpoint": str(
+            Path(single_reference).resolve().relative_to(ROOT)
+        )
+        if single_reference
+        else None,
+        "single_reference_sha256": hashlib.sha256(
+            Path(single_reference).read_bytes()
+        ).hexdigest()
+        if single_reference
+        else None,
+        "single_reference_weight": single_reference_weight,
         "reference_checkpoint": str(Path(reference).resolve().relative_to(ROOT))
         if reference
         else None,
@@ -243,6 +275,12 @@ def train(
                 with torch.no_grad():
                     target, _ = teacher(torch.as_tensor(obs, device=actor_device))
                 target = target.cpu().numpy()
+            if single_teacher is not None:
+                with torch.no_grad():
+                    single_target, _ = single_teacher(
+                        torch.as_tensor(obs, device=actor_device)
+                    )
+                single_target = single_target.cpu().numpy()
             log_std = actor.log_std.detach().cpu().numpy()
             noise = normal_rng.standard_normal(mean.shape, dtype=np.float32)
             actions = mean + np.exp(log_std) * noise
@@ -275,6 +313,11 @@ def train(
                 vals["hist"] = history
             if teacher is not None:
                 vals.update(reference=target, healthy=healthy)
+            if single_teacher is not None:
+                vals.update(
+                    single_reference=single_target,
+                    single=single_damage_mask(env.context).astype(np.float32),
+                )
             for k, v in vals.items():
                 buf[k][t] = v
             metrics.append([terms["track"].mean(), terms["speed"].mean(), raw_reward])
@@ -333,6 +376,10 @@ def train(
                 if teacher is not None:
                     loss += reference_loss_weight * reference_loss(
                         mean, flat["reference"][ids], flat["healthy"][ids]
+                    )
+                if single_teacher is not None:
+                    loss += single_reference_weight * reference_loss(
+                        mean, flat["single_reference"][ids], flat["single"][ids]
                     )
                 opt.zero_grad(set_to_none=True)
                 loss.backward()
