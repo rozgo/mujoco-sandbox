@@ -16,6 +16,8 @@ A shared learned controller handles shortened calves, weakened motors and low st
 
 **[Damage training that retains healthy walking](previews/locomotion/damage_retention.mp4)** · [Recipe and measured limits](docs/locomotion/DAMAGE_RETENTION.md) · [Healthy gait retained](previews/locomotion/damage_healthy_retention.mp4) · [Shortened-calf comparison](previews/locomotion/damage_short_fr_comparison.mp4)
 
+**[Two damaged calves: before and after training](previews/locomotion/paired_damage_comparison.mp4)** · [Paired-damage results](docs/locomotion/PAIRED_DAMAGE.md) · [Three-camera video](previews/locomotion/paired_damage.mp4) · [Healthy gait retained](previews/locomotion/paired_healthy_retention.mp4)
+
 *Real-time motion with three synchronized cameras. Learned joint control follows scripted velocity commands; general parkour and arbitrary-damage recovery remain open.*
 
 ## Learning the wind
