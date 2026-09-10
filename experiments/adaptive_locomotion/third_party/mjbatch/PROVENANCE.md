@@ -1,0 +1,1 @@
+Vendored from https://github.com/kevinzakka/mjbatch at 77966f85bcd8f7ef4351cb4a1a6f42e133d19725 (Apache-2.0). C++ source unchanged. Build/runtime MuJoCo pins and wheel repair names updated from 3.11.0 to 3.13.0; example Torch pin updated to 2.14.0 and old CUDA source index removed. Only build/source/tests and licensing documentation included.

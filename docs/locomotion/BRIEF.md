@@ -1,6 +1,16 @@
 # Adaptive locomotion across partial damage
 
-Planning follow-up, September 10, 2026 UTC. No new training or implementation goal has started. This brief supersedes the earlier leg-count framing and the SWAP-specific architecture proposal.
+Implementation started September 10, 2026 at 06:53:59 UTC on `experiment/adaptive-dog`. This brief supersedes the earlier leg-count framing and the SWAP-specific architecture proposal.
+
+## Implementation authorization and hard training constraint
+
+> lets implement this into a branch to make sure we get traction before polutin main branch... set as goal and lets try to learn
+
+> we need to prioritize fast RL... anything longer than a few minutes is not acceptable
+
+> fast rl through batching, or GPU, or just from vectorized environment or gym... anything, but if training takes hours then we cant continue this path
+
+Training speed is an acceptance gate. Interpret a few minutes as a maximum five-minute cumulative training budget per final policy, including teacher/pretraining, estimator training, fine-tuning and resumed ancestry. Compare independent bounded experiments and CPU/GPU backends; do not conceal longer training in a chain of short runs. Record setup, compilation and evaluation separately and also report full time-to-result. If the learning gate fails, report it and reassess the approach rather than extending a policy to hours. Do not merge experimental work into main.
 
 ## User direction
 
