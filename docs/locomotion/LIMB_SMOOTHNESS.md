@@ -47,3 +47,18 @@ Use the same smoothness weights, reference strength, and mirror-loss weight
 for all missing-limb bodies. Compare all four left/right pairs, healthy gait
 retention, completion, speed and motion quality. Do not optimize a hand-picked
 side. The previously declared final seed and demonstration seed remain fixed.
+
+General selection gate, fixed before inspecting the bilateral run: all nine
+bodies must complete all eight development trials with valid support, and all
+healthy gait gates must pass. For each removal, require at least 90% of the
+smaller of the parent's speed and the 0.55 m/s command; reducing excessive
+speed toward the command is acceptable. Rank eligible candidates by the mean
+across all eight removals of their relative active-command step RMS and their
+absolute joint-motion RMS above 6 Hz. The two components have equal weight.
+All cases contribute equally; there is no front-right selection bonus.
+
+Motion metrics use seconds 1–12 and every trial, including failed trials.
+Joint spectra use a demeaned Hann window with Parseval normalization.
+Report absolute high-frequency RMS, not just its fraction of total motion.
+Angular-rate RMS here is sqrt(mean(wx² + wy²)); earlier stride reports average
+across axes and therefore use a different normalization.
