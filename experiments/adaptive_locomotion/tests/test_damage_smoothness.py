@@ -1,4 +1,5 @@
 import numpy as np
+
 from adaptive_locomotion.bodies import PRESETS
 from adaptive_locomotion.env import DogEnv
 from adaptive_locomotion.limb_loss import LOSS_BODIES
@@ -18,6 +19,7 @@ def test_smoothness_changes_reward_without_filtering_physics():
                 threads=1,
                 damage_action_rate_weight=w,
                 damage_angular_rate_weight=w,
+                damage_joint_accel_weight=w * 1e-5,
             )
             for w in (0, 0.1)
         ]

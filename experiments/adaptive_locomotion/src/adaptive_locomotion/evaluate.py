@@ -9,9 +9,9 @@ import torch
 from .bodies import CONTROL_DT, LIMITS, PRESETS, BodySpec
 from .env import DogEnv
 from .limb_loss import LOSS_BODIES
+from .motion_quality import measure
 from .paired import PAIR_CASES, training_pairs
 from .train import load_checkpoint
-from .motion_quality import measure
 
 CASES = {
     "healthy": (PRESETS["healthy"], "flat", None),

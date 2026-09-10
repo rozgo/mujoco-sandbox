@@ -123,6 +123,7 @@ class DogEnv:
         body_motion_weight=0.0,
         damage_action_rate_weight=0.0,
         damage_angular_rate_weight=0.0,
+        damage_joint_accel_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -155,6 +156,7 @@ class DogEnv:
                 body_motion_weight,
                 damage_action_rate_weight,
                 damage_angular_rate_weight,
+                damage_joint_accel_weight,
             )
             < 0
         ):
@@ -163,6 +165,7 @@ class DogEnv:
         self.body_motion_weight = body_motion_weight
         self.damage_action_rate_weight = damage_action_rate_weight
         self.damage_angular_rate_weight = damage_angular_rate_weight
+        self.damage_joint_accel_weight = damage_joint_accel_weight
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -365,6 +368,7 @@ class DogEnv:
         ).astype(np.float32)
 
     def step(self, action):
+        old_dq = self.dq.copy()
         action = np.clip(np.asarray(action), -3, 3)
         old_action = self.action.copy()
         events = np.flatnonzero(self.steps == self.fault_at)
@@ -452,6 +456,8 @@ class DogEnv:
             self.damage_action_rate_weight
             * np.sum(((action - old_action) * self.valid) ** 2, 1)
             + self.damage_angular_rate_weight * np.sum(self.gyro[:, :2] ** 2, 1)
+            + self.damage_joint_accel_weight
+            * np.sum(((self.dq - old_dq) * self.valid / CONTROL_DT) ** 2, 1)
         )
         if self.stride_weight:
             # The task command expressed in world coordinates supplies direction,

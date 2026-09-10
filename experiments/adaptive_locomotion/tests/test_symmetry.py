@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+
 from adaptive_locomotion.env import DogEnv
 from adaptive_locomotion.limb_loss import LOSS_BODIES
 from adaptive_locomotion.symmetry import mirror_action, mirror_observation

@@ -1,4 +1,5 @@
 import numpy as np
+
 from adaptive_locomotion.motion_quality import measure
 
 

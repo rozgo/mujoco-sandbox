@@ -62,3 +62,16 @@ Joint spectra use a demeaned Hann window with Parseval normalization.
 Report absolute high-frequency RMS, not just its fraction of total motion.
 Angular-rate RMS here is sqrt(mean(wx² + wy²)); earlier stride reports average
 across axes and therefore use a different normalization.
+
+## General refinement extension
+
+The first bilateral run's iteration 200 passed all 72 development trials and
+healthy gait gates, with lower mean command jitter. Its high-frequency joint
+motion did not improve consistently. Extend by 150 seconds from that candidate,
+with the same balanced curriculum and mirror weight. Increase the missing-body
+action-change weight from 0.05 to 0.10 and angular-rate weight from 0.15 to 0.30;
+add 2.5e-6 times the summed squared finite-difference joint acceleration, measured
+at the 50 Hz controller. Only existing joints contribute. The frozen damage
+reference is this passing candidate, weighted 0.5 identically on all removals.
+Selection gates and seeds are unchanged. This is a soft learned-motion cost,
+not a physical damping change or runtime filter.
