@@ -38,6 +38,8 @@ def main():
     p.add_argument("--reference", type=Path)
     p.add_argument("--reference-reward-weight", type=float, default=0.0)
     p.add_argument("--reference-loss-weight", type=float, default=0.0)
+    p.add_argument("--damage-healthy-reward-weight", type=float, default=0.0)
+    p.add_argument("--damage-healthy-loss-weight", type=float, default=0.0)
     p.add_argument("--learning-rate", type=float, default=0.001)
     p.add_argument("--pair-level", choices=("mild", "hard"))
     p.add_argument(

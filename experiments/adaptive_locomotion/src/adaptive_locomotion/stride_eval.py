@@ -148,6 +148,8 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
                         "mean_completed_swing_s",
                         "mean_contact_force_magnitude_n",
                         "mean_stride_m",
+                        "mean_cycle_seconds",
+                        "strides_per_second",
                     )
                 },
             }

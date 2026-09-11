@@ -18,6 +18,7 @@ from torch import nn
 
 from .bodies import PRESETS, ROOT
 from .env import CONTEXT_DIM, HISTORY, OBS_DIM, DogEnv
+from .healthy_style import style_bonus, style_loss, style_mask, teacher_observation
 from .policy import Policy, log_density
 from .retention import healthy_mask, reference_bonus, reference_loss, single_damage_mask
 from .symmetry import mirror_loss
@@ -58,6 +59,8 @@ def train(
     reference=None,
     reference_reward_weight=0.0,
     reference_loss_weight=0.0,
+    damage_healthy_reward_weight=0.0,
+    damage_healthy_loss_weight=0.0,
     learning_rate=0.001,
     pair_level=None,
     single_reference=None,
@@ -79,6 +82,13 @@ def train(
         )
     if (reference_reward_weight or reference_loss_weight) and reference is None:
         raise ValueError("Reference weights require a frozen reference checkpoint")
+    if min(damage_healthy_reward_weight, damage_healthy_loss_weight) < 0:
+        raise ValueError("Healthy-style weights must be nonnegative")
+    healthy_style = bool(damage_healthy_reward_weight or damage_healthy_loss_weight)
+    if healthy_style and (reference is None or mode != "blind" or limb_stage is None):
+        raise ValueError(
+            "Healthy style requires a healthy reference and reactive limb-loss training"
+        )
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
     if single_reference_weight < 0 or (
@@ -202,6 +212,8 @@ def train(
         shapes["hist"] = (HISTORY, OBS_DIM)
     if teacher is not None:
         shapes.update(reference=(12,), healthy=())
+    if healthy_style:
+        shapes.update(style_mask=(12,))
     if single_teacher is not None:
         shapes.update(single_reference=(12,), single=())
     buf = {
@@ -267,6 +279,11 @@ def train(
         else None,
         "reference_reward_weight": reference_reward_weight,
         "reference_loss_weight": reference_loss_weight,
+        "damage_healthy_reward_weight": damage_healthy_reward_weight,
+        "damage_healthy_loss_weight": damage_healthy_loss_weight,
+        "healthy_style_teacher_encoding": "nominal missing channels, intact validity; surviving feedback unchanged"
+        if healthy_style
+        else None,
         "learning_rate": learning_rate,
         "normalization_frozen": teacher is not None,
         "body_environment_counts": {g.body.name: g.n for g in env.groups},
@@ -341,7 +358,10 @@ def train(
             mean, val = infer(obs, ctx, history, extra)
             if teacher is not None:
                 with torch.no_grad():
-                    target, _ = teacher(torch.as_tensor(obs, device=actor_device))
+                    target_obs = teacher_observation(obs) if healthy_style else obs
+                    target, _ = teacher(
+                        torch.as_tensor(target_obs, device=actor_device)
+                    )
                 target = target.cpu().numpy()
             if single_teacher is not None:
                 with torch.no_grad():
@@ -373,6 +393,11 @@ def train(
                 reward += reference_reward_weight * reference_bonus(
                     actions, target, healthy
                 )
+            if healthy_style:
+                active_style = style_mask(obs)
+                reward += damage_healthy_reward_weight * style_bonus(
+                    actions, target, active_style
+                )
             raw_reward = float(reward.mean())
             timeout = done & ~fell
             if timeout.any():
@@ -393,6 +418,8 @@ def train(
                 vals["hist"] = history
             if teacher is not None:
                 vals.update(reference=target, healthy=healthy)
+            if healthy_style:
+                vals.update(style_mask=active_style)
             if single_teacher is not None:
                 vals.update(
                     single_reference=single_target,
@@ -457,6 +484,10 @@ def train(
                 if teacher is not None:
                     loss += reference_loss_weight * reference_loss(
                         mean, flat["reference"][ids], flat["healthy"][ids]
+                    )
+                if healthy_style:
+                    loss += damage_healthy_loss_weight * style_loss(
+                        mean, flat["reference"][ids], flat["style_mask"][ids]
                     )
                 if single_teacher is not None:
                     loss += single_reference_weight * reference_loss(
