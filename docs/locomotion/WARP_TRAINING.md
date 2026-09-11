@@ -52,3 +52,33 @@ load than the earlier backend pilot. Fresh CPU/Warp pairs must run under the sam
 current machine conditions; do not attribute gains over old loaded measurements
 solely to new code. Setup, compilation, learning, evaluation and rendering are
 reported separately.
+
+## First matched result and diagnosis
+
+The 512-world pairs completed identical 48 rounds / 768 optimizer steps /
+589,824 transitions. CPU took 44.314, 43.427, 43.940 seconds; Warp took 25.770,
+26.306, 24.934 seconds: **1.710× pooled speedup**. All seeds and results are
+retained. CPU completes **198/216**, Warp **183/216**; all 432 trials remain
+upright with valid support. The gap is lower-FR (24/24 vs 14/24) and whole-FR
+(6/24 vs 1/24). The predeclared completion and per-seed gait gates fail. This
+is not accepted as matched behavior.
+
+A frozen-policy cross-check (seed 9241, four trials per case, both front-right
+removals, both engines, both 2 ms and 0.5 ms) shows very similar distances on
+the two engines for the same weights. For example, the Warp seed-4 lower-FR
+policy reaches 5.4045 m on CPU and 5.3998 m on Warp at 2 ms, with whole-FR
+5.3426 vs 5.3431 m. Its weakness persists on its own training engine. This
+supports diagnosing drift during continuation rather than a runtime-only
+transfer failure; it does not prove every numerical difference is harmless.
+The unchanged archived parent scores 71/72 and official v1 72/72 on seed 9237.
+
+### Next decision, before more training
+
+Use **4096 worlds on both engines**, **six PPO rounds**, and the same
+**3072-sample minibatches, four epochs, 589,824 transitions and 768 optimizer
+steps** as the first matched test. Keep the same parent, seeds 2/3/4, learning
+rate 0.0001, network, rewards, reference bank and clocks. This trades sequential
+rollout depth for a broader simultaneous population, a possible way to reduce
+gradient variability while exploiting GPU batching. It is a hypothesis to test,
+not an established explanation. Apply the same acceptance gates and preserve
+the failed smaller-batch results. Labels start with `scaled_`.

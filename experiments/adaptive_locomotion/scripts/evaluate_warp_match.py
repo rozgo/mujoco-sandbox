@@ -10,7 +10,7 @@ from evaluate_visible_steps import compare
 from adaptive_locomotion.bodies import ROOT
 
 
-def main(labels):
+def main(labels, prefix="matched"):
     docs = ROOT / "docs/locomotion/warp_training"
     for label in labels:
         directory = docs / label
@@ -32,7 +32,7 @@ def main(labels):
     pairs = []
     for seed in (2, 3, 4):
         paths = [
-            docs / f"matched_{backend}_seed{seed}" / "evaluation.json"
+            docs / f"{prefix}_{backend}_seed{seed}" / "evaluation.json"
             for backend in ("mjbatch", "warp")
         ]
         if not all(p.exists() for p in paths):
@@ -62,7 +62,7 @@ def main(labels):
             json.dumps({k: v for k, v in pairs[-1].items() if k != "gait_comparison"}),
             flush=True,
         )
-    (docs / "matched_pairs.json").write_text(
+    (docs / f"{prefix}_pairs.json").write_text(
         json.dumps({"seed": 9237, "pairs": pairs}, indent=2) + "\n"
     )
 
@@ -70,4 +70,5 @@ def main(labels):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("labels", nargs="+")
-    main(p.parse_args().labels)
+    p.add_argument("--prefix", choices=("matched", "scaled"), default="matched")
+    main(**vars(p.parse_args()))

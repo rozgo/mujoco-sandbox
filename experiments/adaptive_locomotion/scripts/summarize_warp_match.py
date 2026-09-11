@@ -1,23 +1,27 @@
 """Apply the declared paired CPU/Warp learning gates without selecting checkpoints."""
 
+import argparse
 import json
 
 from adaptive_locomotion.bodies import ROOT
 
 
-def main():
+def main(prefix="matched"):
     docs = ROOT / "docs/locomotion/warp_training"
-    pairs = json.loads((docs / "matched_pairs.json").read_text())["pairs"]
+    pairs = json.loads((docs / f"{prefix}_pairs.json").read_text())["pairs"]
     assert len(pairs) == 3 and {p["seed"] for p in pairs} == {2, 3, 4}
     timings, configurations, physical = [], [], []
     for pair in pairs:
         reports = []
         row = {"seed": pair["seed"]}
         for backend in ("mjbatch", "warp"):
-            path = docs / f"matched_{backend}_seed{pair['seed']}"
+            path = docs / f"{prefix}_{backend}_seed{pair['seed']}"
             report = json.loads((path / "training.json").read_text())
             reports.append(report)
-            assert report["iterations"] == 48 and report["optimizer_steps"] == 768
+            assert (
+                report["iterations"] == report["max_iterations"]
+                and report["optimizer_steps"] == 768
+            )
             assert report["transitions"] == 589824
             row[f"{backend}_seconds"] = report["training_seconds"]
             row[f"{backend}_transitions_per_second"] = (
@@ -89,13 +93,15 @@ def main():
         "by_case": by_case,
         "pooled_training_speedup": sum(r["mjbatch_seconds"] for r in timings)
         / sum(r["warp_seconds"] for r in timings),
-        "scope": "Three paired seeds, fixed parent, 512 worlds and identical 48 PPO rounds; development validation, not full curriculum retraining or general robustness.",
+        "scope": f"Three paired seeds, fixed parent, {prefix} world/rollout layout and identical experience plus optimizer-step counts; development validation, not full curriculum retraining or general robustness.",
     }
-    (docs / "matched_summary.json").write_text(json.dumps(report, indent=2) + "\n")
+    (docs / f"{prefix}_summary.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2), flush=True)
     if not report["passed"]:
         raise SystemExit(1)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--prefix", choices=("matched", "scaled"), default="matched")
+    main(**vars(parser.parse_args()))
