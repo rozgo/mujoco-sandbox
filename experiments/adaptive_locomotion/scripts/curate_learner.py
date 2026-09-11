@@ -8,7 +8,7 @@ import torch
 
 from adaptive_locomotion.bodies import ROOT
 
-LABELS = ("mac_mps", "desktop_cpu", "desktop_cuda")
+LABELS = ("mac_mps", "desktop_cpu", "desktop_cuda", "warp_bvh_4096")
 
 
 def state_digest(state):

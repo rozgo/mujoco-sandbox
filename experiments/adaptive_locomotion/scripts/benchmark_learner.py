@@ -114,7 +114,7 @@ def gpu_sample():
         return None
 
 
-def run(label, device, physics_backend="mjbatch"):
+def run(label, device, physics_backend="mjbatch", num_envs=512):
     assert digest(PARENT) == PARENT_SHA and digest(MOTION) == MOTION_SHA
     out = ROOT / "outputs/locomotion/learner_comparison" / label
     out.mkdir(parents=True, exist_ok=True)
@@ -149,7 +149,7 @@ def run(label, device, physics_backend="mjbatch"):
             allowance=2000,
             extension_reason="Matched 90-second learner backend benchmark from the identical archived parent; official v1 is frozen.",
             seed=2,
-            num_envs=512,
+            num_envs=num_envs,
             mode="blind",
             resume=PARENT,
             bodies="all",
@@ -183,6 +183,7 @@ def run(label, device, physics_backend="mjbatch"):
             "label": label,
             "learner_device": device,
             "physics_backend": physics_backend,
+            "num_envs": num_envs,
             "python": platform.python_version(),
             "torch": torch.__version__,
             "architecture": platform.machine(),
@@ -206,6 +207,7 @@ if __name__ == "__main__":
     parser.add_argument("--make-bank", action="store_true")
     parser.add_argument("--label")
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"))
+    parser.add_argument("--num-envs", type=int, default=512)
     parser.add_argument(
         "--physics-backend", choices=("mjbatch", "warp"), default="mjbatch"
     )
@@ -213,6 +215,6 @@ if __name__ == "__main__":
     if args.make_bank:
         make_bank()
     elif args.label and args.device:
-        run(args.label, args.device, args.physics_backend)
+        run(args.label, args.device, args.physics_backend, args.num_envs)
     else:
         parser.error("Provide --make-bank or both --label and --device")

@@ -111,3 +111,23 @@ MJWarp (this floor's bound extends ±24 m); this bridge is intended for the boun
 course, not arbitrary unbounded plane-ray queries. Physics plane collisions
 remain unchanged. The new attempt uses `bvh_` result labels; prior results stay
 available.
+
+## First accelerated results and bounded learning decision
+
+The BVH path passes **19 optional-backend checks**, including all 216 randomized
+sensor poses (0.1 mm tolerance), in 20.77 seconds with existing compiled kernels.
+Healthy-512 rises to **99,850 physics control intervals/s** and **70,127/s with
+the environment bridge**, versus CPU **16,416 / 15,406**. The unchanged nine-body
+split at 512 worlds reaches **11,458 / 10,520**, below CPU **16,996 / 14,769**:
+48-world injury batches underfill the GPU. These are standing-command benchmarks,
+not PPO update rates.
+
+Before inspecting the 4096-world results, declare the next learning attempt:
+if the larger nine-body benchmark shows a useful gain, run **one 90-second
+continuation at 4096 environments** (`warp_bvh_4096`), with the same frozen parent,
+healthy reference bank, seed 2, rewards, timestep and optimizer settings. This is
+an explicit scaling experiment: batch size/update count differ from the earlier
+512-world learner comparison, so neither speed nor learning quality isolates
+hardware alone. No small-batch GPU continuation is needed if it is already slower.
+Evaluate the final checkpoint in CPU MuJoCo with eight trials per body, seed 9217.
+Keep failures and do not replace official v1. The training budget stays 90 seconds.
