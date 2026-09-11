@@ -46,3 +46,19 @@ assets. Use `--presentation original` for the prior visual settings.
 [Preview](../../previews/locomotion/limb_damage_visibility_preview.png) ·
 [Updated nine-case video](../../previews/locomotion/limb_damage_visible.mp4) ·
 [Previous video](../../previews/locomotion/limb_bilateral_smooth.mp4)
+
+## Verification
+
+All nine replay files match the previous trajectories byte for byte, including
+timestamps, joint states, velocities, commands, measured forces and outcomes.
+The checkpoint and original physical-model hashes also match. Both lower-FR
+and whole-FR were checked for 100 live control steps: changing the visual preset
+produced exactly the same joint positions and policy observations. The native
+Mac viewer passed a five-second smoke test. The full RL suite was not rerun
+for this presentation-only change; Ruff and focused checks passed.
+
+The video is 3840×2160, 25 fps, twelve seconds at 1×. All 300 encoded frames
+decode. Opening, middle and ending frames were inspected, and every damage
+marker is visible in six sampled frames across the clip. Replay preparation
+took 0.537 seconds and rendering/export 40.760 seconds, excluding renderer
+setup. [Validation report](DAMAGE_VISIBILITY_VALIDATION.json).

@@ -1,5 +1,7 @@
 # Adaptive dog: minute-scale RL pilot
 
+Video update: **[clearer cut markers and contact shadows](DAMAGE_VISIBILITY.md)**. [Watch the updated nine-case video](../../previews/locomotion/limb_damage_visible.mp4), labeled WALKING, with orange spheres at each removal and cameras facing the damaged side. Same saved trajectories and policy; no new training.
+
 Latest: **[general gait smoothness and bilateral consistency](LIMB_SMOOTHNESS.md)**. One policy passes **288/288** fresh healthy/removal trials, with **32%** lower abrupt-command RMS and **54%** lower roll/pitch angular-rate RMS averaged across the eight removals. Two general refinement rounds used **5 minutes**; all new training including the abandoned diagnostic used **7 min 29 s**. [Watch the new nine-case 4K video](../../previews/locomotion/limb_bilateral_smooth.mp4). Original media remain available.
 
 Previous: **[complete lower-leg and whole-leg loss](LIMB_LOSS.md)**. One policy scores **254/256** fresh removal trials and retains **32/32** healthy walking trials. Five short rounds used **9 min 57 s of additional training**; its selected ancestry totals 12 min 45 s including the healthy parent. [Watch all nine conditions in 4K](../../previews/locomotion/limb_loss_all_cases.mp4). Two whole-front-right trials miss the timed goal requirement; all survive with allowed support. Single removals on flat ground, with no policy switching.
