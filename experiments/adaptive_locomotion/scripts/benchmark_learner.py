@@ -114,7 +114,7 @@ def gpu_sample():
         return None
 
 
-def run(label, device):
+def run(label, device, physics_backend="mjbatch"):
     assert digest(PARENT) == PARENT_SHA and digest(MOTION) == MOTION_SHA
     out = ROOT / "outputs/locomotion/learner_comparison" / label
     out.mkdir(parents=True, exist_ok=True)
@@ -155,6 +155,7 @@ def run(label, device):
             bodies="all",
             terrain="flat",
             device=device,
+            physics_backend=physics_backend,
             threads=16,
             epochs=4,
             horizon=24,
@@ -181,6 +182,7 @@ def run(label, device):
         meta = {
             "label": label,
             "learner_device": device,
+            "physics_backend": physics_backend,
             "python": platform.python_version(),
             "torch": torch.__version__,
             "architecture": platform.machine(),
@@ -193,7 +195,8 @@ def run(label, device):
             "healthy_motion_sha256": digest(MOTION),
             "process_wall_s_including_setup": time.perf_counter() - start,
             "telemetry": samples,
-            "external_gpu_workload_observed_before_benchmark": platform.system() == "Linux",
+            "external_gpu_workload_observed_before_benchmark": platform.system()
+            == "Linux",
         }
         (out / "benchmark.json").write_text(json.dumps(meta, indent=2) + "\n")
 
@@ -203,10 +206,13 @@ if __name__ == "__main__":
     parser.add_argument("--make-bank", action="store_true")
     parser.add_argument("--label")
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"))
+    parser.add_argument(
+        "--physics-backend", choices=("mjbatch", "warp"), default="mjbatch"
+    )
     args = parser.parse_args()
     if args.make_bank:
         make_bank()
     elif args.label and args.device:
-        run(args.label, args.device)
+        run(args.label, args.device, args.physics_backend)
     else:
         parser.error("Provide --make-bank or both --label and --device")

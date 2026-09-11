@@ -48,3 +48,29 @@ is retained under ignored outputs (134.84 seconds including cold compilation).
 The next attempt keeps the CCD block width at 256, matching Warp's default module
 load width. This is a GPU launch configuration adjustment, not a geometry,
 collision, contact-count or solver relaxation. Latest dependency pins are retained.
+
+## Commands (on the experiment branch)
+
+From `experiments/adaptive_locomotion` on an NVIDIA host:
+
+```sh
+uv sync --locked --extra warp
+uv run --locked --extra warp pytest -q tests/test_warp_backend.py
+uv run --locked --extra warp python scripts/run_physics_matrix.py
+
+# Bounded same-parent learning pilot, after the physical checks pass.
+uv run --locked --extra warp python scripts/benchmark_learner.py \
+  --label warp_bridge --device cuda --physics-backend warp
+```
+
+General training supports the same independent flags: `adaptive-dog train
+--physics-backend warp --device cuda ...`. Omit the physics flag for the original
+CPU path. Warp requires NVIDIA CUDA; Mac viewers/evaluation retain ordinary CPU
+MuJoCo. No Warp import or GPU requirement is imposed on default training.
+
+The bridge uses real per-world reset masks and per-world actuator parameters.
+Only explicit reset/forward transfers state to the device; ordinary steps upload
+actuator controls and advance the GPU state. Copies back to NumPy are measured as
+bridge overhead. Contact/constraint/sensor-matching overflow flags raise errors;
+nonfinite state and out-of-envelope velocity stop the run. CPU evaluation remains
+the authoritative task check after any GPU training.
