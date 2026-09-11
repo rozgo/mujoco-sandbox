@@ -1,5 +1,7 @@
 # Adaptive dog: minute-scale RL pilot
 
+Latest: **[visible steps on every intact foot](VISIBLE_STEPS.md)**. [Watch all nine cases](../../previews/locomotion/limb_visible_steps_verified.mp4). The single shared policy now lifts every intact foot: mean swing peaks **5.5–10.8 cm**, with **288/288** fresh task completions and all per-foot gates passing. New training **5 min 59 s**; final runtime physics **0.5 ms** (training was 2 ms). Body airborne time decreased overall; front-loss compensation still includes brief flight. **81 tests**, **72/72** half-timestep checks and video QA pass. Prior videos/checkpoints are preserved.
+
 Experimental review: **[temporal healthy-motion reference](HEALTHY_SEQUENCE.md)**. [Watch the new nine-case preview](../../previews/locomotion/limb_healthy_sequence_preview.mp4). Two short rounds used **2 min 59 s** of training. The first final checkpoint slightly lengthened average stance/stride and passed 72/72 development tasks; the continuation regressed. Neither met all gait gates, so the ground-support policy below remains selected. The preview and all candidates are preserved. [Earlier snapshot-reference trials](HEALTHY_STYLE.md).
 
 Latest: **[minimum ground-support correction](GROUND_SUPPORT.md)**. A single new reward term and **119.5 seconds of fine-tuning** reduced sampled airborne time **41%** across the eight removal bodies, retaining **288/288** fresh task completions and healthy gait quality. Some hopping remains; no phase guidance was added. [Watch the nine-case video](../../previews/locomotion/limb_ground_support.mp4).

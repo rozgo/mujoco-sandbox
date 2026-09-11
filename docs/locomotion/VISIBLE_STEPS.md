@@ -91,3 +91,63 @@ and viewer arguments. Old commands retain their 2 ms default and old videos are
 unchanged. Recheck BOTH parent and candidate at 0.5 ms on development seed 9157;
 only if the original gates pass, use NEW final seed 20260923 (32/body), with
 0.25 ms half-timestep checks. No retraining or changed acceptance thresholds.
+
+## Watching and reproducing
+
+[Verified nine-case video](../../previews/locomotion/limb_visible_steps_verified.mp4),
+3840×2160, 25 fps, twelve seconds at 1×. Every panel uses the same frozen actor.
+Orange markers show removed limb locations. Cameras are observer output; lane
+commands use ideal localization. All motion comes from torque-limited MuJoCo
+joint dynamics. The visible-step reward and motion references are training only.
+
+From the repository root, run the native Mac viewer:
+
+```sh
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog view \
+  --checkpoint ../../assets/locomotion/checkpoints/limb_visible_steps_selected_seed2.pt \
+  --case whole_rl --presentation damage --timestep 0.0005
+```
+
+Use `healthy`, `lower_fl`, `lower_fr`, `lower_rl`, `lower_rr`, `whole_fl`,
+`whole_fr`, `whole_rl` or `whole_rr` for the case. The timestep argument matters:
+training and older demos use 2 ms; the final video uses 0.5 ms physics with the
+same 20 ms control period. No new training for this numerical-resolution change.
+
+The actor remains one reactive 128×128 policy with joint state, IMU, previous
+action, command, missing-joint mask and range observations. No phase input,
+contact-force input, foot-height input, hard symmetry or hand-drawn foot paths.
+This is a flat-ground, fixed-morphology experiment, not arbitrary damage recovery
+or parkour. Brief flight phases still occur in some front-removal gaits; the
+claim is visible foot swings with measured gait retention, not perfect dog motion.
+
+## Final verified result
+
+Fresh seed **20260923**, matched 0.5 ms physics for parent and candidate:
+**288/288** support-valid completions; every one of the 28 intact body/foot
+combinations passes every lift gate. Each individual trial/foot completes at
+least **19** qualifying steps. All measured completed swings meet the visible
+swing definition; per-foot mean peaks range **5.54–10.84 cm**. The equally
+weighted mean swing peak rises **2.41 → 7.26 cm**. This is swing peak, not
+speed-weighted clearance or a prescribed foot path.
+
+Average damaged-body airborne fraction falls **4.38% → 2.57%**. All stride, stance,
+speed and vertical-motion retention gates pass. Healthy stride **32.27 → 32.21 cm**,
+speed **0.612 → 0.589 m/s**, duty gap **4.23 → 1.45 percentage points**, body-height
+SD **6.38 → 6.71 mm**. Some front-removal flight remains; individual gaits are
+still asymmetric compensations. **72/72** additional checks pass at 0.25 ms.
+
+**81 tests**, Ruff, native Mac viewing at 0.5 ms and CPU/MPS action agreement
+(max absolute difference **9.54e-7**) pass. All 300 video frames decode; opening,
+middle and end were inspected. Nine recorded tasks pass. Maximum sampled
+penetration **7.62 mm < 8 mm**, measured from recorded 20 ms states; actual
+recorded torque never exceeds the original caps (some reach saturation). Allowed
+support is checked at every physics substep. Capture **9.985 s**, render/export
+**45.549 s**, excluding context setup. Old 2 ms media and failed integrity checks
+remain archived; use the `verified` video linked above.
+
+New training: **179.748 + 179.395 = 359.143 s (5 min 59 s)** and **7,225,344
+transitions**, CPU MuJoCo/mjbatch with MPS learning. Full selected ancestry is
+**1772.007 s (29 min 32 s)** and **35,340,288 transitions**, including earlier
+healthy/damage/clearance learning. No new NVIDIA training and no retraining for
+the smaller runtime timestep. All six inspected new checkpoints are retained.
