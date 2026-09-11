@@ -72,6 +72,7 @@ def train(
     damage_healthy_reward_weight=0.0,
     damage_healthy_loss_weight=0.0,
     healthy_style_source="policy",
+    healthy_motion_path=None,
     learning_rate=0.001,
     pair_level=None,
     single_reference=None,
@@ -104,6 +105,8 @@ def train(
         raise ValueError("Unknown healthy style reference")
     if healthy_style_source.startswith("motion") and not healthy_style:
         raise ValueError("Motion reference requires healthy-style weights")
+    if healthy_motion_path and not healthy_style_source.startswith("motion"):
+        raise ValueError("Frozen motion reference requires motion-style training")
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
     if single_reference_weight < 0 or (
@@ -204,12 +207,20 @@ def train(
     motion_reference = None
     motion_hash = None
     if healthy_style_source.startswith("motion"):
-        motion_reference, motion_hash = HealthyMotion.collect(
-            teacher,
-            seed,
-            output / "healthy_motion.npz",
-            sequence=healthy_style_source == "motion_sequence",
-        )
+        if healthy_motion_path:
+            motion_reference = HealthyMotion.load(
+                healthy_motion_path, sequence=healthy_style_source == "motion_sequence"
+            )
+            motion_hash = hashlib.sha256(
+                Path(healthy_motion_path).read_bytes()
+            ).hexdigest()
+        else:
+            motion_reference, motion_hash = HealthyMotion.collect(
+                teacher,
+                seed,
+                output / "healthy_motion.npz",
+                sequence=healthy_style_source == "motion_sequence",
+            )
     single_teacher = None
     if single_reference:
         single_teacher, _ = load_checkpoint(single_reference)
@@ -319,6 +330,11 @@ def train(
         "damage_healthy_loss_weight": damage_healthy_loss_weight,
         "healthy_style_source": healthy_style_source,
         "healthy_motion_sha256": motion_hash,
+        "healthy_motion_path": str(
+            Path(healthy_motion_path).resolve().relative_to(ROOT)
+        )
+        if healthy_motion_path
+        else None,
         "healthy_motion_history_seconds": 0.12
         if healthy_style_source == "motion_sequence"
         else 0.0,

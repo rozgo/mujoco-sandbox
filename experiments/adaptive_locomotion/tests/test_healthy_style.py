@@ -85,6 +85,22 @@ def test_motion_sequences_distinguish_identical_poses_with_different_histories()
         reference.query(obs)
 
 
+def test_frozen_motion_reference_preserves_queries_and_rejects_wrong_history(tmp_path):
+    rng = np.random.default_rng(123)
+    obs = rng.normal(size=(8, 66)).astype(np.float32)
+    obs[:, 45:57] = 1
+    past = rng.normal(size=obs.shape).astype(np.float32)
+    actions = rng.normal(size=(8, 12)).astype(np.float32)
+    path = tmp_path / "motion.npz"
+    np.savez_compressed(path, observations=obs, actions=actions, past_observations=past)
+    reference = HealthyMotion(obs, actions, past)
+    loaded = HealthyMotion.load(path, sequence=True)
+    for expected, actual in zip(reference.query(obs, past), loaded.query(obs, past)):
+        np.testing.assert_array_equal(actual, expected)
+    with pytest.raises(ValueError, match="history mode"):
+        HealthyMotion.load(path, sequence=False)
+
+
 @pytest.mark.parametrize("sequence", [False, True])
 def test_fast_masked_distance_agrees_with_brute_force(sequence):
     rng = np.random.default_rng(14)
