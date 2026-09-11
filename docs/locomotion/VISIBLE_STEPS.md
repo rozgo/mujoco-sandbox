@@ -63,3 +63,13 @@ One 180-second continuation from this final checkpoint: keep visible-step weight
 without choosing gait pairs or phases. They address excess body flight while
 leaving the successful foot-swing objective intact. Same parent comparison,
 seeds, gates and checkpoint inspection times. Stop training after this round.
+
+## Development selection
+
+Support refinement iteration 100 and final pass every development gate. Iteration
+200 fails vertical-motion retention. The predeclared worst-foot score selects
+the final checkpoint: all 28 intact body/foot combinations score 100% qualifying
+swings, minimum per-foot mean peak 5.48 cm. All 72 tasks complete; healthy gait,
+stride/stance, speed, vertical motion and airborne retention pass. Freeze this
+choice before final seed 20260922. Both rounds and all inspected candidates are
+archived; no further training planned.
