@@ -32,6 +32,11 @@ matched pairs show **3.23× faster training** with Warp on the RTX 4090, with
 checks passing. Each pair receives the same samples and optimizer updates.
 This is continuation of a pretrained walker; official v1 remains frozen.
 See the report for `adaptive-dog learn`, exact counts and known limitations.
+The longer 40-round control also has similar pooled outcomes (CPU 60/72, Warp
+59/72) at **302 s vs 90 s**. Both regress with continued training; faster sampling
+does not automatically improve the policy. **[Watch all nine bodies side by
+side](../../previews/locomotion/warp_scaled_comparison.mp4)** in the matched short
+comparison, with every recorded failure retained.
 
 ## Earlier experiments
 

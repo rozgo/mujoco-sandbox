@@ -183,6 +183,22 @@ The extra allowance is for this bounded diagnostic; ordinary `learn` invocations
 retain their five-minute requested limit. Results will be retained regardless of
 outcome.
 
+**Control result:** CPU completes the same 40 rounds in **301.874 s**, versus
+Warp's **90.406 s**: **3.34× faster** with Warp. CPU scores **60/72**, Warp
+**59/72**; all trials remain upright with valid support and every healthy,
+visible-step, stride, stance, speed and body-motion comparison passes. Initial
+parameter hashes, learning settings and training/environment/network source
+hashes match. See [the complete control report](warp_training/depth_summary.json).
+
+This supports a shared longer-continuation regression rather than interpreting
+the equal-time result as a general Warp disadvantage. Per-body outcomes still
+differ: lower-FR is CPU 0/8 vs Warp 3/8, whole-FR CPU 4/8 vs Warp 0/8. One
+follow-up seed does not establish per-body equivalence at this depth, and neither
+long-run policy is promoted. For backend comparisons use matched round/sample/
+optimizer counts; evaluate before adopting further fine-tuning. The maintained
+backend is ready for that workflow, while improving the continuation recipe is
+a separate learning problem.
+
 ## Maintained training command
 
 From `experiments/adaptive_locomotion`, on an NVIDIA host:
@@ -242,6 +258,14 @@ initial tensor identity and retains every final checkpoint.
   results cover single removals on flat ground; no new parkour, online fault
   diagnosis or full curriculum training claim is made.
 
+All fifteen comparison checkpoints and their failed/successful evaluations are
+retained. They used **869.284 s (14 min 29 s) of new training in total**; the
+separate CLI smoke runs add 1.066 s. Checkpoint ancestry is recorded independently
+and must not be confused with this task's additional compute. Individual
+matched runs take 13–47 seconds; equal-time runs about 90 seconds; the final CPU
+control took 302 seconds. Elapsed implementation/testing/media time is recorded
+in [the project time log](../TIME_LOG.md).
+
 ## Video and native viewing
 
 **[Watch the matched CPU/Warp comparison](../../previews/locomotion/warp_scaled_comparison.mp4)**
@@ -255,6 +279,9 @@ validation; the heading identifies their **training** backend. Lane commands are
 scripted, joint targets are learned, and orange spheres are visual damage markers.
 Both whole-FR demonstration trials miss the timed goal; the final captions retain
 those failures. No training or checkpoint selection was done for the video.
+Completion requires at least 5 m progress and one continuous second inside the
+±1 m lane, while upright with allowed support, before the twelve-second deadline.
+Crossing 5 m in the final second alone is insufficient.
 
 All **900 frames** decode at **1920×1440 / 25 fps / 36 s**. Chapter openings,
 midpoints, endings and transitions were inspected. Capturing the eighteen live
