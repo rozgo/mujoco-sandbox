@@ -343,3 +343,4 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 ## README presentation order
 
 - **2026-09-11 05:38:06–05:38:18 UTC**: moved adaptive dog to the end of the demo list, retaining Learning the Wind first. Section contents and links are identical; only order changed. Documentation-only validation passed; no training, simulation or rendering. Twelve seconds to the edit checkpoint, before commit/push/sync.
+- Follow-up clarification: placed **Adaptive Dog last in the entire README**, after Run locally and Documentation. All section content remains unchanged.
