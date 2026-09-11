@@ -1,6 +1,6 @@
 # General control under changing leg geometry and function
 
-September 10, 2026 UTC. Engineering plan and gap review; proposed dimensions, budgets and acceptance criteria are not measured results. User intent is captured in [BRIEF.md](BRIEF.md). No adaptive Go2 policy, damaged-body environment or new video has been implemented.
+September 10, 2026 UTC. Original engineering plan and gap review; proposed dimensions, budgets and acceptance criteria below are not measured results. User intent is captured in [BRIEF.md](BRIEF.md). A bounded pilot is now implemented on `experiment/adaptive-dog`; see [implementation, videos and measured gaps](README.md). The broader proposed acceptance criteria have not been met.
 
 ## The experiment
 

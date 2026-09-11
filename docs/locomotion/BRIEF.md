@@ -1,6 +1,24 @@
 # Adaptive locomotion across partial damage
 
-Planning follow-up, September 10, 2026 UTC. No new training or implementation goal has started. This brief supersedes the earlier leg-count framing and the SWAP-specific architecture proposal.
+Implementation started September 10, 2026 at 06:53:59 UTC on `experiment/adaptive-dog`. This brief supersedes the earlier leg-count framing and the SWAP-specific architecture proposal.
+
+## Implementation authorization and hard training constraint
+
+> lets implement this into a branch to make sure we get traction before polutin main branch... set as goal and lets try to learn
+
+> we need to prioritize fast RL... anything longer than a few minutes is not acceptable
+
+> fast rl through batching, or GPU, or just from vectorized environment or gym... anything, but if training takes hours then we cant continue this path
+
+Training speed is an acceptance gate. Start with a five-minute cumulative training budget per final policy, including teacher/pretraining, estimator training, fine-tuning and resumed ancestry. Compare independent bounded experiments and CPU/GPU backends; do not conceal longer training in a chain of short runs. Record setup, compilation and evaluation separately and also report full time-to-result. Do not merge experimental work into main.
+
+> ok, even after the 5 minutes, if you think its worth giving more allowance then lets do it. i leave that decision to you and your insight from the runs
+
+The user subsequently authorized extending the default budget when measured learning progress justifies it. Record the evidence, chosen extension and full cumulative training time; preserve fast learning as the priority. A stalled curve calls for diagnosis rather than automatically adding hours.
+
+> should we consider increase to 10 mins?
+
+Used that allowance for one additional missing-calf experiment, preserving the 329-second policies. Its complete lineage consumed 598.60 seconds. The extension improved missing-calf progress but lost earlier skills; it was not promoted over the shorter policy. See [the measured result](README.md).
 
 ## User direction
 

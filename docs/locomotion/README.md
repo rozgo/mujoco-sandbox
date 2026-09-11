@@ -1,0 +1,155 @@
+# Adaptive dog: official v1 and learning experiments
+
+**[Watch the official v1 video](../../previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](../../previews/locomotion/adaptive_dog_v1.gif)** · **[Frozen baseline and validation](OFFICIAL_V1.md)**
+
+The official solution is **one PPO policy for all nine bodies**: healthy, four complete lower-leg removals and four entire-leg removals. The user accepted the rear-support refinement for its natural gait and requested its promotion to `main`. Weights are frozen as `assets/locomotion/checkpoints/adaptive_dog_v1.pt`; the `adaptive-dog-v1` Git tag preserves this release. Future iterations use another branch and new artifacts.
+
+[![Official nine-body locomotion demonstration](../../previews/locomotion/adaptive_dog_v1.png)](../../previews/locomotion/adaptive_dog_v1.mp4)
+
+## Run the official solution
+
+From the repository root:
+
+```sh
+git lfs pull
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv sync --locked
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog demo
+```
+
+`demo` verifies the exact v1 checkpoint hash and opens the native viewer with **0.5 ms physics, 20 ms control**, orange markers and contact shadows. Default body: `whole_fr`. Use `--case healthy`, `--case lower_fl`, `--case whole_rr`, etc.; `demo --help` lists all nine. `--seconds 5` is a bounded smoke test. The existing `view`, `grid` and training commands remain available with their historical defaults.
+
+The actor is a 128 × 128 MLP with ELU activations and twelve joint-target outputs. It observes joint/IMU/range feedback, the previous action, velocity commands and missing-joint bits. The same frozen weights handle all bodies. Healthy-motion references and the privileged critic are training-only; no online learning or policy switching occurs in the video. Latest training: **179.114 seconds**; checkpoint ancestry: **1922.725 seconds**, **38.4 million transitions**. CPU MuJoCo/mjbatch physics and Apple GPU learning were used for the latest refinement.
+
+**Acceptance is explicit, not a rewritten experiment result.** The selected gait still misses the original FR alternation target, and the original video has **8.889 mm** maximum sampled contact penetration versus its **8 mm** target. See [v1 validation and scope](OFFICIAL_V1.md). Single removals on flat ground are demonstrated; arbitrary injuries, independent fault diagnosis and learned parkour are not established.
+
+## Earlier experiments
+
+The following entries preserve the decisions and selected policies at each historical stage. **They do not override official v1 above.**
+
+Historical review: **[symmetry evaluation](SYMMETRY_OPTION.md)**. A frozen-policy reflection probe transfers the better FL rear-leg alternation to both FR bodies; all 64 diagnostic tasks complete. This is evidence for trying a soft mirror loss, not a trained improvement. The preceding **[rear-overlap experiment](REAR_OVERLAP_TRAINING.md)** used 2 min 59 s of training and reduced simultaneous swing, but failed its phase-separation gate. **No new policy selected; no symmetry training started.**
+
+Previous: **[visible steps on every intact foot](VISIBLE_STEPS.md)**. [Watch all nine cases](../../previews/locomotion/limb_visible_steps_verified.mp4). The single shared policy now lifts every intact foot: mean swing peaks **5.5–10.8 cm**, with **288/288** fresh task completions and all per-foot gates passing. New training **5 min 59 s**; final runtime physics **0.5 ms** (training was 2 ms). Body airborne time decreased overall; front-loss compensation still includes brief flight. **81 tests**, **72/72** half-timestep checks and video QA pass. Prior videos/checkpoints are preserved.
+
+Experimental review: **[temporal healthy-motion reference](HEALTHY_SEQUENCE.md)**. [Watch the new nine-case preview](../../previews/locomotion/limb_healthy_sequence_preview.mp4). Two short rounds used **2 min 59 s** of training. The first final checkpoint slightly lengthened average stance/stride and passed 72/72 development tasks; the continuation regressed. Neither met all gait gates, so the ground-support policy below remains selected. The preview and all candidates are preserved. [Earlier snapshot-reference trials](HEALTHY_STYLE.md).
+
+Previous: **[minimum ground-support correction](GROUND_SUPPORT.md)**. A single new reward term and **119.5 seconds of fine-tuning** reduced sampled airborne time **41%** across the eight removal bodies, retaining **288/288** fresh task completions and healthy gait quality. Some hopping remains; no phase guidance was added. [Watch the nine-case video](../../previews/locomotion/limb_ground_support.mp4).
+
+Video update: **[clearer cut markers and contact shadows](DAMAGE_VISIBILITY.md)**. [Watch the updated nine-case video](../../previews/locomotion/limb_damage_visible.mp4), labeled WALKING, with orange spheres at each removal and cameras facing the damaged side. Same saved trajectories and policy; no new training.
+
+Previous: **[general gait smoothness and bilateral consistency](LIMB_SMOOTHNESS.md)**. One policy passes **288/288** fresh healthy/removal trials, with **32%** lower abrupt-command RMS and **54%** lower roll/pitch angular-rate RMS averaged across the eight removals. Two general refinement rounds used **5 minutes**; all new training including the abandoned diagnostic used **7 min 29 s**. [Watch the new nine-case 4K video](../../previews/locomotion/limb_bilateral_smooth.mp4). Original media remain available.
+
+Previous: **[complete lower-leg and whole-leg loss](LIMB_LOSS.md)**. One policy scores **254/256** fresh removal trials and retains **32/32** healthy walking trials. Five short rounds used **9 min 57 s of additional training**; its selected ancestry totals 12 min 45 s including the healthy parent. [Watch all nine conditions in 4K](../../previews/locomotion/limb_loss_all_cases.mp4). Two whole-front-right trials miss the timed goal requirement; all survive with allowed support. Single removals on flat ground, with no policy switching.
+
+**[Watch all fourteen conditions together in 4K](../../previews/locomotion/all_trained_cases.mp4)**. Every panel uses the same selected policy: healthy, one weakened motor, four single shortened calves and eight paired variants. Twelve seconds at 1×; no new training. [Recording scope and reproduction](ALL_CASES_GRID.md).
+
+Previous: **[paired damage with prior skills retained](PAIRED_DAMAGE.md)**. Another 89.4 seconds of staged training improved four paired-calf conditions from **33/128 to 127/128** support-valid completions, retaining all healthy, single-leg and tested motor-fault completions. [Watch before/after](../../previews/locomotion/paired_damage_comparison.mp4), [all three cameras](../../previews/locomotion/paired_damage.mp4), or [healthy gait retention](../../previews/locomotion/paired_healthy_retention.mp4). The selected intermediate totals 541 seconds of training; one front-pair trial still fails. Flat ground only.
+
+Previous: **[single-damage training with healthy gait retention](DAMAGE_RETENTION.md)**. In 89.6 additional training seconds, the balanced walker learned all four single shortened-calf positions: **128/128** support-valid trials while retaining **32/32** healthy completions and approximately 31 cm strides. [Watch that demo](../../previews/locomotion/damage_retention.mp4), [healthy before/after](../../previews/locomotion/damage_healthy_retention.mp4), or [shortened-calf before/after](../../previews/locomotion/damage_short_fr_comparison.mp4). That 493-second policy scored 1/32 on the diagonal paired case before the latest follow-up.
+
+The original pilot below was implemented on **`experiment/adaptive-dog`**, with `main` preserved. One learned controller moves a Go2-derived robot with shortened calves and weakened motors over low steps. A 329-second reactive policy was the strongest original pilot candidate. Adding a sensor-history estimator did not improve that pilot, and extending training to 599 seconds introduced forgetting.
+
+**[Watch the 48-second three-camera demonstration](../../previews/locomotion/reactive_5m30s.mp4)** · [History versus reactive controller](../../previews/locomotion/history_vs_reactive.mp4) · [What the extra training did](../../previews/locomotion/extra_training.mp4)
+
+[![Learned control with a shortened calf on low steps](../../previews/locomotion/frame-steps.png)](../../previews/locomotion/reactive_5m30s.mp4)
+
+All clips play at **1×** from actual MuJoCo rollouts. The main video uses the same checkpoint for all four cases, with following, head and overview cameras. RGB is observer output, not policy input. The comparison clips retain incomplete trials. This is useful locomotion traction, **not general quadruped parkour or arbitrary-damage recovery**.
+
+For a normal, intact dog, use the **[healthy policy with gait-balance rewards](BALANCED_GAIT.md)**, with 403 seconds of total training, 61% lower stance-timing imbalance and 64/64 trials passing the foot-support test. [Watch it walk](../../previews/locomotion/healthy_walk_balanced.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
+
+## Reproduce the original pilot
+
+From the repository root:
+
+```sh
+git lfs pull
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv sync --locked
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog view \
+  --checkpoint ../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt \
+  --case short_steps
+```
+
+The viewer launches through `mjpython` automatically on macOS. Close its window to stop; `--seconds 5` gives a bounded smoke test. `blind` is the internal name for the reactive controller: it receives joint/IMU/range observations and its previous action, but no learned history encoder or private damage description. It is not blind to the terrain.
+
+The isolated stack uses **uv 0.12.12, Python 3.14.7, MuJoCo 3.13.0, PyTorch 2.14.0 and NumPy 2.5.3**. Its committed lockfile leaves the existing demos' environments unchanged. The vendored [mjbatch code and provenance](../../experiments/adaptive_locomotion/third_party/mjbatch/PROVENANCE.md) retain the upstream Apache-2.0 license. A C++ compiler is needed for its first local build.
+
+```sh
+# Fresh short learning experiment; output and trajectories stay ignored.
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog train \
+  --output ../../outputs/locomotion/my_run --seconds 60 --mode history \
+  --bodies all --terrain flat --seed 2 --num-envs 512 --threads 16
+
+# Reproduce a development evaluation or the main video.
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog evaluate \
+  --checkpoint ../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt \
+  --output ../../outputs/locomotion/my_evaluation.json --trials 32
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog record \
+  --checkpoint ../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt \
+  --output ../../outputs/locomotion/my_video.mp4
+uv tool run --from uv==0.12.12 uv run --locked pytest -q
+uv tool run --from uv==0.12.12 uv run --locked pytest -q third_party/mjbatch/tests
+```
+
+`walk --style longer` selects the 298-second stride policy; `walk --style compact` selects the previous 209-second foot-valid policy. Timing-balance and body-motion reward weights default to zero; the current balanced run uses 5 and 0.5 respectively. The optional longer-stride reward is enabled for training with `--stride-weight 1`; it defaults to zero.
+
+New training now defaults to `--support-weight 2`: nonterminal ground support is penalized according to the actual body geometry. Use `--support-weight 0` to retain the original reward behavior when reproducing the older runs. See the [support rule and evaluation criteria](FOOT_SUPPORT_FIX.md).
+
+Use `--device cuda` on Linux for the learner, or `--device mps` on Apple Silicon. **Physics remains CPU MuJoCo in mjbatch**, not MuJoCo Warp. Multiple native simulation pools run concurrently across body variants. A GPU accelerates neural-network updates but cannot remove this implementation's CPU simulation bottleneck. This environment exposes a direct batched Python API, not a Gymnasium wrapper.
+
+## What was actually learned
+
+PPO learns twelve independent joint-position offsets through torque-limited native servos. There is **no gait clock, supplied walking policy, mirrored-action constraint, foot trajectory, live base pose correction or external propulsive force**. A scripted high-level lane follower uses ideal localization to request forward/lateral/yaw velocity; route selection is not learned.
+
+The actor sees 66 channels: twelve joint angles, twelve joint velocities, gyro, an ideal IMU-style gravity direction, previous action, velocity command, twelve encoder-validity bits and nine body-mounted ranges. Native rays intersect scene geometry; observations receive ranges at 20 Hz, although MuJoCo computes them more often. Noisy sensing, independent encoder outages and latency are future work. Missing joints have masked semantic slots; a shortened member with a surviving joint keeps its encoder.
+
+The reactive actor is a 128×128 MLP with a fixed context. The history variant adds a learned 64-wide estimator over 0.5 seconds of causal feedback, pooled into five chronological windows. Its training uses privileged geometry/strength labels as auxiliary supervision. Both have an asymmetric critic that can see exact body velocity, height and damage; those extra values do not enter the deployed actors. The original pilot's Mac policies share a 59.81-second oracle-context pretraining stage; its time is included below. Later healthy-walking and limb-loss policies descend from the separate healthy learner, which started from random weights. The independent GPU history run started from random weights without that stage.
+
+## Measured results with corrected contacts
+
+**These original pilot scores measure progress, not foot-only or designated-stump support.** The user subsequently caught knee-supported walking in the healthy-only baseline. The new [support-force validation](FOOT_SUPPORT_FIX.md) detects this and the corrected healthy policy passes it; the generalist results below have not been certified under that stricter criterion.
+
+Completion means reaching 5 m within a 12-second trial and remaining controlled in the goal lane for one second. Failures remain in the denominator; no reset occurs inside a trial. The final cases and seed were frozen before the initial comparison. We then repeated that same evaluation after fixing contact stiffness, without changing either 329-second policy's weights.
+
+| Frozen case, 32 initial conditions each | Reactive, 329.05 s | History, 329.35 s | Independent GPU history, 269.59 s |
+| --- | ---: | ---: | ---: |
+| Healthy | 32/32 | 32/32 | 32/32 |
+| Unseen front-right calf at 62% length | 32/32 | 32/32 | 32/32 |
+| Two left calves at 78% and 86% | 32/32 | 32/32 | 32/32 |
+| Short rear-right calf plus rear-left hip dropping to 35% torque | 32/32 | 32/32 | 32/32 |
+| New step layout, 3.5/5/4.5 cm, with two shortened calves | **32/32** | **0/32** | **14/32** |
+| Rear-right calf and distal joint removed | 0/32 | 0/32 | 0/32 |
+
+[Full paired results and confidence intervals](VALIDATION.json) · [Independent GPU results](gpu_firm_validation.json). A 32/32 result has a Wilson 95% interval of approximately 89–100%; this describes initial-condition sampling, not training-seed reliability. There is only one matched Mac seed. The GPU seed used different hardware and curriculum, so it is supporting traction, not a controlled replication or device benchmark.
+
+The comparison is an **equal wall-time engineering test**, not a causal architecture ablation: the simpler actor collected more transitions, and the history curriculum used several resumed stages whereas the reactive fine-tune was continuous. Resuming restarts Adam; optimizer state is not saved. These differences prevent attributing the result solely to memory.
+
+On the separate development suite, the selected reactive policy completed 32/32 low-step trials and 28/32 larger 6/9/6 cm step trials. Those larger steps are not a robust parkour result. See [all development outcomes](runs/blind_steps_330s_seed0_firm_development.json).
+
+## Was ten minutes worth it?
+
+The additional experiment resumed the 329-second reactive policy for 269.54 seconds, using healthy, shortened-front-left and absent-front-left-calf bodies on flat ground. **Total: 598.60 seconds**, including ancestry. Its training process had already loaded the earlier contact model when the geometry fix was made; its reported evaluation and comparison video use the corrected firm model.
+
+In 32 development trials, missing-calf progress increased from **0.67 m to 3.92 m** on average, but **neither policy completed the 5 m task**. The longer-trained policy retained healthy and weak-motor completion, while losing all 32 two-shortened-calf completions and all 32 low-step completions. The inspected missing-calf trajectory also used trunk contact in 50 of 600 sampled frames. This is incomplete, partly body-supported locomotion, not successful three-leg parkour. [Longer-run outcomes](runs/blind_missing_600s_seed0_firm_development.json), [contact diagnostic](MISSING_CALF_CONTACTS.json).
+
+That pilot favored the shorter policy and identified skill retention as the next training problem. The later [complete-removal experiment](LIMB_LOSS.md) now learns single lower-leg and whole-leg loss on flat ground. One-/two-leg mobility, locks, delay, friction randomization, perception and learned navigation remain unimplemented. The broader three-seed/100-trial acceptance plan and off-policy learner comparison remain outstanding.
+
+## Physical specification and verification
+
+World axes are x forward, y left, z up, in SI units. Healthy mass is **15.206408 kg**, retaining unaffected Menagerie properties. Each 0.213 m calf is replaced by a declared primitive mass proxy: 70 g proximal housing, 151.352 g removable member and 20 g terminal surface at full length. The last two masses scale with remaining length; MuJoCo derives their combined inertia. Healthy terminal radius is 22 mm, shortened terminal radius 14 mm; these are illustrative contact surfaces, not a calibrated fracture model. Removing a calf removes its body, mass, collision geometry and distal joint, leaving a thigh-tip stump and eleven actuators. A thigh's retained vendor inertia already accounts for its support surface; no extra stump mass is added to that explicit inertia. The complete-removal follow-up can also remove the entire hip/thigh/calf subtree, leaving nine actuators, three supporting feet and approximately 13.135 kg; it adds no replacement support.
+
+Hip limits are ±1.0472 rad; front thigh −1.5708…3.4907, rear thigh −0.5236…4.5379, calf −2.7227…−0.83776 rad. Native position servos use Kp=20 Nm/rad and Kd=0.5 Nm·s/rad, unit gearing, and actual torque caps of **23.7 Nm for hip/thigh and 45.43 Nm for calf**. Passive damping is 2 Nm·s/rad, armature 0.01 kg·m² and friction loss 0.2 Nm. Commands are nominal pose plus 0.65 times actions clipped to ±3; physical joint stops and actuator force limits remain active. Weakening reduces available torque; zero strength also removes active servo damping.
+
+Physics uses a 2 ms `implicitfast` step, Newton solver with 30 iterations and pyramidal contacts; policy rate is 50 Hz. Full trunk, leg and stump contacts remain enabled, with MuJoCo's ordinary adjacent-body exclusions. Ground/healthy-terminal sliding friction is 0.8; shortened members use 0.6. Corrected contact parameters are `solref=".006 1"`, `solimp=".95 .99 .001"`, margin zero on every physical surface.
+
+The first primitive implementation inherited a 20 ms contact constant and allowed approximately 22 mm sampled foot penetration in the selected rollout. That was corrected before final recording. The selected step rollout now has a sampled maximum of **7.95 mm**, no trunk-contact frames, and **16/16** step completions when rerun at 1 ms. Penetration is reconstructed every 20 ms, not bounded at every substep; these compliant contacts are still an approximation. [Contact report](CONTACTS.json). The earlier [soft-contact results](LEGACY_SOFT_VALIDATION.json) are retained and are not the final physics claim.
+
+Fourteen project tests cover scalar/batch agreement, partial-body topology and inertia, sensor/private-context isolation, zero-strength actuation, history causality, foot-drop penetration, loaded knee/stump support and contact-sensor dynamics equivalence. The 38 vendored mjbatch tests cover the native state/batch interface. MuJoCo warnings reject a run; actual measured actuator torque remains within its effective caps. Native macOS viewing and complete MP4 decoding are checked separately.
+
+## Artifacts and time accounting
+
+[Checkpoint directory](../../assets/locomotion/checkpoints/) · [Training configurations, progress and hashes](runs/) · [Static body manifests](../../previews/locomotion/static/bodies.json) · [Original brief](BRIEF.md) · [Original broader plan](ADAPTIVE_LOCOMOTION_PLAN.md) · [Time log](../TIME_LOG.md)
+
+Checkpoints and curated media use Git LFS. Raw trajectories, generated models and scratch logs remain under ignored `outputs/locomotion/`. Training reports retain source commits, actual per-stage and cumulative time, seed, device, transition counts and checkpoint hashes. Curation only makes parent paths repository-relative; learned tensors are unchanged. Runs trained before the contact fix are explicitly labeled.
+
+Training time excludes installation, model compilation/setup, evaluation, recording and agent development. Separate experiments are not secretly combined into one claimed five-minute run; their shared ancestry is counted once per deployed policy. The full implementation elapsed time is recorded independently in the project time log. No main-branch merge or real-hardware validation has been performed.

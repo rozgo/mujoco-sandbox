@@ -1,0 +1,114 @@
+{
+  "checkpoint": "../../assets/locomotion/checkpoints/blind_steps_330s_seed0.pt",
+  "checkpoint_sha256": "071c6af8956704aa896c00825c33407921ed449208380ce2bf357ebb0d44f319",
+  "contact_profile": "firm: solref=.006 1; solimp=.95 .99 .001",
+  "policy_training_seconds": 329.0513480830123,
+  "fps": 25,
+  "frames": 1200,
+  "duration_seconds": 48.0,
+  "cases": [
+    {
+      "case": "short_fl",
+      "seed": 9137,
+      "seconds": 12,
+      "trials": 1,
+      "survived": 1,
+      "completed_5m": 1,
+      "mean_distance_m": 7.304168453768506,
+      "rows": [
+        {
+          "trial": 0,
+          "survived": true,
+          "completed_5m": true,
+          "fell": false,
+          "left_course": false,
+          "failure_time_s": null,
+          "max_distance_m": 7.304168453768506,
+          "end_distance_before_failure_m": 7.304168453768506,
+          "velocity_rmse_while_alive": 0.078159662139108,
+          "peak_actuator_torque_nm": 33.02969753943403,
+          "peak_torque_limit_ratio": 1.0
+        }
+      ],
+      "model_mjb_sha256": "9823d158e9313f9aaa39e31d005c337b03053313f352a676307eb4ca0274ac01"
+    },
+    {
+      "case": "unseen_pair",
+      "seed": 9137,
+      "seconds": 12,
+      "trials": 1,
+      "survived": 1,
+      "completed_5m": 1,
+      "mean_distance_m": 8.486067152622393,
+      "rows": [
+        {
+          "trial": 0,
+          "survived": true,
+          "completed_5m": true,
+          "fell": false,
+          "left_course": false,
+          "failure_time_s": null,
+          "max_distance_m": 8.486067152622393,
+          "end_distance_before_failure_m": 8.486067152622393,
+          "velocity_rmse_while_alive": 0.17227158032309378,
+          "peak_actuator_torque_nm": 29.316811839666123,
+          "peak_torque_limit_ratio": 1.0
+        }
+      ],
+      "model_mjb_sha256": "7592365dced0f5407436b47058f0e73289a4bc50b405b5712c333dd61ba6521d"
+    },
+    {
+      "case": "unseen_weak",
+      "seed": 9137,
+      "seconds": 12,
+      "trials": 1,
+      "survived": 1,
+      "completed_5m": 1,
+      "mean_distance_m": 6.818042461523446,
+      "rows": [
+        {
+          "trial": 0,
+          "survived": true,
+          "completed_5m": true,
+          "fell": false,
+          "left_course": false,
+          "failure_time_s": null,
+          "max_distance_m": 6.818042461523446,
+          "end_distance_before_failure_m": 6.818042461523446,
+          "velocity_rmse_while_alive": 0.05948150164114979,
+          "peak_actuator_torque_nm": 34.20842703717045,
+          "peak_torque_limit_ratio": 1.0
+        }
+      ],
+      "model_mjb_sha256": "8893dc4c141e5d5f28610a8c5a9966a68ace5543ad98002cba636576ee20cd84"
+    },
+    {
+      "case": "short_steps",
+      "seed": 9137,
+      "seconds": 12,
+      "trials": 1,
+      "survived": 1,
+      "completed_5m": 1,
+      "mean_distance_m": 7.5168516185512395,
+      "rows": [
+        {
+          "trial": 0,
+          "survived": true,
+          "completed_5m": true,
+          "fell": false,
+          "left_course": false,
+          "failure_time_s": null,
+          "max_distance_m": 7.5168516185512395,
+          "end_distance_before_failure_m": 7.5168516185512395,
+          "velocity_rmse_while_alive": 0.0974083164484753,
+          "peak_actuator_torque_nm": 33.02969753943403,
+          "peak_torque_limit_ratio": 1.0
+        }
+      ],
+      "model_mjb_sha256": "fe2f926fafc9c7ed7fc3dd66b7a4fa374357939580f507d5f1aa5877915c3b17"
+    }
+  ],
+  "camera_pixels_used_by_policy": false,
+  "navigation": "scripted lane follower with ideal localization",
+  "physics": "CPU MuJoCo through mjbatch, no pose control; recorded states replayed for rendering"
+}

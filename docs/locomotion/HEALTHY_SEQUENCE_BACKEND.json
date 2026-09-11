@@ -1,0 +1,68 @@
+{
+  "reference": "assets/locomotion/checkpoints/limb_ground_support_selected_seed2.pt",
+  "checkpoint": "assets/locomotion/checkpoints/limb_healthy_sequence_90s_seed2.pt",
+  "reference_sha256": "46ac4e656f4d5b5da7d925ecb1c46014db071c2ee3c8989acd2fafb27e8642fd",
+  "checkpoint_sha256": "1f33e8274115c7df9445776712af36c67074d62ab10bb9e30ec432a5eb398a66",
+  "seed": 9151,
+  "description": "Same reference-policy states for both models; raw mean actions, existing joints only. This measures policy consistency, not paired gait equality.",
+  "states_sha256": "a70da7f9a681de097b3bf7ff4aa5cf3a90f1c77d8c07b6d1773ad83e4e15c9c1",
+  "cases": [
+    {
+      "case": "healthy",
+      "states": 120,
+      "reference_mirror_rmse": 0.11575400084257126,
+      "candidate_mirror_rmse": 0.18999478220939636
+    },
+    {
+      "case": "lower_fl",
+      "states": 120,
+      "reference_mirror_rmse": 0.08762242645025253,
+      "candidate_mirror_rmse": 0.27408352494239807
+    },
+    {
+      "case": "lower_fr",
+      "states": 120,
+      "reference_mirror_rmse": 0.0831134170293808,
+      "candidate_mirror_rmse": 0.28464677929878235
+    },
+    {
+      "case": "lower_rl",
+      "states": 120,
+      "reference_mirror_rmse": 0.08691737055778503,
+      "candidate_mirror_rmse": 0.189804345369339
+    },
+    {
+      "case": "lower_rr",
+      "states": 120,
+      "reference_mirror_rmse": 0.07324927300214767,
+      "candidate_mirror_rmse": 0.17815722525119781
+    },
+    {
+      "case": "whole_fl",
+      "states": 120,
+      "reference_mirror_rmse": 0.0923038125038147,
+      "candidate_mirror_rmse": 0.37859511375427246
+    },
+    {
+      "case": "whole_fr",
+      "states": 120,
+      "reference_mirror_rmse": 0.07836589962244034,
+      "candidate_mirror_rmse": 0.33572718501091003
+    },
+    {
+      "case": "whole_rl",
+      "states": 120,
+      "reference_mirror_rmse": 0.07439101487398148,
+      "candidate_mirror_rmse": 0.16749192774295807
+    },
+    {
+      "case": "whole_rr",
+      "states": 120,
+      "reference_mirror_rmse": 0.07847608625888824,
+      "candidate_mirror_rmse": 0.21056266129016876
+    }
+  ],
+  "mean_reference_mirror_rmse": 0.08557703346014023,
+  "mean_candidate_mirror_rmse": 0.24545150498549143,
+  "cpu_mps_max_action_difference": 7.152557373046875e-07
+}

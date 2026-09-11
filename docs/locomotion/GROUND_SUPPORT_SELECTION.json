@@ -1,0 +1,107 @@
+{
+  "development_seed": 9147,
+  "final_seed": 20260919,
+  "demo_seed": 9143,
+  "candidates": [
+    {
+      "checkpoint": "outputs/locomotion/limb_ground_support_120s_seed2/iteration_0050.pt",
+      "checks": {
+        "all_72_valid": true,
+        "healthy_retained": true,
+        "per_body_speed_retained": true,
+        "airborne_reduced_at_least_25_percent": false,
+        "unsupported_force_reduced": true,
+        "no_body_airborne_increase_over_2pp": true
+      },
+      "eligible": false,
+      "mean_airborne_fraction": 0.044407894736842105,
+      "parent_mean_airborne_fraction": 0.05546733212341198,
+      "mean_unsupported_force_fraction": 0.08799342105263158,
+      "parent_mean_unsupported_force_fraction": 0.120377722323049
+    },
+    {
+      "checkpoint": "outputs/locomotion/limb_ground_support_120s_seed2/iteration_0100.pt",
+      "checks": {
+        "all_72_valid": true,
+        "healthy_retained": true,
+        "per_body_speed_retained": true,
+        "airborne_reduced_at_least_25_percent": false,
+        "unsupported_force_reduced": true,
+        "no_body_airborne_increase_over_2pp": true
+      },
+      "eligible": false,
+      "mean_airborne_fraction": 0.04239450998185118,
+      "parent_mean_airborne_fraction": 0.05546733212341198,
+      "mean_unsupported_force_fraction": 0.07534596188747732,
+      "parent_mean_unsupported_force_fraction": 0.120377722323049
+    },
+    {
+      "checkpoint": "outputs/locomotion/limb_ground_support_120s_seed2/policy.pt",
+      "checks": {
+        "all_72_valid": true,
+        "healthy_retained": true,
+        "per_body_speed_retained": true,
+        "airborne_reduced_at_least_25_percent": true,
+        "unsupported_force_reduced": true,
+        "no_body_airborne_increase_over_2pp": true
+      },
+      "eligible": true,
+      "mean_airborne_fraction": 0.033972323049001815,
+      "parent_mean_airborne_fraction": 0.05546733212341198,
+      "mean_unsupported_force_fraction": 0.0683983666061706,
+      "parent_mean_unsupported_force_fraction": 0.120377722323049
+    }
+  ],
+  "selected": {
+    "checkpoint": "outputs/locomotion/limb_ground_support_120s_seed2/policy.pt",
+    "checks": {
+      "all_72_valid": true,
+      "healthy_retained": true,
+      "per_body_speed_retained": true,
+      "airborne_reduced_at_least_25_percent": true,
+      "unsupported_force_reduced": true,
+      "no_body_airborne_increase_over_2pp": true
+    },
+    "eligible": true,
+    "mean_airborne_fraction": 0.033972323049001815,
+    "parent_mean_airborne_fraction": 0.05546733212341198,
+    "mean_unsupported_force_fraction": 0.0683983666061706,
+    "parent_mean_unsupported_force_fraction": 0.120377722323049
+  },
+  "selected_checkpoint": "assets/locomotion/checkpoints/limb_ground_support_selected_seed2.pt",
+  "selected_sha256": "46ac4e656f4d5b5da7d925ecb1c46014db071c2ee3c8989acd2fafb27e8642fd",
+  "selected_stage_training_seconds": 119.48346416698769,
+  "selected_cumulative_training_seconds": 1107.641085126088,
+  "selected_stage_transitions": 2052096,
+  "curated_checkpoints": [
+    {
+      "source": "outputs/locomotion/limb_ground_support_120s_seed2/iteration_0050.pt",
+      "source_sha256": "7bf83f6ff4ad7bf980f01c396e66994ddb34774436fe6cc6899c03ac425c8f42",
+      "curated": "assets/locomotion/checkpoints/limb_ground_support_iter50_seed2.pt",
+      "curated_sha256": "919a5bd1fb84fcb803ae7e9ebfaa8ced46d0e3643722a24b46587882d66b0427",
+      "training_seconds": 35.30449145799503,
+      "cumulative_training_seconds": 1023.4621124170953,
+      "transitions": 614400
+    },
+    {
+      "source": "outputs/locomotion/limb_ground_support_120s_seed2/iteration_0100.pt",
+      "source_sha256": "9ea051c77d9bbee4eec42837a3fea543ecd4c8dde32116923661f1e8ad943583",
+      "curated": "assets/locomotion/checkpoints/limb_ground_support_iter100_seed2.pt",
+      "curated_sha256": "69b2ea251962cb9de5d956e2f57a9cb524ae8755b2814e384fed0c799d3d0255",
+      "training_seconds": 70.88829983293545,
+      "cumulative_training_seconds": 1059.0459207920358,
+      "transitions": 1228800
+    },
+    {
+      "source": "outputs/locomotion/limb_ground_support_120s_seed2/policy.pt",
+      "source_sha256": "70500507c64bf12184df916ed11fb178984e96953994692981330fe41b3a4237",
+      "curated": "assets/locomotion/checkpoints/limb_ground_support_120s_seed2.pt",
+      "curated_sha256": "46ac4e656f4d5b5da7d925ecb1c46014db071c2ee3c8989acd2fafb27e8642fd",
+      "training_seconds": 119.48346416698769,
+      "cumulative_training_seconds": 1107.641085126088,
+      "transitions": 2052096
+    }
+  ],
+  "new_training_seconds_all_attempts": 119.48346416698769,
+  "new_transitions_all_attempts": 2052096
+}
