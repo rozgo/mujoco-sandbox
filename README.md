@@ -76,7 +76,7 @@ Viewer controls, recording commands, setup notes, and validation live in each de
 
 [Development workflow](docs/DEVELOPMENT.md) · [Simulation guidelines (AGENTS.md)](AGENTS.md) · [Hexapod validation](docs/VALIDATION.md) · [Wind results](docs/wind/RESULTS.md) · [Project time log](docs/TIME_LOG.md)
 
-## Adaptive dog v1 — official RL baseline
+## Adaptive walking — one policy, nine body configurations
 
 **One learned policy, nine physical bodies.** A Go2-derived quadruped walks intact, with any one lower leg removed, or with any one entire leg removed. Every panel uses identical neural-network weights. PPO learns joint commands through torque-limited MuJoCo dynamics, with healthy-motion guidance, visible-step rewards and a rear-support preference.
 
