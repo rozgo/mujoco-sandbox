@@ -1,0 +1,84 @@
+{
+  "trials_per_backend": 216,
+  "cpu_completed": 200,
+  "warp_completed": 205,
+  "checks": {
+    "matched_configurations": true,
+    "all_trials_upright_with_valid_support": true,
+    "pooled_completion_within_5pp": true,
+    "no_body_more_than_two_trials_worse": true,
+    "gait_retention_all_seeds": true
+  },
+  "passed": true,
+  "configuration_differences": [
+    {},
+    {},
+    {}
+  ],
+  "timings": [
+    {
+      "seed": 2,
+      "mjbatch_seconds": 46.7396381739527,
+      "mjbatch_transitions_per_second": 12619.35314528601,
+      "warp_seconds": 15.286007754970342,
+      "warp_transitions_per_second": 38585.876015156085,
+      "speedup": 3.0576746344221246
+    },
+    {
+      "seed": 3,
+      "mjbatch_seconds": 45.26903653983027,
+      "mjbatch_transitions_per_second": 13029.303141475948,
+      "warp_seconds": 13.542002350091934,
+      "warp_transitions_per_second": 43555.154160492064,
+      "speedup": 3.342861370831393
+    },
+    {
+      "seed": 4,
+      "mjbatch_seconds": 44.76326204510406,
+      "mjbatch_transitions_per_second": 13176.519606763366,
+      "warp_seconds": 13.49291270179674,
+      "warp_transitions_per_second": 43713.61566146189,
+      "speedup": 3.3175388468305513
+    }
+  ],
+  "by_case": {
+    "healthy": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_fl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_fr": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_rl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_rr": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_fl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_fr": {
+      "cpu": 8,
+      "warp": 13
+    },
+    "whole_rl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_rr": {
+      "cpu": 24,
+      "warp": 24
+    }
+  },
+  "pooled_training_speedup": 3.231780587183231,
+  "scope": "Three paired seeds, fixed parent, scaled world/rollout layout and identical experience plus optimizer-step counts; development validation, not full curriculum retraining or general robustness."
+}

@@ -1,5 +1,10 @@
 # Experimental GPU physics backend
 
+**Historical first integration.** The maintained path now has explicit optimizer
+minibatches and concurrent body batches: see [matched CPU/Warp training](WARP_TRAINING.md)
+for the newer three-seed **3.23× training speedup** and gait validation. The
+measurements below preserve the original scheduling, GPU load and pilot results.
+
 Started 2026-09-11 17:32:50 UTC (first retained clock checkpoint). The user asked
 for a separate MuJoCo Warp path to accelerate physical simulation on the RTX 4090.
 Work stays on `experiment/adaptive-dog-gpu-comparison`; official v1 stays frozen.

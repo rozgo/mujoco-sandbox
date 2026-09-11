@@ -27,9 +27,12 @@ def main():
         b = env.groups[0].batch
         b.upload_controls()
         totals = defaultdict(float)
-        with b.wp.ScopedDevice(b.device), b.wp.ScopedTimer(
-            "uncaptured step", print=False, cuda_filter=b.wp.TIMING_KERNEL
-        ) as timer:
+        with (
+            b.wp.ScopedDevice(b.device),
+            b.wp.ScopedTimer(
+                "uncaptured step", print=False, cuda_filter=b.wp.TIMING_KERNEL
+            ) as timer,
+        ):
             for _ in range(3):
                 b.mjw.step(b.m, b.d)
         for item in timer.timing_results:

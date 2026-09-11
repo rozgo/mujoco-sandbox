@@ -7,6 +7,12 @@ short time budget. Deliver a maintained training path, not a one-off speed demo.
 The approved v1 weights and original videos remain frozen while this backend is
 validated on the existing branch.
 
+**Result: the 4096-world matched-update comparison passes the declared backend
+acceptance checks.** Same network, rewards, initial weights, experience and
+optimizer updates; **3.23× pooled training speedup** on the desktop, with
+**205/216 Warp vs 200/216 CPU** task completions. This validates a maintained
+backend for continuing adaptive walking, not complete training from scratch.
+
 ## Contract declared before new training
 
 - Same 128×128 ELU actor/critic, observation channels, action distribution, PPO
@@ -113,3 +119,88 @@ documented; no collision shapes or torque/contact limits were changed. The new
 `adaptive-dog learn` command passed an actual one-round CPU smoke run (0.120 s
 new training), and explicit minibatches reproduced legacy updates exactly in
 the separate short scheduling test.
+
+## Matched learning result: 4096 worlds
+
+Every run uses 589,824 transitions, six PPO rounds and 768 Adam steps. Physics is
+CPU MuJoCo/mjbatch or MuJoCo Warp; actor inference and learner updates use CUDA
+in both cases. Runs alternate backend order across seeds on the same Ryzen 5950X
+and RTX 4090. These are learning-loop times with compiled kernels; initialization
+and compilation are excluded and reported separately in each run's JSON.
+
+| Seed | CPU training | Warp training | Speedup | CPU tasks | Warp tasks |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 2 | 46.740 s | 15.286 s | 3.06× | 67/72 | 70/72 |
+| 3 | 45.269 s | 13.542 s | 3.34× | 65/72 | 71/72 |
+| 4 | 44.763 s | 13.493 s | 3.32× | 68/72 | 64/72 |
+| Pooled | 136.772 s | 42.321 s | **3.23×** | **200/216** | **205/216** |
+
+All 432 trials stay upright with allowed support. Both backends complete 24/24
+trials for every body except the entire front-right removal (CPU 8/24, Warp
+13/24). Every seed passes the existing healthy-gait, visible-step, stride,
+stance, speed and body-motion retention comparison. All configuration checks
+match. See [machine-readable acceptance](warp_training/scaled_summary.json),
+[all paired gait checks](warp_training/scaled_pairs.json), and per-run reports.
+
+This is backend equivalence within the predeclared engineering margins, not a
+claim that Warp improves the policy. Seed 4 still performs worse with Warp, and
+both continuations can lose quality relative to the unchanged parent. The parent
+has 71/72 completions and official v1 72/72 on the same development seed. The
+larger population improves the pooled match relative to the failed 512-world
+comparison; it does not isolate the cause or establish arbitrary-damage recovery.
+
+## Maintained training command
+
+From `experiments/adaptive_locomotion`, on an NVIDIA host:
+
+```sh
+uv tool run --from uv==0.12.12 uv sync --locked --extra warp
+uv tool run --from uv==0.12.12 uv run --locked --extra warp adaptive-dog learn \
+  --physics-backend warp --device cuda --num-envs 4096 \
+  --minibatch-size 3072 --max-iterations 6 --seconds 90 \
+  --output ../../outputs/locomotion/my_warp_round
+```
+
+`learn` fixes the accepted adaptive-walking reward recipe, defaults to frozen v1
+as its parent, preserves previous run directories, and records checkpoint ancestry
+separately from new training time. It is the final continuation stage. Remove
+`--max-iterations` for a bounded time-budget run; use a new output directory each
+time. The existing time-budget guard can discard a rollout that finishes after
+the deadline and stop updates between minibatches. Actual optimizer-step counts
+are recorded; a final PPO round can be partial. An in-progress rollout or
+minibatch can exceed the deadline slightly. Each requested round is capped at
+five minutes. No automatically selected intermediate checkpoint replaces the final.
+
+For a matched CPU-physics run on the same desktop, change only
+`--physics-backend mjbatch` and the output directory, retaining `--device cuda`
+and all counts. On a Mac, omit `--extra warp`, use `--physics-backend mjbatch`
+and `--device auto`; that is a portability path, not the same-machine benchmark.
+Default world counts are 512 for CPU and 4096 for Warp; **set the same explicit
+world count for a comparison**.
+
+The archived benchmark uses the earlier parent
+`limb_rear_overlap_iter100_seed2.pt` to stay comparable with preceding hardware
+runs. Reproduce its six runs with `python scripts/train_warp_match.py --prefix
+scaled --num-envs 4096 --iterations 6` on a clean source checkout with empty run
+directories. Curate with `scripts/curate_warp_training.py`, evaluate with
+`scripts/evaluate_warp_match.py --prefix scaled` and all six labels, then run
+`scripts/summarize_warp_match.py --prefix scaled`. The curator verifies the exact
+initial tensor identity and retains every final checkpoint.
+
+## Implementation and remaining limits
+
+- The 128×128 ELU actor and critic, observation/action mapping, PPO loss and
+  reward formulas are shared source. GPU scheduling changes no gait targets.
+- Nine independent streams overlap the nine physically different body batches.
+  Missing parts remain absent from the model; no dummy hidden leg is introduced.
+- Minibatch size is independent of environment count. This prevents increasing
+  GPU batching from silently making each gradient update eight times larger.
+- NumPy observation/reward computation and healthy-reference matching still run
+  on CPU. This is GPU physics plus CUDA actor/learner, not a fully GPU-resident
+  environment. Those host operations and copies limit further throughput.
+- Contact reductions are not bitwise deterministic. The pinned compatibility
+  hooks, finite ±24 m BVH sensor floor and capsule–cylinder multicontact
+  limitation remain documented in [backend integration](WARP_BACKEND.md).
+- One pretrained policy per run handles all nine body configurations. These
+  results cover single removals on flat ground; no new parkour, online fault
+  diagnosis or full curriculum training claim is made.

@@ -23,9 +23,19 @@ The actor is a 128 × 128 MLP with ELU activations and twelve joint-target outpu
 
 **Acceptance is explicit, not a rewritten experiment result.** The selected gait still misses the original FR alternation target, and the original video has **8.889 mm** maximum sampled contact penetration versus its **8 mm** target. See [v1 validation and scope](OFFICIAL_V1.md). Single removals on flat ground are demonstrated; arbitrary injuries, independent fault diagnosis and learned parkour are not established.
 
+## CPU and MuJoCo Warp training backends
+
+The maintained **[adaptive-walking training path](WARP_TRAINING.md)** uses the
+same network and rewards with either CPU or GPU physics. At 4096 worlds, three
+matched pairs show **3.23× faster training** with Warp on the RTX 4090, with
+**205/216 vs 200/216** completed CPU validation tasks and all gait-retention
+checks passing. Each pair receives the same samples and optimizer updates.
+This is continuation of a pretrained walker; official v1 remains frozen.
+See the report for `adaptive-dog learn`, exact counts and known limitations.
+
 ## Earlier experiments
 
-Current branch experiment: **[optional MuJoCo Warp GPU physics](WARP_BACKEND.md)**.
+Historical first integration: **[optional MuJoCo Warp GPU physics](WARP_BACKEND.md)**.
 All-nine-body physics is 4.59× faster than CPU at 4096 worlds; the complete
 90-second training pilot reaches 25,950 transitions/s. Its final policy passes
 65/72 CPU tasks and is not promoted. CPU physics and the official v1 demo remain

@@ -70,5 +70,5 @@ def main(labels, prefix="matched"):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("labels", nargs="+")
-    p.add_argument("--prefix", choices=("matched", "scaled"), default="matched")
+    p.add_argument("--prefix", choices=("matched", "scaled", "time"), default="matched")
     main(**vars(p.parse_args()))
