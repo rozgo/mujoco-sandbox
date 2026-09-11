@@ -1,5 +1,6 @@
 """Backend safety/equivalence checks, optional physical checks on CUDA hosts."""
 
+import mujoco
 import numpy as np
 import pytest
 
@@ -66,6 +67,38 @@ def test_warp_physics_and_reset(cuda_warp, case):
         g.batch.step(nstep=1)
         assert abs(g.torque[0, 0]) < 1e-6
         assert abs(g.torque[1, 0]) > 1e-3
+    finally:
+        cpu.close()
+        gpu.close()
+
+
+@pytest.mark.parametrize("case", LOSS_CASES)
+def test_warp_bvh_ranges_match_cpu(cuda_warp, case):
+    kwargs = {
+        "num_envs": 8,
+        "bodies": [CASES[case][0]],
+        "randomize": False,
+        "faults": False,
+        "sensing": True,
+    }
+    cpu, gpu = DogEnv(**kwargs), DogEnv(**kwargs, physics_backend="warp")
+    try:
+        c, g = cpu.groups[0], gpu.groups[0]
+        for seed in (9222, 9223, 9224):
+            rng = np.random.default_rng(seed)
+            c.qpos[:] = c.initial_qpos
+            c.qpos[:, :2] = rng.uniform(-10, 10, (8, 2))
+            c.qpos[:, 2] = rng.uniform(0.3, 0.8, 8)
+            c.qpos[:, c.qadr] += rng.uniform(-0.3, 0.3, (8, len(c.slot)))
+            for q in c.qpos:
+                euler = rng.uniform([-0.4, -0.4, -3.14], [0.4, 0.4, 3.14])
+                mujoco.mju_euler2Quat(q[3:7], euler, "xyz")
+            c.batch.forward()
+            g.qpos[:] = c.qpos
+            g.batch.forward()
+            np.testing.assert_allclose(
+                np.concatenate(g.rays, 1), np.concatenate(c.rays, 1), atol=1e-4, rtol=0
+            )
     finally:
         cpu.close()
         gpu.close()

@@ -42,6 +42,26 @@ def configure_ccd_module_width(wp, mjw):
     collision_convex.ccd_kernel_builder = configured
 
 
+def configure_sensor_bvh(mjw):
+    """Route this bridge's range sensors through MJWarp's public BVH ray API."""
+    from mujoco_warp._src import ray
+
+    original = ray.rays
+    if getattr(original, "_adaptive_bvh_configured", False):
+        return
+
+    @functools.wraps(original)
+    def accelerated(m, d, *args, **kwargs):
+        context = getattr(m, "_adaptive_sensor_bvh", None)
+        if context is not None and "rc" not in kwargs and len(args) == 8:
+            mjw.refit_bvh(m, d, context)
+            kwargs["rc"] = context
+        return original(m, d, *args, **kwargs)
+
+    accelerated._adaptive_bvh_configured = True
+    ray.rays = accelerated
+
+
 class WarpBatch:
     MODEL_FIELDS = ("actuator_gainprm", "actuator_biasprm", "actuator_forcerange")
     DATA_FIELDS = (
@@ -68,6 +88,7 @@ class WarpBatch:
                 "Warp physics requires an NVIDIA CUDA device; use mjbatch on Mac"
             )
         configure_ccd_module_width(wp, mjw)
+        configure_sensor_bvh(mjw)
         self.wp, self.mjw, self.device = wp, mjw, wp.get_device(device)
         self.model, self.n = model, n
         self.host, self.buffers, self.graphs = {}, {}, {}
@@ -76,6 +97,17 @@ class WarpBatch:
         with wp.ScopedDevice(self.device):
             self.m = mjw.put_model(model, batch_sizes={k: n for k in self.MODEL_FIELDS})
             self.d = mjw.make_data(model, nworld=n, nconmax=nconmax, njmax=njmax)
+            if self.m.nrangefinder:
+                # Build all mesh/scene BVHs without allocating camera images.
+                # Keep every geom group and the public ray API's culling rules.
+                self.m._adaptive_sensor_bvh = mjw.create_render_context(
+                    model,
+                    nworld=n,
+                    cam_active=[],
+                    enabled_geom_groups=list(range(6)),
+                    use_textures=False,
+                    use_fast_math=False,
+                )
             for key in self.DATA_FIELDS:
                 array = getattr(self.d, key)
                 buffer = wp.empty(

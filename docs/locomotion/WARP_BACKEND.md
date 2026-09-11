@@ -85,3 +85,29 @@ avoids changing its launch bounds. It uses Warp's public `set_module_options`
 API, with one explicit private MJWarp builder hook guarded to the pinned versions;
 review/remove it on upgrades. No solver or collision mathematics are patched.
 The revised attempt must rerun all GPU checks before new throughput claims.
+
+## Profile-driven sensor acceleration
+
+The narrower CCD fix also passes all nine physical/reset tests (**10 tests,
+95.31 seconds with cached/remaining compilation**), but healthy-512 throughput
+stays near **925 physics control intervals/s**. Thus the slow result was not
+explained by CCD launch width. The incomplete larger matrix was again stopped.
+
+A three-step, 512-world CUDA-event profile attributes **186.340 / 190.284 ms
+(97.9%)** of measured kernel time to `_ray`. MJWarp's default rangefinder path
+scans mesh triangles; its public `rays(..., rc=...)` API also supports BVH queries.
+The bridge now builds a camera-free render context solely for that spatial index,
+refits it from current geometry during each sensor call, and routes only this
+bridge's rangefinders through the accelerated public query. All six geom groups,
+body exclusions, ray origins/directions and contact sensors remain enabled.
+A second version-scoped internal dispatch hook is required because the upstream
+rangefinder call does not supply a render context. No sensor values are faked.
+
+Before claiming equivalence/speed, test **24 randomized poses per body** (seeds
+9222–9224, eight worlds each, nine bodies), including body orientation and joint
+variation, against CPU range distances with **0.1 mm absolute tolerance**. Test
+positions span ±10 m, beyond the walking course. BVH plane bounds are finite in
+MJWarp (this floor's bound extends ±24 m); this bridge is intended for the bounded
+course, not arbitrary unbounded plane-ray queries. Physics plane collisions
+remain unchanged. The new attempt uses `bvh_` result labels; prior results stay
+available.
