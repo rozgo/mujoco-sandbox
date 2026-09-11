@@ -57,6 +57,7 @@ def grid(
     family="partial",
     presentation="original",
     replay_from=None,
+    label=None,
 ):
     """Capture physical runs, then replay a common timestamp in every panel."""
     if family not in ("partial", "limb_loss"):
@@ -251,9 +252,12 @@ def grid(
             draw = ImageDraw.Draw(canvas)
             draw.text(
                 (28, 24),
-                "ONE POLICY / COMPLETE LIMB LOSS"
-                if limb
-                else "ONE POLICY / FOURTEEN CONDITIONS",
+                label
+                or (
+                    "ONE POLICY / COMPLETE LIMB LOSS"
+                    if limb
+                    else "ONE POLICY / FOURTEEN CONDITIONS"
+                ),
                 font=font(52),
                 fill="white",
             )
@@ -461,6 +465,7 @@ def grid(
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_source_commit": source_commit,
         "presentation": presentation,
+        "label": label,
         "replayed_existing_trajectories": all(
             e["reused_saved_trajectory"] for e in entries
         ),

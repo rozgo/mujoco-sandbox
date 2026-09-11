@@ -93,6 +93,9 @@ def main():
     p.add_argument("--family", choices=("partial", "limb_loss"), default="partial")
     p.add_argument("--presentation", choices=("original", "damage"), default="original")
     p.add_argument(
+        "--label", help="Override the grid heading for clearly labeled experiments"
+    )
+    p.add_argument(
         "--replay-from",
         type=Path,
         help="Reuse this saved capture directory; refuse new rollouts",
