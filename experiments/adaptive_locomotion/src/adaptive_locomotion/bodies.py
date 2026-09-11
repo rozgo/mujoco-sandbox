@@ -134,9 +134,10 @@ def build_model(
             contype="0",
             conaffinity="0",
         )
-    if terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
+    standing = terrain.startswith("stand_")
+    if not standing and terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
         raise ValueError(terrain)
-    if terrain != "flat":
+    if terrain != "flat" and not standing:
         h = 0.04 if terrain == "steps" else 0.06
         obstacles = ((1.6, 0.32, h), (2.8, 0.5, 1.5 * h), (4.1, 0.4, h))
         if terrain == "heldout_steps":
@@ -274,6 +275,10 @@ def build_model(
         xyaxes="1 0 0 0 .52 .85",
         fovy="58",
     )
+    if standing:
+        from .standing_surfaces import compose
+
+        compose(root, terrain.removeprefix("stand_"))
     if contact_profile not in ("firm", "legacy_soft"):
         raise ValueError(contact_profile)
     if contact_profile == "firm":
@@ -330,6 +335,11 @@ def initialize(model, data):
     z = min(data.site_xpos[i, 2] for i in tips)
     data.qpos[2] += 0.024 - z
     mujoco.mj_forward(model, data)
+    from .standing_surfaces import initialize_support, name_for
+
+    surface = name_for(model)
+    if surface is not None:
+        initialize_support(model, data, surface)
 
 
 def manifest(body, model):

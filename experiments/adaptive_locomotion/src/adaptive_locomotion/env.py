@@ -146,6 +146,9 @@ class DogEnv:
         limb_stage=None,
         physics_backend="mjbatch",
         warp_execution="concurrent",
+        terrain_per_group=None,
+        group_counts=None,
+        healthy_posture_only=False,
     ):
         if physics_backend not in ("mjbatch", "warp"):
             raise ValueError("Unknown physics backend")
@@ -170,6 +173,7 @@ class DogEnv:
                 "Paired stages require retention curriculum and at least 16 environments"
             )
         self.reward_profile = reward_profile
+        self.healthy_posture_only = healthy_posture_only
         self.support_weight = support_weight
         self.support_substeps = support_substeps
         if stride_weight < 0:
@@ -223,10 +227,20 @@ class DogEnv:
         if limb_stage:
             self.bodies, counts = curriculum(limb_stage, num_envs)
             self.faults = self.randomize_strength = False
+        if terrain_per_group is not None and len(terrain_per_group) != len(self.bodies):
+            raise ValueError("One terrain required per body group")
+        if group_counts is not None and (
+            len(group_counts) != len(self.bodies)
+            or sum(group_counts) != num_envs
+            or min(group_counts) < 1
+        ):
+            raise ValueError("Invalid group counts")
         self.groups, self.slices = [], []
         start = 0
         for i, body in enumerate(self.bodies):
-            if limb_stage:
+            if group_counts is not None:
+                n = group_counts[i]
+            elif limb_stage:
                 n = counts[i]
             elif pair_level:
                 small_n = num_envs // 16
@@ -245,7 +259,7 @@ class DogEnv:
                     max(1, round(threads * n / num_envs))
                     if pair_level or limb_stage
                     else max(1, threads // len(self.bodies)),
-                    terrain,
+                    terrain_per_group[i] if terrain_per_group is not None else terrain,
                     True if sensing is None else sensing,
                     timestep,
                     physics_backend,
@@ -566,7 +580,7 @@ class DogEnv:
             stride_reward = self.stride.update(
                 self.tip_positions, self.tip_forces, direction, speed > 0.15
             )
-            if self.limb_stage:
+            if self.limb_stage or self.healthy_posture_only:
                 stride_reward *= (self.context[:, :4] == 1).all(1)
             reward += self.stride_weight * stride_reward
         if self.reward_profile == "walk":
@@ -580,7 +594,7 @@ class DogEnv:
                 + 0.014 * rate
                 + 0.08 * np.sum(self.gyro[:, :2] ** 2, 1)
             )
-            if self.limb_stage:
+            if self.limb_stage or self.healthy_posture_only:
                 posture *= (self.context[:, :4] == 1).all(1)
             reward -= posture
         finite = np.isfinite(self.q).all(1) & np.isfinite(self.vel).all(1)

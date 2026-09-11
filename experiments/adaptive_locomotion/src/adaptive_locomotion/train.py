@@ -87,6 +87,8 @@ def train(
     minibatch_size=None,
     max_iterations=None,
     warp_execution="concurrent",
+    standing_profile=None,
+    standing_surfaces="gentle",
 ):
     if minibatch_size is not None and minibatch_size < 1:
         raise ValueError("Minibatch size must be positive")
@@ -149,7 +151,17 @@ def train(
     actor_device = "cuda" if device == "cuda" else "cpu"
     setup_start = time.perf_counter()
     variants = None if bodies == "all" else [PRESETS[k] for k in bodies.split(",")]
-    env = DogEnv(
+    environment_class = DogEnv
+    environment_options = {}
+    if standing_profile:
+        from .standing_env import StandingEnv
+
+        if mode != "support":
+            raise ValueError("Standing training requires support observation mode")
+        environment_class = StandingEnv
+        environment_options["profile"] = standing_profile
+        environment_options["surface_level"] = standing_surfaces
+    env = environment_class(
         num_envs,
         seed,
         bodies=variants,
@@ -176,12 +188,15 @@ def train(
         limb_stage=limb_stage,
         physics_backend=physics_backend,
         warp_execution=warp_execution,
+        **environment_options,
     )
     ancestry = 0.0
     parent = None
     if resume:
         learner, parent = load_checkpoint(resume, mode)
         ancestry = float(parent["cumulative_training_seconds"])
+        if mode == "support" and parent["mode"] == "blind":
+            learner.enable_support()
         if ancestry + seconds > allowance + 0.01:
             raise ValueError(
                 f"Resume exceeds {allowance}-second lineage budget ({ancestry:.2f}+{seconds})"
@@ -212,7 +227,7 @@ def train(
     teacher = None
     if reference:
         teacher, _ = load_checkpoint(reference)
-        if teacher.mode != "blind" or mode != "blind":
+        if teacher.mode != "blind" or mode not in ("blind", "support"):
             raise ValueError("Reference retention currently supports reactive policies")
         teacher = teacher.to(actor_device).eval().requires_grad_(False)
     motion_reference = None
@@ -258,6 +273,8 @@ def train(
         "rew": (),
         "alive": (),
     }
+    if mode == "support":
+        shapes["support"] = (CONTEXT_DIM,)
     if mode == "history":
         shapes["hist"] = (HISTORY, OBS_DIM)
     if teacher is not None:
@@ -280,6 +297,14 @@ def train(
     config = {
         "seed": seed,
         "mode": mode,
+        "standing_profile": standing_profile,
+        "standing_surfaces": standing_surfaces if standing_profile else None,
+        "standing_cases": [
+            {"body": b.name, "surface": s, "worlds": g.n}
+            for (b, s), g in zip(env.cases, env.groups, strict=True)
+        ]
+        if standing_profile
+        else None,
         "hidden": learner.hidden,
         "num_envs": num_envs,
         "minibatch_size": minibatch_size,
@@ -400,10 +425,14 @@ def train(
     (output / "config.json").write_text(json.dumps(config, indent=2) + "\n")
 
     @torch.no_grad()
-    def infer(obs, ctx, hist, extra):
+    def infer(obs, ctx, hist, extra, support=None):
         values = [torch.as_tensor(x, device=actor_device) for x in (obs, ctx, extra)]
         h = torch.as_tensor(hist, device=actor_device) if mode == "history" else None
-        mean, value = actor(values[0], values[1], h, values[2])
+        if mode == "support":
+            support = torch.as_tensor(
+                env.support_obs() if support is None else support, device=actor_device
+            )
+        mean, value = actor(values[0], values[1], h, values[2], support=support)
         return mean.cpu().numpy(), value.cpu().numpy()
 
     def save(name, elapsed):
@@ -414,7 +443,11 @@ def train(
             "config": config,
             "cumulative_training_seconds": ancestry + elapsed,
             "training_seconds": elapsed,
-            "parent": str(resume) if resume else None,
+            "parent": str(Path(resume).resolve().relative_to(ROOT))
+            if resume and Path(resume).resolve().is_relative_to(ROOT)
+            else str(resume)
+            if resume
+            else None,
             "iterations": iteration,
             "transitions": transitions,
             "optimizer_steps": optimizer_steps,
@@ -439,7 +472,13 @@ def train(
             obs, ctx = env.obs(), env.context.copy()
             extra = np.concatenate((env.vel, env.pos[:, 2:3]), 1).astype(np.float32)
             history = env.history.copy() if mode == "history" else None
-            mean, val = infer(obs, ctx, history, extra)
+            support = env.support_obs() if mode == "support" else None
+            walking_mask = (
+                np.linalg.norm(env.commands, axis=1) > 0.05
+                if standing_profile
+                else None
+            )
+            mean, val = infer(obs, ctx, history, extra, support)
             if teacher is not None:
                 with torch.no_grad():
                     target_obs = teacher_observation(obs) if healthy_style else obs
@@ -480,7 +519,9 @@ def train(
             if teacher is not None:
                 # Read health after stepping so a fault at this step immediately
                 # disables imitation. No strength/geometry labels enter the actor.
-                healthy = healthy_mask(env.context).astype(np.float32)
+                healthy = (
+                    walking_mask if standing_profile else healthy_mask(env.context)
+                ).astype(np.float32)
                 reward += reference_reward_weight * reference_bonus(
                     actions, target, healthy
                 )
@@ -510,6 +551,8 @@ def train(
                 "rew": reward,
                 "alive": ~done,
             }
+            if support is not None:
+                vals["support"] = support
             if history is not None:
                 vals["hist"] = history
             if teacher is not None:
@@ -559,6 +602,7 @@ def train(
                     flat["ctx"][ids],
                     flat["hist"][ids] if mode == "history" else None,
                     flat["extra"][ids],
+                    support=flat["support"][ids] if mode == "support" else None,
                 )
                 lp = log_density(
                     (flat["act"][ids] - mean) / learner.log_std.exp(), learner.log_std
@@ -626,7 +670,7 @@ def train(
             print(json.dumps(row), flush=True)
         if iteration % 25 == 0:
             save("latest.pt", elapsed)
-            if retention_curriculum or limb_stage:
+            if retention_curriculum or limb_stage or standing_profile:
                 save(f"iteration_{iteration:04d}.pt", elapsed)
     if device == "cuda":
         torch.cuda.synchronize()

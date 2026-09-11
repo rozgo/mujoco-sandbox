@@ -381,3 +381,13 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - The longer CPU control completed all 40 rounds / 5,120 Adam steps / 3,932,160 transitions in **301.874 s**, versus the existing Warp **90.406 s** (**3.339×**). CPU **60/72**, Warp **59/72**; all upright with allowed support and all gait-retention comparisons pass. Initial weights, learning settings and implementation hashes match. This supports shared longer-training drift; the different per-body failures and single-seed scope remain explicit. No further training or policy promotion followed.
 - Total this goal: **15 comparison training runs, 869.284 seconds (14 min 29 s)**, plus **1.066 seconds** for two actual maintained-CLI smoke runs. All failed attempts and all final checkpoints are retained. Training ancestry, setup, validation, recording and elapsed implementation time remain separate.
 - Verified implementation/results/media milestone **2026-09-11 19:24:53 UTC**, elapsed **57 min 09 s**, before final documentation commit/push/GPU synchronization. Ruff and formatting checks pass for all 76 Python files; Git LFS integrity passes. Full recipe, matched and equal-time results, numerical limits, provenance and viewer command: `docs/locomotion/WARP_TRAINING.md`.
+
+### Adaptive standing — in progress
+
+- Goal start: 2026-09-11 23:18:31 UTC.
+- 23:41:35 UTC: gentle and aggressive scene previews, physical reset/range tests,
+  shared-policy training interface and pre-training assessment implemented.
+- Frozen walking v1: 0/18 complete gentle standing/transition gates; failures
+  retained in `docs/locomotion/standing/baseline_gentle.json`.
+- Local one-update interface test is diagnostic training only, not a candidate.
+  Real GPU learning, acceptance, video and final timing remain outstanding.
