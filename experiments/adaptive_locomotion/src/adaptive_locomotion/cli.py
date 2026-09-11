@@ -5,8 +5,13 @@ from .bodies import ROOT, preview
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Experimental adaptive Go2")
+    parser = argparse.ArgumentParser(description="Adaptive Go2 locomotion")
     sub = parser.add_subparsers(dest="command", required=True)
+    from .limb_loss import LOSS_CASES
+
+    p = sub.add_parser("demo", help="View the frozen, user-accepted adaptive dog v1")
+    p.add_argument("--case", choices=LOSS_CASES, default="whole_fr")
+    p.add_argument("--seconds", type=float, default=0)
     p = sub.add_parser("preview")
     p.add_argument("--output", type=Path, default=ROOT / "previews/locomotion/static")
     p = sub.add_parser("train")
@@ -122,7 +127,11 @@ def main():
     p.add_argument("--case", default="short_steps")
     p.add_argument("--seconds", type=float, default=12)
     args = parser.parse_args()
-    if args.command == "preview":
+    if args.command == "demo":
+        from .official import view_demo
+
+        view_demo(case=args.case, seconds=args.seconds)
+    elif args.command == "preview":
         print(preview(args.output))
     elif args.command == "train":
         from .train import train

@@ -1,5 +1,7 @@
 # Evaluate symmetry before another gait fine-tune
 
+**Later decision:** the user accepted the existing rear-support policy as [official v1](OFFICIAL_V1.md). This symmetry probe remains a separate diagnostic on the earlier visible-step policy; no new symmetry training was applied to v1.
+
 The user asked whether this should use a symmetry reward, explicitly requesting
 evaluation rather than implementation. **No new symmetry training and no change
 to the selected controller.** The approved visible-step checkpoint remains

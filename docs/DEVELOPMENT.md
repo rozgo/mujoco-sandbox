@@ -44,6 +44,13 @@ git push
 
 On the other machine, use `git pull --ff-only` and `git lfs pull`, then verify the commit and checkpoint hashes before evaluation. For work happening on both machines at once, use separate branches with `git switch -c <branch>` and `git push -u origin <branch>`; merge deliberately after review. Do not force-push shared `main`.
 
+Adaptive dog v1 is now the official baseline on `main`, pinned by the
+`adaptive-dog-v1` tag. Its checkpoint and video identities are recorded in
+[the release manifest](locomotion/OFFICIAL_V1.json). Start subsequent learning
+work on a new branch and use new artifact names; preserve the v1 checkpoint,
+video, GIF and recorded limitations. The original `experiment/adaptive-dog`
+branch remains available as development history.
+
 ## Large files and generated data
 
 - `.gitattributes` routes supported mesh, image, video and model formats through Git LFS, including `.mp4`, `.pt`, `.npz`, `.onnx` and `.safetensors`.

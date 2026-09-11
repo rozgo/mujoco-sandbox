@@ -1,5 +1,7 @@
 # Minimal rear swing overlap refinement
 
+**Status update, 2026-09-11:** the user subsequently accepted the final stronger checkpoint and its video as the official v1 baseline, with the recorded limitations retained. See [the release record](OFFICIAL_V1.md). The original automatic selection results below remain unchanged.
+
 Started **2026-09-11 04:39:57 UTC** after explicit approval for the proposed
 single-change fine-tune. Preserve the user-liked `limb_visible_steps_selected_seed2.pt`
 and its verified video. That policy already lifts every intact foot, but both

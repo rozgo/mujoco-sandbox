@@ -1,12 +1,39 @@
-# Adaptive dog: minute-scale RL pilot
+# Adaptive dog: official v1 and learning experiments
 
-Current review: **[symmetry evaluation](SYMMETRY_OPTION.md)**. A frozen-policy reflection probe transfers the better FL rear-leg alternation to both FR bodies; all 64 diagnostic tasks complete. This is evidence for trying a soft mirror loss, not a trained improvement. The preceding **[rear-overlap experiment](REAR_OVERLAP_TRAINING.md)** used 2 min 59 s of training and reduced simultaneous swing, but failed its phase-separation gate. **No new policy selected; no symmetry training started.**
+**[Watch the official v1 video](../../previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](../../previews/locomotion/adaptive_dog_v1.gif)** · **[Frozen baseline and validation](OFFICIAL_V1.md)**
 
-Latest: **[visible steps on every intact foot](VISIBLE_STEPS.md)**. [Watch all nine cases](../../previews/locomotion/limb_visible_steps_verified.mp4). The single shared policy now lifts every intact foot: mean swing peaks **5.5–10.8 cm**, with **288/288** fresh task completions and all per-foot gates passing. New training **5 min 59 s**; final runtime physics **0.5 ms** (training was 2 ms). Body airborne time decreased overall; front-loss compensation still includes brief flight. **81 tests**, **72/72** half-timestep checks and video QA pass. Prior videos/checkpoints are preserved.
+The official solution is **one PPO policy for all nine bodies**: healthy, four complete lower-leg removals and four entire-leg removals. The user accepted the rear-support refinement for its natural gait and requested its promotion to `main`. Weights are frozen as `assets/locomotion/checkpoints/adaptive_dog_v1.pt`; the `adaptive-dog-v1` Git tag preserves this release. Future iterations use another branch and new artifacts.
+
+[![Official nine-body locomotion demonstration](../../previews/locomotion/adaptive_dog_v1.png)](../../previews/locomotion/adaptive_dog_v1.mp4)
+
+## Run the official solution
+
+From the repository root:
+
+```sh
+git lfs pull
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv sync --locked
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog demo
+```
+
+`demo` verifies the exact v1 checkpoint hash and opens the native viewer with **0.5 ms physics, 20 ms control**, orange markers and contact shadows. Default body: `whole_fr`. Use `--case healthy`, `--case lower_fl`, `--case whole_rr`, etc.; `demo --help` lists all nine. `--seconds 5` is a bounded smoke test. The existing `view`, `grid` and training commands remain available with their historical defaults.
+
+The actor is a 128 × 128 MLP with ELU activations and twelve joint-target outputs. It observes joint/IMU/range feedback, the previous action, velocity commands and missing-joint bits. The same frozen weights handle all bodies. Healthy-motion references and the privileged critic are training-only; no online learning or policy switching occurs in the video. Latest training: **179.114 seconds**; checkpoint ancestry: **1922.725 seconds**, **38.4 million transitions**. CPU MuJoCo/mjbatch physics and Apple GPU learning were used for the latest refinement.
+
+**Acceptance is explicit, not a rewritten experiment result.** The selected gait still misses the original FR alternation target, and the original video has **8.889 mm** maximum sampled contact penetration versus its **8 mm** target. See [v1 validation and scope](OFFICIAL_V1.md). Single removals on flat ground are demonstrated; arbitrary injuries, independent fault diagnosis and learned parkour are not established.
+
+## Earlier experiments
+
+The following entries preserve the decisions and selected policies at each historical stage. **They do not override official v1 above.**
+
+Historical review: **[symmetry evaluation](SYMMETRY_OPTION.md)**. A frozen-policy reflection probe transfers the better FL rear-leg alternation to both FR bodies; all 64 diagnostic tasks complete. This is evidence for trying a soft mirror loss, not a trained improvement. The preceding **[rear-overlap experiment](REAR_OVERLAP_TRAINING.md)** used 2 min 59 s of training and reduced simultaneous swing, but failed its phase-separation gate. **No new policy selected; no symmetry training started.**
+
+Previous: **[visible steps on every intact foot](VISIBLE_STEPS.md)**. [Watch all nine cases](../../previews/locomotion/limb_visible_steps_verified.mp4). The single shared policy now lifts every intact foot: mean swing peaks **5.5–10.8 cm**, with **288/288** fresh task completions and all per-foot gates passing. New training **5 min 59 s**; final runtime physics **0.5 ms** (training was 2 ms). Body airborne time decreased overall; front-loss compensation still includes brief flight. **81 tests**, **72/72** half-timestep checks and video QA pass. Prior videos/checkpoints are preserved.
 
 Experimental review: **[temporal healthy-motion reference](HEALTHY_SEQUENCE.md)**. [Watch the new nine-case preview](../../previews/locomotion/limb_healthy_sequence_preview.mp4). Two short rounds used **2 min 59 s** of training. The first final checkpoint slightly lengthened average stance/stride and passed 72/72 development tasks; the continuation regressed. Neither met all gait gates, so the ground-support policy below remains selected. The preview and all candidates are preserved. [Earlier snapshot-reference trials](HEALTHY_STYLE.md).
 
-Latest: **[minimum ground-support correction](GROUND_SUPPORT.md)**. A single new reward term and **119.5 seconds of fine-tuning** reduced sampled airborne time **41%** across the eight removal bodies, retaining **288/288** fresh task completions and healthy gait quality. Some hopping remains; no phase guidance was added. [Watch the nine-case video](../../previews/locomotion/limb_ground_support.mp4).
+Previous: **[minimum ground-support correction](GROUND_SUPPORT.md)**. A single new reward term and **119.5 seconds of fine-tuning** reduced sampled airborne time **41%** across the eight removal bodies, retaining **288/288** fresh task completions and healthy gait quality. Some hopping remains; no phase guidance was added. [Watch the nine-case video](../../previews/locomotion/limb_ground_support.mp4).
 
 Video update: **[clearer cut markers and contact shadows](DAMAGE_VISIBILITY.md)**. [Watch the updated nine-case video](../../previews/locomotion/limb_damage_visible.mp4), labeled WALKING, with orange spheres at each removal and cameras facing the damaged side. Same saved trajectories and policy; no new training.
 
@@ -30,12 +57,11 @@ All clips play at **1×** from actual MuJoCo rollouts. The main video uses the s
 
 For a normal, intact dog, use the **[healthy policy with gait-balance rewards](BALANCED_GAIT.md)**, with 403 seconds of total training, 61% lower stance-timing imbalance and 64/64 trials passing the foot-support test. [Watch it walk](../../previews/locomotion/healthy_walk_balanced.mp4), or run `uv tool run --from uv==0.12.12 uv run --locked adaptive-dog walk` from the isolated project directory below.
 
-## Run on Mac or Linux
+## Reproduce the original pilot
 
 From the repository root:
 
 ```sh
-git switch experiment/adaptive-dog
 git lfs pull
 cd experiments/adaptive_locomotion
 uv tool run --from uv==0.12.12 uv sync --locked

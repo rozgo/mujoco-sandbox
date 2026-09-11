@@ -20,7 +20,7 @@ These instructions apply throughout this repository. Follow explicit user instru
 | RC rovers and communications | `src/sixlegs/rovers/` | `rover-comms` | [Rover documentation](docs/rovers/README.md) |
 | Amphibious attachments | `src/sixlegs/amphibious/` | `amphibious` | [Amphibious documentation](docs/amphibious/README.md) |
 | Neural wind and payload delivery | `src/sixlegs/wind/` | `wind-demo` | [Wind documentation](docs/wind/README.md), [aggressive variant](docs/wind/aggressive/README.md) |
-| Experimental adaptive locomotion | `experiments/adaptive_locomotion/` | `adaptive-dog` | [Pilot results and isolated uv commands](docs/locomotion/README.md) |
+| Adaptive dog RL | `experiments/adaptive_locomotion/` | `adaptive-dog demo` | [Official v1 baseline](docs/locomotion/OFFICIAL_V1.md), [isolated uv commands and history](docs/locomotion/README.md) |
 
 Use `uv`, `pyproject.toml` and `uv.lock` for Python dependencies. Keep optional stacks in extras. Avoid global Python installs and unrelated dependency upgrades.
 
@@ -111,6 +111,7 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 
 ## Artifacts, documentation and Git
 
+- Adaptive dog v1 is the user-accepted baseline on `main`, pinned by the `adaptive-dog-v1` tag and `docs/locomotion/OFFICIAL_V1.json`. Preserve its checkpoint/video and documented limitations. Put later learning trials on a new branch and use new artifact names; do not overwrite v1 or silently reinterpret its recorded gates.
 - The shared origin is `git@github.com:rozgo/mujoco-sandbox.git`. Synchronize Mac/GPU work through commits and Git LFS; follow [the multi-machine workflow](docs/DEVELOPMENT.md). Pull with `--ff-only` before starting work, preserve local changes, and record the source commit for training. Use separate branches/worktrees for concurrent jobs rather than changing a running job's checkout.
 - Keep reproducible source in `src/` and scripts, authoritative assets/checkpoints in `assets/`, scenario documentation and concise result reports in `docs/`, and selected review images/videos in `previews/`.
 - Keep generated MJCF, datasets, weather caches, trajectories, scratch renders and logs in ignored `build/` or `outputs/`. Do not commit virtual environments, secrets or temporary machine configuration.
