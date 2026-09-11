@@ -28,3 +28,21 @@ the demonstration seed is 9143. Previous policies and videos are preserved.
 
 This is training-time reference matching for a single reactive actor on nine
 fixed body variants, not online retraining or arbitrary injury recovery.
+
+## First result and bounded continuation
+
+The first run used 89.685 seconds and 1,609,728 transitions. Its final checkpoint
+passed all 72 task trials and retained healthy gait, but did not meet the gait
+improvement gates. Average stance rose 0.194 → 0.201 s and stride 0.176 → 0.178 m.
+The gaps to healthy stance and stride shrank only 9.5% and 2.0%, below the required
+20%. Two rear-left removal cases lost more than 10% stride, and average airborne
+fraction increased. Earlier inspected checkpoints also failed task completion.
+
+Before further training, authorize a single additional 90-second continuation
+from the final temporal checkpoint: later development checkpoints show improving
+stance, stride and task completion, while the healthy dog remains retained.
+This uses the same source, rewards, seed, environment mix and learning rate,
+with no new heuristic. Evaluate iteration 50, iteration 100 and final using the
+same gates against the original ground-support parent. Stop this experiment
+after the extension even if the gates still fail; preserve every inspected
+candidate, and leave the final holdout unused unless a candidate qualifies.
