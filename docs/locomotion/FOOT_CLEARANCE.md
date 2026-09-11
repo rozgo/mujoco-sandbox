@@ -51,3 +51,18 @@ spring in the step. Require completed cycles on every intact leg. Among eligible
 candidates choose the largest mean rear-foot clearance gain. These gates address
 the user's new foot-drag request; they do not retroactively claim the earlier
 global healthy-style targets were achieved.
+
+## First result and bounded second trial
+
+The first run used 89.374 seconds. Iteration 100 passes all task, healthy gait,
+stride/stance, speed and body-motion retention gates, but its mean rear-foot
+clearance gain is below 1 mm. Mean per-case dragging decreases about 23%.
+The final policy cuts dragging more, but also loses retention gates. None meets
+the declared clearance criteria; all three inspected candidates are preserved.
+
+Before training again, declare one 120-second trial from the first run's
+iteration 100. Increase clearance weight 1 → 3 and the reference loss to the
+user-approved temporal parent 0.5 → 2; retain learning rate 0.0001 and all other
+settings. This tests a stronger lift incentive while resisting unrelated gait
+changes. Selection still compares against the original user-approved temporal
+parent, with identical seeds and gates; inspect iterations 50, 100 and final.
