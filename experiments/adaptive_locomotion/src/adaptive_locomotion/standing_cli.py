@@ -43,6 +43,17 @@ def main():
     p.add_argument("--seed", type=int, default=9301)
     p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
     p.add_argument("--no-transitions", action="store_true")
+    p = commands.add_parser("record")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
+    p.add_argument("--seed", type=int, default=9311)
+    p = commands.add_parser("view")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--surface", default="gap_fr")
+    p.add_argument("--body", default="healthy")
+    p.add_argument("--seconds", type=float, default=0)
+    p.add_argument("--transition", action="store_true")
     args = parser.parse_args()
     if args.command == "preview":
         from .standing_surfaces import preview
@@ -79,6 +90,14 @@ def main():
             allowance=parent["cumulative_training_seconds"] + args.seconds + 1,
             extension_reason=args.reason,
         )
+    elif args.command == "record":
+        from .standing_record import record
+
+        record(args.checkpoint, args.output, args.physics_backend, seed=args.seed)
+    elif args.command == "view":
+        from .standing_record import view
+
+        view(args.checkpoint, args.surface, args.body, args.seconds, args.transition)
     else:
         from .standing_evaluate import evaluate
 
