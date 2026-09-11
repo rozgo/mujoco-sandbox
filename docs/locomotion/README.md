@@ -25,6 +25,14 @@ The actor is a 128 × 128 MLP with ELU activations and twelve joint-target outpu
 
 ## Earlier experiments
 
+Current branch experiment: **[optional MuJoCo Warp GPU physics](WARP_BACKEND.md)**.
+All-nine-body physics is 4.59× faster than CPU at 4096 worlds; the complete
+90-second training pilot reaches 25,950 transitions/s. Its final policy passes
+65/72 CPU tasks and is not promoted. CPU physics and the official v1 demo remain
+the defaults. The report includes the separate backend flags and experimental
+video. The preceding [learner-device comparison](GPU_COMPARISON.md) used CPU
+physics for every learner device.
+
 The following entries preserve the decisions and selected policies at each historical stage. **They do not override official v1 above.**
 
 Historical review: **[symmetry evaluation](SYMMETRY_OPTION.md)**. A frozen-policy reflection probe transfers the better FL rear-leg alternation to both FR bodies; all 64 diagnostic tasks complete. This is evidence for trying a soft mirror loss, not a trained improvement. The preceding **[rear-overlap experiment](REAR_OVERLAP_TRAINING.md)** used 2 min 59 s of training and reduced simultaneous swing, but failed its phase-separation gate. **No new policy selected; no symmetry training started.**

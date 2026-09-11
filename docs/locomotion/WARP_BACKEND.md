@@ -4,6 +4,37 @@ Started 2026-09-11 17:32:50 UTC (first retained clock checkpoint). The user aske
 for a separate MuJoCo Warp path to accelerate physical simulation on the RTX 4090.
 Work stays on `experiment/adaptive-dog-gpu-comparison`; official v1 stays frozen.
 
+## Measured GPU physics results
+
+The optional backend runs real MuJoCo Warp physics on NVIDIA, independently of
+the learner device. Each of the nine physical topologies has its own GPU batch.
+At 4096 worlds, the full nine-body family reaches **4.59× CPU physics throughput**
+and **3.57× with the existing NumPy environment bridge included**. At 512 worlds,
+that family is slower than CPU; use the larger batch for this experiment.
+
+Median 20 ms control intervals per second, three repeats, same desktop:
+
+| Bodies | Worlds | CPU physics | Warp physics | CPU environment | Warp environment |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Healthy | 512 | 16,416 | 99,850 | 15,406 | 70,127 |
+| All nine | 512 | 16,996 | 11,458 | 14,769 | 10,520 |
+| Healthy | 4096 | 18,140 | 320,291 | 15,891 | 115,905 |
+| All nine | 4096 | 18,008 | 82,740 | 15,476 | 55,194 |
+
+Physics uses ten 2 ms integration steps per control interval, so integration
+steps/s are ten times these values. These standing-command measurements exclude
+policy inference, PPO updates and healthy-motion reference matching. The
+environment column includes transfers, observations, rewards and episode resets.
+They are not complete training rates. Full repeats, versions, topology counts,
+source commits and before/after load samples are in the
+[archived reports](warp_backend/index.json).
+
+Warm-cache Warp setup took 2.32–4.70 seconds across the four configurations;
+the nine-body 4096-world setup took 4.70 seconds. First-time compilation is a
+separate cost: the initial failed compatibility check took 134.84 seconds.
+Measurements used a Ryzen 5950X / RTX 4090 with another GPU workload left running.
+These are observed shared-machine results, not exclusive-hardware benchmarks.
+
 ## Plan declared before measurement
 
 - Keep `mjbatch` CPU physics as the default and native Mac evaluation/viewing path.
@@ -45,7 +76,7 @@ The first NVIDIA check failed before stepping: Warp 1.17's occupancy query loade
 one CCD kernel variant, then a 64-thread launch changed its symbol identity; the
 next query raised a missing-symbol/metadata error. The original failed test log
 is retained under ignored outputs (134.84 seconds including cold compilation).
-The next attempt keeps the CCD block width at 256, matching Warp's default module
+The next attempt kept the CCD block width at 256, matching Warp's default module
 load width. This is a GPU launch configuration adjustment, not a geometry,
 collision, contact-count or solver relaxation. Latest dependency pins are retained.
 
@@ -60,7 +91,7 @@ uv run --locked --extra warp python scripts/run_physics_matrix.py
 
 # Bounded same-parent learning pilot, after the physical checks pass.
 uv run --locked --extra warp python scripts/benchmark_learner.py \
-  --label warp_bridge --device cuda --physics-backend warp
+  --label warp_bvh_4096 --device cuda --physics-backend warp --num-envs 4096
 ```
 
 General training supports the same independent flags: `adaptive-dog train
@@ -84,7 +115,7 @@ kernel's *module default* to its already-requested 64-thread launch width. This
 avoids changing its launch bounds. It uses Warp's public `set_module_options`
 API, with one explicit private MJWarp builder hook guarded to the pinned versions;
 review/remove it on upgrades. No solver or collision mathematics are patched.
-The revised attempt must rerun all GPU checks before new throughput claims.
+The revised attempt reran all GPU checks before new throughput claims.
 
 ## Profile-driven sensor acceleration
 
@@ -131,3 +162,112 @@ an explicit scaling experiment: batch size/update count differ from the earlier
 hardware alone. No small-batch GPU continuation is needed if it is already slower.
 Evaluate the final checkpoint in CPU MuJoCo with eight trials per body, seed 9217.
 Keep failures and do not replace official v1. The training budget stays 90 seconds.
+
+## Completed learning pilot
+
+The single predeclared run used **90.916 seconds** of training, **5.823 seconds**
+of setup, **24 PPO updates**, and **2,359,296 transitions**: **25,950 transitions/s**
+including the training loop's deadline handling. Process wall time was 96.815
+seconds. The nominal 90-second limit is checked at rollout boundaries; the small
+overrun is retained in the reported actual time. This is a continuation from the
+archived v1 parent, not training from scratch. Total selected ancestry is
+1924.074 seconds; the pilot adds only 90.916 seconds.
+
+The learner and actor both ran in CUDA; rigid-body physics ran in MuJoCo Warp.
+Rewards, observation assembly and the frozen healthy-motion sequence search still
+ran on CPU. End-to-end throughput is about **2.18×** the earlier desktop
+CUDA-learner/CPU-physics run, but world count changed **512 → 4096**, so this is a
+scaling result and does not isolate the backend alone. One seed and a different
+number of optimizer updates cannot establish better learning quality.
+
+GPU telemetry peaked at **13,432 MiB total VRAM**, including the other application,
+leaving about 10.6 GiB of the card available. Sampled utilization ranged 14–90%.
+There was no out-of-memory failure or need to stop the user's workload. Less
+competition would improve repeatability; extra memory was not required.
+
+Source was clean commit `5d20223`. Initial parameter tensors match the previous
+three runs, and the same hashed healthy-motion bank, seed, rewards, optimizer,
+torque limits and 2 ms training step were used. The checkpoint was transferred
+through Git LFS with tensor and byte hashes checked; only private parent/source
+path metadata was normalized. The original training report remains intact.
+See [training](gpu_comparison/warp_bvh_4096_training.json),
+[load telemetry](gpu_comparison/warp_bvh_4096_benchmark.json), and
+[checkpoint provenance](gpu_comparison/warp_bvh_4096_checkpoint.json).
+
+### CPU evaluation of the final checkpoint
+
+Eight predetermined trials per body, seed 9217, twelve simulated seconds, 0.5 ms
+physics and support checks at every substep: **65/72 full tasks pass**. Every
+condition passes 8/8 except whole-FR, which passes 1/8. All 72 stay upright and
+have valid support; the seven failures miss the compound goal condition, not the
+contact rule. Completion requires at least 5 m progress followed by one continuous
+second within the ±1 m lane by the twelve-second deadline. Whole-FR ends at
+5.19–5.44 m across its trials; crossing 5 m alone is insufficient. The existing
+report does not separate insufficient dwell from lateral goal tolerance.
+
+All eight other gait checks pass: healthy gait, mean swing peak, visible-swing
+fraction, visible steps in every trial/foot, stride/stance, speed, vertical motion
+and airborne fraction. Healthy mean stride is **32.75 cm**, speed **0.583 m/s**,
+height standard deviation **8.22 mm**, and left/right duty gap **2.53 percentage
+points**. Task completion still fails the aggregate acceptance check, so the
+evaluation command correctly exits 1. No extra training, checkpoint search or
+promotion followed. The archived final checkpoint and all failures are retained.
+Full [task/gait evaluation](gpu_comparison/warp_bvh_4096_evaluation.json) and
+[comparison gates](gpu_comparison/warp_bvh_4096_comparison.json).
+
+## Watch the experimental policy
+
+[Nine-case video](../../previews/locomotion/warp_bvh_4096.mp4): GPU-trained weights
+executed in ordinary CPU MuJoCo, one shared policy, fixed seed 9143, 0.5 ms physics,
+twelve seconds at 1×. This video is CPU validation of learned weights, not a
+screen recording of CUDA physics. The separate frozen-policy report above is the
+GPU-physics mission evidence. Main and the user-approved video remain unchanged.
+
+From `experiments/adaptive_locomotion`, including on macOS:
+
+```sh
+uv run --locked adaptive-dog view \
+  --checkpoint ../../assets/locomotion/checkpoints/learner_warp_bvh_4096_90s_seed2.pt \
+  --case whole_fr --presentation damage --timestep 0.0005
+```
+
+The exact command passed a five-second native macOS viewer smoke test. The Warp
+extra is not required to evaluate, view or record its trained checkpoint on Mac.
+
+The encoded video is 3840×2160, 25 fps, 300 frames; every frame decoded, and the
+opening/middle/ending images were inspected. Whole-FR is explicitly marked
+**INCOMPLETE** at the end; all nine runs and the eight successes remain visible.
+Captured states, timestamps, checkpoint and model hashes were verified. All
+original torque caps hold; maximum penetration sampled at 20 ms is **7.772 mm**,
+below the unchanged 8 mm target. Capture took **9.589 seconds**, rendering/export
+**40.589 seconds**, excluding context setup. [Video QA](warp_backend/video_qa.json).
+
+The useful next optimization is moving observation/reward/reference computation
+onto the GPU and reducing synchronization between the nine batches. This pilot
+establishes a tested optional physics path; it does not yet deliver an entirely
+GPU-resident environment or a superior replacement policy.
+
+## Correctness and boundaries
+
+- Mac package plus mjbatch suite: **86 passed**, **18 CUDA-only checks skipped**;
+  the 18 CUDA checks passed on the 4090 (19 tests there including the shared
+  invalid-backend check). Two upstream Warp/Python 3.14 deprecation warnings
+  remain. Ruff passed.
+- All nine body types passed short CPU/GPU trajectory tolerance, explicit reset
+  isolation, graph-capture non-advancement, support sensor, actual torque-limit,
+  motor-strength and finite-state checks. All 216 randomized range-sensor poses
+  matched CPU within 0.1 mm.
+- Before training, unchanged official v1 completed **8/8 full GPU-physics trials**:
+  healthy and whole-FR, four each, seed 9225, twelve simulated seconds at 0.5 ms.
+  Allowed support was checked every integration step. This is a physical backend
+  mission check, separate from CPU evaluation of the newly trained policy.
+  [Full mission report](warp_backend/frozen_policy_trials.json).
+- The two internal dispatch hooks are intentionally tied to MuJoCo Warp 3.13.0
+  and Warp 1.17.0. Review them when upgrading; the version guard fails explicitly.
+  Ray acceleration uses a finite BVH plane bound (±24 m here); sensor agreement
+  was tested within ±10 m. This supports the bounded walking course.
+- MuJoCo Warp reports no multicontact support for capsule–cylinder pairs, using
+  at most one contact for those pairs. Original collision geometry was retained;
+  the backends should not be described as numerically identical.
+- This pilot does not replace official v1, resolve its recorded phase/penetration
+  limitations, or establish obstacle-course or real-robot performance.
