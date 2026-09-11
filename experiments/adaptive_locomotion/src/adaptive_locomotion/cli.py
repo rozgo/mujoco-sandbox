@@ -24,6 +24,7 @@ def main():
     p.add_argument("--bodies", default="all")
     p.add_argument("--terrain", default="flat", choices=("flat", "steps", "test_steps"))
     p.add_argument("--device", default="auto", choices=("auto", "cpu", "mps", "cuda"))
+    p.add_argument("--physics-backend", default="mjbatch", choices=("mjbatch", "warp"))
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--epochs", type=int, default=4)
     p.add_argument("--allowance", type=float, default=300)

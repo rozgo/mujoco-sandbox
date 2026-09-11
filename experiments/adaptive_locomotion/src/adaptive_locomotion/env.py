@@ -50,10 +50,17 @@ def rotation(q):
 
 
 class Group:
-    def __init__(self, body, n, threads, terrain, sensing, timestep):
+    def __init__(
+        self, body, n, threads, terrain, sensing, timestep, physics_backend="mjbatch"
+    ):
         self.body = body
         self.model = build_model(body, terrain, timestep, sensing)
-        self.batch = Batch(self.model, n, num_threads=threads)
+        if physics_backend == "warp":
+            from .warp_batch import WarpBatch
+
+            self.batch = WarpBatch(self.model, n)
+        else:
+            self.batch = Batch(self.model, n, num_threads=threads)
         self.n = n
         self.qpos, self.qvel, self.ctrl = (
             self.batch.bind(k) for k in ("qpos", "qvel", "ctrl")
@@ -102,6 +109,8 @@ class Group:
         active = (strength > 0)[:, :, None]
         self.gain[ids] = self.original_gain[ids] * active
         self.bias[ids] = self.original_bias[ids] * active
+        if hasattr(self.batch, "mark_model_dirty"):
+            self.batch.mark_model_dirty()
 
 
 class DogEnv:
@@ -135,7 +144,11 @@ class DogEnv:
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
+        physics_backend="mjbatch",
     ):
+        if physics_backend not in ("mjbatch", "warp"):
+            raise ValueError("Unknown physics backend")
+        self.physics_backend = physics_backend
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
         if reward_profile not in ("adaptive", "walk"):
@@ -231,13 +244,14 @@ class DogEnv:
                     terrain,
                     True if sensing is None else sensing,
                     timestep,
+                    physics_backend,
                 )
             )
             self.slices.append(slice(start, start + n))
             start += n
         self.pool = (
             ThreadPoolExecutor(max_workers=len(self.groups))
-            if len(self.groups) > 1
+            if len(self.groups) > 1 and physics_backend == "mjbatch"
             else None
         )
         self.q = np.zeros((num_envs, 12))
@@ -427,7 +441,8 @@ class DogEnv:
         if self.pool:
             list(self.pool.map(advance, self.groups))
         else:
-            advance(self.groups[0])
+            for group in self.groups:
+                advance(group)
         if any(np.any(g.warnings[:, :, 1]) for g in self.groups):
             raise FloatingPointError(
                 "MuJoCo numerical warning; refusing an automatically corrected trajectory"

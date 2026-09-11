@@ -83,6 +83,7 @@ def train(
     front_reference=None,
     front_reference_scale=1.0,
     symmetry_weight=0.0,
+    physics_backend="mjbatch",
 ):
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
@@ -165,6 +166,7 @@ def train(
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
         limb_stage=limb_stage,
+        physics_backend=physics_backend,
     )
     ancestry = 0.0
     parent = None
@@ -375,6 +377,9 @@ def train(
         "contact_profile": "firm",
         "threads": threads,
         "physics_timestep_s": env.timestep,
+        "physics_backend": physics_backend,
+        "physics_device": "cuda:0" if physics_backend == "warp" else "cpu",
+        "environment_array_backend": "numpy_cpu",
         "control_timestep_s": 0.02,
         "setup_seconds": time.perf_counter() - setup_start,
     }
