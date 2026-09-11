@@ -74,3 +74,14 @@ actuator controls and advance the GPU state. Copies back to NumPy are measured a
 bridge overhead. Contact/constraint/sensor-matching overflow flags raise errors;
 nonfinite state and out-of-envelope velocity stop the run. CPU evaluation remains
 the authoritative task check after any GPU training.
+
+The 256-thread workaround passed all nine topology/reset/physics tests, but its
+first healthy-512 benchmark reached only **902 physics control intervals/s**,
+versus **16,416/s** on CPU. Its completed reports are retained, and the in-progress
+nine-body attempt was stopped before continuing the expensive matrix.
+A narrower version-scoped compatibility hook now sets each generated CCD
+kernel's *module default* to its already-requested 64-thread launch width. This
+avoids changing its launch bounds. It uses Warp's public `set_module_options`
+API, with one explicit private MJWarp builder hook guarded to the pinned versions;
+review/remove it on upgrades. No solver or collision mathematics are patched.
+The revised attempt must rerun all GPU checks before new throughput claims.

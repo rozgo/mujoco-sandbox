@@ -14,6 +14,8 @@ def main():
         for family in ("healthy", "nine"):
             for backend in ("mjbatch", "warp"):
                 label = f"{backend}_{family}_{n}"
+                if backend == "warp":
+                    label = "ccd64_" + label
                 path = output / f"{label}.json"
                 if path.exists():
                     print("PRESERVED", label, flush=True)

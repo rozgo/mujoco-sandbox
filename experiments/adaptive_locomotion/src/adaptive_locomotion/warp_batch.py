@@ -5,10 +5,41 @@ controls and dirty actuator parameters, then advances MuJoCo Warp on the GPU.
 Host mirrors are intentional: rewards/reference matching still run on CPU.
 """
 
+import functools
 import time
 
 import mujoco
 import numpy as np
+
+
+def configure_ccd_module_width(wp, mjw):
+    """Version-scoped fix for occupancy/launch variant identity in Warp 1.17.
+
+    The upstream CCD builder specializes launch_bounds with block_dim but leaves
+    its module default at 256. Occupancy queries then load the wrong variant.
+    Set the public module option to the builder's existing width; no kernel body,
+    geometry, contacts, iteration limits or physics parameters are modified.
+    """
+    if (mjw.__version__, wp.__version__) != ("3.13.0", "1.17.0"):
+        raise RuntimeError(
+            "Review the CCD compatibility hook before changing Warp versions"
+        )
+    from mujoco_warp._src import collision_convex
+
+    builder = collision_convex.ccd_kernel_builder
+    if getattr(builder, "_adaptive_width_configured", False):
+        return
+
+    @functools.wraps(builder)
+    def configured(*args, **kwargs):
+        kernel = builder(*args, **kwargs)
+        width = kwargs["block_dim"] if "block_dim" in kwargs else args[6]
+        if wp.get_module_options(kernel.module)["block_dim"] != width:
+            wp.set_module_options({"block_dim": width}, kernel.module)
+        return kernel
+
+    configured._adaptive_width_configured = True
+    collision_convex.ccd_kernel_builder = configured
 
 
 class WarpBatch:
@@ -36,6 +67,7 @@ class WarpBatch:
             raise RuntimeError(
                 "Warp physics requires an NVIDIA CUDA device; use mjbatch on Mac"
             )
+        configure_ccd_module_width(wp, mjw)
         self.wp, self.mjw, self.device = wp, mjw, wp.get_device(device)
         self.model, self.n = model, n
         self.host, self.buffers, self.graphs = {}, {}, {}
@@ -43,11 +75,6 @@ class WarpBatch:
         self.model_dirty = True
         with wp.ScopedDevice(self.device):
             self.m = mjw.put_model(model, batch_sizes={k: n for k in self.MODEL_FIELDS})
-            # Warp 1.17 occupancy lookup loads the default 256-thread variant;
-            # switching the same CCD kernel to 64 threads then looking it up
-            # again can leave a stale symbol hash. Keep both launch widths equal.
-            # This changes GPU scheduling only, not collision geometry/solver.
-            self.m.block_dim.convex_ccd = 256
             self.d = mjw.make_data(model, nworld=n, nconmax=nconmax, njmax=njmax)
             for key in self.DATA_FIELDS:
                 array = getattr(self.d, key)
