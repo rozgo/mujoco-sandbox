@@ -1,0 +1,138 @@
+{
+  "physics_backend": "mjbatch",
+  "family": "nine",
+  "num_envs": 512,
+  "setup_seconds": 1.718279390130192,
+  "capture_compile_seconds": 0,
+  "group_world_counts": [
+    128,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48,
+    48
+  ],
+  "model_sizes": [
+    [
+      19,
+      18,
+      12
+    ],
+    [
+      18,
+      17,
+      11
+    ],
+    [
+      18,
+      17,
+      11
+    ],
+    [
+      18,
+      17,
+      11
+    ],
+    [
+      18,
+      17,
+      11
+    ],
+    [
+      16,
+      15,
+      9
+    ],
+    [
+      16,
+      15,
+      9
+    ],
+    [
+      16,
+      15,
+      9
+    ],
+    [
+      16,
+      15,
+      9
+    ]
+  ],
+  "physics_timestep_s": 0.002,
+  "control_timestep_s": 0.02,
+  "full_collision_and_support_sensors": true,
+  "records": [
+    {
+      "scope": "physics_only",
+      "repeat": 0,
+      "elapsed_seconds": 3.013550460804254,
+      "control_intervals": 52224,
+      "control_intervals_per_second": 17329.724748017827,
+      "physics_steps_per_second": 173297.24748017825
+    },
+    {
+      "scope": "physics_only",
+      "repeat": 1,
+      "elapsed_seconds": 3.0124130472540855,
+      "control_intervals": 51200,
+      "control_intervals_per_second": 16996.34120449402,
+      "physics_steps_per_second": 169963.4120449402
+    },
+    {
+      "scope": "physics_only",
+      "repeat": 2,
+      "elapsed_seconds": 3.005324702244252,
+      "control_intervals": 50176,
+      "control_intervals_per_second": 16695.700122695776,
+      "physics_steps_per_second": 166957.00122695774
+    },
+    {
+      "scope": "environment_bridge",
+      "repeat": 0,
+      "elapsed_seconds": 3.0160616701468825,
+      "control_intervals": 44544,
+      "control_intervals_per_second": 14768.928779175361,
+      "physics_steps_per_second": 147689.28779175362
+    },
+    {
+      "scope": "environment_bridge",
+      "repeat": 1,
+      "elapsed_seconds": 3.0126969502307475,
+      "control_intervals": 42496,
+      "control_intervals_per_second": 14105.63382312488,
+      "physics_steps_per_second": 141056.33823124878
+    },
+    {
+      "scope": "environment_bridge",
+      "repeat": 2,
+      "elapsed_seconds": 3.0035699191503227,
+      "control_intervals": 44544,
+      "control_intervals_per_second": 14830.352280462648,
+      "physics_steps_per_second": 148303.5228046265
+    }
+  ],
+  "median_control_intervals_per_second": {
+    "physics_only": 16996.34120449402,
+    "environment_bridge": 14768.928779175361
+  },
+  "source_commit": "480c7a345f2c14abb91d50a72b827682876a526a",
+  "python": "3.14.7",
+  "mujoco": "3.13.0",
+  "mujoco_warp": "3.13.0",
+  "warp": "1.17.0",
+  "gpu_before": {
+    "utilization_percent": 21.0,
+    "memory_mib": 11502.0,
+    "power_w": 100.0
+  },
+  "gpu_after": {
+    "utilization_percent": 25.0,
+    "memory_mib": 11502.0,
+    "power_w": 87.44
+  },
+  "scope": "Standing commands, no policy/learner/reference matching. Physics-only excludes host transfers and rewards. Environment bridge includes transfers, observations, existing rewards and episode resets. This is not PPO throughput."
+}
