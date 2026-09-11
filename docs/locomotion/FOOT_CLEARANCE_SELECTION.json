@@ -964,6 +964,648 @@
       ],
       "selected": null,
       "motion_reference_asset": "assets/locomotion/healthy_sequence_reference_seed2.npz"
+    },
+    {
+      "development_seed": 9153,
+      "final_seed": 20260921,
+      "demo_seed": 9143,
+      "parent": "assets/locomotion/checkpoints/limb_healthy_sequence_90s_seed2.pt",
+      "candidates": [
+        {
+          "checkpoint": "outputs/locomotion/limb_clearance_rear_120s_seed2/iteration_0050.pt",
+          "checks": {
+            "all_tasks_support_valid": true,
+            "healthy_retained": true,
+            "cycles_all_intact_legs": true,
+            "rear_clearance_mean_plus_5mm": true,
+            "rear_clearance_each_plus_3mm": true,
+            "rear_drag_mean_reduced_25percent": true,
+            "rear_drag_no_case_worse": true,
+            "speed_retained": true,
+            "vertical_motion_retained": true,
+            "airborne_mean_within_1pp": true,
+            "mean_slip_retained": true,
+            "stride_and_stance_retained": true
+          },
+          "eligible": true,
+          "rear_feet": [
+            {
+              "case": "lower_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7445454545454546,
+                "mean_completed_stance_s": 0.17921969696969692,
+                "mean_completed_swing_s": 0.061717391304347835,
+                "mean_contact_force_magnitude_n": 72.91275286467223,
+                "mean_stride_m": 0.14728092434107393,
+                "mean_cycle_seconds": 0.24083712121212125,
+                "strides_per_second": 4.152210404580585,
+                "moving_clearance_m": 0.0034740970509369124,
+                "clearance_p95_m": 0.005884908110030196,
+                "drag_fraction": 0.2588636363636364,
+                "drag_travel_m": 4.357501733047327
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7284090909090909,
+                "mean_completed_stance_s": 0.208732355837619,
+                "mean_completed_swing_s": 0.07753702082649452,
+                "mean_contact_force_magnitude_n": 73.04702262749547,
+                "mean_stride_m": 0.16093630020819313,
+                "mean_cycle_seconds": 0.28617285048206104,
+                "strides_per_second": 3.4955197989183073,
+                "moving_clearance_m": 0.010331148850093372,
+                "clearance_p95_m": 0.016414575502846,
+                "drag_fraction": 0.13977272727272727,
+                "drag_travel_m": 1.0723448875733537
+              },
+              "clearance_gain_m": 0.00685705179915646,
+              "drag_reduction_fraction": 0.753908327920863
+            },
+            {
+              "case": "lower_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7452272727272727,
+                "mean_completed_stance_s": 0.24522727272727274,
+                "mean_completed_swing_s": 0.08309269162210339,
+                "mean_contact_force_magnitude_n": 70.31022786144979,
+                "mean_stride_m": 0.17586142547144526,
+                "mean_cycle_seconds": 0.328688446969697,
+                "strides_per_second": 3.0424563911366964,
+                "moving_clearance_m": 0.0055942580987340985,
+                "clearance_p95_m": 0.008526815170955956,
+                "drag_fraction": 0.18613636363636366,
+                "drag_travel_m": 2.2973664977165975
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7656818181818181,
+                "mean_completed_stance_s": 0.2595967741935484,
+                "mean_completed_swing_s": 0.080546875,
+                "mean_contact_force_magnitude_n": 74.15580804467277,
+                "mean_stride_m": 0.18241835275103102,
+                "mean_cycle_seconds": 0.3401612903225806,
+                "strides_per_second": 2.9397865156259533,
+                "moving_clearance_m": 0.013457271602975515,
+                "clearance_p95_m": 0.020765738724251945,
+                "drag_fraction": 0.11727272727272728,
+                "drag_travel_m": 1.0025163750971289
+              },
+              "clearance_gain_m": 0.007863013504241416,
+              "drag_reduction_fraction": 0.5636236638370274
+            },
+            {
+              "case": "whole_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7195454545454545,
+                "mean_completed_stance_s": 0.17455555555555552,
+                "mean_completed_swing_s": 0.06722463768115942,
+                "mean_contact_force_magnitude_n": 60.673533286766386,
+                "mean_stride_m": 0.13651465074192282,
+                "mean_cycle_seconds": 0.24169318181818183,
+                "strides_per_second": 4.137487556789262,
+                "moving_clearance_m": 0.0034822263173568536,
+                "clearance_p95_m": 0.006075942808005219,
+                "drag_fraction": 0.2620454545454545,
+                "drag_travel_m": 3.882444471118432
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7170454545454545,
+                "mean_completed_stance_s": 0.21029539154539156,
+                "mean_completed_swing_s": 0.08374249249249249,
+                "mean_contact_force_magnitude_n": 57.15052223449462,
+                "mean_stride_m": 0.15891857029389014,
+                "mean_cycle_seconds": 0.29409248063853327,
+                "strides_per_second": 3.4023831237903437,
+                "moving_clearance_m": 0.009978754767699959,
+                "clearance_p95_m": 0.016021404275881588,
+                "drag_fraction": 0.1484090909090909,
+                "drag_travel_m": 1.2708903863432177
+              },
+              "clearance_gain_m": 0.0064965284503431045,
+              "drag_reduction_fraction": 0.6726571633419636
+            },
+            {
+              "case": "whole_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7597727272727273,
+                "mean_completed_stance_s": 0.2584375,
+                "mean_completed_swing_s": 0.080703125,
+                "mean_contact_force_magnitude_n": 61.9983630480387,
+                "mean_stride_m": 0.17761209129396577,
+                "mean_cycle_seconds": 0.339140625,
+                "strides_per_second": 2.948646742181862,
+                "moving_clearance_m": 0.006107270163089712,
+                "clearance_p95_m": 0.00962683815146717,
+                "drag_fraction": 0.1734090909090909,
+                "drag_travel_m": 2.2570451272457346
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7434090909090909,
+                "mean_completed_stance_s": 0.27766317733990153,
+                "mean_completed_swing_s": 0.0957528735632184,
+                "mean_contact_force_magnitude_n": 56.74781594443865,
+                "mean_stride_m": 0.19043780560621842,
+                "mean_cycle_seconds": 0.3733189655172414,
+                "strides_per_second": 2.6789549360998794,
+                "moving_clearance_m": 0.016658673745265085,
+                "clearance_p95_m": 0.025937474326821003,
+                "drag_fraction": 0.10045454545454545,
+                "drag_travel_m": 0.704873047520604
+              },
+              "clearance_gain_m": 0.010551403582175373,
+              "drag_reduction_fraction": 0.6877009506758252
+            }
+          ],
+          "score": 0.007941999333979089
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_clearance_rear_120s_seed2/iteration_0100.pt",
+          "checks": {
+            "all_tasks_support_valid": true,
+            "healthy_retained": true,
+            "cycles_all_intact_legs": true,
+            "rear_clearance_mean_plus_5mm": true,
+            "rear_clearance_each_plus_3mm": true,
+            "rear_drag_mean_reduced_25percent": true,
+            "rear_drag_no_case_worse": true,
+            "speed_retained": false,
+            "vertical_motion_retained": true,
+            "airborne_mean_within_1pp": true,
+            "mean_slip_retained": true,
+            "stride_and_stance_retained": true
+          },
+          "eligible": false,
+          "rear_feet": [
+            {
+              "case": "lower_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7445454545454546,
+                "mean_completed_stance_s": 0.17921969696969692,
+                "mean_completed_swing_s": 0.061717391304347835,
+                "mean_contact_force_magnitude_n": 72.91275286467223,
+                "mean_stride_m": 0.14728092434107393,
+                "mean_cycle_seconds": 0.24083712121212125,
+                "strides_per_second": 4.152210404580585,
+                "moving_clearance_m": 0.0034740970509369124,
+                "clearance_p95_m": 0.005884908110030196,
+                "drag_fraction": 0.2588636363636364,
+                "drag_travel_m": 4.357501733047327
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7454545454545454,
+                "mean_completed_stance_s": 0.22716666666666666,
+                "mean_completed_swing_s": 0.0770307807807808,
+                "mean_contact_force_magnitude_n": 76.7401817777405,
+                "mean_stride_m": 0.14995318724637624,
+                "mean_cycle_seconds": 0.3042123015873016,
+                "strides_per_second": 3.287482377675775,
+                "moving_clearance_m": 0.01154464627278129,
+                "clearance_p95_m": 0.01846748566417089,
+                "drag_fraction": 0.12863636363636363,
+                "drag_travel_m": 0.9774304772506766
+              },
+              "clearance_gain_m": 0.008070549221844376,
+              "drag_reduction_fraction": 0.7756901690163801
+            },
+            {
+              "case": "lower_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7452272727272727,
+                "mean_completed_stance_s": 0.24522727272727274,
+                "mean_completed_swing_s": 0.08309269162210339,
+                "mean_contact_force_magnitude_n": 70.31022786144979,
+                "mean_stride_m": 0.17586142547144526,
+                "mean_cycle_seconds": 0.328688446969697,
+                "strides_per_second": 3.0424563911366964,
+                "moving_clearance_m": 0.0055942580987340985,
+                "clearance_p95_m": 0.008526815170955956,
+                "drag_fraction": 0.18613636363636366,
+                "drag_travel_m": 2.2973664977165975
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7370454545454546,
+                "mean_completed_stance_s": 0.2543548387096774,
+                "mean_completed_swing_s": 0.09051159274193549,
+                "mean_contact_force_magnitude_n": 71.81361446397975,
+                "mean_stride_m": 0.18465738701408801,
+                "mean_cycle_seconds": 0.345268817204301,
+                "strides_per_second": 2.896309845153204,
+                "moving_clearance_m": 0.013886001566551792,
+                "clearance_p95_m": 0.022137763192448784,
+                "drag_fraction": 0.11840909090909091,
+                "drag_travel_m": 0.9488519936303635
+              },
+              "clearance_gain_m": 0.008291743467817693,
+              "drag_reduction_fraction": 0.5869827497817836
+            },
+            {
+              "case": "whole_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7195454545454545,
+                "mean_completed_stance_s": 0.17455555555555552,
+                "mean_completed_swing_s": 0.06722463768115942,
+                "mean_contact_force_magnitude_n": 60.673533286766386,
+                "mean_stride_m": 0.13651465074192282,
+                "mean_cycle_seconds": 0.24169318181818183,
+                "strides_per_second": 4.137487556789262,
+                "moving_clearance_m": 0.0034822263173568536,
+                "clearance_p95_m": 0.006075942808005219,
+                "drag_fraction": 0.2620454545454545,
+                "drag_travel_m": 3.882444471118432
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7325,
+                "mean_completed_stance_s": 0.21993055555555555,
+                "mean_completed_swing_s": 0.0802777777777778,
+                "mean_contact_force_magnitude_n": 63.623733270055695,
+                "mean_stride_m": 0.15197138568662072,
+                "mean_cycle_seconds": 0.3002083333333334,
+                "strides_per_second": 3.331048486257293,
+                "moving_clearance_m": 0.011847523162592175,
+                "clearance_p95_m": 0.018891492125679823,
+                "drag_fraction": 0.13545454545454544,
+                "drag_travel_m": 1.0860077162618127
+              },
+              "clearance_gain_m": 0.00836529684523532,
+              "drag_reduction_fraction": 0.7202773344626969
+            },
+            {
+              "case": "whole_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7597727272727273,
+                "mean_completed_stance_s": 0.2584375,
+                "mean_completed_swing_s": 0.080703125,
+                "mean_contact_force_magnitude_n": 61.9983630480387,
+                "mean_stride_m": 0.17761209129396577,
+                "mean_cycle_seconds": 0.339140625,
+                "strides_per_second": 2.948646742181862,
+                "moving_clearance_m": 0.006107270163089712,
+                "clearance_p95_m": 0.00962683815146717,
+                "drag_fraction": 0.1734090909090909,
+                "drag_travel_m": 2.2570451272457346
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7184090909090908,
+                "mean_completed_stance_s": 0.25999999999999995,
+                "mean_completed_swing_s": 0.10000000000000003,
+                "mean_contact_force_magnitude_n": 54.892438517945564,
+                "mean_stride_m": 0.19298327577224833,
+                "mean_cycle_seconds": 0.35999999999999993,
+                "strides_per_second": 2.777777777777778,
+                "moving_clearance_m": 0.015687592911166615,
+                "clearance_p95_m": 0.025946842490796696,
+                "drag_fraction": 0.11181818181818182,
+                "drag_travel_m": 0.560901288619619
+              },
+              "clearance_gain_m": 0.009580322748076903,
+              "drag_reduction_fraction": 0.7514886690351268
+            }
+          ],
+          "score": 0.008576978070743573
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_clearance_rear_120s_seed2/policy.pt",
+          "checks": {
+            "all_tasks_support_valid": true,
+            "healthy_retained": true,
+            "cycles_all_intact_legs": true,
+            "rear_clearance_mean_plus_5mm": true,
+            "rear_clearance_each_plus_3mm": true,
+            "rear_drag_mean_reduced_25percent": true,
+            "rear_drag_no_case_worse": true,
+            "speed_retained": false,
+            "vertical_motion_retained": true,
+            "airborne_mean_within_1pp": true,
+            "mean_slip_retained": true,
+            "stride_and_stance_retained": false
+          },
+          "eligible": false,
+          "rear_feet": [
+            {
+              "case": "lower_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7445454545454546,
+                "mean_completed_stance_s": 0.17921969696969692,
+                "mean_completed_swing_s": 0.061717391304347835,
+                "mean_contact_force_magnitude_n": 72.91275286467223,
+                "mean_stride_m": 0.14728092434107393,
+                "mean_cycle_seconds": 0.24083712121212125,
+                "strides_per_second": 4.152210404580585,
+                "moving_clearance_m": 0.0034740970509369124,
+                "clearance_p95_m": 0.005884908110030196,
+                "drag_fraction": 0.2588636363636364,
+                "drag_travel_m": 4.357501733047327
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7368181818181818,
+                "mean_completed_stance_s": 0.2220833333333333,
+                "mean_completed_swing_s": 0.07843280780780781,
+                "mean_contact_force_magnitude_n": 72.6529090336372,
+                "mean_stride_m": 0.1444209638924025,
+                "mean_cycle_seconds": 0.3005654761904762,
+                "strides_per_second": 3.3271196633741416,
+                "moving_clearance_m": 0.010432831087428665,
+                "clearance_p95_m": 0.016904039164397613,
+                "drag_fraction": 0.13431818181818184,
+                "drag_travel_m": 0.93948685251407
+              },
+              "clearance_gain_m": 0.006958734036491753,
+              "drag_reduction_fraction": 0.784397824701022
+            },
+            {
+              "case": "lower_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7452272727272727,
+                "mean_completed_stance_s": 0.24522727272727274,
+                "mean_completed_swing_s": 0.08309269162210339,
+                "mean_contact_force_magnitude_n": 70.31022786144979,
+                "mean_stride_m": 0.17586142547144526,
+                "mean_cycle_seconds": 0.328688446969697,
+                "strides_per_second": 3.0424563911366964,
+                "moving_clearance_m": 0.0055942580987340985,
+                "clearance_p95_m": 0.008526815170955956,
+                "drag_fraction": 0.18613636363636366,
+                "drag_travel_m": 2.2973664977165975
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7445454545454545,
+                "mean_completed_stance_s": 0.2578225806451613,
+                "mean_completed_swing_s": 0.08856350806451614,
+                "mean_contact_force_magnitude_n": 70.27838162494078,
+                "mean_stride_m": 0.1829315344910644,
+                "mean_cycle_seconds": 0.34653494623655906,
+                "strides_per_second": 2.8857518852455932,
+                "moving_clearance_m": 0.013485868137740267,
+                "clearance_p95_m": 0.021531484019368056,
+                "drag_fraction": 0.1234090909090909,
+                "drag_travel_m": 1.0159116444181413
+              },
+              "clearance_gain_m": 0.007891610039006168,
+              "drag_reduction_fraction": 0.5577929575329501
+            },
+            {
+              "case": "whole_rl",
+              "leg": "RR",
+              "before": {
+                "leg": "RR",
+                "duty_fraction": 0.7195454545454545,
+                "mean_completed_stance_s": 0.17455555555555552,
+                "mean_completed_swing_s": 0.06722463768115942,
+                "mean_contact_force_magnitude_n": 60.673533286766386,
+                "mean_stride_m": 0.13651465074192282,
+                "mean_cycle_seconds": 0.24169318181818183,
+                "strides_per_second": 4.137487556789262,
+                "moving_clearance_m": 0.0034822263173568536,
+                "clearance_p95_m": 0.006075942808005219,
+                "drag_fraction": 0.2620454545454545,
+                "drag_travel_m": 3.882444471118432
+              },
+              "after": {
+                "leg": "RR",
+                "duty_fraction": 0.7295454545454545,
+                "mean_completed_stance_s": 0.21214052868658134,
+                "mean_completed_swing_s": 0.07952702702702705,
+                "mean_contact_force_magnitude_n": 59.018447871809386,
+                "mean_stride_m": 0.14042557895801833,
+                "mean_cycle_seconds": 0.2917567567567568,
+                "strides_per_second": 3.427608891479908,
+                "moving_clearance_m": 0.009920466237072583,
+                "clearance_p95_m": 0.01629954094406391,
+                "drag_fraction": 0.1481818181818182,
+                "drag_travel_m": 1.2844627960630695
+              },
+              "clearance_gain_m": 0.006438239919715729,
+              "drag_reduction_fraction": 0.6691613220438285
+            },
+            {
+              "case": "whole_rr",
+              "leg": "RL",
+              "before": {
+                "leg": "RL",
+                "duty_fraction": 0.7597727272727273,
+                "mean_completed_stance_s": 0.2584375,
+                "mean_completed_swing_s": 0.080703125,
+                "mean_contact_force_magnitude_n": 61.9983630480387,
+                "mean_stride_m": 0.17761209129396577,
+                "mean_cycle_seconds": 0.339140625,
+                "strides_per_second": 2.948646742181862,
+                "moving_clearance_m": 0.006107270163089712,
+                "clearance_p95_m": 0.00962683815146717,
+                "drag_fraction": 0.1734090909090909,
+                "drag_travel_m": 2.2570451272457346
+              },
+              "after": {
+                "leg": "RL",
+                "duty_fraction": 0.7184090909090908,
+                "mean_completed_stance_s": 0.25999999999999995,
+                "mean_completed_swing_s": 0.09991935483870971,
+                "mean_contact_force_magnitude_n": 53.04006094590177,
+                "mean_stride_m": 0.19553083483289715,
+                "mean_cycle_seconds": 0.35999999999999993,
+                "strides_per_second": 2.777777777777778,
+                "moving_clearance_m": 0.01636786618996572,
+                "clearance_p95_m": 0.026680727194731538,
+                "drag_fraction": 0.11136363636363636,
+                "drag_travel_m": 0.6363410699752443
+              },
+              "clearance_gain_m": 0.010260596026876007,
+              "drag_reduction_fraction": 0.7180645338926965
+            }
+          ],
+          "score": 0.007887295005522415
+        }
+      ],
+      "selected": {
+        "checkpoint": "outputs/locomotion/limb_clearance_rear_120s_seed2/iteration_0050.pt",
+        "checks": {
+          "all_tasks_support_valid": true,
+          "healthy_retained": true,
+          "cycles_all_intact_legs": true,
+          "rear_clearance_mean_plus_5mm": true,
+          "rear_clearance_each_plus_3mm": true,
+          "rear_drag_mean_reduced_25percent": true,
+          "rear_drag_no_case_worse": true,
+          "speed_retained": true,
+          "vertical_motion_retained": true,
+          "airborne_mean_within_1pp": true,
+          "mean_slip_retained": true,
+          "stride_and_stance_retained": true
+        },
+        "eligible": true,
+        "rear_feet": [
+          {
+            "case": "lower_rl",
+            "leg": "RR",
+            "before": {
+              "leg": "RR",
+              "duty_fraction": 0.7445454545454546,
+              "mean_completed_stance_s": 0.17921969696969692,
+              "mean_completed_swing_s": 0.061717391304347835,
+              "mean_contact_force_magnitude_n": 72.91275286467223,
+              "mean_stride_m": 0.14728092434107393,
+              "mean_cycle_seconds": 0.24083712121212125,
+              "strides_per_second": 4.152210404580585,
+              "moving_clearance_m": 0.0034740970509369124,
+              "clearance_p95_m": 0.005884908110030196,
+              "drag_fraction": 0.2588636363636364,
+              "drag_travel_m": 4.357501733047327
+            },
+            "after": {
+              "leg": "RR",
+              "duty_fraction": 0.7284090909090909,
+              "mean_completed_stance_s": 0.208732355837619,
+              "mean_completed_swing_s": 0.07753702082649452,
+              "mean_contact_force_magnitude_n": 73.04702262749547,
+              "mean_stride_m": 0.16093630020819313,
+              "mean_cycle_seconds": 0.28617285048206104,
+              "strides_per_second": 3.4955197989183073,
+              "moving_clearance_m": 0.010331148850093372,
+              "clearance_p95_m": 0.016414575502846,
+              "drag_fraction": 0.13977272727272727,
+              "drag_travel_m": 1.0723448875733537
+            },
+            "clearance_gain_m": 0.00685705179915646,
+            "drag_reduction_fraction": 0.753908327920863
+          },
+          {
+            "case": "lower_rr",
+            "leg": "RL",
+            "before": {
+              "leg": "RL",
+              "duty_fraction": 0.7452272727272727,
+              "mean_completed_stance_s": 0.24522727272727274,
+              "mean_completed_swing_s": 0.08309269162210339,
+              "mean_contact_force_magnitude_n": 70.31022786144979,
+              "mean_stride_m": 0.17586142547144526,
+              "mean_cycle_seconds": 0.328688446969697,
+              "strides_per_second": 3.0424563911366964,
+              "moving_clearance_m": 0.0055942580987340985,
+              "clearance_p95_m": 0.008526815170955956,
+              "drag_fraction": 0.18613636363636366,
+              "drag_travel_m": 2.2973664977165975
+            },
+            "after": {
+              "leg": "RL",
+              "duty_fraction": 0.7656818181818181,
+              "mean_completed_stance_s": 0.2595967741935484,
+              "mean_completed_swing_s": 0.080546875,
+              "mean_contact_force_magnitude_n": 74.15580804467277,
+              "mean_stride_m": 0.18241835275103102,
+              "mean_cycle_seconds": 0.3401612903225806,
+              "strides_per_second": 2.9397865156259533,
+              "moving_clearance_m": 0.013457271602975515,
+              "clearance_p95_m": 0.020765738724251945,
+              "drag_fraction": 0.11727272727272728,
+              "drag_travel_m": 1.0025163750971289
+            },
+            "clearance_gain_m": 0.007863013504241416,
+            "drag_reduction_fraction": 0.5636236638370274
+          },
+          {
+            "case": "whole_rl",
+            "leg": "RR",
+            "before": {
+              "leg": "RR",
+              "duty_fraction": 0.7195454545454545,
+              "mean_completed_stance_s": 0.17455555555555552,
+              "mean_completed_swing_s": 0.06722463768115942,
+              "mean_contact_force_magnitude_n": 60.673533286766386,
+              "mean_stride_m": 0.13651465074192282,
+              "mean_cycle_seconds": 0.24169318181818183,
+              "strides_per_second": 4.137487556789262,
+              "moving_clearance_m": 0.0034822263173568536,
+              "clearance_p95_m": 0.006075942808005219,
+              "drag_fraction": 0.2620454545454545,
+              "drag_travel_m": 3.882444471118432
+            },
+            "after": {
+              "leg": "RR",
+              "duty_fraction": 0.7170454545454545,
+              "mean_completed_stance_s": 0.21029539154539156,
+              "mean_completed_swing_s": 0.08374249249249249,
+              "mean_contact_force_magnitude_n": 57.15052223449462,
+              "mean_stride_m": 0.15891857029389014,
+              "mean_cycle_seconds": 0.29409248063853327,
+              "strides_per_second": 3.4023831237903437,
+              "moving_clearance_m": 0.009978754767699959,
+              "clearance_p95_m": 0.016021404275881588,
+              "drag_fraction": 0.1484090909090909,
+              "drag_travel_m": 1.2708903863432177
+            },
+            "clearance_gain_m": 0.0064965284503431045,
+            "drag_reduction_fraction": 0.6726571633419636
+          },
+          {
+            "case": "whole_rr",
+            "leg": "RL",
+            "before": {
+              "leg": "RL",
+              "duty_fraction": 0.7597727272727273,
+              "mean_completed_stance_s": 0.2584375,
+              "mean_completed_swing_s": 0.080703125,
+              "mean_contact_force_magnitude_n": 61.9983630480387,
+              "mean_stride_m": 0.17761209129396577,
+              "mean_cycle_seconds": 0.339140625,
+              "strides_per_second": 2.948646742181862,
+              "moving_clearance_m": 0.006107270163089712,
+              "clearance_p95_m": 0.00962683815146717,
+              "drag_fraction": 0.1734090909090909,
+              "drag_travel_m": 2.2570451272457346
+            },
+            "after": {
+              "leg": "RL",
+              "duty_fraction": 0.7434090909090909,
+              "mean_completed_stance_s": 0.27766317733990153,
+              "mean_completed_swing_s": 0.0957528735632184,
+              "mean_contact_force_magnitude_n": 56.74781594443865,
+              "mean_stride_m": 0.19043780560621842,
+              "mean_cycle_seconds": 0.3733189655172414,
+              "strides_per_second": 2.6789549360998794,
+              "moving_clearance_m": 0.016658673745265085,
+              "clearance_p95_m": 0.025937474326821003,
+              "drag_fraction": 0.10045454545454545,
+              "drag_travel_m": 0.704873047520604
+            },
+            "clearance_gain_m": 0.010551403582175373,
+            "drag_reduction_fraction": 0.6877009506758252
+          }
+        ],
+        "score": 0.007941999333979089
+      },
+      "selected_checkpoint": "assets/locomotion/checkpoints/limb_clearance_candidate_seed2.pt",
+      "selected_sha256": "2822a9408a3d0a39f3e24385acdf57355bdd3990a5579ad8faf569357c555bbb",
+      "selected_stage_training_seconds": 31.586573333013803,
+      "selected_cumulative_training_seconds": 1412.8648860841058,
+      "selected_stage_transitions": 614400,
+      "motion_reference_asset": "assets/locomotion/healthy_sequence_reference_seed2.npz"
     }
   ],
   "curated_checkpoints": [
@@ -1020,8 +1662,35 @@
       "training_seconds": 119.22145145805553,
       "cumulative_training_seconds": 1381.278312751092,
       "transitions": 2297856
+    },
+    {
+      "source": "outputs/locomotion/limb_clearance_rear_120s_seed2/iteration_0050.pt",
+      "source_sha256": "7ba43059361488ecc949d53b314665718fcea4a46ad82eb5f7dcb32b0342f295",
+      "curated": "assets/locomotion/checkpoints/limb_clearance_rear_iter50_seed2.pt",
+      "curated_sha256": "2822a9408a3d0a39f3e24385acdf57355bdd3990a5579ad8faf569357c555bbb",
+      "training_seconds": 31.586573333013803,
+      "cumulative_training_seconds": 1412.8648860841058,
+      "transitions": 614400
+    },
+    {
+      "source": "outputs/locomotion/limb_clearance_rear_120s_seed2/iteration_0100.pt",
+      "source_sha256": "cf4994ffc46ed0b826b32712b22ab0876ce92246bf48d19eb7d4f595e6552c5b",
+      "curated": "assets/locomotion/checkpoints/limb_clearance_rear_iter100_seed2.pt",
+      "curated_sha256": "09d0f2f366eee1e478c9e182b889e0d241d4cf62ccbf27e185bb5bc50bd21a48",
+      "training_seconds": 63.77953854203224,
+      "cumulative_training_seconds": 1445.0578512931243,
+      "transitions": 1228800
+    },
+    {
+      "source": "outputs/locomotion/limb_clearance_rear_120s_seed2/policy.pt",
+      "source_sha256": "5ec36b72d9dddc60e359f170bbb750704326571b6573adac7d2c2f8b8fdf828e",
+      "curated": "assets/locomotion/checkpoints/limb_clearance_rear_120s_seed2.pt",
+      "curated_sha256": "734f2e702906b8f0590b78cbe02665057ad005c78ce2197875cdc695abf74e35",
+      "training_seconds": 119.5520212079864,
+      "cumulative_training_seconds": 1500.8303339590784,
+      "transitions": 2297856
     }
   ],
-  "new_training_seconds_all_attempts": 208.5956249999581,
-  "new_transitions_all_attempts": 3993600
+  "new_training_seconds_all_attempts": 328.1476462079445,
+  "new_transitions_all_attempts": 6291456
 }

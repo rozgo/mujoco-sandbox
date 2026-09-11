@@ -34,7 +34,9 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
     positions, forces, base, velocity, angular_velocity = map(
         np.asarray, (positions, forces, base, velocity, angular_velocity)
     )
-    clearance = clearance_metrics(positions, env.tip_radii)
+    clearance = (
+        clearance_metrics(positions, env.tip_radii) if env.terrain == "flat" else {}
+    )
     contact = forces > 1
     # Offline contact debounce bridges one-sample force dropouts. This diagnostic
     # uses successive landings, unlike the reward's liftoff-to-landing travel.
@@ -146,7 +148,7 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
                 "leg": name,
                 **{
                     key: float(np.mean([row["legs"][j][key] for row in rows]))
-                    if all(row["legs"][j][key] is not None for row in rows)
+                    if all(row["legs"][j].get(key) is not None for row in rows)
                     else None
                     for key in (
                         "duty_fraction",
