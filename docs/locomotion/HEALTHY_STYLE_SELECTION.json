@@ -1,0 +1,264 @@
+{
+  "development_seed": 9149,
+  "final_seed": 20260920,
+  "demo_seed": 9143,
+  "stages": [
+    {
+      "development_seed": 9149,
+      "final_seed": 20260920,
+      "demo_seed": 9143,
+      "healthy_target": {
+        "mean_completed_stance_s": 0.2708035714285714,
+        "mean_completed_swing_s": 0.24303571428571427,
+        "mean_stride_m": 0.3128224456142459,
+        "strides_per_second": 1.9463758669156137
+      },
+      "candidates": [
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_style_150s_seed2/iteration_0050.pt",
+          "checks": {
+            "all_72_valid": false,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": false
+          },
+          "gait_means": {
+            "mean_completed_stance_s": null,
+            "mean_completed_swing_s": null,
+            "mean_stride_m": null,
+            "strides_per_second": null
+          },
+          "eligible": false
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_style_150s_seed2/iteration_0100.pt",
+          "checks": {
+            "all_72_valid": false,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": false
+          },
+          "gait_means": {
+            "mean_completed_stance_s": null,
+            "mean_completed_swing_s": null,
+            "mean_stride_m": null,
+            "strides_per_second": null
+          },
+          "eligible": false
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_style_150s_seed2/policy.pt",
+          "checks": {
+            "all_72_valid": false,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": true,
+            "stance_at_least_20_percent_closer": false,
+            "stride_at_least_20_percent_closer": false,
+            "no_body_stride_loss_over_10_percent": false,
+            "slip_retained": false,
+            "per_body_speed_retained": false,
+            "vertical_velocity_not_worse": true,
+            "airborne_not_worse": true
+          },
+          "gait_means": {
+            "mean_completed_stance_s": 0.3114408277989454,
+            "mean_completed_swing_s": 0.12205214590851621,
+            "mean_stride_m": 0.11520869242794288,
+            "strides_per_second": 2.57603938962175
+          },
+          "distance_to_healthy": {
+            "mean_completed_stance_s": {
+              "old_distance": 0.076922501762568,
+              "new_distance": 0.0763649256942425,
+              "fraction_closer": 0.0072485430862160305
+            },
+            "mean_stride_m": {
+              "old_distance": 0.13729527290517027,
+              "new_distance": 0.19761375318630298,
+              "fraction_closer": -0.43933399165748876
+            }
+          },
+          "score": -0.21604272428563637,
+          "eligible": false
+        }
+      ],
+      "selected": null
+    },
+    {
+      "development_seed": 9149,
+      "final_seed": 20260920,
+      "demo_seed": 9143,
+      "healthy_target": {
+        "mean_completed_stance_s": 0.2708035714285714,
+        "mean_completed_swing_s": 0.24303571428571427,
+        "mean_stride_m": 0.3128224456142459,
+        "strides_per_second": 1.9463758669156137
+      },
+      "candidates": [
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_motion_150s_seed2/iteration_0050.pt",
+          "checks": {
+            "all_72_valid": true,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": true,
+            "stance_at_least_20_percent_closer": false,
+            "stride_at_least_20_percent_closer": false,
+            "no_body_stride_loss_over_10_percent": false,
+            "slip_retained": true,
+            "per_body_speed_retained": true,
+            "vertical_velocity_not_worse": true,
+            "airborne_not_worse": false
+          },
+          "gait_means": {
+            "mean_completed_stance_s": 0.17722382290809763,
+            "mean_completed_swing_s": 0.10506932072189598,
+            "mean_stride_m": 0.15697941045847102,
+            "strides_per_second": 3.6106340969162947
+          },
+          "distance_to_healthy": {
+            "mean_completed_stance_s": {
+              "old_distance": 0.076922501762568,
+              "new_distance": 0.09357974852047378,
+              "fraction_closer": -0.21654582698467983
+            },
+            "mean_stride_m": {
+              "old_distance": 0.13729527290517027,
+              "new_distance": 0.15584303515577486,
+              "fraction_closer": -0.13509396105294535
+            }
+          },
+          "score": -0.1758198940188126,
+          "eligible": false
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_motion_150s_seed2/iteration_0100.pt",
+          "checks": {
+            "all_72_valid": true,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": true,
+            "stance_at_least_20_percent_closer": false,
+            "stride_at_least_20_percent_closer": false,
+            "no_body_stride_loss_over_10_percent": false,
+            "slip_retained": true,
+            "per_body_speed_retained": false,
+            "vertical_velocity_not_worse": true,
+            "airborne_not_worse": false
+          },
+          "gait_means": {
+            "mean_completed_stance_s": 0.17982599268523863,
+            "mean_completed_swing_s": 0.10440718273907831,
+            "mean_stride_m": 0.1558603475034327,
+            "strides_per_second": 3.5817488827001696
+          },
+          "distance_to_healthy": {
+            "mean_completed_stance_s": {
+              "old_distance": 0.076922501762568,
+              "new_distance": 0.09097757874333279,
+              "fraction_closer": -0.18271736694352114
+            },
+            "mean_stride_m": {
+              "old_distance": 0.13729527290517027,
+              "new_distance": 0.1569620981108132,
+              "fraction_closer": -0.14324473661396042
+            }
+          },
+          "score": -0.16298105177874078,
+          "eligible": false
+        },
+        {
+          "checkpoint": "outputs/locomotion/limb_healthy_motion_150s_seed2/policy.pt",
+          "checks": {
+            "all_72_valid": true,
+            "healthy_retained": true,
+            "completed_cycles_all_intact_legs": true,
+            "stance_at_least_20_percent_closer": false,
+            "stride_at_least_20_percent_closer": false,
+            "no_body_stride_loss_over_10_percent": false,
+            "slip_retained": true,
+            "per_body_speed_retained": true,
+            "vertical_velocity_not_worse": true,
+            "airborne_not_worse": false
+          },
+          "gait_means": {
+            "mean_completed_stance_s": 0.1779811769863902,
+            "mean_completed_swing_s": 0.10621925260761424,
+            "mean_stride_m": 0.1620883763220825,
+            "strides_per_second": 3.583961860579874
+          },
+          "distance_to_healthy": {
+            "mean_completed_stance_s": {
+              "old_distance": 0.076922501762568,
+              "new_distance": 0.09282239444218121,
+              "fraction_closer": -0.20670015034989953
+            },
+            "mean_stride_m": {
+              "old_distance": 0.13729527290517027,
+              "new_distance": 0.15073406929216338,
+              "fraction_closer": -0.09788244054312978
+            }
+          },
+          "score": -0.15229129544651465,
+          "eligible": false
+        }
+      ],
+      "selected": null,
+      "motion_reference_asset": "assets/locomotion/healthy_motion_reference_seed2.npz"
+    }
+  ],
+  "curated_checkpoints": [
+    {
+      "source": "outputs/locomotion/limb_healthy_style_150s_seed2/iteration_0050.pt",
+      "source_sha256": "86e46f8758a8aa977332a222d1e967e4150393c0d173e1dd03006fb7af825449",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_style_iter50_seed2.pt",
+      "curated_sha256": "d2817a9cb74670e7b84e0181524bd1f8463299f87adb9cc658378e6f4ed24c19",
+      "training_seconds": 32.30917800008319,
+      "cumulative_training_seconds": 1139.9502631261712,
+      "transitions": 614400
+    },
+    {
+      "source": "outputs/locomotion/limb_healthy_style_150s_seed2/iteration_0100.pt",
+      "source_sha256": "7a353a48ab3c55ca364c2a254383c94193d3ea4826134d364161e89c13d43a1d",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_style_iter100_seed2.pt",
+      "curated_sha256": "88a310965b7c805b25ee48f9fa6fb555597ac113e22d63417aea333e223bf499",
+      "training_seconds": 64.3361812500516,
+      "cumulative_training_seconds": 1171.9772663761396,
+      "transitions": 1228800
+    },
+    {
+      "source": "outputs/locomotion/limb_healthy_style_150s_seed2/policy.pt",
+      "source_sha256": "0a5426db6b522c6f404bade14c647585c1e5d766b28c417f50e0040883c7fdaa",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_style_150s_seed2.pt",
+      "curated_sha256": "938a8139277c73f7ad24cd5d06d91ed8f22158fba360be867736d29466162e65",
+      "training_seconds": 149.31684695906006,
+      "cumulative_training_seconds": 1256.957932085148,
+      "transitions": 2850816
+    },
+    {
+      "source": "outputs/locomotion/limb_healthy_motion_150s_seed2/iteration_0050.pt",
+      "source_sha256": "cb2eee7fda1da1fed1987a0491da8d20f4338a893a9acdadf54a150f129ec458",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_motion_iter50_seed2.pt",
+      "curated_sha256": "ea631349bccbb9ddb971708a6359d654d4036180b80c312fca2579c9648a7166",
+      "training_seconds": 56.256387416040525,
+      "cumulative_training_seconds": 1163.8974725421285,
+      "transitions": 614400
+    },
+    {
+      "source": "outputs/locomotion/limb_healthy_motion_150s_seed2/iteration_0100.pt",
+      "source_sha256": "0c61f36a1b35188b0f42ff88512694559920906bca6134e485df57940500788e",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_motion_iter100_seed2.pt",
+      "curated_sha256": "d709bdf2165634ce510e1bdde2298656df84b07e59cc1007d8429fb7d30aa959",
+      "training_seconds": 110.21378558303695,
+      "cumulative_training_seconds": 1217.854870709125,
+      "transitions": 1228800
+    },
+    {
+      "source": "outputs/locomotion/limb_healthy_motion_150s_seed2/policy.pt",
+      "source_sha256": "92f3057fee8c365437401aa4a97a0d59fca599d8fa882ea3b21f59241330f2b0",
+      "curated": "assets/locomotion/checkpoints/limb_healthy_motion_150s_seed2.pt",
+      "curated_sha256": "d6185e27eeea6b27f5ce4ac171fd92690e86f6871f1a6e821935b16caed6b00b",
+      "training_seconds": 149.6549119160045,
+      "cumulative_training_seconds": 1257.2959970420925,
+      "transitions": 1683456
+    }
+  ],
+  "new_training_seconds_all_attempts": 298.97175887506455,
+  "new_transitions_all_attempts": 4534272
+}

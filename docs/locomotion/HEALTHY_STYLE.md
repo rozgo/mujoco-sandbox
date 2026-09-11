@@ -59,7 +59,51 @@ support remains checked every physics substep. Preserve failed candidates and
 prior videos. If the strong prior prevents compensation, keep that result and
 adjust the reference strength in a separately recorded short trial.
 
-Results will be added after the experiment.
+## Review outcome
+
+**No new policy was selected.** The latest snapshot-reference policy completes
+72/72 development trials, but mean intact-leg stance **0.194 → 0.178 seconds**
+and stride **0.176 → 0.162 m** moved away from the healthy teacher. Healthy gait
+was retained. The earlier direct-policy imitation trial also failed the task
+gates. [All candidates and hashes](HEALTHY_STYLE_SELECTION.json).
+
+[Watch the experimental nine-case preview](../../previews/locomotion/limb_healthy_style_preview.mp4) ·
+[Previous selected version](../../previews/locomotion/limb_ground_support.mp4).
+The new video is labeled **EXPERIMENT / HEALTHY STYLE / NOT SELECTED** and shows
+the final snapshot-motion checkpoint, not a claimed improvement. It uses the same
+seed 9143, cameras, 1× playback, damage markers and shadows as the previous video.
+The current selected policy remains `limb_ground_support_selected_seed2.pt`.
+
+The user requested a video before further training. A temporal-reference draft
+was saved locally and removed from the delivered implementation; it was **not
+trained**. Final holdout seed 20260920 remains unused. No final acceptance or
+half-timestep certification of this unselected policy is claimed. All task
+support checks in development and capture run at every 2 ms physics step.
+
+Total new training: **298.972 seconds (4 min 59 s)** and **4,534,272 transitions**,
+including both unsuccessful experiments. Preview policy ancestry is **1257.296
+seconds (20 min 57 s)**; the first failed trial is not in its ancestry but is
+included in total experiment cost. All six inspected checkpoints are retained.
+
+From the repository root, to inspect the experimental trial live:
+
+```sh
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog view \
+  --checkpoint ../../assets/locomotion/checkpoints/limb_healthy_motion_150s_seed2.pt \
+  --case whole_fr --presentation damage
+```
+
+Reproduce the clearly labeled preview from that package directory:
+
+```sh
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog grid \
+  --checkpoint ../../assets/locomotion/checkpoints/limb_healthy_motion_150s_seed2.pt \
+  --family limb_loss --seed 9143 --presentation damage \
+  --label 'EXPERIMENT / HEALTHY STYLE / NOT SELECTED' \
+  --output ../../outputs/locomotion/healthy_style_preview.mp4
+```
+
 
 ## First result and phase-independent reference refinement
 
@@ -86,3 +130,14 @@ saved actor remains an independent 66-input reactive network. This is a small
 reference-library prior, not adversarial motion imitation or online adaptation.
 The stance and stride targets remain evaluation criteria, not new reward terms.
 The second run uses the same development/final/demo seeds and acceptance gates.
+
+## Preview verification
+
+All nine captured trials complete with allowed support. The new 3840×2160,
+25 fps, twelve-second MP4 plays at 1×. All 300 frames decoded and opening, middle
+and ending frames were inspected. Checkpoint/model/trajectory hashes were checked;
+maximum sampled penetration was 5.16 mm and peak recorded torque 93.3% of cap.
+Capture took 3.804 seconds and rendering/export 39.951 seconds. The native Mac
+viewer passed a five-second smoke test; the delivered source passes 71 tests and
+Ruff. [Preview QA report](HEALTHY_STYLE_PREVIEW_QA.json). These checks verify the
+preview and physical task, not achievement of the requested gait appearance.

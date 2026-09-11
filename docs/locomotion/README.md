@@ -1,5 +1,7 @@
 # Adaptive dog: minute-scale RL pilot
 
+Experimental review: **[healthy-walk reference trials](HEALTHY_STYLE.md)**. [Watch the latest unselected preview](../../previews/locomotion/limb_healthy_style_preview.mp4). Five minutes of new training retained task completion in the motion-reference trial, but did not improve stance or stride. The selected ground-support policy below remains current. Further training is paused for video review.
+
 Latest: **[minimum ground-support correction](GROUND_SUPPORT.md)**. A single new reward term and **119.5 seconds of fine-tuning** reduced sampled airborne time **41%** across the eight removal bodies, retaining **288/288** fresh task completions and healthy gait quality. Some hopping remains; no phase guidance was added. [Watch the nine-case video](../../previews/locomotion/limb_ground_support.mp4).
 
 Video update: **[clearer cut markers and contact shadows](DAMAGE_VISIBILITY.md)**. [Watch the updated nine-case video](../../previews/locomotion/limb_damage_visible.mp4), labeled WALKING, with orange spheres at each removal and cameras facing the damaged side. Same saved trajectories and policy; no new training.
