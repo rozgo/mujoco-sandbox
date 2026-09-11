@@ -73,3 +73,21 @@ swings, minimum per-foot mean peak 5.48 cm. All 72 tasks complete; healthy gait,
 stride/stance, speed, vertical motion and airborne retention pass. Freeze this
 choice before final seed 20260922. Both rounds and all inspected candidates are
 archived; no further training planned.
+
+## Video integrity caught a timestep issue
+
+The final policy passed all final seed 20260922 gait/task gates and 72/72 1 ms
+checks, but its 2 ms video failed the existing 8 mm contact-penetration limit:
+9.39 mm on lower-FR's intact RR foot. The earlier eligible iteration 100 also
+fails this limit (9.25 mm), so do not substitute it or increase the limit. All
+actual torques remain at or below the original caps. Preserve the 2 ms video as
+an archived failed integrity check, not the final delivery.
+
+A numerical-resolution probe of the same final policy, same demo seed and same
+lower-FR task gives 7.96 mm at 1 ms and 7.62 mm at 0.5 ms. Keep the original
+contact solref/solimp, all limits, masses, controller frequency and weights.
+Declare 0.5 ms physics for the final delivery, explicitly recorded in manifests
+and viewer arguments. Old commands retain their 2 ms default and old videos are
+unchanged. Recheck BOTH parent and candidate at 0.5 ms on development seed 9157;
+only if the original gates pass, use NEW final seed 20260923 (32/body), with
+0.25 ms half-timestep checks. No retraining or changed acceptance thresholds.

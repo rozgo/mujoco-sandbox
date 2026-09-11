@@ -12,11 +12,13 @@ from .stride_eval import inspect_stride
 from .train import load_checkpoint
 
 
-def assess(checkpoint, output, trials=8, seed=9141, cases=None, gait=True):
+def assess(
+    checkpoint, output, trials=8, seed=9141, cases=None, gait=True, timestep=0.002
+):
     net, saved = load_checkpoint(checkpoint)
     results = []
     for case in cases.split(",") if cases else LOSS_CASES:
-        result, _, _ = rollout(net, case, trials=trials, seed=seed)
+        result, _, _ = rollout(net, case, trials=trials, seed=seed, timestep=timestep)
         results.append(result)
         print(
             json.dumps(
@@ -36,11 +38,14 @@ def assess(checkpoint, output, trials=8, seed=9141, cases=None, gait=True):
         "sha256": hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
         "cumulative_training_seconds": saved["cumulative_training_seconds"],
         "seed": seed,
+        "physics_timestep_s": timestep,
         "trials_per_case": trials,
         "cases": results,
     }
     if gait:
-        measured = inspect_stride(checkpoint, trials=trials, seed=seed)
+        measured = inspect_stride(
+            checkpoint, trials=trials, seed=seed, timestep=timestep
+        )
         m = measured["summary"]
         gates = {
             "all_healthy_support_valid": next(

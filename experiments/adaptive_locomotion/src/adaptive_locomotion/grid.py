@@ -58,6 +58,7 @@ def grid(
     presentation="original",
     replay_from=None,
     label=None,
+    timestep=0.002,
 ):
     """Capture physical runs, then replay a common timestamp in every panel."""
     if family not in ("partial", "limb_loss"):
@@ -111,6 +112,7 @@ def grid(
         or cache["seed"] != seed
         or cache["seconds"] != seconds
         or cache.get("family", "partial") != family
+        or cache.get("physics_timestep_s", 0.002) != timestep
     ):
         raise ValueError(
             "Existing grid capture uses different weights, seed or duration; use another output name"
@@ -151,7 +153,7 @@ def grid(
                 if not source.exists():
                     result = None
         if result is not None:
-            env = make_case(case, trials=1, seed=seed)
+            env = make_case(case, trials=1, seed=seed, timestep=timestep)
             model = env.groups[0].model
             env.close()
             if model_hash(model) != result["model_mjb_sha256"]:
@@ -167,7 +169,13 @@ def grid(
                     f"Replay source is missing {case}; refusing a new rollout"
                 )
             result, frames, model = rollout(
-                net, case, trials=1, seed=seed, seconds=seconds, capture=True
+                net,
+                case,
+                trials=1,
+                seed=seed,
+                seconds=seconds,
+                capture=True,
+                timestep=timestep,
             )
             result["model_mjb_sha256"] = model_hash(model)
             states = {key: np.asarray([f[key] for f in frames]) for key in frames[0]}
@@ -207,6 +215,7 @@ def grid(
     capture_seconds = time.perf_counter() - start
     manifest = {
         "family": family,
+        "physics_timestep_s": timestep,
         "checkpoint_sha256": digest,
         "seed": seed,
         "seconds": seconds,

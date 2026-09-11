@@ -409,7 +409,9 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
     return report
 
 
-def view(checkpoint, case="short_fl", seconds=0, presentation="original"):
+def view(
+    checkpoint, case="short_fl", seconds=0, presentation="original", timestep=0.002
+):
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
         env = os.environ.copy()
         paths = [sysconfig.get_config_var("LIBDIR"), str(Path(sys.base_prefix) / "lib")]
@@ -434,7 +436,7 @@ def view(checkpoint, case="short_fl", seconds=0, presentation="original"):
 
     torch.set_num_threads(1)
     net, _ = load_checkpoint(checkpoint)
-    env = make_case(case, trials=1)
+    env = make_case(case, trials=1, timestep=timestep)
     group = env.groups[0]
     from .presentation import camera_azimuth, configure, damage_markers
 

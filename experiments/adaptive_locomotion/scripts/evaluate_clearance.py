@@ -16,11 +16,13 @@ PARENT = ROOT / "assets/locomotion/checkpoints/limb_healthy_sequence_90s_seed2.p
 REAR = ("lower_rl", "lower_rr", "whole_rl", "whole_rr")
 
 
-def evaluate(path, output, trials=8, seed=9153):
-    report = assess(path, output, trials=trials, seed=seed)
+def evaluate(path, output, trials=8, seed=9153, timestep=0.002):
+    report = assess(path, output, trials=trials, seed=seed, timestep=timestep)
     gaits = [report["healthy_gait"]]
     for case in LOSS_CASES[1:]:
-        gait = inspect_stride(path, trials=trials, seed=seed, case=case)
+        gait = inspect_stride(
+            path, trials=trials, seed=seed, case=case, timestep=timestep
+        )
         gait["checkpoint"] = report["checkpoint"]
         gaits.append(gait)
     report["gait_cases"] = gaits

@@ -77,6 +77,7 @@ def main():
     )
     p.add_argument("--seconds", type=float, default=12)
     p = sub.add_parser("view")
+    p.add_argument("--timestep", type=float, default=0.002)
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--case", default="short_fl")
     p.add_argument("--seconds", type=float, default=0)
@@ -98,6 +99,7 @@ def main():
     p.add_argument("--seconds", type=float, default=12)
     p.add_argument("--seed", type=int, default=9137)
     p.add_argument("--family", choices=("partial", "limb_loss"), default="partial")
+    p.add_argument("--timestep", type=float, default=0.002)
     p.add_argument("--presentation", choices=("original", "damage"), default="original")
     p.add_argument(
         "--label", help="Override the grid heading for clearly labeled experiments"

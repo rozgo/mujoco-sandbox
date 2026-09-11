@@ -10,10 +10,12 @@ from .train import load_checkpoint
 from .visible_steps import swing_metrics
 
 
-def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy"):
+def inspect_stride(
+    checkpoint, trials=16, seed=9137, seconds=12, case="healthy", timestep=0.002
+):
     torch.set_num_threads(1)
     net, saved = load_checkpoint(checkpoint)
-    env = make_case(case, trials=trials, seed=seed)
+    env = make_case(case, trials=trials, seed=seed, timestep=timestep)
     positions, forces, base, velocity, angular_velocity = [], [], [], [], []
     try:
         for _ in range(round(seconds / CONTROL_DT)):
@@ -144,6 +146,7 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
         "trials": trials,
         "case": case,
         "seed": seed,
+        "physics_timestep_s": timestep,
         "seconds": seconds,
         "measurement": "after first second; 20 ms positions/contact forces; consecutive landings per foot, one-sample contact debounce",
         "summary": {
