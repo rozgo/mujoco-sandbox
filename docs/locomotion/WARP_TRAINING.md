@@ -82,3 +82,34 @@ rollout depth for a broader simultaneous population, a possible way to reduce
 gradient variability while exploiting GPU batching. It is a hypothesis to test,
 not an established explanation. Apply the same acceptance gates and preserve
 the failed smaller-batch results. Labels start with `scaled_`.
+
+## Numerical scheduling checks
+
+Each body owns its state, model parameters, CUDA stream and pinned host buffers.
+Controls, physics and copies are ordered within that stream. All streams finish
+before CPU observation/reward code reads the buffers. Overflow is copied with
+the other fields rather than triggering an additional per-body device sync.
+The CPU reward functions and deployed network implementation are unchanged.
+
+The first scheduling test compared a continuing 0.6-second trajectory with a
+2e-5 absolute reward threshold and failed at 4.24e-5. A three-copy diagnostic
+found that even serial/serial repeats vary: maximum reward difference 2.56e-4,
+qpos 1.19e-6 and qvel 5.39e-5. Serial/concurrent trajectories can diverge further
+through contact events (qpos 0.000322, qvel 0.255 after 0.6 seconds). These are
+not bitwise-deterministic trajectories, and the failed first test is retained
+in the run log and [diagnostic](warp_training/schedule_diagnostic.json).
+
+The delivered test checks **960 one-control-interval samples from matched fresh
+states**, with observations within 2e-5, torque within 2e-4 Nm, reward within
+1e-4 absolute + 1e-4 relative tolerance, and identical termination flags. Partial
+resets must preserve every unreset world's qpos exactly. This passed along with
+the original nine CPU/Warp physical checks, nine range-sensor pose checks and
+three optimizer-scheduling tests: **23 GPU-host tests passed**. Long-run quality
+is judged separately by the multi-seed physical task evaluations above.
+
+Mac package/mjbatch suite: **89 passed, 19 CUDA checks skipped**. The existing
+Warp/Python 3.14 deprecation and capsule–cylinder multicontact warnings remain
+documented; no collision shapes or torque/contact limits were changed. The new
+`adaptive-dog learn` command passed an actual one-round CPU smoke run (0.120 s
+new training), and explicit minibatches reproduced legacy updates exactly in
+the separate short scheduling test.

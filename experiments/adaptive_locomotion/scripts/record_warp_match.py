@@ -18,14 +18,14 @@ from adaptive_locomotion.presentation import camera_azimuth, configure, damage_m
 from adaptive_locomotion.record import font, model_hash
 from adaptive_locomotion.train import load_checkpoint
 
-LABELS = ("matched_mjbatch_seed2", "matched_warp_seed2")
 TITLES = ("CPU PHYSICS / CUDA LEARNER", "WARP PHYSICS / CUDA LEARNER")
 CASES_SHOWN = LOSS_CASES
 
 
-def main(replay=False):
-    output = ROOT / "previews/locomotion/warp_matched_comparison.mp4"
-    directory = ROOT / "outputs/locomotion/recordings/warp_matched_comparison"
+def main(replay=False, prefix="matched"):
+    labels = tuple(f"{prefix}_{backend}_seed2" for backend in ("mjbatch", "warp"))
+    output = ROOT / f"previews/locomotion/warp_{prefix}_comparison.mp4"
+    directory = ROOT / f"outputs/locomotion/recordings/warp_{prefix}_comparison"
     directory.mkdir(parents=True, exist_ok=True)
     if output.exists() and not replay:
         raise ValueError(
@@ -38,11 +38,11 @@ def main(replay=False):
                 ROOT / "docs/locomotion/warp_training" / label / "training.json"
             ).read_text()
         )
-        for label in LABELS
+        for label in labels
     ]
     runs, entries = [], []
     start = time.perf_counter()
-    for col, label in enumerate(LABELS):
+    for col, label in enumerate(labels):
         checkpoint = ROOT / f"assets/locomotion/checkpoints/warp_training/{label}.pt"
         net, _ = load_checkpoint(checkpoint)
         for row, case in enumerate(CASES_SHOWN):
@@ -154,7 +154,7 @@ def main(replay=False):
                 draw.text((16 + col * 960, 66), title, font=font(25), fill="#91d8d0")
                 draw.text(
                     (16 + col * 960, 96),
-                    f"Same 48 PPO rounds / {training[col]['training_seconds']:.1f} seconds training",
+                    f"Same {training[col]['iterations']} PPO rounds / {training[col]['training_seconds']:.1f} seconds training",
                     font=font(20),
                     fill="white",
                 )
@@ -214,7 +214,7 @@ def main(replay=False):
                 )
             draw.text(
                 (16, 1390),
-                f"t = {runs[0][5]['time'][k]:05.2f} s | Same parent, 512 worlds, 768 optimizer steps | One policy per column | 1x playback",
+                f"t = {runs[0][5]['time'][k]:05.2f} s | Same parent, {training[0]['num_envs']} worlds, {training[0]['optimizer_steps']} optimizer steps | One policy per column | 1x playback",
                 font=font(23),
                 fill="white",
             )
@@ -242,7 +242,7 @@ def main(replay=False):
         "chapters": [list(CASES_SHOWN[i : i + 3]) for i in (0, 3, 6)],
         "training_reports": [
             str(Path("docs/locomotion/warp_training") / label / "training.json")
-            for label in LABELS
+            for label in labels
         ],
         "playback_speed": 1,
         "capture_seconds": capture_seconds,
@@ -267,4 +267,5 @@ def main(replay=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--replay", action="store_true")
+    parser.add_argument("--prefix", choices=("matched", "scaled"), default="matched")
     main(**vars(parser.parse_args()))
