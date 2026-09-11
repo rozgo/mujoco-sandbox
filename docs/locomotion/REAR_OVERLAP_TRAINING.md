@@ -42,3 +42,19 @@ half-timestep support checks, CPU/MPS agreement, native Mac viewer, and a new
 1× video using fixed demo seed **9143**. All nine cases and old/new versions
 remain available. Require the existing 8 mm sampled-penetration and original
 torque-cap checks for media. Record all attempts and elapsed/training/render time.
+
+## First result and bounded weight refinement
+
+The first round used **89.546 seconds**. Iteration 100 and final retain every
+preexisting task/lift/gait gate. Final rear overlap falls from 7.0% / 7.8% to
+3.6% / 3.6%, but phase separation remains only 11.7% / 7.2% of a cycle. This is
+less simultaneous swing without the requested clear alternation. No promotion.
+Iteration 50 also has a task failure; all three candidates are retained.
+
+Before a second run, declare one **90-second** continuation with only the same
+cost's weight increased **1 → 3**. Resume iteration 100, which retains a 5.0 cm
+minimum mean swing peak and slightly better phase separation than final, giving
+more lift margin. Keep all other settings, seeds and gates unchanged. This uses
+the user's standing allowance to extend short RL experiments when the measured
+trend supports it. Total new training remains about three minutes. Stop after
+this bounded continuation if it still cannot produce alternating rear steps.
