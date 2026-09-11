@@ -82,7 +82,7 @@ Viewer controls, recording commands, setup notes, and validation live in each de
 
 [![One shared policy walking across nine healthy and missing-leg conditions](previews/locomotion/adaptive_dog_v1.png)](previews/locomotion/adaptive_dog_v1.mp4)
 
-**[Watch the official 4K video](previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](previews/locomotion/adaptive_dog_v1.gif)** · [Run guide and experiment history](docs/locomotion/README.md) · [Frozen weights, validation and known limits](docs/locomotion/OFFICIAL_V1.md)
+**[Watch the official 4K video](previews/locomotion/adaptive_dog_v1.mp4)** · [Run guide and experiment history](docs/locomotion/README.md) · [Frozen weights, validation and known limits](docs/locomotion/OFFICIAL_V1.md)
 
 The user accepted this gait as the official baseline. The video preserves the approved twelve-second motion at **1×**, with orange damage markers and contact shadows. Its checkpoint has **32 min 03 s of training ancestry**; the latest two refinement trials used **2 min 59 s** on CPU MuJoCo/mjbatch with Apple GPU learning.
 

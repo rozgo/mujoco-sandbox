@@ -1,6 +1,6 @@
 # Adaptive dog: official v1 and learning experiments
 
-**[Watch the official v1 video](../../previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](../../previews/locomotion/adaptive_dog_v1.gif)** · **[Frozen baseline and validation](OFFICIAL_V1.md)**
+**[Watch the official v1 video](../../previews/locomotion/adaptive_dog_v1.mp4)** · **[Frozen baseline and validation](OFFICIAL_V1.md)**
 
 The official solution is **one PPO policy for all nine bodies**: healthy, four complete lower-leg removals and four entire-leg removals. The user accepted the rear-support refinement for its natural gait and requested its promotion to `main`. Weights are frozen as `assets/locomotion/checkpoints/adaptive_dog_v1.pt`; the `adaptive-dog-v1` Git tag preserves this release. Future iterations use another branch and new artifacts.
 
