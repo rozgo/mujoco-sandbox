@@ -96,9 +96,9 @@ def train(
         raise ValueError(
             "Healthy style requires a healthy reference and reactive limb-loss training"
         )
-    if healthy_style_source not in ("policy", "motion"):
+    if healthy_style_source not in ("policy", "motion", "motion_sequence"):
         raise ValueError("Unknown healthy style reference")
-    if healthy_style_source == "motion" and not healthy_style:
+    if healthy_style_source.startswith("motion") and not healthy_style:
         raise ValueError("Motion reference requires healthy-style weights")
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
@@ -195,9 +195,12 @@ def train(
         teacher = teacher.to(actor_device).eval().requires_grad_(False)
     motion_reference = None
     motion_hash = None
-    if healthy_style_source == "motion":
+    if healthy_style_source.startswith("motion"):
         motion_reference, motion_hash = HealthyMotion.collect(
-            teacher, seed, output / "healthy_motion.npz"
+            teacher,
+            seed,
+            output / "healthy_motion.npz",
+            sequence=healthy_style_source == "motion_sequence",
         )
     single_teacher = None
     if single_reference:
@@ -300,6 +303,9 @@ def train(
         "damage_healthy_loss_weight": damage_healthy_loss_weight,
         "healthy_style_source": healthy_style_source,
         "healthy_motion_sha256": motion_hash,
+        "healthy_motion_history_seconds": 0.12
+        if healthy_style_source == "motion_sequence"
+        else 0.0,
         "healthy_style_teacher_encoding": (
             "per-leg nearest healthy joint state and command; independent phases"
             if motion_reference is not None
@@ -387,7 +393,9 @@ def train(
                     )
                 target = target.cpu().numpy()
                 if motion_reference is not None:
-                    motion_target, motion_error = motion_reference.query(obs)
+                    motion_target, motion_error = motion_reference.query(
+                        obs, env.history[:, -7] if motion_reference.sequence else None
+                    )
                     target = np.where(
                         (obs[:, 45:57] < 1).any(1)[:, None], motion_target, target
                     )

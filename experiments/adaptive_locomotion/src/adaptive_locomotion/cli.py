@@ -41,7 +41,9 @@ def main():
     p.add_argument("--damage-healthy-reward-weight", type=float, default=0.0)
     p.add_argument("--damage-healthy-loss-weight", type=float, default=0.0)
     p.add_argument(
-        "--healthy-style-source", choices=("policy", "motion"), default="policy"
+        "--healthy-style-source",
+        choices=("policy", "motion", "motion_sequence"),
+        default="policy",
     )
     p.add_argument("--learning-rate", type=float, default=0.001)
     p.add_argument("--pair-level", choices=("mild", "hard"))

@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 import torch
 
 from adaptive_locomotion.healthy_style import (
@@ -68,3 +69,45 @@ def test_motion_matching_allows_independent_leg_phases_and_masks_removed_joints(
         )
     np.testing.assert_array_equal(distance, 0)
     np.testing.assert_array_equal(obs, original)
+
+
+def test_motion_sequences_distinguish_identical_poses_with_different_histories():
+    obs = np.zeros((2, 66), np.float32)
+    obs[:, 45:57] = 1
+    past = obs.copy()
+    past[1, :24] = 0.4
+    actions = np.array([[0] * 12, [1] * 12], np.float32)
+    reference = HealthyMotion(obs, actions, past)
+    target, distance = reference.query(obs[:1], past[1:])
+    np.testing.assert_array_equal(target, actions[1:])
+    np.testing.assert_allclose(distance, 0, atol=1e-6)
+    with pytest.raises(ValueError, match="same causal history"):
+        reference.query(obs)
+
+
+@pytest.mark.parametrize("sequence", [False, True])
+def test_fast_masked_distance_agrees_with_brute_force(sequence):
+    rng = np.random.default_rng(14)
+    bank = rng.normal(size=(64, 66)).astype(np.float32)
+    actions = rng.normal(size=(64, 12)).astype(np.float32)
+    obs = rng.normal(size=(8, 66)).astype(np.float32)
+    obs[:, 45:57] = rng.integers(0, 2, (8, 12))
+    obs[0, 45:48] = 0  # A completely absent leg must also be harmless.
+    past_bank = rng.normal(size=bank.shape).astype(np.float32) if sequence else None
+    past = rng.normal(size=obs.shape).astype(np.float32) if sequence else None
+    prior = HealthyMotion(bank, actions, past_bank)
+    target, errors = prior.query(obs, past)
+    f = prior.feature(obs, past)
+    valid = obs[:, 45:57].reshape(-1, 4, 3)
+    channels = (valid, valid, np.ones((8, 4, 1)))
+    mask = np.concatenate(channels + ((valid, valid) if sequence else ()), axis=2)
+    for leg in range(4):
+        delta = (f[:, None, leg] - prior.features[None, :, leg]) / prior.scale[leg]
+        distance = (delta**2 * mask[:, None, leg]).sum(2) / mask[:, leg].sum(1)[:, None]
+        idx = distance.argmin(1)
+        np.testing.assert_allclose(
+            errors[:, leg], distance[np.arange(8), idx], atol=2e-6
+        )
+        np.testing.assert_array_equal(
+            target.reshape(8, 4, 3)[:, leg], actions.reshape(64, 4, 3)[idx, leg]
+        )
