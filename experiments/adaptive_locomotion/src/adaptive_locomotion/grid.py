@@ -461,7 +461,9 @@ def grid(
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_source_commit": source_commit,
         "presentation": presentation,
-        "replayed_existing_trajectories": all(e["reused_saved_trajectory"] for e in entries),
+        "replayed_existing_trajectories": all(
+            e["reused_saved_trajectory"] for e in entries
+        ),
         "render_model_sha256": render_models,
         "damage_marker": "Observer-only sphere: 28 mm radius at the calf cut, 40 mm at the original hip attachment; no added collision or mass"
         if presentation == "damage"
