@@ -46,3 +46,20 @@ RMS <=1.2*parent+0.01 m/s; mean damaged airborne fraction <=parent+0.015.
 Select the eligible checkpoint with highest worst-foot visible-swing fraction.
 No eligible checkpoint means experimental preview only, not a solved claim.
 Actual video review remains necessary even when numerical gates pass.
+
+## First result and predeclared support refinement
+
+First round used 179.748 seconds, 3,575,808 transitions. Final checkpoint meets
+all per-foot swing gates: the worst mean peak is 5.04 cm, every foot/trial
+completes >=8 qualifying steps, and all 72 tasks pass. Healthy gait and damaged
+stride/stance retention pass. Speed fails in whole-FR (0.483 m/s); body vertical
+motion and airborne retention fail, especially front-right removals. The largest
+mean swing peak reaches 13.9 cm. Earlier checkpoints and all failures are retained.
+
+One 180-second continuation from this final checkpoint: keep visible-step weight
+2; increase no-support weight 0.5 → 3; enable existing body-motion cost at weight
+1 (0.8*v_z² + 0.2*(abs roll rate + abs pitch rate)); lower learning rate to
+0.0001. All other settings unchanged, no new imitation loss. These costs apply
+without choosing gait pairs or phases. They address excess body flight while
+leaving the successful foot-swing objective intact. Same parent comparison,
+seeds, gates and checkpoint inspection times. Stop training after this round.

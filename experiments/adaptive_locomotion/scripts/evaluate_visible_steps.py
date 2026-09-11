@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 
 import numpy as np
+from evaluate_clearance import evaluate, intact_mean
 
 from adaptive_locomotion.bodies import ROOT
-from evaluate_clearance import evaluate, intact_mean
 
 PARENT = ROOT / "assets/locomotion/checkpoints/limb_clearance_candidate_seed2.pt"
 
