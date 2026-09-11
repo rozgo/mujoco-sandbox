@@ -4,31 +4,6 @@ Robotics simulation demos exploring learned locomotion, manipulation, amphibious
 
 Explore the demos below. Click a screenshot to watch the video, or open its guide for run instructions, physical assumptions, and measured results.
 
-## Adaptive dog v1 — official RL baseline
-
-**One learned policy, nine physical bodies.** A Go2-derived quadruped walks intact, with any one lower leg removed, or with any one entire leg removed. Every panel uses identical neural-network weights. PPO learns joint commands through torque-limited MuJoCo dynamics, with healthy-motion guidance, visible-step rewards and a rear-support preference.
-
-[![One shared policy walking across nine healthy and missing-leg conditions](previews/locomotion/adaptive_dog_v1.png)](previews/locomotion/adaptive_dog_v1.mp4)
-
-**[Watch the official 4K video](previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](previews/locomotion/adaptive_dog_v1.gif)** · [Run guide and experiment history](docs/locomotion/README.md) · [Frozen weights, validation and known limits](docs/locomotion/OFFICIAL_V1.md)
-
-The user accepted this gait as the official baseline. The video preserves the approved twelve-second motion at **1×**, with orange damage markers and contact shadows. Its checkpoint has **32 min 03 s of training ancestry**; the latest two refinement trials used **2 min 59 s** on CPU MuJoCo/mjbatch with Apple GPU learning.
-
-The final frozen-policy audit completes **288/288 tasks**, plus **72/72** checks at half the physics timestep. **84 tests** pass; the original gait-selection and contact limitations below remain recorded.
-
-This release covers single-leg removals on flat ground, with known missing-joint inputs and scripted velocity commands. It does not establish arbitrary-damage recovery or learned parkour. The accepted baseline retains two documented limitations: FR rear timing falls below the original alternation target, and one recorded contact reaches **8.889 mm penetration against an 8 mm target**. Original reports, earlier checkpoints and videos remain available.
-
-Run the frozen policy on Mac or Linux in its isolated uv project:
-
-```sh
-git lfs pull
-cd experiments/adaptive_locomotion
-uv tool run --from uv==0.12.12 uv sync --locked
-uv tool run --from uv==0.12.12 uv run --locked adaptive-dog demo
-```
-
-Use `--case healthy`, `--case lower_fr`, or another case shown by `demo --help`. The default is `whole_fr`; runtime physics is **0.5 ms**, control **20 ms**. The `adaptive-dog-v1` Git tag preserves this baseline for subsequent experiments.
-
 ## Learning the wind
 
 A quadrotor carries a suspended parcel through crosswinds, lowers it onto a platform, and releases it. Watch a learned wind forecast and a frozen-field forecast drive the same predictive controller in a matched delivery comparison.
@@ -68,6 +43,31 @@ The original project: a hexapod with two independent Kinova Gen3 arms and Roboti
 **[Watch the full transfer](previews/transfer_all_views.mp4)** · [Shorter 2× overview](previews/transfer.mp4) · [Run & technical details](docs/hexapod/README.md)
 
 *The full transfer plays at real time with six synchronized views, including head and wrist cameras.*
+
+## Adaptive dog v1 — official RL baseline
+
+**One learned policy, nine physical bodies.** A Go2-derived quadruped walks intact, with any one lower leg removed, or with any one entire leg removed. Every panel uses identical neural-network weights. PPO learns joint commands through torque-limited MuJoCo dynamics, with healthy-motion guidance, visible-step rewards and a rear-support preference.
+
+[![One shared policy walking across nine healthy and missing-leg conditions](previews/locomotion/adaptive_dog_v1.png)](previews/locomotion/adaptive_dog_v1.mp4)
+
+**[Watch the official 4K video](previews/locomotion/adaptive_dog_v1.mp4)** · **[Share the GIF](previews/locomotion/adaptive_dog_v1.gif)** · [Run guide and experiment history](docs/locomotion/README.md) · [Frozen weights, validation and known limits](docs/locomotion/OFFICIAL_V1.md)
+
+The user accepted this gait as the official baseline. The video preserves the approved twelve-second motion at **1×**, with orange damage markers and contact shadows. Its checkpoint has **32 min 03 s of training ancestry**; the latest two refinement trials used **2 min 59 s** on CPU MuJoCo/mjbatch with Apple GPU learning.
+
+The final frozen-policy audit completes **288/288 tasks**, plus **72/72** checks at half the physics timestep. **84 tests** pass; the original gait-selection and contact limitations below remain recorded.
+
+This release covers single-leg removals on flat ground, with known missing-joint inputs and scripted velocity commands. It does not establish arbitrary-damage recovery or learned parkour. The accepted baseline retains two documented limitations: FR rear timing falls below the original alternation target, and one recorded contact reaches **8.889 mm penetration against an 8 mm target**. Original reports, earlier checkpoints and videos remain available.
+
+Run the frozen policy on Mac or Linux in its isolated uv project:
+
+```sh
+git lfs pull
+cd experiments/adaptive_locomotion
+uv tool run --from uv==0.12.12 uv sync --locked
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog demo
+```
+
+Use `--case healthy`, `--case lower_fr`, or another case shown by `demo --help`. The default is `whole_fr`; runtime physics is **0.5 ms**, control **20 ms**. The `adaptive-dog-v1` Git tag preserves this baseline for subsequent experiments.
 
 ## Run locally
 

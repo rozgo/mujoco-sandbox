@@ -339,3 +339,7 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Replayed the identical approved nine trajectories with a v1 heading: preparation **0.590 seconds**, render/export **45.525 seconds**, excluding renderer setup. Official MP4: **3840×2160, 25 fps, 12 seconds at 1×**. All 300 frames decode; opening/middle/ending inspected. Checkpoint, physical-model and trajectory hashes match the approved original.
 - GIF: **960×540, 10 fps, 12 seconds at 1×**, infinite loop, **8,934,941 bytes**. All 120 frames decode and a midpoint frame was visually checked. Final encoding took **2.687 seconds**; an earlier 1280×720, 15 fps encoding took **3.713 seconds** and was replaced because its 33 MB size was less suitable for sharing. Both attempts are recorded in GIF provenance.
 - Release-preparation milestone **2026-09-11 05:21:28 UTC**, elapsed **8 min 17 s**, before final commit, merge to main, `adaptive-dog-v1` tag, push and GPU synchronization. New policy/video identities and known limitations are frozen in `docs/locomotion/OFFICIAL_V1.json`.
+
+## README presentation order
+
+- **2026-09-11 05:38:06–05:38:18 UTC**: moved adaptive dog to the end of the demo list, retaining Learning the Wind first. Section contents and links are identical; only order changed. Documentation-only validation passed; no training, simulation or rendering. Twelve seconds to the edit checkpoint, before commit/push/sync.
