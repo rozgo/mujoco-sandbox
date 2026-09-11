@@ -13,6 +13,10 @@ def main():
     copied = []
     for path in sorted(source.glob("*.json")):
         result = json.loads(path.read_text())
+        if path.name in ("kernel_profile.json", "frozen_policy_trials.json"):
+            shutil.copyfile(path, target / path.name)
+            copied.append(path.name)
+            continue
         if "median_control_intervals_per_second" not in result:
             continue
         assert result["physics_timestep_s"] == 0.002
@@ -23,6 +27,8 @@ def main():
         "reports": copied,
         "failed_initial_attempt": "Warp 1.17 occupancy query/CCD symbol mismatch; failed before stepping",
         "block256_attempt": "All nine physical tests passed; healthy-512 speed poor; remaining matrix intentionally stopped",
+        "module64_attempt": "All nine physical tests passed; healthy-512 still slow; remaining matrix intentionally stopped for profiling",
+        "bvh_attempt": "All 19 backend checks and the full 512/4096-world matrix completed",
         "other_gpu_workload": "Left running; GPU telemetry includes other work",
         "official_v1_unchanged": True,
     }
