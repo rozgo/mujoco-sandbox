@@ -5,8 +5,8 @@ import pytest
 
 from adaptive_locomotion.bodies import LIMITS
 from adaptive_locomotion.env import DogEnv
-from adaptive_locomotion.limb_loss import LOSS_CASES
 from adaptive_locomotion.evaluate import CASES
+from adaptive_locomotion.limb_loss import LOSS_CASES
 
 
 def test_unknown_backend_rejected():
@@ -26,14 +26,14 @@ def cuda_warp():
 
 @pytest.mark.parametrize("case", LOSS_CASES)
 def test_warp_physics_and_reset(cuda_warp, case):
-    kwargs = dict(
-        num_envs=2,
-        bodies=[CASES[case][0]],
-        randomize=False,
-        faults=False,
-        sensing=True,
-        timestep=0.002,
-    )
+    kwargs = {
+        "num_envs": 2,
+        "bodies": [CASES[case][0]],
+        "randomize": False,
+        "faults": False,
+        "sensing": True,
+        "timestep": 0.002,
+    }
     cpu = DogEnv(**kwargs)
     gpu = DogEnv(**kwargs, physics_backend="warp")
     try:

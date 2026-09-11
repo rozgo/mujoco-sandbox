@@ -372,7 +372,9 @@ def train(
         ),
         "python": platform.python_version(),
         "torch": torch.__version__,
-        "physics": "CPU MuJoCo/mjbatch",
+        "physics": "CUDA MuJoCo Warp"
+        if physics_backend == "warp"
+        else "CPU MuJoCo/mjbatch",
         "mujoco": mujoco.__version__,
         "contact_profile": "firm",
         "threads": threads,

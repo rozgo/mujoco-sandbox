@@ -287,6 +287,11 @@ class DogEnv:
         self.stride = StrideTracker(num_envs)
         self.contact_timing = ContactTiming(num_envs)
         self.reset(np.arange(num_envs))
+        if physics_backend == "warp":
+            # Compile/capture without stepping; charge cold work to setup, not
+            # the bounded training budget or synchronized warm benchmark.
+            for group in self.groups:
+                group.batch.graph(1 if support_substeps else self.decimation)
 
     def refresh(self):
         self.q[:] = STAND
