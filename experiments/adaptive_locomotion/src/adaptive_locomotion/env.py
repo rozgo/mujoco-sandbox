@@ -24,6 +24,7 @@ from .foot_clearance import clearance_cost
 from .gait_balance import ContactTiming, body_motion_cost
 from .limb_loss import curriculum
 from .paired import training_pairs
+from .rear_overlap import overlap_cost
 from .stride import StrideTracker
 from .visible_steps import VisibleSteps
 
@@ -130,6 +131,7 @@ class DogEnv:
         damage_clearance_weight=0.0,
         clearance_scope="all",
         visible_step_weight=0.0,
+        rear_overlap_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -166,6 +168,7 @@ class DogEnv:
                 damage_flight_weight,
                 damage_clearance_weight,
                 visible_step_weight,
+                rear_overlap_weight,
             )
             < 0
         ):
@@ -176,6 +179,7 @@ class DogEnv:
         self.damage_angular_rate_weight = damage_angular_rate_weight
         self.damage_joint_accel_weight = damage_joint_accel_weight
         self.damage_flight_weight = damage_flight_weight
+        self.rear_overlap_weight = rear_overlap_weight
         self.visible_step_weight = visible_step_weight
         self.damage_clearance_weight = damage_clearance_weight
         if clearance_scope not in ("all", "surviving_rear"):
@@ -489,6 +493,10 @@ class DogEnv:
             moving = np.linalg.norm(self.commands[:, :2], axis=1) > 0.15
             unsupported = ~(self.tip_forces > 1.0).any(1)
             reward -= self.damage_flight_weight * damaged * moving * unsupported
+        if self.rear_overlap_weight:
+            reward -= self.rear_overlap_weight * overlap_cost(
+                self.tip_forces, self.valid, self.commands
+            )
         if self.damage_clearance_weight:
             reward -= self.damage_clearance_weight * clearance_cost(
                 old_tips,

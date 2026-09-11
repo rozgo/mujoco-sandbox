@@ -6,6 +6,7 @@ import torch
 from .bodies import CONTROL_DT, LEGS
 from .evaluate import lane_command, make_case
 from .foot_clearance import clearance_metrics
+from .rear_overlap import rear_swing_metrics
 from .train import load_checkpoint
 from .visible_steps import swing_metrics
 
@@ -105,6 +106,11 @@ def inspect_stride(
         rows.append(
             {
                 "trial": trial,
+                "rear_timing": rear_swing_metrics(
+                    positions[:, trial], env.tip_radii[trial]
+                )
+                if env.terrain == "flat" and env.valid[trial, 6:].all()
+                else None,
                 "legs": legs,
                 "mean_left_right_duty_gap": float(
                     np.abs(duty[[0, 2]] - duty[[1, 3]]).mean()

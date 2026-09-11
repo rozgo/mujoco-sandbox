@@ -64,6 +64,7 @@ def train(
     damage_clearance_weight=0.0,
     clearance_scope="all",
     visible_step_weight=0.0,
+    rear_overlap_weight=0.0,
     retention_curriculum=False,
     reference=None,
     reference_reward_weight=0.0,
@@ -157,6 +158,7 @@ def train(
         damage_clearance_weight=damage_clearance_weight,
         clearance_scope=clearance_scope,
         visible_step_weight=visible_step_weight,
+        rear_overlap_weight=rear_overlap_weight,
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
         limb_stage=limb_stage,
@@ -272,6 +274,7 @@ def train(
         "damage_clearance_weight": damage_clearance_weight,
         "clearance_scope": clearance_scope,
         "visible_step_weight": visible_step_weight,
+        "rear_overlap_weight": rear_overlap_weight,
         "visible_step_targets": {"peak_m": 0.06, "air_s": 0.12, "advance_m": 0.18}
         if visible_step_weight
         else None,
