@@ -141,3 +141,10 @@ Capture took 3.804 seconds and rendering/export 39.951 seconds. The native Mac
 viewer passed a five-second smoke test; the delivered source passes 71 tests and
 Ruff. [Preview QA report](HEALTHY_STYLE_PREVIEW_QA.json). These checks verify the
 preview and physical task, not achievement of the requested gait appearance.
+
+## Follow-up after preview review
+
+The user approved continuing the temporal-reference plan. That implementation,
+its two bounded runs and the new video are recorded in
+[HEALTHY_SEQUENCE.md](HEALTHY_SEQUENCE.md). The historical pause above ended
+with that approval; all earlier checkpoints and this preview remain preserved.
