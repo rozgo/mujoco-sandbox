@@ -127,6 +127,7 @@ class DogEnv:
         damage_joint_accel_weight=0.0,
         damage_flight_weight=0.0,
         damage_clearance_weight=0.0,
+        clearance_scope="all",
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -173,6 +174,9 @@ class DogEnv:
         self.damage_joint_accel_weight = damage_joint_accel_weight
         self.damage_flight_weight = damage_flight_weight
         self.damage_clearance_weight = damage_clearance_weight
+        if clearance_scope not in ("all", "surviving_rear"):
+            raise ValueError("Unknown clearance scope")
+        self.clearance_scope = clearance_scope
         if damage_clearance_weight and terrain != "flat":
             raise ValueError("Foot clearance currently requires flat ground")
         self.timestep = timestep
@@ -481,7 +485,12 @@ class DogEnv:
             reward -= self.damage_flight_weight * damaged * moving * unsupported
         if self.damage_clearance_weight:
             reward -= self.damage_clearance_weight * clearance_cost(
-                old_tips, self.tip_positions, self.tip_radii, self.valid, self.commands
+                old_tips,
+                self.tip_positions,
+                self.tip_radii,
+                self.valid,
+                self.commands,
+                scope=self.clearance_scope,
             )
         if self.stride_weight:
             # The task command expressed in world coordinates supplies direction,

@@ -35,6 +35,25 @@ def test_clearance_metrics_measure_physical_ground_travel():
     np.testing.assert_allclose(r["moving_clearance_m"], [[0, 0.025, 0, 0]])
 
 
+def test_rear_scope_leaves_front_damage_and_front_feet_out_of_the_objective():
+    p = np.zeros((3, 4, 3))
+    p[..., 2] = 0.022
+    q = p.copy()
+    q[..., 0] += 0.02
+    valid = np.ones((3, 12))
+    valid[0, 2] = 0  # Front calf removed: no rear correction requested.
+    valid[1, 8] = 0  # Rear calf removed.
+    valid[2, 6:9] = 0  # Whole rear leg removed.
+    commands = np.tile([0.55, 0, 0], (3, 1))
+    cost = clearance_cost(p, q, 0.022, valid, commands, scope="surviving_rear")
+    assert cost[0] == 0 and cost[1] == cost[2] > 0.9
+    p[1:, 3, 2] += 0.03
+    q[1:, 3, 2] += 0.03
+    assert not clearance_cost(
+        p, q, 0.022, valid, commands, scope="surviving_rear"
+    ).any()
+
+
 def test_clearance_reward_changes_learning_signal_without_changing_physics():
     envs = [
         DogEnv(

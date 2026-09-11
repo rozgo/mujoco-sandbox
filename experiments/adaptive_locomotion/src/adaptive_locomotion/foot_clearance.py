@@ -8,7 +8,7 @@ import numpy as np
 from .bodies import CONTROL_DT
 
 
-def clearance_cost(previous, current, radii, valid, commands, target=0.03):
+def clearance_cost(previous, current, radii, valid, commands, target=0.03, scope="all"):
     """Penalize low moving intact feet on damaged bodies, not stationary support.
 
     Velocity is measured in the world frame. Using contact as a swing gate would
@@ -20,6 +20,11 @@ def clearance_cost(previous, current, radii, valid, commands, target=0.03):
     deficit = np.clip((target - height) / target, 0, 1)
     intact = valid.reshape(-1, 4, 3).all(2)
     damaged = ~intact.all(1)
+    if scope == "surviving_rear":
+        damaged = ~intact[:, 2:].all(1)
+        intact[:, :2] = False
+    elif scope != "all":
+        raise ValueError("Unknown clearance scope")
     moving = np.linalg.norm(commands[:, :2], axis=1) > 0.15
     cost = (deficit**2 * np.tanh(2 * speed) * intact).sum(1)
     return cost / np.maximum(intact.sum(1), 1) * damaged * moving

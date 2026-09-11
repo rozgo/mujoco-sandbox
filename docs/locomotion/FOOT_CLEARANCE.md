@@ -66,3 +66,20 @@ user-approved temporal parent 0.5 → 2; retain learning rate 0.0001 and all oth
 settings. This tests a stronger lift incentive while resisting unrelated gait
 changes. Selection still compares against the original user-approved temporal
 parent, with identical seeds and gates; inspect iterations 50, 100 and final.
+
+## Scope correction after the second trial
+
+The stronger final policy passes 72/72 tasks and the clearance/drag gates:
+rear clearance gains 7.3–9.7 mm, with dragging reduced 54–78%. Healthy gait,
+stride/stance and vertical-motion gates pass, but some speeds are too low and
+average airborne time increases, particularly in front-damage cases.
+
+Declare one final 120-second continuation from this stronger final checkpoint.
+Apply clearance only to the intact rear foot when another rear leg has missing
+joints (`--clearance-scope surviving_rear`). The rule covers both sides and both
+removal types. Front-damage cases and front feet retain their existing task and
+reference objectives. Weight 1 on this one selected foot equals its per-foot
+coefficient in the previous weight-3 average over three intact feet. Reference
+weight stays 2 and learning rate 0.0001; all other parameters and evaluation
+gates remain fixed. This is a scope correction for the user's specific request,
+not a relaxed acceptance threshold. Stop training after this continuation.
