@@ -25,6 +25,7 @@ from .gait_balance import ContactTiming, body_motion_cost
 from .limb_loss import curriculum
 from .paired import training_pairs
 from .stride import StrideTracker
+from .visible_steps import VisibleSteps
 
 OBS_DIM, CONTEXT_DIM, HISTORY = 66, 20, 25
 
@@ -128,6 +129,7 @@ class DogEnv:
         damage_flight_weight=0.0,
         damage_clearance_weight=0.0,
         clearance_scope="all",
+        visible_step_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -163,6 +165,7 @@ class DogEnv:
                 damage_joint_accel_weight,
                 damage_flight_weight,
                 damage_clearance_weight,
+                visible_step_weight,
             )
             < 0
         ):
@@ -173,11 +176,12 @@ class DogEnv:
         self.damage_angular_rate_weight = damage_angular_rate_weight
         self.damage_joint_accel_weight = damage_joint_accel_weight
         self.damage_flight_weight = damage_flight_weight
+        self.visible_step_weight = visible_step_weight
         self.damage_clearance_weight = damage_clearance_weight
         if clearance_scope not in ("all", "surviving_rear"):
             raise ValueError("Unknown clearance scope")
         self.clearance_scope = clearance_scope
-        if damage_clearance_weight and terrain != "flat":
+        if (damage_clearance_weight or visible_step_weight) and terrain != "flat":
             raise ValueError("Foot clearance currently requires flat ground")
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
@@ -261,6 +265,7 @@ class DogEnv:
         self.tip_radii = np.zeros((num_envs, 4))
         for g, s in zip(self.groups, self.slices, strict=True):
             self.tip_radii[s, g.tip_slots] = g.model.geom_size[g.tip_geoms, 0]
+        self.visible_steps = VisibleSteps(num_envs)
         self.stride = StrideTracker(num_envs)
         self.contact_timing = ContactTiming(num_envs)
         self.reset(np.arange(num_envs))
@@ -356,6 +361,7 @@ class DogEnv:
         self.context[ids, 4:16] = self.strength[ids]
         self.context[ids, 16:] = 1
         self.refresh()
+        self.visible_steps.reset(ids, self.tip_positions, self.tip_forces)
         self.stride.reset(ids, self.tip_positions, self.tip_forces)
         self.contact_timing.reset(ids, self.tip_forces)
         self.start_x[ids] = self.pos[ids, 0]
@@ -492,7 +498,7 @@ class DogEnv:
                 self.commands,
                 scope=self.clearance_scope,
             )
-        if self.stride_weight:
+        if self.stride_weight or self.visible_step_weight:
             # The task command expressed in world coordinates supplies direction,
             # not a desired foot trajectory or a phase shared across the legs.
             world_command = np.empty((self.n, 2))
@@ -503,6 +509,15 @@ class DogEnv:
                 )
             speed = np.linalg.norm(world_command, axis=1)
             direction = world_command / np.maximum(speed[:, None], 1e-8)
+            if self.visible_step_weight:
+                reward += self.visible_step_weight * self.visible_steps.update(
+                    self.tip_positions,
+                    self.tip_forces,
+                    self.tip_radii,
+                    self.valid,
+                    direction,
+                    speed > 0.15,
+                )
             stride_reward = self.stride.update(
                 self.tip_positions, self.tip_forces, direction, speed > 0.15
             )

@@ -7,6 +7,7 @@ from .bodies import CONTROL_DT, LEGS
 from .evaluate import lane_command, make_case
 from .foot_clearance import clearance_metrics
 from .train import load_checkpoint
+from .visible_steps import swing_metrics
 
 
 def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy"):
@@ -60,6 +61,15 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
             legs.append(
                 {
                     "leg": LEGS[leg],
+                    **(
+                        swing_metrics(
+                            positions[:, trial, leg],
+                            forces[:, trial, leg],
+                            env.tip_radii[trial, leg],
+                        )
+                        if env.terrain == "flat"
+                        else {}
+                    ),
                     **{
                         key: float(value[trial, leg])
                         for key, value in clearance.items()
@@ -162,6 +172,11 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
                         "clearance_p95_m",
                         "drag_fraction",
                         "drag_travel_m",
+                        "completed_swings",
+                        "visible_swings",
+                        "visible_swing_fraction",
+                        "mean_swing_peak_m",
+                        "mean_swing_clear_1cm_s",
                     )
                 },
             }

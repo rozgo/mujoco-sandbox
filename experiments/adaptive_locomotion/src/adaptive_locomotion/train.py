@@ -63,6 +63,7 @@ def train(
     damage_flight_weight=0.0,
     damage_clearance_weight=0.0,
     clearance_scope="all",
+    visible_step_weight=0.0,
     retention_curriculum=False,
     reference=None,
     reference_reward_weight=0.0,
@@ -155,6 +156,7 @@ def train(
         damage_flight_weight=damage_flight_weight,
         damage_clearance_weight=damage_clearance_weight,
         clearance_scope=clearance_scope,
+        visible_step_weight=visible_step_weight,
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
         limb_stage=limb_stage,
@@ -269,6 +271,10 @@ def train(
         "damage_flight_weight": damage_flight_weight,
         "damage_clearance_weight": damage_clearance_weight,
         "clearance_scope": clearance_scope,
+        "visible_step_weight": visible_step_weight,
+        "visible_step_targets": {"peak_m": 0.06, "air_s": 0.12, "advance_m": 0.18}
+        if visible_step_weight
+        else None,
         "damage_clearance_target_m": 0.03 if damage_clearance_weight else None,
         "front_reference_scale": front_reference_scale,
         "symmetry_weight": symmetry_weight,

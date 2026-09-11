@@ -33,6 +33,7 @@ def main():
     p.add_argument("--damage-joint-accel-weight", type=float, default=0.0)
     p.add_argument("--damage-flight-weight", type=float, default=0.0)
     p.add_argument("--damage-clearance-weight", type=float, default=0.0)
+    p.add_argument("--visible-step-weight", type=float, default=0.0)
     p.add_argument(
         "--clearance-scope", choices=("all", "surviving_rear"), default="all"
     )
