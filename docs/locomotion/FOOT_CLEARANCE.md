@@ -83,3 +83,24 @@ coefficient in the previous weight-3 average over three intact feet. Reference
 weight stays 2 and learning rate 0.0001; all other parameters and evaluation
 gates remain fixed. This is a scope correction for the user's specific request,
 not a relaxed acceptance threshold. Stop training after this continuation.
+
+## Final numerical result and visual rejection
+
+The rear-scoped iteration 50 passed all predeclared development and fresh final
+gates: 288/288 tasks, 72/72 half-timestep checks, and CPU/MPS action difference
+8.35e-7. Mean surviving-rear speed-weighted clearance increased 4.65 → 12.64 mm,
+and mean per-case near-ground travel fell 67.1%. Healthy gait was retained.
+The three new attempts used 328.148 seconds and 6,291,456 transitions. Selected
+ancestry was 1412.865 seconds; later unused updates remain counted in total cost.
+
+Preserved videos: [nine cases](../../previews/locomotion/limb_foot_clearance.mp4)
+and [four rear cases before/after](../../previews/locomotion/limb_foot_clearance_comparison.mp4).
+Both contain 300 decoded frames at 25 fps, twelve seconds, 1×. Native Mac
+viewing, 78 tests and Ruff passed. Raw reports and hashes accompany the media.
+
+**User rejected the visual result at 2026-09-11 04:06:15 UTC.** The feet still
+look like they drag, and the request now explicitly covers ALL intact feet.
+The archived `selected` filename reflects numerical selection only, not visual
+approval. The low heights (rear p95 only 16–26 mm) explain why passing those
+gates did not satisfy the intended visible gait. Preserve this attempt and use
+completed swing height/duration/landing measures for the next experiment.
