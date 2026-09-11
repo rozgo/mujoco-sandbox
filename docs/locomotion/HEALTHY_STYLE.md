@@ -60,3 +60,29 @@ prior videos. If the strong prior prevents compensation, keep that result and
 adjust the reference strength in a separately recorded short trial.
 
 Results will be added after the experiment.
+
+## First result and phase-independent reference refinement
+
+The 149.317-second direct-policy trial failed the task gates. It increased
+support duration by slowing down, and mean removal stride fell to 0.115 m. Healthy
+walking survived, but damaged compensation was lost. All three inspected
+checkpoints are retained as rejected candidates, with no final holdout tuning.
+
+A second 150-second trial restarts from the valid ground-support parent and keeps
+the same simple objective. Use actual healthy-walk samples as the reference:
+four six-second healthy rollouts at 0.30/0.45/0.60/0.75 m/s, seed 2, keeping 248
+frames after the first second. Require valid support at every physics step.
+Each surviving leg independently matches its joint position/velocity and command
+to the nearest healthy sample. Normalize by healthy feature standard deviation,
+with floors 0.1 rad for position, 0.05 in the scaled-velocity observation (1 rad/s),
+and 0.2 m/s for command. Missing channels are excluded from the distance.
+
+The main style reward is `2 * mean(exp(-matched_motion_distance))` over remaining
+legs, using actual physical joint state. A softer 0.25 imitation loss nudges
+surviving controls toward the matched sample. Existing healthy-only retention
+remains; the damaged policy does not have to copy a global four-leg phase.
+Nearest-phase matching is used only to make training targets and rewards; the
+saved actor remains an independent 66-input reactive network. This is a small
+reference-library prior, not adversarial motion imitation or online adaptation.
+The stance and stride targets remain evaluation criteria, not new reward terms.
+The second run uses the same development/final/demo seeds and acceptance gates.

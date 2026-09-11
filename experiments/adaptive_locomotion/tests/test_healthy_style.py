@@ -2,6 +2,7 @@ import numpy as np
 import torch
 
 from adaptive_locomotion.healthy_style import (
+    HealthyMotion,
     style_bonus,
     style_loss,
     style_mask,
@@ -45,3 +46,25 @@ def test_healthy_style_only_constrains_surviving_joints_on_damaged_bodies():
     action[1, 0] = 1
     assert 0 < style_bonus(action, target, mask)[1] < 1
     assert style_bonus(action, target, mask)[0] == 0
+
+
+def test_motion_matching_allows_independent_leg_phases_and_masks_removed_joints():
+    bank = np.zeros((2, 66), np.float32)
+    bank[:, 45:57] = 1
+    bank[1, :24] = 1
+    actions = np.arange(24, dtype=np.float32).reshape(2, 12)
+    reference = HealthyMotion(bank, actions)
+    obs = bank[:1].copy()
+    for leg in (1, 3):
+        obs[:, leg * 3 : leg * 3 + 3] = 1
+        obs[:, 12 + leg * 3 : 15 + leg * 3] = 1
+    obs[0, 45 + 5] = 0
+    obs[0, 5] = obs[0, 17] = 1000
+    original = obs.copy()
+    target, distance = reference.query(obs)
+    for leg, phase in enumerate((0, 1, 0, 1)):
+        np.testing.assert_array_equal(
+            target[0, leg * 3 : leg * 3 + 3], actions[phase, leg * 3 : leg * 3 + 3]
+        )
+    np.testing.assert_array_equal(distance, 0)
+    np.testing.assert_array_equal(obs, original)

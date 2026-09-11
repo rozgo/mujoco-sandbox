@@ -18,7 +18,13 @@ from torch import nn
 
 from .bodies import PRESETS, ROOT
 from .env import CONTEXT_DIM, HISTORY, OBS_DIM, DogEnv
-from .healthy_style import style_bonus, style_loss, style_mask, teacher_observation
+from .healthy_style import (
+    HealthyMotion,
+    style_bonus,
+    style_loss,
+    style_mask,
+    teacher_observation,
+)
 from .policy import Policy, log_density
 from .retention import healthy_mask, reference_bonus, reference_loss, single_damage_mask
 from .symmetry import mirror_loss
@@ -61,6 +67,7 @@ def train(
     reference_loss_weight=0.0,
     damage_healthy_reward_weight=0.0,
     damage_healthy_loss_weight=0.0,
+    healthy_style_source="policy",
     learning_rate=0.001,
     pair_level=None,
     single_reference=None,
@@ -89,6 +96,10 @@ def train(
         raise ValueError(
             "Healthy style requires a healthy reference and reactive limb-loss training"
         )
+    if healthy_style_source not in ("policy", "motion"):
+        raise ValueError("Unknown healthy style reference")
+    if healthy_style_source == "motion" and not healthy_style:
+        raise ValueError("Motion reference requires healthy-style weights")
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
     if single_reference_weight < 0 or (
@@ -182,6 +193,12 @@ def train(
         if teacher.mode != "blind" or mode != "blind":
             raise ValueError("Reference retention currently supports reactive policies")
         teacher = teacher.to(actor_device).eval().requires_grad_(False)
+    motion_reference = None
+    motion_hash = None
+    if healthy_style_source == "motion":
+        motion_reference, motion_hash = HealthyMotion.collect(
+            teacher, seed, output / "healthy_motion.npz"
+        )
     single_teacher = None
     if single_reference:
         single_teacher, _ = load_checkpoint(single_reference)
@@ -281,7 +298,13 @@ def train(
         "reference_loss_weight": reference_loss_weight,
         "damage_healthy_reward_weight": damage_healthy_reward_weight,
         "damage_healthy_loss_weight": damage_healthy_loss_weight,
-        "healthy_style_teacher_encoding": "nominal missing channels, intact validity; surviving feedback unchanged"
+        "healthy_style_source": healthy_style_source,
+        "healthy_motion_sha256": motion_hash,
+        "healthy_style_teacher_encoding": (
+            "per-leg nearest healthy joint state and command; independent phases"
+            if motion_reference is not None
+            else "nominal missing channels, intact validity; surviving feedback unchanged"
+        )
         if healthy_style
         else None,
         "learning_rate": learning_rate,
@@ -363,6 +386,11 @@ def train(
                         torch.as_tensor(target_obs, device=actor_device)
                     )
                 target = target.cpu().numpy()
+                if motion_reference is not None:
+                    motion_target, motion_error = motion_reference.query(obs)
+                    target = np.where(
+                        (obs[:, 45:57] < 1).any(1)[:, None], motion_target, target
+                    )
             if single_teacher is not None:
                 with torch.no_grad():
                     single_target, _ = single_teacher(
@@ -395,9 +423,14 @@ def train(
                 )
             if healthy_style:
                 active_style = style_mask(obs)
-                reward += damage_healthy_reward_weight * style_bonus(
-                    actions, target, active_style
-                )
+                if motion_reference is None:
+                    bonus = style_bonus(actions, target, active_style)
+                else:
+                    active_legs = active_style.reshape(-1, 4, 3).any(2)
+                    bonus = (np.exp(-motion_error) * active_legs).sum(1) / np.maximum(
+                        active_legs.sum(1), 1
+                    )
+                reward += damage_healthy_reward_weight * bonus
             raw_reward = float(reward.mean())
             timeout = done & ~fell
             if timeout.any():
