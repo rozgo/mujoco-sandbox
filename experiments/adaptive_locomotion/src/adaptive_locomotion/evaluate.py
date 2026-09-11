@@ -47,7 +47,14 @@ def lane_command(env, speed=0.55):
     env.commands[:, 2] = np.clip(-1.5 * yaw, -0.5, 0.5)
 
 
-def make_case(case, trials=16, seed=9137, timestep=0.002, support_substeps=False):
+def make_case(
+    case,
+    trials=16,
+    seed=9137,
+    timestep=0.002,
+    support_substeps=False,
+    physics_backend="mjbatch",
+):
     body, terrain, fault = CASES[case]
     env = DogEnv(
         trials,
@@ -59,6 +66,7 @@ def make_case(case, trials=16, seed=9137, timestep=0.002, support_substeps=False
         threads=min(trials, 12),
         timestep=timestep,
         support_substeps=support_substeps,
+        physics_backend=physics_backend,
     )
     # Predetermined perturbations of the initial condition, identical across policies.
     rng = np.random.default_rng(seed)
@@ -88,9 +96,10 @@ def rollout(
     capture=False,
     timestep=0.002,
     support_substeps=True,
+    physics_backend="mjbatch",
 ):
     torch.set_num_threads(1)
-    env = make_case(case, trials, seed, timestep, support_substeps)
+    env = make_case(case, trials, seed, timestep, support_substeps, physics_backend)
     frames = []
     motion = [[] for _ in range(6)]
     clearance = []
@@ -224,6 +233,7 @@ def rollout(
             (completed & (bad_support_windows == 0) & alive).sum()
         ),
         "support_checked_every_physics_step": support_substeps,
+        "physics_backend": physics_backend,
         "support_force_threshold_n": 1.0,
         "support_geom_names": support_group.support_names,
         "allowed_support_geom_names": [
