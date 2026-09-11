@@ -135,6 +135,13 @@ and compilation are excluded and reported separately in each run's JSON.
 | 4 | 44.763 s | 13.493 s | 3.32× | 68/72 | 64/72 |
 | Pooled | 136.772 s | 42.321 s | **3.23×** | **200/216** | **205/216** |
 
+Pooled throughput is **12,937 → 41,811 transitions/s**. Setup with cached
+kernels takes about 2.48 s for CPU and 4.68 s for Warp. Including setup, the
+short six-round processes average 48.17 s vs 18.85 s (**2.56×**). This does not
+include a fresh installation's first kernel compilation. Peak total sampled
+VRAM is 4,468 MiB for the CPU-physics runs and 6,808 MiB for Warp, including the
+unchanged competing workload. Timings are not exclusive-machine measurements.
+
 All 432 trials stay upright with allowed support. Both backends complete 24/24
 trials for every body except the entire front-right removal (CPU 8/24, Warp
 13/24). Every seed passes the existing healthy-gait, visible-step, stride,
@@ -148,6 +155,33 @@ both continuations can lose quality relative to the unchanged parent. The parent
 has 71/72 completions and official v1 72/72 on the same development seed. The
 larger population improves the pooled match relative to the failed 512-world
 comparison; it does not isolate the cause or establish arbitrary-damage recovery.
+
+## Equal-time result and longer-update control
+
+One predeclared seed-2 pair used the same 4096 worlds, parent, rewards and
+3072-sample minibatches with a 90-second budget. All actual updates completed
+four epochs; final checkpoints only were evaluated. Setup remains separate.
+
+| Backend | Actual training | Samples used | PPO rounds / Adam steps | Task completion |
+| --- | ---: | ---: | ---: | ---: |
+| CPU physics / CUDA learner | 89.219 s | 1,081,344 | 11 / 1,408 | 70/72 |
+| Warp physics / CUDA learner | 90.406 s | 3,932,160 | 40 / 5,120 | 59/72 |
+
+Warp provides **3.64× more experience**, or **3.59× measured throughput**, but
+the final policy regresses. All trials remain upright with allowed support;
+lower-FR completes 3/8 vs CPU 8/8 and whole-FR 0/8 vs CPU 6/8. This is not a
+better-policy result, and an unrestricted 90-second continuation is not promoted.
+The fixed-update result above remains a separate comparison.
+[Full equal-time report](warp_training/time_summary.json).
+
+Before additional learning, the decision is to run **one CPU control with exactly
+40 PPO rounds / 5,120 Adam steps / 3,932,160 transitions**, matching the completed
+Warp run. Same seed and recipe, with a 330-second hard budget; no network, reward,
+learning-rate or checkpoint changes. This tests whether the longer continuation
+also regresses on CPU instead of attributing the equal-time difference to Warp.
+The extra allowance is for this bounded diagnostic; ordinary `learn` invocations
+retain their five-minute requested limit. Results will be retained regardless of
+outcome.
 
 ## Maintained training command
 
@@ -170,6 +204,9 @@ the deadline and stop updates between minibatches. Actual optimizer-step counts
 are recorded; a final PPO round can be partial. An in-progress rollout or
 minibatch can exceed the deadline slightly. Each requested round is capped at
 five minutes. No automatically selected intermediate checkpoint replaces the final.
+The actual maintained command passed one-round smoke tests on Mac CPU (0.120 s
+training) and NVIDIA Warp/CUDA (0.946 s training, 16 optimizer steps); these tiny
+runs validate the command path and are excluded from the performance comparison.
 
 For a matched CPU-physics run on the same desktop, change only
 `--physics-backend mjbatch` and the output directory, retaining `--device cuda`
@@ -204,3 +241,41 @@ initial tensor identity and retains every final checkpoint.
 - One pretrained policy per run handles all nine body configurations. These
   results cover single removals on flat ground; no new parkour, online fault
   diagnosis or full curriculum training claim is made.
+
+## Video and native viewing
+
+**[Watch the matched CPU/Warp comparison](../../previews/locomotion/warp_scaled_comparison.mp4)**
+
+[![CPU and Warp adaptive-walking comparison](../../previews/locomotion/warp_scaled_comparison.png)](../../previews/locomotion/warp_scaled_comparison.mp4)
+
+The predetermined seed-2 pair is shown at 1× in three twelve-second chapters,
+covering every body. One policy per column; identical physical models and initial
+conditions per row. Both columns execute in CPU MuJoCo at 0.5 ms for independent
+validation; the heading identifies their **training** backend. Lane commands are
+scripted, joint targets are learned, and orange spheres are visual damage markers.
+Both whole-FR demonstration trials miss the timed goal; the final captions retain
+those failures. No training or checkpoint selection was done for the video.
+
+All **900 frames** decode at **1920×1440 / 25 fps / 36 s**. Chapter openings,
+midpoints, endings and transitions were inspected. Capturing the eighteen live
+trajectories took **19.776 s**; rendering took **61.641 s**, excluding renderer
+setup. State/model/checkpoint hashes and original torque caps hold. All trials
+remain upright with allowed support. The Warp lower-FR trajectory has **8.090 mm**
+maximum 20 ms sampled penetration, exceeding the existing 8 mm target; video
+physical QA therefore remains failed on that check. This known small numerical
+overrun is retained, separate from the learning-comparison acceptance. It is
+smaller than frozen v1's documented 8.889 mm but is not relabeled as a pass.
+
+From the isolated package directory, view the same Warp-trained weights live:
+
+```sh
+uv tool run --from uv==0.12.12 uv run --locked adaptive-dog view \
+  --checkpoint ../../assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt \
+  --case whole_fr --timestep 0.0005
+```
+
+The actual native Mac launch passed with `--seconds 5`. Reproduce the video with
+`python scripts/record_warp_match.py --prefix scaled`; it preserves an existing
+MP4 unless `--replay` explicitly rerenders its saved hashed trajectories.
+`python scripts/qa_warp_video.py --prefix scaled` decodes the entire result and
+returns a nonzero exit status for the retained penetration failure.

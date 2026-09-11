@@ -1,0 +1,2411 @@
+{
+  "seed": 9143,
+  "cases": [
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "healthy",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "cce5dca19c96b353c260b17db0edc9cdbaaa8c204d2f2d5066c59dd9705841df",
+      "model_mjb_sha256": "a5db97f46c301526127d4f7e2aa997e5490fc0d107e31e8597f49ed250629360",
+      "maximum_sampled_penetration_m": 0.0030628764292241276,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "healthy",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 280.6818303480139,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 167.67357300278456,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 179.7667871981926,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 219.6655009327773
+        },
+        "mean_distance_m": 6.79734981271304,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.79734981271304,
+            "end_distance_before_failure_m": 6.79734981271304,
+            "velocity_rmse_while_alive": 0.07481934074530226,
+            "peak_actuator_torque_nm": 23.751565472899884,
+            "peak_torque_limit_ratio": 0.9864995327337226
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.2594153583049774,
+            "joint_above_6hz_rms_rad": 0.012810877011233776,
+            "joint_above_6hz_power_fraction": 0.00865005137470708,
+            "roll_pitch_rate_rms_rad_s": 0.15295303646912262,
+            "vertical_velocity_rms_mps": 0.11932631834037633,
+            "forward_speed_mps": 0.580173212065203,
+            "height_std_m": 0.008504492411514237,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.2594153583049774,
+              "joint_above_6hz_rms_rad": 0.012810877011233776,
+              "joint_above_6hz_power_fraction": 0.00865005137470708,
+              "roll_pitch_rate_rms_rad_s": 0.15295303646912262,
+              "vertical_velocity_rms_mps": 0.11932631834037633,
+              "forward_speed_mps": 0.580173212065203,
+              "height_std_m": 0.008504492411514237,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.542649727767695,
+            0.5499092558983666,
+            0.5208711433756806,
+            0.5462794918330308
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "lower_fl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "bb24765888a574b6d30cf9440b0275b546abc92ea3bbfc3374a3c147939c6f8d",
+      "model_mjb_sha256": "3dfb65c4e1561a78980a31fca0b8f56e2e88da5b8452a9217fcfaaee24bb45e9",
+      "maximum_sampled_penetration_m": 0.003921281270331457,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_fl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_stump",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_stump",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_stump": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 278.3666761557823,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 314.3821466540962,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 214.81807227989785
+        },
+        "mean_distance_m": 6.2456176635732845,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.2456176635732845,
+            "end_distance_before_failure_m": 6.2456176635732845,
+            "velocity_rmse_while_alive": 0.08434602533294537,
+            "peak_actuator_torque_nm": 23.7,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.2798534333705902,
+            "joint_above_6hz_rms_rad": 0.0180586893093601,
+            "joint_above_6hz_power_fraction": 0.026109408012648425,
+            "roll_pitch_rate_rms_rad_s": 0.4654117563732021,
+            "vertical_velocity_rms_mps": 0.18868751386261262,
+            "forward_speed_mps": 0.5258328945499372,
+            "height_std_m": 0.010326819951452267,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.2798534333705902,
+              "joint_above_6hz_rms_rad": 0.0180586893093601,
+              "joint_above_6hz_power_fraction": 0.026109408012648425,
+              "roll_pitch_rate_rms_rad_s": 0.4654117563732021,
+              "vertical_velocity_rms_mps": 0.18868751386261262,
+              "forward_speed_mps": 0.5258328945499372,
+              "height_std_m": 0.010326819951452267,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.6370235934664247,
+            0.5916515426497277,
+            0.5208711433756806
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "lower_fr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "d1cee2ae70e3812edb43cf24e24c2277b0869177069181ff64ded848e5c03fbf",
+      "model_mjb_sha256": "439111f530f525618848b868454595486b14fd344a4b4cdf1dd207ca4bc64291",
+      "maximum_sampled_penetration_m": 0.007624112516826355,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_fr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_stump",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_stump",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 490.52373371960243,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_stump": 0.0,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 380.71898216090483,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 544.4149368210956
+        },
+        "mean_distance_m": 6.024326905994008,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.024326905994008,
+            "end_distance_before_failure_m": 6.024326905994008,
+            "velocity_rmse_while_alive": 0.10015433996046538,
+            "peak_actuator_torque_nm": 27.590229088785108,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.36513614654541016,
+            "joint_above_6hz_rms_rad": 0.022570895329148844,
+            "joint_above_6hz_power_fraction": 0.03609927535292849,
+            "roll_pitch_rate_rms_rad_s": 0.5378370284025973,
+            "vertical_velocity_rms_mps": 0.2389187048182715,
+            "forward_speed_mps": 0.5130958413619137,
+            "height_std_m": 0.01772591600389627,
+            "unsupported_force_fraction": 0.07441016333938294,
+            "airborne_above_1mm_fraction": 0.06896551724137931
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.36513614654541016,
+              "joint_above_6hz_rms_rad": 0.022570895329148844,
+              "joint_above_6hz_power_fraction": 0.03609927535292849,
+              "roll_pitch_rate_rms_rad_s": 0.5378370284025973,
+              "vertical_velocity_rms_mps": 0.2389187048182715,
+              "forward_speed_mps": 0.5130958413619137,
+              "height_std_m": 0.01772591600389627,
+              "unsupported_force_fraction": 0.07441016333938294,
+              "airborne_above_1mm_fraction": 0.06896551724137931
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7422867513611615,
+            0.0,
+            0.7477313974591652,
+            0.7749546279491834
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "lower_rl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "c6271c1972b48ca21f3383be44adc8e327bf519b5072bef5abfb32a5bbd1e4c9",
+      "model_mjb_sha256": "3fe22a1ace59d13e8a53821f5080e93a7b877cf314108f8fbb5a6edd69f18e78",
+      "maximum_sampled_penetration_m": 0.00620981505105251,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_rl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_stump",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_stump",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 415.823236977017,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 189.38961140279795,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_stump": 0.0,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 553.964946032166
+        },
+        "mean_distance_m": 6.130839273892528,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.130839273892528,
+            "end_distance_before_failure_m": 6.130839273892528,
+            "velocity_rmse_while_alive": 0.12164260851262372,
+            "peak_actuator_torque_nm": 31.14128176312107,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.44270268082618713,
+            "joint_above_6hz_rms_rad": 0.03379646124850342,
+            "joint_above_6hz_power_fraction": 0.0901566799734802,
+            "roll_pitch_rate_rms_rad_s": 0.6143634179152302,
+            "vertical_velocity_rms_mps": 0.14093505742050957,
+            "forward_speed_mps": 0.5273923983578692,
+            "height_std_m": 0.006452195420749346,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.44270268082618713,
+              "joint_above_6hz_rms_rad": 0.03379646124850342,
+              "joint_above_6hz_power_fraction": 0.0901566799734802,
+              "roll_pitch_rate_rms_rad_s": 0.6143634179152302,
+              "vertical_velocity_rms_mps": 0.14093505742050957,
+              "forward_speed_mps": 0.5273923983578692,
+              "height_std_m": 0.006452195420749346,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7477313974591652,
+            0.3684210526315789,
+            0.0,
+            0.7894736842105263
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "lower_rr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "108f82e9ab43126619b093b7b229db2b179dc7f30a017040e1c762d7538b96b8",
+      "model_mjb_sha256": "cc9c9bca82435d6dcd2a3e3b272d3fe204eb9c9135cfae280303f28e4da36a9f",
+      "maximum_sampled_penetration_m": 0.0053249663510564,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_rr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_stump"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_stump"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 182.49049011629086,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 424.9310750125617,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 552.9707405616275,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_stump": 0.0
+        },
+        "mean_distance_m": 6.869443274484737,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.869443274484737,
+            "end_distance_before_failure_m": 6.869443274484737,
+            "velocity_rmse_while_alive": 0.12242811576062392,
+            "peak_actuator_torque_nm": 30.55420735736412,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.40400928258895874,
+            "joint_above_6hz_rms_rad": 0.02833478028972498,
+            "joint_above_6hz_power_fraction": 0.08127598115862862,
+            "roll_pitch_rate_rms_rad_s": 0.5544730396950276,
+            "vertical_velocity_rms_mps": 0.18963188782172455,
+            "forward_speed_mps": 0.5983410651202081,
+            "height_std_m": 0.010331623004996347,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.40400928258895874,
+              "joint_above_6hz_rms_rad": 0.02833478028972498,
+              "joint_above_6hz_power_fraction": 0.08127598115862862,
+              "roll_pitch_rate_rms_rad_s": 0.5544730396950276,
+              "vertical_velocity_rms_mps": 0.18963188782172455,
+              "forward_speed_mps": 0.5983410651202081,
+              "height_std_m": 0.010331623004996347,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.3956442831215971,
+            0.7295825771324864,
+            0.7277676950998185,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "whole_fl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "b09de281e35bf3bec26da2d9c1d452831a23f110d3fc115132c2f1a262bb1225",
+      "model_mjb_sha256": "a1081230f5b60dfe2c256f9d20a0ad65ed26ad24910c41e01020e0d6804b7442",
+      "maximum_sampled_penetration_m": 0.004152526946807768,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_fl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 269.6754132380163,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 305.216073293088,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 227.21823670230805
+        },
+        "mean_distance_m": 5.996571756556148,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.996571756556148,
+            "end_distance_before_failure_m": 5.996571756556148,
+            "velocity_rmse_while_alive": 0.11971503750657533,
+            "peak_actuator_torque_nm": 23.938589124048043,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.27207762002944946,
+            "joint_above_6hz_rms_rad": 0.015571559928222026,
+            "joint_above_6hz_power_fraction": 0.018795175950188592,
+            "roll_pitch_rate_rms_rad_s": 0.4398260809901107,
+            "vertical_velocity_rms_mps": 0.15625402116603607,
+            "forward_speed_mps": 0.5026647327600281,
+            "height_std_m": 0.0068131134469002,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.27207762002944946,
+              "joint_above_6hz_rms_rad": 0.015571559928222026,
+              "joint_above_6hz_power_fraction": 0.018795175950188592,
+              "roll_pitch_rate_rms_rad_s": 0.4398260809901107,
+              "vertical_velocity_rms_mps": 0.15625402116603607,
+              "forward_speed_mps": 0.5026647327600281,
+              "height_std_m": 0.0068131134469002,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.5462794918330308,
+            0.5063520871143375,
+            0.604355716878403
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "whole_fr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "86f57fc587c3559d389953e0783b20cebf9499751977323b3f0161b5ba17aa5e",
+      "model_mjb_sha256": "7b29798d75f14149ccb1ec4af62e23cb861937329449d583b6cee77fe3d694ae",
+      "maximum_sampled_penetration_m": 0.00655007224712225,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_fr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 0,
+        "completed_with_allowed_support": 0,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 358.61857134244883,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 367.4225360777919,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 473.940191464915
+        },
+        "mean_distance_m": 5.331664280804176,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": false,
+            "completed_with_allowed_support": false,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.331664280804176,
+            "end_distance_before_failure_m": 5.331664280804176,
+            "velocity_rmse_while_alive": 0.12768720149187487,
+            "peak_actuator_torque_nm": 23.7,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3588108420372009,
+            "joint_above_6hz_rms_rad": 0.030587767347451784,
+            "joint_above_6hz_power_fraction": 0.05347669748227522,
+            "roll_pitch_rate_rms_rad_s": 0.4376990867874311,
+            "vertical_velocity_rms_mps": 0.2029940660215619,
+            "forward_speed_mps": 0.45022796578076696,
+            "height_std_m": 0.016627518305676436,
+            "unsupported_force_fraction": 0.06352087114337568,
+            "airborne_above_1mm_fraction": 0.05989110707803993
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3588108420372009,
+              "joint_above_6hz_rms_rad": 0.030587767347451784,
+              "joint_above_6hz_power_fraction": 0.05347669748227522,
+              "roll_pitch_rate_rms_rad_s": 0.4376990867874311,
+              "vertical_velocity_rms_mps": 0.2029940660215619,
+              "forward_speed_mps": 0.45022796578076696,
+              "height_std_m": 0.016627518305676436,
+              "unsupported_force_fraction": 0.06352087114337568,
+              "airborne_above_1mm_fraction": 0.05989110707803993
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7912885662431942,
+            0.0,
+            0.8076225045372051,
+            0.8148820326678766
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "whole_rl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "3d0f2ebeb0fc7e7e88a718d876606ec2ff2c78dc6e1cea67a92a88bff1371f63",
+      "model_mjb_sha256": "25619d106922cdf00af464cbac829a42b936552b817de72109109cc940f4c4a5",
+      "maximum_sampled_penetration_m": 0.006619934066935222,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_rl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 442.3464203069567,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 215.3390918660856,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 600.1116971422355
+        },
+        "mean_distance_m": 6.4822461059378735,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.4822461059378735,
+            "end_distance_before_failure_m": 6.4822461059378735,
+            "velocity_rmse_while_alive": 0.1036174064238985,
+            "peak_actuator_torque_nm": 29.425412897631418,
+            "peak_torque_limit_ratio": 0.9499911997667391
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.4552995562553406,
+            "joint_above_6hz_rms_rad": 0.03443478705916672,
+            "joint_above_6hz_power_fraction": 0.09264134760038006,
+            "roll_pitch_rate_rms_rad_s": 0.6372984505156162,
+            "vertical_velocity_rms_mps": 0.15966272335917808,
+            "forward_speed_mps": 0.5509382205327896,
+            "height_std_m": 0.006942794069525752,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.4552995562553406,
+              "joint_above_6hz_rms_rad": 0.03443478705916672,
+              "joint_above_6hz_power_fraction": 0.09264134760038006,
+              "roll_pitch_rate_rms_rad_s": 0.6372984505156162,
+              "vertical_velocity_rms_mps": 0.15966272335917808,
+              "forward_speed_mps": 0.5509382205327896,
+              "height_std_m": 0.006942794069525752,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7313974591651543,
+            0.426497277676951,
+            0.0,
+            0.7822141560798548
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_mjbatch_seed2",
+      "case": "whole_rr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_mjbatch_seed2.pt",
+      "checkpoint_sha256": "ba16dcb1c99ca5bf4cbc4d0e435918541f25268ecf6356969c09612b7f614f2b",
+      "trajectory_sha256": "44a581cf294e4a8e6559204173362c627b08f4f90428c1349135f36fc0f1e068",
+      "model_mjb_sha256": "f9a3b4d5b3e42f500c2db97152c1a381111bc043bde8bb23074996b52e654b28",
+      "maximum_sampled_penetration_m": 0.005375054480833773,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_rr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 194.34754503800914,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 430.71192285187794,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 539.1545795935625
+        },
+        "mean_distance_m": 7.361614253175864,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 7.361614253175864,
+            "end_distance_before_failure_m": 7.361614253175864,
+            "velocity_rmse_while_alive": 0.12081470581169128,
+            "peak_actuator_torque_nm": 26.780485688996947,
+            "peak_torque_limit_ratio": 0.9703738906356952
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.43225520849227905,
+            "joint_above_6hz_rms_rad": 0.03070182644408937,
+            "joint_above_6hz_power_fraction": 0.07920796204488502,
+            "roll_pitch_rate_rms_rad_s": 0.6493493235923694,
+            "vertical_velocity_rms_mps": 0.19063763682129803,
+            "forward_speed_mps": 0.6294151953805628,
+            "height_std_m": 0.009739396124783577,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.43225520849227905,
+              "joint_above_6hz_rms_rad": 0.03070182644408937,
+              "joint_above_6hz_power_fraction": 0.07920796204488502,
+              "roll_pitch_rate_rms_rad_s": 0.6493493235923694,
+              "vertical_velocity_rms_mps": 0.19063763682129803,
+              "forward_speed_mps": 0.6294151953805628,
+              "height_std_m": 0.009739396124783577,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.41197822141560797,
+            0.7168784029038112,
+            0.7386569872958257,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "healthy",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "873de4944161a896b54948d7c1adfba4c5b7060fcfb077e2bbaa2388360da0f5",
+      "model_mjb_sha256": "a5db97f46c301526127d4f7e2aa997e5490fc0d107e31e8597f49ed250629360",
+      "maximum_sampled_penetration_m": 0.0029457095189458424,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "healthy",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 271.4724030464918,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 161.87756288726686,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 176.04784712866638,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 211.51705400250532
+        },
+        "mean_distance_m": 6.8053903109171365,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.8053903109171365,
+            "end_distance_before_failure_m": 6.8053903109171365,
+            "velocity_rmse_while_alive": 0.07351015450059317,
+            "peak_actuator_torque_nm": 23.885041408668016,
+            "peak_torque_limit_ratio": 0.9766632747087897
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.2521546185016632,
+            "joint_above_6hz_rms_rad": 0.012957154193194811,
+            "joint_above_6hz_power_fraction": 0.008680380371716593,
+            "roll_pitch_rate_rms_rad_s": 0.16446841428764314,
+            "vertical_velocity_rms_mps": 0.11725072534503234,
+            "forward_speed_mps": 0.5799867106057013,
+            "height_std_m": 0.008563578010883912,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.2521546185016632,
+              "joint_above_6hz_rms_rad": 0.012957154193194811,
+              "joint_above_6hz_power_fraction": 0.008680380371716593,
+              "roll_pitch_rate_rms_rad_s": 0.16446841428764314,
+              "vertical_velocity_rms_mps": 0.11725072534503234,
+              "forward_speed_mps": 0.5799867106057013,
+              "height_std_m": 0.008563578010883912,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.5317604355716878,
+            0.5535390199637024,
+            0.5335753176043557,
+            0.52994555353902
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "lower_fl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "077fda2c967c9fd3884ffe8332bb256007dde6d73dd93fe8366221d6fba22aed",
+      "model_mjb_sha256": "3dfb65c4e1561a78980a31fca0b8f56e2e88da5b8452a9217fcfaaee24bb45e9",
+      "maximum_sampled_penetration_m": 0.0041917205841985675,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_fl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_stump",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_stump",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_stump": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 275.5067955618862,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 317.34645945370596,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 224.12016363987092
+        },
+        "mean_distance_m": 6.339798803579325,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.339798803579325,
+            "end_distance_before_failure_m": 6.339798803579325,
+            "velocity_rmse_while_alive": 0.08477742068819823,
+            "peak_actuator_torque_nm": 23.95824477786136,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.29303789138793945,
+            "joint_above_6hz_rms_rad": 0.018631634607006054,
+            "joint_above_6hz_power_fraction": 0.02722257717459317,
+            "roll_pitch_rate_rms_rad_s": 0.4380437213795596,
+            "vertical_velocity_rms_mps": 0.1927897222544493,
+            "forward_speed_mps": 0.5338720128778938,
+            "height_std_m": 0.010670630767197403,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.29303789138793945,
+              "joint_above_6hz_rms_rad": 0.018631634607006054,
+              "joint_above_6hz_power_fraction": 0.02722257717459317,
+              "roll_pitch_rate_rms_rad_s": 0.4380437213795596,
+              "vertical_velocity_rms_mps": 0.1927897222544493,
+              "forward_speed_mps": 0.5338720128778938,
+              "height_std_m": 0.010670630767197403,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.6370235934664247,
+            0.6079854809437386,
+            0.5408348457350273
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "lower_fr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "f7939a74840c447b7fb5cd380c50c353f6ff07c4866ef1d7b3d6d12ec61fd2a3",
+      "model_mjb_sha256": "439111f530f525618848b868454595486b14fd344a4b4cdf1dd207ca4bc64291",
+      "maximum_sampled_penetration_m": 0.008090240234871461,
+      "penetration_below_original_8mm_target": false,
+      "outcome": {
+        "case": "lower_fr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_stump",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_stump",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 472.84715323103836,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_stump": 0.0,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 383.0476687395498,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 537.5876134157191
+        },
+        "mean_distance_m": 6.146897615131614,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.146897615131614,
+            "end_distance_before_failure_m": 6.146897615131614,
+            "velocity_rmse_while_alive": 0.09587359427315947,
+            "peak_actuator_torque_nm": 26.862271884385763,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.36398187279701233,
+            "joint_above_6hz_rms_rad": 0.022838217616060474,
+            "joint_above_6hz_power_fraction": 0.03591076635572849,
+            "roll_pitch_rate_rms_rad_s": 0.5388172026198359,
+            "vertical_velocity_rms_mps": 0.24263946453125348,
+            "forward_speed_mps": 0.5227736612672556,
+            "height_std_m": 0.01808513572502591,
+            "unsupported_force_fraction": 0.07259528130671507,
+            "airborne_above_1mm_fraction": 0.06533575317604355
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.36398187279701233,
+              "joint_above_6hz_rms_rad": 0.022838217616060474,
+              "joint_above_6hz_power_fraction": 0.03591076635572849,
+              "roll_pitch_rate_rms_rad_s": 0.5388172026198359,
+              "vertical_velocity_rms_mps": 0.24263946453125348,
+              "forward_speed_mps": 0.5227736612672556,
+              "height_std_m": 0.01808513572502591,
+              "unsupported_force_fraction": 0.07259528130671507,
+              "airborne_above_1mm_fraction": 0.06533575317604355
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7368421052631579,
+            0.0,
+            0.7531760435571688,
+            0.7749546279491834
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "lower_rl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "f151db0be8b0ae1055fcdbb3107b6098fac060f6b1ee3b1bffa561a17194ee71",
+      "model_mjb_sha256": "3fe22a1ace59d13e8a53821f5080e93a7b877cf314108f8fbb5a6edd69f18e78",
+      "maximum_sampled_penetration_m": 0.005657927655984586,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_rl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_stump",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_stump",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 412.6601053432801,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 186.2270434616041,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_stump": 0.0,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 517.1079996784595
+        },
+        "mean_distance_m": 6.125488817201069,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.125488817201069,
+            "end_distance_before_failure_m": 6.125488817201069,
+            "velocity_rmse_while_alive": 0.11606980098263732,
+            "peak_actuator_torque_nm": 29.986201828498494,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.42854753136634827,
+            "joint_above_6hz_rms_rad": 0.02757447756543297,
+            "joint_above_6hz_power_fraction": 0.05615255684759111,
+            "roll_pitch_rate_rms_rad_s": 0.6054349348107367,
+            "vertical_velocity_rms_mps": 0.15388770330858337,
+            "forward_speed_mps": 0.5276299753528731,
+            "height_std_m": 0.007891944377746492,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.42854753136634827,
+              "joint_above_6hz_rms_rad": 0.02757447756543297,
+              "joint_above_6hz_power_fraction": 0.05615255684759111,
+              "roll_pitch_rate_rms_rad_s": 0.6054349348107367,
+              "vertical_velocity_rms_mps": 0.15388770330858337,
+              "forward_speed_mps": 0.5276299753528731,
+              "height_std_m": 0.007891944377746492,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7386569872958257,
+            0.35753176043557167,
+            0.0,
+            0.7967332123411979
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "lower_rr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "110e62e8506d1cdbc91a89838159cdeb3f75b12112fd58b1aa0e876a1ea13168",
+      "model_mjb_sha256": "cc9c9bca82435d6dcd2a3e3b272d3fe204eb9c9135cfae280303f28e4da36a9f",
+      "maximum_sampled_penetration_m": 0.005422156561848683,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "lower_rr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_stump"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_stump"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 176.5234448449511,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 418.2790564785779,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 534.4071858816155,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_stump": 0.0
+        },
+        "mean_distance_m": 6.685621868690021,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.685621868690021,
+            "end_distance_before_failure_m": 6.685621868690021,
+            "velocity_rmse_while_alive": 0.11961649551206753,
+            "peak_actuator_torque_nm": 29.88712590905451,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3902128040790558,
+            "joint_above_6hz_rms_rad": 0.02857407444451053,
+            "joint_above_6hz_power_fraction": 0.08285061319532905,
+            "roll_pitch_rate_rms_rad_s": 0.5525038948443718,
+            "vertical_velocity_rms_mps": 0.18862616112147362,
+            "forward_speed_mps": 0.5830732492943546,
+            "height_std_m": 0.010643176520157366,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3902128040790558,
+              "joint_above_6hz_rms_rad": 0.02857407444451053,
+              "joint_above_6hz_power_fraction": 0.08285061319532905,
+              "roll_pitch_rate_rms_rad_s": 0.5525038948443718,
+              "vertical_velocity_rms_mps": 0.18862616112147362,
+              "forward_speed_mps": 0.5830732492943546,
+              "height_std_m": 0.010643176520157366,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.38294010889292196,
+            0.7332123411978222,
+            0.7477313974591652,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "whole_fl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "9fc7ffdef0629b073ed901e03e1b2ce9e226c6a36a8ae363d73392ad05e5e328",
+      "model_mjb_sha256": "a1081230f5b60dfe2c256f9d20a0ad65ed26ad24910c41e01020e0d6804b7442",
+      "maximum_sampled_penetration_m": 0.004369991960703909,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_fl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 266.3625549193732,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 286.71358128860606,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 229.2412385235822
+        },
+        "mean_distance_m": 5.85366940695551,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.85366940695551,
+            "end_distance_before_failure_m": 5.85366940695551,
+            "velocity_rmse_while_alive": 0.12654145732495478,
+            "peak_actuator_torque_nm": 24.38539703709902,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.2626402974128723,
+            "joint_above_6hz_rms_rad": 0.01561721709433384,
+            "joint_above_6hz_power_fraction": 0.020083394919692472,
+            "roll_pitch_rate_rms_rad_s": 0.4346916972058867,
+            "vertical_velocity_rms_mps": 0.154137872311649,
+            "forward_speed_mps": 0.48986734558772166,
+            "height_std_m": 0.0066991325124311964,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.2626402974128723,
+              "joint_above_6hz_rms_rad": 0.01561721709433384,
+              "joint_above_6hz_power_fraction": 0.020083394919692472,
+              "roll_pitch_rate_rms_rad_s": 0.4346916972058867,
+              "vertical_velocity_rms_mps": 0.154137872311649,
+              "forward_speed_mps": 0.48986734558772166,
+              "height_std_m": 0.0066991325124311964,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.5462794918330308,
+            0.5172413793103449,
+            0.6007259528130672
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "whole_fr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "3e76fe220a01f182c2fb9ad0a95392891db39fe0f92b30c29d743e32d0b3deff",
+      "model_mjb_sha256": "7b29798d75f14149ccb1ec4af62e23cb861937329449d583b6cee77fe3d694ae",
+      "maximum_sampled_penetration_m": 0.0063753749764596315,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_fr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 0,
+        "completed_with_allowed_support": 0,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 368.02505467359947,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 380.04248173526594,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 462.52998969230896
+        },
+        "mean_distance_m": 5.421133498023196,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": false,
+            "completed_with_allowed_support": false,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.421133498023196,
+            "end_distance_before_failure_m": 5.421133498023196,
+            "velocity_rmse_while_alive": 0.12229368395674076,
+            "peak_actuator_torque_nm": 23.7,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3608340919017792,
+            "joint_above_6hz_rms_rad": 0.029975746612362044,
+            "joint_above_6hz_power_fraction": 0.05050125475042979,
+            "roll_pitch_rate_rms_rad_s": 0.4434689024458454,
+            "vertical_velocity_rms_mps": 0.20959674211780652,
+            "forward_speed_mps": 0.4562962899479582,
+            "height_std_m": 0.017189432400076504,
+            "unsupported_force_fraction": 0.06533575317604355,
+            "airborne_above_1mm_fraction": 0.06352087114337568
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3608340919017792,
+              "joint_above_6hz_rms_rad": 0.029975746612362044,
+              "joint_above_6hz_power_fraction": 0.05050125475042979,
+              "roll_pitch_rate_rms_rad_s": 0.4434689024458454,
+              "vertical_velocity_rms_mps": 0.20959674211780652,
+              "forward_speed_mps": 0.4562962899479582,
+              "height_std_m": 0.017189432400076504,
+              "unsupported_force_fraction": 0.06533575317604355,
+              "airborne_above_1mm_fraction": 0.06352087114337568
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7822141560798548,
+            0.0,
+            0.809437386569873,
+            0.809437386569873
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "whole_rl",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "bc69dd42703327aee56b97613e0ded1e8b3a15354885c64b552751c3c19745bd",
+      "model_mjb_sha256": "25619d106922cdf00af464cbac829a42b936552b817de72109109cc940f4c4a5",
+      "maximum_sampled_penetration_m": 0.006201863464687381,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_rl",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 469.131847017721,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 200.86981681960307,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 590.6679658503836
+        },
+        "mean_distance_m": 6.182114631655037,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.182114631655037,
+            "end_distance_before_failure_m": 6.182114631655037,
+            "velocity_rmse_while_alive": 0.10704309998052354,
+            "peak_actuator_torque_nm": 29.276263025506175,
+            "peak_torque_limit_ratio": 0.9730444772727237
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.4369640648365021,
+            "joint_above_6hz_rms_rad": 0.034637141194866286,
+            "joint_above_6hz_power_fraction": 0.09425993432516343,
+            "roll_pitch_rate_rms_rad_s": 0.6455371276865752,
+            "vertical_velocity_rms_mps": 0.15717812876175688,
+            "forward_speed_mps": 0.5251254144098407,
+            "height_std_m": 0.007117918056298231,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.4369640648365021,
+              "joint_above_6hz_rms_rad": 0.034637141194866286,
+              "joint_above_6hz_power_fraction": 0.09425993432516343,
+              "roll_pitch_rate_rms_rad_s": 0.6455371276865752,
+              "vertical_velocity_rms_mps": 0.15717812876175688,
+              "forward_speed_mps": 0.5251254144098407,
+              "height_std_m": 0.007117918056298231,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.7332123411978222,
+            0.42286751361161523,
+            0.0,
+            0.7822141560798548
+          ]
+        }
+      }
+    },
+    {
+      "label": "scaled_warp_seed2",
+      "case": "whole_rr",
+      "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+      "checkpoint_sha256": "00a9fa9532c236c0181ea065c36a7f2fc27669fd90d11dc89ae8c602c4bcf204",
+      "trajectory_sha256": "6681156c0f3be444445a35c6175ce2ad442cec475fc829d87b4c5ec6b3f2c6b0",
+      "model_mjb_sha256": "f9a3b4d5b3e42f500c2db97152c1a381111bc043bde8bb23074996b52e654b28",
+      "maximum_sampled_penetration_m": 0.005411087124270554,
+      "penetration_below_original_8mm_target": true,
+      "outcome": {
+        "case": "whole_rr",
+        "seed": 9143,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 184.34956500659007,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 431.4220883199875,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 522.4867036951649
+        },
+        "mean_distance_m": 7.483436921730975,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 7.483436921730975,
+            "end_distance_before_failure_m": 7.483436921730975,
+            "velocity_rmse_while_alive": 0.12525306279384668,
+            "peak_actuator_torque_nm": 27.203514665252392,
+            "peak_torque_limit_ratio": 0.959225524677634
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.42791321873664856,
+            "joint_above_6hz_rms_rad": 0.030161851592927908,
+            "joint_above_6hz_power_fraction": 0.07544374258530702,
+            "roll_pitch_rate_rms_rad_s": 0.6256144536568292,
+            "vertical_velocity_rms_mps": 0.190131557428229,
+            "forward_speed_mps": 0.6404822510815563,
+            "height_std_m": 0.009917989574541985,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.42791321873664856,
+              "joint_above_6hz_rms_rad": 0.030161851592927908,
+              "joint_above_6hz_power_fraction": 0.07544374258530702,
+              "roll_pitch_rate_rms_rad_s": 0.6256144536568292,
+              "vertical_velocity_rms_mps": 0.190131557428229,
+              "forward_speed_mps": 0.6404822510815563,
+              "height_std_m": 0.009917989574541985,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.3992740471869328,
+            0.7041742286751361,
+            0.7477313974591652,
+            0.0
+          ]
+        }
+      }
+    }
+  ],
+  "physics_timestep_s": 0.0005,
+  "control_timestep_s": 0.02,
+  "resolution": [
+    1920,
+    1440
+  ],
+  "fps": 25,
+  "frames": 900,
+  "seconds": 36,
+  "chapter_simulation_seconds": 12,
+  "chapters": [
+    [
+      "healthy",
+      "lower_fl",
+      "lower_fr"
+    ],
+    [
+      "lower_rl",
+      "lower_rr",
+      "whole_fl"
+    ],
+    [
+      "whole_fr",
+      "whole_rl",
+      "whole_rr"
+    ]
+  ],
+  "training_reports": [
+    "docs/locomotion/warp_training/scaled_mjbatch_seed2/training.json",
+    "docs/locomotion/warp_training/scaled_warp_seed2/training.json"
+  ],
+  "playback_speed": 1,
+  "capture_seconds": 19.775801000068896,
+  "replayed_existing_states": false,
+  "original_capture_seconds": 19.775801000068896,
+  "previous_render_seconds": null,
+  "render_seconds": 61.64073866698891,
+  "new_training_seconds_for_video": 0,
+  "same_initial_conditions_and_physics_per_row": true,
+  "runtime_inference": "CPU for every panel; only the training backend differed",
+  "video_sha256": "6e2f700370598970b571266c9ebf210e86ac6059a3e39606d9b50baf974e08e6",
+  "scope": "All nine bodies for the predetermined seed-2 training pair, shown in three chapters. Every recorded success/failure is retained; the three-seed evaluation is separate."
+}
