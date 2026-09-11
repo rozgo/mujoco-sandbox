@@ -208,7 +208,7 @@ def record(
                         font=body_font,
                         fill="white",
                     )
-                    status = "5 m COMPLETED" if state["completed"] else "RUNNING"
+                    status = "5 m COMPLETED" if state["completed"] else "WALKING"
                     foot_contact_strip(draw, 900, 625, state, result)
                     if case == "unseen_weak":
                         draw.text(
@@ -409,7 +409,7 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
     return report
 
 
-def view(checkpoint, case="short_fl", seconds=0):
+def view(checkpoint, case="short_fl", seconds=0, presentation="original"):
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
         env = os.environ.copy()
         paths = [sysconfig.get_config_var("LIBDIR"), str(Path(sys.base_prefix) / "lib")]
@@ -436,6 +436,10 @@ def view(checkpoint, case="short_fl", seconds=0):
     net, _ = load_checkpoint(checkpoint)
     env = make_case(case, trials=1)
     group = env.groups[0]
+    from .presentation import camera_azimuth, configure, damage_markers
+
+    if presentation == "damage":
+        configure(group.model)
     data = mujoco.MjData(group.model)
     start = time.perf_counter()
     try:
@@ -444,6 +448,8 @@ def view(checkpoint, case="short_fl", seconds=0):
         ) as viewer:
             viewer.cam.distance, viewer.cam.azimuth, viewer.cam.elevation = 1.8, 50, -18
             viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_RANGEFINDER] = False
+            if presentation == "damage":
+                viewer.cam.azimuth = camera_azimuth(group.body)
             while viewer.is_running() and (
                 not seconds or time.perf_counter() - start < seconds
             ):
@@ -462,6 +468,10 @@ def view(checkpoint, case="short_fl", seconds=0):
                 data.time = float(env.steps[0] * CONTROL_DT)
                 mujoco.mj_forward(group.model, data)
                 viewer.cam.lookat[:] = data.qpos[:3]
+                if presentation == "damage":
+                    with viewer.lock():
+                        viewer.user_scn.ngeom = 0
+                        damage_markers(viewer.user_scn, group.model, data, group.body)
                 viewer.sync()
                 time.sleep(max(0, CONTROL_DT - (time.perf_counter() - tick)))
     finally:

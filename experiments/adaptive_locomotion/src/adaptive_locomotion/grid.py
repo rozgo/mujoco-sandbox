@@ -12,8 +12,9 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .bodies import CONTROL_DT, ROOT
-from .evaluate import make_case, rollout
+from .evaluate import CASES, make_case, rollout
 from .paired import training_pairs
+from .presentation import camera_azimuth, configure, damage_markers
 from .record import font, model_hash
 from .train import load_checkpoint
 
@@ -47,7 +48,16 @@ GRID_CASES = (
 )
 
 
-def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
+def grid(
+    checkpoint,
+    output,
+    seconds=12,
+    fps=25,
+    seed=9137,
+    family="partial",
+    presentation="original",
+    replay_from=None,
+):
     """Capture physical runs, then replay a common timestamp in every panel."""
     if family not in ("partial", "limb_loss"):
         raise ValueError(family)
@@ -86,7 +96,15 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
     directory = ROOT / "outputs/locomotion/recordings" / output.stem
     directory.mkdir(parents=True, exist_ok=True)
     manifest_path = directory / "capture.json"
-    cache = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
+    source_directory = Path(replay_from) if replay_from else directory
+    source_manifest = source_directory / "capture.json"
+    if replay_from and not source_manifest.exists():
+        raise ValueError("Replay source must contain capture.json")
+    cache = (
+        json.loads(source_manifest.read_text()) if source_manifest.exists() else None
+    )
+    if presentation not in ("original", "damage"):
+        raise ValueError(presentation)
     if cache and (
         cache["checkpoint_sha256"] != digest
         or cache["seed"] != seed
@@ -104,7 +122,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
         if cache:
             entry = next((c for c in cache["cases"] if c["case"] == case), None)
             if entry:
-                source = directory / f"{case}.npz"
+                source = source_directory / f"{case}.npz"
                 if (
                     hashlib.sha256(source.read_bytes()).hexdigest()
                     != entry["trajectory_sha256"]
@@ -143,6 +161,10 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                 states = {k: capture[k] for k in capture.files}
             reuse = True
         else:
+            if replay_from:
+                raise ValueError(
+                    f"Replay source is missing {case}; refusing a new rollout"
+                )
             result, frames, model = rollout(
                 net, case, trials=1, seed=seed, seconds=seconds, capture=True
             )
@@ -190,6 +212,12 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
         "cases": entries,
     }
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+
+    render_models = {}
+    if presentation == "damage":
+        for entry, _, model, _ in runs:
+            configure(model)
+            render_models[entry["case"]] = model_hash(model)
 
     width, height = 3840, 2160
     tile_w, tile_h, gap, margin, top = 936, 472, 16, 24, 148
@@ -252,7 +280,15 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                 )
                 mujoco.mj_forward(model, data)
                 camera.lookat[:] = data.qpos[:3]
+                camera.azimuth = (
+                    camera_azimuth(CASES[entry["case"]][0])
+                    if presentation == "damage"
+                    else 50
+                )
                 renderer.update_scene(data, camera=camera, scene_option=option)
+                if presentation == "damage":
+                    renderer.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = True
+                    damage_markers(renderer.scene, model, data, CASES[entry["case"]][0])
                 draw.rectangle(
                     (x, y, x + tile_w - 1, y + tile_h - 1), fill=(17, 29, 38)
                 )
@@ -264,7 +300,7 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                 if entry["case"] == "weak_fr_thigh_60":
                     subtitle = f"FR thigh: {states['strength'][k, 4] * 100:.0f}% torque  |  fault at 3 s"
                 draw.text((x + 16, y + 46), subtitle, font=small, fill="white")
-                status = "RUNNING" if limb else "WALKING"
+                status = "WALKING"
                 color = (180, 198, 208)
                 if not states["alive"][k]:
                     status, color = "FAILED / NO RESET", (255, 136, 116)
@@ -359,7 +395,9 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                 lines = [
                     "Lower = everything below knee removed",
                     "Whole = entire leg chain removed",
-                    "Orange = exposed upper-leg stump",
+                    "Orange sphere = damage location"
+                    if presentation == "damage"
+                    else "Orange = exposed upper-leg stump",
                     "Crossed dot = no supporting limb",
                     "FL / FR = front left / right",
                     "RL / RR = rear left / right",
@@ -375,7 +413,9 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
                         "No policy switching or online training",
                         "Physical contact / original torque caps",
                         "Failed attempts remain visible",
-                        "Flat ground / scripted velocity commands",
+                        "Damage-side cameras / contact shadows"
+                        if presentation == "damage"
+                        else "Flat ground / scripted velocity commands",
                     ]
                 ):
                     draw.text(
@@ -420,6 +460,12 @@ def grid(checkpoint, output, seconds=12, fps=25, seed=9137, family="partial"):
         else "All 13 geometry variants across mild/strong training, plus one representative 60% motor fault; not every randomized fault, command or initial condition",
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_source_commit": source_commit,
+        "presentation": presentation,
+        "replayed_existing_trajectories": bool(replay_from),
+        "render_model_sha256": render_models,
+        "damage_marker": "Observer-only sphere: 28 mm radius at the calf cut, 40 mm at the original hip attachment; no added collision or mass"
+        if presentation == "damage"
+        else None,
     }
     output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
     return report
