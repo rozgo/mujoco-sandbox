@@ -43,6 +43,11 @@ class WarpBatch:
         self.model_dirty = True
         with wp.ScopedDevice(self.device):
             self.m = mjw.put_model(model, batch_sizes={k: n for k in self.MODEL_FIELDS})
+            # Warp 1.17 occupancy lookup loads the default 256-thread variant;
+            # switching the same CCD kernel to 64 threads then looking it up
+            # again can leave a stale symbol hash. Keep both launch widths equal.
+            # This changes GPU scheduling only, not collision geometry/solver.
+            self.m.block_dim.convex_ccd = 256
             self.d = mjw.make_data(model, nworld=n, nconmax=nconmax, njmax=njmax)
             for key in self.DATA_FIELDS:
                 array = getattr(self.d, key)

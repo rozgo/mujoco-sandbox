@@ -38,3 +38,13 @@ explains GPU batching, graph capture, capacity checks and supported features.
 [Official source](https://github.com/google-deepmind/mujoco_warp) and the installed
 3.13.0 API are the implementation references. Release versions were checked on
 [PyPI](https://pypi.org/project/mujoco-warp/) before pinning the optional stack.
+
+## Compatibility investigation
+
+The first NVIDIA check failed before stepping: Warp 1.17's occupancy query loaded
+one CCD kernel variant, then a 64-thread launch changed its symbol identity; the
+next query raised a missing-symbol/metadata error. The original failed test log
+is retained under ignored outputs (134.84 seconds including cold compilation).
+The next attempt keeps the CCD block width at 256, matching Warp's default module
+load width. This is a GPU launch configuration adjustment, not a geometry,
+collision, contact-count or solver relaxation. Latest dependency pins are retained.
