@@ -124,6 +124,7 @@ class DogEnv:
         damage_action_rate_weight=0.0,
         damage_angular_rate_weight=0.0,
         damage_joint_accel_weight=0.0,
+        damage_flight_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -157,6 +158,7 @@ class DogEnv:
                 damage_action_rate_weight,
                 damage_angular_rate_weight,
                 damage_joint_accel_weight,
+                damage_flight_weight,
             )
             < 0
         ):
@@ -166,6 +168,7 @@ class DogEnv:
         self.damage_action_rate_weight = damage_action_rate_weight
         self.damage_angular_rate_weight = damage_angular_rate_weight
         self.damage_joint_accel_weight = damage_joint_accel_weight
+        self.damage_flight_weight = damage_flight_weight
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -459,6 +462,13 @@ class DogEnv:
             + self.damage_joint_accel_weight
             * np.sum(((self.dq - old_dq) * self.valid / CONTROL_DT) ** 2, 1)
         )
+        if self.damage_flight_weight:
+            # Restore support continuity independently of healthy-only stride
+            # shaping. Only existing feet / designated distal stumps count.
+            # This is a soft reward at 50 Hz, not a gait clock or a constraint.
+            moving = np.linalg.norm(self.commands[:, :2], axis=1) > 0.15
+            unsupported = ~(self.tip_forces > 1.0).any(1)
+            reward -= self.damage_flight_weight * damaged * moving * unsupported
         if self.stride_weight:
             # The task command expressed in world coordinates supplies direction,
             # not a desired foot trajectory or a phase shared across the legs.

@@ -3,7 +3,9 @@
 import numpy as np
 
 
-def measure(q, action, gyro, velocity, height, support, dt=0.02):
+def measure(
+    q, action, gyro, velocity, height, support, dt=0.02, support_clearance=None
+):
     """Inputs are time x trials x active channels; no filtering of live control.
 
     Spectral RMS uses a demeaned Hann window and one-sided Parseval weights.
@@ -34,8 +36,20 @@ def measure(q, action, gyro, velocity, height, support, dt=0.02):
         "vertical_velocity_rms_mps": np.sqrt(np.mean(velocity[:, :, 2] ** 2, 0)),
         "forward_speed_mps": velocity[:, :, 0].mean(0),
         "height_std_m": height.std(0),
+        "unsupported_force_fraction": (~(support > 1.0).any(2)).mean(0),
     }
+    if support_clearance is not None:
+        # Flat-ground only: minimum terminal sphere bottom above z=0. A 1 mm
+        # tolerance separates visible flight from tiny gaps / weak contact force.
+        values["airborne_above_1mm_fraction"] = (
+            np.asarray(support_clearance) > 0.001
+        ).mean(0)
     return {
+        "support_sampling_s": dt,
+        "support_force_threshold_n": 1.0,
+        "airborne_clearance_threshold_m": 0.001
+        if support_clearance is not None
+        else None,
         "window_s": [1.0, 12.0],
         "spectral_window": "Hann, demeaned, power normalized, active joints only",
         "summary": {k: float(v.mean()) for k, v in values.items()},

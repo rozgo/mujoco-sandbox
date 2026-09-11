@@ -31,6 +31,7 @@ def main():
     p.add_argument("--damage-action-rate-weight", type=float, default=0.0)
     p.add_argument("--damage-angular-rate-weight", type=float, default=0.0)
     p.add_argument("--damage-joint-accel-weight", type=float, default=0.0)
+    p.add_argument("--damage-flight-weight", type=float, default=0.0)
     p.add_argument("--front-reference-scale", type=float, default=1.0)
     p.add_argument("--symmetry-weight", type=float, default=0.0)
     p.add_argument("--retention-curriculum", action="store_true")

@@ -93,6 +93,7 @@ def rollout(
     env = make_case(case, trials, seed, timestep, support_substeps)
     frames = []
     motion = [[] for _ in range(6)]
+    clearance = []
     alive = np.ones(trials, bool)
     fail_time = np.full(trials, np.nan)
     max_distance = np.zeros(trials)
@@ -153,6 +154,16 @@ def rollout(
                 strict=True,
             ):
                 samples.append(value.copy())
+            if env.terrain == "flat":
+                g = support_group
+                clearance.append(
+                    (
+                        g.geom_positions[:, g.tip_geoms, 2]
+                        - g.model.geom_size[g.tip_geoms, 0]
+                    )
+                    .min(1)
+                    .copy()
+                )
         if capture:
             g = env.groups[0]
             frames.append(
@@ -229,7 +240,7 @@ def rollout(
         "rows": rows,
     }
     if len(motion[0]) >= 3:
-        result["motion_quality"] = measure(*motion)
+        result["motion_quality"] = measure(*motion, support_clearance=clearance or None)
         result["motion_quality"]["window_s"] = [1.0, seconds]
     model = env.groups[0].model
     env.close()
