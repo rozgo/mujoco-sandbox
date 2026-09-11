@@ -90,6 +90,9 @@ def train(
     standing_profile=None,
     standing_surfaces="gentle",
     walking_replay_weight=0.0,
+    idle_support_weight=2.0,
+    idle_drift_weight=0.0,
+    idle_episode_steps=500,
 ):
     if minibatch_size is not None and minibatch_size < 1:
         raise ValueError("Minibatch size must be positive")
@@ -162,6 +165,11 @@ def train(
         environment_class = StandingEnv
         environment_options["profile"] = standing_profile
         environment_options["surface_level"] = standing_surfaces
+        environment_options.update(
+            idle_support_weight=idle_support_weight,
+            idle_drift_weight=idle_drift_weight,
+            idle_episode_steps=idle_episode_steps,
+        )
     env = environment_class(
         num_envs,
         seed,
@@ -317,6 +325,9 @@ def train(
         "seed": seed,
         "mode": mode,
         "standing_profile": standing_profile,
+        "idle_support_weight": idle_support_weight,
+        "idle_drift_weight": idle_drift_weight,
+        "idle_episode_steps": idle_episode_steps,
         "walking_replay_weight": walking_replay_weight,
         "walking_replay_rows": len(walking_replay_data[0])
         if walking_replay_data
@@ -694,6 +705,7 @@ def train(
             "speed_mps": float(speed),
             "reward": float(reward),
             "fall_fraction": float(falls / max(completed, 1)),
+            "falls_per_control_transition": float(falls / (horizon * num_envs)),
             "rollout_s": rollout_seconds,
             "update_s": time.perf_counter() - update_start,
         }

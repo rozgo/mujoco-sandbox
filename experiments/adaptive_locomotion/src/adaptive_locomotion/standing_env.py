@@ -27,10 +27,16 @@ class StandingEnv(DogEnv):
         cases=None,
         schedule=True,
         surface_level="gentle",
+        idle_support_weight=2.0,
+        idle_drift_weight=0.0,
+        idle_episode_steps=500,
         **kwargs,
     ):
         if profile not in ("healthy", "mixed"):
             raise ValueError(profile)
+        self.idle_support_weight = idle_support_weight
+        self.idle_drift_weight = idle_drift_weight
+        self.idle_episode_steps = idle_episode_steps
         self.balance_ready = False
         self.profile, self.schedule = profile, schedule
         surfaces = {
@@ -214,7 +220,8 @@ class StandingEnv(DogEnv):
             - 0.025 * rate
             - 0.3 * self.vel[:, 2] ** 2
             - 0.3 * slip
-            - self.support_weight * self.support_cost
+            - self.idle_support_weight * self.support_cost
+            - self.idle_drift_weight * np.maximum(drift - 0.025, 0)
         )
         balance_fell = (height < 0.10) | (self.up[:, 2] < 0.30) | (drift > 0.55)
         standing_reward[fell | balance_fell] -= 10
@@ -222,6 +229,11 @@ class StandingEnv(DogEnv):
         new_fell = was_idle & balance_fell
         fell |= new_fell
         done |= new_fell
+        done |= (
+            was_idle
+            & (self.command_kind == 0)
+            & (self.steps >= self.idle_episode_steps)
+        )
         self.returns += reward - old_reward
         info.update(
             idle=was_idle,
