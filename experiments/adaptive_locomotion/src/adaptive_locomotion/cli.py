@@ -73,6 +73,22 @@ def main():
     p.add_argument("--front-reference", type=Path)
     p.add_argument("--single-reference", type=Path)
     p.add_argument("--single-reference-weight", type=float, default=0.0)
+    p = sub.add_parser(
+        "learn",
+        help="Continue the approved adaptive dog using the maintained CPU/Warp recipe",
+    )
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--seconds", type=float, default=90)
+    p.add_argument("--seed", type=int, default=2)
+    p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
+    p.add_argument("--device", choices=("auto", "cpu", "mps", "cuda"), default="auto")
+    p.add_argument(
+        "--num-envs", type=int, help="Defaults to 512 on CPU physics, 4096 on Warp"
+    )
+    p.add_argument("--minibatch-size", type=int, default=3072)
+    p.add_argument("--max-iterations", type=int)
+    p.add_argument("--resume", type=Path)
+    p.add_argument("--learning-rate", type=float, default=0.0001)
     p = sub.add_parser("evaluate")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
@@ -146,6 +162,12 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         train(**kwargs)
+    elif args.command == "learn":
+        from .recipes import adaptive_walking
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        adaptive_walking(**kwargs)
     elif args.command == "evaluate":
         from .evaluate import evaluate
 
