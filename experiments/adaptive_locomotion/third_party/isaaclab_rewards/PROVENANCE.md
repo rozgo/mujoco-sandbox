@@ -7,3 +7,9 @@ Reward formulas in `adaptive_locomotion/gait_balance.py` adapt Isaac Lab's Spot 
 - Source copyright: Copyright (c) 2022-2026, The Isaac Lab Project Developers.
 - License: [BSD-3-Clause](LICENSE), retained from that revision.
 - Accessed September 10, 2026.
+
+`adaptive_locomotion/foot_clearance.py` also uses the speed-weighted height-error
+idea from `foot_clearance_reward`. Local changes use terminal sphere bottoms,
+a one-sided 3 cm clearance deficit normalized to a bounded cost, finite-difference
+world velocity, and masks excluding healthy bodies, stumps and absent legs.
+It does not require Isaac Lab and introduces no contact-phase schedule.

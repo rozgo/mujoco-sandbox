@@ -20,6 +20,7 @@ from .bodies import (
     initialize,
     joint_mapping,
 )
+from .foot_clearance import clearance_cost
 from .gait_balance import ContactTiming, body_motion_cost
 from .limb_loss import curriculum
 from .paired import training_pairs
@@ -125,6 +126,7 @@ class DogEnv:
         damage_angular_rate_weight=0.0,
         damage_joint_accel_weight=0.0,
         damage_flight_weight=0.0,
+        damage_clearance_weight=0.0,
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
@@ -159,6 +161,7 @@ class DogEnv:
                 damage_angular_rate_weight,
                 damage_joint_accel_weight,
                 damage_flight_weight,
+                damage_clearance_weight,
             )
             < 0
         ):
@@ -169,6 +172,9 @@ class DogEnv:
         self.damage_angular_rate_weight = damage_angular_rate_weight
         self.damage_joint_accel_weight = damage_joint_accel_weight
         self.damage_flight_weight = damage_flight_weight
+        self.damage_clearance_weight = damage_clearance_weight
+        if damage_clearance_weight and terrain != "flat":
+            raise ValueError("Foot clearance currently requires flat ground")
         self.timestep = timestep
         self.decimation = round(CONTROL_DT / timestep)
         if abs(self.decimation * timestep - CONTROL_DT) > 1e-10:
@@ -248,6 +254,9 @@ class DogEnv:
         self.support_cost = np.zeros(num_envs)
         self.tip_positions = np.zeros((num_envs, 4, 3))
         self.tip_forces = np.zeros((num_envs, 4))
+        self.tip_radii = np.zeros((num_envs, 4))
+        for g, s in zip(self.groups, self.slices, strict=True):
+            self.tip_radii[s, g.tip_slots] = g.model.geom_size[g.tip_geoms, 0]
         self.stride = StrideTracker(num_envs)
         self.contact_timing = ContactTiming(num_envs)
         self.reset(np.arange(num_envs))
@@ -372,6 +381,7 @@ class DogEnv:
 
     def step(self, action):
         old_dq = self.dq.copy()
+        old_tips = self.tip_positions.copy() if self.damage_clearance_weight else None
         action = np.clip(np.asarray(action), -3, 3)
         old_action = self.action.copy()
         events = np.flatnonzero(self.steps == self.fault_at)
@@ -469,6 +479,10 @@ class DogEnv:
             moving = np.linalg.norm(self.commands[:, :2], axis=1) > 0.15
             unsupported = ~(self.tip_forces > 1.0).any(1)
             reward -= self.damage_flight_weight * damaged * moving * unsupported
+        if self.damage_clearance_weight:
+            reward -= self.damage_clearance_weight * clearance_cost(
+                old_tips, self.tip_positions, self.tip_radii, self.valid, self.commands
+            )
         if self.stride_weight:
             # The task command expressed in world coordinates supplies direction,
             # not a desired foot trajectory or a phase shared across the legs.

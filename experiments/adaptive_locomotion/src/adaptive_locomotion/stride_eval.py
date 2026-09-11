@@ -5,6 +5,7 @@ import torch
 
 from .bodies import CONTROL_DT, LEGS
 from .evaluate import lane_command, make_case
+from .foot_clearance import clearance_metrics
 from .train import load_checkpoint
 
 
@@ -33,6 +34,7 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
     positions, forces, base, velocity, angular_velocity = map(
         np.asarray, (positions, forces, base, velocity, angular_velocity)
     )
+    clearance = clearance_metrics(positions, env.tip_radii)
     contact = forces > 1
     # Offline contact debounce bridges one-sample force dropouts. This diagnostic
     # uses successive landings, unlike the reward's liftoff-to-landing travel.
@@ -56,6 +58,10 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
             legs.append(
                 {
                     "leg": LEGS[leg],
+                    **{
+                        key: float(value[trial, leg])
+                        for key, value in clearance.items()
+                    },
                     "completed_cycles": len(lengths),
                     "mean_stride_m": float(np.mean(lengths)) if len(lengths) else None,
                     "mean_cycle_seconds": float(np.mean(periods))
@@ -150,6 +156,10 @@ def inspect_stride(checkpoint, trials=16, seed=9137, seconds=12, case="healthy")
                         "mean_stride_m",
                         "mean_cycle_seconds",
                         "strides_per_second",
+                        "moving_clearance_m",
+                        "clearance_p95_m",
+                        "drag_fraction",
+                        "drag_travel_m",
                     )
                 },
             }
