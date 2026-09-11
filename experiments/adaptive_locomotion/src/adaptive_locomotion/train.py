@@ -84,7 +84,15 @@ def train(
     front_reference_scale=1.0,
     symmetry_weight=0.0,
     physics_backend="mjbatch",
+    minibatch_size=None,
+    max_iterations=None,
+    warp_execution="concurrent",
 ):
+    if minibatch_size is not None and minibatch_size < 1:
+        raise ValueError("Minibatch size must be positive")
+    if max_iterations is not None and max_iterations < 1:
+        raise ValueError("Iteration limit must be positive")
+    minibatch_size = minibatch_size or ((num_envs * horizon + 3) // 4)
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
     if allowance > 300 and not extension_reason:
@@ -167,6 +175,7 @@ def train(
         pair_level=pair_level,
         limb_stage=limb_stage,
         physics_backend=physics_backend,
+        warp_execution=warp_execution,
     )
     ancestry = 0.0
     parent = None
@@ -273,6 +282,9 @@ def train(
         "mode": mode,
         "hidden": learner.hidden,
         "num_envs": num_envs,
+        "minibatch_size": minibatch_size,
+        "max_iterations": max_iterations,
+        "warp_execution": warp_execution if physics_backend == "warp" else None,
         "bodies": bodies,
         "terrain": terrain,
         "reward_profile": reward_profile,
@@ -405,16 +417,20 @@ def train(
             "parent": str(resume) if resume else None,
             "iterations": iteration,
             "transitions": transitions,
+            "optimizer_steps": optimizer_steps,
         }
         torch.save(saved, output / name)
 
     iteration = 0
     transitions = 0
+    optimizer_steps = 0
     records = []
     start = time.perf_counter()
     deadline = start + min(seconds, allowance - ancestry) - 0.8
     save("initial.pt", 0)
-    while time.perf_counter() < deadline:
+    while time.perf_counter() < deadline and (
+        max_iterations is None or iteration < max_iterations
+    ):
         rollout_start = time.perf_counter()
         metrics = []
         falls = 0
@@ -533,7 +549,9 @@ def train(
         flat = {k: v.reshape((-1, *v.shape[2:])) for k, v in batch.items()}
         update_start = time.perf_counter()
         for _ in range(epochs):
-            for ids in torch.randperm(num_envs * horizon, device=device).chunk(4):
+            for ids in torch.randperm(num_envs * horizon, device=device).split(
+                minibatch_size
+            ):
                 if time.perf_counter() >= deadline:
                     break
                 mean, v = learner(
@@ -581,6 +599,7 @@ def train(
                 loss.backward()
                 nn.utils.clip_grad_norm_(learner.parameters(), 1.0)
                 opt.step()
+                optimizer_steps += 1
                 with torch.no_grad():
                     learner.log_std.clamp_(-2, 0)
         if teacher is None:
@@ -592,6 +611,7 @@ def train(
         track, speed, reward = np.mean(metrics, axis=0)
         row = {
             "iteration": iteration,
+            "optimizer_steps": optimizer_steps,
             "elapsed_s": elapsed,
             "transitions": transitions,
             "track": float(track),
@@ -620,6 +640,10 @@ def train(
         "cumulative_training_seconds": ancestry + elapsed,
         "transitions": transitions,
         "iterations": iteration,
+        "optimizer_steps": optimizer_steps,
+        "stop_reason": "iteration_limit"
+        if max_iterations is not None and iteration >= max_iterations
+        else "time_limit",
         "progress": records,
         "checkpoint_sha256": hashlib.sha256(
             (output / "policy.pt").read_bytes()

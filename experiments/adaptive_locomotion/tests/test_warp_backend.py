@@ -15,6 +15,36 @@ def test_unknown_backend_rejected():
         DogEnv(num_envs=1, physics_backend="unknown")
 
 
+def test_concurrent_topologies_match_serial_with_partial_resets(cuda_warp):
+    args = {
+        "num_envs": 32,
+        "seed": 9231,
+        "limb_stage": "consolidate",
+        "physics_backend": "warp",
+    }
+    serial = DogEnv(**args, warp_execution="serial")
+    parallel = DogEnv(**args, warp_execution="concurrent")
+    rng = np.random.default_rng(9232)
+    try:
+        for step in range(30):
+            action = rng.normal(0, 0.08, (32, 12)).astype(np.float32)
+            a = serial.step(action)
+            b = parallel.step(action)
+            np.testing.assert_allclose(parallel.obs(), serial.obs(), atol=2e-5, rtol=0)
+            np.testing.assert_allclose(a[0], b[0], atol=2e-5, rtol=0)
+            np.testing.assert_array_equal(a[1], b[1])
+            np.testing.assert_allclose(
+                parallel.torque, serial.torque, atol=2e-4, rtol=0
+            )
+            if step in (9, 19):
+                ids = np.array([0, 9, 13, 19, 25, 31])
+                serial.reset(ids)
+                parallel.reset(ids)
+    finally:
+        serial.close()
+        parallel.close()
+
+
 @pytest.fixture(scope="module")
 def cuda_warp():
     wp = pytest.importorskip("warp")

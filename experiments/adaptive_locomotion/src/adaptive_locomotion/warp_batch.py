@@ -94,6 +94,7 @@ class WarpBatch:
         self.host, self.buffers, self.graphs = {}, {}, {}
         self.compile_seconds = 0.0
         self.model_dirty = True
+        self.stream = wp.Stream(self.device)
         with wp.ScopedDevice(self.device):
             self.m = mjw.put_model(model, batch_sizes={k: n for k in self.MODEL_FIELDS})
             self.d = mjw.make_data(model, nworld=n, nconmax=nconmax, njmax=njmax)
@@ -121,6 +122,11 @@ class WarpBatch:
                 )
                 self.buffers[key], self.host[key] = buffer, buffer.numpy()
                 self.host[key][:] = np.asarray(getattr(model, key))
+            array = self.d.overflow
+            self.buffers["overflow"] = wp.empty(
+                array.shape, dtype=array.dtype, device="cpu", pinned=True
+            )
+            self.host["overflow"] = self.buffers["overflow"].numpy()
             self.reset_mask = wp.zeros(n, dtype=bool)
             # Capture reset once; the mask contents vary without recapturing.
             started = time.perf_counter()
@@ -179,10 +185,19 @@ class WarpBatch:
             keep[ids] = False
             previous = {k: self.host[k][keep].copy() for k in self.DATA_FIELDS}
         with wp.ScopedDevice(self.device):
-            for key in self.DATA_FIELDS:
-                wp.copy(self.buffers[key], getattr(self.d, key))
+            self.enqueue_download()
             wp.synchronize_device(self.device)
-            overflow = self.d.overflow.numpy()
+        self.check_download()
+        if previous is not None:
+            for key, values in previous.items():
+                self.host[key][keep] = values
+
+    def enqueue_download(self):
+        for key in (*self.DATA_FIELDS, "overflow"):
+            self.wp.copy(self.buffers[key], getattr(self.d, key))
+
+    def check_download(self):
+        overflow = self.host["overflow"]
         if overflow.any():
             raise FloatingPointError(
                 f"MuJoCo Warp capacity overflow: {np.unique(overflow).tolist()}"
@@ -193,9 +208,17 @@ class WarpBatch:
             raise FloatingPointError(
                 "MuJoCo Warp velocity exceeds MuJoCo numerical envelope"
             )
-        if previous is not None:
-            for key, values in previous.items():
-                self.host[key][keep] = values
+
+    def step_async(self, nstep=1):
+        """Queue this independent topology without blocking the other batches."""
+        with self.wp.ScopedStream(self.stream):
+            self.upload_controls()
+            self.step_device(nstep)
+            self.enqueue_download()
+
+    def wait_step(self):
+        self.wp.synchronize_stream(self.stream)
+        self.check_download()
 
     def step(self, nstep=1):
         self.upload_controls()

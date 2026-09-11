@@ -27,6 +27,11 @@ def main():
     p.add_argument("--physics-backend", default="mjbatch", choices=("mjbatch", "warp"))
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--epochs", type=int, default=4)
+    p.add_argument("--minibatch-size", type=int)
+    p.add_argument("--max-iterations", type=int)
+    p.add_argument(
+        "--warp-execution", choices=("serial", "concurrent"), default="concurrent"
+    )
     p.add_argument("--allowance", type=float, default=300)
     p.add_argument("--extension-reason", default="")
     p.add_argument("--reward-profile", choices=("adaptive", "walk"), default="adaptive")

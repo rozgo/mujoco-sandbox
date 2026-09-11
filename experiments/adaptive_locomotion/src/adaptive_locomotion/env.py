@@ -145,10 +145,14 @@ class DogEnv:
         pair_level=None,
         limb_stage=None,
         physics_backend="mjbatch",
+        warp_execution="concurrent",
     ):
         if physics_backend not in ("mjbatch", "warp"):
             raise ValueError("Unknown physics backend")
         self.physics_backend = physics_backend
+        if warp_execution not in ("serial", "concurrent"):
+            raise ValueError("Unknown Warp execution schedule")
+        self.warp_execution = warp_execution
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
         if reward_profile not in ("adaptive", "walk"):
@@ -443,7 +447,20 @@ class DogEnv:
                 np.maximum(g.support_peaks, force, out=g.support_peaks)
                 g.support_impulses += force * self.timestep
 
-        if self.pool:
+        if (
+            self.physics_backend == "warp"
+            and self.warp_execution == "concurrent"
+            and not self.support_substeps
+        ):
+            for group in self.groups:
+                group.batch.step_async(self.decimation)
+            for group in self.groups:
+                group.batch.wait_step()
+                group.support_peaks = np.linalg.norm(
+                    group.support_data[:, :, 1:4], axis=-1
+                )
+                group.support_impulses = group.support_peaks * CONTROL_DT
+        elif self.pool:
             list(self.pool.map(advance, self.groups))
         else:
             for group in self.groups:

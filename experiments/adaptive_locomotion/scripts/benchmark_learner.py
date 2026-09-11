@@ -114,9 +114,20 @@ def gpu_sample():
         return None
 
 
-def run(label, device, physics_backend="mjbatch", num_envs=512):
+def run(
+    label,
+    device,
+    physics_backend="mjbatch",
+    num_envs=512,
+    seed=2,
+    seconds=90,
+    minibatch_size=None,
+    max_iterations=None,
+    output_family="learner_comparison",
+    allowance=2000,
+):
     assert digest(PARENT) == PARENT_SHA and digest(MOTION) == MOTION_SHA
-    out = ROOT / "outputs/locomotion/learner_comparison" / label
+    out = ROOT / "outputs/locomotion" / output_family / label
     out.mkdir(parents=True, exist_ok=True)
     if (out / "training.json").exists():
         raise ValueError("Preserve the existing attempt; use another label")
@@ -145,10 +156,12 @@ def run(label, device, physics_backend="mjbatch", num_envs=512):
     try:
         train(
             output=out,
-            seconds=90,
-            allowance=2000,
-            extension_reason="Matched 90-second learner backend benchmark from the identical archived parent; official v1 is frozen.",
-            seed=2,
+            seconds=seconds,
+            allowance=allowance,
+            extension_reason="Matched backend verification from the identical archived parent; official v1 is frozen.",
+            seed=seed,
+            minibatch_size=minibatch_size,
+            max_iterations=max_iterations,
             num_envs=num_envs,
             mode="blind",
             resume=PARENT,
@@ -184,6 +197,10 @@ def run(label, device, physics_backend="mjbatch", num_envs=512):
             "learner_device": device,
             "physics_backend": physics_backend,
             "num_envs": num_envs,
+            "seed": seed,
+            "requested_training_seconds": seconds,
+            "requested_iterations": max_iterations,
+            "requested_minibatch_size": minibatch_size,
             "python": platform.python_version(),
             "torch": torch.__version__,
             "architecture": platform.machine(),
@@ -208,6 +225,16 @@ if __name__ == "__main__":
     parser.add_argument("--label")
     parser.add_argument("--device", choices=("cpu", "mps", "cuda"))
     parser.add_argument("--num-envs", type=int, default=512)
+    parser.add_argument("--seed", type=int, default=2)
+    parser.add_argument("--seconds", type=float, default=90)
+    parser.add_argument("--allowance", type=float, default=2000)
+    parser.add_argument("--minibatch-size", type=int)
+    parser.add_argument("--max-iterations", type=int)
+    parser.add_argument(
+        "--output-family",
+        choices=("learner_comparison", "warp_training"),
+        default="learner_comparison",
+    )
     parser.add_argument(
         "--physics-backend", choices=("mjbatch", "warp"), default="mjbatch"
     )
@@ -215,6 +242,8 @@ if __name__ == "__main__":
     if args.make_bank:
         make_bank()
     elif args.label and args.device:
-        run(args.label, args.device, args.physics_backend, args.num_envs)
+        kwargs = vars(args).copy()
+        kwargs.pop("make_bank")
+        run(**kwargs)
     else:
         parser.error("Provide --make-bank or both --label and --device")
