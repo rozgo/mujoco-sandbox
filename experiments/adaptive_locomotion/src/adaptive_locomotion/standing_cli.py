@@ -27,6 +27,7 @@ def main():
     p.add_argument("--device", default="cuda")
     p.add_argument("--learning-rate", type=float, default=0.0001)
     p.add_argument("--reference-weight", type=float, default=3)
+    p.add_argument("--walking-replay-weight", type=float, default=0)
     p.add_argument("--initial-std", type=float, default=0.20)
     p.add_argument("--max-iterations", type=int)
     p.add_argument(
@@ -74,6 +75,7 @@ def main():
             physics_backend=args.physics_backend,
             standing_profile=args.profile,
             standing_surfaces=args.surfaces,
+            walking_replay_weight=args.walking_replay_weight,
             learning_rate=args.learning_rate,
             reference=BASELINE,
             reference_loss_weight=args.reference_weight,

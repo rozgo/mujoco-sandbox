@@ -38,13 +38,13 @@ def lane_command(env, speed=0.55):
     This supplies a body-frame velocity command to the learned locomotion policy;
     it is not learned navigation. It applies no forces or pose corrections.
     """
-    g = env.groups[0]
-    w, x, y, z = g.qpos[:, 3:7].T
-    yaw = np.arctan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
-    world_y = np.clip(-0.7 * env.pos[:, 1], -0.25, 0.25)
-    env.commands[:, 0] = speed * np.cos(yaw) + world_y * np.sin(yaw)
-    env.commands[:, 1] = -speed * np.sin(yaw) + world_y * np.cos(yaw)
-    env.commands[:, 2] = np.clip(-1.5 * yaw, -0.5, 0.5)
+    for g, sl in zip(env.groups, env.slices, strict=True):
+        w, x, y, z = g.qpos[:, 3:7].T
+        yaw = np.arctan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+        world_y = np.clip(-0.7 * env.pos[sl, 1], -0.25, 0.25)
+        env.commands[sl, 0] = speed * np.cos(yaw) + world_y * np.sin(yaw)
+        env.commands[sl, 1] = -speed * np.sin(yaw) + world_y * np.cos(yaw)
+        env.commands[sl, 2] = np.clip(-1.5 * yaw, -0.5, 0.5)
 
 
 def make_case(

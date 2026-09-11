@@ -94,6 +94,7 @@ def test_shared_actor_training_smoke(tmp_path):
         max_iterations=1,
         reference=baseline,
         reference_loss_weight=3,
+        walking_replay_weight=0.5,
         allowance=parent["cumulative_training_seconds"] + 31,
         extension_reason="Focused one-update interface test.",
     )

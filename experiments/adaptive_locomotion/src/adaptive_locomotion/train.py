@@ -89,6 +89,7 @@ def train(
     warp_execution="concurrent",
     standing_profile=None,
     standing_surfaces="gentle",
+    walking_replay_weight=0.0,
 ):
     if minibatch_size is not None and minibatch_size < 1:
         raise ValueError("Minibatch size must be positive")
@@ -259,6 +260,24 @@ def train(
         if front_teacher.mode != "blind":
             raise ValueError("Limb references must use reactive policies")
         front_teacher = front_teacher.to(actor_device).eval().requires_grad_(False)
+    walking_replay_data = None
+    replay_setup_seconds = 0.0
+    if walking_replay_weight:
+        if mode != "support" or reference is None or walking_replay_weight < 0:
+            raise ValueError(
+                "Walking rehearsal requires a support actor and frozen reference"
+            )
+        from .walking_replay import collect
+
+        replay_obs, replay_actions, replay_setup_seconds = collect(
+            reference,
+            ROOT / "outputs/locomotion/standing/v1_rehearsal_seed12.npz",
+            seed=12,
+        )
+        walking_replay_data = (
+            torch.as_tensor(replay_obs, device=device),
+            torch.as_tensor(replay_actions, device=device),
+        )
     opt = torch.optim.Adam(
         learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
@@ -298,6 +317,11 @@ def train(
         "seed": seed,
         "mode": mode,
         "standing_profile": standing_profile,
+        "walking_replay_weight": walking_replay_weight,
+        "walking_replay_rows": len(walking_replay_data[0])
+        if walking_replay_data
+        else 0,
+        "walking_replay_collection_seconds": replay_setup_seconds,
         "standing_surfaces": standing_surfaces if standing_profile else None,
         "standing_cases": [
             {"body": b.name, "surface": s, "worlds": g.n}
@@ -626,6 +650,14 @@ def train(
                 if teacher is not None:
                     loss += reference_loss_weight * reference_loss(
                         mean, flat["reference"][ids], flat["healthy"][ids]
+                    )
+                if walking_replay_data is not None:
+                    replay_obs, replay_actions = walking_replay_data
+                    replay_ids = torch.randint(len(replay_obs), (512,), device=device)
+                    replay_mean, _ = learner(replay_obs[replay_ids])
+                    loss += (
+                        walking_replay_weight
+                        * (replay_mean - replay_actions[replay_ids]).square().mean()
                     )
                 if healthy_style:
                     loss += damage_healthy_loss_weight * style_loss(

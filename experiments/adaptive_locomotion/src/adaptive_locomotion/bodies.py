@@ -290,8 +290,9 @@ def build_model(
                 continue
             geom.attrib.update(solref=".006 1", solimp=".95 .99 .001", margin="0")
     if support_sensing:
-        # Native contact-force sensors are reward/diagnostic truth only. They
-        # preserve physical collisions and do not add channels to actor input.
+        # Native contact-force sensors preserve physical collisions. Legacy
+        # walking uses them only for rewards/diagnostics; standing additionally
+        # exposes the four terminal-contact bits as ideal contact sensing.
         for element in world.iter("body"):
             for i, geom in enumerate(element.findall("geom")):
                 if geom.get("class") == "visual" or geom.get("contype") == "0":
