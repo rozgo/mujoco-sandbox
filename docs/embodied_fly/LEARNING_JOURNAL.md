@@ -544,3 +544,21 @@ This hypothesis needs a measured result; it is not an accepted improvement yet.
 Afterward compare the fixed six development commands and a separate continuous
 walk → stop → walk sequence. Command changes must retain recurrent memory and
 physical state. This addresses a gap in separate reset-based hold/walk tests.
+
+### Continuous command-transition evaluator
+
+Added a separate development test with two seconds walking at 1 cm/s, two seconds
+stopping, then two seconds walking again. Heading initializes at 0.1 rad. No body
+or neural reset occurs at command boundaries; the report records actual physics
+time, root position and preceding memory norm there. The original six fixed-command
+gates remain unchanged. The new recorder can display the actual command per frame.
+
+Transition gates are declared before evaluating candidates. After a 0.25-second
+settling interval, moving phases require mean forward error below 0.25 cm/s,
+lateral error below 0.25 cm/s and mean yaw error below 0.35 rad/s. Stop requires
+late planar-speed RMS below 0.1 cm/s, 100 ms block-yaw RMS below 0.3 rad/s, late
+drift below 1 mm and total stop-phase drift below 2 mm. Every phase must be complete,
+upright above 0.5, height above 0.6 mm, and prohibited support below 0.1 body weight
+at every physics substep. Two metric tests reject sustained drift, a late stop
+after excess travel, incomplete duration and prohibited support while accepting
+an idealized braking trace. Those tests validate scoring, not physical skill.

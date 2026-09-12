@@ -117,9 +117,13 @@ def record(source, case, output):
                 draw.text((818, 410), "teal −  /  amber +", font=font(14), fill="#a8b0b5")
                 draw.text((818, 427), "Measured cell locations", font=font(13), fill="#a8b0b5")
             draw.text((24, 22), title, font=font(25), fill="#ffc31f")
+            context = "physical capture"
+            if "command" in states:
+                command = states["command"][step]
+                context = f"target {command[0]:.1f} cm/s / yaw {command[2]:.2f} rad/s"
             draw.text(
                 (24, 60),
-                f"{case.upper()}  |  physical capture  |  1x playback",
+                f"{case.upper()}  |  {context}  |  1x playback",
                 font=font(19),
                 fill="#e6e1db",
             )
@@ -159,7 +163,9 @@ def record(source, case, output):
                     )
                     draw.text(
                         (1125, 818),
-                        "Raw tracking gate: " + ("PASS" if case_result["success"] else "FAIL"),
+                        case_result.get("gate_label", "Raw tracking gate")
+                        + ": "
+                        + ("PASS" if case_result["success"] else "FAIL"),
                         font=font(18),
                         fill="#70a88a" if case_result["success"] else "#ce6654",
                     )
