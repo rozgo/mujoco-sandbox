@@ -1,0 +1,247 @@
+{
+  "seed": 22,
+  "mode": "support",
+  "standing_profile": "mixed",
+  "moving_profile": "mixed",
+  "motion_scale": 1,
+  "idle_support_weight": 8,
+  "idle_drift_weight": 3,
+  "idle_episode_steps": 500,
+  "substep_support": true,
+  "standing_replay_weight": 50.0,
+  "standing_replay_rows": 54000,
+  "standing_replay_collection_seconds": 11.61522105988115,
+  "standing_reference_sha256": "0e3acf841935676547ab3c974de7fb9317119f0926a9323ea7b4305c03f8e68a",
+  "walking_replay_weight": 15,
+  "walking_replay_rows": 36000,
+  "walking_replay_collection_seconds": 0.0,
+  "standing_surfaces": "gentle",
+  "standing_cases": [
+    {
+      "body": "healthy",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "lower_fl",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "lower_fr",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "lower_rl",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "lower_rr",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "whole_fl",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "whole_fr",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "whole_rl",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "whole_rr",
+      "surface": "flat",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "pads",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fl",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fr",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rl",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rr",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_high",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_extreme",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_12",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_12",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_18",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_18",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_24",
+      "worlds": 76
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_24",
+      "worlds": 75
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_12",
+      "worlds": 75
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_20",
+      "worlds": 75
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_28",
+      "worlds": 75
+    },
+    {
+      "body": "healthy",
+      "surface": "moving",
+      "worlds": 2048
+    }
+  ],
+  "hidden": 128,
+  "num_envs": 4096,
+  "minibatch_size": 3072,
+  "max_iterations": null,
+  "warp_execution": "concurrent",
+  "bodies": "all",
+  "terrain": "flat",
+  "reward_profile": "walk",
+  "support_weight": 2.0,
+  "stride_weight": 1,
+  "balance_weight": 5,
+  "body_motion_weight": 1,
+  "damage_action_rate_weight": 0.0,
+  "damage_angular_rate_weight": 0.0,
+  "damage_joint_accel_weight": 0.0,
+  "damage_flight_weight": 3,
+  "damage_clearance_weight": 0.0,
+  "clearance_scope": "all",
+  "visible_step_weight": 2,
+  "rear_overlap_weight": 3,
+  "visible_step_targets": {
+    "peak_m": 0.06,
+    "air_s": 0.12,
+    "advance_m": 0.18
+  },
+  "damage_clearance_target_m": null,
+  "front_reference_scale": 1.0,
+  "symmetry_weight": 0.0,
+  "retention_curriculum": false,
+  "pair_level": null,
+  "limb_stage": null,
+  "neutralize_validity": null,
+  "initial_std": 0.12,
+  "front_reference_checkpoint": null,
+  "front_reference_sha256": null,
+  "single_reference_checkpoint": null,
+  "single_reference_sha256": null,
+  "single_reference_weight": 0.0,
+  "reference_checkpoint": "assets/locomotion/checkpoints/adaptive_dog_v1.pt",
+  "reference_sha256": "174b3094eaf20233f151ff0ad19fc21c4612e8b1e7468e683c81ab8f980d846b",
+  "reference_reward_weight": 0.0,
+  "reference_loss_weight": 3,
+  "damage_healthy_reward_weight": 0.0,
+  "damage_healthy_loss_weight": 0.0,
+  "healthy_style_source": "policy",
+  "healthy_motion_sha256": null,
+  "healthy_motion_path": null,
+  "healthy_motion_history_seconds": 0.0,
+  "healthy_style_teacher_encoding": null,
+  "learning_rate": 0.0001,
+  "normalization_frozen": true,
+  "body_environment_counts": {
+    "healthy": 3488,
+    "lower_fl": 76,
+    "lower_fr": 76,
+    "lower_rl": 76,
+    "lower_rr": 76,
+    "whole_fl": 76,
+    "whole_fr": 76,
+    "whole_rl": 76,
+    "whole_rr": 76
+  },
+  "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
+  "randomized_motor_strength": false,
+  "epochs": 4,
+  "horizon": 24,
+  "budget_seconds": 60.0,
+  "total_allowance_seconds": 2579.660977517371,
+  "extension_reason": "Round1 passed moving checks but lost upright static balances; rehearse all accepted standing surfaces before accepting the extension.",
+  "ancestry_seconds": 2518.660977517371,
+  "device": "cuda",
+  "actor_device": "cuda",
+  "source_commit": "8267fe99e78ec5d02087cae3c6768fa7636e18d3",
+  "source_dirty": false,
+  "python": "3.14.7",
+  "torch": "2.14.0+cu130",
+  "physics": "CUDA MuJoCo Warp",
+  "mujoco": "3.13.0",
+  "contact_profile": "firm",
+  "threads": 16,
+  "physics_timestep_s": 0.002,
+  "physics_backend": "warp",
+  "physics_device": "cuda:0",
+  "environment_array_backend": "numpy_cpu",
+  "control_timestep_s": 0.02,
+  "setup_seconds": 21.71343557490036
+}
