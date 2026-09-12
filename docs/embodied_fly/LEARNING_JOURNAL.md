@@ -27,6 +27,7 @@ and rendering are different quantities and must be reported separately.
 | Full graph, eight sequences | Twenty-second CUDA optimization probe | Held-out motor MSE 0.65634 → 0.06988; internal core gradients and changes recorded | Full measured graph can be trained within a small pilot budget |
 | Full graph, 32 sequences | Same short probe with larger neural batch | 32,512 supervised examples in 20.098 s; about 2.93 GB peak CUDA allocation | Use 32 sequences for the five-minute motor pilot |
 | Motor BC 01 | Five-minute recurrent imitation, followed by teacher-free physical tests | Held-out MSE fell to 0.01630; **0/6 physical cases passed**, despite zero solver warnings | Retain failure; diagnose feedback/state-distribution mismatch before spending more training time |
+| Passive-channel diagnostic | Same BC 01 checkpoint; set the 19 wing/mouth/antenna channels to the teacher's passive command, leaving 59 walking channels learned | All three paired hold/slow/walk cases became upright and had no disallowed ground support; **0/3 still passed command tracking** | Inactive appendage commands mattered; preserve this explicit walking curriculum while improving starts and feedback control |
 
 Original CEM reports and checkpoints remain under
 `docs/fly_survival/training/`, `docs/fly_survival/evaluation/` and
@@ -118,7 +119,15 @@ from 0.1155 to 0.2087; this case did not show runaway recurrent-state error.
 Predicted wing commands had normalized RMS 0.0323 despite a zero-wing-command
 teacher target. This motivates testing passive wing/mouth/antenna channels during
 the initial walking curriculum and training cold starts/feedback corrections.
-It is a hypothesis, not an established cause of every failure.
+The subsequent paired passive-channel diagnostic supported that concern: without
+additional training, all three tested cases stayed upright (minimum vertical-axis
+alignment ≥0.987) and had zero disallowed ground support. They still moved/turned
+incorrectly for their commands, so none passed overall. The intervention muted
+wings, mouth and antennae together; it does not isolate wing commands alone.
+This is a declared first-stage actuator mask, not a new gait or a second policy.
+All anatomy and degrees of freedom remain physical, and the actor still has 78
+output slots for later curriculum stages. The mask must not be hidden in a claim
+that flight or complete appendage control has already been learned.
 
 The raw GPU captures remain in ignored run directories for re-rendering. Published
 diagnostic reports/checkpoints are indexed with SHA-256 in
@@ -165,3 +174,11 @@ utility experiments, so the narrative includes both architectures.
 The intended story is the learning process: build an embodied system, test a
 hypothesis, retain its failure, change the architecture for a concrete reason,
 then measure what the new controller actually learns.
+
+### Preserved interrupted utility search
+
+CEM 03 was interrupted for the approved full-body architecture change. Its three
+completed generations and intermediate checkpoints are now retained in
+`docs/fly_survival/training/cem_utility_03_interrupted/` and the experiment index.
+The last complete generation reports 231.865 seconds of training. Final total
+time is unknown; partial work is not reconstructed or counted as a completed run.

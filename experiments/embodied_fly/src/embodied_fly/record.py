@@ -31,6 +31,9 @@ def record(source, case, output):
         raise FileExistsError("Choose a new video version; preserve the existing capture")
     run_evidence = evidence()
     teacher = (source / "manifest.json").exists()
+    evaluation = json.loads((source / "report.json").read_text()) if not teacher else {}
+    passive_mask = evaluation.get("walking_action_mask", False)
+    case_result = next((r for r in evaluation.get("results", []) if r["case"] == case), None)
     title = (
         "REFERENCE TEACHER / inherited walking policy"
         if teacher
@@ -103,10 +106,25 @@ def record(source, case, output):
                 )
                 draw.text(
                     (1125, 755),
-                    "One recurrent actor / 78 outputs",
+                    "59 active / 19 passive channels"
+                    if passive_mask
+                    else "All 78 actuator channels active",
                     font=font(16),
                     fill="#a8b0b5",
                 )
+                if case_result:
+                    draw.text(
+                        (1125, 790),
+                        "Posture: " + ("STABLE" if case_result["stable"] else "UNSTABLE"),
+                        font=font(18),
+                        fill="#a8b0b5",
+                    )
+                    draw.text(
+                        (1125, 818),
+                        "Task test: " + ("PASS" if case_result["success"] else "FAIL"),
+                        font=font(18),
+                        fill="#70a88a" if case_result["success"] else "#ce6654",
+                    )
             else:
                 draw.text(
                     (1125, 380), "Demonstration for imitation", font=font(19), fill="#ffc31f"
@@ -134,6 +152,8 @@ def record(source, case, output):
         "duration_s": frame_count / 50,
         "playback_multiplier": 1,
         "teacher": teacher,
+        "walking_action_mask": passive_mask,
+        "checkpoint_sha256": evaluation.get("checkpoint_sha256"),
         "case": case,
         "state_sha256": hashlib.sha256((source / f"{case}.npz").read_bytes()).hexdigest(),
         "model_sha256": hashlib.sha256((source / "model.mjb").read_bytes()).hexdigest(),
