@@ -62,6 +62,12 @@ def evaluate(args):
         else None
     )
     environment = FlyEnvironment(args.physical_preset)
+    actor_dt = args.actor_interval
+    if actor_dt < environment.control_dt or not np.isclose(
+        actor_dt / environment.control_dt, round(actor_dt / environment.control_dt), atol=1e-10
+    ):
+        raise ValueError("Actor interval must be a positive integer number of motor intervals")
+    time_scale = actor_dt / CONTROL_DT
     projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
@@ -74,9 +80,13 @@ def evaluate(args):
         ("left", 1.5, 0.75),
         ("right", 1.5, -0.75),
     ]
+    headings = {name: float(rng.uniform(-0.2, 0.2)) for name, _, _ in cases}
     results = []
-    for name, speed, turn in cases[: args.cases]:
-        environment.reset(yaw=float(rng.uniform(-0.2, 0.2)))
+    selected_cases = cases[: args.cases]
+    if args.case_names:
+        selected_cases = [c for c in cases if c[0] in args.case_names]
+    for name, speed, turn in selected_cases:
+        environment.reset(yaw=headings[name])
         environment.command[:] = (speed, 0, turn)
         memory = actor.initial_state(1)
         qpos, qvel, activations, controls, utilities, actions = [], [], [], [], [], []
@@ -86,9 +96,12 @@ def evaluate(args):
         start_pos = environment.data.qpos[:3].copy()
         wall_start = time.perf_counter()
         numerical_failure = None
-        for step in range(round(args.seconds / CONTROL_DT)):
+        neural_stride = max(1, round(0.02 / actor_dt))
+        for step in range(round(args.seconds / actor_dt)):
             observation = torch.as_tensor(environment.observation()[None], device=device)
-            result = actor(observation, memory, activity_override=forced_activity)
+            result = actor(
+                observation, memory, activity_override=forced_activity, time_scale=time_scale
+            )
             memory = result.state
             action = result.action[0].cpu().numpy()
             if args.walking_action_mask:
@@ -102,10 +115,10 @@ def evaluate(args):
             controls.append(environment.data.ctrl.copy())
             utilities.append(result.utility_scores[0].cpu().numpy())
             neural_activity.append(memory[trace_ids, 0].cpu().numpy())
-            if projection is not None and step % 10 == 0:
+            if projection is not None and step % neural_stride == 0:
                 neural_maps.append(projection.project(memory)[0].astype(np.float16))
             try:
-                environment.advance(action, CONTROL_DT)
+                environment.advance(action, actor_dt)
             except RuntimeError as error:
                 numerical_failure = str(error)
                 break
@@ -131,7 +144,7 @@ def evaluate(args):
             and yaw_rmse < 0.5
             and support_ratio < 0.1
         )
-        block = round(0.1 / CONTROL_DT)
+        block = max(1, round(0.1 / actor_dt))
         usable = len(speed_errors) // block * block
         block_errors = (
             np.column_stack([speed_errors, yaw_errors])[:usable].reshape(-1, block, 2).mean(1)
@@ -141,6 +154,7 @@ def evaluate(args):
         report = {
             "case": name,
             "command_cm_s_rad_s": [speed, turn],
+            "initial_heading_rad": headings[name],
             "simulated_seconds": float(environment.data.time),
             "wall_seconds": time.perf_counter() - wall_start,
             "stable": stable,
@@ -152,7 +166,7 @@ def evaluate(args):
             "block_mean_rmse_cm_s_rad_s": np.sqrt(np.square(block_errors).mean(0)).tolist()
             if block_errors is not None
             else None,
-            "block_mean_window_seconds": block * CONTROL_DT,
+            "block_mean_window_seconds": block * actor_dt,
             "block_mean_frames": usable,
             "block_mean_is_diagnostic_only": True,
             "displacement_m": distance.tolist(),
@@ -170,11 +184,12 @@ def evaluate(args):
             utility=utilities,
             neural_activity=neural_activity,
             neural_ids=trace_ids,
+            time=np.arange(len(qpos)) * actor_dt,
             **(
                 {
                     "neural_map": neural_maps,
                     "neural_occupancy": projection.occupancy,
-                    "neural_map_stride": 10,
+                    "neural_map_stride": neural_stride,
                 }
                 if projection is not None
                 else {}
@@ -196,9 +211,11 @@ def evaluate(args):
         "physics": "native MuJoCo CPU",
         "physical_preset": args.physical_preset,
         "physics_hz": 1 / environment.model.opt.timestep,
-        "control_hz": 1 / CONTROL_DT,
+        "control_hz": 1 / actor_dt,
         "motor_interval_seconds": environment.control_dt,
-        "controller_timing": "Original 500 Hz actor; commands held across finer motor intervals if needed",
+        "neural_time_scale": time_scale,
+        "controller_timing": "Cell relaxation scaled to actor interval relative to trained 2 ms clock; bounded commands held across motor intervals",
+        "timing_transfer_is_diagnostic": actor_dt != CONTROL_DT,
         "setup_seconds": setup_seconds,
         "one_checkpoint_for_all_cases": True,
         "teacher_present": False,
@@ -232,6 +249,12 @@ if __name__ == "__main__":
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--seconds", type=float, default=2.0)
     parser.add_argument("--cases", type=int, default=6)
+    parser.add_argument(
+        "--case-names",
+        nargs="+",
+        choices=("hold", "slow_walk", "walk", "fast_walk", "left", "right"),
+    )
+    parser.add_argument("--actor-interval", type=float, default=CONTROL_DT)
     parser.add_argument("--walking-action-mask", action="store_true")
     parser.add_argument("--physical-preset", choices=("walking", "flight"), default="walking")
     parser.add_argument("--neural-view", action="store_true")

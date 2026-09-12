@@ -62,10 +62,18 @@ class NeuralCore(nn.Module):
         self.leak = nn.Parameter(torch.zeros(self.neurons))
         self.bias = nn.Parameter(torch.zeros(self.neurons))
 
-    def forward(self, state, drive):
+    def forward(self, state, drive, time_scale: float = 1.0):
+        if not np.isfinite(time_scale) or time_scale <= 0:
+            raise ValueError("Neural time scale must be finite and positive")
         signal = _FixedAdjacencyMultiply.apply(self.adjacency, self.transpose, state)
         gain = (0.25 + 3.75 * self.excitability.sigmoid())[:, None]
         leak = (0.02 + 0.96 * self.leak.sigmoid())[:, None]
+        if time_scale != 1.0:
+            # Preserve the relaxation timescale of each learned cell when the
+            # action interval changes. Exact for a held target; recurrent targets
+            # change within the interval, so this does NOT guarantee trajectory
+            # equivalence at a finer clock. Keep legacy arithmetic exact at 1.0.
+            leak = -torch.expm1(torch.log1p(-leak) * time_scale)
         target = (gain * signal + self.bias[:, None] + drive).tanh()
         return state + leak * (target - state)
 
@@ -140,7 +148,9 @@ class EmbodiedBrain(nn.Module):
         """Only episode resets clear memory; other worlds retain their own state."""
         return state * (~reset_mask.bool())[None, :]
 
-    def forward(self, observation, state, activity_override=None, sample_activity=False):
+    def forward(
+        self, observation, state, activity_override=None, sample_activity=False, time_scale=1.0
+    ):
         if observation.shape != (state.shape[1], self.observation_size):
             raise ValueError("Observation/world-state shape mismatch")
         encoded_observation = (
@@ -151,7 +161,7 @@ class EmbodiedBrain(nn.Module):
             self.sensory_ids,
             self.sensory_encoder(encoded_observation).T,
         )
-        state = self.core(state, drive)
+        state = self.core(state, drive, time_scale)
         logits = self.utility_head(state[self.descending_ids].T)
         scores = logits.softmax(dim=-1)
         if activity_override is not None:
@@ -170,7 +180,7 @@ class EmbodiedBrain(nn.Module):
         )
         drive = drive.index_add(0, self.descending_ids, self.intention_encoder(choice).T)
         for _ in range(self.internal_steps - 1):
-            state = self.core(state, drive)
+            state = self.core(state, drive, time_scale)
         action = self.motor_decoder(state[self.motor_ids].T)
         return BrainOutput(action, state, logits, scores, activity)
 

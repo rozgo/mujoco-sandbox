@@ -1,0 +1,267 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T23:34:45.393128+00:00",
+    "source_commit": "65ffef79388b77ba5043f1fe59ff98bd1ce3dcab",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "f65571063e498c037be08d3bfc69aa71a2536586bb3fee6e4e96c895765c0ee4",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "46be2df307042befd4e6b45bf226e5c3a78ee2bc973b5d303797b77dd10dfdc4",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_teacher.py": "3a6d1e5c683f17db3a24303a8e3ed47f8f7decec0d36bff65c7256181405c4cf",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "6b8dcc37f86734f338376cef7a6975008f95735fa8661e07f838e2d8a4bfb47f",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T23:36:19.303606+00:00",
+  "checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "model_sha256": "3c38ca5db6c85853b89813d3ab729b6e753883c7f4552db96a53ade7ea121c73",
+  "training_source_commit": "34981d42315c0b7746a7780344a78adf9f2c2b4c",
+  "graph_metadata_sha256": "bef7dddd63b459cdb5471869e32a5b9dd474748fa8348f0bda9b45122d4a39bf",
+  "checkpoint_metadata_verification": "SHA-256 and routing",
+  "device": "cuda",
+  "physics": "native MuJoCo CPU",
+  "physical_preset": "flight",
+  "physics_hz": 20000.0,
+  "control_hz": 500.0,
+  "motor_interval_seconds": 0.0002,
+  "controller_timing": "Original 500 Hz actor; commands held across finer motor intervals if needed",
+  "setup_seconds": 3.073663021903485,
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "training_method": "online recurrent imitation with inherited braking and frozen parent walking retention",
+  "diagnostic_activity_override": null,
+  "policy_acceptance_eligible": true,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "evaluation_seed": 80001,
+  "seed_role": "development/model-selection",
+  "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
+  "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
+  "neural_view": {
+    "neurons": 166700,
+    "located_neurons": 140638,
+    "neurons_without_locations": 26062,
+    "projection_axes": "MaleCNS measured X/Z coordinates",
+    "map_size": [
+      128,
+      128
+    ],
+    "channels": [
+      "mean signed latent state",
+      "mean absolute latent state"
+    ],
+    "controller_input": false,
+    "physiological_spikes": false
+  },
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 15.956907012034208,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.16070100715264543,
+      "yaw_rmse_rad_s": 1.0832039393282802,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9895639866100032,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.10505977410494324,
+        0.45032182936502974
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.0009977186192208702,
+        0.0002828305021788262
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "b65b6de2d95e7d128db43109d9a9ccb506cda4c83bda5081794f2997dedb9aec"
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 14.909720038063824,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.45873672980476854,
+      "yaw_rmse_rad_s": 3.02116474792289,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.933248422656458,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.24777753800432967,
+        0.8542408636173242
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.006471362905733266,
+        -0.002055308786319736
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "16ad0d8447074bdfd8d9dd8ae94355c6eb360cabd8a33e22c18126e166509700"
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 14.925882572773844,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.6225964589323345,
+      "yaw_rmse_rad_s": 3.5390935654524354,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.842616873505414,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.48763019409122443,
+        1.426129913746422
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.010678049021663557,
+        -0.0026875879892093975
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "1ec3cf2878da8a2f60629fae34f49791ff302d5c720ee62297b927b876f8e5d8"
+    },
+    {
+      "case": "fast_walk",
+      "command_cm_s_rad_s": [
+        2.0,
+        0.0
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 14.24503835523501,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.761032449703457,
+      "yaw_rmse_rad_s": 2.812534920796132,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9916870084309772,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.16440429137102708,
+        0.44390718408693247
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.03442131456103156,
+        0.01257897548409952
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "c6dd2d995629fc7e97651c9fc7b853c9ec3cc4fac15c2eb58d41d5b6b519d535"
+    },
+    {
+      "case": "left",
+      "command_cm_s_rad_s": [
+        1.5,
+        0.75
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 14.224644639994949,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.5859168335629263,
+      "yaw_rmse_rad_s": 2.7496852775540175,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9920543373989568,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.11715599950156706,
+        0.4360784802613524
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.026140713694710303,
+        0.010897097228432413
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "b8cefad715235e44f134349349f574c0569104fd7fbdbbd5d37b8b95934d9e26"
+    },
+    {
+      "case": "right",
+      "command_cm_s_rad_s": [
+        1.5,
+        -0.75
+      ],
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 14.222488927654922,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.45029888078241137,
+      "yaw_rmse_rad_s": 2.553203701174261,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9925823497346151,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.26349812835045344,
+        0.4571748194195875
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 1000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.022291739274978854,
+        -0.011014929243267803
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "9c139f5bbd7ebfdf7697859b80030e9baea228c314f895560123c3591e882777"
+    }
+  ],
+  "physical_success_count": 0
+}

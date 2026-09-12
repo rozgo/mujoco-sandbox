@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 import torch
 from scipy import sparse
 
@@ -79,3 +80,23 @@ def test_no_sensory_to_motor_bypass_without_connectivity():
     brain = EmbodiedBrain(graph, [0, 1], [2, 3], [4, 5], 4, 3).eval()
     result = brain(torch.randn(2, 4), brain.initial_state(2))
     torch.testing.assert_close(result.action[0], result.action[1])
+
+
+def test_neural_clock_preserves_held_target_relaxation_and_legacy_values():
+    core = NeuralCore(sparse.csr_matrix((6, 6), dtype=np.float32)).double()
+    with torch.no_grad():
+        core.leak.copy_(torch.linspace(-2, 2, 6))
+    state = torch.randn(6, 2, dtype=torch.float64)
+    drive = torch.randn_like(state)
+    original = core(state, drive)
+    assert torch.equal(original, core(state, drive, time_scale=1.0))
+    fine = state
+    for _ in range(10):
+        fine = core(fine, drive, time_scale=0.1)
+    torch.testing.assert_close(fine, original, atol=1e-12, rtol=1e-12)
+    # The graph is still frozen; only state/cell parameters receive gradients.
+    gradients = torch.autograd.grad(fine.square().sum(), (core.leak, core.bias))
+    assert all(torch.isfinite(g).all() and g.abs().sum() > 0 for g in gradients)
+    for invalid in (0, -1, float("nan"), float("inf")):
+        with pytest.raises(ValueError, match="time scale"):
+            core(state, drive, time_scale=invalid)

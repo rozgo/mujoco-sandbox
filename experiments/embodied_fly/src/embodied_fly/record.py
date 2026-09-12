@@ -43,17 +43,41 @@ def expand_floor_display(model):
     return changes
 
 
+def replay_clock(states, metadata, fps=50):
+    """Select captured states by simulation timestamp, never by assumed stride."""
+    control_hz = metadata.get(
+        "control_hz", metadata.get("environment", {}).get("control_hz", 500)
+    )
+    dt = 1 / control_hz
+    count = len(states["qpos"])
+    timestamps = np.asarray(states["time"]) if "time" in states else np.arange(count) * dt
+    if not count or timestamps.shape != (count,) or not np.isfinite(timestamps).all():
+        raise ValueError("Nonempty finite capture timestamps required")
+    if count > 1 and not np.allclose(np.diff(timestamps), dt, atol=1e-9, rtol=1e-6):
+        raise ValueError("Capture timestamps disagree with reported control rate")
+    duration = count * dt
+    frame_times = timestamps[0] + np.arange(max(1, round(duration * fps))) / fps
+    indices = np.searchsorted(timestamps, frame_times + 1e-10, side="right") - 1
+    return np.clip(indices, 0, count - 1), timestamps, control_hz
+
+
 def record(source, case, output):
     started = time.perf_counter()
     if output.exists():
         raise FileExistsError("Choose a new video version; preserve the existing capture")
     run_evidence = evidence()
-    teacher = (source / "manifest.json").exists()
-    evaluation = json.loads((source / "report.json").read_text()) if not teacher else {}
+    metadata_file = source / (
+        "manifest.json" if (source / "manifest.json").exists() else "report.json"
+    )
+    evaluation = json.loads(metadata_file.read_text())
+    flight_teacher = evaluation.get("student_present") is False
+    teacher = metadata_file.name == "manifest.json" or flight_teacher
     passive_mask = evaluation.get("walking_action_mask", False)
     case_result = next((r for r in evaluation.get("results", []) if r["case"] == case), None)
     title = (
-        "REFERENCE TEACHER / inherited walking policy"
+        "REFERENCE TEACHER / inherited flight policy + wingbeat generator"
+        if flight_teacher
+        else "REFERENCE TEACHER / inherited walking policy"
         if teacher
         else "MALECNS STUDENT / motor-learning diagnostic"
     )
@@ -69,6 +93,7 @@ def record(source, case, output):
     floor_display = expand_floor_display(model)
     data = mujoco.MjData(model)
     states = np.load(source / f"{case}.npz", allow_pickle=False)
+    frame_indices, timestamps, control_hz = replay_clock(states, evaluation)
     thorax = model.body("walker/thorax").id
     option = mujoco.MjvOption()
     option.geomgroup[3:] = 0
@@ -92,13 +117,13 @@ def record(source, case, output):
         mujoco.Renderer(model, height=700, width=1100) as renderer,
         mujoco.Renderer(model, height=180, width=230) as eye,
     ):
-        for step in range(0, len(states["qpos"]), 10):
+        for step in frame_indices:
             # Replay only: exact saved physical poses, not a live controller.
             data.qpos[:] = states["qpos"][step]
             data.qvel[:] = states["qvel"][step]
             data.act[:] = states["activation"][step]
             data.ctrl[:] = states["ctrl"][step]
-            data.time = step * 0.002
+            data.time = timestamps[step]
             mujoco.mj_forward(model, data)
             camera.lookat[:] = data.xpos[thorax]
             renderer.update_scene(data, camera=camera, scene_option=option)
@@ -183,7 +208,7 @@ def record(source, case, output):
                 )
             draw.text(
                 (24, 840),
-                f"t = {data.time:.2f} s   |   5 kHz physics / 500 Hz control   |   complete anatomy",
+                f"t = {data.time:.2f} s   |   {1 / model.opt.timestep / 1000:g} kHz physics / {control_hz:g} Hz control   |   complete anatomy",
                 font=font(20),
                 fill="#a8b0b5",
             )
@@ -197,6 +222,9 @@ def record(source, case, output):
         "fps": 50,
         "duration_s": frame_count / 50,
         "playback_multiplier": 1,
+        "control_hz": control_hz,
+        "physics_hz": 1 / model.opt.timestep,
+        "source_metadata_sha256": hashlib.sha256(metadata_file.read_bytes()).hexdigest(),
         "teacher": teacher,
         "walking_action_mask": passive_mask,
         "checkpoint_sha256": evaluation.get("checkpoint_sha256"),

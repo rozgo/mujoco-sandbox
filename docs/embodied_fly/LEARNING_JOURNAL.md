@@ -814,3 +814,27 @@ steps and obtains exactly equal physical states and observations. Invalid
 fractional motor intervals are rejected without advancing the body. The original
 walking stepping path still uses one 2 ms interval. Seven focused body/flight
 checks pass before this evaluation.
+
+### Explicit recurrent clock and measured physical transfer
+
+The unchanged online01 actor at 500 Hz remained upright on permitted distal-foot
+support in all six two-second flight-physics cases (source `65ffef7`). Zero solver
+warnings. All original tracking gates still failed; normal-walk 100 ms mean speed
+error increased to 0.488 cm/s and yaw error to 1.426 rad/s. This preserves physical
+control but does not establish matched walking quality. Report retained under
+`runs/motor_online01_flight_physics_500hz`.
+
+The next timing diagnostic is declared before execution: same online01 weights,
+same flight model, same predetermined hold/walk initial headings, two seconds each,
+now at 5 kHz actor rate. Four internal updates remain per action. A cell's leak
+becomes `1 - (1 - leak) ** (actor_dt / 0.002)`, preserving its held-target relaxation
+time. Legacy 500 Hz arithmetic is exactly unchanged. This is exact only for a
+held neural target, not a guarantee of recurrent trajectory or behavioral
+invariance. Unit checks cover numerical relaxation, gradients and invalid clocks.
+Utility and sensory feedback are also sampled faster, so physical evaluation is
+required before calling this transferred. Neither timing probe is flight learning.
+
+Replay now samples actual recorded timestamps, with explicit metadata fallback
+for older 500 Hz recordings. Independent tests verify one second yields 50 video
+frames at either 500 Hz or 5 kHz capture, and reject mislabeled rates. Inherited
+flight captures are labeled teacher + wingbeat generator, not MaleCNS student.
