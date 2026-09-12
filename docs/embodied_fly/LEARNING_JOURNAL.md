@@ -175,6 +175,28 @@ The intended story is the learning process: build an embodied system, test a
 hypothesis, retain its failure, change the architecture for a concrete reason,
 then measure what the new controller actually learns.
 
+### Feedback-data continuation plan (2026-09-12)
+
+BC 01 remains the parent, with identical graph and 2,409,132-parameter actor.
+The next short pilot introduces two explicit data/training changes: collect
+teacher labels on states reached by a 25% student / 75% teacher actuator mixture,
+and supervise the first eight reset frames in 25% of optimizer batches. Previously
+every loss followed eight burn-in frames, leaving those initial decisions out.
+The old demonstrations remain in the training pool, with whole-episode validation
+splits preserved separately for each dataset. Observation normalization is retained
+from the parent. BC 01 did not save Adam state, so the first continuation must
+restart Adam; new checkpoints include optimizer state for subsequent resumes.
+
+All 108 physical degrees of freedom remain. The declared walking curriculum holds
+19 wing/mouth/antenna commands at raw zero; 59 channels come from the learned actor.
+This is the exact intervention tested in the paired diagnostic, now shared by
+collection and evaluation. No teacher may be used in student evaluation. Dataset
+files distinguish teacher target actions from the executed physical mixture and
+retain the parent hash, seed, collection time and failures. This is supervised
+dataset aggregation, not PPO. The teacher still has a future path that the student
+does not observe, so off-path target ambiguity remains a limitation to investigate
+if this feedback-data pilot does not transfer.
+
 ### Preserved interrupted utility search
 
 CEM 03 was interrupted for the approved full-body architecture change. Its three

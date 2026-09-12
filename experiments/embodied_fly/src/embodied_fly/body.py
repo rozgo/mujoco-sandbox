@@ -88,6 +88,21 @@ class FlyEnvironment:
         self.joint_names = [self.model.joint(i).name for i in self.joint_ids]
         self.low = self.model.actuator_ctrlrange[:, 0].copy()
         self.high = self.model.actuator_ctrlrange[:, 1].copy()
+        self.walking_inactive = np.array(
+            [
+                any(
+                    part in name
+                    for part in ("wing_", "antenna", "rostrum", "haustellum", "labrum")
+                )
+                for name in self.action_names
+            ]
+        )
+        self.passive_action = (
+            2
+            * (np.clip(np.zeros(self.model.nu), self.low, self.high) - self.low)
+            / (self.high - self.low)
+            - 1
+        ).astype(np.float32)
         self.foot_geoms = np.array(
             [
                 self.model.geom(f"walker/tarsal_claw_T{leg}_{side}_collision").id
@@ -176,6 +191,12 @@ class FlyEnvironment:
                 raise RuntimeError("MuJoCo numerical failure")
         self.mean_sensors = sensor_total / SUBSTEPS
         return self.observation()
+
+    def walking_action(self, action):
+        """First curriculum stage: raw-zero inactive channels, no gait supplied."""
+        result = np.asarray(action, dtype=np.float32).copy()
+        result[self.walking_inactive] = self.passive_action[self.walking_inactive]
+        return result
 
     def report(self):
         model = self.model

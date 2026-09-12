@@ -33,3 +33,15 @@ def test_observation_and_invalid_action_do_not_advance_body(environment):
         environment.step(np.full(78, np.nan))
     np.testing.assert_array_equal(before, environment.data.qpos)
     assert environment.data.time == 0
+
+
+def test_walking_mask_preserves_active_commands_and_passive_physical_dofs(environment):
+    original = np.linspace(-1, 1, environment.model.nu, dtype=np.float32)
+    masked = environment.walking_action(original)
+    active = ~environment.walking_inactive
+    np.testing.assert_array_equal(masked[active], original[active])
+    raw = environment.low + (masked + 1) * 0.5 * (environment.high - environment.low)
+    np.testing.assert_allclose(raw[~active], 0, atol=1e-6)
+    assert active.sum() == 59
+    assert environment.model.nv == 108
+    assert not np.shares_memory(masked, original)

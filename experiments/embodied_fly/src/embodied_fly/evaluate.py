@@ -43,24 +43,6 @@ def evaluate(args):
     device = torch.device(args.device)
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
     environment = FlyEnvironment()
-    inactive = np.array(
-        [
-            any(
-                part in name
-                for part in ("wing_", "antenna", "rostrum", "haustellum", "labrum")
-            )
-            for name in environment.action_names
-        ]
-    )
-    passive_action = (
-        2
-        * (
-            np.clip(np.zeros(environment.model.nu), environment.low, environment.high)
-            - environment.low
-        )
-        / (environment.high - environment.low)
-        - 1
-    )
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
     rng = np.random.default_rng(80001)
@@ -91,7 +73,7 @@ def evaluate(args):
             if args.walking_action_mask:
                 # Explicit curriculum diagnostic: passive wings/mouth/antennae,
                 # not a supplied gait. Keep the unmasked result as the baseline.
-                action[inactive] = passive_action[inactive]
+                action = environment.walking_action(action)
             actions.append(action)
             qpos.append(environment.data.qpos.copy())
             qvel.append(environment.data.qvel.copy())
@@ -174,7 +156,7 @@ def evaluate(args):
         "teacher_present": False,
         "scripted_gait_present": False,
         "walking_action_mask": args.walking_action_mask,
-        "active_actuators": int((~inactive).sum())
+        "active_actuators": int((~environment.walking_inactive).sum())
         if args.walking_action_mask
         else environment.model.nu,
         "evaluation_seed": 80001,
