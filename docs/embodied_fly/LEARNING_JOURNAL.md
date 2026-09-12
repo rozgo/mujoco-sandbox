@@ -220,3 +220,46 @@ completed generations and intermediate checkpoints are now retained in
 `docs/fly_survival/training/cem_utility_03_interrupted/` and the experiment index.
 The last complete generation reports 231.865 seconds of training. Final total
 time is unknown; partial work is not reconstructed or counted as a completed run.
+
+### Feedback continuation 01: measured outcome
+
+The RTX 4090 continuation completed **300.050483 s** of optimization after
+**3.595310 s** setup, followed by **0.148990 s** offline validation. It performed
+**2,059 updates**, including **523 reset-start batches**, and **527,104** supervised
+frame presentations from **24,000 unique training frames (48 physical seconds)**.
+Peak CUDA allocation was **2,930,873,344 bytes**. Twelve original episodes and
+twelve mixture episodes trained the same actor; eight separate full episodes were
+held out. Parent normalization was retained, Adam restarted because BC01 had not
+saved its optimizer, and all three internal cell-parameter groups changed.
+Checkpoint: `6e946635e0dbdcc1471529b573c8be4d6a7abc207b8fab7766530302cfa1c1d9`.
+The selected ancestry has **600.083779 s** of optimization; separate initial
+20-second probes and data/evaluation/rendering costs are additional work.
+
+On the continuation's fixed held-out batch, motor MSE changed **0.013827 → 0.011609**;
+reset-window MSE changed **0.185662 → 0.010461**. These are imitation errors, not
+physical success. Both the original masked student and the continuation stayed
+upright with zero prohibited support in all six two-second development cases.
+The continuation's stop displacement decreased from approximately **15.9 mm to
+8.5 mm**, still far too much for a stationary fly. Its right-turn behavior worsened.
+No checkpoint is accepted as a complete locomotion solution.
+
+The utility traces expose a shortcut: BC01 selected explore for every stop frame.
+The continuation selected rest for **23.6%** of the stop trial, returning to explore
+while moving. The next dataset therefore uses **100% student physical control**,
+with teacher labels recorded but not executed, to provide rest targets on moving
+states. It retains all previous data rather than replacing walking experience.
+This is a further dataset-aggregation round, not a new policy or a scripted stop.
+
+Teacher replay in anatomical axes also showed **0.82–4.84 rad/s raw yaw RMSE**,
+despite accurate mean direction. Even the teacher fails the old 0.5 rad/s
+instantaneous yaw threshold. The new tracking diagnostic reports both raw and
+100 ms block-mean errors without replacing the recorded gates. The 1 cm/s teacher
+example averages **1.0002 cm/s**, with block errors **0.0465 cm/s / 0.2377 rad/s**.
+Raw jerk, sustained drift, tilt and support should remain separate quantities.
+Replay metrics use captured pre-action poses/velocities; live reports sample after
+the control step and can differ at substep phase. Compare checkpoints using the
+same metric path and window.
+
+Reports, learning curves, collection manifest, utility traces and the new student
+film are preserved in `runs/motor_dagger_01/` and `previews/embodied_fly/`. The film
+remains labeled as a motor-learning diagnostic.

@@ -20,9 +20,10 @@ def diagnose(args):
     actor, _ = load_actor(args.checkpoint, args.graph, device)
     with np.load(args.episode, allow_pickle=False) as data:
         observations, targets = data["observation"], data["action"]
+        target_activity = data["activity"]
     manifest = json.loads((args.episode.parent / "manifest.json").read_text())
     names = [a["name"] for a in manifest["environment"]["actuation"]]
-    errors, predictions, state_std = [], [], []
+    errors, predictions, state_std, activities = [], [], [], []
     memory = actor.initial_state(1)
     for observation, target in zip(observations, targets):
         result = actor(torch.as_tensor(observation[None], device=device), memory)
@@ -31,6 +32,7 @@ def diagnose(args):
         predictions.append(prediction)
         errors.append((prediction - target) ** 2)
         state_std.append(float(memory.std()))
+        activities.append(int(result.activity[0]))
     errors, predictions = np.array(errors), np.array(predictions)
     report = {
         "provenance": evidence(),
@@ -42,6 +44,11 @@ def diagnose(args):
         "first_32_frames_mse": float(errors[:32].mean()),
         "last_500_frames_mse": float(errors[-500:].mean()),
         "neural_state_std_first_last": [state_std[0], state_std[-1]],
+        "activity_accuracy": float(np.mean(np.asarray(activities) == target_activity)),
+        "rest_fraction": float(np.mean(np.asarray(activities) == 0)),
+        "first_activity_mismatch_frame": next(
+            (i for i, (a, b) in enumerate(zip(activities, target_activity)) if a != b), None
+        ),
         "groups": {},
     }
     for group in ("wing", "antenna", "labrum", "coxa", "tibia", "femur", "tarsus", "head"):
