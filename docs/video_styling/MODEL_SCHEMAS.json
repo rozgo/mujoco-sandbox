@@ -1,0 +1,260 @@
+[
+  {
+    "model_id": "bytedance/seedance-2.5/video-edit",
+    "name": "bytedance/seedance-2.5/video-edit",
+    "base_price": 1.1,
+    "description": "Seedance 2.5 (Video-Edit) edits an input video from a natural-language prompt. The reference video drives subject identity, composition, and motion while the model rewrites lighting, style, weather, environment, or specific elements as instructed. Built on ByteDance Seed's unified multimodal architecture for cinematic, motion-stable output.",
+    "type": "video-to-video",
+    "sort_order": 80045,
+    "api_schema": {
+      "api_schemas": [
+        {
+          "type": "model_run",
+          "method": "POST",
+          "server": "https://api.wavespeed.ai",
+          "api_path": "/api/v3/bytedance/seedance-2.5/video-edit",
+          "request_schema": {
+            "additionalProperties": false,
+            "properties": {
+              "generate_audio": {
+                "default": true,
+                "description": "Whether to generate native audio for the edited output. Defaults to true. When set to false, the input video's audio track is preserved on the output instead.",
+                "type": "boolean"
+              },
+              "prompt": {
+                "description": "Describe the edit you want applied to the input video.",
+                "type": "string"
+              },
+              "reference_audios": {
+                "description": "Optional reference audio URLs to guide audio generation.",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "type": "array"
+              },
+              "reference_images": {
+                "description": "Optional reference image URLs to guide the edit (subject identity, style, etc.).",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 30,
+                "type": "array"
+              },
+              "resolution": {
+                "default": "720p",
+                "description": "Output video resolution.",
+                "enum": [
+                  "480p",
+                  "720p",
+                  "1080p",
+                  "4k"
+                ],
+                "type": "string",
+                "x-ui-component": "select"
+              },
+              "video": {
+                "description": "URL of the input video to edit. Videos longer than 30s are trimmed to 30s; videos shorter than 4s are padded to 4s.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "prompt",
+              "video"
+            ],
+            "type": "object",
+            "x-order-properties": [
+              "prompt",
+              "video",
+              "reference_images",
+              "reference_audios",
+              "resolution",
+              "generate_audio"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "model_id": "alibaba/wan-2.7/video-edit",
+    "name": "alibaba/wan-2.7/video-edit",
+    "base_price": 0.5,
+    "description": "Alibaba WAN 2.7 Video Edit performs prompt-driven video editing with multi-image reference support, supporting 720p/1080p output. Ready-to-use REST inference API, best performance, no cold starts, affordable pricing.",
+    "type": "video-to-video",
+    "sort_order": 6800,
+    "api_schema": {
+      "api_schemas": [
+        {
+          "type": "model_run",
+          "method": "POST",
+          "server": "https://api.wavespeed.ai",
+          "api_path": "/api/v3/alibaba/wan-2.7/video-edit",
+          "request_schema": {
+            "additionalProperties": false,
+            "properties": {
+              "audio_setting": {
+                "default": "auto",
+                "description": "Audio setting. 'auto' (default): model decides based on prompt content. 'origin': keep original audio from input video.",
+                "enum": [
+                  "auto",
+                  "origin"
+                ],
+                "type": "string"
+              },
+              "duration": {
+                "default": 0,
+                "description": "Duration of the output video in seconds. 0 means use input video length (max 10s). Set 2-10 to trim from 0s to specified length.",
+                "maximum": 10,
+                "minimum": 0,
+                "type": "integer",
+                "x-ui-component": "slider"
+              },
+              "enable_prompt_expansion": {
+                "default": false,
+                "description": "If set to true, the prompt optimizer will be enabled.",
+                "type": "boolean"
+              },
+              "images": {
+                "description": "List of reference images for video editing (0-3 images, optional).",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 3,
+                "type": "array"
+              },
+              "negative_prompt": {
+                "description": "The negative prompt for the generation.",
+                "type": "string"
+              },
+              "prompt": {
+                "description": "The positive prompt for the generation.",
+                "type": "string"
+              },
+              "resolution": {
+                "default": "720p",
+                "description": "The resolution of the generated video.",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ],
+                "type": "string"
+              },
+              "seed": {
+                "description": "The random seed to use for the generation. -1 means a random seed will be used.",
+                "type": "integer"
+              },
+              "video": {
+                "description": "The source video to edit.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "video",
+              "prompt"
+            ],
+            "type": "object",
+            "x-order-properties": [
+              "prompt",
+              "video",
+              "images",
+              "negative_prompt",
+              "resolution",
+              "duration",
+              "audio_setting",
+              "enable_prompt_expansion",
+              "seed"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "model_id": "kwaivgi/kling-video-o3-pro/video-edit",
+    "name": "kwaivgi/kling-video-o3-pro/video-edit",
+    "base_price": 0.84,
+    "description": "Kling Omni Video O3 Video-Edit enables conversational video editing through natural language commands. Remove objects, change backgrounds, modify styles, adjust weather/lighting, and transform scenes with simple text instructions like 'remove pedestrians' or 'change daytime to dusk'. Ready-to-use REST API, best performance, no coldstarts, affordable pricing.",
+    "type": "video-to-video",
+    "sort_order": 2800,
+    "api_schema": {
+      "api_schemas": [
+        {
+          "type": "model_run",
+          "method": "POST",
+          "server": "https://api.wavespeed.ai",
+          "api_path": "/api/v3/kwaivgi/kling-video-o3-pro/video-edit",
+          "request_schema": {
+            "additionalProperties": false,
+            "properties": {
+              "element_list": {
+                "description": "Element reference list.",
+                "items": {
+                  "properties": {
+                    "element_id": {
+                      "description": "Element ID returned by kwaivgi/kling-elements or kwaivgi/kling-elements-advanced.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "x-order-properties": [
+                    "element_id"
+                  ]
+                },
+                "maxItems": 3,
+                "type": "array",
+                "x-ui-component": "array"
+              },
+              "images": {
+                "description": "Including reference images of the element, scene, style, etc. Max 4",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "type": "array"
+              },
+              "keep_original_sound": {
+                "default": true,
+                "description": "Whether to keep the original sound from the video.",
+                "type": "boolean"
+              },
+              "prompt": {
+                "description": "The positive prompt for the generation.",
+                "type": "string"
+              },
+              "shot_type": {
+                "default": "customize",
+                "description": "Shot type for the generation.",
+                "enum": [
+                  "customize",
+                  "intelligence"
+                ],
+                "type": "string",
+                "x-enum-aliases": {
+                  "intelligent": "intelligence"
+                }
+              },
+              "video": {
+                "description": "The video to edit. Supported formats: .mp4/.mov, up to 200MB, 3-15 seconds (longer videos are trimmed to 15s), width and height between 700px and 3840px. The output duration follows the input video.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "prompt",
+              "video"
+            ],
+            "type": "object",
+            "x-order-properties": [
+              "prompt",
+              "video",
+              "images",
+              "keep_original_sound",
+              "shot_type",
+              "element_list"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

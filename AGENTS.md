@@ -110,6 +110,8 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 - Include a clickable video path and an exact viewer command in the handoff so the user can watch immediately. Retain previous versions when requested.
 - The adaptive dog's opt-in `graphite` theme uses observer-only curved body panels to cover embedded branding; these panels are not part of the physical morphology. Preserve the classic reproduction path and vendor meshes. See [the theme guide](docs/locomotion/graphite/README.md) for native viewer/replay commands and physics-invariance checks.
 
+- Generative video styling uses the isolated `experiments/video_styling` project and [its guide](docs/video_styling/README.md). Keep original simulation footage and hashes, label generated presentation, and review motion/contact changes in a timestamp-matched comparison. Generated pixels cannot establish physics or controller results. Keep API credentials in ignored local environment files and resume saved provider task IDs instead of retrying billable submissions.
+
 ## Artifacts, documentation and Git
 
 - Adaptive dog v1 is the user-accepted baseline on `main`, pinned by the `adaptive-dog-v1` tag and `docs/locomotion/OFFICIAL_V1.json`. Preserve its checkpoint/video and documented limitations. Put later learning trials on a new branch and use new artifact names; do not overwrite v1 or silently reinterpret its recorded gates.
