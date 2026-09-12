@@ -1,0 +1,140 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T23:42:17.512445+00:00",
+    "source_commit": "c9fed6f70b35d243fed296d93aa365afda517ed8",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "f65571063e498c037be08d3bfc69aa71a2536586bb3fee6e4e96c895765c0ee4",
+      "src/embodied_fly/brain.py": "70d6b185df89a9cf5dcef89878fdaa670a305e517d087e115aa75dcb8945f1e6",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f704422d850433f48a90de7741153dd22d2004290461203b6df45e6b2392cc65",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_teacher.py": "3a6d1e5c683f17db3a24303a8e3ed47f8f7decec0d36bff65c7256181405c4cf",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T23:43:34.660621+00:00",
+  "checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "model_sha256": "3c38ca5db6c85853b89813d3ab729b6e753883c7f4552db96a53ade7ea121c73",
+  "training_source_commit": "34981d42315c0b7746a7780344a78adf9f2c2b4c",
+  "graph_metadata_sha256": "bef7dddd63b459cdb5471869e32a5b9dd474748fa8348f0bda9b45122d4a39bf",
+  "checkpoint_metadata_verification": "SHA-256 and routing",
+  "device": "cuda",
+  "physics": "native MuJoCo CPU",
+  "physical_preset": "flight",
+  "physics_hz": 20000.0,
+  "control_hz": 5000.0,
+  "motor_interval_seconds": 0.0002,
+  "neural_time_scale": 0.1,
+  "controller_timing": "Cell relaxation scaled to actor interval relative to trained 2 ms clock; bounded commands held across motor intervals",
+  "timing_transfer_is_diagnostic": true,
+  "setup_seconds": 2.769997497089207,
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "training_method": "online recurrent imitation with inherited braking and frozen parent walking retention",
+  "diagnostic_activity_override": null,
+  "policy_acceptance_eligible": true,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "evaluation_seed": 80001,
+  "seed_role": "development/model-selection",
+  "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
+  "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
+  "neural_view": null,
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "initial_heading_rad": 0.1415904978386921,
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 35.76809107372537,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.2980058918045988,
+      "yaw_rmse_rad_s": 1.5895607019613323,
+      "max_disallowed_ground_force_over_weight": 0.45518733075598306,
+      "minimum_upright": 0.8870940765607581,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.21989037337581507,
+        0.7192202236743727
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 10000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.00049304853860053,
+        0.0006004250448628192
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "142288fd169e45d31bb6f6a10f919ca536e8ab310fc742abe1555352480f7dcf"
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "initial_heading_rad": -0.07094516146153099,
+      "simulated_seconds": 2.000000000002008,
+      "wall_seconds": 33.785664720926434,
+      "stable": false,
+      "success": false,
+      "velocity_rmse_cm_s": 1.0940762708391496,
+      "yaw_rmse_rad_s": 3.099163265682666,
+      "max_disallowed_ground_force_over_weight": 6.922908709475869,
+      "minimum_upright": -0.16225081906248326,
+      "block_mean_rmse_cm_s_rad_s": [
+        0.9195029176587228,
+        1.2860590202758133
+      ],
+      "block_mean_window_seconds": 0.1,
+      "block_mean_frames": 10000,
+      "block_mean_is_diagnostic_only": true,
+      "displacement_m": [
+        0.0034043388145084874,
+        0.0020780586798386904
+      ],
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "a55450e1060426993981492c157855c7b7d0e845a2700bc40962932c7e69b099"
+    }
+  ],
+  "physical_success_count": 0
+}

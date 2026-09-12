@@ -15,6 +15,7 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
+from embodied_fly.body import CONTROL_DT
 from embodied_fly.brain import EmbodiedBrain, load_malecns
 from embodied_fly.provenance import evidence, sha256, utc_now
 
@@ -76,8 +77,29 @@ def train(args):
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
     training, validation, splits, data_manifests = [], [], [], []
+    clock_groups = {}
+    wing_channels = None
     for dataset in [args.data, *args.additional_data]:
         episodes = load_episodes(dataset)
+        manifest = json.loads((dataset / "manifest.json").read_text())
+        hz = manifest.get("control_hz", manifest.get("environment", {}).get("control_hz", 500))
+        time_scale = 1 / hz / CONTROL_DT
+        if not np.isfinite(time_scale) or time_scale <= 0:
+            raise ValueError("Invalid dataset action clock")
+        group = clock_groups.setdefault(time_scale, {"training": [], "validation": []})
+        if args.wing_loss_weight:
+            channels = np.array(
+                [
+                    i
+                    for i, a in enumerate(manifest["environment"]["actuation"])
+                    if "wing_" in a["name"]
+                ]
+            )
+            if len(channels) != 6 or (
+                wing_channels is not None and not np.array_equal(wing_channels, channels)
+            ):
+                raise ValueError("Dataset wing channel ordering mismatch")
+            wing_channels = channels
         validation_indices = set(
             np.random.default_rng(1193)
             .permutation(len(episodes))[: max(1, len(episodes) // 4)]
@@ -85,12 +107,20 @@ def train(args):
         )
         training.extend(e for i, e in enumerate(episodes) if i not in validation_indices)
         validation.extend(e for i, e in enumerate(episodes) if i in validation_indices)
+        group["training"].extend(
+            e for i, e in enumerate(episodes) if i not in validation_indices
+        )
+        group["validation"].extend(
+            e for i, e in enumerate(episodes) if i in validation_indices
+        )
         manifest_hash = sha256(dataset / "manifest.json")
         data_manifests.append(manifest_hash)
         splits.append(
             {
                 "manifest_sha256": manifest_hash,
                 "validation_indices": sorted(validation_indices),
+                "control_hz": hz,
+                "neural_time_scale": time_scale,
                 "episode_file_sha256": {
                     file.name: sha256(file) for file in sorted(dataset.glob("episode_*.npz"))
                 },
@@ -140,37 +170,45 @@ def train(args):
         optimizer.load_state_dict(parent["optimizer_state_dict"])
         for group in optimizer.param_groups:
             group["lr"] = args.lr
-    fixed_validation = sample(
-        validation,
-        np.random.default_rng(9044),
-        args.burnin + args.sequence,
-        args.worlds,
-        device,
-    )
-    reset_validation = sample(
-        validation,
-        np.random.default_rng(9045),
-        args.sequence,
-        args.worlds,
-        device,
-        reset_start=True,
-    )
+    fixed_validation = {
+        scale: sample(
+            group["validation"],
+            np.random.default_rng(9044),
+            args.burnin + args.sequence,
+            args.worlds,
+            device,
+        )
+        for scale, group in clock_groups.items()
+    }
+    reset_validation = {
+        scale: sample(
+            group["validation"],
+            np.random.default_rng(9045),
+            args.sequence,
+            args.worlds,
+            device,
+            reset_start=True,
+        )
+        for scale, group in clock_groups.items()
+    }
 
     @torch.no_grad()
-    def validate(batch=fixed_validation, burnin=args.burnin):
+    def validate(batch, burnin=args.burnin, time_scale=1.0):
         brain.eval()
         state = brain.initial_state(args.worlds)
         losses = []
         for t in range(burnin + args.sequence):
-            result = brain(batch["observation"][t], state)
+            result = brain(batch["observation"][t], state, time_scale=time_scale)
             state = result.state
             if t >= burnin:
                 losses.append(F.mse_loss(result.action, batch["action"][t]))
         brain.train()
         return float(torch.stack(losses).mean())
 
-    initial_validation = validate()
-    initial_reset_validation = validate(reset_validation, 0)
+    initial_by_clock = {s: validate(b, time_scale=s) for s, b in fixed_validation.items()}
+    initial_reset_by_clock = {s: validate(b, 0, s) for s, b in reset_validation.items()}
+    initial_validation = float(np.mean(list(initial_by_clock.values())))
+    initial_reset_validation = float(np.mean(list(initial_reset_by_clock.values())))
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
     source = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
@@ -182,13 +220,17 @@ def train(args):
     grad_audit = None
     last_log = started
     max_memory = 0
+    clock_updates = dict.fromkeys(clock_groups, 0)
+    scales = list(clock_groups)
     with (args.output / "progress.jsonl").open("w") as log:
         while time.perf_counter() - started < args.seconds:
             reset_start = rng.random() < args.reset_fraction if args.reset_fraction else False
             burnin = 0 if reset_start else args.burnin
+            time_scale = scales[rng.integers(len(scales))] if len(scales) > 1 else scales[0]
+            clock_updates[time_scale] += 1
             reset_updates += int(reset_start)
             batch = sample(
-                training,
+                clock_groups[time_scale]["training"],
                 rng,
                 burnin + args.sequence,
                 args.worlds,
@@ -198,13 +240,17 @@ def train(args):
             state = brain.initial_state(args.worlds)
             with torch.no_grad():
                 for t in range(burnin):
-                    state = brain(batch["observation"][t], state).state
+                    state = brain(batch["observation"][t], state, time_scale=time_scale).state
             optimizer.zero_grad(set_to_none=True)
             motor_losses, utility_losses = [], []
             for t in range(burnin, burnin + args.sequence):
-                result = brain(batch["observation"][t], state)
+                result = brain(batch["observation"][t], state, time_scale=time_scale)
                 state = result.state
                 motor_losses.append(F.mse_loss(result.action, batch["action"][t]))
+                if args.wing_loss_weight and time_scale < 1:
+                    motor_losses[-1] = motor_losses[-1] + args.wing_loss_weight * F.mse_loss(
+                        result.action[:, wing_channels], batch["action"][t][:, wing_channels]
+                    )
                 utility_losses.append(
                     F.cross_entropy(result.utility_logits, batch["activity"][t])
                 )
@@ -244,6 +290,7 @@ def train(args):
                     "utility_ce": float(utility_loss.detach()),
                     "supervised_examples": examples,
                     "reset_start_updates": reset_updates,
+                    "neural_time_scale": time_scale,
                 }
                 print(json.dumps(record), flush=True)
                 log.write(json.dumps(record) + "\n")
@@ -255,8 +302,10 @@ def train(args):
     if device.type == "cuda":
         max_memory = torch.cuda.max_memory_allocated(device)
     evaluation_start = time.perf_counter()
-    final_validation = validate()
-    final_reset_validation = validate(reset_validation, 0)
+    final_by_clock = {s: validate(b, time_scale=s) for s, b in fixed_validation.items()}
+    final_reset_by_clock = {s: validate(b, 0, s) for s, b in reset_validation.items()}
+    final_validation = float(np.mean(list(final_by_clock.values())))
+    final_reset_validation = float(np.mean(list(final_reset_by_clock.values())))
     synchronize(device)
     evaluation_seconds = time.perf_counter() - evaluation_start
     changes = {
@@ -321,6 +370,12 @@ def train(args):
         "peak_cuda_allocated_bytes": max_memory,
         "core_gradient_audit": grad_audit,
         "core_parameter_changes": changes,
+        "clock_updates": clock_updates,
+        "clock_sampling": "equal probability per control rate; homogeneous recurrent minibatches; one shared actor",
+        "initial_validation_by_neural_time_scale": initial_by_clock,
+        "final_validation_by_neural_time_scale": final_by_clock,
+        "initial_reset_validation_by_neural_time_scale": initial_reset_by_clock,
+        "final_reset_validation_by_neural_time_scale": final_reset_by_clock,
         "checkpoint_sha256": hashlib.sha256(
             (args.output / "actor.pt").read_bytes()
         ).hexdigest(),
@@ -348,4 +403,5 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=0.0003)
     parser.add_argument("--seed", type=int, default=18001)
     parser.add_argument("--freeze-core", action="store_true")
+    parser.add_argument("--wing-loss-weight", type=float, default=0)
     train(parser.parse_args())

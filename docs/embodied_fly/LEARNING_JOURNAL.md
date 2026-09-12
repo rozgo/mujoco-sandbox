@@ -838,3 +838,28 @@ Replay now samples actual recorded timestamps, with explicit metadata fallback
 for older 500 Hz recordings. Independent tests verify one second yields 50 video
 frames at either 500 Hz or 5 kHz capture, and reject mislabeled rates. Inherited
 flight captures are labeled teacher + wingbeat generator, not MaleCNS student.
+
+The 5 kHz clock-transfer probe failed (source `c9fed6f`): hold remained upright
+but developed prohibited support at 0.455 body weight; normal walking toppled,
+with 6.923 body-weight prohibited support. Both had zero numerical warnings.
+Cell relaxation scaling alone is insufficient to preserve the walking behavior;
+do not replace the retained 500 Hz walking execution with this failed transfer.
+
+Next declared pilot: offline mixed-clock imitation in the same actor, initialized
+from online01. Original walking demonstrations retain their 500 Hz clock; eight
+new 0.3-second inherited-flight demonstrations use 5 kHz, speeds 0/5/10/20 cm/s
+and seeded initial wing phases. Choose each clock with equal probability per
+homogeneous minibatch. Use 32 neural sequences, 16 burn-in + 16 supervised steps,
+25% reset-start batches, 60 seconds optimization, learning rate 1e-4, and an extra
+unit-weight six-wing MSE only on flight batches. Retain parent normalization and
+Adam state when available. Validate each clock separately. All neuron dynamics
+and interfaces remain in one actor/checkpoint; fixed connectivity is unchanged.
+These are offline neural sequences, not parallel live physics worlds. This stage
+has no altitude/visual inputs yet and tests initial direct-wing learning only.
+A deployment clock transition and recovery of terrestrial behavior on the shared
+flight physical model remain open, as do takeoff, landing and survival utility.
+
+The evaluator for this pilot loads only the first physical state from a declared
+expert capture, then runs the student with all 78 bounded actuators and no teacher
+or oscillator calls. It measures short airborne tracking against a declared
+1 mm root-RMSE / 8 mm minimum-height envelope, preserving failure trajectories.
