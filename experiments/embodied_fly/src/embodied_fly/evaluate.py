@@ -12,6 +12,7 @@ import torch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.brain import EmbodiedBrain, load_malecns
+from embodied_fly.provenance import evidence, utc_now
 
 
 def load_actor(path, graph_path, device):
@@ -37,10 +38,29 @@ def load_actor(path, graph_path, device):
 def evaluate(args):
     torch.set_num_threads(4)
     started = time.perf_counter()
+    args.output.mkdir(parents=True, exist_ok=False)
+    run_evidence = evidence()
     device = torch.device(args.device)
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
     environment = FlyEnvironment()
-    args.output.mkdir(parents=True, exist_ok=True)
+    inactive = np.array(
+        [
+            any(
+                part in name
+                for part in ("wing_", "antenna", "rostrum", "haustellum", "labrum")
+            )
+            for name in environment.action_names
+        ]
+    )
+    passive_action = (
+        2
+        * (
+            np.clip(np.zeros(environment.model.nu), environment.low, environment.high)
+            - environment.low
+        )
+        / (environment.high - environment.low)
+        - 1
+    )
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
     rng = np.random.default_rng(80001)
@@ -68,6 +88,10 @@ def evaluate(args):
             result = actor(observation, memory)
             memory = result.state
             action = result.action[0].cpu().numpy()
+            if args.walking_action_mask:
+                # Explicit curriculum diagnostic: passive wings/mouth/antennae,
+                # not a supplied gait. Keep the unmasked result as the baseline.
+                action[inactive] = passive_action[inactive]
             actions.append(action)
             qpos.append(environment.data.qpos.copy())
             qvel.append(environment.data.qvel.copy())
@@ -139,6 +163,8 @@ def evaluate(args):
         )
         print(json.dumps(report), flush=True)
     manifest = {
+        "provenance": run_evidence,
+        "completed_utc": utc_now(),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
         "training_source_commit": checkpoint["source_commit"],
         "device": str(device),
@@ -147,6 +173,10 @@ def evaluate(args):
         "one_checkpoint_for_all_cases": True,
         "teacher_present": False,
         "scripted_gait_present": False,
+        "walking_action_mask": args.walking_action_mask,
+        "active_actuators": int((~inactive).sum())
+        if args.walking_action_mask
+        else environment.model.nu,
         "evaluation_seed": 80001,
         "results": results,
         "physical_success_count": sum(r["success"] for r in results),
@@ -162,4 +192,5 @@ if __name__ == "__main__":
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--seconds", type=float, default=2.0)
     parser.add_argument("--cases", type=int, default=6)
+    parser.add_argument("--walking-action-mask", action="store_true")
     evaluate(parser.parse_args())

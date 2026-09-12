@@ -16,6 +16,7 @@ import torch
 from torch.nn import functional as F
 
 from embodied_fly.brain import EmbodiedBrain, load_malecns
+from embodied_fly.provenance import evidence, sha256, utc_now
 
 
 def synchronize(device):
@@ -66,6 +67,8 @@ def sample(episodes, rng, length, worlds, device):
 
 def train(args):
     setup_start = time.perf_counter()
+    args.output.mkdir(parents=True, exist_ok=False)
+    run_evidence = evidence()
     device = torch.device(args.device)
     torch.set_num_threads(4)
     torch.manual_seed(args.seed)
@@ -125,8 +128,8 @@ def train(args):
     initial_validation = validate()
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
-    args.output.mkdir(parents=True, exist_ok=True)
     source = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    optimization_started_utc = utc_now()
     started = time.perf_counter()
     updates = 0
     examples = 0
@@ -181,8 +184,8 @@ def train(args):
                 record = {
                     "update": updates,
                     "seconds": now - started,
-                    "motor_mse": float(motor_loss),
-                    "utility_ce": float(utility_loss),
+                    "motor_mse": float(motor_loss.detach()),
+                    "utility_ce": float(utility_loss.detach()),
                     "supervised_examples": examples,
                 }
                 print(json.dumps(record), flush=True)
@@ -191,6 +194,7 @@ def train(args):
                 last_log = now
     synchronize(device)
     training_seconds = time.perf_counter() - started
+    optimization_completed_utc = utc_now()
     if device.type == "cuda":
         max_memory = torch.cuda.max_memory_allocated(device)
     evaluation_start = time.perf_counter()
@@ -218,6 +222,7 @@ def train(args):
         "config": config,
         "source_commit": source,
         "graph_sha256": hashlib.sha256((args.graph / "weights.npz").read_bytes()).hexdigest(),
+        "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
         "data_manifest_sha256": hashlib.sha256(
             (args.data / "manifest.json").read_bytes()
         ).hexdigest(),
@@ -225,6 +230,9 @@ def train(args):
     }
     torch.save(checkpoint, args.output / "actor.pt")
     report = {
+        "provenance": run_evidence,
+        "optimization_started_utc": optimization_started_utc,
+        "optimization_completed_utc": optimization_completed_utc,
         "source_commit": source,
         "config": config,
         "device_name": torch.cuda.get_device_name(device) if device.type == "cuda" else "CPU",
@@ -250,6 +258,7 @@ def train(args):
             (args.output / "actor.pt").read_bytes()
         ).hexdigest(),
         "physical_success": "Not established by this supervised training report",
+        "completed_utc": utc_now(),
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report), flush=True)

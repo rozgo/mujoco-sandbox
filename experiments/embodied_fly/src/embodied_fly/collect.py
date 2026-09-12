@@ -11,17 +11,19 @@ import numpy as np
 import torch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
+from embodied_fly.provenance import evidence, utc_now
 from embodied_fly.teacher import TeacherOracle
 
 
 def collect(teacher_path, output, seconds=2.0, episodes=8, seed=2001):
     started = time.perf_counter()
+    output.mkdir(parents=True, exist_ok=False)
+    run_evidence = evidence()
     torch.set_num_threads(2)
     environment = FlyEnvironment()
     oracle = TeacherOracle(environment, teacher_path)
     setup = time.perf_counter() - started
     rng = np.random.default_rng(seed)
-    output.mkdir(parents=True, exist_ok=True)
     mujoco.mj_saveModel(environment.model, str(output / "model.mjb"))
     reports = []
     for episode in range(episodes):
@@ -82,6 +84,8 @@ def collect(teacher_path, output, seconds=2.0, episodes=8, seed=2001):
         reports.append(report)
         print(json.dumps(report), flush=True)
     manifest = {
+        "provenance": run_evidence,
+        "completed_utc": utc_now(),
         "source": "upstream learned teacher through full 78-actuator FlyBody",
         "seed": seed,
         "setup_seconds": setup,

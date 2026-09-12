@@ -4,6 +4,12 @@ Work in progress on `feature/fly-brain`. This is the approved successor to the
 utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
+The [learning journal](LEARNING_JOURNAL.md) records the hypotheses, failures,
+architecture changes, measured runs and reporting limits. Exact GPU reports and
+curves are in [`runs/`](runs/). The first five-minute graph warm start reduced
+offline imitation error, but failed all six teacher-free physical acceptance cases;
+its checkpoint is retained as diagnostic.
+
 The actor contains a measured MaleCNS graph with learned internal cell dynamics,
 a learned utility head and an individual-actuator decoder. Utilities choose among
 rest, exploration, feeding, drinking, escape and grooming; names declare intended
@@ -51,6 +57,13 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.body \
   --preview previews/embodied_fly/anatomy_v1.png
 uv run --project experiments/embodied_fly --locked pytest experiments/embodied_fly/tests -q
 ```
+
+New collection/training/evaluation output directories must have new names. These
+commands refuse to overwrite previous runs. Each new report automatically records
+UTC timestamps, source commit, package source hashes, dependency versions and
+whether there were uncommitted package changes. Model/video/state hashes tie a
+presentation to its actual inputs; generation, training and evaluation times stay
+separate. Earlier reports retain the evidence available when they ran.
 
 Use uv 0.12.12 or compatible. The current MuJoCo 3.13 / PyTorch 2.14 stack uses
 Python 3.12 because dm-control 1.0.46 imports labmaze's compiled extension, whose
