@@ -31,8 +31,8 @@ def main(source, output):
         cases = chapter["cases"]
         offset, reason = 0, "First half retains initial support and gait adjustments"
         if cases and all(k.startswith("transition_") for k in cases):
-            offset = 3 * FPS
-            reason = "3–9 s retains walking, the full hold, and walking again"
+            offset = (5 * FPS + 1) // 2
+            reason = "2.52–8.52 s includes walking before the 3 s stop and after the 8 s restart"
         elif cases and all(k.startswith("moving_") for k in cases):
             offset = (original - count + 1) // 2
             reason = "Middle five seconds emphasize established platform motion"
@@ -187,6 +187,12 @@ def main(source, output):
             for c in edits
         ),
         "source_preserved": sha(source) == parent["video_sha256"],
+        "transition_commands_retained": all(
+            c["source_chapter_offset_s"] < 3
+            and c["source_chapter_offset_s"] + c["frames"] / FPS > 8
+            for c in edits
+            if c["cases"] and all(k.startswith("transition_") for k in c["cases"])
+        ),
     }
     write(
         output.with_suffix(".qa.json"),
