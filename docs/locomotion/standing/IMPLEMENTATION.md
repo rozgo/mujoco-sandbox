@@ -1,4 +1,4 @@
-# Shared standing and walking policy (in progress)
+# Shared standing and walking policy
 
 The actor is still 86 → 128 ELU → 128 ELU → 12 joint targets; the separate
 critic is 90 → 128 ELU → 128 ELU → 1 value estimate. One actor handles commands.
@@ -30,9 +30,12 @@ MuJoCo physics steps. The actor has no online learning during evaluation.
 Training uses 4,096 simultaneous worlds, PPO horizon 24, four epochs, minibatches
 of 3,072, Adam at 0.0001, gamma 0.99 and GAE lambda 0.95. Physics and learning
 run on the RTX 4090; observation/reward assembly remains NumPy on the host.
-Half the worlds initially cover the healthy dog on flat ground with walking,
-standing and walk–stop–walk commands. The other half cover the seven gentle
-nonflat surfaces. Harder terrain and damaged-body extension remain pending.
+The first three rounds split worlds between healthy flat commands and seven
+gentle nonflat surfaces. Later rounds use 27 groups: half the worlds split among
+all nine body topologies on flat ground; the other half split among 18 healthy
+nonflat surfaces. Flat episodes are 20% stand, 45% walk and 35% walk–stop–walk.
+Nonflat episodes stand. This does not train damaged bodies on every terrain.
+Mass and motor-strength randomization are disabled for this first extension.
 
 Surfaces are physical boxes with friction 0.8 and the existing firm contacts.
 The catch plane is 40 cm below the central datum. A gap is an omitted platform,
@@ -68,3 +71,33 @@ on the GPU, inside the captured graph, then transfers the summaries once per
 20 ms action. The standing penalty uses these peaks. Physics and actuator targets
 are unchanged. CPU uses explicit substeps for the same mode. Validation retains
 its independent explicit-substep path. The default legacy reward path is unchanged.
+
+The selected run uses standing support weight 8, drift weight 3 and walking
+rehearsal weight 15. One short acquisition round used two-second standing
+episodes; the final two-minute round restores ten-second episodes so that the
+policy must sustain its hold. Walking episodes remain ten seconds throughout.
+The fixed walking teacher weight is 3; all added standing inputs are disabled
+while moving. The networks still share parameters across both behaviors.
+
+All 19 scene presets are retained, including challenge failures. Slopes are
+6/12/18/24 degrees along each horizontal axis, steps have 12/20/28 cm risers,
+and uneven pad sets have maximum height differences of 6.5/18/24 cm.
+Only reset joint/velocity perturbations are held out in the final seed: these
+are familiar terrain presets, not evidence of unseen-terrain generalization.
+
+Four downward ranges are real geometric ray queries, not a height-map lookup.
+Existing angular velocity and gravity direction remain in the actor input; no
+additional IMU is modeled. Contact bits and ideal body velocity/position error
+are simulator feedback. Deploying this controller on hardware would require
+corresponding estimators and separate validation.
+
+The observer head camera is 40 cm forward and 8 cm above the base origin,
+ahead of the nose mesh. The video also uses following and overhead views,
+contact indicators and orange markers at actual limb removals. Observer floor
+marks are render decorations only. Camera placement and encoder fixes do not
+change physics, sensing or learned actions.
+
+Historical training reports keep their original contents. Before the reporting
+fix, `body_environment_counts` overwrote repeated healthy-terrain entries; use
+the authoritative `standing_cases` list to recover all 4,096 worlds. One mixed
+run reports `source_dirty=true`; this limitation is retained in its provenance.

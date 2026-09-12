@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import sysconfig
 import time
@@ -105,6 +106,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
     )
     writer.send(None)
     count, results = 0, []
+    capture_seconds = 0.0
     started = time.perf_counter()
     option = mujoco.MjvOption()
     option.flags[mujoco.mjtVisFlag.mjVIS_RANGEFINDER] = False
@@ -112,6 +114,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
         for heading, cases in VIDEO_GROUPS:
             runs = []
             for body, surface, transition in cases:
+                capture_start = time.perf_counter()
                 result, frames, model = run_case(
                     net,
                     body,
@@ -136,6 +139,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                 ).hexdigest()
                 result["trajectory"] = str(path.relative_to(ROOT))
                 results.append(result)
+                capture_seconds += time.perf_counter() - capture_start
                 configure(model)
                 model.vis.global_.offwidth = 1920
                 model.vis.global_.offheight = 1080
@@ -342,7 +346,11 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
             count += 1
     finally:
         writer.close()
+    elapsed = time.perf_counter() - started
     report = {
+        "source_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
         "checkpoint_sha256": hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "mode": saved["mode"],
@@ -353,7 +361,9 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
         "dimensions": [1920, 1080],
         "physics_backend": physics_backend,
         "cases": results,
-        "record_and_render_seconds": time.perf_counter() - started,
+        "capture_and_save_seconds": capture_seconds,
+        "render_and_encode_seconds": elapsed - capture_seconds,
+        "record_and_render_seconds": elapsed,
     }
     output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
     return report
