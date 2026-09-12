@@ -53,6 +53,7 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
     p.add_argument("--seed", type=int, default=9311)
+    p.add_argument("--replay-from", type=Path)
     p = commands.add_parser("view")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--surface", default="gap_fr")
@@ -103,7 +104,13 @@ def main():
     elif args.command == "record":
         from .standing_record import record
 
-        record(args.checkpoint, args.output, args.physics_backend, seed=args.seed)
+        record(
+            args.checkpoint,
+            args.output,
+            args.physics_backend,
+            seed=args.seed,
+            replay_from=args.replay_from,
+        )
     elif args.command == "view":
         from .standing_record import view
 

@@ -15,7 +15,7 @@ import numpy as np
 import torch
 from PIL import Image, ImageDraw
 
-from .bodies import CONTROL_DT, ROOT
+from .bodies import CONTROL_DT, ROOT, build_model
 from .presentation import configure, damage_markers
 from .record import font, model_hash
 from .standing_env import StandingEnv
@@ -88,10 +88,45 @@ def camera(model, data, surface, kind="follow"):
     return cam
 
 
-def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
+def replay_case(report, body, surface, transition):
+    """Load measured states; reject changed geometry or traces instead of rerunning."""
+    result = dict(
+        next(
+            c
+            for c in report["cases"]
+            if (c["body"], c["surface"], c["transition"]) == (body, surface, transition)
+        )
+    )
+    path = ROOT / result["trajectory"]
+    if hashlib.sha256(path.read_bytes()).hexdigest() != result["trajectory_sha256"]:
+        raise ValueError(f"Recorded trajectory changed: {path.name}")
+    with np.load(path, allow_pickle=False) as trace:
+        frames = [
+            {k: trace[k][i].copy() for k in trace.files}
+            for i in range(len(trace["time"]))
+        ]
+    model = build_model(
+        BODY_MAP[body], "stand_" + surface, timestep=result["physics_timestep_s"]
+    )
+    if model_hash(model) != result["model_mjb_sha256"]:
+        raise ValueError("Recorded model differs; replay on the original capture host")
+    return result, frames, model
+
+
+def record(
+    checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311, replay_from=None
+):
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     net, saved = load_checkpoint(checkpoint)
+    replay = json.loads(Path(replay_from).read_text()) if replay_from else None
+    if replay and (
+        replay["checkpoint_sha256"]
+        != hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest()
+        or replay["seed"] != seed
+        or replay["physics_backend"] != physics_backend
+    ):
+        raise ValueError("Replay must preserve checkpoint, seed and capture backend")
     trace_dir = ROOT / "outputs/locomotion/standing/recordings" / output.stem
     trace_dir.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(
@@ -115,17 +150,22 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
             runs = []
             for body, surface, transition in cases:
                 capture_start = time.perf_counter()
-                result, frames, model = run_case(
-                    net,
-                    body,
-                    surface,
-                    trials=1,
-                    seconds=12 if transition else 10,
-                    seed=seed,
-                    physics_backend=physics_backend,
-                    transition=transition,
-                    capture=True,
-                )
+                if replay:
+                    result, frames, model = replay_case(
+                        replay, body, surface, transition
+                    )
+                else:
+                    result, frames, model = run_case(
+                        net,
+                        body,
+                        surface,
+                        trials=1,
+                        seconds=12 if transition else 10,
+                        seed=seed,
+                        physics_backend=physics_backend,
+                        transition=transition,
+                        capture=True,
+                    )
                 result["model_mjb_sha256"] = model_hash(model)
                 path = (
                     trace_dir
@@ -236,12 +276,18 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                             elif tilt > 20:
                                 status = "EXCESSIVE TILT"
                         draw.text(
-                            (x + 16, y + height - 34),
-                            f"{status}  |  drift {live_drift:.2f} m",
+                            (x + 16, y + height - 54),
+                            status,
                             font=font(21),
                             fill="#91d8d0"
                             if status in ("WALK", "BALANCE")
                             else "#ff9b77",
+                        )
+                        draw.text(
+                            (x + 16, y + height - 29),
+                            f"drift {live_drift:.2f} m",
+                            font=font(18),
+                            fill="#b6c8ce",
                         )
                         for j, leg in enumerate(("FL", "FR", "RL", "RR")):
                             bx = x + width - 260 + j * 62
@@ -360,8 +406,10 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
         "duration_s": count / fps,
         "dimensions": [1920, 1080],
         "physics_backend": physics_backend,
+        "replay_of_video_sha256": replay["video_sha256"] if replay else None,
         "cases": results,
-        "capture_and_save_seconds": capture_seconds,
+        "capture_and_save_seconds": 0 if replay else capture_seconds,
+        "replay_load_verify_save_seconds": capture_seconds if replay else 0,
         "render_and_encode_seconds": elapsed - capture_seconds,
         "record_and_render_seconds": elapsed,
     }
