@@ -95,6 +95,11 @@ class FlyEnvironment:
                 for side in ("left", "right")
             ]
         )
+        self.support_geoms = {
+            i
+            for i in range(self.model.ngeom)
+            if any(part in self.model.geom(i).name for part in ("tarsus", "tarsal", "claw"))
+        }
         self.reset()
 
     def reset(self, yaw=0.0):
@@ -109,6 +114,7 @@ class FlyEnvironment:
         self.command = np.zeros(3, np.float32)  # forward cm/s, lateral cm/s, yaw rad/s
         self.needs = np.zeros(len(NEED_NAMES), np.float32)
         self.previous_action = np.zeros(self.model.nu, np.float32)
+        self.maximum_disallowed_ground_force = 0.0
         mujoco.mj_forward(self.model, self.data)
         self.mean_sensors = self.data.sensordata.copy()
         return self.observation()
@@ -155,6 +161,17 @@ class FlyEnvironment:
         for _ in range(SUBSTEPS):
             mujoco.mj_step(self.model, self.data)
             sensor_total += self.data.sensordata
+            for cid, contact in enumerate(self.data.contact):
+                body1 = self.model.geom_bodyid[contact.geom1]
+                body2 = self.model.geom_bodyid[contact.geom2]
+                if (body1 == 0) != (body2 == 0):
+                    robot_geom = contact.geom2 if body1 == 0 else contact.geom1
+                    if robot_geom not in self.support_geoms:
+                        force = np.empty(6)
+                        mujoco.mj_contactForce(self.model, self.data, cid, force)
+                        self.maximum_disallowed_ground_force = max(
+                            self.maximum_disallowed_ground_force, float(abs(force[0]))
+                        )
             if np.any(self.data.warning.number) or not np.isfinite(self.data.qpos).all():
                 raise RuntimeError("MuJoCo numerical failure")
         self.mean_sensors = sensor_total / SUBSTEPS

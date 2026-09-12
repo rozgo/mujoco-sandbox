@@ -58,7 +58,7 @@ def evaluate(args):
         environment.command[:] = (speed, 0, turn)
         memory = actor.initial_state(1)
         qpos, qvel, activations, controls, utilities, actions = [], [], [], [], [], []
-        upright, heights, speed_errors, neural_activity = [], [], [], []
+        upright, heights, speed_errors, yaw_errors, neural_activity = [], [], [], [], []
         trace_ids = np.linspace(0, actor.core.neurons - 1, 256).astype(int)
         start_pos = environment.data.qpos[:3].copy()
         wall_start = time.perf_counter()
@@ -93,14 +93,22 @@ def evaluate(args):
                 1,
             )
             speed_errors.append(float(velocity[3] - speed))
+            yaw_errors.append(float(velocity[2] - turn))
         distance = (environment.data.qpos[:2] - start_pos[:2]) * 0.01
         # All cases use the same declared thresholds, including failures.
         stable = bool(upright) and min(upright) > 0.5 and min(heights) > 0.0006
         velocity_rmse = (
             float(np.sqrt(np.mean(np.square(speed_errors)))) if speed_errors else None
         )
+        yaw_rmse = float(np.sqrt(np.mean(np.square(yaw_errors)))) if yaw_errors else None
+        body_weight = environment.model.body_mass.sum() * 981
+        support_ratio = environment.maximum_disallowed_ground_force / body_weight
         success = (
-            stable and numerical_failure is None and velocity_rmse < max(0.5, speed * 0.5)
+            stable
+            and numerical_failure is None
+            and velocity_rmse < max(0.5, speed * 0.5)
+            and yaw_rmse < 0.5
+            and support_ratio < 0.1
         )
         report = {
             "case": name,
@@ -110,6 +118,8 @@ def evaluate(args):
             "stable": stable,
             "success": success,
             "velocity_rmse_cm_s": velocity_rmse,
+            "yaw_rmse_rad_s": yaw_rmse,
+            "max_disallowed_ground_force_over_weight": support_ratio,
             "minimum_upright": min(upright) if upright else None,
             "displacement_m": distance.tolist(),
             "numerical_failure": numerical_failure,
