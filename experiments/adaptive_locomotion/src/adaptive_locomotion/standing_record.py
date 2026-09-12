@@ -99,6 +99,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
         fps=fps,
         codec="libx264",
         quality=8,
+        macro_block_size=1,
         pix_fmt_out="yuv420p",
         output_params=["-movflags", "+faststart"],
     )
@@ -136,6 +137,8 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                 result["trajectory"] = str(path.relative_to(ROOT))
                 results.append(result)
                 configure(model)
+                model.vis.global_.offwidth = 1920
+                model.vis.global_.offheight = 1080
                 runs.append((result, frames, model, mujoco.MjData(model)))
                 print(
                     json.dumps(

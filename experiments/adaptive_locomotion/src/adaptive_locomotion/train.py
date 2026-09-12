@@ -424,7 +424,10 @@ def train(
         else None,
         "learning_rate": learning_rate,
         "normalization_frozen": teacher is not None,
-        "body_environment_counts": {g.body.name: g.n for g in env.groups},
+        "body_environment_counts": {
+            name: sum(g.n for g in env.groups if g.body.name == name)
+            for name in dict.fromkeys(g.body.name for g in env.groups)
+        },
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
         "randomized_motor_strength": env.randomize_strength,
         "epochs": epochs,

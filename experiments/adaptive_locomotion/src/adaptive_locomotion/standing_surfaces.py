@@ -163,6 +163,9 @@ def compose(root, name):
                 condim="3",
             )
     sensor, base = root.find("sensor"), world.find("body[@name='base']")
+    # Put the observer camera ahead of the nose mesh, rather than inside it.
+    # Cameras do not contribute mass, collision geometry or policy observations.
+    base.find("camera[@name='head']").set("pos", ".40 0 .08")
     for i in range(4):
         x, y = (0.12 if i < 2 else -0.12), (0.06 if i % 2 == 0 else -0.06)
         add(
