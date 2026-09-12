@@ -1,0 +1,114 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T20:28:07.572470+00:00",
+    "source_commit": "2f4084155bfa57ba103e82c64f3decf454b41332",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "e4a491cd8a10a2f1552b512ac7e7b7c4867fd5dab375c6fb864a309a6ed25be1",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "789de126f3b4ad861e32f723cfaf29ba5966a57683196072970654b3f8d4cfda",
+      "src/embodied_fly/diagnose.py": "b6f3f13fa76832f706597d0d32b7df5ba86d0b71dd462f31c69b4285e213f996",
+      "src/embodied_fly/evaluate.py": "f4d791c11f52b01296e348eb779cbd3a22e0939f9fec8a9a0cb7540ef58edd87",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "83af4492129bc87f78cb881a650f58e3d352555783ef63e0b4c2bba9ad27cca8",
+      "src/embodied_fly/teacher.py": "0ce36ee756b5a7d7a4092c8cd006f5303cc5b407e06a6bf061a742bb01196652",
+      "src/embodied_fly/train.py": "90fc28e4359acfdfd9667c052a2f954fae677a57a3d73bad87d82e64ed84ea6d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T20:28:26.486446+00:00",
+  "checkpoint_sha256": "7bf16a8033a1013088e9672acbd9d44e4c08194c4ff8ddd744c270e9ae874243",
+  "training_source_commit": "e34d2e5541ee7867154c2530690b2ba376fbe61e",
+  "device": "cuda",
+  "physics": "native MuJoCo CPU",
+  "setup_seconds": 2.979556686244905,
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "evaluation_seed": 80001,
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.215180995874107,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.6167590108469974,
+      "yaw_rmse_rad_s": 4.713636551370512,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9883466613255368,
+      "displacement_m": [
+        0.015153369421797347,
+        0.004984428486924709
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.0037194369360805,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.7289476810834611,
+      "yaw_rmse_rad_s": 5.245562438343679,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9874581706697474,
+      "displacement_m": [
+        0.017384104772049564,
+        -0.00036819432375185103
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.003176776692271,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 1.1173476665781776,
+      "yaw_rmse_rad_s": 5.289975882705146,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9887363450783997,
+      "displacement_m": [
+        0.018508635304695365,
+        -0.004005473462655438
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    }
+  ],
+  "physical_success_count": 0
+}
