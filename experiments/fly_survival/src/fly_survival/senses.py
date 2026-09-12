@@ -22,6 +22,8 @@ class Percept:
     crowding: float
     avoidance: np.ndarray
     vision: np.ndarray
+    taste_food: bool = False
+    taste_water: bool = False
 
 
 class Sensors:
@@ -44,6 +46,10 @@ class Sensors:
         self.geom_id = np.zeros(1, dtype=np.int32)
         self.roof_ids = [m.geom(f"shelter_roof_{i}").id for i in range(2)]
         self.swat_ids = {m.geom("swatter_pad").id, m.geom("swatter_arm").id}
+        self.mouth_geoms = [
+            np.flatnonzero(m.geom_bodyid == m.body(f.name + "/c_haustellum").id)[0]
+            for f in arena.flies
+        ]
 
     def ray(self, origin, direction, exclude=-1):
         m, d = self.arena.sim.mj_model, self.arena.sim.mj_data
@@ -163,6 +169,12 @@ class Sensors:
                 body = m.geom_bodyid[hit_id]
                 near = max(near, float(m.body(body).name.startswith("fly_")) * factor)
         feature = self.eyes(i) if refresh_eyes else self.last_features[i]
+        mouth = d.geom_xpos[self.mouth_geoms[i]]
+        reach = (
+            (np.linalg.norm(RESOURCE_POS - mouth[:2], axis=1) < 2.35)
+            & (remaining > 1e-6)
+            & (0.15 < mouth[2] < 1.35)
+        )
         return Percept(
             float(np.clip(food.mean(), 0, 1)),
             float(water.mean()),
@@ -176,6 +188,8 @@ class Sensors:
             near,
             avoid,
             feature.copy(),
+            bool(reach[:2].any()),
+            bool(reach[2]),
         )
 
     def close(self):

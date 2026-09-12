@@ -35,6 +35,11 @@ class Habitat:
     ):
         self.n, self.seed = n_flies, seed
         self.rng = np.random.default_rng(seed)
+        # Exogenous hazard timing and other flies' exploration do not change when one fly dies.
+        self.hazard_rng = np.random.default_rng(seed + 1_000_003)
+        self.wander_rng = [
+            np.random.default_rng(seed + 2_000_003 + i) for i in range(n_flies)
+        ]
         self.arena = arena or build(n_flies)
         self.m, self.d = self.arena.sim.mj_model, self.arena.sim.mj_data
         if random_spawn:
@@ -71,13 +76,19 @@ class Habitat:
         ]
         self.resources = Resources()
         self.hazards = hazards
-        self.next_swat = float(self.rng.uniform(1.4, 2.4))
+        self.next_swat = float(self.hazard_rng.uniform(1.4, 2.4))
         self.swat_start = None
         self.swat_events = 0
         self.walk_angle = self.rng.uniform(-np.pi, np.pi, n_flies)
         self.commands = np.zeros((n_flies, 2))
         self.speed = np.zeros(n_flies)
         self.previous_xyz = self.d.xpos[self.arena.fly_body_ids].copy()
+        self.mouth_geoms = [
+            np.flatnonzero(
+                self.m.geom_bodyid == self.m.body(f.name + "/c_haustellum").id
+            )[0]
+            for f in self.arena.flies
+        ]
         self.impacts = np.zeros(n_flies)
         self.total_impulse = np.zeros(n_flies)
         self.max_contact_force = 0.0
@@ -122,7 +133,7 @@ class Habitat:
                 target = 0.035 + (raised - 0.035) * (age - 0.7) / 0.3
             else:
                 self.swat_start = None
-                self.next_swat = t + float(self.rng.uniform(1.4, 2.4))
+                self.next_swat = t + float(self.hazard_rng.uniform(1.4, 2.4))
                 target = raised
         self.d.ctrl[self.arena.swat_actuator] = target
 
@@ -164,17 +175,17 @@ class Habitat:
         forward = self.d.xmat[bid].reshape(3, 3)[:2, 0]
         forward = forward / max(np.linalg.norm(forward), 1e-9)
         if self.tick % 35 == 0:
-            self.walk_angle[i] += float(self.rng.normal(0, 0.55))
+            self.walk_angle[i] += float(self.wander_rng[i].normal(0, 0.55))
         wander = np.array([np.cos(self.walk_angle[i]), np.sin(self.walk_angle[i])])
         desired = wander
         speed = 0.7
         if action == 1:
             desired = p.food_gradient
-            if p.food > 0.78:
+            if p.taste_food:
                 speed = 0
         elif action == 2:
             desired = p.water_gradient
-            if p.water > 0.76:
+            if p.taste_water:
                 speed = 0
         elif action == 3:
             speed = 0
@@ -270,7 +281,8 @@ class Habitat:
         for i, (p, n, t) in enumerate(zip(percepts, self.needs, self.thinkers)):
             if not n.alive or self.speed[i] > 2.5 or not 0.5 < xyz[i, 2] < 1.8:
                 continue
-            distance = np.linalg.norm(RESOURCE_POS - xyz[i, :2], axis=1)
+            mouth = self.d.geom_xpos[self.mouth_geoms[i]]
+            distance = np.linalg.norm(RESOURCE_POS - mouth[:2], axis=1)
             if t.current == 1:
                 patch = int(np.argmin(distance[:2]))
                 if distance[patch] < 2.35:

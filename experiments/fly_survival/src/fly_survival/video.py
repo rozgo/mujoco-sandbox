@@ -89,6 +89,19 @@ def record(name, output="fly_lab_development_v1", selected=0, publish=False):
         d.time = frame["t"]
         mj.mj_forward(m, d)
         renderer.update_scene(d, camera=camera)
+        cam = renderer.scene.camera[0]
+        forward = np.asarray(cam.forward)
+        up = np.asarray(cam.up)
+        right = np.cross(forward, up)
+        center = (renderer.scene.camera[0].pos + renderer.scene.camera[1].pos) / 2
+        tangent = cam.frustum_top / cam.frustum_near
+        for i, fly in enumerate(frame["flies"]):
+            delta = d.xpos[body_ids[i]] - center
+            depth = max(float(np.dot(delta, forward)), 1e-6)
+            fly["screen"] = [
+                0.5 + float(np.dot(delta, right)) / (2 * depth * tangent * 1.5),
+                0.5 - float(np.dot(delta, up)) / (2 * depth * tangent),
+            ]
         world = renderer.render().copy()
         raw.send(world)
         canvas = Image.new("RGB", (1600, 1000), "#111313")
@@ -180,7 +193,15 @@ def record(name, output="fly_lab_development_v1", selected=0, publish=False):
     if publish:
         inspector.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source / "arena.mp4", inspector / "arena.mp4")
-        shutil.copy2(source / "telemetry.json", inspector / "telemetry.json")
+        # Fill intermediate telemetry frames with the preceding rendered-frame projection.
+        previous = None
+        for frame in frames:
+            if "screen" in frame["flies"][0]:
+                previous = [f["screen"] for f in frame["flies"]]
+            elif previous is not None:
+                for fly, xy in zip(frame["flies"], previous):
+                    fly["screen"] = xy
+        (inspector / "telemetry.json").write_text(json.dumps(telemetry))
         shutil.copytree(source / "eyes", inspector / "eyes", dirs_exist_ok=True)
         shutil.copy2(
             Path(__file__).with_name("inspector.html"), inspector / "index.html"

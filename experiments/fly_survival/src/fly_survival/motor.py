@@ -2,6 +2,7 @@
 
 import mujoco as mj
 import numpy as np
+from flygym.compose import ActuatorType
 from flygym_demo.complex_terrain import (
     HybridControllerObservation,
     HybridTurningController,
@@ -48,6 +49,11 @@ class Motors:
             )
             for f in arena.flies
         ]
+        self.holding = np.zeros(len(arena.flies), dtype=bool)
+        self.hold_targets = [None] * len(arena.flies)
+        self.position_ids = arena.sim._intern_actuatorids_by_type_by_fly[
+            ActuatorType.POSITION
+        ]
 
     def contact_forces(self):
         m, d = self.arena.sim.mj_model, self.arena.sim.mj_data
@@ -76,6 +82,18 @@ class Motors:
                 sim.mj_model.actuator_biasprm[ids, :] = 0
                 d.ctrl[ids] = 0
                 continue
+            if np.max(np.abs(commands[i])) < 1e-5:
+                ids = self.position_ids[fly.name]
+                if not self.holding[i]:
+                    joints = sim.mj_model.actuator_trnid[ids, 0]
+                    self.hold_targets[i] = d.qpos[
+                        sim.mj_model.jnt_qposadr[joints]
+                    ].copy()
+                self.holding[i] = True
+                d.ctrl[ids] = self.hold_targets[i]
+                sim.set_leg_adhesion_states(fly.name, np.ones(6))
+                continue
+            self.holding[i] = False
             obs = HybridControllerObservation(
                 float(d.xpos[bid, 2]),
                 d.xpos[self.foot_ids[i], 2],
