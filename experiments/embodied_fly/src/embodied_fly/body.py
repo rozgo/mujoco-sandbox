@@ -248,6 +248,23 @@ class FlyEnvironment:
         result[self.walking_inactive] = self.passive_action[self.walking_inactive]
         return result
 
+    def advance(self, action, duration):
+        """Hold a bounded command for an explicit controller interval.
+
+        Useful for checking a 500 Hz walking actor with the finer flight physics
+        and motor clock. Every underlying substep still checks contacts/warnings.
+        """
+        repeats = round(duration / self.control_dt)
+        if repeats < 1 or not np.isclose(
+            repeats * self.control_dt, duration, rtol=0, atol=1e-12
+        ):
+            raise ValueError(
+                "Controller interval must be a positive multiple of the motor interval"
+            )
+        for _ in range(repeats):
+            observation = self.step(action)
+        return observation
+
     def report(self):
         model = self.model
         return {

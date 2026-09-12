@@ -61,7 +61,7 @@ def evaluate(args):
         if args.diagnostic_activity
         else None
     )
-    environment = FlyEnvironment()
+    environment = FlyEnvironment(args.physical_preset)
     projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
@@ -105,7 +105,7 @@ def evaluate(args):
             if projection is not None and step % 10 == 0:
                 neural_maps.append(projection.project(memory)[0].astype(np.float16))
             try:
-                environment.step(action)
+                environment.advance(action, CONTROL_DT)
             except RuntimeError as error:
                 numerical_failure = str(error)
                 break
@@ -194,6 +194,11 @@ def evaluate(args):
         else "legacy checkpoint: exact graph weights and neuron routing; no stored metadata digest",
         "device": str(device),
         "physics": "native MuJoCo CPU",
+        "physical_preset": args.physical_preset,
+        "physics_hz": 1 / environment.model.opt.timestep,
+        "control_hz": 1 / CONTROL_DT,
+        "motor_interval_seconds": environment.control_dt,
+        "controller_timing": "Original 500 Hz actor; commands held across finer motor intervals if needed",
         "setup_seconds": setup_seconds,
         "one_checkpoint_for_all_cases": True,
         "teacher_present": False,
@@ -228,6 +233,7 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=float, default=2.0)
     parser.add_argument("--cases", type=int, default=6)
     parser.add_argument("--walking-action-mask", action="store_true")
+    parser.add_argument("--physical-preset", choices=("walking", "flight"), default="walking")
     parser.add_argument("--neural-view", action="store_true")
     parser.add_argument("--seed", type=int, default=80001)
     parser.add_argument(

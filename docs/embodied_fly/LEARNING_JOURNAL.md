@@ -798,3 +798,19 @@ training episodes fell; its retained trace was verified. Checkpoint
 `f8459aeb48997f79f81f7cb5bfd7433a4d0b1c53a2b98c8fe21af4f79441de7e`
 remains diagnostic because the continuous resume regressed. Online01 remains the
 preserved walking/braking reference; neither is the final survival controller.
+
+### Walking-to-flight physics compatibility, declared before evaluation
+
+Before changing neural timing, evaluate online01 in the full flight physical
+preset at its original **500 Hz actor clock**. Each action is held across ten
+0.2 ms motor intervals, with 20 kHz physics and every-substep contact/warning
+checks. The graph weights, neuronal update timing, original six commands, two-second
+durations and development seed remain unchanged. Report the physical preset,
+physics rate, actor rate and motor interval independently. This is a compatibility
+probe, not learned flight or acceptance of the faster neural clock.
+
+A regression check compares one 2 ms held action with ten explicit flight motor
+steps and obtains exactly equal physical states and observations. Invalid
+fractional motor intervals are rejected without advancing the body. The original
+walking stepping path still uses one 2 ms interval. Seven focused body/flight
+checks pass before this evaluation.

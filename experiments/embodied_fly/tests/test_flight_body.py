@@ -56,3 +56,18 @@ def test_enabled_wing_aerodynamics_dissipate_energy_at_same_physical_state():
     assert np.linalg.norm(aero_difference) > 1e-8
     assert aero_difference @ data.qvel < 0
     model.geom_fluid[geoms] = enabled
+
+
+def test_original_actor_interval_preserves_fine_physics_and_elapsed_time():
+    held = FlyEnvironment("flight")
+    explicit = FlyEnvironment("flight")
+    observation = held.advance(held.passive_action, 0.002)
+    for _ in range(10):
+        expected = explicit.step(explicit.passive_action)
+    np.testing.assert_array_equal(held.data.qpos, explicit.data.qpos)
+    np.testing.assert_array_equal(observation, expected)
+    assert held.data.time == pytest.approx(0.002)
+    before = held.data.qpos.copy()
+    with pytest.raises(ValueError):
+        held.advance(held.passive_action, 0.0003)
+    np.testing.assert_array_equal(held.data.qpos, before)
