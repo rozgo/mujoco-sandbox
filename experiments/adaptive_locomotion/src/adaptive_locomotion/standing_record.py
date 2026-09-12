@@ -210,11 +210,31 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                             status = "FAILED / NO RESET"
                         elif not state["support_valid"]:
                             status = "UNINTENDED SUPPORT"
+                        elif status == "BALANCE" and state["time"] >= (
+                            5 if transition else 2
+                        ):
+                            tilt = np.rad2deg(
+                                np.arccos(
+                                    np.clip(
+                                        data.xmat[model.body("base").id].reshape(3, 3)[
+                                            2, 2
+                                        ],
+                                        -1,
+                                        1,
+                                    )
+                                )
+                            )
+                            if live_drift > 0.15:
+                                status = "OUTSIDE HOLD REGION"
+                            elif tilt > 20:
+                                status = "EXCESSIVE TILT"
                         draw.text(
                             (x + 16, y + height - 34),
                             f"{status}  |  drift {live_drift:.2f} m",
                             font=font(21),
-                            fill="#91d8d0" if state["alive"] else "#ff9b77",
+                            fill="#91d8d0"
+                            if status in ("WALK", "BALANCE")
+                            else "#ff9b77",
                         )
                         for j, leg in enumerate(("FL", "FR", "RL", "RR")):
                             bx = x + width - 260 + j * 62
@@ -272,10 +292,56 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                     renderer.close()
                 if inset is not None:
                     inset.close()
+        card = Image.new("RGB", (1920, 1080), "#091219")
+        draw = ImageDraw.Draw(card)
+        passed = sum(r["passed"] for r in results)
+        draw.text(
+            (40, 28),
+            f"RECORDED TRIALS / {passed} OF {len(results)} PASS ALL BALANCE GATES",
+            font=font(38),
+            fill="#91d8d0",
+        )
+        for i, result in enumerate(results):
+            col, row = divmod(i, 9)
+            label = (
+                result["body"].replace("_", " ")
+                + " / "
+                + result["surface"].replace("_", " ")
+            )
+            if result["transition"]:
+                label += " / walk–stand–walk"
+            draw.text(
+                (40 + col * 960, 135 + row * 80),
+                label.upper(),
+                font=font(26),
+                fill="white",
+            )
+            draw.text(
+                (820 + col * 960, 135 + row * 80),
+                "PASS" if result["passed"] else "FAIL",
+                font=font(26),
+                fill="#91d8d0" if result["passed"] else "#ff9b77",
+            )
+        draw.text(
+            (40, 925),
+            "Pass: upright, allowed supports, low drift and speed, tilt and physical limits respected.",
+            font=font(27),
+            fill="white",
+        )
+        draw.text(
+            (40, 980),
+            "One shared policy. Failures retained. See the full metrics for each trial.",
+            font=font(27),
+            fill="white",
+        )
+        for _ in range(3 * fps):
+            writer.send(np.asarray(card))
+            count += 1
     finally:
         writer.close()
     report = {
         "checkpoint_sha256": hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
+        "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "mode": saved["mode"],
         "seed": seed,
         "frames": count,
