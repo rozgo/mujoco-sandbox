@@ -1,17 +1,25 @@
 # One final policy in the Ember scene
 
-[Watch the film](../../../previews/locomotion/ember/adaptive_dog_complete_v1.mp4) · [Training summary](../GPU_SUMMARY.md) · [Training card](../../../previews/locomotion/ember/training_stats_v1.png) · [Results card](../../../previews/locomotion/ember/results_v1.png)
+[Watch the film](../../../previews/locomotion/ember/adaptive_dog_complete_v2.mp4) · [Training summary](../GPU_SUMMARY.md) · [Training card](../../../previews/locomotion/ember/training_stats_v1.png) · [Results card](../../../previews/locomotion/ember/results_v1.png)
 
 **2m 54s, 1920×1080, 25 fps, 1×.** Every scene uses the same frozen final actor from
 the measured 4,096-world RTX 4090 curriculum. The Ember palette uses charcoal and
 steel, machinery yellow, oxide-red damage markers and forest-green contact dots.
 Cosmetic covers hide embedded branding; vendor assets and physical models remain
-unchanged. This is native simulation rendering.
+unchanged. The approved industrial environment adds hazard borders to every
+support family, inset steel plates, corner fasteners, floor seams, numbered lane
+markings and a dark ribbed background. This is native simulation rendering.
+
+Version 2 re-renders the **exact same 51 physical runs** as the
+[first Ember film](../../../previews/locomotion/ember/adaptive_dog_complete_v1.mp4).
+Only presentation changes; the checkpoints, outcomes, chapter order, timestamps
+and normal playback speed remain identical. There is no new physical capture or
+training for v2. The original video, manifest and QA report remain preserved.
 
 Watch immediately on macOS, from the repository root:
 
 ```sh
-open previews/locomotion/ember/adaptive_dog_complete_v1.mp4
+open previews/locomotion/ember/adaptive_dog_complete_v2.mp4
 ```
 
 ## Chapters
@@ -59,21 +67,21 @@ their strict/task targets**. The two misses are labeled in the movie:
 - Rear-left lower-leg removal drifts **17.2 cm** during the transition hold,
   exceeding the unchanged **15 cm** threshold.
 
-The final card reports the separate **204-trial held-out audit**, with 36/36
-walking completions, 136/144 strict static passes, 24/24 moving passes and 204/204
+The unchanged final card reports the separate **204-trial held-out audit**, with
+36/36 walking completions, 136/144 strict static passes, 24/24 moving passes and 204/204
 upright. Its eight static misses are not the denominator for this 51-trial film.
 The [full training report](../GPU_REPORT.md) records both scope and limitations.
 
-Training used MuJoCo Warp on the RTX 4090. These fresh demonstration runs execute
+Training used MuJoCo Warp on the RTX 4090. The original demonstration runs executed
 the frozen actor in **native CPU MuJoCo/mjbatch**, with **0.5 ms walking physics**,
 **2 ms balance physics** and **20 ms control**. No new learning or reward changes
 were made for this film. Saved physical models, states, actions, torques, contacts
 and timestamps precede rendering; replay advances through those recorded states.
 
-The [video manifest](../../../previews/locomotion/ember/adaptive_dog_complete_v1.json)
+The [video manifest](../../../previews/locomotion/ember/adaptive_dog_complete_v2.json)
 records each trial's measurements, checkpoint/model/trace hashes, capture and
 render time, chapter boundaries and video hash. The
-[QA report](../../../previews/locomotion/ember/adaptive_dog_complete_v1.qa.json)
+[QA report](../../../previews/locomotion/ember/adaptive_dog_complete_v2.qa.json)
 records complete decoding, frame/timeline/coverage checks and visual inspection.
 Raw trajectory caches remain under ignored `outputs/`.
 
@@ -84,13 +92,16 @@ From the repository root, with assets available through Git LFS:
 ```sh
 git lfs pull
 uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/record_unified_showcase.py --part capture
-uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/record_unified_showcase.py --part preview
-uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/record_unified_showcase.py --part render --output previews/locomotion/ember/adaptive_dog_complete_replay.mp4
+uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/record_unified_showcase.py --part preview --environment industrial
+uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/record_unified_showcase.py --part render --environment industrial --output previews/locomotion/ember/adaptive_dog_complete_replay.mp4
 uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/qa_unified_showcase.py previews/locomotion/ember/adaptive_dog_complete_replay.mp4
 ```
 
 Existing capture caches are reused only after their hashes/specifications match.
 Rendering refuses to overwrite an existing movie. Inspect the actual preview and
 encoded QA samples after reproducing. Fonts/rendering may vary between hosts.
+The approved environment is selected explicitly with `--environment industrial`;
+`--environment simple` reproduces the first Ember environment. Both use the same
+saved trajectories. No new capture is needed when that cache is already present.
 The [previous graphite film](../../../previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)
 and all accepted release artifacts remain available.

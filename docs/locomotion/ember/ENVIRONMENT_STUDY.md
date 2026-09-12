@@ -2,9 +2,10 @@
 
 [Open the static study](../../../previews/locomotion/ember/environment_v2.png)
 
-The user requested more consistent environment detail, then explicitly asked to
-see the platforms and floor before continuing. This candidate is **preview-only**;
-the completed Ember v1 video and live theme remain unchanged pending review.
+The user requested more consistent environment detail, reviewed the static floor
+and platforms, and explicitly approved rendering a new video. The environment is
+used in the [complete Ember v2 film](COMPLETE_VIDEO.md); the original v1 movie and
+live theme remain available unchanged.
 
 The six views show a marked floor, moving deck, modular pads, 24° slope, 20 cm
 steps and a missing-support gap. All support families receive the same diagonal
@@ -28,5 +29,6 @@ hidden so the palette is consistent across nested environment bodies as well.
 uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked python experiments/adaptive_locomotion/scripts/preview_ember_environment.py
 ```
 
-After visual approval, the existing saved 51-run traces can be re-rendered with
-this environment. Training and physical recapture are unnecessary.
+The approved video reuses the existing saved 51-run traces. Training and physical
+recapture are unnecessary. Use the recorder's `--environment industrial` option;
+the default `simple` option preserves the first Ember film's environment.

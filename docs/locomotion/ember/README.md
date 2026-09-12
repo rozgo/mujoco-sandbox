@@ -2,10 +2,11 @@
 
 [Open the static palette preview](../../../previews/locomotion/ember/palette_v1.png)
 
-[Watch the complete one-policy film — 2m 54s, 1×](../../../previews/locomotion/ember/adaptive_dog_complete_v1.mp4) · [Chapters and recording commands](COMPLETE_VIDEO.md) · [Measured training summary](../GPU_SUMMARY.md)
+[Watch the complete one-policy film — 2m 54s, 1×](../../../previews/locomotion/ember/adaptive_dog_complete_v2.mp4) · [Chapters and recording commands](COMPLETE_VIDEO.md) · [Measured training summary](../GPU_SUMMARY.md)
 
-[Industrial environment study](ENVIRONMENT_STUDY.md): static floor/platform detail
-preview, awaiting user review before another video render.
+[Approved industrial environment study](ENVIRONMENT_STUDY.md): consistent hazard
+borders, inset plates, fasteners and a numbered floor lane, used in the v2 film.
+Live viewer commands below retain the original Ember environment.
 
 An optional native MuJoCo theme based on the supplied Golden Ember palette.
 Charcoal and steel form the neutral base; yellow painted panels provide the main

@@ -1,0 +1,3970 @@
+{
+  "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+  "checkpoint_count": 1,
+  "theme": "ember",
+  "environment": "industrial",
+  "playback_speed": 1,
+  "fps": 25,
+  "frames": 4350,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "duration_s": 174.0,
+  "chapters": [
+    {
+      "title": "LEARNED WALKING",
+      "cases": [
+        "walking_healthy"
+      ],
+      "start_s": 0.0,
+      "end_s": 12.0
+    },
+    {
+      "title": "ADAPTING TO LIMB LOSS",
+      "cases": [
+        "walking_lower_fl",
+        "walking_lower_fr",
+        "walking_lower_rl",
+        "walking_lower_rr"
+      ],
+      "start_s": 12.0,
+      "end_s": 24.0
+    },
+    {
+      "title": "WALKING WITH THREE LEGS",
+      "cases": [
+        "walking_whole_fl",
+        "walking_whole_fr",
+        "walking_whole_rl",
+        "walking_whole_rr"
+      ],
+      "start_s": 24.0,
+      "end_s": 36.0
+    },
+    {
+      "title": "WALK. HOLD. WALK.",
+      "cases": [
+        "transition_healthy"
+      ],
+      "start_s": 36.0,
+      "end_s": 48.0
+    },
+    {
+      "title": "FINDING SUPPORT",
+      "cases": [
+        "standing_healthy_flat",
+        "standing_healthy_pads",
+        "standing_healthy_slope_x",
+        "standing_healthy_slope_y"
+      ],
+      "start_s": 48.0,
+      "end_s": 58.0
+    },
+    {
+      "title": "ONE FOOT WITHOUT SUPPORT",
+      "cases": [
+        "standing_healthy_gap_fl",
+        "standing_healthy_gap_fr",
+        "standing_healthy_gap_rl",
+        "standing_healthy_gap_rr"
+      ],
+      "start_s": 58.0,
+      "end_s": 68.0
+    },
+    {
+      "title": "PADS AND STEPS",
+      "cases": [
+        "standing_healthy_pads_high",
+        "standing_healthy_pads_extreme",
+        "standing_healthy_steps_12",
+        "standing_healthy_steps_20"
+      ],
+      "start_s": 68.0,
+      "end_s": 78.0
+    },
+    {
+      "title": "BALANCING ON SLOPES",
+      "cases": [
+        "standing_healthy_slope_x_12",
+        "standing_healthy_slope_y_12",
+        "standing_healthy_slope_x_18",
+        "standing_healthy_slope_y_18"
+      ],
+      "start_s": 78.0,
+      "end_s": 88.0
+    },
+    {
+      "title": "THE HARDEST STATIC SUPPORTS",
+      "cases": [
+        "standing_healthy_slope_x_24",
+        "standing_healthy_slope_y_24",
+        "standing_healthy_steps_28",
+        "moving_still"
+      ],
+      "start_s": 88.0,
+      "end_s": 98.0
+    },
+    {
+      "title": "BALANCE AFTER LOWER-LEG LOSS",
+      "cases": [
+        "standing_lower_fl_flat",
+        "standing_lower_fr_flat",
+        "standing_lower_rl_flat",
+        "standing_lower_rr_flat"
+      ],
+      "start_s": 98.0,
+      "end_s": 108.0
+    },
+    {
+      "title": "BALANCE AFTER ENTIRE-LEG LOSS",
+      "cases": [
+        "standing_whole_fl_flat",
+        "standing_whole_fr_flat",
+        "standing_whole_rl_flat",
+        "standing_whole_rr_flat"
+      ],
+      "start_s": 108.0,
+      "end_s": 118.0
+    },
+    {
+      "title": "WALK\u2013HOLD\u2013WALK / LOWER-LEG LOSS",
+      "cases": [
+        "transition_lower_fl",
+        "transition_lower_fr",
+        "transition_lower_rl",
+        "transition_lower_rr"
+      ],
+      "start_s": 118.0,
+      "end_s": 130.0
+    },
+    {
+      "title": "WALK\u2013HOLD\u2013WALK / ENTIRE-LEG LOSS",
+      "cases": [
+        "transition_whole_fl",
+        "transition_whole_fr",
+        "transition_whole_rl",
+        "transition_whole_rr"
+      ],
+      "start_s": 130.0,
+      "end_s": 142.0
+    },
+    {
+      "title": "THE WORLD STARTS MOVING",
+      "cases": [
+        "moving_translate",
+        "moving_yaw",
+        "moving_heave",
+        "moving_rock"
+      ],
+      "start_s": 142.0,
+      "end_s": 152.0
+    },
+    {
+      "title": "BALANCING ON A MOVING WORLD",
+      "cases": [
+        "moving_combined"
+      ],
+      "start_s": 152.0,
+      "end_s": 162.0
+    },
+    {
+      "title": "GPU TRAINING / MEASURED SCALE",
+      "cases": [],
+      "start_s": 162.0,
+      "end_s": 168.0
+    },
+    {
+      "title": "FINAL CHECKPOINT / HELD-OUT RESULTS",
+      "cases": [],
+      "start_s": 168.0,
+      "end_s": 174.0
+    }
+  ],
+  "cases": [
+    {
+      "key": "walking_healthy",
+      "spec": {
+        "kind": "walking",
+        "body": "healthy",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_healthy.npz",
+      "trace_sha256": "99338621ce6b5d1be72bd2b1acb5ebab8295166ba4e92faf88a570fb2b143b92",
+      "model": "walking_healthy.mjb",
+      "model_sha256": "a5db97f46c301526127d4f7e2aa997e5490fc0d107e31e8597f49ed250629360",
+      "states": 600,
+      "outcome": {
+        "case": "healthy",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 247.89047724322276,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 262.7099007490789,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 245.8998926571758,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 292.53909765621205
+        },
+        "mean_distance_m": 6.562966484474294,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.562966484474294,
+            "end_distance_before_failure_m": 6.562966484474294,
+            "velocity_rmse_while_alive": 0.059258642376735046,
+            "peak_actuator_torque_nm": 19.7423083589626,
+            "peak_torque_limit_ratio": 0.8330087915174093
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.20682650804519653,
+            "joint_above_6hz_rms_rad": 0.012916860488905606,
+            "joint_above_6hz_power_fraction": 0.007649621497434631,
+            "roll_pitch_rate_rms_rad_s": 0.2912337306031837,
+            "vertical_velocity_rms_mps": 0.05289797128588485,
+            "forward_speed_mps": 0.5576729054242239,
+            "height_std_m": 0.004475656972070259,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.20682650804519653,
+              "joint_above_6hz_rms_rad": 0.012916860488905606,
+              "joint_above_6hz_power_fraction": 0.007649621497434631,
+              "roll_pitch_rate_rms_rad_s": 0.2912337306031837,
+              "vertical_velocity_rms_mps": 0.05289797128588485,
+              "forward_speed_mps": 0.5576729054242239,
+              "height_std_m": 0.004475656972070259,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.4646098003629764,
+            0.604355716878403,
+            0.5807622504537205,
+            0.6678765880217786
+          ]
+        }
+      },
+      "capture_save_seconds": 1.642792999977246
+    },
+    {
+      "key": "walking_lower_fl",
+      "spec": {
+        "kind": "walking",
+        "body": "lower_fl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_lower_fl.npz",
+      "trace_sha256": "1fded476c0fc81dcaab72c435daa25a310d68db05f4c19c71f1b4fd2cf3aa573",
+      "model": "walking_lower_fl.mjb",
+      "model_sha256": "3dfb65c4e1561a78980a31fca0b8f56e2e88da5b8452a9217fcfaaee24bb45e9",
+      "states": 600,
+      "outcome": {
+        "case": "lower_fl",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_stump",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_stump",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_stump": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 267.7859760661183,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 329.90022517553484,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 333.3070979222123
+        },
+        "mean_distance_m": 5.943362414972786,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.943362414972786,
+            "end_distance_before_failure_m": 5.943362414972786,
+            "velocity_rmse_while_alive": 0.09228381255248308,
+            "peak_actuator_torque_nm": 26.75102339357474,
+            "peak_torque_limit_ratio": 0.9920459043256138
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.31437867879867554,
+            "joint_above_6hz_rms_rad": 0.025166326286599424,
+            "joint_above_6hz_power_fraction": 0.04098773774911176,
+            "roll_pitch_rate_rms_rad_s": 0.6242535812902317,
+            "vertical_velocity_rms_mps": 0.22104615299588204,
+            "forward_speed_mps": 0.5067090828145177,
+            "height_std_m": 0.014683526396608965,
+            "unsupported_force_fraction": 0.010889292196007259,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.31437867879867554,
+              "joint_above_6hz_rms_rad": 0.025166326286599424,
+              "joint_above_6hz_power_fraction": 0.04098773774911176,
+              "roll_pitch_rate_rms_rad_s": 0.6242535812902317,
+              "vertical_velocity_rms_mps": 0.22104615299588204,
+              "forward_speed_mps": 0.5067090828145177,
+              "height_std_m": 0.014683526396608965,
+              "unsupported_force_fraction": 0.010889292196007259,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.6352087114337568,
+            0.6696914700544465,
+            0.6932849364791288
+          ]
+        }
+      },
+      "capture_save_seconds": 1.434180291951634
+    },
+    {
+      "key": "walking_lower_fr",
+      "spec": {
+        "kind": "walking",
+        "body": "lower_fr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_lower_fr.npz",
+      "trace_sha256": "f1513972dce5bf68bd0613414979496269e3d3e70cd64cc53f50d0ed303bc5d7",
+      "model": "walking_lower_fr.mjb",
+      "model_sha256": "439111f530f525618848b868454595486b14fd344a4b4cdf1dd207ca4bc64291",
+      "states": 600,
+      "outcome": {
+        "case": "lower_fr",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_stump",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_stump",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 229.80450992758787,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_stump": 0.0,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 307.2442954616707,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 359.1987127424998
+        },
+        "mean_distance_m": 6.603583619032742,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.603583619032742,
+            "end_distance_before_failure_m": 6.603583619032742,
+            "velocity_rmse_while_alive": 0.0743676743261405,
+            "peak_actuator_torque_nm": 22.29252019240363,
+            "peak_torque_limit_ratio": 0.9406126663461447
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3264259099960327,
+            "joint_above_6hz_rms_rad": 0.023017191033135882,
+            "joint_above_6hz_power_fraction": 0.033557494093394355,
+            "roll_pitch_rate_rms_rad_s": 0.6016850772102974,
+            "vertical_velocity_rms_mps": 0.20519927062071855,
+            "forward_speed_mps": 0.5625091745283257,
+            "height_std_m": 0.012816612580860148,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3264259099960327,
+              "joint_above_6hz_rms_rad": 0.023017191033135882,
+              "joint_above_6hz_power_fraction": 0.033557494093394355,
+              "roll_pitch_rate_rms_rad_s": 0.6016850772102974,
+              "vertical_velocity_rms_mps": 0.20519927062071855,
+              "forward_speed_mps": 0.5625091745283257,
+              "height_std_m": 0.012816612580860148,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.6678765880217786,
+            0.0,
+            0.5462794918330308,
+            0.6606170598911071
+          ]
+        }
+      },
+      "capture_save_seconds": 1.4600058329524472
+    },
+    {
+      "key": "walking_lower_rl",
+      "spec": {
+        "kind": "walking",
+        "body": "lower_rl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_lower_rl.npz",
+      "trace_sha256": "646b375b687b15b1e0635ae1b6b9591f5635316812133c614036d744e0419636",
+      "model": "walking_lower_rl.mjb",
+      "model_sha256": "3fe22a1ace59d13e8a53821f5080e93a7b877cf314108f8fbb5a6edd69f18e78",
+      "states": 600,
+      "outcome": {
+        "case": "lower_rl",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_stump",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_stump",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 329.42299675342684,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 191.7481475002357,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_stump": 0.0,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 427.5679611667474
+        },
+        "mean_distance_m": 5.9526427600714795,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 5.9526427600714795,
+            "end_distance_before_failure_m": 5.9526427600714795,
+            "velocity_rmse_while_alive": 0.13113247920503282,
+            "peak_actuator_torque_nm": 23.7,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3074580132961273,
+            "joint_above_6hz_rms_rad": 0.026101508764728193,
+            "joint_above_6hz_power_fraction": 0.04271021944707294,
+            "roll_pitch_rate_rms_rad_s": 0.689766494364914,
+            "vertical_velocity_rms_mps": 0.13509123740201448,
+            "forward_speed_mps": 0.5133797048411963,
+            "height_std_m": 0.009746736651838882,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3074580132961273,
+              "joint_above_6hz_rms_rad": 0.026101508764728193,
+              "joint_above_6hz_power_fraction": 0.04271021944707294,
+              "roll_pitch_rate_rms_rad_s": 0.689766494364914,
+              "vertical_velocity_rms_mps": 0.13509123740201448,
+              "forward_speed_mps": 0.5133797048411963,
+              "height_std_m": 0.009746736651838882,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.6950998185117967,
+            0.38656987295825773,
+            0.0,
+            0.7985480943738656
+          ]
+        }
+      },
+      "capture_save_seconds": 1.4511486659757793
+    },
+    {
+      "key": "walking_lower_rr",
+      "spec": {
+        "kind": "walking",
+        "body": "lower_rr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_lower_rr.npz",
+      "trace_sha256": "bfc679f78e30f2ce8988304c59e389325ce3910364b75f468e80a48ea505f009",
+      "model": "walking_lower_rr.mjb",
+      "model_sha256": "cc9c9bca82435d6dcd2a3e3b272d3fe204eb9c9135cfae280303f28e4da36a9f",
+      "states": 600,
+      "outcome": {
+        "case": "lower_rr",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_stump"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal",
+          "RR_stump"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 156.21827064245116,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 365.4350379354719,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 445.590378994173,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_stump": 0.0
+        },
+        "mean_distance_m": 6.032709426844471,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.032709426844471,
+            "end_distance_before_failure_m": 6.032709426844471,
+            "velocity_rmse_while_alive": 0.10165271078587683,
+            "peak_actuator_torque_nm": 23.131502274580225,
+            "peak_torque_limit_ratio": 0.9760127542016973
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3286345601081848,
+            "joint_above_6hz_rms_rad": 0.027600466489758075,
+            "joint_above_6hz_power_fraction": 0.044680675481709606,
+            "roll_pitch_rate_rms_rad_s": 0.6560028112614686,
+            "vertical_velocity_rms_mps": 0.17585667130774904,
+            "forward_speed_mps": 0.5125066776361722,
+            "height_std_m": 0.011114682964878074,
+            "unsupported_force_fraction": 0.012704174228675136,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3286345601081848,
+              "joint_above_6hz_rms_rad": 0.027600466489758075,
+              "joint_above_6hz_power_fraction": 0.044680675481709606,
+              "roll_pitch_rate_rms_rad_s": 0.6560028112614686,
+              "vertical_velocity_rms_mps": 0.17585667130774904,
+              "forward_speed_mps": 0.5125066776361722,
+              "height_std_m": 0.011114682964878074,
+              "unsupported_force_fraction": 0.012704174228675136,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.39019963702359345,
+            0.7695099818511797,
+            0.7695099818511797,
+            0.0
+          ]
+        }
+      },
+      "capture_save_seconds": 1.3204289159039035
+    },
+    {
+      "key": "walking_whole_fl",
+      "spec": {
+        "kind": "walking",
+        "body": "whole_fl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_whole_fl.npz",
+      "trace_sha256": "6b7f9efa60702e16a6d7c340823ce42340bfedf221496da229af454ad4831326",
+      "model": "walking_whole_fl.mjb",
+      "model_sha256": "a1081230f5b60dfe2c256f9d20a0ad65ed26ad24910c41e01020e0d6804b7442",
+      "states": 600,
+      "outcome": {
+        "case": "whole_fl",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FR_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 230.40072548527905,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 326.2097471241613,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 353.6939867059931
+        },
+        "mean_distance_m": 6.266348908497181,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.266348908497181,
+            "end_distance_before_failure_m": 6.266348908497181,
+            "velocity_rmse_while_alive": 0.09533546053354822,
+            "peak_actuator_torque_nm": 27.944209213756174,
+            "peak_torque_limit_ratio": 0.9940242760929968
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.33890533447265625,
+            "joint_above_6hz_rms_rad": 0.02598283604737907,
+            "joint_above_6hz_power_fraction": 0.036496285034874267,
+            "roll_pitch_rate_rms_rad_s": 0.6350059010343749,
+            "vertical_velocity_rms_mps": 0.18394701133754046,
+            "forward_speed_mps": 0.5383555179496897,
+            "height_std_m": 0.011569948247207685,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.33890533447265625,
+              "joint_above_6hz_rms_rad": 0.02598283604737907,
+              "joint_above_6hz_power_fraction": 0.036496285034874267,
+              "roll_pitch_rate_rms_rad_s": 0.6350059010343749,
+              "vertical_velocity_rms_mps": 0.18394701133754046,
+              "forward_speed_mps": 0.5383555179496897,
+              "height_std_m": 0.011569948247207685,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.0,
+            0.6134301270417423,
+            0.6352087114337568,
+            0.7150635208711433
+          ]
+        }
+      },
+      "capture_save_seconds": 1.0174931249348447
+    },
+    {
+      "key": "walking_whole_fr",
+      "spec": {
+        "kind": "walking",
+        "body": "whole_fr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_whole_fr.npz",
+      "trace_sha256": "8df3e447420affda8fb734b5a342f80a5d7001dfa4822e338afb8ab40675f5ab",
+      "model": "walking_whole_fr.mjb",
+      "model_sha256": "7b29798d75f14149ccb1ec4af62e23cb861937329449d583b6cee77fe3d694ae",
+      "states": 600,
+      "outcome": {
+        "case": "whole_fr",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "RL_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 249.81101524112873,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 290.31092780782024,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 300.4071053003486
+        },
+        "mean_distance_m": 6.386141463973615,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.386141463973615,
+            "end_distance_before_failure_m": 6.386141463973615,
+            "velocity_rmse_while_alive": 0.08593726428405923,
+            "peak_actuator_torque_nm": 23.7,
+            "peak_torque_limit_ratio": 1.0
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.306412011384964,
+            "joint_above_6hz_rms_rad": 0.024261921016308252,
+            "joint_above_6hz_power_fraction": 0.03466730787163067,
+            "roll_pitch_rate_rms_rad_s": 0.7072490014419457,
+            "vertical_velocity_rms_mps": 0.13306079954537003,
+            "forward_speed_mps": 0.5461102546558685,
+            "height_std_m": 0.008016215977354609,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.306412011384964,
+              "joint_above_6hz_rms_rad": 0.024261921016308252,
+              "joint_above_6hz_power_fraction": 0.03466730787163067,
+              "roll_pitch_rate_rms_rad_s": 0.7072490014419457,
+              "vertical_velocity_rms_mps": 0.13306079954537003,
+              "forward_speed_mps": 0.5461102546558685,
+              "height_std_m": 0.008016215977354609,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.6497277676950998,
+            0.0,
+            0.5698729582577132,
+            0.6424682395644283
+          ]
+        }
+      },
+      "capture_save_seconds": 1.055658874916844
+    },
+    {
+      "key": "walking_whole_rl",
+      "spec": {
+        "kind": "walking",
+        "body": "whole_rl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_whole_rl.npz",
+      "trace_sha256": "6acc7644e73c4b7dffd552f0f6d92c821bc280e2d2c27b7bbb018e626416be3f",
+      "model": "walking_whole_rl.mjb",
+      "model_sha256": "25619d106922cdf00af464cbac829a42b936552b817de72109109cc940f4c4a5",
+      "states": 600,
+      "outcome": {
+        "case": "whole_rl",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RR_hip_collision_2",
+          "RR_thigh_collision_2",
+          "RR_housing",
+          "RR_member",
+          "RR_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RR_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 345.97082077881873,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 164.23105178453417,
+          "RR_hip_collision_2": 0.0,
+          "RR_thigh_collision_2": 0.0,
+          "RR_housing": 0.0,
+          "RR_member": 0.0,
+          "RR_terminal": 405.76413616330325
+        },
+        "mean_distance_m": 6.127654396731236,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.127654396731236,
+            "end_distance_before_failure_m": 6.127654396731236,
+            "velocity_rmse_while_alive": 0.11071221619909448,
+            "peak_actuator_torque_nm": 23.17398853421604,
+            "peak_torque_limit_ratio": 0.977805423384643
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.3168069124221802,
+            "joint_above_6hz_rms_rad": 0.027646089525661766,
+            "joint_above_6hz_power_fraction": 0.06223439738304921,
+            "roll_pitch_rate_rms_rad_s": 0.7321702252909851,
+            "vertical_velocity_rms_mps": 0.13188375719622203,
+            "forward_speed_mps": 0.5253576142280518,
+            "height_std_m": 0.00888973607860283,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.3168069124221802,
+              "joint_above_6hz_rms_rad": 0.027646089525661766,
+              "joint_above_6hz_power_fraction": 0.06223439738304921,
+              "roll_pitch_rate_rms_rad_s": 0.7321702252909851,
+              "vertical_velocity_rms_mps": 0.13188375719622203,
+              "forward_speed_mps": 0.5253576142280518,
+              "height_std_m": 0.00888973607860283,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.6388384754990926,
+            0.4627949183303085,
+            0.0,
+            0.7549909255898367
+          ]
+        }
+      },
+      "capture_save_seconds": 1.4046819580253214
+    },
+    {
+      "key": "walking_whole_rr",
+      "spec": {
+        "kind": "walking",
+        "body": "whole_rr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.0005,
+      "trace": "walking_whole_rr.npz",
+      "trace_sha256": "704a87dfd1b1369f5f1afd7aa01342fd448a24282aa183688015bdea4a38b19c",
+      "model": "walking_whole_rr.mjb",
+      "model_sha256": "f9a3b4d5b3e42f500c2db97152c1a381111bc043bde8bb23074996b52e654b28",
+      "states": 600,
+      "outcome": {
+        "case": "whole_rr",
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "survived": 1,
+        "completed_5m": 1,
+        "completed_with_allowed_support": 1,
+        "support_checked_every_physics_step": true,
+        "physics_backend": "mjbatch",
+        "support_force_threshold_n": 1.0,
+        "support_geom_names": [
+          "base_collision_5",
+          "base_collision_6",
+          "base_collision_7",
+          "FL_hip_collision_2",
+          "FL_thigh_collision_2",
+          "FL_housing",
+          "FL_member",
+          "FL_terminal",
+          "FR_hip_collision_2",
+          "FR_thigh_collision_2",
+          "FR_housing",
+          "FR_member",
+          "FR_terminal",
+          "RL_hip_collision_2",
+          "RL_thigh_collision_2",
+          "RL_housing",
+          "RL_member",
+          "RL_terminal"
+        ],
+        "allowed_support_geom_names": [
+          "FL_terminal",
+          "FR_terminal",
+          "RL_terminal"
+        ],
+        "maximum_force_by_geom_n": {
+          "base_collision_5": 0.0,
+          "base_collision_6": 0.0,
+          "base_collision_7": 0.0,
+          "FL_hip_collision_2": 0.0,
+          "FL_thigh_collision_2": 0.0,
+          "FL_housing": 0.0,
+          "FL_member": 0.0,
+          "FL_terminal": 162.30554879235189,
+          "FR_hip_collision_2": 0.0,
+          "FR_thigh_collision_2": 0.0,
+          "FR_housing": 0.0,
+          "FR_member": 0.0,
+          "FR_terminal": 378.87854643851085,
+          "RL_hip_collision_2": 0.0,
+          "RL_thigh_collision_2": 0.0,
+          "RL_housing": 0.0,
+          "RL_member": 0.0,
+          "RL_terminal": 409.1919523398506
+        },
+        "mean_distance_m": 6.628052696880558,
+        "rows": [
+          {
+            "trial": 0,
+            "survived": true,
+            "completed_5m": true,
+            "completed_with_allowed_support": true,
+            "bad_support_control_windows": 0,
+            "peak_unintended_support_n": 0.0,
+            "unintended_support_impulse_ns": 0.0,
+            "fell": false,
+            "left_course": false,
+            "failure_time_s": null,
+            "max_distance_m": 6.628052696880558,
+            "end_distance_before_failure_m": 6.628052696880558,
+            "velocity_rmse_while_alive": 0.08672648800145255,
+            "peak_actuator_torque_nm": 21.33802937681469,
+            "peak_torque_limit_ratio": 0.8621115710882231
+          }
+        ],
+        "motion_quality": {
+          "support_sampling_s": 0.02,
+          "support_force_threshold_n": 1.0,
+          "airborne_clearance_threshold_m": 0.001,
+          "window_s": [
+            1.0,
+            12
+          ],
+          "spectral_window": "Hann, demeaned, power normalized, active joints only",
+          "summary": {
+            "action_step_rms": 0.33684614300727844,
+            "joint_above_6hz_rms_rad": 0.028452379383894746,
+            "joint_above_6hz_power_fraction": 0.06274466852028483,
+            "roll_pitch_rate_rms_rad_s": 0.609346986255463,
+            "vertical_velocity_rms_mps": 0.15888742189843513,
+            "forward_speed_mps": 0.563037857871072,
+            "height_std_m": 0.009480019271827969,
+            "unsupported_force_fraction": 0.0,
+            "airborne_above_1mm_fraction": 0.0
+          },
+          "per_trial": [
+            {
+              "action_step_rms": 0.33684614300727844,
+              "joint_above_6hz_rms_rad": 0.028452379383894746,
+              "joint_above_6hz_power_fraction": 0.06274466852028483,
+              "roll_pitch_rate_rms_rad_s": 0.609346986255463,
+              "vertical_velocity_rms_mps": 0.15888742189843513,
+              "forward_speed_mps": 0.563037857871072,
+              "height_std_m": 0.009480019271827969,
+              "unsupported_force_fraction": 0.0,
+              "airborne_above_1mm_fraction": 0.0
+            }
+          ],
+          "mean_support_duty_FL_FR_RL_RR": [
+            0.4192377495462795,
+            0.7477313974591652,
+            0.7277676950998185,
+            0.0
+          ]
+        }
+      },
+      "capture_save_seconds": 1.3705248340265825
+    },
+    {
+      "key": "standing_healthy_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_flat.npz",
+      "trace_sha256": "4b736ef788a7d0a8d11348d4a69803a495094f8a8cdec20d8058cf2d6c6ff6e9",
+      "model": "standing_healthy_flat.mjb",
+      "model_sha256": "40be609187a761a9743683d93c0d6d475d93c294dc015c38ffbf451a1fe44f86",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0008033659426522352,
+            "max_idle_drift_m": 0.03298389510219452,
+            "max_idle_tilt_deg": 1.8909378553679415,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.25634370287858016,
+            "max_penetration_m": 0.000554050731714946,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4235409579705447
+      },
+      "capture_save_seconds": 0.4751859159441665
+    },
+    {
+      "key": "standing_healthy_pads",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "pads",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_pads.npz",
+      "trace_sha256": "e345fe3a7b5b1f4623a1b510fa4a960eac47f9f30bf6742c6563420741021779",
+      "model": "standing_healthy_pads.mjb",
+      "model_sha256": "d27371c8352b9c68574bf0e44ce442fd9d101c67dde50d1a87026c063a121a08",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "pads",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0010668177835111178,
+            "max_idle_drift_m": 0.05235708196242333,
+            "max_idle_tilt_deg": 3.0288937653758343,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.326543143242448,
+            "max_penetration_m": 0.0004957426362478326,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4468825840158388
+      },
+      "capture_save_seconds": 0.5006749170133844
+    },
+    {
+      "key": "standing_healthy_slope_x",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_x",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_x.npz",
+      "trace_sha256": "e2ac3825618e02a663911a0c6ed33e68e5d3b952e7f85f78f82f5adc0e0cfee9",
+      "model": "standing_healthy_slope_x.mjb",
+      "model_sha256": "bad3b8ff9a50c03c346b3ecaf1af390b02b8635ebd1dbc05d2ae23153ce2f1a5",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_x",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.00147720088234236,
+            "max_idle_drift_m": 0.01923610686778106,
+            "max_idle_tilt_deg": 4.57509600598062,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.34321816706031216,
+            "max_penetration_m": 0.00040483508685194153,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.43668029201216996
+      },
+      "capture_save_seconds": 0.4849883330753073
+    },
+    {
+      "key": "standing_healthy_slope_y",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_y",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_y.npz",
+      "trace_sha256": "c928b9078f6f8518b6d89bf2d87176787c321917f29ca5c973151c80fc9742e3",
+      "model": "standing_healthy_slope_y.mjb",
+      "model_sha256": "da779ab72de383dbf148809f6adbcb37435033cfc7fcb213435f262b664b0cff",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_y",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0025231408343017463,
+            "max_idle_drift_m": 0.043088021739815616,
+            "max_idle_tilt_deg": 4.853320589057343,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3282306782062785,
+            "max_penetration_m": 0.0005672586631067442,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.42840524995699525
+      },
+      "capture_save_seconds": 0.47528045892249793
+    },
+    {
+      "key": "standing_healthy_gap_fl",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "gap_fl",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_gap_fl.npz",
+      "trace_sha256": "dc0c71e6fd83472513de37c376650006485af9cd3636fd6b7ba6669c16f868a4",
+      "model": "standing_healthy_gap_fl.mjb",
+      "model_sha256": "75ec1d27cee938d98e58e53ac32235d23cff7b0993ced9d1387ccb9ec16e1d3c",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "gap_fl",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0036034528576865663,
+            "max_idle_drift_m": 0.01245992671966708,
+            "max_idle_tilt_deg": 5.65867462272079,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.37503442097488837,
+            "max_penetration_m": 0.00042607186882540754,
+            "unsupported_foot_fraction": 1.0,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4346373330336064
+      },
+      "capture_save_seconds": 0.48511787492316216
+    },
+    {
+      "key": "standing_healthy_gap_fr",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "gap_fr",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_gap_fr.npz",
+      "trace_sha256": "4583b3650ffab45ba44d108e22e35531a06040ca23c01757c242aa8ed374e967",
+      "model": "standing_healthy_gap_fr.mjb",
+      "model_sha256": "4d039aac4aedd6f6009d531647a54a7cbe00ac8e13910a27f9f163b2a5af1bf4",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "gap_fr",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.006535704280713197,
+            "max_idle_drift_m": 0.025153038010169097,
+            "max_idle_tilt_deg": 6.167851241613198,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4439019547325754,
+            "max_penetration_m": 0.0004660472136622587,
+            "unsupported_foot_fraction": 1.0,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.42792895797174424
+      },
+      "capture_save_seconds": 0.47763137496076524
+    },
+    {
+      "key": "standing_healthy_gap_rl",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "gap_rl",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_gap_rl.npz",
+      "trace_sha256": "54d7f122eedbaa1c3fc11b24ebe5dc326ebc8330bc3f40b71e1d0cd70e5993dc",
+      "model": "standing_healthy_gap_rl.mjb",
+      "model_sha256": "d433935229e4c5050dcf2c1acf0f66626c6223e1bb974dffb8511a6c52a93d94",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "gap_rl",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0012134163587269695,
+            "max_idle_drift_m": 0.028840829720148186,
+            "max_idle_tilt_deg": 6.036375088020272,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.30293951289081444,
+            "max_penetration_m": 0.0004876499112840063,
+            "unsupported_foot_fraction": 1.0,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.37867925001773983
+      },
+      "capture_save_seconds": 0.42909537500236183
+    },
+    {
+      "key": "standing_healthy_gap_rr",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "gap_rr",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_gap_rr.npz",
+      "trace_sha256": "6ba02fbef539753e2bb73909d2096c0554067ac54b3af6e53e871b820888ec27",
+      "model": "standing_healthy_gap_rr.mjb",
+      "model_sha256": "c036a58ec4002d84cb07cbd94c5f051b44fe01527fb267a9274bbb1cc016d35c",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "gap_rr",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0019989635875098757,
+            "max_idle_drift_m": 0.03432106133594343,
+            "max_idle_tilt_deg": 5.724545823972645,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3586703149543762,
+            "max_penetration_m": 0.0007054650561735057,
+            "unsupported_foot_fraction": 1.0,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4339649999747053
+      },
+      "capture_save_seconds": 0.4829050409607589
+    },
+    {
+      "key": "standing_healthy_pads_high",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "pads_high",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_pads_high.npz",
+      "trace_sha256": "7db5194e153f0df3bea57cb78a1ed6ead85d236d91462df4dc713933990ff7a7",
+      "model": "standing_healthy_pads_high.mjb",
+      "model_sha256": "6d5145f1974fe59123305e629e11eb12d74d137cbb77a198662610df1bb81cee",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "pads_high",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0026042478382394397,
+            "max_idle_drift_m": 0.06206205786682755,
+            "max_idle_tilt_deg": 1.098150280442388,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.34338530983422116,
+            "max_penetration_m": 0.0006347216759786459,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.43767250003293157
+      },
+      "capture_save_seconds": 0.49045104207471013
+    },
+    {
+      "key": "standing_healthy_pads_extreme",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "pads_extreme",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_pads_extreme.npz",
+      "trace_sha256": "5631cc9cfccbbbb9d1bcc75ddd9eac31ba24aeaf358f40b1c570d77b87527749",
+      "model": "standing_healthy_pads_extreme.mjb",
+      "model_sha256": "319656106b9a469dc1534af286affc26ec49e256b17428b5d18e367a179b800a",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "pads_extreme",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0046584649057255815,
+            "max_idle_drift_m": 0.12172814338919499,
+            "max_idle_tilt_deg": 7.844542629261883,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.575400124389708,
+            "max_penetration_m": 0.0011607696147465998,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.38480925001204014
+      },
+      "capture_save_seconds": 0.4381771250627935
+    },
+    {
+      "key": "standing_healthy_slope_x_12",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_x_12",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_x_12.npz",
+      "trace_sha256": "3087d2b3404308adfe70aacfffe4d15ff72b9bd7e0b021a08eee1b58a0322ca2",
+      "model": "standing_healthy_slope_x_12.mjb",
+      "model_sha256": "93af679dbfb36052daea9e17bd820bb504e2fe8bf125925a3eeb9afcb8ae424f",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_x_12",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0030222244146302767,
+            "max_idle_drift_m": 0.017948319120213854,
+            "max_idle_tilt_deg": 5.926214733279573,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3712616262124483,
+            "max_penetration_m": 0.0008255471885708007,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.43662583304103464
+      },
+      "capture_save_seconds": 0.48797366698272526
+    },
+    {
+      "key": "standing_healthy_slope_y_12",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_y_12",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_y_12.npz",
+      "trace_sha256": "37d4ec9216e33219ff36f926bad7339f3670282e717281b574d42dd2254ec9e4",
+      "model": "standing_healthy_slope_y_12.mjb",
+      "model_sha256": "56b0310a11c4b7eba377f38a0a3c3bca2724cfe03165a0784a53096a1d6a84df",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_y_12",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.003218404039843805,
+            "max_idle_drift_m": 0.04474360435134873,
+            "max_idle_tilt_deg": 5.170546712049314,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.28574176664538364,
+            "max_penetration_m": 0.0003714724995726934,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.41060337505768985
+      },
+      "capture_save_seconds": 0.45996254100464284
+    },
+    {
+      "key": "standing_healthy_slope_x_18",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_x_18",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_x_18.npz",
+      "trace_sha256": "ae1570138fb0f8fbe56b43e4e08f1264277dd783d6aafdea4d48c9a5430cafac",
+      "model": "standing_healthy_slope_x_18.mjb",
+      "model_sha256": "b33203f95db4509a41d3f42211a6ac8c9d4e9d0acfffe1d14bc677e23a6b49a1",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_x_18",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.005097619286928731,
+            "max_idle_drift_m": 0.0376122068293074,
+            "max_idle_tilt_deg": 9.350423171745348,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3741201505219997,
+            "max_penetration_m": 0.000551643221537175,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4561205829959363
+      },
+      "capture_save_seconds": 0.5059882079949602
+    },
+    {
+      "key": "standing_healthy_slope_y_18",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_y_18",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_y_18.npz",
+      "trace_sha256": "09f8e8e26e830ca9480627ee0ccf4550a85423741fd2a9b532726869a770a130",
+      "model": "standing_healthy_slope_y_18.mjb",
+      "model_sha256": "59a05af16640f773b615973a9ff8fb9471668ab1319afd9d0c2bff3477e6f9fe",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_y_18",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.004252016065666816,
+            "max_idle_drift_m": 0.0506532091718651,
+            "max_idle_tilt_deg": 5.157501096371502,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.2557486850613122,
+            "max_penetration_m": 0.000138725030949631,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4218110829824582
+      },
+      "capture_save_seconds": 0.4712022499879822
+    },
+    {
+      "key": "standing_healthy_slope_x_24",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_x_24",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_x_24.npz",
+      "trace_sha256": "c32c905df11e095a3835a92b59944ac126653687322a30c34221ffa588ecf080",
+      "model": "standing_healthy_slope_x_24.mjb",
+      "model_sha256": "f9975f674ed7cd9d29071c63383559ffa64247e2b8b891c04026e9097f84bcf4",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_x_24",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 0,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": false,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.006878917462665288,
+            "max_idle_drift_m": 0.049810069230391656,
+            "max_idle_tilt_deg": 13.798397440026692,
+            "peak_unintended_support_n": 10.954824047921164,
+            "peak_torque_limit_ratio": 0.41727056219033937,
+            "max_penetration_m": 0.00029610152025743436,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4806409999728203
+      },
+      "capture_save_seconds": 0.5309305840637535
+    },
+    {
+      "key": "standing_healthy_slope_y_24",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "slope_y_24",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_slope_y_24.npz",
+      "trace_sha256": "de332e6e1ffcce68601c23e9689788581f4baa5e913a07f651592c4460aadeab",
+      "model": "standing_healthy_slope_y_24.mjb",
+      "model_sha256": "d0c21e7ba8d61fd936f5e6e0769265a19008a3752da47c11b8e343ddaff69106",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "slope_y_24",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.006185181483786031,
+            "max_idle_drift_m": 0.0662130351513033,
+            "max_idle_tilt_deg": 5.225731911923615,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.23775214974864478,
+            "max_penetration_m": 0.00017070285522783474,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4250260409899056
+      },
+      "capture_save_seconds": 0.47662108298391104
+    },
+    {
+      "key": "standing_healthy_steps_12",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "steps_12",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_steps_12.npz",
+      "trace_sha256": "815f6b26c8fda2ef975a0033c1786db4fd7624115da47e59539cac93c3497f35",
+      "model": "standing_healthy_steps_12.mjb",
+      "model_sha256": "e41a0f613ee3d849c36b9c700a6c4f844bb2825abe4ab50b69fe3efc5b25ff98",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "steps_12",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0007873068296493422,
+            "max_idle_drift_m": 0.033624469930662315,
+            "max_idle_tilt_deg": 4.305444180696991,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.2442276601383294,
+            "max_penetration_m": 0.00042012559299920565,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.41434429201763123
+      },
+      "capture_save_seconds": 0.46469404094386846
+    },
+    {
+      "key": "standing_healthy_steps_20",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "steps_20",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_steps_20.npz",
+      "trace_sha256": "41a52074eb51f2827100aebcf242408c9e431ffb904d2545570427d505f5bec3",
+      "model": "standing_healthy_steps_20.mjb",
+      "model_sha256": "29907a8175e630ed92ba498dbda52ac545b5905bf68ee81f02f6ec890728331c",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "steps_20",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0010748369743550598,
+            "max_idle_drift_m": 0.032889110539310054,
+            "max_idle_tilt_deg": 10.522890024120496,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4993095358981801,
+            "max_penetration_m": 0.0003336845072494446,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.43060270801652223
+      },
+      "capture_save_seconds": 0.4803870420437306
+    },
+    {
+      "key": "standing_healthy_steps_28",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "steps_28",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_healthy_steps_28.npz",
+      "trace_sha256": "61cf1cf0e9a6446cf5c8179168c15c4bd68b918bc883fe0512b1e76a05dfd67f",
+      "model": "standing_healthy_steps_28.mjb",
+      "model_sha256": "8badff21838984f9b8059486306f68d224c2bf2da3227fd5be7b42315fd7ffbc",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "surface": "steps_28",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.000742346348941558,
+            "max_idle_drift_m": 0.051979907713186564,
+            "max_idle_tilt_deg": 18.038769052414256,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.745073130467838,
+            "max_penetration_m": 0.0012606272335954696,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4442454589297995
+      },
+      "capture_save_seconds": 0.5109444579575211
+    },
+    {
+      "key": "transition_healthy",
+      "spec": {
+        "kind": "standing",
+        "body": "healthy",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_healthy.npz",
+      "trace_sha256": "24b3fbbed3f90604dd2d19b412f7fc952d3f9f7c83379cd4f76ce11ba2056d01",
+      "model": "transition_healthy.mjb",
+      "model_sha256": "40be609187a761a9743683d93c0d6d475d93c294dc015c38ffbf451a1fe44f86",
+      "states": 600,
+      "outcome": {
+        "body": "healthy",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0033214862679374502,
+            "max_idle_drift_m": 0.08946760290957015,
+            "max_idle_tilt_deg": 0.5704382847747952,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.9154916982063269,
+            "max_penetration_m": 0.005805442741388549,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 2.0755854967469283
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5436971669550985
+      },
+      "capture_save_seconds": 0.5925196249736473
+    },
+    {
+      "key": "transition_lower_fl",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_fl",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_lower_fl.npz",
+      "trace_sha256": "bceb782009427d2aed50bd8bc1e33347a3e6f06a87c6a6fa99b7f57788efc752",
+      "model": "transition_lower_fl.mjb",
+      "model_sha256": "ebbfa77d1333dff8925f24307c7ad22fd84ed25b93bd529b6dad44e8cd7d80a4",
+      "states": 600,
+      "outcome": {
+        "body": "lower_fl",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.00043161922578700764,
+            "max_idle_drift_m": 0.13562374640151145,
+            "max_idle_tilt_deg": 4.862623279684236,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 1.0,
+            "max_penetration_m": 0.007577402410485663,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 1.8825714284802317
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5505056669935584
+      },
+      "capture_save_seconds": 0.6237248339457437
+    },
+    {
+      "key": "standing_lower_fl_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_fl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_lower_fl_flat.npz",
+      "trace_sha256": "a12981e1c756e00f21ab10f058d51ee0e7baee98ac3730ffcc28fc0e9bbef140",
+      "model": "standing_lower_fl_flat.mjb",
+      "model_sha256": "ebbfa77d1333dff8925f24307c7ad22fd84ed25b93bd529b6dad44e8cd7d80a4",
+      "states": 500,
+      "outcome": {
+        "body": "lower_fl",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.002252472039794628,
+            "max_idle_drift_m": 0.0373683282455654,
+            "max_idle_tilt_deg": 5.867143386000459,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.5477209747261357,
+            "max_penetration_m": 0.0028192767148579392,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4415221670642495
+      },
+      "capture_save_seconds": 0.5116514159599319
+    },
+    {
+      "key": "transition_lower_fr",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_fr",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_lower_fr.npz",
+      "trace_sha256": "bca07f3a3eb423968f5e2cc9e63ca1b74b75cd33f664727bb90c4c45f0abcf3e",
+      "model": "transition_lower_fr.mjb",
+      "model_sha256": "29eae968a49b5dbb77a06ada0f783b91d4f251b86502d98197c346e7714c88d2",
+      "states": 600,
+      "outcome": {
+        "body": "lower_fr",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0011770581056273208,
+            "max_idle_drift_m": 0.12637696224706046,
+            "max_idle_tilt_deg": 3.8881270163951456,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.9473282271204317,
+            "max_penetration_m": 0.0057758834005252405,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 2.08914047234888
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5571578750386834
+      },
+      "capture_save_seconds": 0.6303646250162274
+    },
+    {
+      "key": "standing_lower_fr_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_fr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_lower_fr_flat.npz",
+      "trace_sha256": "65c6d5be0d67ae274011a11fba5808589dcae168b44ad626188e10f64d9bb327",
+      "model": "standing_lower_fr_flat.mjb",
+      "model_sha256": "29eae968a49b5dbb77a06ada0f783b91d4f251b86502d98197c346e7714c88d2",
+      "states": 500,
+      "outcome": {
+        "body": "lower_fr",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0013422565936831916,
+            "max_idle_drift_m": 0.08886542314637455,
+            "max_idle_tilt_deg": 4.336270522634676,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4584185627646053,
+            "max_penetration_m": 0.0005064669729762036,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.43916012498084456
+      },
+      "capture_save_seconds": 0.5086199169745669
+    },
+    {
+      "key": "transition_lower_rl",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_rl",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_lower_rl.npz",
+      "trace_sha256": "337e9d2877b0a02f02c35d5014546ee9cd0f926bc3db84d63ab8f000095597b3",
+      "model": "transition_lower_rl.mjb",
+      "model_sha256": "c6f7c4277eae91ad0eca0fd0e0c841320066212863da96c6cf1e7e0a432e05e9",
+      "states": 600,
+      "outcome": {
+        "body": "lower_rl",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 0,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": false,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.004540169134885206,
+            "max_idle_drift_m": 0.17174566302860653,
+            "max_idle_tilt_deg": 8.179509048684054,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 1.0,
+            "max_penetration_m": 0.00579272021379796,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 1.8079282747521026
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5169169580331072
+      },
+      "capture_save_seconds": 0.5858279580716044
+    },
+    {
+      "key": "standing_lower_rl_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_rl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_lower_rl_flat.npz",
+      "trace_sha256": "0de4a24481cb953f4a1fd8c6f2a655e624b3982730a28eec872245abf105bff3",
+      "model": "standing_lower_rl_flat.mjb",
+      "model_sha256": "c6f7c4277eae91ad0eca0fd0e0c841320066212863da96c6cf1e7e0a432e05e9",
+      "states": 500,
+      "outcome": {
+        "body": "lower_rl",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0033863167787773598,
+            "max_idle_drift_m": 0.04599387299113704,
+            "max_idle_tilt_deg": 8.517914066204636,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4128201385853582,
+            "max_penetration_m": 0.0005484352776264426,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4223595419898629
+      },
+      "capture_save_seconds": 0.489168000058271
+    },
+    {
+      "key": "transition_lower_rr",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_rr",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_lower_rr.npz",
+      "trace_sha256": "46fc1d7f8c38620789c11c14cdf5bfc70cb8a2464dd74f3c69bb6b59e5cdc1a2",
+      "model": "transition_lower_rr.mjb",
+      "model_sha256": "a7d7dfd40c71c5dc4dd8a1b0965fd6e77d57ab85e36b0b491c7f3494744a5378",
+      "states": 600,
+      "outcome": {
+        "body": "lower_rr",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.005184959884865799,
+            "max_idle_drift_m": 0.089146854731736,
+            "max_idle_tilt_deg": 2.1132420146870015,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 1.0,
+            "max_penetration_m": 0.0071963433400213175,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 1.8598383569072152
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.49166895903181285
+      },
+      "capture_save_seconds": 0.5597769579617307
+    },
+    {
+      "key": "standing_lower_rr_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "lower_rr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_lower_rr_flat.npz",
+      "trace_sha256": "8dbf5f2106c68657164480464037f377f0db2461d1d83841e2bf1efd1b1008b1",
+      "model": "standing_lower_rr_flat.mjb",
+      "model_sha256": "a7d7dfd40c71c5dc4dd8a1b0965fd6e77d57ab85e36b0b491c7f3494744a5378",
+      "states": 500,
+      "outcome": {
+        "body": "lower_rr",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.002715064697343469,
+            "max_idle_drift_m": 0.08060042729752122,
+            "max_idle_tilt_deg": 2.1489921721830307,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3356477938650083,
+            "max_penetration_m": 0.0004924992062279379,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4002436670707539
+      },
+      "capture_save_seconds": 0.4667561670066789
+    },
+    {
+      "key": "transition_whole_fl",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_fl",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_whole_fl.npz",
+      "trace_sha256": "55a4430e094595a0a1599428bb4160c55d93680a29f48d3742319edec4090b7b",
+      "model": "transition_whole_fl.mjb",
+      "model_sha256": "abc13f7b5df0de6a12a4dbd9070afa4b8776f191f1dc34cdb1c3c7b295fe39f9",
+      "states": 600,
+      "outcome": {
+        "body": "whole_fl",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0012632902469367298,
+            "max_idle_drift_m": 0.08927063370490106,
+            "max_idle_tilt_deg": 3.589954084167291,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.9912153230001481,
+            "max_penetration_m": 0.007179475731785373,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 1.965661613820915
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.41693545889575034
+      },
+      "capture_save_seconds": 0.4639877079753205
+    },
+    {
+      "key": "standing_whole_fl_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_fl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_whole_fl_flat.npz",
+      "trace_sha256": "1bb8fc0ebc0f2dca40ee7a951815743078c962469293923ddf332d5119056224",
+      "model": "standing_whole_fl_flat.mjb",
+      "model_sha256": "abc13f7b5df0de6a12a4dbd9070afa4b8776f191f1dc34cdb1c3c7b295fe39f9",
+      "states": 500,
+      "outcome": {
+        "body": "whole_fl",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0015415498143796585,
+            "max_idle_drift_m": 0.06683628832327618,
+            "max_idle_tilt_deg": 3.7999724602150935,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3262875801192301,
+            "max_penetration_m": 0.0005244307908826365,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.34977891703601927
+      },
+      "capture_save_seconds": 0.39482770790345967
+    },
+    {
+      "key": "transition_whole_fr",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_fr",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_whole_fr.npz",
+      "trace_sha256": "78aa9286b9ba9202d34a3c109f5c090b2c72920e3d2fffb0b520114d90a6f72a",
+      "model": "transition_whole_fr.mjb",
+      "model_sha256": "ccf6633b920c29b226eddc8d854774e09e6aeca78c5df8a03fa0894c91c3491d",
+      "states": 600,
+      "outcome": {
+        "body": "whole_fr",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.000490649276302772,
+            "max_idle_drift_m": 0.05380114255857805,
+            "max_idle_tilt_deg": 7.58152443497203,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 1.0,
+            "max_penetration_m": 0.006549972287371086,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 2.1349477450315435
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.41532604105304927
+      },
+      "capture_save_seconds": 0.46011075004935265
+    },
+    {
+      "key": "standing_whole_fr_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_fr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_whole_fr_flat.npz",
+      "trace_sha256": "5a57141069d757f5359eb94c4d1075de4b6a2f4fa2b2dde23224b08b33cd273a",
+      "model": "standing_whole_fr_flat.mjb",
+      "model_sha256": "ccf6633b920c29b226eddc8d854774e09e6aeca78c5df8a03fa0894c91c3491d",
+      "states": 500,
+      "outcome": {
+        "body": "whole_fr",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0015869512506612301,
+            "max_idle_drift_m": 0.07802245575672417,
+            "max_idle_tilt_deg": 6.778441191762606,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4037204334510289,
+            "max_penetration_m": 0.0005818557394520543,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.3451407089596614
+      },
+      "capture_save_seconds": 0.3898130839224905
+    },
+    {
+      "key": "transition_whole_rl",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_rl",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_whole_rl.npz",
+      "trace_sha256": "08ac901496545c051e16b3f9ac7b4e3c84cb6930e931164b6a4da976553c9ae7",
+      "model": "transition_whole_rl.mjb",
+      "model_sha256": "21ff21429b68e7336554983cc6aa177688711fd29e0c5a7afaf77d172ea24f62",
+      "states": 600,
+      "outcome": {
+        "body": "whole_rl",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0012569400347051118,
+            "max_idle_drift_m": 0.05363857129659128,
+            "max_idle_tilt_deg": 6.252594524234687,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.9750253809208385,
+            "max_penetration_m": 0.007752388615047935,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 1.9691659937485768
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5226436669472605
+      },
+      "capture_save_seconds": 0.570364291081205
+    },
+    {
+      "key": "standing_whole_rl_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_rl",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_whole_rl_flat.npz",
+      "trace_sha256": "19cbbb9bef3bb15191577ae52faaed84ea9622897779b38323214b01bf0e8783",
+      "model": "standing_whole_rl_flat.mjb",
+      "model_sha256": "21ff21429b68e7336554983cc6aa177688711fd29e0c5a7afaf77d172ea24f62",
+      "states": 500,
+      "outcome": {
+        "body": "whole_rl",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0009196468135295168,
+            "max_idle_drift_m": 0.03455708772216159,
+            "max_idle_tilt_deg": 7.431377748263968,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.30985789052558177,
+            "max_penetration_m": 0.0005645765491131619,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.39253962493967265
+      },
+      "capture_save_seconds": 0.4377798750065267
+    },
+    {
+      "key": "transition_whole_rr",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_rr",
+        "surface": "flat",
+        "transition": true,
+        "seconds": 12
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "transition_whole_rr.npz",
+      "trace_sha256": "cbfb9b99ffac44484ec3dbcee1e2b7b2e12f0dbda38d603462de4f01d4cd7f6e",
+      "model": "transition_whole_rr.mjb",
+      "model_sha256": "ec82b94d558e4cec678116b7cf666fd2ef493be6ad1cc7a96280d4c54cdda7b1",
+      "states": 600,
+      "outcome": {
+        "body": "whole_rr",
+        "surface": "flat",
+        "transition": true,
+        "seed": 9511,
+        "seconds": 12,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0018686997976488505,
+            "max_idle_drift_m": 0.08334683109594157,
+            "max_idle_tilt_deg": 5.156550569347218,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.9144789460428423,
+            "max_penetration_m": 0.006314829523207353,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": 2.1614404943810337
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          5,
+          8
+        ],
+        "execution_seconds": 0.5195349580608308
+      },
+      "capture_save_seconds": 0.5661921669961885
+    },
+    {
+      "key": "standing_whole_rr_flat",
+      "spec": {
+        "kind": "standing",
+        "body": "whole_rr",
+        "surface": "flat",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "standing_whole_rr_flat.npz",
+      "trace_sha256": "d3364d5141677334a75907eee95508e791f7c33848fc890081967941dbf4e66d",
+      "model": "standing_whole_rr_flat.mjb",
+      "model_sha256": "ec82b94d558e4cec678116b7cf666fd2ef493be6ad1cc7a96280d4c54cdda7b1",
+      "states": 500,
+      "outcome": {
+        "body": "whole_rr",
+        "surface": "flat",
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0008362253703581438,
+            "max_idle_drift_m": 0.045465508855555475,
+            "max_idle_tilt_deg": 4.865069327507894,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.27561439506127505,
+            "max_penetration_m": 0.0007557549052379445,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.4101085419533774
+      },
+      "capture_save_seconds": 0.4579935410292819
+    },
+    {
+      "key": "moving_still",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "still",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_still.npz",
+      "trace_sha256": "e3495e483c62c426ae8c9f40498dd395affb7585da49346bab1bf9e0bb420692",
+      "model": "moving_still.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "still",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.0010158587801045683,
+            "peak_deck_force_limit_ratio": 0.1897909365462587,
+            "max_deck_joint_tracking_error": [
+              7.116147390945826e-05,
+              0.0001403130176924628,
+              0.01710425072505416,
+              0.0001602634002333092,
+              0.0002445438208413954,
+              0.0008072612086377909
+            ],
+            "mean_loaded_tip_slip_mps": 0.0005249088044035993,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.0010074822916693407,
+            "max_idle_drift_m": 0.03629137462282745,
+            "max_idle_tilt_deg": 4.973321657286824,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.3732899649506771,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.5639809170970693
+      },
+      "capture_save_seconds": 0.6212889170274138
+    },
+    {
+      "key": "moving_translate",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "translate",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_translate.npz",
+      "trace_sha256": "8f9536930a1de5f4672d82e08569441ed7661b21db22107ac7f80db01e027c26",
+      "model": "moving_translate.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "translate",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.28072691620934603,
+            "peak_deck_force_limit_ratio": 0.18982997552366768,
+            "max_deck_joint_tracking_error": [
+              0.015283765493587162,
+              0.012390867265047689,
+              0.017098979949707948,
+              0.00016082649033275122,
+              0.00089879256462989,
+              0.0013761634822433415
+            ],
+            "mean_loaded_tip_slip_mps": 0.002222734624477637,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.012905581568896506,
+            "max_idle_drift_m": 0.04908720140951319,
+            "max_idle_tilt_deg": 5.276520171836836,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.38936992723787517,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.5843672920018435
+      },
+      "capture_save_seconds": 0.6409648329718038
+    },
+    {
+      "key": "moving_yaw",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "yaw",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_yaw.npz",
+      "trace_sha256": "c9838919ce1fffeb4e161007da4bd9fdb9cc95b2428d1349954dafee532d5a14",
+      "model": "moving_yaw.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "yaw",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.010428983586985624,
+            "peak_deck_force_limit_ratio": 0.18979086832693357,
+            "max_deck_joint_tracking_error": [
+              7.643911681566626e-05,
+              0.00014026727639974496,
+              0.017110606332943524,
+              0.03080609458646255,
+              0.00042778290298146605,
+              0.0007064546292574485
+            ],
+            "mean_loaded_tip_slip_mps": 0.005912551043081241,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.007474562823175574,
+            "max_idle_drift_m": 0.02748637123207568,
+            "max_idle_tilt_deg": 5.867460271696874,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4289362103061839,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.5716990829678252
+      },
+      "capture_save_seconds": 0.6286841250257567
+    },
+    {
+      "key": "moving_heave",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "heave",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_heave.npz",
+      "trace_sha256": "24ef1f2857ea3ea24594b3b7ae8d59211b0aba45cb243ea08c3f62bdf388dafe",
+      "model": "moving_heave.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "heave",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.01211037632568174,
+            "peak_deck_force_limit_ratio": 0.18913033211329688,
+            "max_deck_joint_tracking_error": [
+              6.747732230165604e-05,
+              0.00013962090856612579,
+              0.026622512090376645,
+              0.0001602658745428394,
+              0.0002446858978750285,
+              0.0007665585666424603
+            ],
+            "mean_loaded_tip_slip_mps": 0.0007759133149903009,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.002482886314393714,
+            "max_idle_drift_m": 0.031420312043548525,
+            "max_idle_tilt_deg": 5.153048525607879,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.39758502121642997,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.5710480839479715
+      },
+      "capture_save_seconds": 0.6268601670162752
+    },
+    {
+      "key": "moving_rock",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "rock",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_rock.npz",
+      "trace_sha256": "de2ba7c2133318527bbdedc56728ad430edbd79d592cb0cabf0b8e2b7962bb3e",
+      "model": "moving_rock.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "rock",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.04422079104933081,
+            "peak_deck_force_limit_ratio": 0.18977534312067196,
+            "max_deck_joint_tracking_error": [
+              0.000123708739237357,
+              0.0001349097407392113,
+              0.017103204633455615,
+              0.00017213398731335633,
+              0.011125063215016849,
+              0.01143904687746187
+            ],
+            "mean_loaded_tip_slip_mps": 0.007500429285422794,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.03505425154700906,
+            "max_idle_drift_m": 0.06744839499364254,
+            "max_idle_tilt_deg": 9.672654883427722,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.4082858049247255,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.577597540919669
+      },
+      "capture_save_seconds": 0.6327193329343572
+    },
+    {
+      "key": "moving_combined",
+      "spec": {
+        "kind": "moving",
+        "body": "healthy",
+        "surface": "combined",
+        "transition": false,
+        "seconds": 10
+      },
+      "checkpoint_sha256": "076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241",
+      "seed": 9511,
+      "trial": 0,
+      "physics_backend": "mjbatch",
+      "physics_timestep_s": 0.002,
+      "trace": "moving_combined.npz",
+      "trace_sha256": "3c712bfec116786fa4ebc47ed753eb72c437658197351b752348afb17e54c2d4",
+      "model": "moving_combined.mjb",
+      "model_sha256": "363c256cb316c5b2c4ab416b4054e216543d1fb853492a6624476ce3dc7af872",
+      "states": 500,
+      "outcome": {
+        "body": "healthy",
+        "motion": "combined",
+        "support_relative_observations": true,
+        "motion_scale": 1.0,
+        "transition": false,
+        "seed": 9511,
+        "seconds": 10,
+        "trials": 1,
+        "passed": 1,
+        "survived": 1,
+        "rows": [
+          {
+            "trial": 0,
+            "cpu_warning_count": 0,
+            "mean_world_speed_mps": 0.1904826553331121,
+            "peak_deck_force_limit_ratio": 0.18938407976439642,
+            "max_deck_joint_tracking_error": [
+              0.011110371898838844,
+              0.008216882503455385,
+              0.022682761375692584,
+              0.019301600414349585,
+              0.008229176757283284,
+              0.008426387900080217
+            ],
+            "mean_loaded_tip_slip_mps": 0.006146831243846116,
+            "passed": true,
+            "survived": true,
+            "failure_time_s": null,
+            "mean_idle_speed_mps": 0.027418818780087964,
+            "max_idle_drift_m": 0.050214797581962,
+            "max_idle_tilt_deg": 8.744796404084406,
+            "peak_unintended_support_n": 0.0,
+            "peak_torque_limit_ratio": 0.39279653516754487,
+            "max_penetration_m": 0.0006484544246039767,
+            "unsupported_foot_fraction": null,
+            "at_least_two_contacts_fraction": 1.0,
+            "resumed_distance_m": null
+          }
+        ],
+        "support_checked_every_physics_step": true,
+        "physics_timestep_s": 0.002,
+        "physics_backend": "mjbatch",
+        "penetration_sample_hz": 50,
+        "numerical_checks": "CPU warnings and finite state",
+        "metric_window_s": [
+          2,
+          10
+        ],
+        "execution_seconds": 0.5678428339306265
+      },
+      "capture_save_seconds": 0.6243338340427727
+    }
+  ],
+  "capture_manifest": "outputs/locomotion/ember/unified_v1/capture.json",
+  "capture_manifest_sha256": "164b04233c3a23657e66f0337e7e64e9e422fb76506cdcd32fcd6cd2adfa3552",
+  "capture_save_seconds": 33.76945666351821,
+  "capture_source_commit": "be0ee278e92f5a326781d7f9ad06e46d1b7d703f",
+  "render_encode_seconds": 222.84254491701722,
+  "new_training_seconds": 0,
+  "new_physics_steps_during_render": 0,
+  "environment_source_sha256": "ab8a818d95a9d3564c4fb29233f7c42e136e7a2d25578b5b7c9eddca95c9d858",
+  "approved_environment_preview_sha256": "a5dc32d802ebde912c5b166c08e95b51c1f68c193a09fbb9ab55fcb2586e4b2d",
+  "training_report_sha256": "007d83ff32463bed4d10ef59f0485f88db32251abf1076f37f655c87e4a98042",
+  "physics_backend": "mjbatch",
+  "state_indices": "1,3,... at 50 Hz, 0.04 s increments to each exact endpoint",
+  "source_commit": "ad474c35f3f7316634136419bd415bdd68bd30a1",
+  "video_sha256": "6dc252963ccb3bc58553c79e30d83bae4dd2ffbecba907aafbe4ce1e346afd6d",
+  "visual_inspection": {
+    "status": "passed",
+    "method": "Inspected all 63 encoded opening/midpoint/end and command-transition samples across seven contact sheets; full-resolution walking, pads/steps and combined-platform previews also inspected.",
+    "findings": "Robot and contacts remain visible. Support borders attach to the actual static and moving faces. Floor lane and wall details provide a fixed reference. Original trial misses and final results stay legible; all camera panels are synchronized."
+  }
+}
