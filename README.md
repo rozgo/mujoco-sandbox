@@ -156,3 +156,14 @@ one shared actor within each stage. Observer, overhead and head views accompany
 the main sequences. The original movies and measured limitations remain available.
 
 [Graphite materials, covered branding and live viewer options](docs/locomotion/graphite/README.md).
+
+The [measured GPU curriculum replay](docs/locomotion/gpu_from_scratch/README.md)
+starts from random weights and trains all behaviors in **22m 05s**, with **4,096
+worlds throughout**. Its one final checkpoint passes **36/36 walking tasks**,
+**136/144 strict static-balance checks** and **24/24 moving-support checks**.
+All trials stay upright. This separately saved replay does not replace the
+accepted film above.
+
+Try the optional [Ember machinery palette](docs/locomotion/ember/README.md):
+charcoal, steel and yellow, with forest-green contact indicators and oxide-red
+damage markers. [Static preview](previews/locomotion/ember/palette_v1.png).

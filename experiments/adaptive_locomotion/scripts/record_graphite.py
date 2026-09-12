@@ -10,8 +10,6 @@ from pathlib import Path
 import imageio_ffmpeg
 import mujoco
 import numpy as np
-from PIL import Image, ImageDraw
-
 from adaptive_locomotion.bodies import ROOT, BodySpec, build_model, initialize
 from adaptive_locomotion.graphite import (
     BG,
@@ -25,6 +23,7 @@ from adaptive_locomotion.graphite import (
 )
 from adaptive_locomotion.moving_record import camera
 from adaptive_locomotion.record import font, model_hash
+from PIL import Image, ImageDraw
 
 
 def sha(path):
@@ -89,7 +88,17 @@ def preview(output):
     canvas.save(output)
 
 
-def replay(output, trace_root):
+def replay(output, trace_root, theme="graphite"):
+    if theme == "ember":
+        from adaptive_locomotion import ember
+
+        configure_view, decorate_view, make_layout = (
+            ember.configure,
+            ember.decorate,
+            ember.layout,
+        )
+    else:
+        configure_view, decorate_view, make_layout = configure, decorate, layout
     source = ROOT / "previews/locomotion/moving/moving_supports_v1.json"
     manifest = json.loads(source.read_text())
     case = next(c for c in manifest["cases"] if c["key"] == "combined_2")
@@ -102,7 +111,7 @@ def replay(output, trace_root):
     with np.load(path, allow_pickle=False) as arrays:
         states = {k: arrays[k] for k in arrays.files}
     assert len(states["time"]) == 500 and np.isclose(states["time"][-1], 10)
-    configure(model)
+    configure_view(model)
     data = mujoco.MjData(model)
     model.vis.global_.offwidth, model.vis.global_.offheight = 1920, 1080
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -141,9 +150,9 @@ def replay(output, trace_root):
                     renderer.update_scene(
                         data, camera=camera(model, data, kind), scene_option=option()
                     )
-                    decorate(renderer.scene, model, data, BodySpec())
+                    decorate_view(renderer.scene, model, data, BodySpec())
                     images.append(Image.fromarray(renderer.render()))
-                canvas = layout(
+                canvas = make_layout(
                     *images,
                     title="BALANCING ON A MOVING WORLD",
                     subtitle="Healthy robot / combined platform motion / one frozen policy",
@@ -158,7 +167,7 @@ def replay(output, trace_root):
         "source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
-        "theme": "graphite",
+        "theme": theme,
         "generated_media": False,
         "source_manifest": str(source.relative_to(ROOT)),
         "source_manifest_sha256": sha(source),
@@ -190,13 +199,19 @@ def replay(output, trace_root):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--theme", choices=("graphite", "ember"), default="graphite")
     p.add_argument("--preview-only", action="store_true")
     p.add_argument("--trace-root", type=Path, default=ROOT)
     args = p.parse_args()
     if args.preview_only:
-        preview(args.output)
+        if args.theme == "ember":
+            from preview_ember import preview as preview_ember
+
+            preview_ember(args.output)
+        else:
+            preview(args.output)
     else:
-        replay(args.output, args.trace_root)
+        replay(args.output, args.trace_root, args.theme)
 
 
 if __name__ == "__main__":

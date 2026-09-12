@@ -10,7 +10,9 @@ def main():
     from .limb_loss import LOSS_CASES
 
     p = sub.add_parser("demo", help="View the frozen, user-accepted adaptive dog v1")
-    p.add_argument("--theme", choices=("classic", "graphite"), default="classic")
+    p.add_argument(
+        "--theme", choices=("classic", "graphite", "ember"), default="classic"
+    )
     p.add_argument("--case", choices=LOSS_CASES, default="whole_fr")
     p.add_argument("--seconds", type=float, default=0)
     p = sub.add_parser("preview")
@@ -107,6 +109,9 @@ def main():
     )
     p.add_argument("--seconds", type=float, default=12)
     p = sub.add_parser("view")
+    p.add_argument(
+        "--theme", choices=("classic", "graphite", "ember"), default="classic"
+    )
     p.add_argument("--timestep", type=float, default=0.002)
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--case", default="short_fl")
