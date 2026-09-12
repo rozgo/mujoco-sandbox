@@ -66,8 +66,14 @@ def main():
         ),
         "walking_trials": len(walk["cases"]) * args.trials,
         "healthy_gait_checks": walk["healthy_gates"],
-        "standing_healthy": {k: healthy[k] for k in ("passed", "trials")},
-        "standing_damaged": {k: damaged[k] for k in ("passed", "trials")},
+        "standing_healthy": {
+            **{k: healthy[k] for k in ("passed", "trials")},
+            "survived": sum(c["survived"] for c in healthy["cases"]),
+        },
+        "standing_damaged": {
+            **{k: damaged[k] for k in ("passed", "trials")},
+            "survived": sum(c["survived"] for c in damaged["cases"]),
+        },
         "moving": {k: deck[k] for k in ("passed", "survived", "trials")},
         "evaluation_wall_seconds": time.perf_counter() - started,
         "new_training_seconds": 0,
