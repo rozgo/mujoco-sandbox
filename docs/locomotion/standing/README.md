@@ -5,14 +5,21 @@ poses on uneven pads, slopes and steps, including missing support under a front
 foot. This is a limited extension of the accepted walker, on
 `feature/adaptive-standing`; it does not replace adaptive dog v1.
 
-[Watch the 45-second video](../../../previews/locomotion/standing/adaptive_standing_v2.mp4) ·
+[Watch the 67-second results video](../../../previews/locomotion/standing/adaptive_standing_v3.mp4) ·
 [All evaluation results](RESULTS.json) · [Network, rewards and physics](IMPLEMENTATION.md) ·
 [Original brief and gates](BRIEF.md)
 
-The film shows the same weights in 17 predetermined cases, at real time:
-walk–stand–walk with following/head/overhead views, six ordinary support scenes,
-six aggressive challenges and four physically damaged bodies. Failures stay in
-the film and its results card. Camera pixels are observer output.
+The film preserves the original 17 recorded trials and adds eight terrain trials
+accepted by the user after watching the failure review. All 25 remain upright;
+10 meet every original strict gate. The added cases show natural corrections,
+sliding and alternate support at real time. Visual acceptance is recorded
+alongside the unchanged measured flags. Camera pixels are observer output.
+
+The original walk–stand–walk, following/head/overhead views, ordinary supports,
+aggressive challenges and damaged-body footage remain intact. The added terrain
+section runs from **0:32 to 0:52**. [Edit, acceptance and replay details](RESULTS_VIDEO_V3.md) ·
+[Archived 45-second v2](../../../previews/locomotion/standing/adaptive_standing_v2.mp4) ·
+[Detailed failure review](FAILURE_REVIEW.md).
 
 ## What learned
 
@@ -140,7 +147,7 @@ the NVIDIA host**. Ruff lint/format checks pass across 86 Python files. Existing
 Warp struct-deprecation and capsule–cylinder multicontact warnings remain
 documented; no new numerical instability was hidden by resets.
 
-The final video is a layout-only replay of the first physical capture. All 17
+The archived 45-second v2 is a layout-only replay of the first physical capture. All 17
 trajectory hashes and acceptance metrics are identical. To revise rendering
 on the capture host, pass `record --replay-from` the original video JSON with
 the same checkpoint, backend and seed; its ignored trajectory files must be
@@ -152,7 +159,7 @@ Capture took **45.154 s** including setup and trajectory saving; the first rende
 took **33.059 s**. The final layout replay took **16.711 s** to load/verify/save
 states and **33.637 s** to render/encode, with zero new physical simulation or
 learning. All 1,125 frames decode at 1920×1080 / 25 fps; chapter boundaries,
-key interactions and the results card were visually inspected. The video passes
+key interactions and the results card were visually inspected. The v2 video passes
 10/17 task cases; all recorded torque caps hold and maximum sampled penetration
 is **3.495 mm**. This video seed does not replace the wider holdout results above.
 

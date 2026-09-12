@@ -1,0 +1,171 @@
+{
+  "source": "previews/locomotion/standing/failure_review.json",
+  "source_report_sha256": "06a4e4c0059266341018ff04081ff279105b625b45b023ee3d78bce0ce8cee5a",
+  "checkpoint_sha256": "0e3acf841935676547ab3c974de7fb9317119f0926a9323ea7b4305c03f8e68a",
+  "method": "Replay kinematics only, no mj_step. Tangential velocity at each active foot-to-static-terrain contact point from mj_jac @ qvel; recorded terminal load >5 N; hold window 2\u201310 s; 50 Hz samples, each contact equally weighted.",
+  "limitation": "Slip is measured, but no friction counterfactual was run. These measurements do not establish how much slip is caused by the coefficient versus contact regularization, geometry or control. Reconstructed contacts are sampled, not all physics substeps.",
+  "new_training_seconds": 0,
+  "new_simulation_seconds": 0,
+  "cases": [
+    {
+      "surface": "gap_rl",
+      "trial": 0,
+      "contact_samples": 1416,
+      "mean_tangential_slip_mps": 0.007266771327716106,
+      "p95_tangential_slip_mps": 0.015864597691463367,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.06672534470661064
+    },
+    {
+      "surface": "gap_rr",
+      "trial": 0,
+      "contact_samples": 1184,
+      "mean_tangential_slip_mps": 0.005307218417829622,
+      "p95_tangential_slip_mps": 0.008258779584171424,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.07818338417610254
+    },
+    {
+      "surface": "pads_extreme",
+      "trial": 0,
+      "contact_samples": 1242,
+      "mean_tangential_slip_mps": 0.0025179978333766413,
+      "p95_tangential_slip_mps": 0.004162119765242821,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.17607851062684055
+    },
+    {
+      "surface": "slope_x_18",
+      "trial": 0,
+      "contact_samples": 1203,
+      "mean_tangential_slip_mps": 0.006071206591967189,
+      "p95_tangential_slip_mps": 0.008211465907177203,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.19727358191205435
+    },
+    {
+      "surface": "slope_x_24",
+      "trial": 0,
+      "contact_samples": 1203,
+      "mean_tangential_slip_mps": 0.009745328372297631,
+      "p95_tangential_slip_mps": 0.013441533404516644,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.25532537717070175
+    },
+    {
+      "surface": "slope_y_24",
+      "trial": 0,
+      "contact_samples": 1173,
+      "mean_tangential_slip_mps": 0.012491632315244666,
+      "p95_tangential_slip_mps": 0.02013089483829788,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.1841453924525907
+    },
+    {
+      "surface": "steps_20",
+      "trial": 0,
+      "contact_samples": 1604,
+      "mean_tangential_slip_mps": 0.003711324797027418,
+      "p95_tangential_slip_mps": 0.011208735140045754,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.03150325264948857
+    },
+    {
+      "surface": "steps_28",
+      "trial": 0,
+      "contact_samples": 1535,
+      "mean_tangential_slip_mps": 0.007338619529913518,
+      "p95_tangential_slip_mps": 0.013474790909027754,
+      "foot_sliding_friction": [
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "observed_contact_sliding_friction": [
+        0.8
+      ],
+      "friction_cone": "mjCONE_PYRAMIDAL",
+      "impratio": 1.0,
+      "noslip_iterations": 0,
+      "hold_drift_m": 0.11310559497855607
+    }
+  ]
+}
