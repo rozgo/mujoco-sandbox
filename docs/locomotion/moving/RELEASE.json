@@ -1,0 +1,18 @@
+{
+  "release": "adaptive-moving-v1",
+  "source_commit": "e34f5f3607f8d76f076a9df4cd919093d586528b",
+  "checkpoint": "assets/locomotion/checkpoints/moving/round2_60s_seed22.pt",
+  "checkpoint_sha256": "5c349861f504bdb43e29e3a4351998cc22ed50bacfde86d3772f3684bc8b7879",
+  "video": "previews/locomotion/moving/moving_supports_v1.mp4",
+  "video_sha256": "aa4290c5691e2938cecf18d47037e7ce7aa2d59567340293b729d5574d1f1c15",
+  "video_seconds": 64,
+  "acceptance": "User accepted the existing moving-support result and requested merging it to main before further video work. Original quantitative failures remain reported.",
+  "new_training_seconds": 118.55379705457017,
+  "selected_training_ancestry_seconds": 2578.013514447608,
+  "limitations": [
+    "Healthy moving training; damaged moving transfer is unreliable (0/8 strict, 6/8 surviving per backend).",
+    "Healthy holdout: 22/24 strict passes, 24/24 upright on CPU and Warp; two combined-motion trials use unintended link support.",
+    "Ideal current platform-state sensing; no real-robot validation.",
+    "Video-seed results are separate from holdout: trained 20/20 strict; predetermined trial 0 shown."
+  ]
+}

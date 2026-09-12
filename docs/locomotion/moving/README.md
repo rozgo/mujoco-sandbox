@@ -1,6 +1,6 @@
 # Balancing on a moving support
 
-Experimental branch `feature/moving-supports`. The accepted static standing release remains unchanged on main, tagged `adaptive-standing-v1`.
+Accepted on main and pinned by `adaptive-moving-v1`; [the release manifest](RELEASE.json) identifies the unchanged checkpoint and video. Development history remains on `feature/moving-supports`. The earlier static standing release is preserved by `adaptive-standing-v1`.
 
 A free-body Go2 balances on a physically actuated deck that translates, yaws, heaves and rocks. The platform uses MuJoCo joint servos with finite mass and force limits. The robot's base is never repositioned during live simulation. One actor produces the twelve joint targets; absent joints remain masked in static damaged-body rehearsal.
 

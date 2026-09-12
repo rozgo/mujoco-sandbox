@@ -120,7 +120,7 @@ after visual review: all 25 recorded trials stay upright, and 10 pass every
 original strict gate. Natural corrections and measured limitations remain visible.
 This extension preserves the accepted walking checkpoint above.
 
-### Balancing on a moving platform — experimental
+### Balancing on a moving platform
 
 The same network now balances on a translating, rotating, heaving and rocking
 deck. **Two minutes of additional MuJoCo Warp/PPO training** improve held-out
@@ -136,3 +136,5 @@ and newly trained weights, with synchronized third-person, overhead and head
 views. This uses ideal current platform-state sensing. Moving training covers
 the healthy dog; damaged-platform transfer remains unreliable. The accepted
 static release is preserved by `adaptive-standing-v1`.
+The accepted moving-support checkpoint and video are pinned by
+`adaptive-moving-v1` and [the release manifest](docs/locomotion/moving/RELEASE.json).
