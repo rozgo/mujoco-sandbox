@@ -4,7 +4,8 @@ An opt-in native MuJoCo look on `feature/graphite-presentation`: graphite surfac
 neutral robot materials, restrained overlays, and teal/orange task accents. No
 generative model, retraining or physics changes are needed.
 
-[Static design preview](../../../previews/locomotion/graphite/style_preview_v1.png).
+[Watch the ten-second preview](../../../previews/locomotion/graphite/moving_graphite_v1.mp4)
+· [Static design preview](../../../previews/locomotion/graphite/style_preview_v1.png).
 
 The visible Go2/Unitree names are part of the source mesh geometry. Hiding the white
 lettering alone exposes the underlying recessed letter shapes. This theme instead
@@ -53,6 +54,16 @@ Two focused tests compare themed and original flat/moving models for 500 physics
 steps each: physical parameters, every pose, velocity and sensor reading agree
 exactly. Observer decorations do not modify data state. Previous policy validation
 and failed gates remain in the original reports.
+
+The Mac suite passes **80 tests**, with **25 CUDA-only skips** and the two existing
+upstream warnings. Both new invariance tests also pass on Linux/NVIDIA. All three
+native Mac viewer commands completed four-second smoke checks. Lint/format checks
+pass across 105 Python files. The movie rendered from the verified cached trace in
+**5.564 seconds**, with zero new simulation or learning for capture. All **250
+frames** decode at **1920×1080 / 25 fps / 10 seconds**; opening, intermediate,
+camera and ending samples were inspected. A darker head view still shows the deck,
+ground markings and changing horizon. Original accepted media/checkpoint hashes
+and Git LFS integrity were verified.
 
 MuJoCo documents [display materials](https://mujoco.readthedocs.io/en/stable/XMLreference.html#asset-material)
 and the distinction between [model changes and simulation state](https://mujoco.readthedocs.io/en/stable/programming/simulation.html#model-changes).

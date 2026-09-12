@@ -138,3 +138,7 @@ the healthy dog; damaged-platform transfer remains unreliable. The accepted
 static release is preserved by `adaptive-standing-v1`.
 The accepted moving-support checkpoint and video are pinned by
 `adaptive-moving-v1` and [the release manifest](docs/locomotion/moving/RELEASE.json).
+
+[Preview the native graphite visual theme](previews/locomotion/graphite/moving_graphite_v1.mp4)
+· [Unbranded body panels, dark overlays and viewer options](docs/locomotion/graphite/README.md).
+This presentation preview reuses the accepted motion and preserves the original films.
