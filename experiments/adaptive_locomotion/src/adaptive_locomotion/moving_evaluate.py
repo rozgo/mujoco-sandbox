@@ -88,7 +88,7 @@ def run_case(
             np.abs(g.torque[:, g.deck_aadr])
             / g.model.actuator_forcerange[g.deck_aadr, 1]
         )
-        warnings = np.maximum(warnings, g.warnings[:, :, 0].sum(1))
+        warnings = np.maximum(warnings, g.warnings[:, :, 1].sum(1))
         fail_time[alive & fell] = (k + 1) * CONTROL_DT
         alive &= ~fell
         bad_peak = np.maximum(bad_peak, g.support_peaks[:, ~g.support_allowed].max(1))
