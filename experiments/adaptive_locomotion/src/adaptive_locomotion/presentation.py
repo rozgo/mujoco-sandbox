@@ -14,6 +14,17 @@ import numpy as np
 from .bodies import VENDOR
 
 
+def theme_hooks(theme="classic"):
+    if theme == "classic":
+        return configure, damage_markers
+    if theme == "graphite":
+        from .graphite import configure as configure_graphite
+        from .graphite import decorate
+
+        return configure_graphite, decorate
+    raise ValueError(f"Unknown presentation theme: {theme}")
+
+
 @lru_cache
 def attachment_points():
     root = ET.parse(VENDOR / "go2.xml").getroot()

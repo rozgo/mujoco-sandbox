@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw
 from .bodies import CONTROL_DT, ROOT
 from .moving_env import MovingEnv
 from .moving_evaluate import BODY_MAP, run_case
-from .presentation import configure, damage_markers
+from .presentation import configure
 from .record import font, model_hash
 from .train import load_checkpoint
 
@@ -36,7 +36,14 @@ def camera(model, data, kind="follow"):
     return cam
 
 
-def view(checkpoint, motion="combined", body="healthy", seconds=0, relative=True):
+def view(
+    checkpoint,
+    motion="combined",
+    body="healthy",
+    seconds=0,
+    relative=True,
+    theme="classic",
+):
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
         env = os.environ.copy()
         paths = [sysconfig.get_config_var("LIBDIR"), str(Path(sys.base_prefix) / "lib")]
@@ -73,7 +80,10 @@ def view(checkpoint, motion="combined", body="healthy", seconds=0, relative=True
         substep_support=True,
     )
     g = env.groups[0]
-    configure(g.model)
+    from .presentation import theme_hooks
+
+    configure_view, decorate_view = theme_hooks(theme)
+    configure_view(g.model)
     data = mujoco.MjData(g.model)
     start = time.perf_counter()
     try:
@@ -108,7 +118,7 @@ def view(checkpoint, motion="combined", body="healthy", seconds=0, relative=True
                 )
                 with viewer.lock():
                     viewer.user_scn.ngeom = 0
-                    damage_markers(viewer.user_scn, g.model, data, BODY_MAP[body])
+                    decorate_view(viewer.user_scn, g.model, data, BODY_MAP[body])
                 viewer.sync()
                 time.sleep(max(0, CONTROL_DT - (time.perf_counter() - tick)))
     finally:

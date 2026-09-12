@@ -43,6 +43,7 @@ def main():
     p.add_argument("--world-observations", action="store_true")
     p.add_argument("--motion-scale", type=float, default=1)
     p = commands.add_parser("view")
+    p.add_argument("--theme", choices=("classic", "graphite"), default="classic")
     p.add_argument("--checkpoint", type=Path, default=STANDING)
     p.add_argument("--motion", default="combined")
     p.add_argument("--body", default="healthy")
@@ -107,6 +108,7 @@ def main():
             args.body,
             args.seconds,
             not args.world_observations,
+            theme=args.theme,
         )
     elif args.command == "record":
         from .moving_record import record
