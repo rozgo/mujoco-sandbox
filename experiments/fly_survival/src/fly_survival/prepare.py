@@ -114,11 +114,13 @@ def bake_anatomy(path):
         np.uint8
     )
     image = Image.fromarray(base)
+    PREVIEWS.mkdir(parents=True, exist_ok=True)
+    image.save(PREVIEWS / "brain_texture_v1.png")
     draw = ImageDraw.Draw(image)
     draw.text((24, 18), "MaleCNS v1.0 / anatomical positions", fill="#b9b6ad")
     draw.text(
         (24, 870),
-        f"{len(indices):,} located / {len(ann):,} neurons / activity overlay pending",
+        f"{len(indices):,} located / {len(ann):,} neurons / measured anatomical positions",
         fill="#b9b6ad",
     )
     PREVIEWS.mkdir(parents=True, exist_ok=True)
