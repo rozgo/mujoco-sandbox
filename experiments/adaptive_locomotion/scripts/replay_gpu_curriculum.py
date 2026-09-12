@@ -6,12 +6,12 @@ import json
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
 def utc():
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def digest(path):
@@ -110,7 +110,9 @@ def main():
             str(row["stage"]),
         ]
         with (run / "process.log").open("w") as log:
-            result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
+            result = subprocess.run(
+                command, stdout=log, stderr=subprocess.STDOUT, check=False
+            )
         audit = {
             "stage": row["stage"],
             "recipe_sha256": recipe_hash,
