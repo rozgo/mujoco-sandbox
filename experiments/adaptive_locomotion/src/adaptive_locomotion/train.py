@@ -88,6 +88,8 @@ def train(
     max_iterations=None,
     warp_execution="concurrent",
     standing_profile=None,
+    moving_profile=None,
+    motion_scale=1.0,
     standing_surfaces="gentle",
     walking_replay_weight=0.0,
     idle_support_weight=2.0,
@@ -171,6 +173,15 @@ def train(
             idle_drift_weight=idle_drift_weight,
             idle_episode_steps=idle_episode_steps,
             substep_support=substep_support,
+        )
+    if moving_profile:
+        from .moving_env import MovingEnv
+
+        if not standing_profile or mode != "support":
+            raise ValueError("Moving training requires standing support mode")
+        environment_class = MovingEnv
+        environment_options.update(
+            moving_profile=moving_profile, motion_scale=motion_scale
         )
     env = environment_class(
         num_envs,
@@ -327,6 +338,8 @@ def train(
         "seed": seed,
         "mode": mode,
         "standing_profile": standing_profile,
+        "moving_profile": moving_profile,
+        "motion_scale": motion_scale if moving_profile else None,
         "idle_support_weight": idle_support_weight,
         "idle_drift_weight": idle_drift_weight,
         "idle_episode_steps": idle_episode_steps,

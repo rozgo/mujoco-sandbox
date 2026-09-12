@@ -25,6 +25,7 @@ class StandingEnv(DogEnv):
         seed=12,
         profile="healthy",
         cases=None,
+        case_counts=None,
         schedule=True,
         surface_level="gentle",
         idle_support_weight=2.0,
@@ -76,6 +77,8 @@ class StandingEnv(DogEnv):
                 num_envs // len(cases) + (i < num_envs % len(cases))
                 for i in range(len(cases))
             ]
+        if case_counts is not None:
+            counts = case_counts
         self.cases = cases
         self.hold_anchor = np.zeros((num_envs, 2))
         self.reference_height = np.zeros(num_envs)
@@ -100,7 +103,9 @@ class StandingEnv(DogEnv):
             seed,
             bodies=[b for b, _ in cases],
             terrain="flat",
-            terrain_per_group=[f"stand_{s}" for _, s in cases],
+            terrain_per_group=[
+                "moving" if s == "moving" else f"stand_{s}" for _, s in cases
+            ],
             group_counts=counts,
             faults=False,
             randomize_strength=False,
@@ -140,7 +145,7 @@ class StandingEnv(DogEnv):
                     -0.008, 0.008, (len(local), len(g.slot))
                 )
                 g.qvel[local] = self.rng.uniform(-0.02, 0.02, (len(local), g.model.nv))
-            g.ctrl[local] = g.qpos[local[:, None], g.qadr]
+            g.ctrl[local[:, None], g.aadr] = g.qpos[local[:, None], g.qadr]
             g.batch.forward(local)
             self.action[chosen[:, None], g.slot] = (
                 g.qpos[local[:, None], g.qadr] - STAND[g.slot]
@@ -209,7 +214,7 @@ class StandingEnv(DogEnv):
             # Independent acceptance still inspects each step explicitly.
             for g, sl in zip(self.groups, self.slices, strict=True):
                 force = g.support_peaks[:, ~g.support_allowed]
-                weight = float(g.model.body_mass.sum() * 9.81)
+                weight = float(g.robot_mass * 9.81)
                 self.bad_support_force[sl] = force.sum(1)
                 self.support_cost[sl] = 0.25 * np.minimum(force / 5, 1).sum(
                     1
