@@ -89,15 +89,7 @@ def evaluate(args):
             data = environment.data
             upright.append(float(data.xmat[environment.thorax_id, 8]))
             heights.append(float(data.qpos[2] * 0.01))
-            velocity = np.empty(6)
-            mujoco.mj_objectVelocity(
-                environment.model,
-                data,
-                mujoco.mjtObj.mjOBJ_BODY,
-                environment.thorax_id,
-                velocity,
-                1,
-            )
+            velocity = environment.anatomical_velocity()
             speed_errors.append(float(velocity[3] - speed))
             yaw_errors.append(float(velocity[2] - turn))
         distance = (environment.data.qpos[:2] - start_pos[:2]) * 0.01
@@ -160,6 +152,8 @@ def evaluate(args):
         if args.walking_action_mask
         else environment.model.nu,
         "evaluation_seed": 80001,
+        "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
+        "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
         "results": results,
         "physical_success_count": sum(r["success"] for r in results),
     }

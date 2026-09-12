@@ -197,6 +197,22 @@ dataset aggregation, not PPO. The teacher still has a future path that the stude
 does not observe, so off-path target ambiguity remains a limitation to investigate
 if this feedback-data pilot does not transfer.
 
+### Tracking-frame correction before continuation
+
+A check against the inherited teacher's actual displacement exposed a metric bug:
+`mj_objectVelocity(..., mjOBJ_BODY, ..., local=1)` returns velocity in the body's
+principal-inertia axes. The fly's inertia frame is rotated relative to its thorax.
+Forward-speed and yaw metrics must use `mjOBJ_XBODY` (anatomical body axes).
+The old BC01 reports are retained, but their speed/yaw values cannot establish
+command accuracy. Tilt, height, support loads and numerical status are unaffected.
+The initial three-case passive-mask result therefore proves stable support, with
+command success requiring corrected evaluation. Existing trained velocity inputs
+retain their original inertia coordinates; all six components remain available,
+so no input reinterpretation or weight change is hidden in this evaluator fix.
+A regression test applies known forward and yaw velocities at a rotated heading.
+This distinction is explicit in the
+[MuJoCo engine](https://github.com/google-deepmind/mujoco/blob/main/src/engine/engine_core_util.c).
+
 ### Preserved interrupted utility search
 
 CEM 03 was interrupted for the approved full-body architecture change. Its three

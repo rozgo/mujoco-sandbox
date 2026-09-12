@@ -45,3 +45,17 @@ def test_walking_mask_preserves_active_commands_and_passive_physical_dofs(enviro
     assert active.sum() == 59
     assert environment.model.nv == 108
     assert not np.shares_memory(masked, original)
+
+
+def test_command_metrics_use_anatomical_axes_not_principal_inertia(environment):
+    # A 90-degree-heading body translating along world Y moves forward in its
+    # own anatomical frame. The fly's inertia frame is substantially rotated.
+    environment.reset(yaw=np.pi / 2)
+    environment.data.qvel[:6] = (0, 1.25, 0, 0, 0, 0)
+    mujoco.mj_forward(environment.model, environment.data)
+    velocity = environment.anatomical_velocity()
+    np.testing.assert_allclose(velocity, [0, 0, 0, 1.25, 0, 0], atol=1e-10)
+    environment.data.qvel[:6] = (0, 0, 0, 0, 0, 0.75)
+    mujoco.mj_forward(environment.model, environment.data)
+    assert environment.anatomical_velocity()[2] == pytest.approx(0.75)
+    environment.reset()

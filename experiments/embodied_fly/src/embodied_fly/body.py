@@ -136,6 +136,10 @@ class FlyEnvironment:
 
     def observation(self):
         rotation = self.data.xmat[self.thorax_id].reshape(3, 3)
+        # Preserve v1 checkpoint input coordinates: MuJoCo mjOBJ_BODY uses the
+        # principal inertia frame, NOT the anatomical xmat axes. Six components
+        # still contain complete measured local velocity. Use anatomical_velocity
+        # for command tracking; do not silently reinterpret trained features.
         body_velocity = np.empty(6)
         mujoco.mj_objectVelocity(
             self.model, self.data, mujoco.mjtObj.mjOBJ_BODY, self.thorax_id, body_velocity, 1
@@ -163,6 +167,14 @@ class FlyEnvironment:
                 self.needs,
             )
         ).astype(np.float32)
+
+    def anatomical_velocity(self):
+        """Angular then linear velocity in thorax axes (forward x, upright z)."""
+        velocity = np.empty(6)
+        mujoco.mj_objectVelocity(
+            self.model, self.data, mujoco.mjtObj.mjOBJ_XBODY, self.thorax_id, velocity, 1
+        )
+        return velocity
 
     def step(self, action):
         action = np.asarray(action, np.float32)
