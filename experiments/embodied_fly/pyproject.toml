@@ -8,7 +8,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
  "mujoco==3.13.0", "torch==2.14.0", "numpy==2.5.3", "scipy>=1.18,<2",
  "pandas>=3,<4", "pyarrow>=25", "h5py", "pillow>=12,<13", "imageio-ffmpeg==0.6.0",
- "flybody", "dm-control", "protobuf",
+ "flybody", "dm-control", "protobuf", "mjbatch==0.1.0",
 ]
 [project.optional-dependencies]
 gpu = ["mujoco-warp==3.13.0"]
@@ -16,6 +16,7 @@ gpu = ["mujoco-warp==3.13.0"]
 dev = ["pytest>=9,<10", "ruff>=0.16"]
 [tool.uv.sources]
 flybody = { git = "https://github.com/TuragaLab/flybody.git", rev = "d015e9bfe441bd90ae431bac24c55cb74bdbce26" }
+mjbatch = { path = "../adaptive_locomotion/third_party/mjbatch" }
 [tool.uv]
 override-dependencies = ["numpy==2.5.3"]
 [build-system]

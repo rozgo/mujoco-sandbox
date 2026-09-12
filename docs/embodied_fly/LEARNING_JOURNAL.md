@@ -338,3 +338,24 @@ metadata digests when stored. No simulation ran in that rejected setup.
 The user reconfirmed that flight remains required. Full-body wing control, takeoff,
 flight, landing, learned survival utility, multi-agent integration and the final
 combined demonstration are still open. These prototypes do not complete that goal.
+
+### Native live-physics batching for outcome learning
+
+Added a separate `FlyBatch` using the repository's pinned, Apache-2.0 mjbatch
+source (revision `77966f85bcd8f7ef4351cb4a1a6f42e133d19725`, MuJoCo 3.13 build).
+It retains full anatomy, passive-channel walking curriculum, all force bounds,
+500 Hz control / 5 kHz physics, and the existing 383-value observation convention.
+Additional sensors expose anatomical/inertial-frame velocity, claw contacts and
+forbidden support. Reward support samples every physics substep; authoritative
+acceptance still enumerates every contact in the original evaluator. The training
+sensor selects the maximum-force-norm contact per geom, so is explicitly a proxy
+for the acceptance maximum over every normal reaction.
+
+A 100-action regression test produced identical single/batched poses and float32
+observations, matching anatomical velocities and forbidden contact loads. It also
+checks independent worlds and repeated partial resets. The first implementation
+lost the folded-wing initialization on repeated resets because mjbatch only
+applies changed array elements. Reset-then-initialize-then-forward fixes this;
+the regression includes the previously failing repeated-reset case. No training
+used that defective implementation. Physics remains CPU-based; CUDA is reserved
+for the full-graph actor and learning in this path.

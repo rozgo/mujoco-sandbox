@@ -35,6 +35,7 @@ def evidence():
         "numpy",
         "scipy",
         "mujoco",
+        "mjbatch",
         "mujoco-warp",
         "flybody",
         "dm-control",

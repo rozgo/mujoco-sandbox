@@ -263,6 +263,7 @@ dependencies = [
     { name = "flybody" },
     { name = "h5py" },
     { name = "imageio-ffmpeg" },
+    { name = "mjbatch" },
     { name = "mujoco" },
     { name = "numpy" },
     { name = "pandas" },
@@ -290,6 +291,7 @@ requires-dist = [
     { name = "flybody", git = "https://github.com/TuragaLab/flybody.git?rev=d015e9bfe441bd90ae431bac24c55cb74bdbce26" },
     { name = "h5py" },
     { name = "imageio-ffmpeg", specifier = "==0.6.0" },
+    { name = "mjbatch", directory = "../adaptive_locomotion/third_party/mjbatch" },
     { name = "mujoco", specifier = "==3.13.0" },
     { name = "mujoco-warp", marker = "extra == 'gpu'", specifier = "==3.13.0" },
     { name = "numpy", specifier = "==2.5.3" },
@@ -644,6 +646,34 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7c/99/8b59dbcebf7e84b35e86c893f52fdc2953299d66ef1fcbacca26162818b0/mediapy-1.2.7.tar.gz", hash = "sha256:fd3826ca156f9165cd369f44d4d345d5609df1da3caf867df7ce304e19dd7fde", size = 28660, upload-time = "2026-07-01T13:14:43.448Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/10/70/eeb41d81fea2b3165cfe7ae1c662f9dc6310b14b230a96260376c2891cc7/mediapy-1.2.7-py3-none-any.whl", hash = "sha256:fc81a9190d9724b02286efac4e7a67f384024e078fda0a3cac9fdf25e2f8878f", size = 28015, upload-time = "2026-07-01T13:14:42.524Z" },
+]
+
+[[package]]
+name = "mjbatch"
+version = "0.1.0"
+source = { directory = "../adaptive_locomotion/third_party/mjbatch" }
+dependencies = [
+    { name = "mujoco" },
+    { name = "numpy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mujoco", specifier = "==3.13.0" },
+    { name = "numpy" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "nanobind", specifier = ">=2.2.0" },
+    { name = "pyright" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+examples = [
+    { name = "mediapy" },
+    { name = "mujoco-menagerie", marker = "python_full_version >= '3.10.12'", specifier = ">=2026.9.0" },
+    { name = "torch", specifier = "==2.14.0" },
 ]
 
 [[package]]
