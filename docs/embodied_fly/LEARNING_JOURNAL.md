@@ -624,3 +624,31 @@ training-only assistance still fades to zero halfway through the timed run.
 The frozen retention actor remains PPO01. Independently test the final single
 student, with no inherited or frozen teacher present. The pilot remains separate
 and is not part of this new checkpoint's ancestry.
+
+The online probe ran **60.123372 seconds** after **9.464741 seconds** setup:
+**45.190153 seconds** collection plus supervised forward computation and
+**14.921138 seconds** backward/optimization. It collected **63,488 physical
+transitions / 126.976 aggregate simulated seconds**, in **248 updates**, using
+32 native CPU physics worlds and CUDA graph learning. All **29** saved training
+fall traces were hash-checked and finite. The pilot checkpoint is
+`97f2877504cced0d8265255f9806d9bd493630b5d8665dbffc6c2f4205b7ea35`.
+PPO02's **14** saved falls were also verified. The pilot is explicitly imitation,
+not additional physical-reward PPO training.
+
+### Flight body preparation
+
+Implemented a separate full-anatomy flight preset with upstream ellipsoid wing
+fluid parameters, 20 kHz physics, 5 kHz control and unfiltered wing torque channels.
+All 78 actuator outputs remain; the input schema exposes effective actuator input
+so removing six wing filter states does not remove observation channels. Existing
+walking physics and observations retain numerical agreement in regression tests.
+This is a physical preparation step, not permission to run walking weights at ten
+times their learned recurrent rate.
+
+A short, explicitly scripted aerodynamic probe starts airborne and compares air,
+vacuum and a halved timestep. It supplies only bounded wing controls; no body pose
+writes after initialization or root-force injection. The upstream synthetic wing
+pattern generates about 28% of body weight upward force, insufficient to hover.
+All three trajectories remain finite without warnings. Preserve this failure to
+support body weight; stronger/learned wing control is still required. Exact settings
+and limitations are in FLIGHT_PREREQUISITES.md. Twenty-one focused tests pass.

@@ -18,20 +18,43 @@ from flybody.fruitfly.fruitfly import FruitFly
 PHYSICS_DT = 0.0002
 CONTROL_DT = 0.002
 SUBSTEPS = 10
+FLIGHT_PHYSICS_DT = 0.00005
+FLIGHT_CONTROL_DT = 0.0002
 NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
-def make_body():
+def make_body(preset="walking"):
+    if preset not in ("walking", "flight"):
+        raise ValueError(f"Unknown physical preset: {preset}")
+    physics_dt = FLIGHT_PHYSICS_DT if preset == "flight" else PHYSICS_DT
+    control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
     fly = FruitFly(
         use_legs=True,
         use_wings=True,
         use_mouth=True,
         use_antennae=True,
-        physics_timestep=PHYSICS_DT,
-        control_timestep=CONTROL_DT,
+        physics_timestep=physics_dt,
+        control_timestep=control_dt,
         joint_filter=0.01,
         adhesion_filter=0.007,
     )
+    if preset == "flight":
+        # Pinned upstream Flying coefficients, with complete limbs and floor
+        # contacts retained. Only wing filters are removed; terrestrial actuator
+        # dynamics stay unchanged. No external body forces or wing generator.
+        for axis in ("yaw", "roll", "pitch"):
+            fly.mjcf_model.find("default", axis).general.gainprm[0] = 18
+        wing_joint = fly.mjcf_model.find("default", "wing").joint
+        wing_joint.damping = 0.007769230
+        wing_joint.stiffness = 0.01
+        for geom in fly.mjcf_model.find_all("geom"):
+            if "fluid" in geom.name:
+                geom.fluidshape = "ellipsoid"
+                geom.fluidcoef = (1, 0.5, 1.5, 1.7, 1)
+        for actuator in fly.mjcf_model.find_all("actuator"):
+            if "wing_" in actuator.name:
+                actuator.dyntype = "none"
+                actuator.dynprm = (1,)
     arena = floors.Floor(size=(3, 3), reflectance=0.08)
     root = arena.mjcf_model
     root.compiler.boundmass = 0
@@ -39,7 +62,7 @@ def make_body():
     spawn = root.worldbody.add("site", pos=(0, 0, 0.1278))
     fly.create_root_joints(arena.attach(fly, spawn))
     spawn.remove()
-    root.option.timestep = PHYSICS_DT
+    root.option.timestep = physics_dt
     root.visual.map.znear = 0.001
     root.visual.map.zfar = 50
     root.statistic.extent = 4.01
@@ -76,10 +99,13 @@ def make_body():
 
 
 class FlyEnvironment:
-    def __init__(self):
-        self.physics, self.fly = make_body()
+    def __init__(self, preset="walking"):
+        self.preset = preset
+        self.control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
+        self.physics, self.fly = make_body(preset)
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr
+        self.substeps = round(self.control_dt / self.model.opt.timestep)
         self.thorax_id = self.model.body("walker/thorax").id
         self.joint_ids = np.flatnonzero(self.model.jnt_type == mujoco.mjtJoint.mjJNT_HINGE)
         self.qpos_indices = self.model.jnt_qposadr[self.joint_ids]
@@ -158,7 +184,7 @@ class FlyEnvironment:
             (
                 np.clip(normalized_q, -5, 5),
                 np.clip(self.data.qvel[self.qvel_indices] / 100, -10, 10),
-                self.data.act,
+                self.actuator_activation(),
                 body_velocity / np.array([20, 20, 20, 10, 10, 10]),
                 rotation[2],
                 foot_touch,
@@ -167,6 +193,18 @@ class FlyEnvironment:
                 self.needs,
             )
         ).astype(np.float32)
+
+    def actuator_activation(self):
+        """One effective input per actuator, retaining the 78-channel schema.
+
+        Filtered actuators expose their activation; unfiltered flight wings expose
+        the directly applied control. Walking values exactly match v1 data.act.
+        This preserves dimensions, not a claim of flight checkpoint compatibility.
+        """
+        effective = self.data.ctrl.copy()
+        filtered = self.model.actuator_actadr >= 0
+        effective[filtered] = self.data.act[self.model.actuator_actadr[filtered]]
+        return effective
 
     def anatomical_velocity(self):
         """Angular then linear velocity in thorax axes (forward x, upright z)."""
@@ -185,7 +223,7 @@ class FlyEnvironment:
             self.high - self.low
         )
         sensor_total = np.zeros(self.model.nsensordata)
-        for _ in range(SUBSTEPS):
+        for _ in range(self.substeps):
             mujoco.mj_step(self.model, self.data)
             sensor_total += self.data.sensordata
             for cid, contact in enumerate(self.data.contact):
@@ -201,7 +239,7 @@ class FlyEnvironment:
                         )
             if np.any(self.data.warning.number) or not np.isfinite(self.data.qpos).all():
                 raise RuntimeError("MuJoCo numerical failure")
-        self.mean_sensors = sensor_total / SUBSTEPS
+        self.mean_sensors = sensor_total / self.substeps
         return self.observation()
 
     def walking_action(self, action):
@@ -219,8 +257,11 @@ class FlyEnvironment:
             "degrees_of_freedom": model.nv,
             "actuators": model.nu,
             "observation_size": len(self.observation()),
-            "physics_hz": 1 / PHYSICS_DT,
-            "control_hz": 1 / CONTROL_DT,
+            "physical_preset": self.preset,
+            "physics_hz": 1 / model.opt.timestep,
+            "control_hz": 1 / self.control_dt,
+            "activation_states": model.na,
+            "activation_observation": "78 effective actuator inputs; filtered state or direct control",
             "root_is_free": bool(model.jnt_type[0] == mujoco.mjtJoint.mjJNT_FREE),
             "source": "TuragaLab/flybody@d015e9bfe441bd90ae431bac24c55cb74bdbce26",
             "joints": [

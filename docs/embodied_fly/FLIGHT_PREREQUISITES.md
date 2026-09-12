@@ -47,3 +47,49 @@ Sources inspected locally at FlyBody revision
 - [Flight physical setup](https://github.com/TuragaLab/flybody/blob/d015e9bfe441bd90ae431bac24c55cb74bdbce26/flybody/tasks/base.py).
 - [Flight constants](https://github.com/TuragaLab/flybody/blob/d015e9bfe441bd90ae431bac24c55cb74bdbce26/flybody/tasks/constants.py).
 - [Teacher plus wingbeat generator](https://github.com/TuragaLab/flybody/blob/d015e9bfe441bd90ae431bac24c55cb74bdbce26/flybody/tasks/flight_imitation.py).
+
+## Implemented physical preset and first force diagnostic
+
+`FlyEnvironment("flight")` now enables the pinned wing aerodynamic coefficients,
+18-unit wing gains, damping 0.007769230 and stiffness 0.01. It uses 20 kHz physics
+and 5 kHz control, removes the six wing actuator filters, and preserves all legs,
+mouth, antennae, free root and ground collisions. The walking preset is unchanged.
+Terrestrial actuator filters remain unchanged in the flight preset too.
+
+The flight body has 72 filter states instead of 78. The observation still has
+383 entries: its activation section exposes one effective input per actuator,
+using filter state where present and direct control on unfiltered wings. This
+exactly preserves existing walking observations. Equal input/output dimensions
+do not establish behavioral compatibility at a tenfold action rate; controller
+timing and curriculum transfer still require an explicit design and validation.
+
+A first 30 ms airborne diagnostic uses the upstream *approximate* wingbeat pattern
+with its proportional angle-error wing torque, no learned residual and no brain.
+The body is initialized airborne once, then moves only through bounded actuators,
+aerodynamics, gravity and native MuJoCo stepping. No root force is supplied.
+
+| Condition | Mean upward passive force / weight | Vertical travel | Solver warnings |
+| --- | ---: | ---: | ---: |
+| Air, 20 kHz physics | 0.2760 | −3.743 mm | 0 |
+| Vacuum, 20 kHz physics | 0 | −4.988 mm | 0 |
+| Air, 40 kHz physics | 0.2816 | −3.722 mm | 0 |
+
+Halving the timestep changed final height by 0.0203 mm over this short interval.
+Maximum wing actuator force was below 82% of its limit; no channel saturated.
+This demonstrates an aerodynamic response, **not sufficient lift or stable
+flight**. The approximate pattern fails to support body weight. Longer integration,
+stronger/learned wing control, realistic demonstrations, takeoff, flight stability
+and landing remain required. The recorded controller is explicitly ineligible for
+student acceptance, and will never be presented as learned flight.
+
+Two tests verify unchanged anatomy/contact flags and walking observations,
+valid 20 kHz ground contact, no applied root forces, and dissipative aerodynamic
+force at identical physical state. The latter toggles the fluid model while
+holding state fixed, separating force response from trajectory divergence.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.flight_probe \
+  --output outputs/embodied_fly/flight_physics_probe_02
+```
+
+The first run is preserved separately. New captures must use unused output names.

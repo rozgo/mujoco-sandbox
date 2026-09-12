@@ -1,0 +1,1150 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T22:38:54.263152+00:00",
+    "source_commit": "0a98dfbeed7397deb85bffd8df6f3bade3098d2b",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "5789fa666cd6369c3c06dffe69c462ee98bddf1d758eac64d922f77a25069ea2",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "6b8dcc37f86734f338376cef7a6975008f95735fa8661e07f838e2d8a4bfb47f",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 60.0,
+    "sequence": 8,
+    "lr": 3e-05,
+    "initial_teacher_mix": 0.5,
+    "seed": 38001,
+    "internal_steps": 4
+  },
+  "started_utc": "2026-09-12T22:39:03.711340+00:00",
+  "completed_utc": "2026-09-12T22:40:03.925568+00:00",
+  "setup_seconds": 9.4647412346676,
+  "training_wall_seconds": 60.1233722246252,
+  "collection_and_supervised_forward_seconds": 45.19015304138884,
+  "backward_optimizer_seconds": 14.921138369943947,
+  "updates": 248,
+  "transitions": 63488,
+  "aggregate_simulated_seconds": 126.976,
+  "parallel_worlds": 32,
+  "command_switches_without_reset": 32,
+  "episodes": [
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.588,
+      "teacher_mix_at_end": 0.3514087602496147,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "4ba7a3ce3713e034518d679e900cbd8cb3ad518445d55b778734f6f0ab648329",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.662,
+      "teacher_mix_at_end": 0.33118796300453446,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "f6ce958d69d3104ec7b72ce1ee13bef8a7a4a34acf9515470f84cf389dbef5d6",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.6980000000000001,
+      "teacher_mix_at_end": 0.3226091842011859,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "1ed2959fc8ac2ddfed0afa1e47f91db16d1b0bfcea25adb20cd22010aa7691cc",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.756,
+      "teacher_mix_at_end": 0.30632144370271513,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "0bd56ce62187a62334a72bb69df6af09bbfe968e06e90d3859b8612091ffff11",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.776,
+      "teacher_mix_at_end": 0.3019030707034593,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "7a0bf76889c61fd75fb088ad0520b86c34cca4672595f867f776672cde79ad63",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.294,
+      "teacher_mix_at_end": 0.17572800993608934,
+      "failure_trace": {
+        "file": "failure_00005.npz",
+        "sha256": "b066e138d47e196e6212e91855c8b04a965d62e0b6b17a1a321acefe7aa08d7b",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.756,
+      "teacher_mix_at_end": 0.14412215376893678,
+      "failure_trace": {
+        "file": "failure_00006.npz",
+        "sha256": "23195f45e341448733893bdd80e59530bc5a5802ec7f04350778b975350f93e9",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.546,
+      "teacher_mix_at_end": 0.1129463807369272,
+      "failure_trace": {
+        "file": "failure_00007.npz",
+        "sha256": "2d3aab8551c2d9494fd2b999c5fa89417f605b8b0aa377f7371a34bac5bbb099",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.596,
+      "teacher_mix_at_end": 0.1010218506834159,
+      "failure_trace": {
+        "file": "failure_00008.npz",
+        "sha256": "55a07df27f0b45884eed4927acf007699728be99505707eb9c6a97a40b41401d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.602,
+      "teacher_mix_at_end": 0.09676553050521763,
+      "failure_trace": {
+        "file": "failure_00009.npz",
+        "sha256": "8c0fdcfbdd1a8f93914e619491c74ede1de3f52cb91f922bdfd50e47bfc0e795",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.612,
+      "teacher_mix_at_end": 0.09676553050521763,
+      "failure_trace": {
+        "file": "failure_00010.npz",
+        "sha256": "09b69b1d58ff23f32ca170739a58f8258218e1576afe4587ee80ef6df1c5dcb2",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.1,
+      "teacher_mix_at_end": 0.07641181798341373,
+      "failure_trace": {
+        "file": "failure_00011.npz",
+        "sha256": "c0b85d68e2b47388ea7e07b7b94f481eed8fa677d3c2c104c69680fbca5e5d57",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.808,
+      "teacher_mix_at_end": 0.04886041528855761,
+      "failure_trace": {
+        "file": "failure_00012.npz",
+        "sha256": "cd24f712461c68cb0b0700b943641f0e6c5f51cc288801855dd423822178c36a",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.96,
+      "teacher_mix_at_end": 0.009187948734809936,
+      "failure_trace": {
+        "file": "failure_00013.npz",
+        "sha256": "c8f0c9b940fc8bd3612cdc93d8b78f02174b4cbbff713c8fa34896f6929d272d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.402,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": {
+        "file": "failure_00014.npz",
+        "sha256": "cc996fe24bf5cad24b91c59936fc05ab36621215e324bf40b9762345998c383c",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0008233580195034507,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.40800000000000003,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00035.npz",
+        "sha256": "2b227aef9e45a99344b6f5ba1ae0be11332f5f8d2976d57c0978d77670925a81",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.266,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00036.npz",
+        "sha256": "6fb210825a5eac0a8d5e0f9a2c39a01b4476e39e5425291ee15f1701c34acd1d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.38,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00037.npz",
+        "sha256": "504bc23193ea09454f1b9b057b5e8cee81b27798b111fda2575d349349e0c1f1",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.746,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00038.npz",
+        "sha256": "0d8ae9877323df88488cee69ad8cc38652eb5ba5500be92ce7faead9767ad858",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.894,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00042.npz",
+        "sha256": "b165e5a68d51bb76facfc55b61b87853b6deffb0653cac0406f6150f3ba75f85",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.9400000000000001,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00043.npz",
+        "sha256": "4338f16be653afc111c2c881f404b1ba9f5977d881cccbb9df2a5f9c1e2f051d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.9420000000000001,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00044.npz",
+        "sha256": "74570b498b9bb4849848df9f49cdb31d5c2b40fd004d1479e5861d378ebe24b3",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.026,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00045.npz",
+        "sha256": "2668abf341e66ceed6af7a272e98c655d53bdc43e47ac7513e0a052ad34ab2f8",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.094,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00046.npz",
+        "sha256": "ed412bff68cc22836ac462de3d968674e8c412e283f0c4dcb125d585f4a9509e",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.1440000000000001,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00047.npz",
+        "sha256": "ce9b766c7708ede230df6a40f98a0f22914dea606b78881d290bf4b0f474106b",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.41,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00049.npz",
+        "sha256": "0d1022f810a7e4a1ff27a8884587990de21913f91f20d69b0345f55246d2a5ea",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.426,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00051.npz",
+        "sha256": "e610990ade8afc9725f7a0c63bea5efa30a3a572edc1544ca67b077562767daf",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.476,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00052.npz",
+        "sha256": "48733a89b4f90ac9f5ebc34112a81d4baa51947cbdd4797a1f22efef69078dcb",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.51,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00056.npz",
+        "sha256": "595f9c93ff4826cc01d434176ca50081c7a44fedb6a115acbfe20009d01c211f",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    }
+  ],
+  "core_gradient_audit": {
+    "excitability": {
+      "l2": 0.0015498962020501494,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.0007404743228107691,
+      "finite": true,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "l2": 0.08073751628398895,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.2926063537597656,
+    "leak": 0.16989034414291382,
+    "bias": 0.5665709376335144
+  },
+  "physics": "native MuJoCo CPU / mjbatch",
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "peak_cuda_allocated_bytes": 2995016704,
+  "checkpoint_sha256": "97f2877504cced0d8265255f9806d9bd493630b5d8665dbffc6c2f4205b7ea35",
+  "model_sha256": "3fa48fd8390a6a3f76b66a6b1311b4c13d962cdadc7f94710eee7d1f5bb02d3d",
+  "parent_checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+  "braking_teacher_sha256": "96dd572472d6d22639cb54fd54f2f43b5d45e583cc054a301f27fa099b2f1478",
+  "optimizer_initialization": "new imitation Adam; actor and normalization inherited",
+  "execution": "mixture of student and training-only target, linearly faded to pure student halfway",
+  "deployed_actor_count": 1,
+  "teacher_required_at_evaluation": false,
+  "failure": null,
+  "physical_success": "Independent teacher-free evaluation required"
+}
