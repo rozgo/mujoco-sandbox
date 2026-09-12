@@ -11,7 +11,7 @@ from pathlib import Path
 import imageio_ffmpeg
 import mujoco
 import numpy as np
-from adaptive_locomotion import ember
+from adaptive_locomotion import ember, ember_environment
 from adaptive_locomotion.bodies import LEGS, ROOT
 from adaptive_locomotion.evaluate import rollout
 from adaptive_locomotion.limb_loss import LOSS_CASES
@@ -322,7 +322,7 @@ def outcome_label(record):
 
 
 class Run:
-    def __init__(self, record, directory):
+    def __init__(self, record, directory, environment="simple"):
         self.record = record
         self.spec = record["spec"]
         self.body = BODY_MAP[self.spec["body"]]
@@ -331,7 +331,8 @@ class Run:
         with np.load(directory / record["trace"], allow_pickle=False) as trace:
             self.trace = {k: trace[k] for k in trace.files}
         self.model = mujoco.MjModel.from_binary_path(str(directory / record["model"]))
-        ember.configure(self.model)
+        self.visuals = ember_environment if environment == "industrial" else ember
+        self.visuals.configure(self.model)
         self.model.vis.global_.offwidth, self.model.vis.global_.offheight = 1920, 1080
         self.data = mujoco.MjData(self.model)
         self.renderers = {}
@@ -385,7 +386,7 @@ class Run:
             if self.spec["surface"].endswith(("fl", "rl")):
                 camera.azimuth = -50
         renderer.update_scene(self.data, camera=camera, scene_option=self.option)
-        ember.decorate(renderer.scene, self.model, self.data, self.body)
+        self.visuals.decorate(renderer.scene, self.model, self.data, self.body)
         return Image.fromarray(renderer.render())
 
     def close(self):
@@ -575,12 +576,12 @@ def stats_card(outcomes=False):
     return canvas
 
 
-def render(directory, output, preview_only=False):
+def render(directory, output, preview_only=False, environment="simple"):
     capture_report = read(directory / "capture.json")
     assert capture_report["checkpoint_sha256"] == EXPECTED
     records = {r["key"]: r for r in capture_report["cases"]}
     output.parent.mkdir(parents=True, exist_ok=True)
-    previews = directory / "render_preview"
+    previews = directory / f"render_preview_{output.stem}"
     previews.mkdir(exist_ok=True)
     stream = None
     if not preview_only:
@@ -601,7 +602,7 @@ def render(directory, output, preview_only=False):
     try:
         for chapter, (title, subtitle, keys, seconds) in enumerate(chapters()):
             with ExitStack() as stack:
-                runs = [Run(records[k], directory) for k in keys]
+                runs = [Run(records[k], directory, environment) for k in keys]
                 for run in runs:
                     stack.callback(run.close)
                 first = count
@@ -633,9 +634,9 @@ def render(directory, output, preview_only=False):
             ("FINAL CHECKPOINT / HELD-OUT RESULTS", True),
         ):
             canvas = stats_card(is_outcome)
-            canvas.save(
-                DEST / ("results_v1.png" if is_outcome else "training_stats_v1.png")
-            )
+            card = DEST / ("results_v1.png" if is_outcome else "training_stats_v1.png")
+            if not card.exists():
+                canvas.save(card)
             first = count
             if stream:
                 for _ in range(6 * FPS):
@@ -659,6 +660,7 @@ def render(directory, output, preview_only=False):
                 "checkpoint_sha256": EXPECTED,
                 "checkpoint_count": 1,
                 "theme": "ember",
+                "environment": environment,
                 "playback_speed": 1,
                 "fps": FPS,
                 "frames": count,
@@ -669,8 +671,16 @@ def render(directory, output, preview_only=False):
                 "capture_manifest": str((directory / "capture.json").relative_to(ROOT)),
                 "capture_manifest_sha256": sha(directory / "capture.json"),
                 "capture_save_seconds": capture_report["capture_save_seconds"],
+                "capture_source_commit": capture_report["source_commit"],
                 "render_encode_seconds": time.perf_counter() - started,
                 "new_training_seconds": 0,
+                "new_physics_steps_during_render": 0,
+                "environment_source_sha256": sha(Path(ember_environment.__file__))
+                if environment == "industrial"
+                else None,
+                "approved_environment_preview_sha256": sha(DEST / "environment_v2.png")
+                if environment == "industrial"
+                else None,
                 "training_report_sha256": sha(ROOT / "docs/locomotion/GPU_REPORT.json"),
                 "physics_backend": "mjbatch",
                 "state_indices": "1,3,... at 50 Hz, 0.04 s increments to each exact endpoint",
@@ -690,13 +700,16 @@ def main():
     )
     parser.add_argument("--trace-root", type=Path, default=TRACE)
     parser.add_argument(
+        "--environment", choices=("simple", "industrial"), default="simple"
+    )
+    parser.add_argument(
         "--output", type=Path, default=DEST / "adaptive_dog_complete_v1.mp4"
     )
     args = parser.parse_args()
     if args.part in ("capture", "all"):
         capture(args.trace_root)
     if args.part in ("render", "all", "preview"):
-        render(args.trace_root, args.output, args.part == "preview")
+        render(args.trace_root, args.output, args.part == "preview", args.environment)
 
 
 if __name__ == "__main__":

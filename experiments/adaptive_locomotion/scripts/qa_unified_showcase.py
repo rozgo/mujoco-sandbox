@@ -47,6 +47,22 @@ def main(video, trace_root):
         and report["physics_backend"] == "mjbatch",
         "no_new_training": report["new_training_seconds"] == 0,
     }
+    if report.get("environment") == "industrial":
+        previous = read(video.parent / "adaptive_dog_complete_v1.json")
+        checks["same_physical_runs_as_previous_film"] = (
+            report["cases"] == previous["cases"]
+            and report["capture_manifest_sha256"] == previous["capture_manifest_sha256"]
+            and report["chapters"] == previous["chapters"]
+        )
+        checks["previous_film_preserved"] = (
+            sha(video.parent / "adaptive_dog_complete_v1.mp4")
+            == previous["video_sha256"]
+        )
+        checks["approved_environment_preview"] = (
+            sha(video.parent / "environment_v2.png")
+            == report["approved_environment_preview_sha256"]
+        )
+        checks["no_new_render_physics"] = report["new_physics_steps_during_render"] == 0
     state_count, misses, upright = 0, [], 0
     for key, record in records.items():
         assert record["spec"] == specs[key]
@@ -70,7 +86,7 @@ def main(video, trace_root):
         assert c["start_s"] == cursor
         cursor = c["end_s"]
     checks["contiguous_chapters"] = cursor == duration
-    directory = trace_root / "encoded_qa"
+    directory = trace_root / "encoded_qa" / video.stem
     directory.mkdir(parents=True, exist_ok=True)
     samples = set()
     for c in plan:
