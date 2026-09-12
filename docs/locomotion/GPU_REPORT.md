@@ -10,7 +10,7 @@ These are measured continuation runs. The starting walker was trained earlier on
 
 | Stage | New GPU training | Parallel worlds | Experiences | Aggregate simulation hours | Experiences/s, including learning |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Walking fine-tuning benchmark, three runs | 42 seconds | 4,096 | 1.77 million | 9.83 | 41,811 |
+| Walking learned from random weights | Not yet measured on GPU | — | — | — | — |
 | Standing on static supports, seven sequential rounds | 8m 57s | 4,096 | 26.84 million | 149.09 | 50,000 |
 | Moving platforms, two sequential rounds | 1m 59s | 4,096 | 5.51 million | 30.58 | 46,435 |
 | **Standing + moving total** | **10m 55s** | **4,096** | **32.34 million** | **179.68** | **49,355** |
