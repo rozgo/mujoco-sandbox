@@ -7,9 +7,8 @@ from pathlib import Path
 
 import imageio_ffmpeg
 import numpy as np
-from PIL import Image, ImageDraw
-
 from adaptive_locomotion.bodies import ROOT
+from PIL import Image, ImageDraw
 
 
 def main(video):
@@ -17,13 +16,24 @@ def main(video):
     provenance = json.loads(video.with_suffix(".json").read_text())
     assert hashlib.sha256(video.read_bytes()).hexdigest() == provenance["video_sha256"]
     samples = (0, 75, 125, 200, 299, 300, 425, 549, 550, 675, 799, 800, 925, 1049, 1050)
+    thumbnail = provenance.get("thumbnail_frame", 425)
+    if "chapters" in provenance:
+        samples = {thumbnail}
+        for chapter in provenance["chapters"]:
+            start = round(chapter["start_s"] * provenance["fps"])
+            end = (
+                round((chapter["start_s"] + chapter["duration_s"]) * provenance["fps"])
+                - 1
+            )
+            samples.update((start, start + provenance["fps"], (start + end) // 2, end))
+        samples = tuple(sorted(samples))
     directory = ROOT / "outputs/locomotion/standing/video_qa" / video.stem
     directory.mkdir(parents=True, exist_ok=True)
     frames = imageio_ffmpeg.read_frames(str(video), pix_fmt="rgb24")
     metadata = next(frames)
     width, height = metadata["size"]
     count = 0
-    board = Image.new("RGB", (1920, 1940), "#091219")
+    board = Image.new("RGB", (1920, 388 * ((len(samples) + 2) // 3)), "#091219")
     for index, raw in enumerate(frames):
         count += 1
         assert len(raw) == width * height * 3
@@ -37,7 +47,7 @@ def main(video):
             ImageDraw.Draw(board).text(
                 ((k % 3) * 640 + 12, (k // 3) * 388 + 6), f"Frame {index}", fill="white"
             )
-            if index == 425:
+            if index == thumbnail:
                 frame.save(video.with_suffix(".png"))
     board.save(directory / "contact_sheet.png")
     checks = {
@@ -50,9 +60,11 @@ def main(video):
         "video_sha256": provenance["video_sha256"],
         "encoding_checks": checks,
         "decoded_frames": count,
+        "sampled_frames": samples,
         "visual_inspection": "Pending inspection of decoded samples",
         "cases_passed": sum(c["passed"] for c in provenance["cases"]),
         "cases_total": len(provenance["cases"]),
+        "upright_count": sum(c["survived"] for c in provenance["cases"]),
         "all_torque_limits": all(
             r["peak_torque_limit_ratio"] <= 1.0001
             for c in provenance["cases"]
