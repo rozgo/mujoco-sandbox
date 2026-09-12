@@ -30,11 +30,14 @@ def run_case(
     capture=False,
     support_substeps=True,
     timestep=0.002,
+    capture_trial=0,
 ):
     if trials < 1 or seconds <= 2 or (transition and seconds < 10):
         raise ValueError(
             "Acceptance needs positive trials, >2 s standing or >=10 s transitions"
         )
+    if capture and not 0 <= capture_trial < trials:
+        raise ValueError("Captured trial must be a valid batch index")
     torch.set_num_threads(1)
     env = StandingEnv(
         trials,
@@ -87,28 +90,32 @@ def run_case(
                 air.append(~contacts[:, LEGS.index(surface[-2:].upper())])
         # Independent CPU forward detects actual geometry penetration, even for
         # GPU rollouts. This diagnostic is sampled at 50 Hz; support is 500 Hz.
+        step_pen = np.zeros(trials)
         for i in range(trials):
             scratch.qpos[:] = g.qpos[i]
             scratch.qvel[:] = g.qvel[i]
             mujoco.mj_forward(g.model, scratch)
             if scratch.ncon:
-                pen[i] = max(pen[i], -float(scratch.contact.dist.min()))
+                step_pen[i] = max(0, -float(scratch.contact.dist.min()))
+                pen[i] = max(pen[i], step_pen[i])
         if capture:
+            i = capture_trial
             frames.append(
                 {
                     "time": (k + 1) * CONTROL_DT,
-                    "qpos": g.qpos[0].copy(),
-                    "qvel": g.qvel[0].copy(),
-                    "action": env.action[0].copy(),
-                    "ctrl": g.ctrl[0].copy(),
-                    "torque": env.torque[0].copy(),
-                    "commands": env.commands[0].copy(),
-                    "tip_positions": env.tip_positions[0].copy(),
-                    "tip_forces": env.tip_forces[0].copy(),
-                    "support_peak_forces_n": g.support_peaks[0].copy(),
-                    "hold_anchor": env.hold_anchor[0].copy(),
-                    "alive": bool(alive[0]),
-                    "support_valid": bool(bad_peak[0] <= 1),
+                    "qpos": g.qpos[i].copy(),
+                    "qvel": g.qvel[i].copy(),
+                    "action": env.action[i].copy(),
+                    "ctrl": g.ctrl[i].copy(),
+                    "torque": env.torque[i].copy(),
+                    "commands": env.commands[i].copy(),
+                    "tip_positions": env.tip_positions[i].copy(),
+                    "tip_forces": env.tip_forces[i].copy(),
+                    "support_peak_forces_n": g.support_peaks[i].copy(),
+                    "hold_anchor": env.hold_anchor[i].copy(),
+                    "alive": bool(alive[i]),
+                    "support_valid": bool(bad_peak[i] <= 1),
+                    "sampled_penetration_m": step_pen[i],
                 }
             )
     mean_speed = np.mean(speed, axis=0)
