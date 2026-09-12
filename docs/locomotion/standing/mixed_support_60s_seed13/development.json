@@ -1,0 +1,1036 @@
+{
+  "checkpoint_sha256": "6507d3796d8f74e5185aa226e3690b4b7001c5fc7410f5679091193a3ddd8e3e",
+  "seed": 9301,
+  "passed": 14,
+  "trials": 40,
+  "thresholds": {
+    "idle_speed_mps": 0.06,
+    "drift_m": 0.15,
+    "tilt_deg": 20,
+    "bad_support_n": 1,
+    "penetration_m": 0.008,
+    "unsupported_foot_fraction": 0.95
+  },
+  "cases": [
+    {
+      "body": "healthy",
+      "surface": "flat",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0004216572401354969,
+          "max_idle_drift_m": 0.07707846505152414,
+          "max_idle_tilt_deg": 7.446838569700082,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3335796880017432,
+          "max_penetration_m": 0.0006344338052347923,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0018717727639209242,
+          "max_idle_drift_m": 0.046335905648081044,
+          "max_idle_tilt_deg": 1.6300700245687323,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3773403431730875,
+          "max_penetration_m": 0.0007572555209380064,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9809156637638807
+    },
+    {
+      "body": "healthy",
+      "surface": "pads",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.00029555079654293827,
+          "max_idle_drift_m": 0.0716205037454052,
+          "max_idle_tilt_deg": 7.005298597320076,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.35271953243188625,
+          "max_penetration_m": 0.0008928963891153899,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.00029909554138384323,
+          "max_idle_drift_m": 0.0687461110052336,
+          "max_idle_tilt_deg": 7.008938044294429,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3521770560672028,
+          "max_penetration_m": 0.0008231865837547495,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.0240591736510396
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.00154844352248797,
+          "max_idle_drift_m": 0.05445444303935806,
+          "max_idle_tilt_deg": 4.237410883820865,
+          "peak_unintended_support_n": 290.6798505143596,
+          "peak_torque_limit_ratio": 0.33955341734679334,
+          "max_penetration_m": 0.0007647605567622021,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0015809357421046103,
+          "max_idle_drift_m": 0.05518385982284992,
+          "max_idle_tilt_deg": 4.131882203716921,
+          "peak_unintended_support_n": 227.37830559771217,
+          "peak_torque_limit_ratio": 0.3646881214732241,
+          "max_penetration_m": 0.0006223786200372158,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.0229755002073944
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0018712308435198054,
+          "max_idle_drift_m": 0.01665719064402397,
+          "max_idle_tilt_deg": 4.688830155442985,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3900602003660026,
+          "max_penetration_m": 0.0007719048571727741,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.001864256338824791,
+          "max_idle_drift_m": 0.02047475799845958,
+          "max_idle_tilt_deg": 4.76442018446865,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3746516009857292,
+          "max_penetration_m": 0.0005530864985095821,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9562294539064169
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fl",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0005716209417959672,
+          "max_idle_drift_m": 0.06505491883271261,
+          "max_idle_tilt_deg": 6.692098173378793,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3311457593285892,
+          "max_penetration_m": 0.000728982678812419,
+          "unsupported_foot_fraction": 1.0,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0005855807946688517,
+          "max_idle_drift_m": 0.06556205623921842,
+          "max_idle_tilt_deg": 6.716469247057112,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.33219831438897895,
+          "max_penetration_m": 0.0005378865598455809,
+          "unsupported_foot_fraction": 1.0,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9370202929712832
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fr",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0018278818241818074,
+          "max_idle_drift_m": 0.024817120282726722,
+          "max_idle_tilt_deg": 11.006222808782566,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.3412512372048429,
+          "max_penetration_m": 0.0017780550108214901,
+          "unsupported_foot_fraction": 1.0,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0018235256496839077,
+          "max_idle_drift_m": 0.02726137426509518,
+          "max_idle_tilt_deg": 11.043560614067324,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.33740567601208604,
+          "max_penetration_m": 0.0014411714004574985,
+          "unsupported_foot_fraction": 1.0,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9865747150033712
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rl",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.010965121280743235,
+          "max_idle_drift_m": 0.04976884458710783,
+          "max_idle_tilt_deg": 10.2699791672979,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.5264346074670218,
+          "max_penetration_m": 0.0009024244063512224,
+          "unsupported_foot_fraction": 0.0575,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.010900760771326422,
+          "max_idle_drift_m": 0.05052264194593905,
+          "max_idle_tilt_deg": 10.61966809246244,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.5249288615701106,
+          "max_penetration_m": 0.0008314025805604489,
+          "unsupported_foot_fraction": 0.0725,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.0787896211259067
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rr",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.04602880179671092,
+          "max_idle_drift_m": 0.04896790749660069,
+          "max_idle_tilt_deg": 24.49122692821023,
+          "peak_unintended_support_n": 1726.0749888273417,
+          "peak_torque_limit_ratio": 0.6740827918325238,
+          "max_penetration_m": 0.002000201570510597,
+          "unsupported_foot_fraction": 0.1775,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0461734605115959,
+          "max_idle_drift_m": 0.08284309859296932,
+          "max_idle_tilt_deg": 25.641937894938827,
+          "peak_unintended_support_n": 1240.847219264939,
+          "peak_torque_limit_ratio": 0.6609335123551908,
+          "max_penetration_m": 0.0007143517832612148,
+          "unsupported_foot_fraction": 0.1875,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.124179087113589
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_high",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0013111802120566618,
+          "max_idle_drift_m": 0.12214971714865873,
+          "max_idle_tilt_deg": 13.437412797066818,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.4114708514219213,
+          "max_penetration_m": 0.001639648139537049,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0013324705936001466,
+          "max_idle_drift_m": 0.11801077925386477,
+          "max_idle_tilt_deg": 13.412728551127026,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.41362214708728323,
+          "max_penetration_m": 0.0011211615306615033,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.0236032498069108
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_extreme",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0036900349767045094,
+          "max_idle_drift_m": 0.19232195401578417,
+          "max_idle_tilt_deg": 4.340351905806762,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.7374062151370339,
+          "max_penetration_m": 0.001714692002850994,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.003528164545433918,
+          "max_idle_drift_m": 0.1771356650347105,
+          "max_idle_tilt_deg": 4.246352791533896,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.6885784764776967,
+          "max_penetration_m": 0.0026268430773803766,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.487034129910171
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_12",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.002885227178465475,
+          "max_idle_drift_m": 0.03237233532221977,
+          "max_idle_tilt_deg": 3.8131974752932263,
+          "peak_unintended_support_n": 400.03983000304214,
+          "peak_torque_limit_ratio": 0.39489936624881966,
+          "max_penetration_m": 0.0008932013455302187,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.004595647119974999,
+          "max_idle_drift_m": 0.21276935169942576,
+          "max_idle_tilt_deg": 4.6396464347601425,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.5690116357387623,
+          "max_penetration_m": 0.0018234601800614439,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.0461820061318576
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_12",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0034685054310278724,
+          "max_idle_drift_m": 0.049581864261981363,
+          "max_idle_tilt_deg": 4.608972214828811,
+          "peak_unintended_support_n": 98.90918873225209,
+          "peak_torque_limit_ratio": 0.4712081138044761,
+          "max_penetration_m": 0.001867336091190809,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.003474904764967439,
+          "max_idle_drift_m": 0.052184407003736034,
+          "max_idle_tilt_deg": 4.622932678886871,
+          "peak_unintended_support_n": 93.80928066374132,
+          "peak_torque_limit_ratio": 0.4510928151332747,
+          "max_penetration_m": 0.0008719992151382597,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9639316122047603
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_18",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.004720076645497684,
+          "max_idle_drift_m": 0.3191768504840323,
+          "max_idle_tilt_deg": 7.634572936966011,
+          "peak_unintended_support_n": 241.3737271256092,
+          "peak_torque_limit_ratio": 0.6551244290264285,
+          "max_penetration_m": 0.0025155715521185465,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.004627393337227692,
+          "max_idle_drift_m": 0.32932308510110847,
+          "max_idle_tilt_deg": 8.062031184779793,
+          "peak_unintended_support_n": 272.99290672938605,
+          "peak_torque_limit_ratio": 0.6158453496176938,
+          "max_penetration_m": 0.00288370789596943,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.2085683071054518
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_18",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.004981800635709339,
+          "max_idle_drift_m": 0.07956119772139156,
+          "max_idle_tilt_deg": 5.273966017682574,
+          "peak_unintended_support_n": 58.55892034510996,
+          "peak_torque_limit_ratio": 0.535834407962433,
+          "max_penetration_m": 0.0016024786501896635,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.004930586296189575,
+          "max_idle_drift_m": 0.08293069992967252,
+          "max_idle_tilt_deg": 5.206165909871521,
+          "peak_unintended_support_n": 60.53041109379913,
+          "peak_torque_limit_ratio": 0.5390061073437779,
+          "max_penetration_m": 0.0014331493638286216,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.4115085080265999
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_24",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 0,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": false,
+          "failure_time_s": 1.46,
+          "mean_idle_speed_mps": 0.028628763370365545,
+          "max_idle_drift_m": 1.2282912931134502,
+          "max_idle_tilt_deg": 179.84799889447507,
+          "peak_unintended_support_n": 7627.764065442586,
+          "peak_torque_limit_ratio": 0.7039818641304731,
+          "max_penetration_m": 0.0030310642673563454,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 0.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": false,
+          "failure_time_s": 1.28,
+          "mean_idle_speed_mps": 0.026790129559065224,
+          "max_idle_drift_m": 1.2381295803116035,
+          "max_idle_tilt_deg": 178.57249169082579,
+          "peak_unintended_support_n": 7020.96375495383,
+          "peak_torque_limit_ratio": 0.716285406803155,
+          "max_penetration_m": 0.004233462617749574,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 0.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9046300067566335
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_24",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.01136992523756907,
+          "max_idle_drift_m": 0.16014886103114567,
+          "max_idle_tilt_deg": 8.497645418894264,
+          "peak_unintended_support_n": 87.56779938341758,
+          "peak_torque_limit_ratio": 0.5754056892869401,
+          "max_penetration_m": 0.0005933015876908518,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.013745917201585687,
+          "max_idle_drift_m": 0.17207741212354874,
+          "max_idle_tilt_deg": 8.655325785899421,
+          "peak_unintended_support_n": 102.60267448315179,
+          "peak_torque_limit_ratio": 0.5652445846164477,
+          "max_penetration_m": 0.002629686470168889,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 1.014062146190554
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_12",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.00841284992675248,
+          "max_idle_drift_m": 0.06211227344170976,
+          "max_idle_tilt_deg": 19.229237730567004,
+          "peak_unintended_support_n": 542.2454263750038,
+          "peak_torque_limit_ratio": 0.42544874182204234,
+          "max_penetration_m": 0.000989510514554183,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.009448417456477985,
+          "max_idle_drift_m": 0.05980021302928238,
+          "max_idle_tilt_deg": 19.073169154974547,
+          "peak_unintended_support_n": 589.1840368280988,
+          "peak_torque_limit_ratio": 0.4206346821162386,
+          "max_penetration_m": 0.002208778357562037,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.8599997172132134
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_20",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.000730424323370387,
+          "max_idle_drift_m": 0.06896785673402006,
+          "max_idle_tilt_deg": 27.840634823005345,
+          "peak_unintended_support_n": 1611.844555938761,
+          "peak_torque_limit_ratio": 0.5426955404308192,
+          "max_penetration_m": 0.0015740942165780383,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0007474332497571848,
+          "max_idle_drift_m": 0.06984780335473295,
+          "max_idle_tilt_deg": 27.745088544555507,
+          "peak_unintended_support_n": 1401.0182692867238,
+          "peak_torque_limit_ratio": 0.5429532676936202,
+          "max_penetration_m": 0.0023354541889804917,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.8984894729219377
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_28",
+      "transition": false,
+      "seed": 9301,
+      "seconds": 10,
+      "trials": 2,
+      "passed": 0,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.002904100129145073,
+          "max_idle_drift_m": 0.079619590970795,
+          "max_idle_tilt_deg": 34.627393393712474,
+          "peak_unintended_support_n": 2146.6743797796844,
+          "peak_torque_limit_ratio": 0.7755492153325827,
+          "max_penetration_m": 0.0019039640359703527,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        },
+        {
+          "trial": 1,
+          "passed": false,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0034867581145014764,
+          "max_idle_drift_m": 0.0761431408205908,
+          "max_idle_tilt_deg": 34.83054836228927,
+          "peak_unintended_support_n": 2169.5555442214218,
+          "peak_torque_limit_ratio": 0.8503564378541582,
+          "max_penetration_m": 0.0014035097193266025,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": null
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        2,
+        10
+      ],
+      "execution_seconds": 0.9665585127659142
+    },
+    {
+      "body": "healthy",
+      "surface": "flat",
+      "transition": true,
+      "seed": 9301,
+      "seconds": 12,
+      "trials": 2,
+      "passed": 2,
+      "survived": 2,
+      "rows": [
+        {
+          "trial": 0,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.001335141394461999,
+          "max_idle_drift_m": 0.1352385165796795,
+          "max_idle_tilt_deg": 5.06095105219569,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 1.0,
+          "max_penetration_m": 0.0035393987368473115,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": 2.013281631441477
+        },
+        {
+          "trial": 1,
+          "passed": true,
+          "survived": true,
+          "failure_time_s": null,
+          "mean_idle_speed_mps": 0.0013361033928133306,
+          "max_idle_drift_m": 0.1318830779313673,
+          "max_idle_tilt_deg": 4.9717013295460495,
+          "peak_unintended_support_n": 0.0,
+          "peak_torque_limit_ratio": 0.9983844885495474,
+          "max_penetration_m": 0.0026547396678338678,
+          "unsupported_foot_fraction": null,
+          "at_least_two_contacts_fraction": 1.0,
+          "resumed_distance_m": 1.9802478266340675
+        }
+      ],
+      "support_checked_every_physics_step": true,
+      "physics_timestep_s": 0.002,
+      "physics_backend": "mjbatch",
+      "penetration_sample_hz": 50,
+      "metric_window_s": [
+        5,
+        8
+      ],
+      "execution_seconds": 1.0607425649650395
+    }
+  ]
+}
