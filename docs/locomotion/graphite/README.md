@@ -4,7 +4,8 @@ An opt-in native MuJoCo look on `feature/graphite-presentation`: graphite surfac
 neutral robot materials, restrained overlays, and teal/orange task accents. No
 generative model, retraining or physics changes are needed.
 
-[Watch the ten-second preview](../../../previews/locomotion/graphite/moving_graphite_v1.mp4)
+[Watch the complete 65-second showcase at 2×](COMPLETE_VIDEO.md)
+· [Watch the ten-second preview](../../../previews/locomotion/graphite/moving_graphite_v1.mp4)
 · [Static design preview](../../../previews/locomotion/graphite/style_preview_v1.png).
 
 The visible Go2/Unitree names are part of the source mesh geometry. Hiding the white

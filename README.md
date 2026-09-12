@@ -139,6 +139,16 @@ static release is preserved by `adaptive-standing-v1`.
 The accepted moving-support checkpoint and video are pinned by
 `adaptive-moving-v1` and [the release manifest](docs/locomotion/moving/RELEASE.json).
 
-[Preview the native graphite visual theme](previews/locomotion/graphite/moving_graphite_v1.mp4)
-· [Unbranded body panels, dark overlays and viewer options](docs/locomotion/graphite/README.md).
-This presentation preview reuses the accepted motion and preserves the original films.
+### Complete learned-policy showcase
+
+[![Adaptive dog in the native graphite scene](previews/locomotion/graphite/adaptive_dog_complete_v1.png)](previews/locomotion/graphite/adaptive_dog_complete_v1.mp4)
+
+**[Watch the complete film — 65 seconds, 2× playback](previews/locomotion/graphite/adaptive_dog_complete_v1.mp4)** · [Chapters, provenance and reproduction](docs/locomotion/graphite/COMPLETE_VIDEO.md)
+
+All nine walking bodies, standing on uneven terrain, the accepted difficult
+terrain trials and five moving-platform motions are combined in the native
+graphite style. Three successive checkpoints show the learning progression, with
+one shared actor within each stage. Observer, overhead and head views accompany
+the main sequences. The original movies and measured limitations remain available.
+
+[Graphite materials, covered branding and live viewer options](docs/locomotion/graphite/README.md).
