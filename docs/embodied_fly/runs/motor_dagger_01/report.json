@@ -1,0 +1,128 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T20:53:09.149832+00:00",
+    "source_commit": "876d331acfa552ae740a12d01bdef49019f9d600",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "789de126f3b4ad861e32f723cfaf29ba5966a57683196072970654b3f8d4cfda",
+      "src/embodied_fly/dagger.py": "3425ce7d84782c22ed8d0a8e734cfd3410e5f02eaf222aca901d7692fd6524a7",
+      "src/embodied_fly/diagnose.py": "b6f3f13fa76832f706597d0d32b7df5ba86d0b71dd462f31c69b4285e213f996",
+      "src/embodied_fly/evaluate.py": "78c9c4bd2a41037a93bc6042107f531947f33f54efcf596a44fea9be8f35c550",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "808e1a463a217b200baf144fd0a8b829bc33f40fe7aa600d486d901cd533dbbb",
+      "src/embodied_fly/teacher.py": "0ce36ee756b5a7d7a4092c8cd006f5303cc5b407e06a6bf061a742bb01196652",
+      "src/embodied_fly/train.py": "93ff1cf661aaa6e79ced4b1f042a71603848af6a364ee32baab9ca8979129d94"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "optimization_started_utc": "2026-09-12T20:53:12.733640+00:00",
+  "optimization_completed_utc": "2026-09-12T20:58:12.784147+00:00",
+  "source_commit": "876d331acfa552ae740a12d01bdef49019f9d600",
+  "config": {
+    "reset_fraction": 0.25,
+    "device": "cuda",
+    "seconds": 300.0,
+    "worlds": 32,
+    "sequence": 8,
+    "burnin": 8,
+    "internal_steps": 4,
+    "lr": 0.0003,
+    "seed": 18002,
+    "freeze_core": false
+  },
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "neurons": 166700,
+  "connections": 25582938,
+  "trainable_parameters": 2409132,
+  "core_parameters": 500100,
+  "setup_seconds": 3.595310227945447,
+  "training_seconds": 300.0504831871949,
+  "evaluation_seconds": 0.14898958569392562,
+  "updates": 2059,
+  "reset_start_updates": 523,
+  "supervised_examples": 527104,
+  "unique_training_frames": 24000,
+  "parallel_neural_sequences": 32,
+  "dataset_splits": [
+    {
+      "manifest_sha256": "8181e5e7749198ba4250c9ecaf3856c4c7e8dcaa12db0375e7fe9293c02a2e2d",
+      "validation_indices": [
+        1,
+        2,
+        11,
+        12
+      ]
+    },
+    {
+      "manifest_sha256": "e4799cf89b1d952fec7575b95d9cb8d1a24a69ec7f25cf7b5b8ab27c43da82e0",
+      "validation_indices": [
+        1,
+        2,
+        11,
+        12
+      ]
+    }
+  ],
+  "parent_checkpoint_sha256": "7bf16a8033a1013088e9672acbd9d44e4c08194c4ff8ddd744c270e9ae874243",
+  "optimizer_resumed": false,
+  "normalization": "retained from parent",
+  "live_physics_worlds_during_imitation": 0,
+  "initial_validation_motor_mse": 0.01382710225880146,
+  "final_validation_motor_mse": 0.011609291657805443,
+  "initial_reset_validation_motor_mse": 0.18566226959228516,
+  "final_reset_validation_motor_mse": 0.010460924357175827,
+  "peak_cuda_allocated_bytes": 2930873344,
+  "core_gradient_audit": {
+    "excitability": {
+      "finite": true,
+      "l2": 0.0005656504654325545,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "finite": true,
+      "l2": 0.00017516055959276855,
+      "nonzero_cells": 165461
+    },
+    "bias": {
+      "finite": true,
+      "l2": 0.015338949859142303,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_parameter_changes": {
+    "excitability": {
+      "l2": 2.83825945854187,
+      "changed_cells": 165351
+    },
+    "leak": {
+      "l2": 5.174495220184326,
+      "changed_cells": 165503
+    },
+    "bias": {
+      "l2": 1.8666805028915405,
+      "changed_cells": 165503
+    }
+  },
+  "checkpoint_sha256": "6e946635e0dbdcc1471529b573c8be4d6a7abc207b8fab7766530302cfa1c1d9",
+  "physical_success": "Not established by this supervised training report",
+  "completed_utc": "2026-09-12T20:58:13.269214+00:00"
+}

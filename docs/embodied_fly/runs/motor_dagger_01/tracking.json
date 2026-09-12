@@ -1,0 +1,180 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T20:59:20.447379+00:00",
+    "source_commit": "13a838de150d6d924b177f1bdf9bf403fae7b2a8",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "789de126f3b4ad861e32f723cfaf29ba5966a57683196072970654b3f8d4cfda",
+      "src/embodied_fly/dagger.py": "3425ce7d84782c22ed8d0a8e734cfd3410e5f02eaf222aca901d7692fd6524a7",
+      "src/embodied_fly/diagnose.py": "b6f3f13fa76832f706597d0d32b7df5ba86d0b71dd462f31c69b4285e213f996",
+      "src/embodied_fly/evaluate.py": "78c9c4bd2a41037a93bc6042107f531947f33f54efcf596a44fea9be8f35c550",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "808e1a463a217b200baf144fd0a8b829bc33f40fe7aa600d486d901cd533dbbb",
+      "src/embodied_fly/teacher.py": "0ce36ee756b5a7d7a4092c8cd006f5303cc5b407e06a6bf061a742bb01196652",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "93ff1cf661aaa6e79ced4b1f042a71603848af6a364ee32baab9ca8979129d94"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T20:59:21.966672+00:00",
+  "source_manifest_sha256": "294a75ec4f318652badf13f9f45be9314a4869d0a613cc70b6d946eced77270f",
+  "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+  "frame": "anatomical thorax; mjOBJ_XBODY",
+  "block_seconds": 0.1,
+  "metric_window": "whole available capture; only final incomplete block omitted from block metric",
+  "acceptance_gates_changed": false,
+  "wall_seconds": 1.57356578996405,
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.6245073917016113,
+        3.5108813543160227
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.4206842844897592,
+        0.47741547612369056
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.45187008059982,
+        1.0796164965969872
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "963e31ebcd96732e375383f67a249c4a446ac71c57ad4d503a7d97f360a1eab6"
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.5360244564483497,
+        5.388964985022655
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.45882375466591735,
+        -0.16203973636595775
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.1895488100554695,
+        1.436974450886608
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "b555e51b64b247cce250915843d3a84367ea71c56fba23170364c7b204084c00"
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.446416032869369,
+        3.338107438917211
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.9562622355172067,
+        0.27158461561937924
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.10305519165809172,
+        0.49799279098529714
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "c60d1fba219d371a0c1931c43b3e0fbab37e1c63ffe94a2761aaad71d46fd68a"
+    },
+    {
+      "case": "fast_walk",
+      "command_cm_s_rad_s": [
+        2.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        1.0242794660190835,
+        3.899142675395623
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        2.082486611780411,
+        0.38451634650583716
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.16269249990533377,
+        0.5349228187152231
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "3857224d1800be147f85e33b2ccdc8b49ecf038ec39f7712c7182ff16c08693b"
+    },
+    {
+      "case": "left",
+      "command_cm_s_rad_s": [
+        1.5,
+        0.75
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.7497539769560205,
+        3.8486697265193937
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        1.6113853681336823,
+        0.32222171338635247
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.18698695705138424,
+        0.5076497007026382
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "aa3dd54ad4b0deb4e637b2857cd164a5c091f1002dab707e56988c7bb8579908"
+    },
+    {
+      "case": "right",
+      "command_cm_s_rad_s": [
+        1.5,
+        -0.75
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        1.2936305420809697,
+        8.980110669914815
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.5425032868585421,
+        -0.9076254757591815
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.9887763568332419,
+        2.705655433229698
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "4f8e948a59223df986228ca44f1c3e6023c2ced85462795fcd00514cba4b709f"
+    }
+  ]
+}
