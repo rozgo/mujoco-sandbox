@@ -2,6 +2,9 @@
 
 [Watch the film](../../../previews/locomotion/ember/adaptive_dog_complete_v2.mp4) · [Training summary](../GPU_SUMMARY.md) · [Training card](../../../previews/locomotion/ember/training_stats_v1.png) · [Results card](../../../previews/locomotion/ember/results_v1.png)
 
+[Compare the shorter cut — 1m 27s, still 1×](SHORT_VIDEO.md): every segment is
+halved using continuous excerpts, with all conditions retained.
+
 **2m 54s, 1920×1080, 25 fps, 1×.** Every scene uses the same frozen final actor from
 the measured 4,096-world RTX 4090 curriculum. The Ember palette uses charcoal and
 steel, machinery yellow, oxide-red damage markers and forest-green contact dots.

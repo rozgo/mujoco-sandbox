@@ -149,6 +149,8 @@ The accepted moving-support checkpoint and video are pinned by
 
 **[Watch the complete film — 2 min 54 s, normal speed](previews/locomotion/ember/adaptive_dog_complete_v2.mp4)** · [Training summary and scale](docs/locomotion/GPU_SUMMARY.md) · [Chapters and reproduction](docs/locomotion/ember/COMPLETE_VIDEO.md)
 
+[Compare the shorter 1 min 27 s edit, also at 1×](previews/locomotion/ember/adaptive_dog_short_v1.mp4): each segment is half as long, with all conditions retained.
+
 **One final checkpoint controls every scene and command.** The measured RTX 4090
 curriculum starts from random weights and takes **22m 05s**, with **4,096 worlds
 throughout**: **71.76 million experiences**, equivalent to **399 aggregate simulation
