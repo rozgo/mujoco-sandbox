@@ -92,9 +92,20 @@ REWARD_RECIPE = {
 
 
 class OutcomeReward:
-    def __init__(self, env):
+    def __init__(self, env, stationary_cost=0.0, stationary_turn_cost=0.0):
+        if min(stationary_cost, stationary_turn_cost) < 0:
+            raise ValueError("Stationary costs must be nonnegative")
         self.env = env
         self.filtered_velocity = np.zeros((env.n, 6))
+        self.stationary_cost = stationary_cost
+        self.stationary_turn_cost = stationary_turn_cost
+        self.recipe = REWARD_RECIPE | {
+            "stationary_translation_cost_rate": stationary_cost,
+            "stationary_rotation_cost_rate": stationary_turn_cost,
+            "stationary_speed_scale_cm_s": 0.25,
+            "stationary_yaw_scale_rad_s": 0.5,
+            "stationary_cost_formula": "zero command only: -weight * magnitude / (scale + magnitude)",
+        }
 
     def reset(self, ids):
         self.filtered_velocity[ids] = 0
@@ -119,6 +130,18 @@ class OutcomeReward:
             "action_change": -0.01
             * np.mean((env.previous_action - previous_action) ** 2, axis=1),
         }
+        # Bounded rational costs keep a useful distinction between drifting holds
+        # after the original narrow tracking exponential has almost saturated.
+        # A nonzero translational OR rotational command leaves these costs off.
+        stationary = np.linalg.norm(env.command, axis=1) < 1e-6
+        speed = np.linalg.norm(self.filtered_velocity[:, 3:5], axis=1)
+        turn = np.abs(self.filtered_velocity[:, 2])
+        terms["stationary_translation"] = (
+            -self.stationary_cost * stationary * speed / (0.25 + speed)
+        )
+        terms["stationary_rotation"] = (
+            -self.stationary_turn_cost * stationary * turn / (0.5 + turn)
+        )
         reward = sum(terms.values()) * CONTROL_DT - failed.astype(float)
         return reward.astype(np.float32), failed, terms
 
@@ -141,7 +164,7 @@ def train(args):
     env = FlyBatch(args.worlds, args.threads)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     trace = deque(maxlen=128)
-    reward_fn = OutcomeReward(env)
+    reward_fn = OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
     active = torch.as_tensor(~env.template.walking_inactive, device=device)
     log_std = nn.Parameter(
         torch.full((int(active.sum()),), math.log(args.noise), device=device)
@@ -149,6 +172,17 @@ def train(args):
     parameters = [*brain.parameters(), log_std]
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
     value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
+    optimizer_resumed = parent.get("method", "").startswith("recurrent physical-outcome PPO")
+    if optimizer_resumed:
+        # Same actor/critic/exploration ordering as the preceding PPO stage.
+        # Imitation checkpoints use another optimizer layout and cannot resume it.
+        critic.load_state_dict(parent["critic_state_dict"], strict=True)
+        optimizer.load_state_dict(parent["optimizer_state_dict"])
+        value_optimizer.load_state_dict(parent["value_optimizer_state_dict"])
+        with torch.no_grad():
+            log_std.copy_(parent["log_std"].to(device))
+        for group in optimizer.param_groups:
+            group["lr"] = args.lr
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
     # Preserve the same whole-episode held-out split as the imitation experiments.
     episodes = load_episodes(args.rehearsal)
@@ -474,7 +508,7 @@ def train(args):
         report = {
             "provenance": run_evidence,
             "config": config,
-            "reward_recipe": REWARD_RECIPE,
+            "reward_recipe": reward_fn.recipe,
             "training_started_utc": training_started_utc,
             "completed_utc": utc_now(),
             "setup_seconds": setup_seconds,
@@ -510,7 +544,10 @@ def train(args):
             "completed_episodes": episode_records,
             "failure": failure,
             "physical_success": "Not established by training reward; independent evaluation required",
-            "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained",
+            "optimizer_resumed": optimizer_resumed,
+            "optimizer_initialization": "retained actor/critic Adam and exploration from PPO parent"
+            if optimizer_resumed
+            else "new PPO and critic Adam; parent actor and normalization retained",
         }
         (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
 
@@ -536,5 +573,7 @@ if __name__ == "__main__":
     parser.add_argument("--target-kl", type=float, default=0.03)
     parser.add_argument("--entropy", type=float, default=0.001)
     parser.add_argument("--rehearsal-weight", type=float, default=1.0)
+    parser.add_argument("--stationary-cost", type=float, default=0.0)
+    parser.add_argument("--stationary-turn-cost", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=28001)
     train(parser.parse_args())

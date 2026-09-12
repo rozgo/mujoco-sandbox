@@ -521,3 +521,26 @@ the visible ground now continues beneath the fly. The change is restricted to
 replay plane display size and is recorded in each segment's metadata. All 28
 training-fall trace hashes and finite state arrays were independently checked on
 the training machine. The journal/index retain the original video as well.
+
+### PPO 02 stationary-cost continuation (declared before training)
+
+Continue the PPO01 checkpoint (`6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f`)
+for a requested 300 seconds, seed 28003, 32 worlds / 16 physics threads. Retain the
+actor, normalizer, critic, both Adam states and learned motor exploration scale.
+The new resume path recognizes a PPO parent explicitly; behavioral-cloning Adam
+has a different parameter layout and is not treated as PPO state. Learning rate
+remains 2e-6, and rollout, recurrent chunks, task mixture and rehearsal are unchanged.
+
+Add two bounded costs only when the entire command vector is zero, using the
+existing 50 ms filtered physical velocity. Translation costs
+`1.5 * speed / (0.25 + speed)` per second, with speed in cm/s. Rotation costs
+`0.25 * abs(yaw) / (0.5 + abs(yaw))` per second, yaw in rad/s. They are subtracted
+from reward rates before multiplication by the 2 ms action interval. They never
+penalize a requested walk or turn-in-place. A new test verifies stationary drift
+ranking, zero cost at rest, bounded costs and exactly unchanged moving rewards.
+The original narrow tracking exponentials and all physical gates remain present.
+This hypothesis needs a measured result; it is not an accepted improvement yet.
+
+Afterward compare the fixed six development commands and a separate continuous
+walk → stop → walk sequence. Command changes must retain recurrent memory and
+physical state. This addresses a gap in separate reset-based hold/walk tests.

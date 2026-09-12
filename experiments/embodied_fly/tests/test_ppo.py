@@ -1,7 +1,15 @@
+from types import SimpleNamespace
+
+import numpy as np
 import torch
 from test_brain import make_brain
 
-from embodied_fly.ppo import advantages, joint_log_probability, motor_distribution
+from embodied_fly.ppo import (
+    OutcomeReward,
+    advantages,
+    joint_log_probability,
+    motor_distribution,
+)
 
 
 def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core():
@@ -49,3 +57,35 @@ def test_gae_resets_do_not_leak_and_timeouts_use_terminal_state_bootstrap():
     torch.testing.assert_close(advantage[0], torch.tensor([-1.0, 2.6]))
     torch.testing.assert_close(returns[0], torch.tensor([1.0, 4.6]))
     torch.testing.assert_close(returns[1], torch.tensor([109.0, 109.0]))
+
+
+def test_stationary_cost_distinguishes_drift_without_changing_walking_or_turning():
+    velocity = np.zeros((5, 6))
+    velocity[:, 3] = [0, 0.3, 1, 0.3, 0]
+    velocity[:, 2] = [0, 0, 0, 0, 0.4]
+    qpos = np.zeros((5, 7))
+    qpos[:, 2] = 0.1278
+    command = np.zeros((5, 3))
+    command[3, 0] = 1
+    command[4, 2] = 0.4
+    env = SimpleNamespace(
+        n=5,
+        command=command,
+        velocity=lambda: velocity,
+        template=SimpleNamespace(thorax_id=0),
+        fields={"qpos": qpos, "xmat": np.tile(np.eye(3).reshape(1, 1, 9), (5, 1, 1))},
+        forbidden_peak=np.zeros(5),
+        body_weight=1,
+        previous_action=np.zeros((5, 78)),
+    )
+    baseline, dense = OutcomeReward(env), OutcomeReward(env, 1.5, 0.25)
+    baseline.filtered_velocity[:] = velocity
+    dense.filtered_velocity[:] = velocity
+    original, _, _ = baseline(env.previous_action)
+    modified, _, terms = dense(env.previous_action)
+    assert modified[0] == original[0]  # motionless is never penalized
+    assert modified[2] < modified[1] < modified[0]
+    assert modified[1] < original[1] and modified[2] < original[2]
+    np.testing.assert_array_equal(modified[3:], original[3:])
+    assert np.all(terms["stationary_translation"] >= -1.5)
+    assert np.all(terms["stationary_rotation"] >= -0.25)
