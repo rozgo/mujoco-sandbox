@@ -40,6 +40,12 @@ def record(source, case, output):
         if teacher
         else "MALECNS STUDENT / motor-learning diagnostic"
     )
+    if evaluation.get("diagnostic_activity_override"):
+        title = (
+            "UTILITY INTERVENTION / "
+            + evaluation["diagnostic_activity_override"].upper()
+            + " FORCED"
+        )
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
     data = mujoco.MjData(model)
     states = np.load(source / f"{case}.npz", allow_pickle=False)
@@ -116,7 +122,7 @@ def record(source, case, output):
                         (1250, y + 3, 1250 + 315 * float(score), y + 21), fill="#e88107"
                     )
                 draw.text(
-                    (1125, 730), "Rest/explore warm start only", font=font(16), fill="#a8b0b5"
+                    (1125, 730), "Rest/explore curriculum", font=font(16), fill="#a8b0b5"
                 )
                 draw.text(
                     (1125, 755),
@@ -135,7 +141,7 @@ def record(source, case, output):
                     )
                     draw.text(
                         (1125, 818),
-                        "Task test: " + ("PASS" if case_result["success"] else "FAIL"),
+                        "Raw tracking gate: " + ("PASS" if case_result["success"] else "FAIL"),
                         font=font(18),
                         fill="#70a88a" if case_result["success"] else "#ce6654",
                     )

@@ -11,7 +11,7 @@ import numpy as np
 import torch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
-from embodied_fly.brain import EmbodiedBrain, load_malecns
+from embodied_fly.brain import ACTIVITIES, EmbodiedBrain, load_malecns
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.provenance import evidence, sha256, utc_now
 
@@ -56,6 +56,11 @@ def evaluate(args):
     run_evidence = evidence()
     device = torch.device(args.device)
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
+    forced_activity = (
+        torch.tensor([ACTIVITIES.index(args.diagnostic_activity)], device=device)
+        if args.diagnostic_activity
+        else None
+    )
     environment = FlyEnvironment()
     projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
@@ -83,7 +88,7 @@ def evaluate(args):
         numerical_failure = None
         for step in range(round(args.seconds / CONTROL_DT)):
             observation = torch.as_tensor(environment.observation()[None], device=device)
-            result = actor(observation, memory)
+            result = actor(observation, memory, activity_override=forced_activity)
             memory = result.state
             action = result.action[0].cpu().numpy()
             if args.walking_action_mask:
@@ -192,6 +197,9 @@ def evaluate(args):
         "setup_seconds": setup_seconds,
         "one_checkpoint_for_all_cases": True,
         "teacher_present": False,
+        "training_method": checkpoint.get("method"),
+        "diagnostic_activity_override": args.diagnostic_activity,
+        "policy_acceptance_eligible": forced_activity is None,
         "scripted_gait_present": False,
         "walking_action_mask": args.walking_action_mask,
         "active_actuators": int((~environment.walking_inactive).sum())
@@ -222,5 +230,15 @@ if __name__ == "__main__":
     parser.add_argument("--walking-action-mask", action="store_true")
     parser.add_argument("--neural-view", action="store_true")
     parser.add_argument("--seed", type=int, default=80001)
+    parser.add_argument(
+        "--diagnostic-activity",
+        choices=ACTIVITIES,
+        help="Force a utility choice to isolate motor ability; not deployable-policy acceptance",
+    )
     report = evaluate(parser.parse_args())
-    raise SystemExit(0 if report["physical_success_count"] == len(report["results"]) else 2)
+    raise SystemExit(
+        0
+        if report["policy_acceptance_eligible"]
+        and report["physical_success_count"] == len(report["results"])
+        else 2
+    )
