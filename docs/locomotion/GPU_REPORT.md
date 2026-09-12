@@ -2,22 +2,22 @@
 
 **One RTX 4090, 4,096 parallel worlds, approximately 49,000 world/action transitions per second including learning.** Extending the existing walker to stand on uneven terrain and balance on moving platforms took **10 min 55 s of GPU training**, collecting **32.34 million transitions**, equivalent to **179.68 hours of aggregate simulated experience**. A separate matched walking experiment measured **3.23× faster training with MuJoCo Warp than CPU physics**.
 
-These are measured continuation runs. The starting walker was trained earlier on the Mac; its training is excluded from every GPU total below. We have not measured the complete walking curriculum from random weights on the RTX 4090. The walking benchmarks are separate experiments and are not included in the standing/moving total.
+These are measured continuation runs. The starting walker was trained earlier on the Mac; its training is excluded from every GPU total below. We have not measured the complete walking curriculum from random weights on the RTX 4090. The walking row sums three independent benchmark runs from the same pretrained checkpoint; these are separate experiments and are not included in the standing/moving total.
 
 [Watch the complete normal-speed film](../../previews/locomotion/graphite/adaptive_dog_complete_v2.mp4) · [Exact statistics, formulas and source hashes](GPU_REPORT.json)
 
 **GPU training by stage**
 
-| Stage | New GPU training | Parallel worlds | Recorded transitions | Aggregate simulation hours | Transitions/s, including learning |
+| Stage | New GPU training | Parallel worlds | Experiences | Aggregate simulation hours | Experiences/s, including learning |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Walking continuation, each of three matched seeds | 13.49–15.29 s | 4,096 | 589,824 per seed | 3.28 per seed | 41,811 pooled |
-| Standing on static supports, seven sequential rounds | 536.734 s / 8m 57s | 4,096 | 26,836,992 | 149.09 | 50,000 |
-| Moving platforms, two sequential rounds | 118.554 s / 1m 59s | 4,096 | 5,505,024 | 30.58 | 46,435 |
-| **Standing + moving total** | **655.288 s / 10m 55s** | **4,096 reused across rounds** | **32,342,016** | **179.68** | **49,355** |
+| Walking fine-tuning benchmark, three runs | 42 seconds | 4,096 | 1.77 million | 9.83 | 41,811 |
+| Standing on static supports, seven sequential rounds | 8m 57s | 4,096 | 26.84 million | 149.09 | 50,000 |
+| Moving platforms, two sequential rounds | 1m 59s | 4,096 | 5.51 million | 30.58 | 46,435 |
+| **Standing + moving total** | **10m 55s** | **4,096** | **32.34 million** | **179.68** | **49,355** |
 
 Times include physics rollouts, host observation/reward work, transfers and neural-network optimization inside the learning loop. Setup, rehearsal-data collection outside the loop, evaluation, rendering and development time are excluded. The nine extension runs separately record **92.593 s of setup**; those fields are not a complete accounting of project overhead. Full experiment history includes unsuccessful attempts beyond these selected stages.
 
-The approximately 180 hours are summed across worlds and episodes, including resets. Each transition is one world's **20 ms** action interval, not one rendered frame. Reusing an experience for multiple PPO epochs does not count it as new simulated experience. Recorded transitions exclude rollouts discarded at a training deadline.
+The summary uses rounded totals; exact values are retained below and in the JSON ledger. The same 4,096 world slots are reused across rounds. The approximately 180 hours are summed across worlds and episodes, including resets. Each experience (a transition) is one world's **20 ms** action interval, not one rendered frame. Reusing an experience for multiple PPO epochs does not count it as new simulated experience. Recorded transitions exclude rollouts discarded at a training deadline.
 
 **Scale and training mechanics**
 
@@ -54,14 +54,14 @@ The nine body configurations are the intact dog, any one entire lower leg remove
 
 **Walking: measured GPU acceleration**
 
-Both sides use CUDA policy inference and learning on the same Ryzen 5950X / RTX 4090 desktop. The comparison changes CPU MuJoCo/mjbatch physics to MuJoCo Warp, while matching starting weights, network, rewards, experience and optimizer updates. Each seed uses **six PPO rollouts, 589,824 transitions and 768 optimizer steps**.
+Both sides use CUDA policy inference and learning on the same Ryzen 5950X / RTX 4090 desktop. The comparison changes CPU MuJoCo/mjbatch physics to MuJoCo Warp, while matching starting weights, network, rewards, experience and optimizer updates. We repeat the comparison three times with different random sampling. Each run uses **six PPO rollouts, 589,824 transitions and 768 optimizer steps**. Across the three GPU runs, that totals **42.321 seconds and 1,769,472 experiences**.
 
-| Seed | CPU physics + CUDA learning | Warp physics + CUDA learning | Speedup | Warp-trained task completions |
+| Run | CPU physics + CUDA learning | Warp physics + CUDA learning | Speedup | Warp-trained task completions |
 | --- | ---: | ---: | ---: | ---: |
-| 2 | 46.740 s | 15.286 s | 3.06× | 70/72 |
-| 3 | 45.269 s | 13.542 s | 3.34× | 71/72 |
-| 4 | 44.763 s | 13.493 s | 3.32× | 64/72 |
-| **Pooled** | **136.772 s** | **42.321 s** | **3.23×** | **205/216** |
+| 1 | 46.740 s | 15.286 s | 3.06× | 70/72 |
+| 2 | 45.269 s | 13.542 s | 3.34× | 71/72 |
+| 3 | 44.763 s | 13.493 s | 3.32× | 64/72 |
+| **Combined** | **136.772 s** | **42.321 s** | **3.23×** | **205/216** |
 
 The CPU-trained controls complete **200/216** tasks. Both sets are evaluated on CPU physics; all 432 trials stay upright with allowed support, and the declared gait-retention comparison passes. These are three short continuation experiments, not a dog learning to walk from scratch in fifteen seconds.
 
