@@ -62,13 +62,20 @@ panels are rendered from recorded physical states after checking model and trace
 hashes. Changes affect cameras, layout and the closing card only. Prior videos and
 policy files remain byte-identical.
 
-Final render/encode: **33.001 seconds**. Encoding: **1920×1080, H.264, 25 fps,
+Initial render/encode: **33.001 seconds**. Encoding: **1920×1080, H.264, 25 fps,
 1,675 frames**. Every frame decoded, and encoded opening, both new terrain groups,
 the return to damaged bodies and the final card were inspected. The original
 far-side lower-FL marker is still partly occluded; the existing labels identify
 that body. All torque limits hold. Maximum sampled penetration among the 25
 included trials is **5.426 mm**. This does not remove penetration failures in other
 holdout trials.
+
+Caption revision: the closing card now says **“One trained policy across different
+bodies and terrain. No retraining between scenes.”** This replaces the technical
+footage/backend sentence at the user's request. The same v3 path contains the
+updated edit; its earlier bytes remain in Git LFS history. Re-render/encode took
+**33.109 seconds**, with identical scene/trajectory hashes, trial metrics,
+chapter timing, resolution and duration. No new simulation or learning.
 
 [Recording provenance](../../../previews/locomotion/standing/adaptive_standing_v3.json) ·
 [Encoded-video QA](../../../previews/locomotion/standing/adaptive_standing_v3.qa.json).
