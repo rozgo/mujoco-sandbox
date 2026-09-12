@@ -1,0 +1,222 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T22:50:32.524544+00:00",
+    "source_commit": "34981d42315c0b7746a7780344a78adf9f2c2b4c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "6b8dcc37f86734f338376cef7a6975008f95735fa8661e07f838e2d8a4bfb47f",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T22:50:52.242070+00:00",
+  "setup_seconds": 2.9944210038520396,
+  "checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+  "training_method": "online recurrent imitation with inherited braking and frozen parent walking retention",
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "braking_teacher_sha256": null,
+  "policy_acceptance_eligible": true,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "neural_view": {
+    "neurons": 166700,
+    "located_neurons": 140638,
+    "neurons_without_locations": 26062,
+    "projection_axes": "MaleCNS measured X/Z coordinates",
+    "map_size": [
+      128,
+      128
+    ],
+    "channels": [
+      "mean signed latent state",
+      "mean absolute latent state"
+    ],
+    "controller_input": false,
+    "physiological_spikes": false
+  },
+  "gates": {
+    "settle_seconds": 0.25,
+    "minimum_upright": 0.5,
+    "minimum_height_m": 0.0006,
+    "max_forbidden_load_over_weight": 0.1,
+    "moving_mean_forward_error_cm_s": 0.25,
+    "moving_mean_lateral_error_cm_s": 0.25,
+    "moving_mean_yaw_error_rad_s": 0.35,
+    "stop_late_planar_speed_rms_cm_s": 0.1,
+    "stop_block_yaw_rms_rad_s": 0.3,
+    "stop_late_drift_m": 0.001,
+    "stop_total_drift_m": 0.002
+  },
+  "command_boundary_events": [
+    {
+      "phase": "walk",
+      "physics_time": 0.0,
+      "root_position_cm": [
+        0.0,
+        0.0,
+        0.1278
+      ],
+      "preceding_memory_l2": 0.0,
+      "reset_performed": false
+    },
+    {
+      "phase": "stop",
+      "physics_time": 1.9999999999998124,
+      "root_position_cm": [
+        1.79577647073702,
+        0.542315800496416,
+        0.13584258544305183
+      ],
+      "preceding_memory_l2": 81.43043518066406,
+      "reset_performed": false
+    },
+    {
+      "phase": "resume",
+      "physics_time": 3.9999999999995923,
+      "root_position_cm": [
+        1.8587357563438804,
+        0.6340953092661142,
+        0.13403106658600683
+      ],
+      "preceding_memory_l2": 88.80929565429688,
+      "reset_performed": false
+    }
+  ],
+  "physics": "native MuJoCo CPU",
+  "neural_device": "cuda",
+  "scope": "development transition test, separate from original six fixed-command gates",
+  "results": [
+    {
+      "case": "walk_stop_walk",
+      "success": false,
+      "stable": true,
+      "gate_label": "Transition gates",
+      "phases": [
+        {
+          "phase": "walk",
+          "command_cm_s_rad_s": [
+            1,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            0.9507376114559088,
+            -0.06522659740977936,
+            0.3722329295929391
+          ],
+          "late_planar_speed_rms_cm_s": 1.2370417334322534,
+          "late_block_yaw_rms_rad_s": 0.4346615724460863,
+          "total_planar_displacement_m": 0.018758783436888377,
+          "late_planar_displacement_m": 0.01650711561948603,
+          "minimum_upright": 0.990592968243675,
+          "minimum_height_m": 0.0012177745504697922,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "executed_controller": "MaleCNS student"
+        },
+        {
+          "phase": "stop",
+          "command_cm_s_rad_s": [
+            0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.00010511112666086657,
+            -0.0033692977614681436,
+            0.03394982004336265
+          ],
+          "late_planar_speed_rms_cm_s": 0.13379023297338125,
+          "late_block_yaw_rms_rad_s": 0.1360092773219186,
+          "total_planar_displacement_m": 0.001112984720206586,
+          "late_planar_displacement_m": 6.0905620476449185e-05,
+          "minimum_upright": 0.9876979025541843,
+          "minimum_height_m": 0.0013136794419269444,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "executed_controller": "MaleCNS student"
+        },
+        {
+          "phase": "resume",
+          "command_cm_s_rad_s": [
+            1,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            0.9216474589859804,
+            -0.06597467714377946,
+            0.3885186288107296
+          ],
+          "late_planar_speed_rms_cm_s": 1.2573815267612747,
+          "late_block_yaw_rms_rad_s": 0.5420665488168643,
+          "total_planar_displacement_m": 0.016711015605277837,
+          "late_planar_displacement_m": 0.015905760118562297,
+          "minimum_upright": 0.9744489068744693,
+          "minimum_height_m": 0.0012164800652018847,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "executed_controller": "MaleCNS student"
+        }
+      ],
+      "simulated_seconds": 6.000000000003813,
+      "wall_seconds": 16.72901781788096,
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "2abbb0b6c2dbf8f8a6b7bc719819a45e480ab3330bbda4cd9983e056e069abf6"
+    }
+  ],
+  "physical_success_count": 0
+}

@@ -234,3 +234,16 @@ The reproduction command requires the captured states and an unused output name.
 intervention to distinguish selection from motor response. It cannot establish
 acceptance of the deployed policy. The PPO 01 intervention still moved, identifying
 motor stopping as an unresolved requirement.
+
+The [online braking report](runs/motor_online_01/SUMMARY.md) records the next
+five-minute supervised correction. Its one student checkpoint walks, stops and
+resumes continuously, with 0.0609 mm of late stop drift, but still fails slow-walk
+stability and heading gates. The [18-second complete review](../../previews/embodied_fly/student_online01_all_commands_and_transitions.mp4)
+includes all six fixed-command cases and the uninterrupted transition, including
+the slow-walk fall. It remains a development film, with actual recurrent activity
+and observer eye cameras; no teacher executes actions in these captures.
+
+The [flight prerequisites](FLIGHT_PREREQUISITES.md) now include a physically tested
+full-body flight preset. Its first scripted force probe produces some lift but
+cannot hover. This does not yet demonstrate learned flight or transfer of the
+walking checkpoint to the faster flight control rate.

@@ -652,3 +652,51 @@ pattern generates about 28% of body weight upward force, insufficient to hover.
 All three trajectories remain finite without warnings. Preserve this failure to
 support body weight; stronger/learned wing control is still required. Exact settings
 and limitations are in FLIGHT_PREREQUISITES.md. Twenty-one focused tests pass.
+
+### Online correction 01: walking retention improved, failures remain
+
+The declared fourfold-retention run completed **300.229040 seconds** of training
+with **9.815098 seconds** setup. It collected **321,280 physical transitions /
+642.56 aggregate simulated seconds**, across 32 native CPU worlds and 16 threads,
+with full-graph learning on the RTX 4090. Collection and supervised forward work
+took **225.503499 seconds**, backward/optimization **74.220068 seconds**. There
+were **1,255 updates**, **159 command changes without resets**, and **324 completed
+training episodes / 26 falls**. Every fall trace was hash-checked and finite.
+Peak CUDA allocation was **2,995,016,704 bytes**. All internal-cell parameter
+families received finite gradients and changed.
+
+This student uses checkpoint
+`9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a`.
+It inherits PPO01 directly, excluding the one-minute pilot and failed PPO02 from
+its ancestry. Its training targets came from the inherited braking teacher and
+frozen PPO01 walking actor; both were removed for evaluation. This is supervised
+online correction, not an additional PPO stage.
+
+Continuous teacher-free walk–stop–walk stayed upright with permitted support.
+Mean walking/resumed forward speeds were **0.951 / 0.922 cm/s** for a 1 cm/s command.
+Stop travel was **1.113 mm** total and **0.0609 mm** after settling, versus PPO01's
+8.64 mm / 7.55 mm. The same memory and physical body persist across both command
+changes. Stop's 100 ms block-planar RMS was **0.01168 cm/s**; the retained raw RMS
+was **0.13379 cm/s**, still failing the raw 0.1 gate. Walking yaw means
+**0.372 / 0.389 rad/s** also exceed the declared 0.35 gate. Report the overall test
+as failed, not solved by these more encouraging individual measures.
+
+Five of six fixed-command cases kept upright, permitted support; the **slow case
+toppled**, with prohibited support reaching 13.13 body weights. All original raw
+tracking gates failed, with zero numerical warnings. Normal walking's 100 ms
+forward RMSE improved to 0.060 cm/s. These development results establish useful
+walking/braking retention while exposing slow-speed and heading requirements.
+
+Recorded all six fixed cases plus the complete continuous sequence, one checkpoint,
+at **1× / 50 fps / 1600 × 900 / 900 frames / 18 seconds**. Render, encode and full
+decode took **104.858421 seconds**. The source review manifest lists both original
+capture reports and hashes; no case was omitted. Local full decode and twelve
+sampled frames verified the copied video, including the slow fall and both command
+changes. It retains actual anatomical latent activity and observer eye views.
+
+The clean-source flight physical probe (source ecd797d) reproduced the initial
+three air/vacuum/timestep trajectories exactly by state hash. That is a force
+prerequisite, not learned flight. Walking/flight integration, accurate commands,
+trained survival needs, brain-contribution tests and the multi-agent final film
+remain open. The next iteration must preserve current stopping and walking while
+addressing failures; it must not present separate checkpoints as one solution.

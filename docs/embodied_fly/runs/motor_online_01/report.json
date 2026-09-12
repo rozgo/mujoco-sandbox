@@ -1,0 +1,5395 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T22:44:11.746898+00:00",
+    "source_commit": "34981d42315c0b7746a7780344a78adf9f2c2b4c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "6b8dcc37f86734f338376cef7a6975008f95735fa8661e07f838e2d8a4bfb47f",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 300.0,
+    "sequence": 8,
+    "lr": 3e-05,
+    "initial_teacher_mix": 0.5,
+    "retention_weight": 4.0,
+    "seed": 38002,
+    "internal_steps": 4
+  },
+  "started_utc": "2026-09-12T22:44:21.150661+00:00",
+  "completed_utc": "2026-09-12T22:49:21.472644+00:00",
+  "setup_seconds": 9.815097558312118,
+  "training_wall_seconds": 300.22903951769695,
+  "collection_and_supervised_forward_seconds": 225.50349860358983,
+  "backward_optimizer_seconds": 74.22006753087044,
+  "updates": 1255,
+  "transitions": 321280,
+  "aggregate_simulated_seconds": 642.5600000000001,
+  "parallel_worlds": 32,
+  "command_switches_without_reset": 159,
+  "episodes": [
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.516,
+      "teacher_mix_at_end": 0.47369737395395833,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "2ee02f9ef434316992e433fdb961bc10452a9f3de7608fd944f419532f9c6477",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.538,
+      "teacher_mix_at_end": 0.4728029712941498,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "738b6019e1ac78576ac7ed741ec289e1d6a894c0b75134de222644c4b7955673",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.544,
+      "teacher_mix_at_end": 0.4728029712941498,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "a64b66f739f3ee10b7538254779672e58f5988458aec891dde38a5550c9d82f8",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.578,
+      "teacher_mix_at_end": 0.4702858961373568,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "a4c5e07e0cfde9a15c30b40cc69a39f2082f67b9ed42d6f353e2734677f94009",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.592,
+      "teacher_mix_at_end": 0.4702858961373568,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "17be7bc1b898c3ef31f4993e24a17d435b5831201247d8784152e355ef32ccfd",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.188,
+      "teacher_mix_at_end": 0.4402213874909406,
+      "failure_trace": {
+        "file": "failure_00005.npz",
+        "sha256": "75ada8f21ab1d3166e6e737d9dcd370f14d56cb14db288a8b7f5d43698b8582e",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.446,
+      "teacher_mix_at_end": 0.4275012246038144,
+      "failure_trace": {
+        "file": "failure_00006.npz",
+        "sha256": "029cfeff3b08ed2b420ef8277c11415525300e784b89438b47630a4cd5c76d22",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.536,
+      "teacher_mix_at_end": 0.41403029578117034,
+      "failure_trace": {
+        "file": "failure_00007.npz",
+        "sha256": "bb94d7dff1f06a87a15d9541664c9700305c140fb19356854914aef842d28488",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.4005230436706916,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3745986462042977,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.37381637055737277,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.37381637055737277,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.37145274722793453,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.37145274722793453,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3287724738009274,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3153261517469461,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.3017631079008182,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.2758975664433092,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.2750971241078029,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.2750971241078029,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.27274186089324454,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.27274186089324454,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.23025635687013468,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.21693595705398666,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.20366094348796954,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.17779611529471973,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.17699496093671768,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.17699496093671768,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.17460316067406284,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.17460316067406284,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.768,
+      "teacher_mix_at_end": 0.1659667557943612,
+      "failure_trace": {
+        "file": "failure_00102.npz",
+        "sha256": "7a0450390aa2b98f26db3e2a4fb78f8135c52e127cbe4720d4b5a5040c228a86",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.13192283296802393,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.11835885894019155,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.856,
+      "teacher_mix_at_end": 0.1119434146909043,
+      "failure_trace": {
+        "file": "failure_00105.npz",
+        "sha256": "9a8ae6be7d9af29a3ee99810dbfecee2594dc78695844a22f47ecddc88cba406",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.986,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": {
+        "file": "failure_00106.npz",
+        "sha256": "355e268ca14a9b8e3f757efef043114681504118c58953b23d550d10c63a269c",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.10472088588401673,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0788079789467156,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.07804903654381634,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.07804903654381634,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.07571140319108965,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.07571140319108965,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.06708391669361541,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.766,
+      "teacher_mix_at_end": 0.041299301506951436,
+      "failure_trace": {
+        "file": "failure_00135.npz",
+        "sha256": "650766b61ea30fb70ea4df5d37226f115197036b91c9a89b816f5827fd59438a",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0333953802178924,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.7,
+      "teacher_mix_at_end": 0.027824487577502943,
+      "failure_trace": {
+        "file": "failure_00137.npz",
+        "sha256": "f11ad69508ca1aaceff3f8a13fbe11f005e1be299248f09a13dd5e90ebf4ef74",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.01968807854689658,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.005951388063840546,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.672,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00167.npz",
+        "sha256": "2bfd226d098399457b6e48dc798a0ae498fc65007ee85e7427b249a22d38e461",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.312,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00168.npz",
+        "sha256": "3b35f6432702b22060cb5da69b83e67d7769857c2d444cb436bddecc16aafbac",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.86,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00169.npz",
+        "sha256": "d7eda48341a1f3804a78f92e56cddf79f7f30ab674a92a99f92bfe92048a4eb9",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.338,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00170.npz",
+        "sha256": "cfb6bd8eb15808d6e347af428a8f87c3d55b11c655013d2b5e62c33081e072a5",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.8260000000000001,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00172.npz",
+        "sha256": "46b59451c8b490d7736e06ba7ea98c6e5877918d5503b8e2037774add6d88e79",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.338,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00173.npz",
+        "sha256": "9f531ddbbf0a19c8ee134eeff7f544639815292ff671f50a3ee86e4f4fadf535",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 0.73,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00200.npz",
+        "sha256": "74f1bbcc51f8cc5660bbb526e19b9b144825a037cf93907948dc6aaab5457b18",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.068,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00202.npz",
+        "sha256": "cfd290a7f1f3db6ca026c7dcdb8db5698d47f68dc561fe4d8bcd5c2726506619",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.412,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00205.npz",
+        "sha256": "ef2d8bfd6783af4f4092b7d0fdea8329bba419ea0dc8c36ca273cdf59b94f19b",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.17,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00260.npz",
+        "sha256": "0fd51bdc15b6c8c28010e25220a245904341843c3fbda22b1a0cc36d59f3895d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.692,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00273.npz",
+        "sha256": "6727f8de57f5e2ab5c53dc226f1f8553ae23bba5866d929c115020df2fbecd11",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.014,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00298.npz",
+        "sha256": "1e1142e0d9d0222aad97c9a3d3d6f14461ec31275a1cc818f52b5fc7d92d646d",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": true,
+      "simulated_seconds": 1.034,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": {
+        "file": "failure_00299.npz",
+        "sha256": "1a494cdc91c26bfb055eee88e9a66f9d0a5b71871bf069a31615f462c7ecbf43",
+        "frames": 128
+      }
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "final_command": [
+        1.5,
+        0.0,
+        -0.75
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.5,
+        0.0,
+        0.75
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    },
+    {
+      "initial_command": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix_at_end": 0.0,
+      "failure_trace": null
+    }
+  ],
+  "core_gradient_audit": {
+    "excitability": {
+      "l2": 0.0015498928260058165,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.0007404750213027,
+      "finite": true,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "l2": 0.08073721826076508,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.427141398191452,
+    "leak": 0.3290330767631531,
+    "bias": 0.6585462689399719
+  },
+  "physics": "native MuJoCo CPU / mjbatch",
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "peak_cuda_allocated_bytes": 2995016704,
+  "checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "model_sha256": "3fa48fd8390a6a3f76b66a6b1311b4c13d962cdadc7f94710eee7d1f5bb02d3d",
+  "parent_checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+  "braking_teacher_sha256": "96dd572472d6d22639cb54fd54f2f43b5d45e583cc054a301f27fa099b2f1478",
+  "optimizer_initialization": "new imitation Adam; actor and normalization inherited",
+  "execution": "mixture of student and training-only target, linearly faded to pure student halfway",
+  "deployed_actor_count": 1,
+  "teacher_required_at_evaluation": false,
+  "failure": null,
+  "physical_success": "Independent teacher-free evaluation required"
+}
