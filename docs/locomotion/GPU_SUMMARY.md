@@ -2,6 +2,8 @@
 
 **22 minutes 5 seconds of GPU training. 4,096 worlds in parallel. One final policy for walking, balancing and moving supports.** The same actor controls an intact dog and eight physical limb-removal variants. All training starts from random weights and follows the recorded successful curriculum.
 
+[Watch the complete Ember film — 2m 54s, 1×](../../previews/locomotion/ember/adaptive_dog_complete_v1.mp4) · [Shareable training card](../../previews/locomotion/ember/training_stats_v1.png) · [Results card](../../previews/locomotion/ember/results_v1.png)
+
 | What it learned | GPU learning time | New experiences |
 | --- | ---: | ---: |
 | Healthy walking | **1m 54s** | **9.63 million** |
@@ -42,7 +44,7 @@ The eight static misses are retained: five unintended-link-support cases and thr
 
 The **22m 05s** includes the actual training loop: physics, CPU observations/rewards, transfers, PPO updates and the recipe's existing rehearsal losses. Reused examples do not inflate the new-experience count. Setup is separate (**187.8 s**); the complete process span is **26m 37s**. The final native CPU evaluation takes **50.1 s**, outside training time. Video production is also separate.
 
-The actor and physics are trained on the RTX 4090. Observation and reward assembly remain on the CPU. The final evaluation and new Ember footage execute the frozen GPU-trained policy in native CPU MuJoCo. Cameras show the scene; camera pixels are not policy inputs. High-level velocity commands are supplied by the demo; the actor learns joint control.
+Actor learning, inference and MuJoCo Warp physics run on the RTX 4090. Observation and reward assembly remain on the CPU. The final evaluation and new Ember footage execute the frozen GPU-trained policy in native CPU MuJoCo. Cameras show the scene; camera pixels are not policy inputs. High-level velocity commands are supplied by the demo; the actor learns joint control.
 
 The prior accepted film and checkpoints are preserved. Earlier abandoned attempts are excluded from the selected policy's training time and remain documented in the full report.
 

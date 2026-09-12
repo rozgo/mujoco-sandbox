@@ -522,7 +522,11 @@ def stats_card(outcomes=False):
                 f"{e['moving']['passed']}/{e['moving']['trials']}",
                 "Healthy robot / six platform conditions",
             ),
-            ("REMAINED UPRIGHT", "204/204", "Eight static targets missed in evaluation"),
+            (
+                "REMAINED UPRIGHT",
+                "204/204",
+                "Eight static targets missed in evaluation",
+            ),
         ]
     else:
         seconds = round(total["training_seconds"])

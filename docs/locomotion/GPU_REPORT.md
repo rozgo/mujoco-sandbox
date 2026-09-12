@@ -75,3 +75,9 @@ The separate matched walking benchmark still measures **3.23× faster training w
 Two abandoned starts are kept outside this lineage: an improvised three-round healthy recipe used **328.928 s** of learning; the mistaken 512-world replay used **157.969 s in four completed stages**, plus an interrupted stage whose partial learning time was not fully recorded. They are additional experiment cost, not part of the selected policy's training time. [Retained records](gpu_from_scratch/RESULTS.json)
 
 The existing accepted graphite film and release checkpoints remain unchanged. That film shows the earlier three historical checkpoints, not this new final actor. This replay is saved on its experiment branch for review; it does not silently replace an accepted release.
+
+The separate [complete Ember film](ember/COMPLETE_VIDEO.md) now shows this final
+actor across all 51 evaluated conditions, with one predetermined demonstration
+trial per condition. All 51 stay upright; two strict misses remain labeled.
+Those demonstration trials are separate from the 204-trial audit above.
+[Concise summary and shareable cards](GPU_SUMMARY.md).

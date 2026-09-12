@@ -143,27 +143,31 @@ static release is preserved by `adaptive-standing-v1`.
 The accepted moving-support checkpoint and video are pinned by
 `adaptive-moving-v1` and [the release manifest](docs/locomotion/moving/RELEASE.json).
 
-### Complete learned-policy showcase
+### One final policy — the complete Ember film
 
-[![Adaptive dog in the native graphite scene](previews/locomotion/graphite/adaptive_dog_complete_v2.png)](previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)
+[![One final adaptive dog policy in the Ember machinery palette](previews/locomotion/ember/adaptive_dog_complete_v1.png)](previews/locomotion/ember/adaptive_dog_complete_v1.mp4)
 
-**[Watch the complete film — 2 min 04 s, normal speed](previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)** · [Chapters, provenance and reproduction](docs/locomotion/graphite/COMPLETE_VIDEO.md) · [RTX 4090 training statistics](docs/locomotion/GPU_REPORT.md)
+**[Watch the complete film — 2 min 54 s, normal speed](previews/locomotion/ember/adaptive_dog_complete_v1.mp4)** · [Training summary and scale](docs/locomotion/GPU_SUMMARY.md) · [Chapters and reproduction](docs/locomotion/ember/COMPLETE_VIDEO.md)
 
-All nine walking bodies, standing on uneven terrain, the accepted difficult
-terrain trials and five moving-platform motions are combined in the native
-graphite style. Three successive checkpoints show the learning progression, with
-one shared actor within each stage. Observer, overhead and head views accompany
-the main sequences. The original movies and measured limitations remain available.
+**One final checkpoint controls every scene and command.** The measured RTX 4090
+curriculum starts from random weights and takes **22m 05s**, with **4,096 worlds
+throughout**: **71.76 million experiences**, equivalent to **399 aggregate simulation
+hours**. The actor learns walking, physical limb loss, static balance and moving
+supports through successive stages of the recorded successful recipe.
 
-[Graphite materials, covered branding and live viewer options](docs/locomotion/graphite/README.md).
+The new film shows all **51 evaluated conditions** in charcoal, steel and machinery
+yellow, with red damage markers and green contact indicators. Fresh native CPU
+MuJoCo runs execute the frozen GPU-trained actor at **1×**. Observer, overhead and
+head cameras accompany the main sequences. All 51 film trials stay upright; two
+strict target misses remain labeled.
 
-The [measured GPU curriculum replay](docs/locomotion/gpu_from_scratch/README.md)
-starts from random weights and trains all behaviors in **22m 05s**, with **4,096
-worlds throughout**. Its one final checkpoint passes **36/36 walking tasks**,
-**136/144 strict static-balance checks** and **24/24 moving-support checks**.
-All trials stay upright. This separately saved replay does not replace the
-accepted film above.
+The separate final audit passes **36/36 walking tasks**, **136/144 strict static
+checks** and **24/24 moving-support checks**, with **204/204 upright**. Evaluation
+and video production are outside the measured training time.
 
-Try the optional [Ember machinery palette](docs/locomotion/ember/README.md):
-charcoal, steel and yellow, with forest-green contact indicators and oxide-red
-damage markers. [Static preview](previews/locomotion/ember/palette_v1.png).
+[Exact GPU measurements](docs/locomotion/GPU_REPORT.md) · [Training reproduction](docs/locomotion/gpu_from_scratch/README.md) · [Ember live viewers and palette](docs/locomotion/ember/README.md)
+
+The [previous graphite film](previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)
+remains available with its [original provenance](docs/locomotion/graphite/COMPLETE_VIDEO.md).
+It shows three historical training stages. All accepted release checkpoints and
+movies above remain preserved.

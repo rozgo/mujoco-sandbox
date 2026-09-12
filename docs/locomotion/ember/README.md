@@ -2,6 +2,8 @@
 
 [Open the static palette preview](../../../previews/locomotion/ember/palette_v1.png)
 
+[Watch the complete one-policy film — 2m 54s, 1×](../../../previews/locomotion/ember/adaptive_dog_complete_v1.mp4) · [Chapters and recording commands](COMPLETE_VIDEO.md) · [Measured training summary](../GPU_SUMMARY.md)
+
 An optional native MuJoCo theme based on the supplied Golden Ember palette.
 Charcoal and steel form the neutral base; yellow painted panels provide the main
 accent. Forest green balances the warm colors in small contact indicators, while
