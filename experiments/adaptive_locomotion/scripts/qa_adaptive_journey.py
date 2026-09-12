@@ -15,7 +15,12 @@ from adaptive_locomotion.bodies import ROOT
 def main(video):
     report = json.loads(video.with_suffix(".json").read_text())
     assert hashlib.sha256(video.read_bytes()).hexdigest() == report["video_sha256"]
-    directory = ROOT / "outputs/locomotion/graphite/journey_qa"
+    directory = ROOT / "outputs/locomotion/graphite/journey_qa" / video.stem
+    speed = report["playback_speed"]
+    assert speed in (1, 2)
+    expected_duration = 118 / speed + 6
+    hero = report["chapters"][-2]
+    thumbnail = round((hero["start_s"] + hero["end_s"]) * 25 / 2) - 1
     directory.mkdir(parents=True, exist_ok=True)
     samples = set()
     for chapter in report["chapters"]:
@@ -44,18 +49,18 @@ def main(video):
                 f"Frame {index} / video {index / 25:.2f} s",
                 fill="white",
             )
-        if index == 1412:  # Combined-motion chapter midpoint at 56.48 s.
+        if index == thumbnail:
             Image.fromarray(np.frombuffer(raw, np.uint8).reshape(1080, 1920, 3)).save(
                 video.with_suffix(".png")
             )
     for i, sheet in enumerate(sheets):
         sheet.save(directory / f"sheet_{i}.png")
     checks = {
-        "complete_decode": count == report["frames"] == 1625,
+        "complete_decode": count == report["frames"] == round(expected_duration * 25),
         "dimensions": metadata["size"] == (1920, 1080),
         "fps": metadata["fps"] == 25,
-        "duration": abs(metadata["duration"] - 65) < 0.05,
-        "playback_speed": report["playback_speed"] == 2,
+        "duration": abs(metadata["duration"] - expected_duration) < 0.05,
+        "playback_speed": speed in (1, 2),
         "three_training_stages": report["checkpoint_count"] == 3,
         "all_accepted_runs": len(report["cases"]) == 39,
         "nine_walking_bodies": sum(
@@ -89,7 +94,7 @@ def main(video):
         "sampled_frames": samples,
         "visual_inspection": "pending",
         "final_card_seconds": 6,
-        "physical_footage_seconds": 59,
+        "physical_footage_seconds": 118 / speed,
         "source_timeline_seconds": 118,
     }
     video.with_suffix(".qa.json").write_text(json.dumps(qa, indent=2) + "\n")

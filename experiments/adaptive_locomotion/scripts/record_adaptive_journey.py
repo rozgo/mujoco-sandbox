@@ -274,8 +274,9 @@ class Run:
         self.renderers = {}
         self.index = 0
 
-    def set_frame(self, frame):
-        self.index = 4 * frame + 3
+    def set_frame(self, frame, speed):
+        step = 2 * speed
+        self.index = step * frame + step - 1
         if self.index >= len(self.trace["time"]):
             raise ValueError("Replay exceeds saved physical timeline")
         for field in ("qpos", "qvel", "ctrl"):
@@ -317,7 +318,7 @@ class Run:
             renderer.close()
 
 
-def footer(draw, part, seconds):
+def footer(draw, part, seconds, speed):
     stage = {
         "walking": "01 / WALKING",
         "standing": "02 / STANDING ADDED",
@@ -326,7 +327,9 @@ def footer(draw, part, seconds):
     }[part]
     draw.rectangle((0, 1010, 1920, 1080), fill=BG)
     draw.line((24, 1010, 1896, 1010), fill=LINE, width=1)
-    draw.text((32, 1030), f"{seconds:05.2f} s / 2x playback", font=font(24), fill=WHITE)
+    draw.text(
+        (32, 1030), f"{seconds:05.2f} s / {speed}x playback", font=font(24), fill=WHITE
+    )
     draw.text((425, 1032), stage, font=font(21), fill=TEAL)
     draw.text(
         (1130, 1032), "ONE SHARED POLICY WITHIN THIS STAGE", font=font(21), fill=MUTED
@@ -344,9 +347,9 @@ def contacts(draw, run, x, y, spacing=69):
         draw.text((px + 16, y), label, font=font(17), fill=MUTED)
 
 
-def canvas_for(part, title, subtitle, runs, frame):
+def canvas_for(part, title, subtitle, runs, frame, speed):
     for run in runs:
-        run.set_frame(frame)
+        run.set_frame(frame, speed)
     if len(runs) == 1:
         run = runs[0]
         canvas = layout(
@@ -400,7 +403,7 @@ def canvas_for(part, title, subtitle, runs, frame):
             )
             if columns == 2:
                 contacts(draw, run, x + width - 294, y + 390)
-    footer(ImageDraw.Draw(canvas), part, runs[0].data.time)
+    footer(ImageDraw.Draw(canvas), part, runs[0].data.time, speed)
     return canvas
 
 
@@ -420,7 +423,7 @@ def writer(path):
     return stream
 
 
-def render(part, trace_root, output, preview_only):
+def render(part, trace_root, output, preview_only, speed):
     source = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
@@ -439,12 +442,12 @@ def render(part, trace_root, output, preview_only):
                     records.append(run.provenance)
                 start = count
                 indices = (
-                    (min(50, seconds * 25 // 2 - 1),)
+                    (min(100 // speed, seconds * 25 // speed - 1),)
                     if preview_only
-                    else range(seconds * 25 // 2)
+                    else range(seconds * 25 // speed)
                 )
                 for frame in indices:
-                    canvas = canvas_for(part, title, subtitle, runs, frame)
+                    canvas = canvas_for(part, title, subtitle, runs, frame, speed)
                     if preview_only:
                         canvas.save(preview_dir / f"{part}_{chapter}.png")
                     else:
@@ -479,8 +482,8 @@ def render(part, trace_root, output, preview_only):
                 "fps": 25,
                 "duration_s": count / 25,
                 "dimensions": [1920, 1080],
-                "playback_speed": 2,
-                "state_indices": "3,7,... at 50 Hz; 0.08 s to exact endpoint; no interpolation; 2x playback",
+                "playback_speed": speed,
+                "state_indices": f"{2 * speed - 1},{4 * speed - 1},... at 50 Hz; {0.04 * speed:.2f} s to exact endpoint; no interpolation; {speed}x playback",
                 "new_physics_steps": 0,
                 "new_training_seconds": 0,
                 "render_encode_seconds": time.perf_counter() - started,
@@ -536,14 +539,17 @@ def closing_card():
     return canvas
 
 
-def assemble(output):
+def assemble(output, speed):
     started = time.perf_counter()
     sources, records, chapter_rows, count = [], [], [], 0
     stream = writer(output)
     try:
         for part in ("walking", "standing", "terrain", "moving"):
-            path = DEST / "chapters" / f"{part}_v1.mp4"
+            edition = "v2" if speed == 1 else "v1"
+            path = DEST / "chapters" / f"{part}_{edition}.mp4"
             report = read(path.with_suffix(".json"))
+            if report["playback_speed"] != speed:
+                raise ValueError("Chapter playback speed differs")
             if sha(path) != report["video_sha256"]:
                 raise ValueError(f"Chapter bytes differ: {part}")
             frames = imageio_ffmpeg.read_frames(str(path), pix_fmt="rgb24")
@@ -601,7 +607,7 @@ def assemble(output):
             "fps": 25,
             "dimensions": [1920, 1080],
             "duration_s": count / 25,
-            "playback_speed": 2,
+            "playback_speed": speed,
             "new_physics_steps": 0,
             "new_training_seconds": 0,
             "assemble_encode_seconds": time.perf_counter() - started,
@@ -623,16 +629,18 @@ def main():
     parser.add_argument("--trace-root", type=Path, default=ROOT)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--preview-only", action="store_true")
+    parser.add_argument("--speed", type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
+    edition = "v2" if args.speed == 1 else "v1"
     output = args.output or (
-        DEST / "adaptive_dog_complete_v1.mp4"
+        DEST / f"adaptive_dog_complete_{edition}.mp4"
         if args.part == "assemble"
-        else DEST / "chapters" / f"{args.part}_v1.mp4"
+        else DEST / "chapters" / f"{args.part}_{edition}.mp4"
     )
     if args.part == "assemble":
-        assemble(output)
+        assemble(output, args.speed)
     else:
-        render(args.part, args.trace_root, output, args.preview_only)
+        render(args.part, args.trace_root, output, args.preview_only, args.speed)
 
 
 if __name__ == "__main__":
