@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 import subprocess
 import sys
 import time
@@ -42,6 +43,7 @@ def worker(recipe, output, number):
         ("historical_reference", "reference"),
         ("historical_single_reference", "single_reference"),
         ("historical_front_reference", "front_reference"),
+        ("historical_standing_reference", "standing_reference"),
     ):
         if row[archived_key]:
             params[argument] = mapping[row[archived_key]]
@@ -64,10 +66,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--recipe", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--through", type=int, default=21)
+    parser.add_argument("--through", type=int, default=30)
     parser.add_argument("--worker", type=int)
     args = parser.parse_args()
     recipe = json.loads(args.recipe.read_text())
+    if recipe["gpu_num_envs"] != 4096:
+        raise ValueError("This replay requires the user-selected 4096 GPU worlds")
     if args.worker:
         worker(recipe, args.output, args.worker)
         return
@@ -143,7 +147,14 @@ def main():
                 result.returncode == 0
                 and measured["iterations"] == row["gpu_iterations"]
                 and measured["transitions"] == row["gpu_transitions"]
-                and measured["optimizer_steps"] == row["gpu_iterations"] * 16
+                and measured["optimizer_steps"]
+                == row["gpu_iterations"]
+                * math.ceil(
+                    recipe["gpu_num_envs"]
+                    * row["parameters"]["horizon"]
+                    / recipe["minibatch_size"]
+                )
+                * row["parameters"]["epochs"]
                 and measured["stop_reason"] == "iteration_limit"
             )
         audit_path.write_text(json.dumps(audit, indent=2) + "\n")
