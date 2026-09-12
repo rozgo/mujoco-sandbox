@@ -101,10 +101,11 @@ def replay_case(report, body, surface, transition):
     if hashlib.sha256(path.read_bytes()).hexdigest() != result["trajectory_sha256"]:
         raise ValueError(f"Recorded trajectory changed: {path.name}")
     with np.load(path, allow_pickle=False) as trace:
-        frames = [
-            {k: trace[k][i].copy() for k in trace.files}
-            for i in range(len(trace["time"]))
-        ]
+        arrays = {k: trace[k] for k in trace.files}
+    frames = [
+        {k: values[i].copy() for k, values in arrays.items()}
+        for i in range(len(arrays["time"]))
+    ]
     model = build_model(
         BODY_MAP[body], "stand_" + surface, timestep=result["physics_timestep_s"]
     )
