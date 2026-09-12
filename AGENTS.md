@@ -108,6 +108,7 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 - Start moving promptly. Avoid repeated opening frames or unexplained frozen holds that look like a stalled simulation. Cut directly to a clearly identified results card after the complete action; preserve existing approved edits unless asked to change them.
 - Inspect encoded frames at the opening, strongest interaction, camera transitions, release and final results. Decode the entire MP4 and verify duration, dimensions, frame rate and frame count. Use the bundled `imageio-ffmpeg`; a new system FFmpeg install is normally unnecessary.
 - Include a clickable video path and an exact viewer command in the handoff so the user can watch immediately. Retain previous versions when requested.
+- Generative video styling uses the isolated `experiments/video_styling` project and [its guide](docs/video_styling/README.md). Keep original simulation footage and hashes, label generated presentation, and review motion/contact changes in a timestamp-matched comparison. Generated pixels cannot establish physics or controller results. Keep API credentials in ignored local environment files and resume saved provider task IDs instead of retrying billable submissions.
 
 ## Artifacts, documentation and Git
 
