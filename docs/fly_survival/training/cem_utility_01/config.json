@@ -1,0 +1,42 @@
+{
+  "algorithm": "diagonal CEM",
+  "seed": 4701,
+  "workers": 8,
+  "population": 8,
+  "elites": 3,
+  "episode_seconds": 8.0,
+  "flies_per_world": 1,
+  "paired_scenarios_per_candidate": 2,
+  "training_budget_seconds": 300.0,
+  "max_generations": 20,
+  "physics": "native MuJoCo CPU",
+  "neural": "MaleCNS CPU per worker",
+  "vision": true,
+  "parameters": 72,
+  "features": [
+    "bias",
+    "hunger",
+    "thirst",
+    "fatigue",
+    "heat",
+    "threat",
+    "food_odor",
+    "water_odor",
+    "shade",
+    "crowding",
+    "neural_escape",
+    "neural_steer"
+  ],
+  "actions": [
+    "explore",
+    "forage",
+    "drink",
+    "rest",
+    "refuge",
+    "evade"
+  ],
+  "source_commit": "d78a3645b3c58cef089e32ab5856c2c282183900",
+  "started_utc": "2026-09-12T18:45:43.716205+00:00",
+  "initialization": "handcrafted weights + Gaussian search noise",
+  "note": "Utility parameters learn; anatomy, walking skill and connectome weights stay frozen."
+}
