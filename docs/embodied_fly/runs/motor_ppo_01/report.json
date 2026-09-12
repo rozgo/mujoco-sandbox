@@ -1,0 +1,2471 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:40:48.735376+00:00",
+    "source_commit": "082bdc2e0295ec8b129b39b3e86e6a2f57065c1b",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "e2e627135ee8288690d5ead8074d8d13d47f0fb195ee7afc41ed4eb9e21bee06",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "83a0bb3cb57bbb2c09f09044ba942638f4cc6f5583a2f946e7423e1815713961",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 300.0,
+    "horizon": 64,
+    "sequence": 8,
+    "epochs": 2,
+    "episode_seconds": 2,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "lr": 2e-06,
+    "noise": 0.04,
+    "target_kl": 0.03,
+    "entropy": 0.001,
+    "rehearsal_weight": 1.0,
+    "seed": 28002,
+    "internal_steps": 4
+  },
+  "reward_recipe": {
+    "velocity_tracking_rate": 2.0,
+    "yaw_tracking_rate": 0.5,
+    "upright_alive_rate": 0.5,
+    "tilt_cost_rate": 0.5,
+    "vertical_speed_cost_rate": 0.05,
+    "forbidden_support_cost_rate": 2.0,
+    "action_change_cost_rate": 0.01,
+    "physical_failure_penalty": 1.0,
+    "velocity_filter_seconds": 0.05,
+    "moving_velocity_width_cm_s": 0.5,
+    "holding_velocity_width_cm_s": 0.2,
+    "yaw_width_rad_s": 0.75,
+    "failure_upright_below": 0.5,
+    "failure_height_below_cm": 0.06,
+    "units": "rates multiplied by 0.002 s each action; failure penalty once"
+  },
+  "training_started_utc": "2026-09-12T21:40:54.304830+00:00",
+  "completed_utc": "2026-09-12T21:45:55.596962+00:00",
+  "setup_seconds": 5.697280577849597,
+  "training_wall_seconds": 301.1964566940442,
+  "rollouts": 136,
+  "ppo_updates": 1090,
+  "transitions": 278528,
+  "rehearsal_frames": 34816,
+  "collection_seconds": 142.70429829368368,
+  "optimization_seconds": 158.34993952000514,
+  "ppo_optimization_seconds": 139.15628772461787,
+  "rehearsal_seconds": 19.193651795387268,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 32,
+  "aggregate_simulated_seconds": 557.056,
+  "transitions_per_training_wall_second": 924.7386342360899,
+  "actor_parameters": 2409132,
+  "critic_parameters": 233985,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 5.237639427185059,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 1.9961175918579102,
+      "finite": true,
+      "nonzero_cells": 165477
+    },
+    "bias": {
+      "l2": 146.2823028564453,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.004682142753154039,
+    "leak": 0.0037813829258084297,
+    "bias": 0.00703291455283761
+  },
+  "peak_cuda_allocated_bytes": 5342385152,
+  "parent_checkpoint_sha256": "6e946635e0dbdcc1471529b573c8be4d6a7abc207b8fab7766530302cfa1c1d9",
+  "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+  "model_sha256": "3fa48fd8390a6a3f76b66a6b1311b4c13d962cdadc7f94710eee7d1f5bb02d3d",
+  "rehearsal_manifest_sha256": "8181e5e7749198ba4250c9ecaf3856c4c7e8dcaa12db0375e7fe9293c02a2e2d",
+  "rehearsal_episode_sha256": {
+    "episode_000.npz": "583554a27778014a9588fbf6d8be246c3a6ada87932629aeaa58b53a9f313c6a",
+    "episode_001.npz": "fa4b109170ba53b95a2a6b0bdc151aa9f271897f2ebe1053e62367fe45b16a6f",
+    "episode_002.npz": "34260dd90efaf6621dc2e071a1c47f01418449eba59dc0f0a370c8509492cb9c",
+    "episode_003.npz": "ef1523b6162664dda1bde5bb45238ea6e26f00802d1d75ef13bba63184d42b9f",
+    "episode_004.npz": "64f18042a23203e66b2cf48dd94b8272e12a287250dd5ffcfc64d8d67628964f",
+    "episode_005.npz": "5dded500e87bbf8caba8b8f83e4186ee0c1dd1f42247bcba24136198a3d9f74a",
+    "episode_006.npz": "f36597782d4e2f151a55b15d8d0d26649ea9df7febb9558b35ac4730d5fbf171",
+    "episode_007.npz": "34ec5b20f162122b0dd01786c458074221421db6acfeebdb0ccd224a63d74915",
+    "episode_008.npz": "c9f7d13bdcec720325ec436defcfd0f8bd6e14f951d264ed50fa298f2cf9612f",
+    "episode_009.npz": "2438a2b20a887b669d5e432b25d3d82350739c44e1133bf093869fe8560f4f6e",
+    "episode_010.npz": "9212860a0d771d19604898891b9a3154c310de0497852d7d81b75d7d5ee4f7c6",
+    "episode_011.npz": "5d82625df2105adbf3609414d72e1743257e64fae1fedd075c683a1f7a25cf7e",
+    "episode_012.npz": "b9a8019c00a77e95eee26a72421b7207270b63d1f661dcdeee30905286b5a0be",
+    "episode_013.npz": "fc5167100f0e6a10208d3d5cf78cff3c8c9c40e15f922303e77875e139f66ea0",
+    "episode_014.npz": "d12c8d19fe17d10f3edc64d21c10249c07eccd794150724ff9ed0658363a3109",
+    "episode_015.npz": "659dcd75cbb2e51ab50dcc31135e126bd0f32be5a0e214352ee7c63a28707fd9"
+  },
+  "rehearsal_validation_indices": [
+    1,
+    2,
+    11,
+    12
+  ],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "fcc7b44f605a52eb45a36446a65be397d6e9bb3f639c68d99668e39383e6e7d5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.732,
+      "return": 0.37001131625220296,
+      "distance_cm": 0.40880908898780666
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "778a20c7bb78cb0a95846afbcd1e58fabf2573f92236e1087327fc025dbdb4b7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.06,
+      "return": 0.2993708375670394,
+      "distance_cm": 0.46035583110336264
+    },
+    {
+      "case_id": 2,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "6a059956cb0068ea414a62ae1b4b69e4554ea3c7d8a742c69d0fa5dfbcb0e722",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.412,
+      "return": 1.7458973610391695,
+      "distance_cm": 0.804474062948685
+    },
+    {
+      "case_id": 6,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "94c5134a6340c6b416e09a787b5def4ddc6069e30dcc9206fca5d21c324c54ca",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.6520000000000001,
+      "return": 0.15527166592983122,
+      "distance_cm": 1.0270748456301702
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "9c9aa9c26e74315468614cf191a0920194cba39c5a7d0418de327561415270cb",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.6600000000000001,
+      "return": 0.8278791069703857,
+      "distance_cm": 0.5607669251541364
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.1433962681912817,
+      "distance_cm": 0.801490064970377
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4839839163832949,
+      "distance_cm": 0.9504905862889241
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.562906848499551,
+      "distance_cm": 1.8470603131012544
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.809870185563341,
+      "distance_cm": 4.067447011986464
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.199612864293158,
+      "distance_cm": 3.431956239267992
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.267001812692797,
+      "distance_cm": 2.7001794052027877
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.1149742537527345,
+      "distance_cm": 0.7636705205593717
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.566432556224754,
+      "distance_cm": 0.9945631588347329
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.375629037385806,
+      "distance_cm": 1.1195258304682307
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.691422288888134,
+      "distance_cm": 1.9427755575060126
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.7506816574023105,
+      "distance_cm": 4.02826666233413
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.408347785123624,
+      "distance_cm": 3.3451105098802896
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.022819947775133,
+      "distance_cm": 0.8641143450407545
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.507440672343364,
+      "distance_cm": 0.9626509661408885
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.435651380219497,
+      "distance_cm": 1.0397172711999039
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.471031176275574,
+      "distance_cm": 1.836363532275231
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.785264439065941,
+      "distance_cm": 4.032833091351795
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.417110073263757,
+      "distance_cm": 3.3045218677240458
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.068136715010041,
+      "distance_cm": 3.4343016854775232
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.132182852437836,
+      "distance_cm": 0.8148203895031907
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.1173064688355225,
+      "distance_cm": 0.9776437177831063
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.801743377553066,
+      "distance_cm": 3.9746710287550755
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.986640528397402,
+      "distance_cm": 3.5276516247990197
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.2843645118991844,
+      "distance_cm": 1.3881890021652374
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.3568375644044863,
+      "distance_cm": 0.6776823524016089
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.33761498646345,
+      "distance_cm": 1.094524489789851
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.8597025975604993,
+      "distance_cm": 0.9308105821286523
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00032.npz",
+        "sha256": "e0e14ebb96fc7ef490c899c06adcc4bad1c8183cfc791b7b8b0099802e481b8c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.652,
+      "return": -0.40059369140772105,
+      "distance_cm": 0.4375993525092358
+    },
+    {
+      "case_id": 3,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00033.npz",
+        "sha256": "e04d204c9cf997a5871417cee577b923e2f4f95fd105478b9965fe409b946e7d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.528,
+      "return": -0.4517678309451867,
+      "distance_cm": 0.34025637322705066
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.098691619656165,
+      "distance_cm": 3.4782496547451145
+    },
+    {
+      "case_id": 1,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00035.npz",
+        "sha256": "bafd63699a1bf18cb655dee0e0bb2c10243f7509d763f476c12c361c90fbba3f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8160000000000001,
+      "return": 0.030025951889911084,
+      "distance_cm": 0.33487972049628895
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.800936735700816,
+      "distance_cm": 1.988686844536182
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.7944633605657145,
+      "distance_cm": 4.007956417162138
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.8003427007352,
+      "distance_cm": 3.983462430148375
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.773807321791537,
+      "distance_cm": 4.007183562532374
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.209788907552138,
+      "distance_cm": 3.4469547530545843
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.795574223913718,
+      "distance_cm": 4.041155482152311
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4926638549295603,
+      "distance_cm": 0.9706484224592361
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.321907110395841,
+      "distance_cm": 1.0725185828618033
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.731270089128884,
+      "distance_cm": 1.6121641210787008
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.065980052895611,
+      "distance_cm": 3.497196141612896
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.3114019090662623,
+      "distance_cm": 1.0417749647582157
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.1151463674961235,
+      "distance_cm": 1.9581360840501463
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.021232752944343,
+      "distance_cm": 3.519520099950876
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5172475665785896,
+      "distance_cm": 0.9717007619538114
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.527294574174448,
+      "distance_cm": 0.9600797626177494
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.126899144175695,
+      "distance_cm": 1.1918550129754752
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.85474160121521,
+      "distance_cm": 3.389363892123427
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.5533937129785045,
+      "distance_cm": 2.9230161164372843
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.155084173777141,
+      "distance_cm": 1.129115265818111
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.809930488176178,
+      "distance_cm": 4.0068020821804815
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.716404265316669,
+      "distance_cm": 4.000025537263194
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.2930534346960485,
+      "distance_cm": 1.1487667509249702
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.0703285549934662,
+      "distance_cm": 0.8603485452550502
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.05419927847106,
+      "distance_cm": 3.4573798224670194
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.00245408984847,
+      "distance_cm": 0.7909882851217469
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.75388742814539,
+      "distance_cm": 3.9801371998532686
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4843822781112976,
+      "distance_cm": 0.9975562057479955
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.689430208061822,
+      "distance_cm": 1.9466108734990275
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.348930070176721,
+      "distance_cm": 1.0900172102390802
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.9111489287765835,
+      "distance_cm": 1.0076660150824308
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.113503364758799,
+      "distance_cm": 0.954881504728369
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.397421351866797,
+      "distance_cm": 1.110592902137236
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.574211886618286,
+      "distance_cm": 1.8551061102425948
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00069.npz",
+        "sha256": "cd222b589be4ebd0ec99212625f5a02cf8509e09f4fe12101ee81881c18ecfba",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.23,
+      "return": 0.5311200763708257,
+      "distance_cm": 0.4460979053418831
+    },
+    {
+      "case_id": 1,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00070.npz",
+        "sha256": "2c0bb0493abd1b90f562478db1049bb97f50c8527d52a45009c2e5cd3fcf63d2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.35,
+      "return": 0.7623204538228947,
+      "distance_cm": 0.4488256101611514
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.380408658937085,
+      "distance_cm": 3.349778492979961
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.25288806646131,
+      "distance_cm": 1.0890582417532413
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00073.npz",
+        "sha256": "490fbae7a7feeaabb83b5c3ed876d44a0d1a1a2f4ef9c275d5d984018ccd937b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.666,
+      "return": 0.9655441365175648,
+      "distance_cm": 0.6551459554932512
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00074.npz",
+        "sha256": "b0de1530c236e27a41f6c7db309c4e82f217c92d1cb1d48f870fbd568956c507",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.8800000000000001,
+      "return": 0.8650382819873812,
+      "distance_cm": 0.66375394993564
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4913161649601534,
+      "distance_cm": 0.909780466889084
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.175106726186641,
+      "distance_cm": 0.761681328523269
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.675130530977185,
+      "distance_cm": 1.5807419066310495
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.145424851129064,
+      "distance_cm": 1.1097845491382232
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.12058016366791,
+      "distance_cm": 3.454331405411918
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5463344115123618,
+      "distance_cm": 0.9960568189237617
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.370269091450609,
+      "distance_cm": 1.0782539818982464
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.809492633241462,
+      "distance_cm": 3.9992923453120306
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.7154648987343535,
+      "distance_cm": 0.9631325688579474
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.8411774373380467,
+      "distance_cm": 0.9299354288497916
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.2631083416054025,
+      "distance_cm": 1.0864663660048046
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.61410051618509,
+      "distance_cm": 2.879288909075001
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.6512349677914244,
+      "distance_cm": 2.9323138860012494
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.6606312254880322,
+      "distance_cm": 0.9748521045879912
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.222966818488203,
+      "distance_cm": 3.3856450241055858
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.282331447022443,
+      "distance_cm": 0.763964031250225
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.117177675507264,
+      "distance_cm": 3.225170498200511
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.35908768652007,
+      "distance_cm": 1.1009300502011459
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5323885664329282,
+      "distance_cm": 0.9776428400336438
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.355807671556249,
+      "distance_cm": 3.3674405882534835
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.115641446551308,
+      "distance_cm": 3.4196768600419887
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.721459053398576,
+      "distance_cm": 3.9713610975428595
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.404172933893278,
+      "distance_cm": 1.041533978833771
+    },
+    {
+      "case_id": 1,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00098.npz",
+        "sha256": "bcdac9c68c8bbc1f3a11e3044bff5f2315bf617e7091130fd9e1b0f20dc07322",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.54,
+      "return": -0.6276802717729879,
+      "distance_cm": 0.36606166775079513
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8472945627290756,
+      "distance_cm": 3.5317174843900485
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.7131065441062674,
+      "distance_cm": 3.5643685075283575
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.601288531324826,
+      "distance_cm": 1.9120193203549167
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00102.npz",
+        "sha256": "29892ad6c1b39acf9ec5f1613340869bc24d5478b5c3c0d53dc7c98e29eeee94",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.218,
+      "return": 0.3851125583933026,
+      "distance_cm": 0.4028387823110374
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.11286547940108,
+      "distance_cm": 3.471855085993465
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.457526665646583,
+      "distance_cm": 1.0661210623377688
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.1077328649039373,
+      "distance_cm": 0.8011314814730427
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.084094995583655,
+      "distance_cm": 0.6874487918231864
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.786052793409908,
+      "distance_cm": 3.414767941618194
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00108.npz",
+        "sha256": "b8a4e12b8bda76e9058a7e3eba3e90c29f520a6301d4d592416534e48d1af0e1",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.772,
+      "return": 0.9899858712283276,
+      "distance_cm": 0.6196992556000894
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.057485825789627,
+      "distance_cm": 3.457711719266708
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.1321784567153372,
+      "distance_cm": 2.817268578207156
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.383135218755342,
+      "distance_cm": 1.0596736651609777
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.790129474597052,
+      "distance_cm": 4.02272659803146
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.679968540498521,
+      "distance_cm": 4.059786994036558
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.0155386761362024,
+      "distance_cm": 0.5848746513809535
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.537927679950371,
+      "distance_cm": 1.825480749669885
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.746820634230971,
+      "distance_cm": 1.9885706552694804
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.220237995847128,
+      "distance_cm": 1.1366204045449357
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.1667445242892427,
+      "distance_cm": 2.7242395941893145
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.677511019806843,
+      "distance_cm": 4.03047239833369
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.878295552538475,
+      "distance_cm": 3.554510710059008
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.672329613202237,
+      "distance_cm": 0.9485696588974805
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5743674965597165,
+      "distance_cm": 1.0729987740253826
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.896837488698111,
+      "distance_cm": 0.7273665960716671
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8361700921086594,
+      "distance_cm": 3.5400027327373427
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.190807091887109,
+      "distance_cm": 1.1485496299072278
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.001446493144613,
+      "distance_cm": 3.435777736723783
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.778270948445424,
+      "distance_cm": 3.974538629244012
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.4447779841257216,
+      "distance_cm": 3.052607107581533
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4710236416347016,
+      "distance_cm": 0.9459305711066571
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.156373075267766,
+      "distance_cm": 3.3814936830735998
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00131.npz",
+        "sha256": "244b9be4988688dbbd25fbda3a563eaa3636059a1ceedd252dc12fd42e0e2827",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.05,
+      "return": 0.37861017614704906,
+      "distance_cm": 0.40689151526950057
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.762480708595831,
+      "distance_cm": 3.4700161179253963
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.232216437405441,
+      "distance_cm": 1.1021678019770902
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.7128700641333126,
+      "distance_cm": 3.5567743204285502
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00135.npz",
+        "sha256": "96c330a770e8b347ea1e0b1595f9707371497b7d09886c9b84772e8bb8a602f4",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.122,
+      "return": -0.13538128785512527,
+      "distance_cm": 0.6020233654827348
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.951286329800496,
+      "distance_cm": 3.5091734093088323
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8297081215278013,
+      "distance_cm": 1.0789113966470232
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.461143684553008,
+      "distance_cm": 1.488294437860209
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.4653985218610615,
+      "distance_cm": 1.0606334534198862
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.5640410846972372,
+      "distance_cm": 3.506524875038075
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.798560990369879,
+      "distance_cm": 2.0385378464164257
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.111790464794467,
+      "distance_cm": 1.9164567136471202
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.713107268791646,
+      "distance_cm": 1.9404821291658019
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.494872476981982,
+      "distance_cm": 1.03240877401156
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.773279204731807,
+      "distance_cm": 1.9944616889763591
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.728570206323639,
+      "distance_cm": 4.0190538755612115
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.6890734075859655,
+      "distance_cm": 4.0834475298083
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.5532783789385576,
+      "distance_cm": 3.591411893869215
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.226208326697815,
+      "distance_cm": 1.003419722349852
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.3071864109952,
+      "distance_cm": 1.1594437835986204
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.7373103012068896,
+      "distance_cm": 1.1767669459897812
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.388624874642119,
+      "distance_cm": 1.065152915309776
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5803148416453041,
+      "distance_cm": 0.9208970051400704
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.682465202582534,
+      "distance_cm": 4.0735640327904274
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.703835172578692,
+      "distance_cm": 2.085291721522446
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.350870923110051,
+      "distance_cm": 1.08105899341002
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.807037854625378,
+      "distance_cm": 4.0552757584455135
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5937820300459862,
+      "distance_cm": 0.9664723071115454
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.771320867002942,
+      "distance_cm": 1.980231145532878
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.3648677978198975,
+      "distance_cm": 1.067834595290266
+    },
+    {
+      "case_id": 2,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00161.npz",
+        "sha256": "745c9ccc2ae2d7dc3ab77436f0c4a2912fa9b4cedfd29e48195fed97e251199c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.982,
+      "return": 3.1364984244873995,
+      "distance_cm": 0.9504171274060307
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.819862446165644,
+      "distance_cm": 2.0061245990997807
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00163.npz",
+        "sha256": "14e7edc41af310f5e20bcb50b45d3be20a6f16970e098a59c1580e367cc6d80f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.712,
+      "return": -0.1768976561506861,
+      "distance_cm": 0.24358069640730137
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.287611104780808,
+      "distance_cm": 1.0921014141030865
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8429791038797703,
+      "distance_cm": 3.5419671731878375
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.430007024408269,
+      "distance_cm": 1.0873101022356788
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.3962329579517245,
+      "distance_cm": 1.0749400141913554
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.6409003260778263,
+      "distance_cm": 3.4963331980343377
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.9933715058086818,
+      "distance_cm": 0.940507628530163
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.037606709021929,
+      "distance_cm": 1.1116248158258126
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.7510329771466786,
+      "distance_cm": 0.8126449003521005
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.639451185823418,
+      "distance_cm": 3.593477935154623
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.294609150558244,
+      "distance_cm": 1.0899513451971004
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00174.npz",
+        "sha256": "916a15764cab496eeeb7f535ea06f1ebb0d0a9e4c7becadba09c69dcc8e66823",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.634,
+      "return": -0.05171792492910754,
+      "distance_cm": 0.2016695006593117
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.65656623110408,
+      "distance_cm": 3.954606679151078
+    },
+    {
+      "case_id": 1,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00176.npz",
+        "sha256": "bfc642a9184e082d560d303b60db7ad8c09e5adb09705d73ab39037791d3ccdf",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.828,
+      "return": 0.32302782179067435,
+      "distance_cm": 0.8171264722419257
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.715691748977406,
+      "distance_cm": 3.6013524366141962
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9681099516164977,
+      "distance_cm": 3.522897906041012
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.0332058366475394,
+      "distance_cm": 0.7864644386712601
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.831928813830018,
+      "distance_cm": 4.0951796235277795
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.003008001222042,
+      "distance_cm": 3.5028161527736166
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.936711801057527,
+      "distance_cm": 2.4253646678013396
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.784968612366356,
+      "distance_cm": 4.033539032431028
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.388076907605864,
+      "distance_cm": 0.7773855681525896
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9321700167201925,
+      "distance_cm": 3.5251515013936308
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.6905017345561646,
+      "distance_cm": 3.590473305385476
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4770883727942419,
+      "distance_cm": 0.9301369978508331
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.836529684776906,
+      "distance_cm": 3.5198826705001522
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.9403927148023286,
+      "distance_cm": 0.8516438143873784
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.021268884913297,
+      "distance_cm": 3.4754791956324738
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8529000512498897,
+      "distance_cm": 3.505636302874266
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.729932266985998,
+      "distance_cm": 3.9919519214786723
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.6987347097481234,
+      "distance_cm": 0.9766032028213139
+    },
+    {
+      "case_id": 3,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00194.npz",
+        "sha256": "6f22ad03296564f7161eca20b3ea77d7b1ec0065781c86c337889335bbe5387a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.504,
+      "return": -0.42953908027402576,
+      "distance_cm": 0.359790516449075
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8014348701108247,
+      "distance_cm": 3.5793049937328836
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5271609707269818,
+      "distance_cm": 0.9228286699091819
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8491486643324606,
+      "distance_cm": 3.555701743979253
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.805498989182524,
+      "distance_cm": 4.035310453727492
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.797032149741426,
+      "distance_cm": 3.9942104840690735
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.710907839122228,
+      "distance_cm": 4.057361398718594
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9925390407734085,
+      "distance_cm": 3.4641691774697163
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.749502523103729,
+      "distance_cm": 4.0167639971717435
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.5618249214312527,
+      "distance_cm": 3.6346622551101753
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.0355932962556835,
+      "distance_cm": 3.4857865698556414
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00205.npz",
+        "sha256": "42e662a44e1c83877f28b99bce35a4a904cb8f645098260b846ce048af238d7e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8220000000000001,
+      "return": 0.17836039746362076,
+      "distance_cm": 0.24321202022244873
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8515972390014213,
+      "distance_cm": 3.4834978452293166
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.9192912439411884,
+      "distance_cm": 0.9003499591131398
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.2682275958550235,
+      "distance_cm": 1.3834482980215637
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.7375053876521633,
+      "distance_cm": 0.8365361924054638
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.815822071279399,
+      "distance_cm": 4.022494814445611
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00211.npz",
+        "sha256": "566abe77c54416055452de4886dbd4556eb70fb55e653c06896ccd09c2232d6d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.986,
+      "return": 0.6657435075558169,
+      "distance_cm": 0.6721914175277883
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.746805967879482,
+      "distance_cm": 1.9268792528754868
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.014012782732607,
+      "distance_cm": 0.8388818662963902
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.949487573639999,
+      "distance_cm": 0.8295544346456167
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8327870361099485,
+      "distance_cm": 3.500574682480677
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.509538412297843,
+      "distance_cm": 3.6362264713199526
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8258410194248427,
+      "distance_cm": 3.5522697614554817
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.773294602520764,
+      "distance_cm": 4.0530729260503335
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.771369821508415,
+      "distance_cm": 4.016361920868074
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.601935790533844,
+      "distance_cm": 0.5735178456341491
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.914325968740741,
+      "distance_cm": 3.4556485512567026
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.866934867546661,
+      "distance_cm": 3.5162997948386994
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.718271914840443,
+      "distance_cm": 3.557723318300643
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.199583363134934,
+      "distance_cm": 3.0155904598447676
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.298435618693475,
+      "distance_cm": 1.1437997512304516
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5844914524204796,
+      "distance_cm": 0.9497372969988328
+    },
+    {
+      "case_id": 0,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00227.npz",
+        "sha256": "eeca233eaa65116fda5157e131228abcf9e765e9a6925d788514e2bd263d7855",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.614,
+      "return": -0.45544066557886254,
+      "distance_cm": 0.3733523659032661
+    },
+    {
+      "case_id": 3,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00228.npz",
+        "sha256": "381e58718f2dac4b6e6071f7bc6673593eb36a5d5e8bde5f1b44a9db95fe0e2e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.34,
+      "return": -0.5610028130079172,
+      "distance_cm": 0.31037744850356325
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8106734863540623,
+      "distance_cm": 3.5529201845052425
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.4812531171105547,
+      "distance_cm": 0.9906179449728554
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.9740993973828154,
+      "distance_cm": 0.8283724988631446
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.941132158826804,
+      "distance_cm": 3.482952731538515
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.7070354638271965,
+      "distance_cm": 4.040420561374054
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8152471394569147,
+      "distance_cm": 3.5478805714449386
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.620697518112138,
+      "distance_cm": 1.871553889262426
+    },
+    {
+      "case_id": 2,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00236.npz",
+        "sha256": "4f8b273b309c1f0fcdad18b8e5d4c023571951ec69dd64b66773d1af009c0982",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.364,
+      "return": 1.8212024373206077,
+      "distance_cm": 0.6453898825990618
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.006357757933074,
+      "distance_cm": 0.9955802213617361
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.294381296307378,
+      "distance_cm": 0.7675553761490442
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.711217312025838,
+      "distance_cm": 4.013933914396782
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.6038024252047762,
+      "distance_cm": 0.9614742639284198
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.126497521410897,
+      "distance_cm": 3.0406682158620173
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.281220649106217,
+      "distance_cm": 0.6778111484225247
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.449809817131609,
+      "distance_cm": 1.8002535730411153
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.600767195577646,
+      "distance_cm": 3.0876015697212433
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.703106574233971,
+      "distance_cm": 3.9891265828152425
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.302162905805744,
+      "distance_cm": 1.0875854517101267
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5140618069790435,
+      "distance_cm": 1.0036583232618077
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.6505705921774734,
+      "distance_cm": 0.9670558844099353
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.710517329192953,
+      "distance_cm": 3.471117600233025
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.476365718757734,
+      "distance_cm": 1.8097923204533715
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.209601706323156,
+      "distance_cm": 1.1481189859515843
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.6550163642095868,
+      "distance_cm": 3.5830803677618572
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.67244108277373,
+      "distance_cm": 1.8734460154961765
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.4376761553576216,
+      "distance_cm": 3.6793173739667093
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.5711000033861637,
+      "distance_cm": 0.9427252326960719
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.636010490663466,
+      "distance_cm": 0.9554679639930904
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.964137510600267,
+      "distance_cm": 3.487772312261755
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9216283437854145,
+      "distance_cm": 3.5447550015179115
+    },
+    {
+      "case_id": 3,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00259.npz",
+        "sha256": "db27cfd874958021aa0f0762e28184b490e8222d5d3122affeabb9890a704d29",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8,
+      "return": -0.2661456671239648,
+      "distance_cm": 0.23232506492290908
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.206084435039884,
+      "distance_cm": 0.40209178435435977
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.351737337638042,
+      "distance_cm": 0.7516194002259204
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9078771950444207,
+      "distance_cm": 3.497805894196316
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8510315667954274,
+      "distance_cm": 3.5546692368370976
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.892909026653797,
+      "distance_cm": 0.9051845524201668
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.8052427272778,
+      "distance_cm": 4.03839483107225
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.850135824701283,
+      "distance_cm": 3.50412951934047
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.779273081629071,
+      "distance_cm": 4.034400969271747
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.780576939112507,
+      "distance_cm": 3.9928891358918803
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.589574455480033,
+      "distance_cm": 0.9632936296615452
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.795545451284852,
+      "distance_cm": 4.008871299610086
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 1.6600110127474181,
+      "distance_cm": 0.9679214772873291
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained"
+}

@@ -441,3 +441,83 @@ parent, not from the pilot, preserving the pilot as a separate experiment. Retai
 reward weights, recurrent architecture, 32 worlds, 16 threads, rollout/rehearsal
 recipe and evaluation cases. This is an explicitly documented step-size adjustment
 based on the measured update size. It has not changed the acceptance gates.
+
+### Outcome PPO 01: timed five-minute trial and retained limitations
+
+Starting again from DAgger01 with the declared 2e-6 step size, seed 28002 and
+unchanged reward, the run completed **301.196457 s** of training wall time after
+**5.697281 s** setup. It used 32 independent physical worlds, 16 native CPU
+threads and the RTX 4090 for the shared graph actor/learning. Collection took
+**142.704298 s**, PPO optimization **139.156288 s**, and explicit imitation
+rehearsal **19.193652 s**. Rehearsal is included in the total, not hidden as free
+training. There were **136 rollouts, 278,528 actual physical transitions,
+557.056 aggregate simulated seconds, 1,090 PPO chunk updates and 34,816 rehearsal
+frame presentations**. Peak CUDA allocation was **5,342,385,152 bytes**.
+Checkpoint SHA-256:
+`6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f`.
+
+All six greedy teacher-free development cases remained upright with valid foot
+support and zero MuJoCo numerical warnings. The original raw tracking gates
+still failed in all six cases; the evaluator now exits 2 for that outcome.
+Comparing the same recorded-state 100 ms diagnostic against the DAgger01 parent:
+
+| Command | Forward RMSE before → after, cm/s | Yaw RMSE before → after, rad/s |
+| --- | --- | --- |
+| Hold | 0.452 → 0.488 | 1.080 → 0.880 |
+| Slow walk | 0.190 → 0.155 | 1.437 → 0.787 |
+| Walk | 0.103 → 0.124 | 0.498 → 0.476 |
+| Fast walk | 0.163 → 0.135 | 0.535 → 0.570 |
+| Left | 0.187 → 0.352 | 0.508 → 0.398 |
+| Right | 0.989 → 0.369 | 2.706 → 0.701 |
+
+This is a mixed improvement, not universal success. The right case became much
+less erratic, but its mean yaw was only −0.183 rad/s for a −0.75 command; it did
+not learn accurate right-turn tracking. Normal walking remained close to its
+1 cm/s target (mean 0.927). Hold drifted **8.72 mm net in two seconds** and chose
+rest in only **25.7% of frames**. An explicit forced-rest intervention on the same
+checkpoint still drifted **8.66 mm**, with worse yaw oscillation. That diagnostic
+is ineligible for policy acceptance and proves changing utility selection alone
+is insufficient. The motor response must learn to arrest motion too.
+
+There were 272 completed training episodes, 28 ending in a fall; the remaining
+live partial episodes are not counted as completed successes. All 28 falls have
+hashed last-128-frame physical traces in the ignored run directory. Training
+exploration failures and deterministic deployment checks are distinct. The
+checkpoint's ancestry includes **600.083779 s of supervised optimization** plus
+this PPO stage; the failed DAgger02 and short PPO pilot are separate experiments,
+not part of these weights. The inherited pretrained teacher's training is not
+included in our times.
+
+The next focused hypothesis is a dense stationary-motion cost when the command
+is zero: the current narrow exponential gives very little distinction between
+bad drifting holds. Test that while preserving moving-command rewards and explicit
+walking rehearsal, then test actual walk-to-stop transitions without clearing
+recurrent state. This hypothesis is not yet implemented or validated. Full
+flight, recovery, learned survival utility and multi-agent arena integration
+remain open; [flight prerequisites](FLIGHT_PREREQUISITES.md) record the inspected
+upstream aerodynamic settings and direct-wing-control requirements.
+
+### Complete-case physical/brain film
+
+`student_ppo01_all_commands.mp4` shows all six original two-second development
+cases, one checkpoint, at 1× with observer eye cameras and actual anatomical
+recurrent-state maps. It is a **12-second, 600-frame, 1600 × 900, 50 fps** diagnostic
+film, not the final survival demo. Rendering/encoding/full decode took
+**49.475143 s**. No case or failed tracking label was omitted.
+
+Frame review caught an infinite collision plane whose finite display patch ended
+under the right-turn case. The next video version enlarges only plane display
+bounds. A regression test drops a sphere beyond the former display edge and
+compares 500 native steps: poses and contact forces remain identical with the
+larger display. Original captured physics and the first video are retained. The
+new overlay calls the failed gate “Raw tracking gate” to distinguish that measure
+from posture stability. Fourteen actor/body/learning checks plus this rendering
+physics-invariance check pass.
+
+The corrected `student_ppo01_all_commands_v2.mp4` rendered and fully decoded in
+**49.169889 s**, retaining the same 600 frames / 12 s / 50 fps / 1× case sequence
+and checkpoint. Opening, walking, turning and final frames were visually inspected;
+the visible ground now continues beneath the fly. The change is restricted to
+replay plane display size and is recorded in each segment's metadata. All 28
+training-fall trace hashes and finite state arrays were independently checked on
+the training machine. The journal/index retain the original video as well.

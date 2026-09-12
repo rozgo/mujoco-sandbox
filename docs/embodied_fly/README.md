@@ -215,3 +215,22 @@ Native batching reuses [mjbatch](https://github.com/kevinzakka/mjbatch) with the
 repository's pinned source and Apache-2.0 attribution. Additional contact sensors
 follow the [MuJoCo contact sensor specification](https://mujoco.readthedocs.io/en/stable/XMLreference.html#sensor-contact);
 a regression test compares this sensor/batch path with the original physical body.
+
+The [PPO 01 report](runs/motor_ppo_01/SUMMARY.md) records the actual five-minute
+trial, including its mixed tracking outcome and failed stopping test. The
+[complete-case review video](../../previews/embodied_fly/student_ppo01_all_commands_v2.mp4)
+shows all six two-second cases from that single checkpoint, including failures.
+It is a development film; flight and the interacting survival arena remain open.
+
+```sh
+open previews/embodied_fly/student_ppo01_all_commands_v2.mp4
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.montage \
+  outputs/embodied_fly/motor_ppo_01_evaluation \
+  previews/embodied_fly/student_ppo01_all_commands_v2.mp4
+```
+
+The reproduction command requires the captured states and an unused output name.
+`evaluate --diagnostic-activity rest --cases 1` is an explicitly forced utility
+intervention to distinguish selection from motor response. It cannot establish
+acceptance of the deployed policy. The PPO 01 intervention still moved, identifying
+motor stopping as an unresolved requirement.

@@ -1,0 +1,492 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:52:48.236221+00:00",
+    "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:53:37.696642+00:00",
+  "source_evaluation_sha256": "94c8efe111ef42433fc3b624b7c4937445744af9e42af649d6795305025c7b6a",
+  "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+  "all_source_cases_included": true,
+  "segments": [
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:52:48.249101+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:52:56.176298+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "hold",
+      "state_sha256": "3a6de8ed0bce57d55c3b64ca4f688f8795ef503097076f260d6297cc36704886",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "dd030c30f0a5fca4a12271938758f0cd9ca69ad81ff28bd5f8a414067763ee37",
+      "render_seconds": 8.027330923825502
+    },
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:52:56.295512+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:53:03.969191+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "slow_walk",
+      "state_sha256": "1984d4b02393313494a2ee04463987d0485d5ecc007d3d4aa425ee90cb1e6a0e",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "68718981d7f8a6598523cc185255abdde89140301aab99d4c018d0fac6040f05",
+      "render_seconds": 7.772279040887952
+    },
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:53:04.086063+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:53:11.818009+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "walk",
+      "state_sha256": "136b4ce0489f44b11624fbd5a9ddab6740d46657b90ee20ae73d2d56cde0255c",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "1595958be355d5eebd81530a970eec617e8effb027b9091eb25a4fbfbec3d5a2",
+      "render_seconds": 7.848435280844569
+    },
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:53:11.949880+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:53:19.878692+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "fast_walk",
+      "state_sha256": "772a019372bf9c2f29d0da743171ebd9bc831697fb6f8ebbee02c3d5bc0451ee",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "bc49203178e2d9fd07dc2c9c3cc1d0b2b87f1787e5c8576e41bed8f5445ce9a2",
+      "render_seconds": 8.03984621912241
+    },
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:53:20.004955+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:53:27.873676+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "left",
+      "state_sha256": "91c714c1b10b5b3a6fd1acac2f363acbbe5bb2a74b3fbb60122d200362814c47",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "89c104ed99bed648c3a94d1aa1da09c9d4e6d40ab73ecb35cce40e5bda8a6ad0",
+      "render_seconds": 7.975024600047618
+    },
+    {
+      "provenance": {
+        "schema": "embodied-fly-evidence-v1",
+        "captured_utc": "2026-09-12T21:53:27.996439+00:00",
+        "source_commit": "fca8da2e5c6ff77876422fd7474f2222352ae067",
+        "package_has_uncommitted_changes": false,
+        "source_file_sha256": {
+          "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+          "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+          "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+          "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+          "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+          "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+          "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+          "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+          "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+          "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+          "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+          "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+          "src/embodied_fly/ppo.py": "205628db4eda37b187cbe70f3f41d3d57cf8e350c73b80627b2e2d11512e6abe",
+          "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+          "src/embodied_fly/record.py": "0f082ec07ea78e57e061041bb8538e261a03d518a841336b4cd11723dda68eb8",
+          "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+          "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+          "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+        },
+        "runtime": {
+          "python": "3.12.12",
+          "system": "Linux",
+          "architecture": "x86_64",
+          "packages": {
+            "torch": "2.14.0",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "mujoco": "3.13.0",
+            "mjbatch": "0.1.0",
+            "mujoco-warp": null,
+            "flybody": "0.1.0",
+            "dm-control": "1.0.46"
+          }
+        }
+      },
+      "completed_utc": "2026-09-12T21:53:35.662806+00:00",
+      "frames": 100,
+      "fps": 50,
+      "duration_s": 2.0,
+      "playback_multiplier": 1,
+      "teacher": false,
+      "walking_action_mask": true,
+      "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+      "neural_view": {
+        "neurons": 166700,
+        "located_neurons": 140638,
+        "neurons_without_locations": 26062,
+        "projection_axes": "MaleCNS measured X/Z coordinates",
+        "map_size": [
+          128,
+          128
+        ],
+        "channels": [
+          "mean signed latent state",
+          "mean absolute latent state"
+        ],
+        "controller_input": false,
+        "physiological_spikes": false
+      },
+      "case": "right",
+      "state_sha256": "8d58ce0724eda06e56125484b177a636db3947cd1c541b4943880dd0a8afb803",
+      "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+      "video_sha256": "0b82d092a14ce25cdf15e5494e09429b6925e9f036510a8d5fd1d84c00fab49f",
+      "render_seconds": 7.769953891634941
+    }
+  ],
+  "frames": 600,
+  "fps": 50,
+  "duration_seconds": 12.0,
+  "size": [
+    1600,
+    900
+  ],
+  "playback_multiplier": 1,
+  "fully_decoded": true,
+  "render_and_encode_seconds": 49.475143203977495,
+  "video_sha256": "7ceb22ec56fec1e8fc8492978b590cdaf3f132e51a8effac7c799bbb65e64161"
+}
