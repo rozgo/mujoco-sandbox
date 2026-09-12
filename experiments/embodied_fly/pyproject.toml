@@ -1,0 +1,27 @@
+[project]
+name = "embodied-fly"
+version = "0.1.0"
+description = "Trainable MaleCNS recurrent neural control of a physical FlyBody"
+# Latest compatible Python minor for dm_control's labmaze binary dependency.
+# Core MuJoCo/PyTorch versions remain current; avoid a custom C++ toolchain on Mac.
+requires-python = ">=3.12,<3.13"
+dependencies = [
+ "mujoco==3.13.0", "torch==2.14.0", "numpy==2.5.3", "scipy>=1.18,<2",
+ "pandas>=3,<4", "pyarrow>=25", "h5py", "pillow>=12,<13", "imageio-ffmpeg==0.6.0",
+ "flybody", "dm-control", "protobuf",
+]
+[project.optional-dependencies]
+gpu = ["mujoco-warp==3.13.0"]
+[dependency-groups]
+dev = ["pytest>=9,<10", "ruff>=0.16"]
+[tool.uv.sources]
+flybody = { git = "https://github.com/TuragaLab/flybody.git", rev = "d015e9bfe441bd90ae431bac24c55cb74bdbce26" }
+[tool.uv]
+override-dependencies = ["numpy==2.5.3"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+[tool.ruff]
+line-length = 95

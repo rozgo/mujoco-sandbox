@@ -1,8 +1,9 @@
 # Course correction: train the embodied fly controller
 
-Research checked September 12, 2026. This is a proposal, not an implemented
-replacement. The utility-only training effort is paused; its source, generation
-checkpoints, physical captures and inspector work are preserved.
+Research checked September 12, 2026. The user approved implementation; it is in
+progress on `feature/fly-brain`. This document records the accepted target,
+not a claim that every curriculum stage already works. The utility-only training
+effort is preserved with its source, generation checkpoints, captures and inspector.
 
 The user's revised objective is one trained neural system that learns locomotion
 and activity selection, potentially through a curriculum. Training a small
@@ -94,13 +95,14 @@ limited forces and contact. Wings need physically modeled aerodynamic forces.
 Detailed biological muscles can be added later, but must not be claimed from a
 joint-servo implementation.
 
-Replace the external six-way utility winner with learned internal motivation or
-skill state that influences the same motor-generating network. Needs enter as
-observations and determine outcome rewards. If explicit utility scores are kept
-for interpretability, their selection mechanism must also be trained within the
-actor. The UI must distinguish an actual decision head from a post-hoc behavior
-classifier. A training-only critic estimates returns; it does not supply rewards
-or control the fly at deployment.
+Keep explicit learned utility scores, as the user reconfirmed during implementation.
+The utility head reads recurrent neural activity, selects an intention and injects
+that intention back into the same neural core before motor decoding. It must not
+call a scripted movement routine. Needs enter as observations and determine outcome
+rewards. The decision head and motor controller belong to the same checkpoint.
+The UI must distinguish actual decisions from a post-hoc behavior classifier.
+A training-only critic estimates returns; it does not supply rewards or control
+the fly at deployment.
 
 ## Curriculum and acceptance
 

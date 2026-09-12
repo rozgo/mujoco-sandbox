@@ -1,0 +1,143 @@
+{
+  "source": "Official FlyBody trained-fly-policies.zip / walking",
+  "saved_model_sha256": "49cdb0874021609c1aa5634a3073a394ef55b7ce54b6487c020c8ed2ec37d5d4",
+  "export_sha256": "96dd572472d6d22639cb54fd54f2f43b5d45e583cc054a301f27fa099b2f1478",
+  "tensorflow": "2.21.0",
+  "tensorflow_probability": "0.25.0",
+  "layer_norm_epsilon": 9.999999747378752e-06,
+  "observation_shapes": {
+    "walker/accelerometer": [
+      3
+    ],
+    "walker/actuator_activation": [
+      59
+    ],
+    "walker/appendages_pos": [
+      21
+    ],
+    "walker/force": [
+      18
+    ],
+    "walker/gyro": [
+      3
+    ],
+    "walker/joints_pos": [
+      85
+    ],
+    "walker/joints_vel": [
+      85
+    ],
+    "walker/ref_displacement": [
+      65,
+      3
+    ],
+    "walker/ref_root_quat": [
+      65,
+      4
+    ],
+    "walker/touch": [
+      6
+    ],
+    "walker/velocimeter": [
+      3
+    ],
+    "walker/world_zaxis": [
+      3
+    ]
+  },
+  "variables": [
+    {
+      "name": "feedforward_mlp_torso/linear/b:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/linear/w:0",
+      "shape": [
+        741,
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/layer_norm/offset:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/layer_norm/scale:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_0/b:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_0/w:0",
+      "shape": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_1/b:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_1/w:0",
+      "shape": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_2/b:0",
+      "shape": [
+        512
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_2/w:0",
+      "shape": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/b:0",
+      "shape": [
+        59
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/w:0",
+      "shape": [
+        512,
+        59
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/b:0",
+      "shape": [
+        59
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/w:0",
+      "shape": [
+        512,
+        59
+      ]
+    }
+  ],
+  "golden_samples": 32,
+  "golden_seed": 44001,
+  "purpose": "Training-only learned teacher; not part of deployed MaleCNS actor"
+}
