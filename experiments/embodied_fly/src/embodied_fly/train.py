@@ -91,6 +91,9 @@ def train(args):
             {
                 "manifest_sha256": manifest_hash,
                 "validation_indices": sorted(validation_indices),
+                "episode_file_sha256": {
+                    file.name: sha256(file) for file in sorted(dataset.glob("episode_*.npz"))
+                },
             }
         )
     graph, sensory, descending, motor = load_malecns(args.graph)
@@ -111,6 +114,8 @@ def train(args):
         parent = torch.load(args.resume, map_location="cpu", weights_only=True)
         if parent["graph_sha256"] != sha256(args.graph / "weights.npz"):
             raise ValueError("Resume graph differs from checkpoint")
+        if parent.get("graph_metadata_sha256") != sha256(args.graph / "brain.npz"):
+            raise ValueError("Resume neuron metadata differs from checkpoint")
         if parent["config"]["internal_steps"] != args.internal_steps:
             raise ValueError("Resume must preserve the recurrent architecture")
         brain.load_state_dict(parent["state_dict"], strict=True)
@@ -251,7 +256,7 @@ def train(args):
     evaluation_seconds = time.perf_counter() - evaluation_start
     changes = {
         name: {
-            "l2": float((p - core_initial[name]).norm()),
+            "l2": float((p.detach() - core_initial[name]).norm()),
             "changed_cells": int((p != core_initial[name]).sum()),
         }
         for name, p in brain.core.named_parameters()

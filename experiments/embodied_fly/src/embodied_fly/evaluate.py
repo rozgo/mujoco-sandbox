@@ -12,7 +12,7 @@ import torch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.brain import EmbodiedBrain, load_malecns
-from embodied_fly.provenance import evidence, utc_now
+from embodied_fly.provenance import evidence, sha256, utc_now
 
 
 def load_actor(path, graph_path, device):
@@ -20,6 +20,8 @@ def load_actor(path, graph_path, device):
     graph_hash = hashlib.sha256((graph_path / "weights.npz").read_bytes()).hexdigest()
     if graph_hash != checkpoint["graph_sha256"]:
         raise ValueError("Checkpoint refers to a different graph")
+    if checkpoint.get("graph_metadata_sha256") != sha256(graph_path / "brain.npz"):
+        raise ValueError("Checkpoint refers to different neuron metadata")
     adjacency, sensory, descending, motor = load_malecns(graph_path)
     brain = EmbodiedBrain(
         adjacency,
