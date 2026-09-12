@@ -93,3 +93,30 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.flight
 ```
 
 The first run is preserved separately. New captures must use unused output names.
+
+## Inherited flight teacher for demonstrations
+
+The supplied `wing_pattern_fmech.npy` and learned flight SavedModel are now
+available with [attribution](../../assets/embodied_fly/teachers/FLIGHT_NOTICE.json).
+The converted flight teacher's outputs match 32 TensorFlow reference probes to
+maximum absolute error 8.6427e-7. Its smaller 256-wide layout is handled explicitly;
+the existing walking importer remains numerically checked.
+
+The supplied pattern alone approximately doubles upward force compared with the
+synthetic probe, but still cannot support weight. `FlightTeacherOracle` adds the
+inherited policy's wing/body corrections, observes the current complete body, and
+supplies retracted-leg servo targets without removing joints or applying root
+forces. A first 0.2-second hover remains near the target altitude. This is inherited
+teacher performance, **not the learned MaleCNS actor flying**. Neither this adapter
+nor its wingbeat generator belongs in the deployed student.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.flight_teacher \
+  --teacher assets/embodied_fly/teachers/flight.npz \
+  --wing-pattern assets/embodied_fly/teachers/wing_pattern_fmech.npy \
+  --output outputs/embodied_fly/flight_teacher_hover_reproduction --seconds 1
+```
+
+The existing walking recorder assumes a 500 Hz action clock and must not be used
+unchanged for 5 kHz flight captures. Recorded flight states carry actual timestamps;
+flight recording must honor those before any flight video is presented.

@@ -1,0 +1,429 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T23:07:18.235816+00:00",
+    "source_commit": "f4604f97de43bc44de4f51f5ce817d73c4dc9843",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "6228d50c921e0df7f11e7d5358d73666e6bdd5e81496fbaac8e4dd09efb75d5d",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "6b8dcc37f86734f338376cef7a6975008f95735fa8661e07f838e2d8a4bfb47f",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 60.0,
+    "horizon": 64,
+    "sequence": 8,
+    "epochs": 2,
+    "episode_seconds": 2,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "lr": 2e-06,
+    "noise": 0.04,
+    "target_kl": 0.03,
+    "entropy": 0.001,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 1.5,
+    "stationary_turn_cost": 0.25,
+    "seed": 28004,
+    "internal_steps": 4
+  },
+  "reward_recipe": {
+    "velocity_tracking_rate": 2.0,
+    "yaw_tracking_rate": 0.5,
+    "upright_alive_rate": 0.5,
+    "tilt_cost_rate": 0.5,
+    "vertical_speed_cost_rate": 0.05,
+    "forbidden_support_cost_rate": 2.0,
+    "action_change_cost_rate": 0.01,
+    "physical_failure_penalty": 1.0,
+    "velocity_filter_seconds": 0.05,
+    "moving_velocity_width_cm_s": 0.5,
+    "holding_velocity_width_cm_s": 0.2,
+    "yaw_width_rad_s": 0.75,
+    "failure_upright_below": 0.5,
+    "failure_height_below_cm": 0.06,
+    "units": "rates multiplied by 0.002 s each action; failure penalty once",
+    "stationary_translation_cost_rate": 1.5,
+    "stationary_rotation_cost_rate": 0.25,
+    "stationary_speed_scale_cm_s": 0.25,
+    "stationary_yaw_scale_rad_s": 0.5,
+    "stationary_cost_formula": "zero command only: -weight * magnitude / (scale + magnitude)"
+  },
+  "training_started_utc": "2026-09-12T23:07:23.178562+00:00",
+  "completed_utc": "2026-09-12T23:08:24.360689+00:00",
+  "setup_seconds": 4.95659145526588,
+  "training_wall_seconds": 61.07235834700987,
+  "rollouts": 27,
+  "ppo_updates": 222,
+  "transitions": 55296,
+  "rehearsal_frames": 6912,
+  "collection_seconds": 29.157639655750245,
+  "optimization_seconds": 31.89379202341661,
+  "ppo_optimization_seconds": 28.160629235208035,
+  "rehearsal_seconds": 3.733162788208574,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 32,
+  "aggregate_simulated_seconds": 110.592,
+  "transitions_per_training_wall_second": 905.4177945087873,
+  "actor_parameters": 2409132,
+  "critic_parameters": 233985,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 3.8028268814086914,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 1.9601085186004639,
+      "finite": true,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "l2": 168.8479461669922,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.002190499799326062,
+    "leak": 0.0016575449844822288,
+    "bias": 0.004054708871990442
+  },
+  "peak_cuda_allocated_bytes": 5342385152,
+  "parent_checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "checkpoint_sha256": "f8459aeb48997f79f81f7cb5bfd7433a4d0b1c53a2b98c8fe21af4f79441de7e",
+  "model_sha256": "3fa48fd8390a6a3f76b66a6b1311b4c13d962cdadc7f94710eee7d1f5bb02d3d",
+  "rehearsal_manifest_sha256": "8181e5e7749198ba4250c9ecaf3856c4c7e8dcaa12db0375e7fe9293c02a2e2d",
+  "rehearsal_episode_sha256": {
+    "episode_000.npz": "583554a27778014a9588fbf6d8be246c3a6ada87932629aeaa58b53a9f313c6a",
+    "episode_001.npz": "fa4b109170ba53b95a2a6b0bdc151aa9f271897f2ebe1053e62367fe45b16a6f",
+    "episode_002.npz": "34260dd90efaf6621dc2e071a1c47f01418449eba59dc0f0a370c8509492cb9c",
+    "episode_003.npz": "ef1523b6162664dda1bde5bb45238ea6e26f00802d1d75ef13bba63184d42b9f",
+    "episode_004.npz": "64f18042a23203e66b2cf48dd94b8272e12a287250dd5ffcfc64d8d67628964f",
+    "episode_005.npz": "5dded500e87bbf8caba8b8f83e4186ee0c1dd1f42247bcba24136198a3d9f74a",
+    "episode_006.npz": "f36597782d4e2f151a55b15d8d0d26649ea9df7febb9558b35ac4730d5fbf171",
+    "episode_007.npz": "34ec5b20f162122b0dd01786c458074221421db6acfeebdb0ccd224a63d74915",
+    "episode_008.npz": "c9f7d13bdcec720325ec436defcfd0f8bd6e14f951d264ed50fa298f2cf9612f",
+    "episode_009.npz": "2438a2b20a887b669d5e432b25d3d82350739c44e1133bf093869fe8560f4f6e",
+    "episode_010.npz": "9212860a0d771d19604898891b9a3154c310de0497852d7d81b75d7d5ee4f7c6",
+    "episode_011.npz": "5d82625df2105adbf3609414d72e1743257e64fae1fedd075c683a1f7a25cf7e",
+    "episode_012.npz": "b9a8019c00a77e95eee26a72421b7207270b63d1f661dcdeee30905286b5a0be",
+    "episode_013.npz": "fc5167100f0e6a10208d3d5cf78cff3c8c9c40e15f922303e77875e139f66ea0",
+    "episode_014.npz": "d12c8d19fe17d10f3edc64d21c10249c07eccd794150724ff9ed0658363a3109",
+    "episode_015.npz": "659dcd75cbb2e51ab50dcc31135e126bd0f32be5a0e214352ee7c63a28707fd9"
+  },
+  "rehearsal_validation_indices": [
+    1,
+    2,
+    11,
+    12
+  ],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "8ecf52608fe90df8cea77268eab95d643f17850ffb9135854a3ae72c2e64f85f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.97,
+      "return": 2.924242868032934,
+      "distance_cm": 0.826185927675836
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.753386798663996,
+      "distance_cm": 0.09260126783114034
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.852420087350765,
+      "distance_cm": 0.09365188434398787
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.750548238749616,
+      "distance_cm": 1.9800474829972694
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.834743362094741,
+      "distance_cm": 4.028389329156902
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9038323289423715,
+      "distance_cm": 3.518032678184635
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.8332010344602168,
+      "distance_cm": 3.537002067223925
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.8952474347897805,
+      "distance_cm": 0.09139037158347339
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.55723585668602,
+      "distance_cm": 0.08770167169098776
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.442214637296274,
+      "distance_cm": 1.0172524111349992
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.649396113054536,
+      "distance_cm": 1.020354916194427
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.909569604322314,
+      "distance_cm": 4.096779138324368
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.123405778547749,
+      "distance_cm": 3.4739383322987183
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.298745610372862,
+      "distance_cm": 3.3522909480186107
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.911542677989928,
+      "distance_cm": 0.08858326888212878
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.40580692369258,
+      "distance_cm": 0.09088877822089153
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.316899360681418,
+      "distance_cm": 0.9432079938639619
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 2.558763890629052,
+      "distance_cm": 0.9702210086541807
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.866712736082263,
+      "distance_cm": 4.027171909704225
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.1533973162586335,
+      "distance_cm": 3.4286385782734925
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.9592337991052773,
+      "distance_cm": 3.464079089221691
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.849140829770477,
+      "distance_cm": 0.09932170106747945
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.892497395601822,
+      "distance_cm": 0.092721273862506
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.685679167226226,
+      "distance_cm": 0.7065732991509894
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.716585720540024,
+      "distance_cm": 1.8602460656956674
+    },
+    {
+      "case_id": 4,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.864469418709632,
+      "distance_cm": 4.026255958627576
+    },
+    {
+      "case_id": 5,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.233271432924084,
+      "distance_cm": 3.4195959640851807
+    },
+    {
+      "case_id": 6,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.212245541042648,
+      "distance_cm": 3.387977771357907
+    },
+    {
+      "case_id": 0,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.907190888974583,
+      "distance_cm": 0.09194702868072581
+    },
+    {
+      "case_id": 1,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 4.45674516966028,
+      "distance_cm": 0.09008720690839199
+    },
+    {
+      "case_id": 2,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.6080724552894026,
+      "distance_cm": 0.7037679262681039
+    },
+    {
+      "case_id": 3,
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 2.0,
+      "return": 3.458346134651947,
+      "distance_cm": 1.3785287204262855
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": false,
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained"
+}

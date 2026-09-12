@@ -727,3 +727,44 @@ Neither holds altitude. At 40 kHz the supplied pattern gives 0.596 body-weight
 force; the larger timestep sensitivity must be retained. Flight teacher export
 now labels its actual source directory rather than hard-coding "walking"; no
 teacher training or student deployment is implied by conversion.
+
+### PPO probe 02 and verified flight-teacher import
+
+The next physical-reward pilot kept all six two-second fixed-command bodies
+upright, including the formerly toppling slow case, but the slow case still
+approached the stability threshold (minimum upright 0.654) and tracked poorly.
+The continuous check retained a small stop displacement but added substantial
+yaw during stopping; resumed forward speed fell to 0.593 cm/s. This is a mixed,
+unaccepted candidate, not a replacement for online01. Preserve every original
+failed gate and report. A curriculum gap is now explicit: PPO rehearses fixed
+commands, whereas online correction included actual command switches. Future
+physical-reward refinement must retain those transitions as well as steady walking.
+
+The official flight SavedModel uses a 104 → 256 → 256 → 256 → 12 mean network,
+with LayerNorm/tanh first and ELU hidden layers. Its 12 saved parameter tensors
+have a different layout from the walking teacher's 14. The generic importer
+supports both and validates each against exported TensorFlow reference outputs.
+Flight maximum absolute discrepancy on 32 saved probes is **8.6427e-7**; walking
+retains its previous checked values. No teacher retraining occurred.
+
+The flight adapter maps the complete body's observed state to the teacher's
+25-joint/104-input schema. The inherited policy supplies 11 physical commands plus
+a wing-frequency control; the upstream supplied wing pattern converts the latter
+into six bounded wing commands. Remaining leg position servos receive the
+upstream retracted spring pose as a training-only target, with all limbs and
+contacts still physical. Runtime student acceptance must contain neither this
+teacher nor the wingbeat generator. Joint transmission type is checked before
+setting posture targets, avoiding accidental interpretation of adhesion body IDs
+as joint IDs. Tests check no live pose writes, no root forces, bounded actions,
+zero adhesive posture targets, and both independent numerical export references.
+
+The first 0.2-second inherited-controller hover stayed close to its 10 mm target
+height, with 0.192 mm root-position RMSE and no ground loading or solver warnings.
+This was a development probe before the transmission-type guard; retain its exact
+report. Longer clean-source hover and moving-flight probes are required before
+using this expert for student demonstrations. **23 focused tests pass.**
+
+Flight teacher/pattern attribution is in assets/embodied_fly/teachers/FLIGHT_NOTICE.json.
+The official dataset metadata was checked directly against Figshare's article API;
+the existing flight dataset ZIP matches its published MD5. These GPL-3.0-or-later
+teacher/data assets are distinct from the anatomical model's source license.

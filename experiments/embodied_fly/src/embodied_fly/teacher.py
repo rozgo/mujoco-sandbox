@@ -1,4 +1,4 @@
-"""Numerically checked PyTorch inference of the official learned walking teacher."""
+"""Numerically checked PyTorch inference of the official learned teachers."""
 
 import json
 from pathlib import Path
@@ -9,12 +9,16 @@ from torch import nn
 from torch.nn import functional as F
 
 
-class WalkingTeacher(nn.Module):
+class ConvertedTeacher(nn.Module):
     def __init__(self, path: Path):
         super().__init__()
         self.manifest = json.loads(path.with_suffix(".json").read_text())
+        count = len(self.manifest["variables"])
+        if count not in (12, 14):
+            raise ValueError("Unsupported official teacher MLP layout")
+        self.mean_index = count - 4
         with np.load(path, allow_pickle=False) as data:
-            for i in range(14):
+            for i in range(count):
                 self.register_buffer(f"v{i}", torch.from_numpy(data[f"v{i}"].copy()))
             golden_x = torch.from_numpy(data["golden_input"].copy())
             golden_y = torch.from_numpy(data["golden_mean"].copy())
@@ -32,9 +36,11 @@ class WalkingTeacher(nn.Module):
         variance = (x - mean).square().mean(-1, keepdim=True)
         inverse = (variance + self.manifest["layer_norm_epsilon"]).rsqrt() * self.v3
         x = (x * inverse + (self.v2 - mean * inverse)).tanh()
-        for i in (4, 6, 8):
+        for i in range(4, self.mean_index, 2):
             x = F.elu(x @ getattr(self, f"v{i + 1}") + getattr(self, f"v{i}"))
-        return x @ self.v11 + self.v10
+        return x @ getattr(self, f"v{self.mean_index + 1}") + getattr(
+            self, f"v{self.mean_index}"
+        )
 
     @torch.no_grad()
     def act(self, observation):
@@ -43,6 +49,9 @@ class WalkingTeacher(nn.Module):
         ]
         x = torch.from_numpy(np.concatenate(values).astype(np.float32))[None]
         return self(x)[0].cpu().numpy()
+
+
+WalkingTeacher = ConvertedTeacher  # Preserve walking-adapter imports/checkpoints.
 
 
 class TeacherOracle:

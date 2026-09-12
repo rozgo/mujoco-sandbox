@@ -1,0 +1,121 @@
+{
+  "source": "Official FlyBody trained-fly-policies.zip / flight",
+  "saved_model_sha256": "3183f73654e8d0406caaf377e710c8073cafc7e9908d9927ab413e44edf859c8",
+  "export_sha256": "d49129e5c30e390a5614abd48727f76a03919e18124f50e166a2061bea3cfcb5",
+  "tensorflow": "2.21.0",
+  "tensorflow_probability": "0.25.0",
+  "layer_norm_epsilon": 9.999999747378752e-06,
+  "observation_shapes": {
+    "walker/accelerometer": [
+      3
+    ],
+    "walker/actuator_activation": [
+      0
+    ],
+    "walker/gyro": [
+      3
+    ],
+    "walker/joints_pos": [
+      25
+    ],
+    "walker/joints_vel": [
+      25
+    ],
+    "walker/ref_displacement": [
+      6,
+      3
+    ],
+    "walker/ref_root_quat": [
+      6,
+      4
+    ],
+    "walker/velocimeter": [
+      3
+    ],
+    "walker/world_zaxis": [
+      3
+    ]
+  },
+  "variables": [
+    {
+      "name": "feedforward_mlp_torso/linear/b:0",
+      "shape": [
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/linear/w:0",
+      "shape": [
+        104,
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/layer_norm/offset:0",
+      "shape": [
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/layer_norm/scale:0",
+      "shape": [
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_0/b:0",
+      "shape": [
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_0/w:0",
+      "shape": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_1/b:0",
+      "shape": [
+        256
+      ]
+    },
+    {
+      "name": "feedforward_mlp_torso/mlp/linear_1/w:0",
+      "shape": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/b:0",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/w:0",
+      "shape": [
+        256,
+        12
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/b:0",
+      "shape": [
+        12
+      ]
+    },
+    {
+      "name": "MultivariateNormalDiagHead/linear/w:0",
+      "shape": [
+        256,
+        12
+      ]
+    }
+  ],
+  "golden_samples": 32,
+  "golden_seed": 44001,
+  "purpose": "Training-only learned teacher; not part of deployed MaleCNS actor"
+}
