@@ -418,3 +418,7 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 
 - **2026-09-12 02:22:31–02:24:47 UTC**, **2 min 16 s** to verified render, before media commit/push/sync. Replaced the closing card's backend/footage sentence with the user-approved wording: “One trained policy across different bodies and terrain. No retraining between scenes.” Updated the existing v3 video path; earlier bytes remain in Git LFS history.
 - Re-render/encode **33.109 s**, **zero new simulation or learning**. All scene/trajectory hashes, 25 trial results, chapter timing, dimensions, frame rate and duration match the previous v3. All **1,675 frames** decode; the last physical frame, card transition and final encoded card were inspected. Ruff/diff checks pass; no physics or training tests rerun for this caption-only edit. Video SHA-256 `61c2c33b734273427ea34c41d321f5434f3352306a061aef67a835c6aa2ee070`.
+
+### Standing release and moving-environment goal
+
+- Work began **2026-09-12 02:37:25 UTC**; explicit moving-environment goal registered **02:37:55 UTC**. Preserve accepted static-standing/Warp work on main before a new experiment branch. Release manifest pins unchanged checkpoint and latest user-approved 67-second video. Merge verification: **74 Mac tests passed / 24 CUDA-only skipped; 98 NVIDIA tests passed**. Existing upstream warnings retained.

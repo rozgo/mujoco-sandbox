@@ -2,8 +2,9 @@
 
 One shared policy walks, stops to balance, and walks again. It also holds standing
 poses on uneven pads, slopes and steps, including missing support under a front
-foot. This is a limited extension of the accepted walker, on
-`feature/adaptive-standing`; it does not replace adaptive dog v1.
+foot. This accepted extension is available on `main` and preserved by the
+`adaptive-standing-v1` tag; it does not replace adaptive dog v1. Later moving-support
+experiments use a separate branch and new checkpoint/video names.
 
 [Watch the 67-second results video](../../../previews/locomotion/standing/adaptive_standing_v3.mp4) ·
 [All evaluation results](RESULTS.json) · [Network, rewards and physics](IMPLEMENTATION.md) ·
