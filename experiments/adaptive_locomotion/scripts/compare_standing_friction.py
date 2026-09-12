@@ -39,6 +39,7 @@ def main():
                 trials=4,
                 seconds=12 if transition else 10,
                 seed=9307,
+                transition=transition,
                 capture=True,
                 physics_backend="mjbatch",
                 support_friction=friction,
