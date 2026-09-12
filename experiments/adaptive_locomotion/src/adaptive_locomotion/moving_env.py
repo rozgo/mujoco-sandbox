@@ -62,10 +62,9 @@ class MovingEnv(StandingEnv):
         if cases is None:
             # Half moving; static rehearsal spans all bodies and existing terrain.
             static = [(PRESETS["healthy"], "flat")] + [(b, "flat") for b in LOSS_BODIES]
-            static += [
-                (PRESETS["healthy"], s)
-                for s in ("pads", "slope_x_12", "slope_y_12", "gap_fl", "gap_fr")
-            ]
+            from .standing_surfaces import SURFACES
+
+            static += [(PRESETS["healthy"], s) for s in SURFACES[1:]]
             if moving_profile == "mixed":
                 cases = static + [(PRESETS["healthy"], "moving")]
                 half = num_envs // 2

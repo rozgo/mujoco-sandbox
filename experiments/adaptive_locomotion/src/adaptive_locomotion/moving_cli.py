@@ -24,6 +24,7 @@ def main():
     p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="warp")
     p.add_argument("--device", default="cuda")
     p.add_argument("--learning-rate", type=float, default=0.0001)
+    p.add_argument("--standing-replay-weight", type=float, default=50)
     p.add_argument("--initial-std", type=float, default=0.12)
     p.add_argument("--max-iterations", type=int)
     p.add_argument(
@@ -41,6 +42,19 @@ def main():
     p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
     p.add_argument("--world-observations", action="store_true")
     p.add_argument("--motion-scale", type=float, default=1)
+    p = commands.add_parser("view")
+    p.add_argument("--checkpoint", type=Path, default=STANDING)
+    p.add_argument("--motion", default="combined")
+    p.add_argument("--body", default="healthy")
+    p.add_argument("--seconds", type=float, default=0)
+    p.add_argument("--world-observations", action="store_true")
+    p = commands.add_parser("record")
+    p.add_argument("--checkpoint", type=Path, required=True)
+    p.add_argument("--baseline", type=Path, default=STANDING)
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--seed", type=int, default=9411)
+    p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
+    p.add_argument("--replay-from", type=Path)
     args = parser.parse_args()
     if args.command == "preview":
         from .moving_scene import preview
@@ -63,6 +77,8 @@ def main():
             moving_profile=args.profile,
             motion_scale=args.motion_scale,
             walking_replay_weight=15,
+            standing_replay_weight=args.standing_replay_weight,
+            standing_reference=STANDING,
             idle_support_weight=8,
             idle_drift_weight=3,
             substep_support=True,
@@ -81,6 +97,27 @@ def main():
             max_iterations=args.max_iterations,
             allowance=parent["cumulative_training_seconds"] + args.seconds + 1,
             extension_reason=args.reason,
+        )
+    elif args.command == "view":
+        from .moving_record import view
+
+        view(
+            args.checkpoint,
+            args.motion,
+            args.body,
+            args.seconds,
+            not args.world_observations,
+        )
+    elif args.command == "record":
+        from .moving_record import record
+
+        record(
+            args.checkpoint,
+            args.baseline,
+            args.output,
+            args.seed,
+            args.physics_backend,
+            args.replay_from,
         )
     elif args.command == "evaluate":
         from .moving_evaluate import evaluate
