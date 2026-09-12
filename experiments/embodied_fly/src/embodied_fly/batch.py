@@ -83,6 +83,7 @@ class FlyBatch:
                 "warning",
             )
         }
+        self.mean_sensors = self.fields["sensordata"].copy()
         self.previous_action = np.zeros((worlds, self.model.nu), np.float32)
         self.command = np.zeros((worlds, 3), np.float32)
         self.needs = np.zeros((worlds, 5), np.float32)
@@ -112,6 +113,7 @@ class FlyBatch:
             self.fields["qpos"][ids, 3] = np.cos(np.asarray(yaw) / 2)
             self.fields["qpos"][ids, 6] = np.sin(np.asarray(yaw) / 2)
         self.batch.forward(ids)
+        self.mean_sensors[ids] = self.fields["sensordata"][ids]
         self.previous_action[ids] = 0
         self.ages[ids] = 0
         self.forbidden_peak[ids] = 0
@@ -163,12 +165,15 @@ class FlyBatch:
         )
         self.forbidden_peak[:] = 0
         addresses = [self.sensor_addresses[f"batch_forbidden_{i}"] for i in self.forbidden]
+        self.mean_sensors[:] = 0
         for _ in range(SUBSTEPS):
             self.batch.step()
+            self.mean_sensors += self.fields["sensordata"]
             # Sensor's force x is normal force of its maximum-norm contact.
             # This is a training proxy; native acceptance checks all contacts.
             force = np.abs(self.fields["sensordata"][:, addresses]).max(axis=1)
             np.maximum(self.forbidden_peak, force, out=self.forbidden_peak)
+        self.mean_sensors /= SUBSTEPS
         if np.any(self.fields["warning"]) or not np.isfinite(self.fields["qpos"]).all():
             raise RuntimeError("MuJoCo numerical failure in batch")
         self.ages += 1

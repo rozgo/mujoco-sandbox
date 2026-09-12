@@ -562,3 +562,41 @@ upright above 0.5, height above 0.6 mm, and prohibited support below 0.1 body we
 at every physics substep. Two metric tests reject sustained drift, a late stop
 after excess travel, incomplete duration and prohibited support while accepting
 an idealized braking trace. Those tests validate scoring, not physical skill.
+
+### Stopping reward result and online correction pilot
+
+PPO02 retained the PPO01 actor, critic, normalization, exploration and optimizer
+states. Its additional zero-command costs did not teach braking: the six-case
+hold still moved approximately 8.55 mm in two seconds, and normal/right walking
+tracking regressed. Keep it as a failed candidate; do not use it as the next parent.
+A continuous walk–stop–walk test retained physical and neural state throughout.
+PPO01 traveled 8.64 mm during stop; PPO02 traveled 9.14 mm. Both remained upright
+with permitted support. Exact reports and checkpoints are retained separately.
+
+A training-only intervention let the inherited walking teacher brake from PPO01's
+moving state, with its stationary reference anchored to current xy and heading.
+Stop travel was 0.677 mm total and 0.00870 mm after the settling interval. This is
+not student success: the teacher executed the stop actions. The new raw planar
+speed gate still rejected the teacher's within-stride jitter despite negligible
+late drift; retain that result and examine block-averaged velocity separately.
+
+Next pilot, declared before running: resume **PPO01**, seed 38001, 32 physical
+worlds / 16 CPU threads, requested **60 seconds**, CUDA full-graph learning, new
+imitation Adam at **3e-5**, eight-step recurrent chunks. This is supervised online
+correction, not PPO. Carry the student's real recurrent state across chunks and
+command changes. The inherited teacher supplies zero-command braking labels;
+a frozen PPO01 graph actor supplies moving-command retention labels, both on the
+student's current physical observations. Balance the two groups' action MSE and
+add 0.02 utility cross-entropy (rest/explore). No teacher is deployed at evaluation.
+
+For training execution only, blend 50% target / 50% student initially and fade the
+target contribution linearly to zero halfway through the timed pilot. Half the
+worlds switch command at one second without resetting body or memory; episodes
+end at two seconds or a physical fall. Record all training falls, timings, source
+hashes and internal-cell gradients. Keep the same graph architecture and walking
+passive-appendage mask. Accept no improvement from loss alone: independently
+check the saved student on fixed commands and continuous walk–stop–walk.
+
+The batched braking adapter was compared with the inherited single-world oracle
+on actual physical states and verified not to write poses. Native single/batched
+physics agreement remains tested. Nineteen focused tests passed before this pilot.
