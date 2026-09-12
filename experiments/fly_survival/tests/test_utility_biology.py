@@ -43,3 +43,22 @@ def test_all_activity_scores_apply_and_urgent_hazard_can_interrupt():
     f[5] = 1
     assert t.tick(f, 0.02) == 5
     assert np.all((t.scores >= 0) & (t.scores <= 1))
+
+
+def test_satiation_removes_drinking_priority_even_with_saturated_learned_bias():
+    weights = np.zeros((6, 12))
+    weights[2, 0] = 30
+    t = Thinker(weights=weights)
+    f = np.zeros(12)
+    f[0], f[2] = 1, 0.9
+    assert t.tick(f, 0.02) == 2
+    f[1], f[2] = 0.9, 0.0
+    for _ in range(12):
+        t.tick(f, 0.02)
+    assert t.current == 1
+
+
+def test_extra_water_cannot_offset_empty_energy_in_wellbeing_reward():
+    thirsty = Needs(energy=0, hydration=0.3)
+    hydrated = Needs(energy=0, hydration=1)
+    assert abs(thirsty.advance(0.02, 0, 0) - hydrated.advance(0.02, 0, 0)) < 1e-9

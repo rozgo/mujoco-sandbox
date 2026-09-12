@@ -21,8 +21,10 @@ class Needs:
         if not self.alive:
             return 0.0
         moving = min(abs(speed) / 12, 1.5)
-        self.energy -= dt * (0.018 + 0.012 * moving)
-        self.hydration -= dt * (0.014 + 0.008 * self.heat)
+        # Compressed physiology: needs can become consequential within a short
+        # physical episode. These are illustrative units, not measured fly metabolism.
+        self.energy -= dt * (0.035 + 0.02 * moving)
+        self.hydration -= dt * (0.03 + 0.015 * self.heat)
         self.fatigue += dt * (0.11 * moving - 0.24 * max(0, 1 - moving * 3))
         self.heat += dt * (1.7 * exposure - 0.75 * self.heat)
         self.energy += food
@@ -47,8 +49,7 @@ class Needs:
             dt
             * (
                 float(self.alive)
-                + 0.35 * self.energy
-                + 0.35 * self.hydration
+                + 0.8 * min(self.energy, self.hydration)
                 - 0.12 * self.fatigue
                 - 0.3 * self.heat
             )

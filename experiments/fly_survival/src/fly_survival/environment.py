@@ -1,9 +1,12 @@
 """One shared physical habitat. No scripted fly paths or pose-driven movement."""
 
+import hashlib
 import io
 import json
+import subprocess
 import time
 from dataclasses import asdict
+from pathlib import Path
 
 import mujoco as mj
 import numpy as np
@@ -32,6 +35,8 @@ class Habitat:
         hazards=True,
         arena=None,
         random_spawn=False,
+        policy_label=None,
+        checkpoint_sha256=None,
     ):
         self.n, self.seed = n_flies, seed
         self.rng = np.random.default_rng(seed)
@@ -63,13 +68,29 @@ class Habitat:
         self.neural = NeuralPopulation(n_flies, device, seed) if neural else None
         self.neural_features = np.zeros((n_flies, 2, 2))
         w = handcrafted_weights() if weights is None else weights
+        w = np.asarray(w, dtype=np.float64)
+        if w.shape != (6, 12) or not np.isfinite(w).all():
+            raise ValueError("Utility weights must be a finite 6 × 12 matrix")
+        self.provenance = {
+            "source_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], text=True
+            ).strip(),
+            "policy": policy_label
+            or ("handcrafted" if weights is None else "supplied weights"),
+            "weights_sha256": hashlib.sha256(w.tobytes()).hexdigest(),
+            "checkpoint_sha256": checkpoint_sha256,
+            "physics_hz": 1 / self.m.opt.timestep,
+            "motor_hz": 1 / self.motors.timestep,
+            "utility_hz": 1 / self.decision_dt,
+            "eye_hz": 10,
+        }
         self.thinkers = [
             Thinker(weights=np.array(w, copy=True)) for _ in range(n_flies)
         ]
         self.needs = [
             Needs(
-                energy=float(self.rng.uniform(0.28, 0.82)),
-                hydration=float(self.rng.uniform(0.3, 0.9)),
+                energy=float(self.rng.uniform(0.08, 0.9)),
+                hydration=float(self.rng.uniform(0.08, 0.9)),
                 fatigue=float(self.rng.uniform(0, 0.55)),
             )
             for _ in range(n_flies)
@@ -109,6 +130,7 @@ class Habitat:
             self._geom_fly[ids] = i
         self.force = np.zeros(6)
         self.warnings = []
+        self.envelope_departures = []
         self.started = time.perf_counter()
         self.step_wall = 0.0
 
@@ -275,6 +297,13 @@ class Habitat:
                 f"Numerical failure at t={self.d.time}: {self.d.warning.number}"
             )
         xyz = self.d.xpos[self.arena.fly_body_ids].copy()
+        for i in np.flatnonzero(
+            (np.abs(xyz[:, :2]) > [27, 19]).any(axis=1) | (xyz[:, 2] > 15)
+        ):
+            if not any(e["fly"] == int(i) for e in self.envelope_departures):
+                self.envelope_departures.append(
+                    {"fly": int(i), "t": float(self.d.time), "xyz": xyz[i].tolist()}
+                )
         self.speed = np.linalg.norm(xyz[:, :2] - self.previous_xyz[:, :2], axis=1) / dt
         self.previous_xyz = xyz
         demand = np.zeros((self.n, 3))
@@ -351,6 +380,15 @@ class Habitat:
                     "xyz": self.d.xpos[self.arena.fly_body_ids[i]].tolist(),
                     "speed": float(self.speed[i]),
                     "event": self.last_event[i],
+                    "target": (
+                        "Local food gradient",
+                        "Local water gradient",
+                        "Hold stance",
+                        "Local shade / cooling",
+                        "Local escape direction",
+                    )[t.current - 1]
+                    if t.current
+                    else "Local exploration",
                     "exposure": p.heat,
                     "threat": p.threat,
                     "neural_rates_hz": (
@@ -380,6 +418,7 @@ class Habitat:
 
     def report(self):
         return {
+            "provenance": self.provenance,
             "seed": self.seed,
             "n_flies": self.n,
             "simulation_seconds": float(self.d.time),
@@ -401,14 +440,21 @@ class Habitat:
             "interfly_contact_samples": self.interfly_contacts,
             "events": self.events,
             "warnings": self.d.warning.number.tolist(),
+            "envelope_departures": self.envelope_departures,
         }
 
     def save(self, name):
         root = OUTPUTS / name
+        if (root / "report.json").exists():
+            raise ValueError(f"Refusing to overwrite capture {root}")
         root.mkdir(parents=True, exist_ok=True)
         (root / "report.json").write_text(json.dumps(self.report(), indent=2))
         if self.record:
             mj.mj_saveModel(self.m, str(root / "scene.mjb"), None)
+            self.provenance["scene_sha256"] = hashlib.sha256(
+                (root / "scene.mjb").read_bytes()
+            ).hexdigest()
+            (root / "report.json").write_text(json.dumps(self.report(), indent=2))
             (root / "eyes").mkdir(exist_ok=True)
             for filename, data in self.eye_jpeg.items():
                 (root / "eyes" / filename).write_bytes(data)
@@ -422,7 +468,15 @@ class Habitat:
                 n_flies=self.n,
             )
             (root / "telemetry.json").write_text(
-                json.dumps({"mode": "replay", "n_flies": self.n, "frames": self.frames})
+                json.dumps(
+                    {
+                        "mode": "replay",
+                        "n_flies": self.n,
+                        "provenance": self.provenance,
+                        "events": self.events,
+                        "frames": self.frames,
+                    }
+                )
             )
         self.sensors.close()
         return root
@@ -439,6 +493,8 @@ if __name__ == "__main__":
     p.add_argument("--no-neural", action="store_true")
     p.add_argument("--no-vision", action="store_true")
     p.add_argument("--record", action="store_true")
+    p.add_argument("--checkpoint", type=Path)
+    p.add_argument("--random-spawn", action="store_true")
     p.add_argument("--name", default="development")
     a = p.parse_args()
     env = Habitat(
@@ -448,6 +504,12 @@ if __name__ == "__main__":
         neural=not a.no_neural,
         vision=not a.no_vision,
         record=a.record,
+        weights=np.load(a.checkpoint)["weights"] if a.checkpoint else None,
+        policy_label="CEM learned utility" if a.checkpoint else "Handcrafted utility",
+        checkpoint_sha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest()
+        if a.checkpoint
+        else None,
+        random_spawn=a.random_spawn,
     )
     report = env.run(a.seconds)
     env.save(a.name)

@@ -96,6 +96,8 @@ def train(
         "neural": "MaleCNS CPU per worker",
         "vision": True,
         "parameters": 72,
+        "utility_architecture": "Six learned sigmoid scorers multiplied by explicit need relevance",
+        "reward": "dt * (alive + 0.8 * min(energy, hydration) - 0.12 * fatigue - 0.3 * heat) - 4 * actual health loss",
         "features": FEATURES,
         "actions": ACTIONS,
         "source_commit": source,

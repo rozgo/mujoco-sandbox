@@ -39,12 +39,26 @@ class Thinker:
     minimum_commitment: float = 0.18
     hysteresis: float = 0.045
     current: int = 0
-    elapsed: float = 0.0
+    elapsed: float = float("inf")  # The first decision has no previous commitment.
     scores: np.ndarray = field(default_factory=lambda: np.zeros(6))
 
     def tick(self, features, dt):
-        logits = np.clip(self.weights @ np.asarray(features), -30, 30)
+        features = np.asarray(features)
+        logits = np.clip(self.weights @ features, -30, 30)
         self.scores = 1 / (1 + np.exp(-logits))
+        # A need is a consideration, not an action-name reward. Learned preferences
+        # cannot make a fully hydrated fly value drinking as highly as a thirsty one.
+        relevance = np.array(
+            [
+                0.35,
+                0.05 + 0.95 * features[1],
+                0.05 + 0.95 * features[2],
+                0.03 + 0.97 * features[3],
+                0.04 + 0.96 * max(features[4], features[5], features[10]),
+                0.02 + 0.98 * max(features[4], features[5], features[10]),
+            ]
+        )
+        self.scores *= relevance
         winner = int(np.argmax(self.scores))
         self.elapsed += dt
         urgent = winner == 5 and features[5] > 0.7
