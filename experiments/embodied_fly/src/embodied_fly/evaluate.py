@@ -12,6 +12,7 @@ import torch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.brain import EmbodiedBrain, load_malecns
+from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -45,6 +46,7 @@ def evaluate(args):
     device = torch.device(args.device)
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
     environment = FlyEnvironment()
+    projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
     rng = np.random.default_rng(80001)
@@ -63,11 +65,12 @@ def evaluate(args):
         memory = actor.initial_state(1)
         qpos, qvel, activations, controls, utilities, actions = [], [], [], [], [], []
         upright, heights, speed_errors, yaw_errors, neural_activity = [], [], [], [], []
+        neural_maps = []
         trace_ids = np.linspace(0, actor.core.neurons - 1, 256).astype(int)
         start_pos = environment.data.qpos[:3].copy()
         wall_start = time.perf_counter()
         numerical_failure = None
-        for _ in range(round(args.seconds / CONTROL_DT)):
+        for step in range(round(args.seconds / CONTROL_DT)):
             observation = torch.as_tensor(environment.observation()[None], device=device)
             result = actor(observation, memory)
             memory = result.state
@@ -83,6 +86,8 @@ def evaluate(args):
             controls.append(environment.data.ctrl.copy())
             utilities.append(result.utility_scores[0].cpu().numpy())
             neural_activity.append(memory[trace_ids, 0].cpu().numpy())
+            if projection is not None and step % 10 == 0:
+                neural_maps.append(projection.project(memory)[0].astype(np.float16))
             try:
                 environment.step(action)
             except RuntimeError as error:
@@ -136,6 +141,15 @@ def evaluate(args):
             utility=utilities,
             neural_activity=neural_activity,
             neural_ids=trace_ids,
+            **(
+                {
+                    "neural_map": neural_maps,
+                    "neural_occupancy": projection.occupancy,
+                    "neural_map_stride": 10,
+                }
+                if projection is not None
+                else {}
+            ),
         )
         print(json.dumps(report), flush=True)
     manifest = {
@@ -156,6 +170,7 @@ def evaluate(args):
         "evaluation_seed": 80001,
         "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
         "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
+        "neural_view": projection.report() if projection is not None else None,
         "results": results,
         "physical_success_count": sum(r["success"] for r in results),
     }
@@ -171,4 +186,5 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=float, default=2.0)
     parser.add_argument("--cases", type=int, default=6)
     parser.add_argument("--walking-action-mask", action="store_true")
+    parser.add_argument("--neural-view", action="store_true")
     evaluate(parser.parse_args())

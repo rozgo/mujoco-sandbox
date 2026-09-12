@@ -12,6 +12,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from embodied_fly.brain import ACTIVITIES
+from embodied_fly.neural_view import colorize
 from embodied_fly.provenance import evidence, utc_now
 
 
@@ -78,6 +79,19 @@ def record(source, case, output):
             board = Image.new("RGB", (1600, 900), "#111519")
             board.paste(Image.fromarray(renderer.render()), (10, 100))
             draw = ImageDraw.Draw(board)
+            if "neural_map" in states:
+                stride = int(states["neural_map_stride"])
+                values = states["neural_map"][step // stride].astype(np.float32)
+                neural_image = Image.fromarray(colorize(values, states["neural_occupancy"]))
+                draw.rectangle((806, 110, 1096, 446), fill="#111519", outline="#33383c")
+                draw.text(
+                    (818, 120), "CNS / learned latent state", font=font(15), fill="#e6e1db"
+                )
+                board.paste(
+                    neural_image.resize((256, 256), Image.Resampling.NEAREST), (823, 149)
+                )
+                draw.text((818, 410), "teal −  /  amber +", font=font(14), fill="#a8b0b5")
+                draw.text((818, 427), "Measured cell locations", font=font(13), fill="#a8b0b5")
             draw.text((24, 22), title, font=font(25), fill="#ffc31f")
             draw.text(
                 (24, 60),
@@ -154,6 +168,7 @@ def record(source, case, output):
         "teacher": teacher,
         "walking_action_mask": passive_mask,
         "checkpoint_sha256": evaluation.get("checkpoint_sha256"),
+        "neural_view": evaluation.get("neural_view"),
         "case": case,
         "state_sha256": hashlib.sha256((source / f"{case}.npz").read_bytes()).hexdigest(),
         "model_sha256": hashlib.sha256((source / "model.mjb").read_bytes()).hexdigest(),

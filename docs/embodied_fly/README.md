@@ -135,6 +135,23 @@ Recorded demonstrations and teacher-free student rollouts can be inspected with
 `python -m embodied_fly.tracking CAPTURE NEW_REPORT.json` for anatomical velocity
 and block-mean tracking diagnostics, without changing acceptance gates or physics.
 
+Add `--neural-view` to evaluation to capture a 128 × 128 anatomical activity map
+at 50 Hz. The optional observer path bins all **140,638 spatially located cells**
+using measured MaleCNS X/Z coordinates. The other **26,062 cells remain in the
+brain computation**. Each pixel retains mean signed and mean absolute latent
+activity; fixed amber/teal colors indicate its sign, not measured excitation or
+biological spikes. Binning runs on the actor device, then only the small map moves
+to the recorder. It does not affect actions, rewards or recurrent memory.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.record \
+  outputs/embodied_fly/motor_dagger_01_evaluation walk \
+  previews/embodied_fly/student_dagger01_walk.mp4
+```
+
+Use a new output name for every recording. Neural maps appear automatically when
+the source capture contains them; older diagnostic captures remain usable.
+
 ## Source and attribution
 
 - [Accepted curriculum and research](../fly_survival/COURSE_CORRECTION.md).
