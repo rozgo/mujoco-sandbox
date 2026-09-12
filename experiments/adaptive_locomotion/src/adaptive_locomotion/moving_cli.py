@@ -43,7 +43,9 @@ def main():
     p.add_argument("--world-observations", action="store_true")
     p.add_argument("--motion-scale", type=float, default=1)
     p = commands.add_parser("view")
-    p.add_argument("--theme", choices=("classic", "graphite"), default="classic")
+    p.add_argument(
+        "--theme", choices=("classic", "graphite", "ember"), default="classic"
+    )
     p.add_argument("--checkpoint", type=Path, default=STANDING)
     p.add_argument("--motion", default="combined")
     p.add_argument("--body", default="healthy")

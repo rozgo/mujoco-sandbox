@@ -5,7 +5,6 @@ import copy
 import mujoco
 import numpy as np
 import pytest
-
 from adaptive_locomotion.bodies import (
     STAND,
     BodySpec,
@@ -13,11 +12,13 @@ from adaptive_locomotion.bodies import (
     initialize,
     joint_mapping,
 )
-from adaptive_locomotion.graphite import configure, decorate
+from adaptive_locomotion.presentation import theme_hooks
 
 
 @pytest.mark.parametrize("terrain", ["flat", "moving"])
-def test_theme_does_not_change_physics_or_sensors(terrain):
+@pytest.mark.parametrize("theme", ["graphite", "ember"])
+def test_theme_does_not_change_physics_or_sensors(terrain, theme):
+    configure, decorate = theme_hooks(theme)
     plain = build_model(terrain=terrain)
     themed = copy.copy(plain)
     configure(themed)

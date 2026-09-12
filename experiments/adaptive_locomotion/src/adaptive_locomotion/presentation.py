@@ -22,6 +22,11 @@ def theme_hooks(theme="classic"):
         from .graphite import decorate
 
         return configure_graphite, decorate
+    if theme == "ember":
+        from .ember import configure as configure_ember
+        from .ember import decorate
+
+        return configure_ember, decorate
     raise ValueError(f"Unknown presentation theme: {theme}")
 
 
@@ -65,7 +70,7 @@ def camera_azimuth(body):
     )
 
 
-def damage_markers(scene, model, data, body):
+def damage_markers(scene, model, data, body, color=(1.0, 0.24, 0.015, 1.0)):
     """Append opaque 3D annotation spheres, anchored to actual cut locations."""
     points = [
         (data.geom_xpos[model.geom(f"{leg}_stump").id], 0.028) for leg in body.absent
@@ -86,7 +91,7 @@ def damage_markers(scene, model, data, body):
             np.full(3, radius),
             pos,
             np.eye(3).ravel(),
-            np.array([1.0, 0.24, 0.015, 1.0], dtype=np.float32),
+            np.array(color, dtype=np.float32),
         )
         geom.category = mujoco.mjtCatBit.mjCAT_DECOR
         geom.emission = 0.45

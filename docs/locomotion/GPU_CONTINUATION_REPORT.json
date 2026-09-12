@@ -1,0 +1,244 @@
+{
+  "scope": "RTX 4090 adaptive-dog training: selected standing/moving continuation and separate matched walking benchmark. No full from-scratch GPU curriculum claim. Not total project compute.",
+  "source_repository_commit": "128929c4e3e9a1c985ffc463e1659d2aa49ff2a4",
+  "gpu": "NVIDIA RTX 4090",
+  "parallel_worlds": 4096,
+  "physics_hz": 500,
+  "control_hz": 50,
+  "rollout_steps": 24,
+  "transitions_per_rollout": 98304,
+  "epochs_requested": 4,
+  "minibatch_size": 3072,
+  "learning_rate": 0.0001,
+  "actor": {
+    "layers": [
+      86,
+      128,
+      128,
+      12
+    ],
+    "activation": "ELU",
+    "parameters": 29196
+  },
+  "critic": {
+    "layers": [
+      90,
+      128,
+      128,
+      1
+    ],
+    "activation": "ELU",
+    "parameters": 28289
+  },
+  "parameter_count_scope": "Individual MLPs only; excludes 12 exploration log standard deviations, normalizer buffers and unused history estimator.",
+  "gpu_extensions": {
+    "training_seconds": 655.2882899874821,
+    "recorded_setup_seconds": 92.59328132960945,
+    "transitions": 32342016,
+    "transitions_per_second": 49355.40050718414,
+    "aggregate_simulated_hours": 179.6778666666667,
+    "equivalent_world_physics_steps": 323420160,
+    "aggregate_simulated_seconds_per_wall_second": 987.1080101436828,
+    "rollouts": 329,
+    "optimizer_steps": 41819
+  },
+  "standing": {
+    "training_seconds": 536.734492932912,
+    "recorded_setup_seconds": 57.14008721662685,
+    "transitions": 26836992,
+    "transitions_per_second": 50000.498110998866,
+    "aggregate_simulated_hours": 149.09439999999998,
+    "equivalent_world_physics_steps": 268369920,
+    "aggregate_simulated_seconds_per_wall_second": 1000.0099622199773,
+    "rollouts": 273,
+    "optimizer_steps": 34775
+  },
+  "moving": {
+    "training_seconds": 118.55379705457017,
+    "recorded_setup_seconds": 35.4531941129826,
+    "transitions": 5505024,
+    "transitions_per_second": 46434.81808909118,
+    "aggregate_simulated_hours": 30.583466666666666,
+    "equivalent_world_physics_steps": 55050240,
+    "aggregate_simulated_seconds_per_wall_second": 928.6963617818236,
+    "rollouts": 56,
+    "optimizer_steps": 7044
+  },
+  "moving_final_worlds": {
+    "moving_healthy": 2048,
+    "static_rehearsal": 2048,
+    "static_groups": 27
+  },
+  "rounds": [
+    {
+      "source": "docs/locomotion/standing/healthy_60s_seed12/training.json",
+      "source_sha256": "5c828d95e323d026413199cbef8a5bcaae1c78d379f3c44e150d311c9f52c6b3",
+      "stage": "standing",
+      "training_seconds": 59.74910398805514,
+      "setup_seconds": 4.553067491855472,
+      "transitions": 3440640,
+      "iterations": 35,
+      "optimizer_steps": 4480,
+      "source_commit": "e31e27d041bc1ec039fff6b402557cc1c13e54d9",
+      "source_dirty": false,
+      "checkpoint_sha256": "a652a91fe02f3153538f4afcf10441011977b0069a6e14d98d2f4ea921a92183"
+    },
+    {
+      "source": "docs/locomotion/standing/healthy_120s_seed13/training.json",
+      "source_sha256": "e91eeb48f9b615e85ffdfa1f855fee0854c17847b43737437eb242900cb88e6d",
+      "stage": "standing",
+      "training_seconds": 59.56337444810197,
+      "setup_seconds": 4.4785679639317095,
+      "transitions": 3833856,
+      "iterations": 39,
+      "optimizer_steps": 4992,
+      "source_commit": "48df6d0c9714adb879d4d05ae8ca7df32e108707",
+      "source_dirty": false,
+      "checkpoint_sha256": "391a9f50da78ff723ffb457dde16a1ece414ce0419f2a9c580f92e3915b8f422"
+    },
+    {
+      "source": "docs/locomotion/standing/healthy_180s_seed14/training.json",
+      "source_sha256": "fa08a99fe4126d8cb1690d42191c47cd4e38e338ec6d5890aead7cf414144eef",
+      "stage": "standing",
+      "training_seconds": 59.74322017328814,
+      "setup_seconds": 4.466199074871838,
+      "transitions": 4128768,
+      "iterations": 42,
+      "optimizer_steps": 5376,
+      "source_commit": "467d97de0ce6673c55f99a6694a0d2fd99d01760",
+      "source_dirty": false,
+      "checkpoint_sha256": "43f5279a533f9b45587c1585f5eafae9bbb594f9c9358314cdf56ff259e799c2"
+    },
+    {
+      "source": "docs/locomotion/standing/mixed_all_60s_seed12/training.json",
+      "source_sha256": "76f9980b4f4ffeb8069ca9235203276f4876717ca62e14df51649b90e2ecaabc",
+      "stage": "standing",
+      "training_seconds": 59.74731330014765,
+      "setup_seconds": 15.023424259852618,
+      "transitions": 2359296,
+      "iterations": 24,
+      "optimizer_steps": 3072,
+      "source_commit": "406c43e5ceb958e8afa91aba3fc638d56c62364e",
+      "source_dirty": true,
+      "checkpoint_sha256": "de669a027282ad6292efb045ec6395375f5863cd362d96012a6ea7fa56b6d91c"
+    },
+    {
+      "source": "docs/locomotion/standing/mixed_support_60s_seed13/training.json",
+      "source_sha256": "a8758c01308dbb92bb5757c365717e154686d454d7668f3e0547d10fec3986e1",
+      "stage": "standing",
+      "training_seconds": 59.528367473278195,
+      "setup_seconds": 9.611468785908073,
+      "transitions": 2457600,
+      "iterations": 25,
+      "optimizer_steps": 3200,
+      "source_commit": "6043f4171d1eb19bb446c58d65ad99d0cf324574",
+      "source_dirty": false,
+      "checkpoint_sha256": "6507d3796d8f74e5185aa226e3690b4b7001c5fc7410f5679091193a3ddd8e3e"
+    },
+    {
+      "source": "docs/locomotion/standing/substep_120s_seed14/training.json",
+      "source_sha256": "1857794ab409fc5860edafbf3d4b52007743c78898cf9809382c48756d4fb381",
+      "stage": "standing",
+      "training_seconds": 119.20150875113904,
+      "setup_seconds": 9.445492340251803,
+      "transitions": 5308416,
+      "iterations": 54,
+      "optimizer_steps": 6842,
+      "source_commit": "de738134d3c998928150ddc0330e0e832db4f7ed",
+      "source_dirty": false,
+      "checkpoint_sha256": "83c22973a87401a42e91a18a3920ee5fed4c3cec8a37e564203a9f8a34007c33"
+    },
+    {
+      "source": "docs/locomotion/standing/consolidate_120s_seed12/training.json",
+      "source_sha256": "be824bae656e8137dffb9fb3a56c700db5d31a56b0a5d01b3020f6f35af508be",
+      "stage": "standing",
+      "training_seconds": 119.20160479890183,
+      "setup_seconds": 9.561867299955338,
+      "transitions": 5308416,
+      "iterations": 54,
+      "optimizer_steps": 6813,
+      "source_commit": "382d3963fe7dd0a280f0589499d458f89c1a0ac6",
+      "source_dirty": false,
+      "checkpoint_sha256": "0e3acf841935676547ab3c974de7fb9317119f0926a9323ea7b4305c03f8e68a"
+    },
+    {
+      "source": "docs/locomotion/moving/round1_training.json",
+      "source_sha256": "20240297f68c98c94a9e217433e5dce8b38956e220d7312ef817965338f49c07",
+      "stage": "moving",
+      "training_seconds": 59.2012601243332,
+      "setup_seconds": 13.739758538082242,
+      "transitions": 3145728,
+      "iterations": 32,
+      "optimizer_steps": 3972,
+      "source_commit": "26971baff270748c73cca1ad8b4857e50eee4a2c",
+      "source_dirty": false,
+      "checkpoint_sha256": "461e4dc97db0447cea7bcd67b3f194e51b1ffde4343089abac71e8342be6f9c3"
+    },
+    {
+      "source": "docs/locomotion/moving/round2_training.json",
+      "source_sha256": "909d520170ff8b7f3ef33216b3f6548e2adc4f0a1cbb0724382fd43033d7a232",
+      "stage": "moving",
+      "training_seconds": 59.352536930236965,
+      "setup_seconds": 21.71343557490036,
+      "transitions": 2359296,
+      "iterations": 24,
+      "optimizer_steps": 3072,
+      "source_commit": "8267fe99e78ec5d02087cae3c6768fa7636e18d3",
+      "source_dirty": false,
+      "checkpoint_sha256": "5c349861f504bdb43e29e3a4351998cc22ed50bacfde86d3772f3684bc8b7879"
+    }
+  ],
+  "matched_walking": {
+    "source": "docs/locomotion/warp_training/scaled_summary.json",
+    "transitions_per_seed": 589824,
+    "seeds": [
+      2,
+      3,
+      4
+    ],
+    "gpu_seconds_all_three_runs": 42.320922806859016,
+    "cpu_seconds_all_three_runs": 136.77193675888702,
+    "gpu_transitions_per_second_pooled": 41810.80852313596,
+    "cpu_transitions_per_second_pooled": 12937.390826887045,
+    "speedup": 3.231780587183231,
+    "gpu_trained_completions": 205,
+    "cpu_trained_completions": 200,
+    "trials_per_backend": 216,
+    "evaluation_physics": "CPU MuJoCo",
+    "timings": [
+      {
+        "seed": 2,
+        "mjbatch_seconds": 46.7396381739527,
+        "mjbatch_transitions_per_second": 12619.35314528601,
+        "warp_seconds": 15.286007754970342,
+        "warp_transitions_per_second": 38585.876015156085,
+        "speedup": 3.0576746344221246
+      },
+      {
+        "seed": 3,
+        "mjbatch_seconds": 45.26903653983027,
+        "mjbatch_transitions_per_second": 13029.303141475948,
+        "warp_seconds": 13.542002350091934,
+        "warp_transitions_per_second": 43555.154160492064,
+        "speedup": 3.342861370831393
+      },
+      {
+        "seed": 4,
+        "mjbatch_seconds": 44.76326204510406,
+        "mjbatch_transitions_per_second": 13176.519606763366,
+        "warp_seconds": 13.49291270179674,
+        "warp_transitions_per_second": 43713.61566146189,
+        "speedup": 3.3175388468305513
+      }
+    ],
+    "gpu_transitions_all_three_runs": 1769472,
+    "gpu_aggregate_simulated_hours_all_three_runs": 9.830400000000001
+  },
+  "timing_scope": "Learning-loop wall time includes rollouts, observations/rewards and optimizer work; excludes separately recorded setup, rehearsal collection outside the loop, evaluation and rendering. Time-limited final PPO rounds can have fewer than four epochs. Recorded transitions exclude discarded deadline rollouts.",
+  "formulae": {
+    "transitions_per_second": "sum(transitions) / sum(training_seconds)",
+    "aggregate_simulated_hours": "transitions * 0.02 / 3600",
+    "equivalent_world_physics_steps": "transitions * (0.02 / 0.002)",
+    "aggregate_simulated_seconds_per_wall_second": "transitions * 0.02 / training_seconds"
+  }
+}

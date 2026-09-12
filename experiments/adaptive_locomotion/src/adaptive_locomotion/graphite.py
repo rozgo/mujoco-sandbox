@@ -81,7 +81,17 @@ def geom(scene, kind, size, position, rotation, rgba, emission=0):
     scene.ngeom += 1
 
 
-def decorate(scene, model, data, body):
+def decorate(
+    scene,
+    model,
+    data,
+    body,
+    *,
+    panel_color=(0.22, 0.235, 0.25, 1),
+    seam_color=(0.25, 0.7, 0.65, 1),
+    nose_color=(0.10, 0.11, 0.12, 1),
+    marker_color=(1.0, 0.24, 0.015, 1.0),
+):
     """Blank cosmetic plates cover raised/recessed branding on both body sides."""
     base = model.body("base").id
     origin, rotation = data.xpos[base], data.xmat[base].reshape(3, 3)
@@ -113,7 +123,7 @@ def decorate(scene, model, data, body):
                 [0.112, 0.0015, np.hypot(dy, dz) / 2 + 0.00025],
                 origin + rotation @ [0, sign * (ya + yb) / 2, (za + zb) / 2],
                 rotation @ local,
-                [0.22, 0.235, 0.25, 1],
+                panel_color,
             )
         # Fine lower seam accent, part of the same cosmetic side plate.
         geom(
@@ -122,7 +132,7 @@ def decorate(scene, model, data, body):
             [0.094, 0.0018, 0.001],
             origin + rotation @ [0, sign * 0.098, 0.0045],
             rotation,
-            [0.25, 0.7, 0.65, 1],
+            seam_color,
             0.12,
         )
         # Small angled nose plate covers the manufacturer's forward wordmark.
@@ -140,9 +150,9 @@ def decorate(scene, model, data, body):
             [0.029, 0.004, 0.017],
             origin + rotation @ [0.287, sign * 0.050, 0.037],
             rotation @ local_rot,
-            [0.10, 0.11, 0.12, 1],
+            nose_color,
         )
-    damage_markers(scene, model, data, body)
+    damage_markers(scene, model, data, body, marker_color)
 
 
 def layout(

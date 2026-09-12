@@ -1,108 +1,83 @@
-# Adaptive dog: RTX 4090 training report
+# Adaptive dog: measured RTX 4090 training from scratch
 
-**One RTX 4090, 4,096 parallel worlds, approximately 49,000 world/action transitions per second including learning.** Extending the existing walker to stand on uneven terrain and balance on moving platforms took **10 min 55 s of GPU training**, collecting **32.34 million transitions**, equivalent to **179.68 hours of aggregate simulated experience**. A separate matched walking experiment measured **3.23× faster training with MuJoCo Warp than CPU physics**.
+**One RTX 4090, 4,096 parallel worlds throughout, one final policy for walking, standing and moving supports.** Replaying the successful curriculum from random weights took **22 min 05 s of training**, collecting **71.76 million new experiences**. The final checkpoint completes **36/36 walking tasks**, passes **136/144 strict static-balance checks** and **24/24 moving-support checks**. All 204 task trials stay upright.
 
-These are measured continuation runs. The starting walker was trained earlier on the Mac; its training is excluded from every GPU total below. We have not measured the complete walking curriculum from random weights on the RTX 4090. The walking row sums three independent benchmark runs from the same pretrained checkpoint; these are separate experiments and are not included in the standing/moving total.
+[Exact timing and provenance](GPU_REPORT.json) · [Recipe and reproduction](gpu_from_scratch/README.md) · [Final evaluation](gpu_from_scratch/evaluation/stage_30/summary.json) · [Earlier continuation experiments](GPU_CONTINUATION_REPORT.md)
 
-[Watch the complete normal-speed film](../../previews/locomotion/graphite/adaptive_dog_complete_v2.mp4) · [Exact statistics, formulas and source hashes](GPU_REPORT.json)
+## GPU learning time
 
-**GPU training by stage**
+Each row continues the previous row's weights. Healthy walking and damage adaptation together took **11 min 33 s**; that is the complete nine-body walking curriculum.
 
-| Stage | New GPU training | Parallel worlds | Experiences | Aggregate simulation hours | Experiences/s, including learning |
+| Training phase | Learning time | Parallel worlds | New experiences | Aggregate simulation hours | Experiences/s |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Walking fine-tuning benchmark, three runs | 42 seconds | 4,096 | 1.77 million | 9.83 | 41,811 |
-| Standing on static supports, seven sequential rounds | 8m 57s | 4,096 | 26.84 million | 149.09 | 50,000 |
-| Moving platforms, two sequential rounds | 1m 59s | 4,096 | 5.51 million | 30.58 | 46,435 |
-| **Standing + moving total** | **10m 55s** | **4,096** | **32.34 million** | **179.68** | **49,355** |
+| Healthy walking from random weights | 1m 54s | 4,096 | 9.63 million | 53.52 | 84,658 |
+| Adapt walking to missing limbs | 9m 39s | 4,096 | 29.79 million | 165.48 | 51,463 |
+| Standing on static supports | 8m 23s | 4,096 | 26.84 million | 149.09 | 53,318 |
+| Moving platforms | 2m 09s | 4,096 | 5.51 million | 30.58 | 42,643 |
+| **Complete shared policy** | **22m 05s** | **4,096** | **71.76 million** | **398.68** | **54,159** |
 
-Times include physics rollouts, host observation/reward work, transfers and neural-network optimization inside the learning loop. Setup, rehearsal-data collection outside the loop, evaluation, rendering and development time are excluded. The nine extension runs separately record **92.593 s of setup**; those fields are not a complete accounting of project overhead. Full experiment history includes unsuccessful attempts beyond these selected stages.
+Rounded rows need not add exactly; the ledger retains full precision. Learning-loop time is **1,325.012506 s**. It includes physical rollouts, CPU observation/reward work, transfers, PPO optimization, reference/rehearsal losses and ordinary in-loop checkpoint writes. The timer ends after CUDA synchronization. It excludes offline reference collection, setup, standalone evaluation, rendering and earlier abandoned attempts.
 
-The summary uses rounded totals; exact values are retained below and in the JSON ledger. The same 4,096 world slots are reused across rounds. The approximately 180 hours are summed across worlds and episodes, including resets. Each experience (a transition) is one world's **20 ms** action interval, not one rendered frame. Reusing an experience for multiple PPO epochs does not count it as new simulated experience. Recorded transitions exclude rollouts discarded at a training deadline.
+**Rehearsal was already part of the archived recipe; it was not added during this replay.** Early standing rounds retain the walking controller through a reference loss. Later standing and moving rounds also use saved walking examples, at the original weight of 15. Reusing those examples is actual training work, so its cost stays in the learning timer. It does not create extra worlds or inflate the new-experience count. The examples and reference policies were rebuilt from this run's own GPU-trained checkpoints.
 
-**Scale and training mechanics**
+The 30 processes span **26m 37s** from first launch to final completion. Their recorded setup totals **187.827 s**; remaining process overhead includes interpreter imports, hardware queries, final saves and teardown. Kernel caches were already available. The final combined evaluation takes **50.103 s on the Mac**, outside the GPU learning timer. Earlier walking-retention checks also run separately. These are elapsed measurements on a shared desktop, not isolated kernel timings.
 
-| Statistic | Measured setting or derived value |
+## Scale and mechanics
+
+| Statistic | Setting or measured value |
 | --- | --- |
-| Physics | MuJoCo Warp on CUDA; **500 Hz**, 2 ms timestep |
-| Policy frequency | **50 Hz**, 20 ms per action; **10 physics steps per action** |
-| Physics work represented by extension data | **323,420,160 world-physics steps**, derived from recorded transitions |
-| Aggregate experience rate | **987 simulated seconds per wall-clock second**, summed across worlds |
-| PPO rollout | **24 steps × 4,096 worlds = 98,304 experiences**; 0.48 s per world |
-| PPO updates | **Four epochs**, minibatches of **3,072**; **128 optimizer steps** per complete rollout |
-| Extension totals | **329 recorded rollouts**, **41,819 actual optimizer steps** |
-| Optimizer | Adam, learning rate **0.0001**; PPO clipping **0.2** |
-| Return estimation | Discount **0.99**, GAE lambda **0.95** |
-| CPU work | NumPy observation/reward assembly; host coordination and transfers |
-| GPU work | Batched rigid-body/contact physics, policy inference, actor/critic optimization; selected standing/moving runs also accumulate contact summaries within GPU physics steps |
+| New simulated experience | **398.68 aggregate hours**, or **16.61 days**, summed across worlds and resets |
+| Training throughput | **54,159 new world/action transitions per second**, including learning |
+| Aggregate experience rate | **1,083 simulated seconds per wall-clock second** across all worlds |
+| Physics | **MuJoCo Warp / CUDA, 500 Hz**, 2 ms timestep |
+| Control | **50 Hz**, one action every 20 ms, ten physics steps per action |
+| Physics work represented by collected data | **717,619,200 world-physics steps** |
+| PPO rollout | **24 steps × 4,096 worlds = 98,304 experiences** |
+| Updates | Four epochs, minibatches of **3,072**; **128 optimizer steps per complete rollout** |
+| Complete curriculum | **30 stages, 730 rollouts, 93,440 optimizer steps** |
+| PPO settings | Clip 0.2, discount 0.99, GAE lambda 0.95; Adam with the archived per-stage learning rates |
+| GPU work | Batched contact/rigid-body physics, actor inference and neural-network optimization |
+| CPU work | NumPy observations/rewards, host coordination and reference-data collection |
 
-Time budgets can stop a final PPO update before all four epochs finish, which explains why the actual optimizer-step total is below 329 × 128. The 987× figure is aggregate experience production, not each world running 987× faster than real time. Camera rendering is outside training.
+The measured stack is **MuJoCo 3.13.0, MuJoCo Warp 3.13.0, NVIDIA Warp 1.17.0, PyTorch 2.14.0+cu130 and Python 3.14.7**, with the locked uv 0.12.12 workflow.
 
-The environment computes each world's weighted reward every **20 ms**, using measured task progress, posture, motion, support and other configured terms. The critic learns expected discounted future reward; it does not award the reward. PPO uses returns and critic-based advantages to update the shared actor. Moving-world rewards measure holding and slip relative to the physical support, including its rotation. [Training implementation](../../experiments/adaptive_locomotion/src/adaptive_locomotion/train.py)
+The actor is **86 → 128 ELU → 128 ELU → 12**, with **29,196 parameters**. The separate critic is **90 → 128 ELU → 128 ELU → 1**, with **28,289 parameters**. Twelve learned exploration scales and normalization buffers are separate. The history estimator is unused. The same feed-forward actor handles every command; there is no runtime checkpoint selection. Support observations are enabled during the standing curriculum while preserving the existing walking mapping. The critic estimates future return; the environment computes the weighted reward every 20 ms. [Implementation](../../experiments/adaptive_locomotion/src/adaptive_locomotion/train.py)
 
-**Small networks, shared weights**
+The final stage contains **2,048 moving-platform worlds plus 2,048 static rehearsal worlds**, all improving the same actor. The static half covers 27 body/surface groups. Training also reuses **36,000 walking examples** and **54,000 standing examples** from this lineage. None of these reference actors or datasets is required at deployment.
 
-| Network | Architecture | Parameters | Role |
-| --- | --- | ---: | --- |
-| Actor | **86 → 128 ELU → 128 ELU → 12** | **29,196** | Produces joint-position offsets; finite-torque servos move the robot |
-| Critic | **90 → 128 ELU → 128 ELU → 1** | **28,289** | Estimates future return during training |
+The nine bodies are the healthy dog, any one complete lower leg removed, and any one entire leg removed. Masses are **15.206 / 14.965 / 13.135 kg**, with **12 / 11 / 9 active actuators** respectively. Hip/thigh torque caps are **23.7 N·m**, calf caps **45.43 N·m**. Removed joints occupy masked slots in the common twelve-action output. Mass/strength randomization is not part of this recipe. [Physical specification](standing/PHYSICAL_SPEC.json)
 
-These counts describe the two MLPs. Twelve learned exploration standard-deviation parameters and normalization buffers are separate; the package's history estimator is unused in these support-mode runs. The deployed actor is feed-forward, with no recurrence or explicit gait-phase clock. The critic's four extra channels are simulator velocity and height. RGB cameras are for observation, not policy input. [Network source](../../experiments/adaptive_locomotion/src/adaptive_locomotion/policy.py)
+## One final checkpoint, all commands
 
-The final moving round combines **2,048 healthy dogs on moving platforms** and **2,048 static rehearsal worlds**. The static half spans **27 body/surface groups**: nine body configurations on flat ground plus 18 healthy nonflat supports. All worlds contribute to the same actor. Training also uses **36,000 saved walking examples** and, in the corrective moving round, **54,000 standing examples** to preserve earlier behavior. Teachers and rehearsal datasets are not used at deployment.
+Every final result below uses `assets/locomotion/checkpoints/gpu_from_scratch/unified.pt`, SHA-256 `076099ef8fc47bad53cb0cbeb9cc311e64ea47accacfa8ca4080488934b10241`. The healthy, walking and standing milestone files are retained for provenance; deployment uses the final file for all behaviors.
 
-The nine body configurations are the intact dog, any one entire lower leg removed, and any one entire leg removed. Removal changes mass, geometry and active actuators. The healthy body is **15.206 kg / 12 actuators**; lower-leg removal **14.965 kg / 11 actuators**; whole-leg removal **13.135 kg / 9 actuators**. Hip/thigh torque caps are **23.7 N·m**, calf caps **45.43 N·m**. Missing joints occupy masked slots in the common twelve-action output. Mass and motor-strength randomization are disabled in these runs. [Physical specification](standing/PHYSICAL_SPEC.json)
+| Final check | Strict/task passes | Upright trials |
+| --- | ---: | ---: |
+| Walking across all nine bodies | **36/36** | **36/36** |
+| Healthy static surfaces and walk–hold–walk | **76/80** | **80/80** |
+| Damaged flat holds and walk–hold–walk | **60/64** | **64/64** |
+| Healthy moving supports, including stationary controls | **24/24** | **24/24** |
 
-**Walking: measured GPU acceleration**
+Four predetermined trials per condition use holdout seed 9507. Validation uses **CPU MuJoCo/mjbatch**: 0.5 ms walking physics, 2 ms standing/moving physics, 20 ms control. This verifies native CPU execution of the GPU-trained actor; it is not a new GPU evaluation matrix. All original healthy gait gates pass: mean stride **32.22 cm**, speed **0.558 m/s**, duty gap **11.80 percentage points** and body-height variation **4.59 mm**. Walking also passed 36/36 tasks and the healthy gait gates after both the walking and standing phases, using development seed 9501.
 
-Both sides use CUDA policy inference and learning on the same Ryzen 5950X / RTX 4090 desktop. The comparison changes CPU MuJoCo/mjbatch physics to MuJoCo Warp, while matching starting weights, network, rewards, experience and optimizer updates. We repeat the comparison three times with different random sampling. Each run uses **six PPO rollouts, 589,824 transitions and 768 optimizer steps**. Across the three GPU runs, that totals **42.321 seconds and 1,769,472 experiences**.
+The eight static failures remain failures: all four 24° fore/aft-slope trials have unintended link support; one front-right lower-leg walk–hold–walk trial also has unintended support; three rear-left lower-leg transition trials exceed the 15 cm drift threshold, reaching **16.4–16.8 cm**. None falls. Strict checks also cover speed, tilt, torque, sampled penetration and required foot support. No thresholds or reward weights changed after these results.
 
-| Run | CPU physics + CUDA learning | Warp physics + CUDA learning | Speedup | Warp-trained task completions |
-| --- | ---: | ---: | ---: | ---: |
-| 1 | 46.740 s | 15.286 s | 3.06× | 70/72 |
-| 2 | 45.269 s | 13.542 s | 3.34× | 71/72 |
-| 3 | 44.763 s | 13.493 s | 3.32× | 64/72 |
-| **Combined** | **136.772 s** | **42.321 s** | **3.23×** | **205/216** |
+These are reset variations on the existing presets, not unseen-terrain or real-hardware validation. Moving training covers healthy bodies; damaged moving transfer is not included in this final audit. Cameras are observer output, not policy inputs. Detailed damaged-foot gait quality beyond the declared retention checks was not re-audited, following the request to avoid unnecessary tests.
 
-The CPU-trained controls complete **200/216** tasks. Both sets are evaluated on CPU physics; all 432 trials stay upright with allowed support, and the declared gait-retention comparison passes. These are three short continuation experiments, not a dog learning to walk from scratch in fifteen seconds.
+## Provenance and earlier experiments
 
-Including cached-kernel setup, average short-process time is **48.17 s CPU vs 18.85 s Warp**, a **2.56×** speedup. First-time kernel compilation is excluded. Peak sampled total device memory is **6,808 MiB for Warp** versus **4,468 MiB for CPU physics with CUDA learning**, including other GPU workloads. These are whole-device measurements, not isolated process memory or a guaranteed memory requirement.
+The training checkout stayed at **`a84b3f5`** throughout. The recipe hash is **`94f8f1a2cdf1b2488ce066d833cd93941cb00d0e01afbdec69901d580bcff19e`**. Verification checks all 30 stage records, source identity, 4,096-world settings, exact rollout/update counts, parent continuity and that every trained reference belongs to an earlier stage in this same lineage. The initial checkpoint has no parent, no prior training and zero transitions.
 
-The earlier **512-world** comparison achieved **1.71×** speedup but failed gait/completion acceptance. A longer matched **3,932,160-transition** continuation took **90.406 s on Warp vs 301.874 s on CPU**, a **3.34×** speedup, but both policies regressed and were not promoted. Under equal approximately 90-second budgets, Warp collected **3.64× more experience**; more updates alone did not improve the gait. [Complete benchmark and retained failures](WARP_TRAINING.md)
+The historical walking curriculum used 512 worlds. Its sample counts were rounded up to complete 4,096 × 24 GPU rollouts: **39,419,904 versus 38,400,000 transitions**, a 2.66% difference. Historical time-limited final minibatches are replaced by complete four-epoch updates. Rewards, stage order, reference roles, seeds and learning rates were preserved. This is a measured curriculum replay, **not an exact-sample CPU/GPU speedup experiment**.
 
-**What the GPU-trained policies achieved**
+The separate matched walking benchmark still measures **3.23× faster training with Warp physics**. It starts from pretrained weights and must not be presented as learning walking in 42 seconds. The earlier Mac-initialized standing/moving totals and their original results are archived in the [continuation report](GPU_CONTINUATION_REPORT.md) and [benchmark](WARP_TRAINING.md).
 
-| Check | Result | Evaluation physics |
-| --- | --- | --- |
-| Standing: healthy terrain and walk–hold–walk | **48/80 strict passes; 80/80 upright** | Warp |
-| Standing: damaged bodies on flat ground | **48/64 strict passes; 64/64 upright** | Warp |
-| Standing total | **96/144 strict passes; 144/144 upright** | Warp |
-| Moving-platform holdout | **22/24 strict passes**, up from **16/24** before training; **24/24 upright** | Warp; same counts on CPU |
-| Walking retained after standing and again after moving training | **36/36 tasks** and all original gait-quality retention checks at each stage | CPU, 0.5 ms physics / 20 ms control |
-| Damaged moving-platform transfer, not trained | **0/8 strict passes; 6/8 upright** | Warp; same counts on CPU |
+Two abandoned starts are kept outside this lineage: an improvised three-round healthy recipe used **328.928 s** of learning; the mistaken 512-world replay used **157.969 s in four completed stages**, plus an interrupted stage whose partial learning time was not fully recorded. They are additional experiment cost, not part of the selected policy's training time. [Retained records](gpu_from_scratch/RESULTS.json)
 
-Strict standing checks include drift, speed, tilt, allowed support, torque caps and sampled penetration; upright survival alone is not a pass. Static terrain evaluation uses new reset perturbations on the same **19 presets** seen in training. Slopes reach **24°**, step risers **28 cm**, and pad height differences **24 cm**; the hardest conditions retain failures. Moving training covers the healthy dog and five motion families: translation, yaw, heave, rocking and combined motion. Its 24 holdout checks include four stationary-deck controls. The two remaining trained failures involve unintended link support.
+The existing accepted graphite film and release checkpoints remain unchanged. That film shows the earlier three historical checkpoints, not this new final actor. This replay is saved on its experiment branch for review; it does not silently replace an accepted release.
 
-The platform is physically actuated and provides ideal current pose/twist sensing. The experiment does not establish unseen-terrain generalization, arbitrary damage recovery, damaged moving-platform reliability or hardware deployment. Reset-only inverse kinematics supplies feasible initial standing poses. [Standing results](standing/README.md) · [Moving results](moving/README.md)
-
-**Per-round GPU training ledger**
-
-| Round | Seconds | Transitions | PPO rollouts | Actual optimizer steps |
-| --- | ---: | ---: | ---: | ---: |
-| [Healthy standing 1](standing/healthy_60s_seed12/training.json) | 59.749 | 3,440,640 | 35 | 4,480 |
-| [Healthy standing 2](standing/healthy_120s_seed13/training.json) | 59.563 | 3,833,856 | 39 | 4,992 |
-| [Healthy standing 3](standing/healthy_180s_seed14/training.json) | 59.743 | 4,128,768 | 42 | 5,376 |
-| [Mixed bodies](standing/mixed_all_60s_seed12/training.json) | 59.747 | 2,359,296 | 24 | 3,072 |
-| [Support refinement](standing/mixed_support_60s_seed13/training.json) | 59.528 | 2,457,600 | 25 | 3,200 |
-| [Substep support](standing/substep_120s_seed14/training.json) | 119.202 | 5,308,416 | 54 | 6,842 |
-| [Standing consolidation](standing/consolidate_120s_seed12/training.json) | 119.202 | 5,308,416 | 54 | 6,813 |
-| [Moving round 1](moving/round1_training.json) | 59.201 | 3,145,728 | 32 | 3,972 |
-| [Moving round 2](moving/round2_training.json) | 59.353 | 2,359,296 | 24 | 3,072 |
-| **Total** | **655.288** | **32,342,016** | **329** | **41,819** |
-
-Totals use unrounded measurements. Historical files are preserved: the mixed-bodies run records `source_dirty=true`, and older `body_environment_counts` omit repeated healthy terrain entries. This report verifies **4,096 worlds from each authoritative `standing_cases` list**. The complete raw records retain failed intermediate evaluations.
-
-The recorded GPU stack is **MuJoCo 3.13.0, MuJoCo Warp 3.13.0, NVIDIA Warp 1.17.0, PyTorch 2.14.0+cu130, Python 3.14.7 and uv 0.12.12**. CPU observations/rewards mean this is a hybrid training pipeline even though physics and neural learning run on the GPU.
-
-The final combined film uses **three successive checkpoints**, one shared actor within each stage; it does not show the latest weights in every chapter. It contains **39 recorded trials**, **1920×1080 at 25 fps**, **2 min 04 s** total: **118 s at 1×** plus a six-second results card. Following, overhead and head cameras are synchronized. The graphite styling and covered branding are native observer-only presentation changes. [Film provenance](graphite/COMPLETE_VIDEO.md)
-
-For ancestry context only, the starting walker carries **32m 03s of earlier Mac training**; adding the GPU extensions gives the latest checkpoint **42m 58s total across both machines**. Neither is a GPU-only training duration. No new simulation, training or video generation was performed to compile this report.
+The separate [complete Ember film](ember/COMPLETE_VIDEO.md) now shows this final
+actor across all 51 evaluated conditions, with one predetermined demonstration
+trial per condition. All 51 stay upright; two strict misses remain labeled.
+Those demonstration trials are separate from the 204-trial audit above.
+[Concise summary and shareable cards](GPU_SUMMARY.md).
