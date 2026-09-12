@@ -1,0 +1,576 @@
+{
+  "seed": 13,
+  "mode": "support",
+  "standing_profile": "mixed",
+  "moving_profile": null,
+  "motion_scale": null,
+  "idle_support_weight": 8.0,
+  "idle_drift_weight": 3.0,
+  "idle_episode_steps": 250,
+  "substep_support": false,
+  "standing_replay_weight": 0.0,
+  "standing_replay_rows": 0,
+  "standing_replay_collection_seconds": 0.0,
+  "standing_reference_sha256": null,
+  "walking_replay_weight": 15.0,
+  "walking_replay_rows": 36000,
+  "walking_replay_collection_seconds": 0.0,
+  "standing_surfaces": "all",
+  "standing_cases": [
+    {
+      "body": "healthy",
+      "surface": "flat",
+      "worlds": 228
+    },
+    {
+      "body": "lower_fl",
+      "surface": "flat",
+      "worlds": 228
+    },
+    {
+      "body": "lower_fr",
+      "surface": "flat",
+      "worlds": 228
+    },
+    {
+      "body": "lower_rl",
+      "surface": "flat",
+      "worlds": 228
+    },
+    {
+      "body": "lower_rr",
+      "surface": "flat",
+      "worlds": 228
+    },
+    {
+      "body": "whole_fl",
+      "surface": "flat",
+      "worlds": 227
+    },
+    {
+      "body": "whole_fr",
+      "surface": "flat",
+      "worlds": 227
+    },
+    {
+      "body": "whole_rl",
+      "surface": "flat",
+      "worlds": 227
+    },
+    {
+      "body": "whole_rr",
+      "surface": "flat",
+      "worlds": 227
+    },
+    {
+      "body": "healthy",
+      "surface": "pads",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fl",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_fr",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rl",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "gap_rr",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_high",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "pads_extreme",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_12",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_12",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_18",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_18",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_x_24",
+      "worlds": 114
+    },
+    {
+      "body": "healthy",
+      "surface": "slope_y_24",
+      "worlds": 113
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_12",
+      "worlds": 113
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_20",
+      "worlds": 113
+    },
+    {
+      "body": "healthy",
+      "surface": "steps_28",
+      "worlds": 113
+    }
+  ],
+  "hidden": 128,
+  "num_envs": 4096,
+  "minibatch_size": 3072,
+  "max_iterations": 25,
+  "warp_execution": "concurrent",
+  "bodies": "all",
+  "terrain": "flat",
+  "reward_profile": "walk",
+  "support_weight": 2.0,
+  "stride_weight": 1,
+  "balance_weight": 5,
+  "body_motion_weight": 1,
+  "damage_action_rate_weight": 0.0,
+  "damage_angular_rate_weight": 0.0,
+  "damage_joint_accel_weight": 0.0,
+  "damage_flight_weight": 3,
+  "damage_clearance_weight": 0.0,
+  "clearance_scope": "all",
+  "visible_step_weight": 2,
+  "rear_overlap_weight": 3,
+  "visible_step_targets": {
+    "peak_m": 0.06,
+    "air_s": 0.12,
+    "advance_m": 0.18
+  },
+  "damage_clearance_target_m": null,
+  "front_reference_scale": 1.0,
+  "symmetry_weight": 0.0,
+  "retention_curriculum": false,
+  "pair_level": null,
+  "limb_stage": null,
+  "neutralize_validity": null,
+  "initial_std": 0.15,
+  "front_reference_checkpoint": null,
+  "front_reference_sha256": null,
+  "single_reference_checkpoint": null,
+  "single_reference_sha256": null,
+  "single_reference_weight": 0.0,
+  "reference_checkpoint": "outputs/locomotion/gpu_from_scratch/replay_4096/stage_21/policy.pt",
+  "reference_sha256": "981a16a244ba326ee20181a8eb7799527f596f7d2ac820c34c1b765dc497b4e4",
+  "reference_reward_weight": 0.0,
+  "reference_loss_weight": 3,
+  "damage_healthy_reward_weight": 0.0,
+  "damage_healthy_loss_weight": 0.0,
+  "healthy_style_source": "policy",
+  "healthy_motion_sha256": null,
+  "healthy_motion_path": null,
+  "healthy_motion_history_seconds": 0.0,
+  "healthy_style_teacher_encoding": null,
+  "learning_rate": 0.0001,
+  "normalization_frozen": true,
+  "body_environment_counts": {
+    "healthy": 2276,
+    "lower_fl": 228,
+    "lower_fr": 228,
+    "lower_rl": 228,
+    "lower_rr": 228,
+    "whole_fl": 227,
+    "whole_fr": 227,
+    "whole_rl": 227,
+    "whole_rr": 227
+  },
+  "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
+  "randomized_motor_strength": false,
+  "epochs": 4,
+  "horizon": 24,
+  "budget_seconds": 300,
+  "total_allowance_seconds": 1230.905381896533,
+  "extension_reason": "Replay the accepted historical curriculum at its recorded PPO round count; no reward retuning or imported trained weights.",
+  "ancestry_seconds": 929.9053818965331,
+  "device": "cuda",
+  "actor_device": "cuda",
+  "source_commit": "a84b3f539842da39ac51b32e69beb49618d34795",
+  "source_dirty": false,
+  "python": "3.14.7",
+  "torch": "2.14.0+cu130",
+  "physics": "CUDA MuJoCo Warp",
+  "mujoco": "3.13.0",
+  "contact_profile": "firm",
+  "threads": 16,
+  "physics_timestep_s": 0.002,
+  "physics_backend": "warp",
+  "physics_device": "cuda:0",
+  "environment_array_backend": "numpy_cpu",
+  "control_timestep_s": 0.02,
+  "setup_seconds": 9.930105865001678,
+  "training_seconds": 51.97340786131099,
+  "cumulative_training_seconds": 981.8787897578441,
+  "transitions": 2457600,
+  "iterations": 25,
+  "optimizer_steps": 3200,
+  "stop_reason": "iteration_limit",
+  "progress": [
+    {
+      "iteration": 1,
+      "optimizer_steps": 128,
+      "elapsed_s": 2.580531428102404,
+      "transitions": 98304,
+      "track": 0.8305052504729167,
+      "speed_mps": 0.06788937086991716,
+      "reward": 2.006752366820971,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.9403475681319833,
+      "update_s": 0.6202503638342023
+    },
+    {
+      "iteration": 2,
+      "optimizer_steps": 256,
+      "elapsed_s": 4.570742981042713,
+      "transitions": 196608,
+      "track": 0.9543350560652274,
+      "speed_mps": 0.18008034031106143,
+      "reward": 2.416056444247564,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 3.0517578125e-05,
+      "rollout_s": 1.5936177498660982,
+      "update_s": 0.37912198109552264
+    },
+    {
+      "iteration": 3,
+      "optimizer_steps": 384,
+      "elapsed_s": 6.692703139036894,
+      "transitions": 294912,
+      "track": 0.9701034810301592,
+      "speed_mps": 0.20177248735290307,
+      "reward": 2.529841442902883,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 0.00016276041666666666,
+      "rollout_s": 1.7191354241222143,
+      "update_s": 0.38566655991598964
+    },
+    {
+      "iteration": 4,
+      "optimizer_steps": 512,
+      "elapsed_s": 8.818425761070102,
+      "transitions": 393216,
+      "track": 0.9646404696555725,
+      "speed_mps": 0.19673330715666262,
+      "reward": 2.4948865175247192,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 0.00019327799479166666,
+      "rollout_s": 1.723407393321395,
+      "update_s": 0.38544456427916884
+    },
+    {
+      "iteration": 5,
+      "optimizer_steps": 640,
+      "elapsed_s": 10.85241219913587,
+      "transitions": 491520,
+      "track": 0.9657807005070765,
+      "speed_mps": 0.175469623730654,
+      "reward": 2.4931502044200897,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 7.120768229166667e-05,
+      "rollout_s": 1.6356326341629028,
+      "update_s": 0.38602383015677333
+    },
+    {
+      "iteration": 6,
+      "optimizer_steps": 768,
+      "elapsed_s": 12.893084672279656,
+      "transitions": 589824,
+      "track": 0.9692516583719901,
+      "speed_mps": 0.15088191379701504,
+      "reward": 2.49995826681455,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 4.0690104166666664e-05,
+      "rollout_s": 1.6428529107943177,
+      "update_s": 0.3860852653160691
+    },
+    {
+      "iteration": 7,
+      "optimizer_steps": 896,
+      "elapsed_s": 14.93090263614431,
+      "transitions": 688128,
+      "track": 0.9748355674082704,
+      "speed_mps": 0.12757375837096052,
+      "reward": 2.5100115736325583,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 4.0690104166666664e-05,
+      "rollout_s": 1.621773798018694,
+      "update_s": 0.3970882720313966
+    },
+    {
+      "iteration": 8,
+      "optimizer_steps": 1024,
+      "elapsed_s": 17.055978743359447,
+      "transitions": 786432,
+      "track": 0.9804149651470079,
+      "speed_mps": 0.11868609824032428,
+      "reward": 2.560382862885793,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 0.00017293294270833334,
+      "rollout_s": 1.7256642798893154,
+      "update_s": 0.3873100420460105
+    },
+    {
+      "iteration": 9,
+      "optimizer_steps": 1152,
+      "elapsed_s": 19.16407797811553,
+      "transitions": 884736,
+      "track": 0.9802466081595983,
+      "speed_mps": 0.11979704306791805,
+      "reward": 2.6131751934687295,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 0.00017293294270833334,
+      "rollout_s": 1.7107736966572702,
+      "update_s": 0.3848108877427876
+    },
+    {
+      "iteration": 10,
+      "optimizer_steps": 1280,
+      "elapsed_s": 21.28296724241227,
+      "transitions": 983040,
+      "track": 0.9788923490103626,
+      "speed_mps": 0.12533676221175846,
+      "reward": 2.6235529283682504,
+      "fall_fraction": 1.0,
+      "falls_per_control_transition": 0.000152587890625,
+      "rollout_s": 1.7008676589466631,
+      "update_s": 0.4044068627990782
+    },
+    {
+      "iteration": 11,
+      "optimizer_steps": 1408,
+      "elapsed_s": 24.284639434423298,
+      "transitions": 1081344,
+      "track": 0.9454751512808484,
+      "speed_mps": 0.12689470042304873,
+      "reward": 2.4328046639760337,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.6075030020438135,
+      "update_s": 0.4068245650269091
+    },
+    {
+      "iteration": 12,
+      "optimizer_steps": 1536,
+      "elapsed_s": 26.202949851285666,
+      "transitions": 1179648,
+      "track": 0.9528656615648159,
+      "speed_mps": 0.16714561763812671,
+      "reward": 2.44496488571167,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5212394851259887,
+      "update_s": 0.3826000550761819
+    },
+    {
+      "iteration": 13,
+      "optimizer_steps": 1664,
+      "elapsed_s": 28.07756927702576,
+      "transitions": 1277952,
+      "track": 0.963578521272548,
+      "speed_mps": 0.20094105225474812,
+      "reward": 2.5357189575831094,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.474498325958848,
+      "update_s": 0.3868666929192841
+    },
+    {
+      "iteration": 14,
+      "optimizer_steps": 1792,
+      "elapsed_s": 29.987636083271354,
+      "transitions": 1376256,
+      "track": 0.9643021323287121,
+      "speed_mps": 0.21728931083839553,
+      "reward": 2.561986525853475,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5118123148567975,
+      "update_s": 0.38377779303118587
+    },
+    {
+      "iteration": 15,
+      "optimizer_steps": 1920,
+      "elapsed_s": 31.89397974126041,
+      "transitions": 1474560,
+      "track": 0.9654111114889458,
+      "speed_mps": 0.23056842089913107,
+      "reward": 2.576206545035044,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5041135847568512,
+      "update_s": 0.38601774303242564
+    },
+    {
+      "iteration": 16,
+      "optimizer_steps": 2048,
+      "elapsed_s": 33.84733938612044,
+      "transitions": 1572864,
+      "track": 0.9693711779722994,
+      "speed_mps": 0.23558629312598175,
+      "reward": 2.591851125160853,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5557826939038932,
+      "update_s": 0.38626296166330576
+    },
+    {
+      "iteration": 17,
+      "optimizer_steps": 2176,
+      "elapsed_s": 35.802120668347925,
+      "transitions": 1671168,
+      "track": 0.9706140197385896,
+      "speed_mps": 0.2346855032710458,
+      "reward": 2.5908940732479095,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5533210998401046,
+      "update_s": 0.3893270269036293
+    },
+    {
+      "iteration": 18,
+      "optimizer_steps": 2304,
+      "elapsed_s": 37.75270812027156,
+      "transitions": 1769472,
+      "track": 0.9729990374221437,
+      "speed_mps": 0.23311768642062555,
+      "reward": 2.5882591704527536,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.5634914268739522,
+      "update_s": 0.36843169620260596
+    },
+    {
+      "iteration": 19,
+      "optimizer_steps": 2432,
+      "elapsed_s": 39.88047622330487,
+      "transitions": 1867776,
+      "track": 0.9730899864141476,
+      "speed_mps": 0.23378699738233333,
+      "reward": 2.585483362277349,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.7487070709466934,
+      "update_s": 0.3668512748554349
+    },
+    {
+      "iteration": 20,
+      "optimizer_steps": 2560,
+      "elapsed_s": 41.974108417052776,
+      "transitions": 1966080,
+      "track": 0.972769474091133,
+      "speed_mps": 0.23386419155053603,
+      "reward": 2.5680342813332877,
+      "fall_fraction": 0.06666666666666667,
+      "falls_per_control_transition": 1.0172526041666666e-05,
+      "rollout_s": 1.704699135851115,
+      "update_s": 0.3764172759838402
+    },
+    {
+      "iteration": 21,
+      "optimizer_steps": 2688,
+      "elapsed_s": 44.00539057329297,
+      "transitions": 2064384,
+      "track": 0.9383697742601317,
+      "speed_mps": 0.19977641551814876,
+      "reward": 2.4531397372484207,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.6446314048953354,
+      "update_s": 0.3698037792928517
+    },
+    {
+      "iteration": 22,
+      "optimizer_steps": 2816,
+      "elapsed_s": 45.91050153132528,
+      "transitions": 2162688,
+      "track": 0.8825050418623975,
+      "speed_mps": 0.11732001225899791,
+      "reward": 2.1705935498078666,
+      "fall_fraction": 0.0,
+      "falls_per_control_transition": 0.0,
+      "rollout_s": 1.495846445672214,
+      "update_s": 0.3933777413330972
+    },
+    {
+      "iteration": 23,
+      "optimizer_steps": 2944,
+      "elapsed_s": 47.845968606416136,
+      "transitions": 2260992,
+      "track": 0.9631199018404474,
+      "speed_mps": 0.19691368545576562,
+      "reward": 2.5503874818483987,
+      "fall_fraction": 0.16666666666666666,
+      "falls_per_control_transition": 1.0172526041666666e-05,
+      "rollout_s": 1.5460645849816501,
+      "update_s": 0.3720786040648818
+    },
+    {
+      "iteration": 24,
+      "optimizer_steps": 3072,
+      "elapsed_s": 49.895975968334824,
+      "transitions": 2359296,
+      "track": 0.9721023102006764,
+      "speed_mps": 0.21160361717528256,
+      "reward": 2.636882176001867,
+      "fall_fraction": 0.1875,
+      "falls_per_control_transition": 3.0517578125e-05,
+      "rollout_s": 1.6571768657304347,
+      "update_s": 0.379697697237134
+    },
+    {
+      "iteration": 25,
+      "optimizer_steps": 3200,
+      "elapsed_s": 51.970350651070476,
+      "transitions": 2457600,
+      "track": 0.9673328644857492,
+      "speed_mps": 0.20516382482281834,
+      "reward": 2.654240866502126,
+      "fall_fraction": 0.375,
+      "falls_per_control_transition": 9.1552734375e-05,
+      "rollout_s": 1.692680492065847,
+      "update_s": 0.36952428705990314
+    }
+  ],
+  "checkpoint_sha256": "309daa074537c086378745b0664e0fdc6199fbf9e4e093ac6703d73c6d92f197"
+}
