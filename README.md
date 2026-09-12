@@ -119,3 +119,20 @@ missing-support cases. The 67-second video includes eight terrain trials accepte
 after visual review: all 25 recorded trials stay upright, and 10 pass every
 original strict gate. Natural corrections and measured limitations remain visible.
 This extension preserves the accepted walking checkpoint above.
+
+### Balancing on a moving platform — experimental
+
+The same network now balances on a translating, rotating, heaving and rocking
+deck. **Two minutes of additional MuJoCo Warp/PPO training** improve held-out
+platform checks from **16/24 to 22/24** on both CPU and Warp. All 36 original
+walking tasks and their gait-quality gates remain intact.
+
+[![Shared policy on a physically actuated platform](previews/locomotion/moving/moving_supports_v1.png)](previews/locomotion/moving/moving_supports_v1.mp4)
+
+**[Watch the moving-platform comparison](previews/locomotion/moving/moving_supports_v1.mp4)** · [Run guide, measurements and limitations](docs/locomotion/moving/README.md)
+
+The 64-second film compares frozen weights, corrected support-relative inputs,
+and newly trained weights, with synchronized third-person, overhead and head
+views. This uses ideal current platform-state sensing. Moving training covers
+the healthy dog; damaged-platform transfer remains unreliable. The accepted
+static release is preserved by `adaptive-standing-v1`.

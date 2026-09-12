@@ -54,9 +54,21 @@ Two rounds used **118.554 seconds of new GPU learning** and **5,505,024 transiti
 
 Development retention: all **144/144 static standing/transition trials stay upright**; strict passes **100/144** versus **98/144** for the accepted parent on the same seed. All original **36/36 walking tasks and every gait-quality gate pass**, including individual foot lift, visible steps, stride/stance, speed and body motion. The original failed static conditions remain failures.
 
-Both CPU and Warp held-out moving tests improve from **16/24 strict passes** with the frozen parent to **22/24** after training; both remain **24/24 upright**. Merely changing input coordinates stays at **16/24**. The two trained strict failures on each backend are brief unintended support in combined motion; torque caps hold and sampled penetration stays below 8 mm.
+Both CPU and Warp held-out moving tests improve from **16/24 strict passes** with the frozen parent to **22/24** after training; both remain **24/24 upright**. Merely changing input coordinates stays at **16/24**. The 24 checks include four stationary-deck controls. The two trained strict failures on each backend are brief unintended support in combined motion; torque caps hold and sampled penetration stays below 8 mm.
 
 **Damaged moving transfer is not reliable.** The untrained whole-FR and whole-RR removal probes on combined motion pass **0/8** strict checks; only **6/8** survive the complete hold on each backend. These cases are not part of moving training. Do not infer arbitrary damaged-platform robustness from retained damaged walking and standing.
+
+## Video
+
+[Watch the 64-second comparison](../../../previews/locomotion/moving/moving_supports_v1.mp4). Five ten-second motion chapters compare all three methods. A labeled ten-second replay shows the trained combined-motion trajectory through following, overhead and head cameras; a four-second results card closes the film. Playback is 1×. The capture uses **MuJoCo Warp physics on NVIDIA**, with a CPU actor for four-world evaluation batches. PPO training used the CUDA actor/learner. Rendering is separate Linux EGL rendering of the recorded states.
+
+Four video-seed trials per motion/method are evaluated: frozen original **15/20**, relative inputs only **14/20**, trained **20/20** strict passes; all 60 trials remain upright. These video-seed numbers do not replace the 22/24 trained holdout result. Predetermined trial 0 is shown; all four results are retained. This is a separate seed from model selection and final holdout. The reproduction/replay report preserves every captured model and trajectory hash. Camera pixels are not actor inputs.
+
+```sh
+uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion --locked --extra warp adaptive-moving record --checkpoint assets/locomotion/checkpoints/moving/round2_60s_seed22.pt --output previews/locomotion/moving/my_reproduction.mp4 --physics-backend warp
+```
+
+On Linux headless systems, prefix the command with `MUJOCO_GL=egl`. Omit `--extra warp` and select `--physics-backend mjbatch` for CPU capture on macOS. For presentation-only changes, `--replay-from previews/locomotion/moving/moving_supports_v1.json` verifies and uses cached trajectories/model binaries on the original capture host without simulating again.
 
 ## Run
 
@@ -71,3 +83,5 @@ uv tool run --from uv==0.12.12 uv run --project experiments/adaptive_locomotion 
 The viewer uses the native macOS mjpython launcher. CPU physics works on macOS; CUDA/Warp is optional on the NVIDIA host. The training command above targets NVIDIA; use `--physics-backend mjbatch --device cpu --num-envs 64 --max-iterations 1` for a bounded CPU interface check. Checkpoint, preview and video files use Git LFS; raw trajectories, compiled models, rehearsal datasets and logs stay in ignored outputs/build directories. Both machines synchronize via commits and LFS.
 
 This prototype assumes one known rigid support per moving world. It does not infer which moving surface a foot has reached, transition between independently moving platforms, or estimate platform motion from cameras. Static damage variants remain physically distinct bodies; moving training currently uses the healthy robot only.
+
+Validation: **78 Mac tests passed / 25 CUDA checks skipped; 103 NVIDIA tests passed**. Both frozen and selected policies pass the native Mac viewer smoke. All 1,600 video frames decode at 1920×1080 / 25 fps; chapter, contact, camera and result-card samples were inspected. Capture/save **50.806 s**, render/encode **40.214 s**. These are separate from learning time. See [validation](VALIDATION.json), [selection](SELECTION.json), CPU/Warp holdout folders, and both preserved training-round reports.

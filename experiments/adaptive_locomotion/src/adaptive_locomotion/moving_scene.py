@@ -157,6 +157,30 @@ def preview():
     output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output)
     report = manifest(PRESETS["healthy"], model)
+    report.pop("joint_limits_rad")
+    report.pop("torque_limits_nm")
+    report["joint_limits"] = [
+        {
+            "name": model.joint(i).name,
+            "range": model.jnt_range[i].tolist(),
+            "units": "m"
+            if model.jnt_type[i] == mujoco.mjtJoint.mjJNT_SLIDE
+            else "rad"
+            if model.jnt_type[i] == mujoco.mjtJoint.mjJNT_HINGE
+            else "free joint",
+        }
+        for i in range(model.njnt)
+    ]
+    report["actuator_force_limits"] = [
+        {
+            "name": model.actuator(i).name,
+            "range": model.actuator_forcerange[i].tolist(),
+            "units": "N"
+            if model.actuator(i).name in ("deck_x", "deck_y", "deck_z")
+            else "N m",
+        }
+        for i in range(model.nu)
+    ]
     report["initial_max_penetration_m"] = (
         max(0, -float(data.contact.dist.min())) if data.ncon else 0
     )
