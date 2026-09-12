@@ -1,0 +1,88 @@
+{
+  "video": "previews/locomotion/warp_bvh_4096.mp4",
+  "video_sha256": "e8aa78324f83919a6a23fed4a800412a697428fcf2a863b54b55421f02d8146e",
+  "all_frames_decoded": true,
+  "frames": 300,
+  "width": 3840,
+  "height": 2160,
+  "fps": 25.0,
+  "duration_s": 12.0,
+  "playback_speed": 1,
+  "encoded_frames_for_inspection": [
+    0,
+    150,
+    299
+  ],
+  "visual_inspection_complete": true,
+  "native_mac_viewer_5s_smoke_exit_code": 0,
+  "state_checkpoint_model_hashes_verified": true,
+  "all_torque_limits_respected": true,
+  "penetration_sampling_s": 0.02,
+  "cases": [
+    {
+      "case": "healthy",
+      "maximum_sampled_penetration_m": 0.0031152513322777672,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 0.9388741609389173,
+      "goal_met": true
+    },
+    {
+      "case": "lower_fl",
+      "maximum_sampled_penetration_m": 0.00427925731266543,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": true
+    },
+    {
+      "case": "lower_fr",
+      "maximum_sampled_penetration_m": 0.007771606289224485,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": true
+    },
+    {
+      "case": "lower_rl",
+      "maximum_sampled_penetration_m": 0.006623574070095999,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": true
+    },
+    {
+      "case": "lower_rr",
+      "maximum_sampled_penetration_m": 0.0048766015846176194,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": true
+    },
+    {
+      "case": "whole_fl",
+      "maximum_sampled_penetration_m": 0.004784582849474611,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": true
+    },
+    {
+      "case": "whole_fr",
+      "maximum_sampled_penetration_m": 0.005955966735208713,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 1.0,
+      "goal_met": false
+    },
+    {
+      "case": "whole_rl",
+      "maximum_sampled_penetration_m": 0.006062967993573344,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 0.9510825539415237,
+      "goal_met": true
+    },
+    {
+      "case": "whole_rr",
+      "maximum_sampled_penetration_m": 0.005157050454535357,
+      "penetration_below_original_8mm_target": true,
+      "peak_torque_limit_ratio": 0.9765899010867481,
+      "goal_met": true
+    }
+  ],
+  "scope": "GPU-physics training, CPU-physics validation video; all failures retained; no candidate promotion.",
+  "visual_inspection_notes": "All nine bodies visible in encoded opening, middle and final frames; injury markers, shadows, shared timestamp and CPU-validation label legible. Whole-FR explicitly ends INCOMPLETE. No camera or scale changes for failed cases."
+}

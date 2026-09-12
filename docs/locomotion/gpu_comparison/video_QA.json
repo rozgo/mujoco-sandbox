@@ -1,0 +1,97 @@
+{
+  "video": "previews/locomotion/learner_backend_comparison.mp4",
+  "video_sha256": "d4ee3b3c031ede036095cfe5ff59e340cc5d0e8a28e6303e22f6f193aceb2ea4",
+  "all_frames_decoded": true,
+  "frames": 300,
+  "width": 1920,
+  "height": 1440,
+  "fps": 25.0,
+  "duration_s": 12.0,
+  "playback_speed": 1,
+  "encoded_frames_for_inspection": [
+    0,
+    150,
+    299
+  ],
+  "visual_inspection_complete": true,
+  "native_mac_viewer_5s_smoke_exit_code": 0,
+  "all_torque_limits_respected": true,
+  "state_checkpoint_model_hashes_verified_during_replay": true,
+  "cases": [
+    {
+      "label": "mac_mps",
+      "case": "healthy",
+      "maximum_sampled_penetration_m": 0.0029659370453723258,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "mac_mps",
+      "case": "lower_fr",
+      "maximum_sampled_penetration_m": 0.008889369128127676,
+      "penetration_below_original_8mm_target": false,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "mac_mps",
+      "case": "whole_fr",
+      "maximum_sampled_penetration_m": 0.006733767714033813,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "desktop_cpu",
+      "case": "healthy",
+      "maximum_sampled_penetration_m": 0.003059727469179825,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "desktop_cpu",
+      "case": "lower_fr",
+      "maximum_sampled_penetration_m": 0.006890652852663333,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "desktop_cpu",
+      "case": "whole_fr",
+      "maximum_sampled_penetration_m": 0.006565905850300639,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": false,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "desktop_cuda",
+      "case": "healthy",
+      "maximum_sampled_penetration_m": 0.002794110580815433,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": true,
+      "peak_torque_limit_ratio": 1.0
+    },
+    {
+      "label": "desktop_cuda",
+      "case": "lower_fr",
+      "maximum_sampled_penetration_m": 0.008217458435242249,
+      "penetration_below_original_8mm_target": false,
+      "goal_met": false,
+      "peak_torque_limit_ratio": 0.9788131482799813
+    },
+    {
+      "label": "desktop_cuda",
+      "case": "whole_fr",
+      "maximum_sampled_penetration_m": 0.006230259973649975,
+      "penetration_below_original_8mm_target": true,
+      "goal_met": false,
+      "peak_torque_limit_ratio": 1.0
+    }
+  ],
+  "scope": "Benchmark illustration. Failed task and original 8 mm penetration gates retained; no candidate promotion.",
+  "visual_inspection_notes": "Encoded opening, middle and final frames inspected: all nine bodies stay visible; orange injury markers, contact shadows, timestamps and column labels legible. Three failed trial outcomes remain explicitly labeled at the end.",
+  "verified_at_utc": "2026-09-11 17:26:54 UTC"
+}

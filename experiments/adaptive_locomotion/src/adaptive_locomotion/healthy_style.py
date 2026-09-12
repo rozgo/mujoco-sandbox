@@ -59,6 +59,27 @@ class HealthyMotion:
         ).astype(np.float32)
         self.normalized = self.features / self.scale
 
+    @classmethod
+    def load(cls, path, *, sequence):
+        """Use an identical frozen training reference across learner backends."""
+        with np.load(path, allow_pickle=False) as source:
+            arrays = {key: source[key] for key in source.files}
+        expected = {"observations", "actions"}
+        if sequence:
+            expected.add("past_observations")
+        if set(arrays) != expected:
+            raise ValueError("Motion reference must match the requested history mode")
+        count = len(arrays["observations"])
+        for key, array in arrays.items():
+            width = 12 if key == "actions" else 66
+            if (
+                count == 0
+                or array.shape != (count, width)
+                or not np.isfinite(array).all()
+            ):
+                raise ValueError("Invalid frozen motion reference shape or values")
+        return cls(**arrays)
+
     @staticmethod
     def feature(obs, past=None):
         current = np.concatenate(

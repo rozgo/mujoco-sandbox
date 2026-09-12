@@ -100,3 +100,22 @@ uv tool run --from uv==0.12.12 uv run --locked adaptive-dog demo
 ```
 
 Use `--case healthy`, `--case lower_fr`, or another case shown by `demo --help`. The default is `whole_fr`; runtime physics is **0.5 ms**, control **20 ms**. The `adaptive-dog-v1` Git tag preserves this baseline for subsequent experiments.
+
+### Standing on uneven supports
+
+The standing extension uses one policy to walk, hold position and walk again,
+with the same actor balancing on pads, slopes, steps and missing supports.
+It was fine-tuned with MuJoCo Warp and PPO on an RTX 4090 for **8 min 57 s**
+beyond the existing walker. Rays and body-state feedback guide the controller;
+RGB cameras provide the video views.
+
+[![Shared policy balancing on uneven supports](previews/locomotion/standing/adaptive_standing_v3.png)](previews/locomotion/standing/adaptive_standing_v3.mp4)
+
+**[Watch standing and terrain challenges](previews/locomotion/standing/adaptive_standing_v3.mp4)** · [Run guide, results and limits](docs/locomotion/standing/README.md)
+
+The new checkpoint passes all **36 walking-retention trials**. Healthy standing
+and transition tests pass **48/80** on CPU and Warp, including both front-foot
+missing-support cases. The 67-second video includes eight terrain trials accepted
+after visual review: all 25 recorded trials stay upright, and 10 pass every
+original strict gate. Natural corrections and measured limitations remain visible.
+This extension preserves the accepted walking checkpoint above.

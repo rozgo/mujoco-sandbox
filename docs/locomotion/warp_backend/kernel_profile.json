@@ -1,0 +1,446 @@
+{
+  "steps": 3,
+  "worlds": 512,
+  "cuda_kernel_ms": 190.28448052657768,
+  "top_kernels_ms": [
+    [
+      "forward kernel _ray_8b9796c2",
+      186.3397445678711
+    ],
+    [
+      "forward kernel _qfrc_constraint_from_grad_4e7e88b1",
+      1.146015982143581
+    ],
+    [
+      "forward kernel mul_m_kernel__locals___mul_m_9c0838e9",
+      0.969279975630343
+    ],
+    [
+      "forward kernel _crb_accumulate_073a11b8",
+      0.07299199956469238
+    ],
+    [
+      "forward kernel _subtree_com_acc_350f0560",
+      0.06646399991586804
+    ],
+    [
+      "forward kernel _tile_cholesky_factorize_solve_block__locals__kernel_ac7aec46",
+      0.06131200026720762
+    ],
+    [
+      "forward kernel _cfrc_backward_72237d38",
+      0.059103999054059386
+    ],
+    [
+      "forward kernel _kinematics_branch_95f8028e",
+      0.05244800075888634
+    ],
+    [
+      "forward kernel _efc_contact_jac_dense__locals__kernel_4179614b",
+      0.0453119995072484
+    ],
+    [
+      "forward kernel _comvel_branch_0f933c58",
+      0.04224000032991171
+    ],
+    [
+      "forward kernel _primitive_narrowphase__locals__primitive_narrowphase_71c5cd60",
+      0.040927999652922153
+    ],
+    [
+      "forward kernel _linesearch_iterative_kernel__locals__kernel_ee5ea4e3",
+      0.03852800000458956
+    ],
+    [
+      "forward kernel _contact_match_builder__locals___contact_match_0e5aadf2",
+      0.0360319996252656
+    ],
+    [
+      "forward kernel _contact_sort__locals__contact_sort_390a65ae",
+      0.03487999923527241
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_1a8c991d",
+      0.032703999895602465
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_c6d3104f",
+      0.03267199965193868
+    ],
+    [
+      "forward kernel _sensor_acc_b295114e",
+      0.031328000128269196
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_5ccc0905",
+      0.03014400042593479
+    ],
+    [
+      "forward kernel _next_activation_becb463e",
+      0.030080000637099147
+    ],
+    [
+      "forward kernel _next_position_1c101e8d",
+      0.02921599941328168
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_37a8e4d7",
+      0.02886400045827031
+    ],
+    [
+      "forward kernel _friction_dof__locals__kernel_43a1ef03",
+      0.02863999968394637
+    ],
+    [
+      "forward kernel _cdof_3e73eb78",
+      0.02675200067460537
+    ],
+    [
+      "forward kernel _efc_contact_update__locals__kernel_646486ca",
+      0.026623999699950218
+    ],
+    [
+      "forward kernel _light_local_to_global_1966b84b",
+      0.026304000057280064
+    ],
+    [
+      "forward kernel _update_gradient_grad__locals__kernel_7f5e4a38",
+      0.026176000013947487
+    ],
+    [
+      "forward kernel _nxn_broadphase__locals__kernel_cb91fd56",
+      0.02553600026294589
+    ],
+    [
+      "forward kernel _update_gradient_JTDAJ_dense_tiled__locals__kernel_73fba643",
+      0.025439999997615814
+    ],
+    [
+      "forward kernel _transmission_4db1a205",
+      0.02479999978095293
+    ],
+    [
+      "forward kernel _qderiv_actuator_passive_vel_ccdd93c1",
+      0.02464000042527914
+    ]
+  ],
+  "all_kernel_ms": [
+    [
+      "forward kernel _ray_8b9796c2",
+      186.3397445678711
+    ],
+    [
+      "forward kernel _qfrc_constraint_from_grad_4e7e88b1",
+      1.146015982143581
+    ],
+    [
+      "forward kernel mul_m_kernel__locals___mul_m_9c0838e9",
+      0.969279975630343
+    ],
+    [
+      "forward kernel _crb_accumulate_073a11b8",
+      0.07299199956469238
+    ],
+    [
+      "forward kernel _subtree_com_acc_350f0560",
+      0.06646399991586804
+    ],
+    [
+      "forward kernel _tile_cholesky_factorize_solve_block__locals__kernel_ac7aec46",
+      0.06131200026720762
+    ],
+    [
+      "forward kernel _cfrc_backward_72237d38",
+      0.059103999054059386
+    ],
+    [
+      "forward kernel _kinematics_branch_95f8028e",
+      0.05244800075888634
+    ],
+    [
+      "forward kernel _efc_contact_jac_dense__locals__kernel_4179614b",
+      0.0453119995072484
+    ],
+    [
+      "forward kernel _comvel_branch_0f933c58",
+      0.04224000032991171
+    ],
+    [
+      "forward kernel _primitive_narrowphase__locals__primitive_narrowphase_71c5cd60",
+      0.040927999652922153
+    ],
+    [
+      "forward kernel _linesearch_iterative_kernel__locals__kernel_ee5ea4e3",
+      0.03852800000458956
+    ],
+    [
+      "forward kernel _contact_match_builder__locals___contact_match_0e5aadf2",
+      0.0360319996252656
+    ],
+    [
+      "forward kernel _contact_sort__locals__contact_sort_390a65ae",
+      0.03487999923527241
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_1a8c991d",
+      0.032703999895602465
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_c6d3104f",
+      0.03267199965193868
+    ],
+    [
+      "forward kernel _sensor_acc_b295114e",
+      0.031328000128269196
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_5ccc0905",
+      0.03014400042593479
+    ],
+    [
+      "forward kernel _next_activation_becb463e",
+      0.030080000637099147
+    ],
+    [
+      "forward kernel _next_position_1c101e8d",
+      0.02921599941328168
+    ],
+    [
+      "forward kernel ccd_kernel_builder__locals__ccd_kernel_37a8e4d7",
+      0.02886400045827031
+    ],
+    [
+      "forward kernel _friction_dof__locals__kernel_43a1ef03",
+      0.02863999968394637
+    ],
+    [
+      "forward kernel _cdof_3e73eb78",
+      0.02675200067460537
+    ],
+    [
+      "forward kernel _efc_contact_update__locals__kernel_646486ca",
+      0.026623999699950218
+    ],
+    [
+      "forward kernel _light_local_to_global_1966b84b",
+      0.026304000057280064
+    ],
+    [
+      "forward kernel _update_gradient_grad__locals__kernel_7f5e4a38",
+      0.026176000013947487
+    ],
+    [
+      "forward kernel _nxn_broadphase__locals__kernel_cb91fd56",
+      0.02553600026294589
+    ],
+    [
+      "forward kernel _update_gradient_JTDAJ_dense_tiled__locals__kernel_73fba643",
+      0.025439999997615814
+    ],
+    [
+      "forward kernel _transmission_4db1a205",
+      0.02479999978095293
+    ],
+    [
+      "forward kernel _qderiv_actuator_passive_vel_ccdd93c1",
+      0.02464000042527914
+    ],
+    [
+      "forward kernel _cacc_branch_ffe1d6c4",
+      0.024575999937951565
+    ],
+    [
+      "forward kernel _solve_done__locals__kernel_7c5fc981",
+      0.02425600029528141
+    ],
+    [
+      "forward kernel _cam_local_to_global_ed67ebfa",
+      0.023648000322282314
+    ],
+    [
+      "forward kernel _qderiv_actuator_passive_6cbfee2a",
+      0.02345600025728345
+    ],
+    [
+      "forward kernel _zero_constraint_counts_82d999b9",
+      0.022751999786123633
+    ],
+    [
+      "forward kernel _qderiv_tendon_damping_ec990995",
+      0.02243200014345348
+    ],
+    [
+      "forward kernel _geom_local_to_global_e28b714c",
+      0.022431999910622835
+    ],
+    [
+      "forward kernel _update_gradient_cholesky__locals__kernel_9c3e4676",
+      0.02214400051161647
+    ],
+    [
+      "forward kernel _efc_contact_init__locals__kernel_9c9a536b",
+      0.02214400004595518
+    ],
+    [
+      "forward kernel _limit_slide_hinge__locals__kernel_dc200dd6",
+      0.02163200033828616
+    ],
+    [
+      "forward kernel _update_constraint_efc__locals__kernel_afa7fbbf",
+      0.021535999607294798
+    ],
+    [
+      "forward kernel _M_13671fca",
+      0.02095999987795949
+    ],
+    [
+      "forward kernel _site_local_to_global_084f92a4",
+      0.020800000056624413
+    ],
+    [
+      "forward kernel _update_gradient_cholesky__locals__kernel_899c794f",
+      0.02054399996995926
+    ],
+    [
+      "forward kernel _next_velocity_d66c2f53",
+      0.02051199972629547
+    ],
+    [
+      "forward kernel _actuator_force_9287f290",
+      0.020447999704629183
+    ],
+    [
+      "forward kernel _cinert_1261260c",
+      0.020383999682962894
+    ],
+    [
+      "forward kernel _update_gradient_h_incremental_9c0c45bc",
+      0.020223999628797174
+    ],
+    [
+      "forward kernel _qderiv_actuator_passive_actuation_sparse_9edf10e9",
+      0.019807999953627586
+    ],
+    [
+      "forward kernel _compute_body_inertial_frames_d3bdd81a",
+      0.019360000267624855
+    ],
+    [
+      "forward kernel _update_constraint_init_qfrc_constraint_dense__locals__kernel_935a1343",
+      0.01897599990479648
+    ],
+    [
+      "forward kernel _update_gradient_zero_grad_dot__locals__kernel_382f12e9",
+      0.018623999785631895
+    ],
+    [
+      "forward kernel _solve_init_jaref_kernel__locals__kernel_d4dcae8c",
+      0.01785600045695901
+    ],
+    [
+      "forward kernel _compute_body_matrices_27760750",
+      0.017823999747633934
+    ],
+    [
+      "forward kernel _next_time_builder__locals___next_time_6bcfac29",
+      0.017215999774634838
+    ],
+    [
+      "forward kernel _subtree_com_init_002b02fd",
+      0.016992000164464116
+    ],
+    [
+      "forward kernel _sensor_vel_e2a1adc2",
+      0.016991999931633472
+    ],
+    [
+      "forward kernel _apply_ft_1667a928",
+      0.016480000223964453
+    ],
+    [
+      "forward kernel _update_constraint_efc__locals__kernel_d88e782a",
+      0.01612800033763051
+    ],
+    [
+      "forward kernel _subtree_div_0ef57c26",
+      0.015552000142633915
+    ],
+    [
+      "forward kernel _update_constraint_init_qfrc_constraint_dense__locals__kernel_70c42511",
+      0.014528000261634588
+    ],
+    [
+      "forward kernel _actuator_velocity_00a052f5",
+      0.014431999996304512
+    ],
+    [
+      "forward kernel _spring_damper_dof_passive_7b46d40c",
+      0.014240000396966934
+    ],
+    [
+      "forward kernel _zero_change_counters_1e273adc",
+      0.014239999931305647
+    ],
+    [
+      "forward kernel _sensor_pos_f481f6a4",
+      0.014175999909639359
+    ],
+    [
+      "forward kernel _qfrc_passive_kernel__locals__kernel_d84f5901",
+      0.013119999784976244
+    ],
+    [
+      "forward kernel _cfrc_3922b605",
+      0.012192000169306993
+    ],
+    [
+      "forward kernel _update_gradient_grad__locals__kernel_72941948",
+      0.011936000548303127
+    ],
+    [
+      "forward kernel _gravity_force_7c63ac28",
+      0.01190400030463934
+    ],
+    [
+      "forward kernel _cacc_world_6ec26fdb",
+      0.011679999763146043
+    ],
+    [
+      "forward kernel _sensor_rangefinder_init_49b66287",
+      0.011040000012144446
+    ],
+    [
+      "forward kernel _qfrc_actuator_6de5c51c",
+      0.010751999914646149
+    ],
+    [
+      "forward kernel _qfrc_bias_4085b6de",
+      0.010464000049978495
+    ],
+    [
+      "forward kernel _qfrc_actuator_gravcomp_limits_a91eb6a0",
+      0.010464000049978495
+    ],
+    [
+      "forward kernel _qfrc_smooth__locals__kernel_33de72f1",
+      0.010368000017479062
+    ],
+    [
+      "forward kernel _solve_init_dof__locals__kernel_b0ab9dcc",
+      0.010175999952480197
+    ],
+    [
+      "forward kernel _update_gradient_zero_grad_dot__locals__kernel_591ead3f",
+      0.009504000190645456
+    ],
+    [
+      "forward kernel _solve_init_efc_332d2fcc",
+      0.008831999963149428
+    ],
+    [
+      "forward kernel _comvel_root_15820f35",
+      0.008544000098481774
+    ]
+  ],
+  "scope": "Uncaptured kernel attribution only. CUDA events include instrumentation; use synchronized captured benchmarks for throughput."
+}

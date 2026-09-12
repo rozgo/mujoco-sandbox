@@ -1,0 +1,84 @@
+{
+  "trials_per_backend": 216,
+  "cpu_completed": 198,
+  "warp_completed": 183,
+  "checks": {
+    "matched_configurations": true,
+    "all_trials_upright_with_valid_support": true,
+    "pooled_completion_within_5pp": false,
+    "no_body_more_than_two_trials_worse": false,
+    "gait_retention_all_seeds": false
+  },
+  "passed": false,
+  "configuration_differences": [
+    {},
+    {},
+    {}
+  ],
+  "timings": [
+    {
+      "seed": 2,
+      "mjbatch_seconds": 44.313849778845906,
+      "mjbatch_transitions_per_second": 13310.150279057094,
+      "warp_seconds": 25.770416315179318,
+      "warp_transitions_per_second": 22887.639562601136,
+      "speedup": 1.71956282106099
+    },
+    {
+      "seed": 3,
+      "mjbatch_seconds": 43.42665895493701,
+      "mjbatch_transitions_per_second": 13582.07180091954,
+      "warp_seconds": 26.306399097200483,
+      "warp_transitions_per_second": 22421.312693563174,
+      "speedup": 1.6508021031110434
+    },
+    {
+      "seed": 4,
+      "mjbatch_seconds": 43.93992337863892,
+      "mjbatch_transitions_per_second": 13423.4189467599,
+      "warp_seconds": 24.934459674172103,
+      "warp_transitions_per_second": 23654.974188630935,
+      "speedup": 1.762216785637961
+    }
+  ],
+  "by_case": {
+    "healthy": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_fl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_fr": {
+      "cpu": 24,
+      "warp": 14
+    },
+    "lower_rl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "lower_rr": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_fl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_fr": {
+      "cpu": 6,
+      "warp": 1
+    },
+    "whole_rl": {
+      "cpu": 24,
+      "warp": 24
+    },
+    "whole_rr": {
+      "cpu": 24,
+      "warp": 24
+    }
+  },
+  "pooled_training_speedup": 1.7098851040244176,
+  "scope": "Three paired seeds, fixed parent, 512 worlds and identical 48 PPO rounds; development validation, not full curriculum retraining or general robustness."
+}

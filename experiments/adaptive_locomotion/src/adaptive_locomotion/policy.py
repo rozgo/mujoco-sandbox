@@ -40,7 +40,7 @@ class Policy(nn.Module):
         x = self.norm(history).reshape(-1, 5, 5, OBS_DIM).mean(2).flatten(1)
         return self.estimator(x).sigmoid()
 
-    def forward(self, obs, context=None, history=None, critic_extra=None):
+    def forward(self, obs, context=None, history=None, critic_extra=None, support=None):
         if self.mode == "oracle":
             if context is None:
                 raise ValueError("Oracle requires private body context")
@@ -49,6 +49,10 @@ class Policy(nn.Module):
             if history is None:
                 raise ValueError("History policy requires causal history")
             z = self.estimate(history)
+        elif self.mode == "support":
+            if support is None:
+                support = torch.zeros((*obs.shape[:-1], CONTEXT_DIM), device=obs.device)
+            z = 1 + support
         elif self.mode == "blind":
             z = torch.ones((*obs.shape[:-1], CONTEXT_DIM), device=obs.device)
         else:
@@ -57,8 +61,18 @@ class Policy(nn.Module):
         action = self.actor(torch.cat((x, z), -1))
         value = None
         if critic_extra is not None:
-            value = self.critic(torch.cat((x, context, critic_extra), -1)).squeeze(-1)
+            critic_context = context + support if self.mode == "support" else context
+            value = self.critic(
+                torch.cat((x, critic_context, critic_extra), -1)
+            ).squeeze(-1)
         return action, value
+
+    @torch.no_grad()
+    def enable_support(self):
+        """Convert constant blind context to learnable sensor inputs, preserving output."""
+        self.actor[0].bias.add_(self.actor[0].weight[:, OBS_DIM:].sum(1))
+        self.actor[0].weight[:, OBS_DIM:] = 0
+        self.mode = "support"
 
     @torch.no_grad()
     def absorb(self, obs):

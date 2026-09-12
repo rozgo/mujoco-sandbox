@@ -50,10 +50,37 @@ def rotation(q):
 
 
 class Group:
-    def __init__(self, body, n, threads, terrain, sensing, timestep):
+    def __init__(
+        self,
+        body,
+        n,
+        threads,
+        terrain,
+        sensing,
+        timestep,
+        physics_backend="mjbatch",
+        native_support_peaks=False,
+        support_friction=None,
+    ):
         self.body = body
         self.model = build_model(body, terrain, timestep, sensing)
-        self.batch = Batch(self.model, n, num_threads=threads)
+        if support_friction is not None:
+            if not np.isfinite(support_friction) or support_friction <= 0:
+                raise ValueError("Support friction must be finite and positive")
+            # Apply before either backend copies the model. Only sliding
+            # friction on allowed terminals and physical static supports changes.
+            support_geoms = [self.model.geom(n).id for n in allowed_support_names(body)]
+            static = (self.model.geom_bodyid == 0) & (
+                (self.model.geom_contype != 0) | (self.model.geom_conaffinity != 0)
+            )
+            self.model.geom_friction[support_geoms, 0] = support_friction
+            self.model.geom_friction[static, 0] = support_friction
+        if physics_backend == "warp":
+            from .warp_batch import WarpBatch
+
+            self.batch = WarpBatch(self.model, n)
+        else:
+            self.batch = Batch(self.model, n, num_threads=threads)
         self.n = n
         self.qpos, self.qvel, self.ctrl = (
             self.batch.bind(k) for k in ("qpos", "qvel", "ctrl")
@@ -78,6 +105,8 @@ class Group:
         self.support_data = self.batch.bind("sensordata")[
             :, first : first + 4 * len(sensor_ids)
         ].reshape(n, -1, 4)
+        if native_support_peaks and physics_backend == "warp":
+            self.batch.enable_contact_window(int(first), len(sensor_ids))
         self.support_allowed = np.array(
             [name in allowed_support_names(body) for name in self.support_names]
         )
@@ -102,6 +131,8 @@ class Group:
         active = (strength > 0)[:, :, None]
         self.gain[ids] = self.original_gain[ids] * active
         self.bias[ids] = self.original_bias[ids] * active
+        if hasattr(self.batch, "mark_model_dirty"):
+            self.batch.mark_model_dirty()
 
 
 class DogEnv:
@@ -135,7 +166,20 @@ class DogEnv:
         retention_curriculum=False,
         pair_level=None,
         limb_stage=None,
+        physics_backend="mjbatch",
+        warp_execution="concurrent",
+        terrain_per_group=None,
+        group_counts=None,
+        healthy_posture_only=False,
+        native_support_peaks=False,
+        support_friction=None,
     ):
+        if physics_backend not in ("mjbatch", "warp"):
+            raise ValueError("Unknown physics backend")
+        self.physics_backend = physics_backend
+        if warp_execution not in ("serial", "concurrent"):
+            raise ValueError("Unknown Warp execution schedule")
+        self.warp_execution = warp_execution
         self.n, self.rng = num_envs, np.random.default_rng(seed)
         self.randomize, self.faults, self.terrain = randomize, faults, terrain
         if reward_profile not in ("adaptive", "walk"):
@@ -153,6 +197,7 @@ class DogEnv:
                 "Paired stages require retention curriculum and at least 16 environments"
             )
         self.reward_profile = reward_profile
+        self.healthy_posture_only = healthy_posture_only
         self.support_weight = support_weight
         self.support_substeps = support_substeps
         if stride_weight < 0:
@@ -206,10 +251,20 @@ class DogEnv:
         if limb_stage:
             self.bodies, counts = curriculum(limb_stage, num_envs)
             self.faults = self.randomize_strength = False
+        if terrain_per_group is not None and len(terrain_per_group) != len(self.bodies):
+            raise ValueError("One terrain required per body group")
+        if group_counts is not None and (
+            len(group_counts) != len(self.bodies)
+            or sum(group_counts) != num_envs
+            or min(group_counts) < 1
+        ):
+            raise ValueError("Invalid group counts")
         self.groups, self.slices = [], []
         start = 0
         for i, body in enumerate(self.bodies):
-            if limb_stage:
+            if group_counts is not None:
+                n = group_counts[i]
+            elif limb_stage:
                 n = counts[i]
             elif pair_level:
                 small_n = num_envs // 16
@@ -228,16 +283,19 @@ class DogEnv:
                     max(1, round(threads * n / num_envs))
                     if pair_level or limb_stage
                     else max(1, threads // len(self.bodies)),
-                    terrain,
+                    terrain_per_group[i] if terrain_per_group is not None else terrain,
                     True if sensing is None else sensing,
                     timestep,
+                    physics_backend,
+                    native_support_peaks,
+                    support_friction,
                 )
             )
             self.slices.append(slice(start, start + n))
             start += n
         self.pool = (
             ThreadPoolExecutor(max_workers=len(self.groups))
-            if len(self.groups) > 1
+            if len(self.groups) > 1 and physics_backend == "mjbatch"
             else None
         )
         self.q = np.zeros((num_envs, 12))
@@ -273,6 +331,11 @@ class DogEnv:
         self.stride = StrideTracker(num_envs)
         self.contact_timing = ContactTiming(num_envs)
         self.reset(np.arange(num_envs))
+        if physics_backend == "warp":
+            # Compile/capture without stepping; charge cold work to setup, not
+            # the bounded training budget or synchronized warm benchmark.
+            for group in self.groups:
+                group.batch.graph(1 if support_substeps else self.decimation)
 
     def refresh(self):
         self.q[:] = STAND
@@ -413,8 +476,16 @@ class DogEnv:
         def advance(g):
             if not self.support_substeps:
                 g.batch.step(nstep=self.decimation)
-                g.support_peaks = np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
-                g.support_impulses = g.support_peaks * CONTROL_DT
+                g.support_peaks = (
+                    g.batch.bind("contact_peaks")
+                    if hasattr(g.batch, "contact_arrays")
+                    else np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
+                )
+                g.support_impulses = (
+                    g.batch.bind("contact_impulses")
+                    if hasattr(g.batch, "contact_arrays")
+                    else g.support_peaks * CONTROL_DT
+                )
                 return
             g.support_peaks = np.zeros((g.n, len(g.support_names)))
             g.support_impulses = np.zeros_like(g.support_peaks)
@@ -424,10 +495,30 @@ class DogEnv:
                 np.maximum(g.support_peaks, force, out=g.support_peaks)
                 g.support_impulses += force * self.timestep
 
-        if self.pool:
+        if (
+            self.physics_backend == "warp"
+            and self.warp_execution == "concurrent"
+            and not self.support_substeps
+        ):
+            for group in self.groups:
+                group.batch.step_async(self.decimation)
+            for group in self.groups:
+                group.batch.wait_step()
+                group.support_peaks = (
+                    group.batch.bind("contact_peaks")
+                    if hasattr(group.batch, "contact_arrays")
+                    else np.linalg.norm(group.support_data[:, :, 1:4], axis=-1)
+                )
+                group.support_impulses = (
+                    group.batch.bind("contact_impulses")
+                    if hasattr(group.batch, "contact_arrays")
+                    else group.support_peaks * CONTROL_DT
+                )
+        elif self.pool:
             list(self.pool.map(advance, self.groups))
         else:
-            advance(self.groups[0])
+            for group in self.groups:
+                advance(group)
         if any(np.any(g.warnings[:, :, 1]) for g in self.groups):
             raise FloatingPointError(
                 "MuJoCo numerical warning; refusing an automatically corrected trajectory"
@@ -529,7 +620,7 @@ class DogEnv:
             stride_reward = self.stride.update(
                 self.tip_positions, self.tip_forces, direction, speed > 0.15
             )
-            if self.limb_stage:
+            if self.limb_stage or self.healthy_posture_only:
                 stride_reward *= (self.context[:, :4] == 1).all(1)
             reward += self.stride_weight * stride_reward
         if self.reward_profile == "walk":
@@ -543,7 +634,7 @@ class DogEnv:
                 + 0.014 * rate
                 + 0.08 * np.sum(self.gyro[:, :2] ** 2, 1)
             )
-            if self.limb_stage:
+            if self.limb_stage or self.healthy_posture_only:
                 posture *= (self.context[:, :4] == 1).all(1)
             reward -= posture
         finite = np.isfinite(self.q).all(1) & np.isfinite(self.vel).all(1)

@@ -134,9 +134,10 @@ def build_model(
             contype="0",
             conaffinity="0",
         )
-    if terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
+    standing = terrain.startswith("stand_")
+    if not standing and terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
         raise ValueError(terrain)
-    if terrain != "flat":
+    if terrain != "flat" and not standing:
         h = 0.04 if terrain == "steps" else 0.06
         obstacles = ((1.6, 0.32, h), (2.8, 0.5, 1.5 * h), (4.1, 0.4, h))
         if terrain == "heldout_steps":
@@ -274,6 +275,10 @@ def build_model(
         xyaxes="1 0 0 0 .52 .85",
         fovy="58",
     )
+    if standing:
+        from .standing_surfaces import compose
+
+        compose(root, terrain.removeprefix("stand_"))
     if contact_profile not in ("firm", "legacy_soft"):
         raise ValueError(contact_profile)
     if contact_profile == "firm":
@@ -285,8 +290,9 @@ def build_model(
                 continue
             geom.attrib.update(solref=".006 1", solimp=".95 .99 .001", margin="0")
     if support_sensing:
-        # Native contact-force sensors are reward/diagnostic truth only. They
-        # preserve physical collisions and do not add channels to actor input.
+        # Native contact-force sensors preserve physical collisions. Legacy
+        # walking uses them only for rewards/diagnostics; standing additionally
+        # exposes the four terminal-contact bits as ideal contact sensing.
         for element in world.iter("body"):
             for i, geom in enumerate(element.findall("geom")):
                 if geom.get("class") == "visual" or geom.get("contype") == "0":
@@ -330,6 +336,11 @@ def initialize(model, data):
     z = min(data.site_xpos[i, 2] for i in tips)
     data.qpos[2] += 0.024 - z
     mujoco.mj_forward(model, data)
+    from .standing_surfaces import initialize_support, name_for
+
+    surface = name_for(model)
+    if surface is not None:
+        initialize_support(model, data, surface)
 
 
 def manifest(body, model):

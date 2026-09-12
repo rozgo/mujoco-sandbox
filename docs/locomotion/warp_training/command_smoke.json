@@ -1,0 +1,33 @@
+{
+  "scope": "Actual maintained CLI launch checks; tiny runs excluded from learning comparisons.",
+  "cpu": {
+    "physics_backend": "mjbatch",
+    "device": "cpu",
+    "num_envs": 32,
+    "minibatch_size": 192,
+    "iterations": 1,
+    "optimizer_steps": 16,
+    "training_seconds": 0.11978675,
+    "passed": true
+  },
+  "nvidia": {
+    "physics_backend": "warp",
+    "device": "cuda",
+    "num_envs": 512,
+    "minibatch_size": 3072,
+    "iterations": 1,
+    "optimizer_steps": 16,
+    "training_seconds": 0.9459984092973173,
+    "setup_seconds": 4.8516957219690084,
+    "source_commit": "1db97d5",
+    "source_dirty": false,
+    "passed": true
+  },
+  "native_mac_viewer": {
+    "checkpoint": "assets/locomotion/checkpoints/warp_training/scaled_warp_seed2.pt",
+    "case": "whole_fr",
+    "physics_timestep_s": 0.0005,
+    "requested_seconds": 5,
+    "exit_code": 0
+  }
+}

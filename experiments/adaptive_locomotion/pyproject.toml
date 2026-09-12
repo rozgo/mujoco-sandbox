@@ -8,6 +8,9 @@ dependencies = [
   "torch==2.14.0", "pillow>=12,<13", "imageio-ffmpeg>=0.6,<1",
 ]
 
+[project.optional-dependencies]
+warp = ["mujoco-warp==3.13.0", "warp-lang==1.17.0"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -20,6 +23,7 @@ mjbatch = { path = "third_party/mjbatch" }
 
 [project.scripts]
 adaptive-dog = "adaptive_locomotion.cli:main"
+adaptive-balance = "adaptive_locomotion.standing_cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

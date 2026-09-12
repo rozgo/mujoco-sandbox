@@ -72,6 +72,7 @@ def train(
     damage_healthy_reward_weight=0.0,
     damage_healthy_loss_weight=0.0,
     healthy_style_source="policy",
+    healthy_motion_path=None,
     learning_rate=0.001,
     pair_level=None,
     single_reference=None,
@@ -82,7 +83,23 @@ def train(
     front_reference=None,
     front_reference_scale=1.0,
     symmetry_weight=0.0,
+    physics_backend="mjbatch",
+    minibatch_size=None,
+    max_iterations=None,
+    warp_execution="concurrent",
+    standing_profile=None,
+    standing_surfaces="gentle",
+    walking_replay_weight=0.0,
+    idle_support_weight=2.0,
+    idle_drift_weight=0.0,
+    idle_episode_steps=500,
+    substep_support=False,
 ):
+    if minibatch_size is not None and minibatch_size < 1:
+        raise ValueError("Minibatch size must be positive")
+    if max_iterations is not None and max_iterations < 1:
+        raise ValueError("Iteration limit must be positive")
+    minibatch_size = minibatch_size or ((num_envs * horizon + 3) // 4)
     if not 0 < seconds <= allowance:
         raise ValueError("Invalid training duration for the chosen allowance")
     if allowance > 300 and not extension_reason:
@@ -104,6 +121,8 @@ def train(
         raise ValueError("Unknown healthy style reference")
     if healthy_style_source.startswith("motion") and not healthy_style:
         raise ValueError("Motion reference requires healthy-style weights")
+    if healthy_motion_path and not healthy_style_source.startswith("motion"):
+        raise ValueError("Frozen motion reference requires motion-style training")
     if retention_curriculum and bodies != "all":
         raise ValueError("Retention curriculum requires --bodies all")
     if single_reference_weight < 0 or (
@@ -137,7 +156,23 @@ def train(
     actor_device = "cuda" if device == "cuda" else "cpu"
     setup_start = time.perf_counter()
     variants = None if bodies == "all" else [PRESETS[k] for k in bodies.split(",")]
-    env = DogEnv(
+    environment_class = DogEnv
+    environment_options = {}
+    if standing_profile:
+        from .standing_env import StandingEnv
+
+        if mode != "support":
+            raise ValueError("Standing training requires support observation mode")
+        environment_class = StandingEnv
+        environment_options["profile"] = standing_profile
+        environment_options["surface_level"] = standing_surfaces
+        environment_options.update(
+            idle_support_weight=idle_support_weight,
+            idle_drift_weight=idle_drift_weight,
+            idle_episode_steps=idle_episode_steps,
+            substep_support=substep_support,
+        )
+    env = environment_class(
         num_envs,
         seed,
         bodies=variants,
@@ -162,12 +197,17 @@ def train(
         retention_curriculum=retention_curriculum,
         pair_level=pair_level,
         limb_stage=limb_stage,
+        physics_backend=physics_backend,
+        warp_execution=warp_execution,
+        **environment_options,
     )
     ancestry = 0.0
     parent = None
     if resume:
         learner, parent = load_checkpoint(resume, mode)
         ancestry = float(parent["cumulative_training_seconds"])
+        if mode == "support" and parent["mode"] == "blind":
+            learner.enable_support()
         if ancestry + seconds > allowance + 0.01:
             raise ValueError(
                 f"Resume exceeds {allowance}-second lineage budget ({ancestry:.2f}+{seconds})"
@@ -198,18 +238,26 @@ def train(
     teacher = None
     if reference:
         teacher, _ = load_checkpoint(reference)
-        if teacher.mode != "blind" or mode != "blind":
+        if teacher.mode != "blind" or mode not in ("blind", "support"):
             raise ValueError("Reference retention currently supports reactive policies")
         teacher = teacher.to(actor_device).eval().requires_grad_(False)
     motion_reference = None
     motion_hash = None
     if healthy_style_source.startswith("motion"):
-        motion_reference, motion_hash = HealthyMotion.collect(
-            teacher,
-            seed,
-            output / "healthy_motion.npz",
-            sequence=healthy_style_source == "motion_sequence",
-        )
+        if healthy_motion_path:
+            motion_reference = HealthyMotion.load(
+                healthy_motion_path, sequence=healthy_style_source == "motion_sequence"
+            )
+            motion_hash = hashlib.sha256(
+                Path(healthy_motion_path).read_bytes()
+            ).hexdigest()
+        else:
+            motion_reference, motion_hash = HealthyMotion.collect(
+                teacher,
+                seed,
+                output / "healthy_motion.npz",
+                sequence=healthy_style_source == "motion_sequence",
+            )
     single_teacher = None
     if single_reference:
         single_teacher, _ = load_checkpoint(single_reference)
@@ -222,6 +270,24 @@ def train(
         if front_teacher.mode != "blind":
             raise ValueError("Limb references must use reactive policies")
         front_teacher = front_teacher.to(actor_device).eval().requires_grad_(False)
+    walking_replay_data = None
+    replay_setup_seconds = 0.0
+    if walking_replay_weight:
+        if mode != "support" or reference is None or walking_replay_weight < 0:
+            raise ValueError(
+                "Walking rehearsal requires a support actor and frozen reference"
+            )
+        from .walking_replay import collect
+
+        replay_obs, replay_actions, replay_setup_seconds = collect(
+            reference,
+            ROOT / "outputs/locomotion/standing/v1_rehearsal_seed12.npz",
+            seed=12,
+        )
+        walking_replay_data = (
+            torch.as_tensor(replay_obs, device=device),
+            torch.as_tensor(replay_actions, device=device),
+        )
     opt = torch.optim.Adam(
         learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
@@ -236,6 +302,8 @@ def train(
         "rew": (),
         "alive": (),
     }
+    if mode == "support":
+        shapes["support"] = (CONTEXT_DIM,)
     if mode == "history":
         shapes["hist"] = (HISTORY, OBS_DIM)
     if teacher is not None:
@@ -258,8 +326,28 @@ def train(
     config = {
         "seed": seed,
         "mode": mode,
+        "standing_profile": standing_profile,
+        "idle_support_weight": idle_support_weight,
+        "idle_drift_weight": idle_drift_weight,
+        "idle_episode_steps": idle_episode_steps,
+        "substep_support": substep_support,
+        "walking_replay_weight": walking_replay_weight,
+        "walking_replay_rows": len(walking_replay_data[0])
+        if walking_replay_data
+        else 0,
+        "walking_replay_collection_seconds": replay_setup_seconds,
+        "standing_surfaces": standing_surfaces if standing_profile else None,
+        "standing_cases": [
+            {"body": b.name, "surface": s, "worlds": g.n}
+            for (b, s), g in zip(env.cases, env.groups, strict=True)
+        ]
+        if standing_profile
+        else None,
         "hidden": learner.hidden,
         "num_envs": num_envs,
+        "minibatch_size": minibatch_size,
+        "max_iterations": max_iterations,
+        "warp_execution": warp_execution if physics_backend == "warp" else None,
         "bodies": bodies,
         "terrain": terrain,
         "reward_profile": reward_profile,
@@ -319,6 +407,11 @@ def train(
         "damage_healthy_loss_weight": damage_healthy_loss_weight,
         "healthy_style_source": healthy_style_source,
         "healthy_motion_sha256": motion_hash,
+        "healthy_motion_path": str(
+            Path(healthy_motion_path).resolve().relative_to(ROOT)
+        )
+        if healthy_motion_path
+        else None,
         "healthy_motion_history_seconds": 0.12
         if healthy_style_source == "motion_sequence"
         else 0.0,
@@ -331,7 +424,10 @@ def train(
         else None,
         "learning_rate": learning_rate,
         "normalization_frozen": teacher is not None,
-        "body_environment_counts": {g.body.name: g.n for g in env.groups},
+        "body_environment_counts": {
+            name: sum(g.n for g in env.groups if g.body.name == name)
+            for name in dict.fromkeys(g.body.name for g in env.groups)
+        },
         "support_rule": "terminal foot or designated distal stump; other link-ground contact penalized",
         "randomized_motor_strength": env.randomize_strength,
         "epochs": epochs,
@@ -354,21 +450,30 @@ def train(
         ),
         "python": platform.python_version(),
         "torch": torch.__version__,
-        "physics": "CPU MuJoCo/mjbatch",
+        "physics": "CUDA MuJoCo Warp"
+        if physics_backend == "warp"
+        else "CPU MuJoCo/mjbatch",
         "mujoco": mujoco.__version__,
         "contact_profile": "firm",
         "threads": threads,
         "physics_timestep_s": env.timestep,
+        "physics_backend": physics_backend,
+        "physics_device": "cuda:0" if physics_backend == "warp" else "cpu",
+        "environment_array_backend": "numpy_cpu",
         "control_timestep_s": 0.02,
         "setup_seconds": time.perf_counter() - setup_start,
     }
     (output / "config.json").write_text(json.dumps(config, indent=2) + "\n")
 
     @torch.no_grad()
-    def infer(obs, ctx, hist, extra):
+    def infer(obs, ctx, hist, extra, support=None):
         values = [torch.as_tensor(x, device=actor_device) for x in (obs, ctx, extra)]
         h = torch.as_tensor(hist, device=actor_device) if mode == "history" else None
-        mean, value = actor(values[0], values[1], h, values[2])
+        if mode == "support":
+            support = torch.as_tensor(
+                env.support_obs() if support is None else support, device=actor_device
+            )
+        mean, value = actor(values[0], values[1], h, values[2], support=support)
         return mean.cpu().numpy(), value.cpu().numpy()
 
     def save(name, elapsed):
@@ -379,19 +484,27 @@ def train(
             "config": config,
             "cumulative_training_seconds": ancestry + elapsed,
             "training_seconds": elapsed,
-            "parent": str(resume) if resume else None,
+            "parent": str(Path(resume).resolve().relative_to(ROOT))
+            if resume and Path(resume).resolve().is_relative_to(ROOT)
+            else str(resume)
+            if resume
+            else None,
             "iterations": iteration,
             "transitions": transitions,
+            "optimizer_steps": optimizer_steps,
         }
         torch.save(saved, output / name)
 
     iteration = 0
     transitions = 0
+    optimizer_steps = 0
     records = []
     start = time.perf_counter()
     deadline = start + min(seconds, allowance - ancestry) - 0.8
     save("initial.pt", 0)
-    while time.perf_counter() < deadline:
+    while time.perf_counter() < deadline and (
+        max_iterations is None or iteration < max_iterations
+    ):
         rollout_start = time.perf_counter()
         metrics = []
         falls = 0
@@ -400,7 +513,13 @@ def train(
             obs, ctx = env.obs(), env.context.copy()
             extra = np.concatenate((env.vel, env.pos[:, 2:3]), 1).astype(np.float32)
             history = env.history.copy() if mode == "history" else None
-            mean, val = infer(obs, ctx, history, extra)
+            support = env.support_obs() if mode == "support" else None
+            walking_mask = (
+                np.linalg.norm(env.commands, axis=1) > 0.05
+                if standing_profile
+                else None
+            )
+            mean, val = infer(obs, ctx, history, extra, support)
             if teacher is not None:
                 with torch.no_grad():
                     target_obs = teacher_observation(obs) if healthy_style else obs
@@ -441,7 +560,9 @@ def train(
             if teacher is not None:
                 # Read health after stepping so a fault at this step immediately
                 # disables imitation. No strength/geometry labels enter the actor.
-                healthy = healthy_mask(env.context).astype(np.float32)
+                healthy = (
+                    walking_mask if standing_profile else healthy_mask(env.context)
+                ).astype(np.float32)
                 reward += reference_reward_weight * reference_bonus(
                     actions, target, healthy
                 )
@@ -471,6 +592,8 @@ def train(
                 "rew": reward,
                 "alive": ~done,
             }
+            if support is not None:
+                vals["support"] = support
             if history is not None:
                 vals["hist"] = history
             if teacher is not None:
@@ -510,7 +633,9 @@ def train(
         flat = {k: v.reshape((-1, *v.shape[2:])) for k, v in batch.items()}
         update_start = time.perf_counter()
         for _ in range(epochs):
-            for ids in torch.randperm(num_envs * horizon, device=device).chunk(4):
+            for ids in torch.randperm(num_envs * horizon, device=device).split(
+                minibatch_size
+            ):
                 if time.perf_counter() >= deadline:
                     break
                 mean, v = learner(
@@ -518,6 +643,7 @@ def train(
                     flat["ctx"][ids],
                     flat["hist"][ids] if mode == "history" else None,
                     flat["extra"][ids],
+                    support=flat["support"][ids] if mode == "support" else None,
                 )
                 lp = log_density(
                     (flat["act"][ids] - mean) / learner.log_std.exp(), learner.log_std
@@ -542,6 +668,14 @@ def train(
                     loss += reference_loss_weight * reference_loss(
                         mean, flat["reference"][ids], flat["healthy"][ids]
                     )
+                if walking_replay_data is not None:
+                    replay_obs, replay_actions = walking_replay_data
+                    replay_ids = torch.randint(len(replay_obs), (512,), device=device)
+                    replay_mean, _ = learner(replay_obs[replay_ids])
+                    loss += (
+                        walking_replay_weight
+                        * (replay_mean - replay_actions[replay_ids]).square().mean()
+                    )
                 if healthy_style:
                     loss += damage_healthy_loss_weight * style_loss(
                         mean, flat["reference"][ids], flat["style_mask"][ids]
@@ -558,6 +692,7 @@ def train(
                 loss.backward()
                 nn.utils.clip_grad_norm_(learner.parameters(), 1.0)
                 opt.step()
+                optimizer_steps += 1
                 with torch.no_grad():
                     learner.log_std.clamp_(-2, 0)
         if teacher is None:
@@ -569,12 +704,14 @@ def train(
         track, speed, reward = np.mean(metrics, axis=0)
         row = {
             "iteration": iteration,
+            "optimizer_steps": optimizer_steps,
             "elapsed_s": elapsed,
             "transitions": transitions,
             "track": float(track),
             "speed_mps": float(speed),
             "reward": float(reward),
             "fall_fraction": float(falls / max(completed, 1)),
+            "falls_per_control_transition": float(falls / (horizon * num_envs)),
             "rollout_s": rollout_seconds,
             "update_s": time.perf_counter() - update_start,
         }
@@ -583,7 +720,7 @@ def train(
             print(json.dumps(row), flush=True)
         if iteration % 25 == 0:
             save("latest.pt", elapsed)
-            if retention_curriculum or limb_stage:
+            if retention_curriculum or limb_stage or standing_profile:
                 save(f"iteration_{iteration:04d}.pt", elapsed)
     if device == "cuda":
         torch.cuda.synchronize()
@@ -597,6 +734,10 @@ def train(
         "cumulative_training_seconds": ancestry + elapsed,
         "transitions": transitions,
         "iterations": iteration,
+        "optimizer_steps": optimizer_steps,
+        "stop_reason": "iteration_limit"
+        if max_iterations is not None and iteration >= max_iterations
+        else "time_limit",
         "progress": records,
         "checkpoint_sha256": hashlib.sha256(
             (output / "policy.pt").read_bytes()

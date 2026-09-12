@@ -24,8 +24,14 @@ def main():
     p.add_argument("--bodies", default="all")
     p.add_argument("--terrain", default="flat", choices=("flat", "steps", "test_steps"))
     p.add_argument("--device", default="auto", choices=("auto", "cpu", "mps", "cuda"))
+    p.add_argument("--physics-backend", default="mjbatch", choices=("mjbatch", "warp"))
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--epochs", type=int, default=4)
+    p.add_argument("--minibatch-size", type=int)
+    p.add_argument("--max-iterations", type=int)
+    p.add_argument(
+        "--warp-execution", choices=("serial", "concurrent"), default="concurrent"
+    )
     p.add_argument("--allowance", type=float, default=300)
     p.add_argument("--extension-reason", default="")
     p.add_argument("--reward-profile", choices=("adaptive", "walk"), default="adaptive")
@@ -37,6 +43,7 @@ def main():
     p.add_argument("--damage-angular-rate-weight", type=float, default=0.0)
     p.add_argument("--damage-joint-accel-weight", type=float, default=0.0)
     p.add_argument("--damage-flight-weight", type=float, default=0.0)
+    p.add_argument("--healthy-motion-path", type=Path)
     p.add_argument("--damage-clearance-weight", type=float, default=0.0)
     p.add_argument("--visible-step-weight", type=float, default=0.0)
     p.add_argument("--rear-overlap-weight", type=float, default=0.0)
@@ -66,6 +73,22 @@ def main():
     p.add_argument("--front-reference", type=Path)
     p.add_argument("--single-reference", type=Path)
     p.add_argument("--single-reference-weight", type=float, default=0.0)
+    p = sub.add_parser(
+        "learn",
+        help="Continue the approved adaptive dog using the maintained CPU/Warp recipe",
+    )
+    p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--seconds", type=float, default=90)
+    p.add_argument("--seed", type=int, default=2)
+    p.add_argument("--physics-backend", choices=("mjbatch", "warp"), default="mjbatch")
+    p.add_argument("--device", choices=("auto", "cpu", "mps", "cuda"), default="auto")
+    p.add_argument(
+        "--num-envs", type=int, help="Defaults to 512 on CPU physics, 4096 on Warp"
+    )
+    p.add_argument("--minibatch-size", type=int, default=3072)
+    p.add_argument("--max-iterations", type=int)
+    p.add_argument("--resume", type=Path)
+    p.add_argument("--learning-rate", type=float, default=0.0001)
     p = sub.add_parser("evaluate")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
@@ -139,6 +162,12 @@ def main():
         kwargs = vars(args)
         kwargs.pop("command")
         train(**kwargs)
+    elif args.command == "learn":
+        from .recipes import adaptive_walking
+
+        kwargs = vars(args)
+        kwargs.pop("command")
+        adaptive_walking(**kwargs)
     elif args.command == "evaluate":
         from .evaluate import evaluate
 

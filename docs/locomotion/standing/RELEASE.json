@@ -1,0 +1,18 @@
+{
+  "release": "adaptive-standing-v1",
+  "source_commit": "fab7d12",
+  "checkpoint": "assets/locomotion/checkpoints/standing/consolidate_120s_seed12.pt",
+  "checkpoint_sha256": "0e3acf841935676547ab3c974de7fb9317119f0926a9323ea7b4305c03f8e68a",
+  "video": "previews/locomotion/standing/adaptive_standing_v3.mp4",
+  "video_sha256": "61c2c33b734273427ea34c41d321f5434f3352306a061aef67a835c6aa2ee070",
+  "video_seconds": 67,
+  "acceptance": "User accepted natural standing behavior and eight terrain cases from failure review. Original quantitative failures remain reported.",
+  "limitations": [
+    "Static supports only; moving supports untested in this release.",
+    "All 144 holdout trials per backend remain upright; strict CPU passes 94/144, Warp 96/144.",
+    "Some damaged transitions exceed the original 8 mm sampled penetration gate.",
+    "Video includes reviewed cases chosen after evaluation; 25/25 upright, 10/25 strict passes."
+  ],
+  "new_training_seconds": 536.734,
+  "selected_training_ancestry_seconds": 2459.46
+}
