@@ -88,8 +88,12 @@ def train(
     max_iterations=None,
     warp_execution="concurrent",
     standing_profile=None,
+    moving_profile=None,
+    motion_scale=1.0,
     standing_surfaces="gentle",
     walking_replay_weight=0.0,
+    standing_replay_weight=0.0,
+    standing_reference=None,
     idle_support_weight=2.0,
     idle_drift_weight=0.0,
     idle_episode_steps=500,
@@ -171,6 +175,15 @@ def train(
             idle_drift_weight=idle_drift_weight,
             idle_episode_steps=idle_episode_steps,
             substep_support=substep_support,
+        )
+    if moving_profile:
+        from .moving_env import MovingEnv
+
+        if not standing_profile or mode != "support":
+            raise ValueError("Moving training requires standing support mode")
+        environment_class = MovingEnv
+        environment_options.update(
+            moving_profile=moving_profile, motion_scale=motion_scale
         )
     env = environment_class(
         num_envs,
@@ -288,6 +301,26 @@ def train(
             torch.as_tensor(replay_obs, device=device),
             torch.as_tensor(replay_actions, device=device),
         )
+    standing_replay_data = None
+    standing_replay_setup_seconds = 0.0
+    if standing_replay_weight:
+        if (
+            mode != "support"
+            or standing_reference is None
+            or standing_replay_weight < 0
+        ):
+            raise ValueError(
+                "Standing rehearsal requires a support policy and reference"
+            )
+        from .standing_replay import collect as collect_standing
+
+        ro, rs, ra, standing_replay_setup_seconds = collect_standing(
+            standing_reference,
+            ROOT / "outputs/locomotion/moving/standing_rehearsal_seed22.npz",
+        )
+        standing_replay_data = tuple(
+            torch.as_tensor(x, device=device) for x in (ro, rs, ra)
+        )
     opt = torch.optim.Adam(
         learner.parameters(), lr=learning_rate, fused=device in ("cuda", "mps")
     )
@@ -327,10 +360,22 @@ def train(
         "seed": seed,
         "mode": mode,
         "standing_profile": standing_profile,
+        "moving_profile": moving_profile,
+        "motion_scale": motion_scale if moving_profile else None,
         "idle_support_weight": idle_support_weight,
         "idle_drift_weight": idle_drift_weight,
         "idle_episode_steps": idle_episode_steps,
         "substep_support": substep_support,
+        "standing_replay_weight": standing_replay_weight,
+        "standing_replay_rows": len(standing_replay_data[0])
+        if standing_replay_data
+        else 0,
+        "standing_replay_collection_seconds": standing_replay_setup_seconds,
+        "standing_reference_sha256": hashlib.sha256(
+            Path(standing_reference).read_bytes()
+        ).hexdigest()
+        if standing_reference
+        else None,
         "walking_replay_weight": walking_replay_weight,
         "walking_replay_rows": len(walking_replay_data[0])
         if walking_replay_data
@@ -675,6 +720,13 @@ def train(
                     loss += (
                         walking_replay_weight
                         * (replay_mean - replay_actions[replay_ids]).square().mean()
+                    )
+                if standing_replay_data is not None:
+                    ro, rs, ra = standing_replay_data
+                    rid = torch.randint(len(ro), (512,), device=device)
+                    prediction, _ = learner(ro[rid], support=rs[rid])
+                    loss += (
+                        standing_replay_weight * (prediction - ra[rid]).square().mean()
                     )
                 if healthy_style:
                     loss += damage_healthy_loss_weight * style_loss(

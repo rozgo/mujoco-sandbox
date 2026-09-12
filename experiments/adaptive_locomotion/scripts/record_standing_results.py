@@ -10,10 +10,11 @@ from pathlib import Path
 import imageio_ffmpeg
 import mujoco
 import numpy as np
+from PIL import Image, ImageDraw
+
 from adaptive_locomotion.bodies import CONTROL_DT, ROOT
 from adaptive_locomotion.presentation import configure
 from adaptive_locomotion.record import font
-from PIL import Image, ImageDraw
 
 BASE = ROOT / "previews/locomotion/standing/adaptive_standing_v2.mp4"
 REVIEW = ROOT / "previews/locomotion/standing/failure_review.json"

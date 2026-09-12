@@ -135,9 +135,15 @@ def build_model(
             conaffinity="0",
         )
     standing = terrain.startswith("stand_")
-    if not standing and terrain not in ("flat", "steps", "test_steps", "heldout_steps"):
+    if not standing and terrain not in (
+        "flat",
+        "moving",
+        "steps",
+        "test_steps",
+        "heldout_steps",
+    ):
         raise ValueError(terrain)
-    if terrain != "flat" and not standing:
+    if terrain not in ("flat", "moving") and not standing:
         h = 0.04 if terrain == "steps" else 0.06
         obstacles = ((1.6, 0.32, h), (2.8, 0.5, 1.5 * h), (4.1, 0.4, h))
         if terrain == "heldout_steps":
@@ -275,7 +281,11 @@ def build_model(
         xyaxes="1 0 0 0 .52 .85",
         fovy="58",
     )
-    if standing:
+    if terrain == "moving":
+        from .moving_scene import compose
+
+        compose(root)
+    elif standing:
         from .standing_surfaces import compose
 
         compose(root, terrain.removeprefix("stand_"))
@@ -293,7 +303,7 @@ def build_model(
         # Native contact-force sensors preserve physical collisions. Legacy
         # walking uses them only for rewards/diagnostics; standing additionally
         # exposes the four terminal-contact bits as ideal contact sensing.
-        for element in world.iter("body"):
+        for element in world.find("body[@name='base']").iter("body"):
             for i, geom in enumerate(element.findall("geom")):
                 if geom.get("class") == "visual" or geom.get("contype") == "0":
                     continue
@@ -304,7 +314,11 @@ def build_model(
                     "contact",
                     name="support_" + geom.get("name"),
                     geom1=geom.get("name"),
-                    body2="world",
+                    **(
+                        {"subtree2": "support_environment"}
+                        if terrain == "moving"
+                        else {"body2": "world"}
+                    ),
                     data="found force",
                     reduce="netforce",
                     num="1",
@@ -341,6 +355,11 @@ def initialize(model, data):
     surface = name_for(model)
     if surface is not None:
         initialize_support(model, data, surface)
+    from .moving_scene import initialize as initialize_moving
+    from .moving_scene import is_moving
+
+    if is_moving(model):
+        initialize_moving(model, data)
 
 
 def manifest(body, model):

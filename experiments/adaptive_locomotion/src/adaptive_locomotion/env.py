@@ -64,6 +64,12 @@ class Group:
     ):
         self.body = body
         self.model = build_model(body, terrain, timestep, sensing)
+        base = self.model.body("base").id
+        robot_bodies = [base]
+        for i in range(base + 1, self.model.nbody):
+            if self.model.body_parentid[i] in robot_bodies:
+                robot_bodies.append(i)
+        self.robot_mass = float(self.model.body_mass[robot_bodies].sum())
         if support_friction is not None:
             if not np.isfinite(support_friction) or support_friction <= 0:
                 raise ValueError("Support friction must be finite and positive")
@@ -126,11 +132,15 @@ class Group:
     def set_strength(self, ids, strength):
         strength = strength[:, self.slot]
         cap = LIMITS[self.slot][None, :] * strength
-        self.force_range[ids, :, 0] = -cap
-        self.force_range[ids, :, 1] = cap
+        self.force_range[ids[:, None], self.aadr, 0] = -cap
+        self.force_range[ids[:, None], self.aadr, 1] = cap
         active = (strength > 0)[:, :, None]
-        self.gain[ids] = self.original_gain[ids] * active
-        self.bias[ids] = self.original_bias[ids] * active
+        self.gain[ids[:, None], self.aadr] = (
+            self.original_gain[ids[:, None], self.aadr] * active
+        )
+        self.bias[ids[:, None], self.aadr] = (
+            self.original_bias[ids[:, None], self.aadr] * active
+        )
         if hasattr(self.batch, "mark_model_dirty"):
             self.batch.mark_model_dirty()
 
@@ -355,7 +365,7 @@ class DogEnv:
                 self.scan[s] = np.where(values >= 0, np.minimum(values, 2), 2)
             force = np.linalg.norm(g.support_data[:, ~g.support_allowed, 1:4], axis=-1)
             self.bad_support_force[s] = force.sum(1)
-            weight = float(g.model.body_mass.sum() * 9.81)
+            weight = float(g.robot_mass * 9.81)
             # Both load and contact persistence matter. A weak incidental brush
             # costs less than using a knee to carry the body. No contact is hidden.
             self.support_cost[s] = 0.25 * np.minimum(force / 5, 1).sum(
@@ -418,7 +428,8 @@ class DogEnv:
                 g.qvel[local, :] = self.rng.uniform(
                     -0.05, 0.05, (len(local), g.model.nv)
                 )
-            g.ctrl[local] = STAND[g.slot]
+            g.ctrl[local] = 0
+            g.ctrl[local[:, None], g.aadr] = STAND[g.slot]
             g.set_strength(local, self.strength[global_ids])
             g.batch.forward(local)
             self.valid[global_ids[:, None], g.slot] = 1
@@ -471,7 +482,7 @@ class DogEnv:
             local = events[(events >= s.start) & (events < s.stop)] - s.start
             if len(local):
                 g.set_strength(local, self.strength[local + s.start])
-            g.ctrl[:] = STAND[g.slot] + ACTION_SCALE * action[s][:, g.slot]
+            g.ctrl[:, g.aadr] = STAND[g.slot] + ACTION_SCALE * action[s][:, g.slot]
 
         def advance(g):
             if not self.support_substeps:
