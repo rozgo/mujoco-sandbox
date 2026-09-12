@@ -141,9 +141,9 @@ The accepted moving-support checkpoint and video are pinned by
 
 ### Complete learned-policy showcase
 
-[![Adaptive dog in the native graphite scene](previews/locomotion/graphite/adaptive_dog_complete_v1.png)](previews/locomotion/graphite/adaptive_dog_complete_v1.mp4)
+[![Adaptive dog in the native graphite scene](previews/locomotion/graphite/adaptive_dog_complete_v2.png)](previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)
 
-**[Watch the complete film — 65 seconds, 2× playback](previews/locomotion/graphite/adaptive_dog_complete_v1.mp4)** · [Chapters, provenance and reproduction](docs/locomotion/graphite/COMPLETE_VIDEO.md)
+**[Watch the complete film — 2 min 04 s, normal speed](previews/locomotion/graphite/adaptive_dog_complete_v2.mp4)** · [Chapters, provenance and reproduction](docs/locomotion/graphite/COMPLETE_VIDEO.md)
 
 All nine walking bodies, standing on uneven terrain, the accepted difficult
 terrain trials and five moving-platform motions are combined in the native
