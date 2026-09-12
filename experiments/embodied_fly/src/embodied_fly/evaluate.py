@@ -21,9 +21,18 @@ def load_actor(path, graph_path, device):
     graph_hash = hashlib.sha256((graph_path / "weights.npz").read_bytes()).hexdigest()
     if graph_hash != checkpoint["graph_sha256"]:
         raise ValueError("Checkpoint refers to a different graph")
-    if checkpoint.get("graph_metadata_sha256") != sha256(graph_path / "brain.npz"):
+    if checkpoint.get("graph_metadata_sha256") is not None and checkpoint[
+        "graph_metadata_sha256"
+    ] != sha256(graph_path / "brain.npz"):
         raise ValueError("Checkpoint refers to different neuron metadata")
     adjacency, sensory, descending, motor = load_malecns(graph_path)
+    for name, ids in (
+        ("sensory_ids", sensory),
+        ("descending_ids", descending),
+        ("motor_ids", motor),
+    ):
+        if not np.array_equal(checkpoint["state_dict"][name].numpy(), ids):
+            raise ValueError("Checkpoint neuron routing differs from graph metadata")
     brain = EmbodiedBrain(
         adjacency,
         sensory,
@@ -157,6 +166,10 @@ def evaluate(args):
         "completed_utc": utc_now(),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
         "training_source_commit": checkpoint["source_commit"],
+        "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
+        "checkpoint_metadata_verification": "SHA-256 and routing"
+        if checkpoint.get("graph_metadata_sha256")
+        else "legacy checkpoint: exact graph weights and neuron routing; no stored metadata digest",
         "device": str(device),
         "physics": "native MuJoCo CPU",
         "setup_seconds": setup_seconds,

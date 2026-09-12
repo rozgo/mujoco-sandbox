@@ -114,8 +114,13 @@ def train(args):
         parent = torch.load(args.resume, map_location="cpu", weights_only=True)
         if parent["graph_sha256"] != sha256(args.graph / "weights.npz"):
             raise ValueError("Resume graph differs from checkpoint")
-        if parent.get("graph_metadata_sha256") != sha256(args.graph / "brain.npz"):
+        if parent.get("graph_metadata_sha256") is not None and parent[
+            "graph_metadata_sha256"
+        ] != sha256(args.graph / "brain.npz"):
             raise ValueError("Resume neuron metadata differs from checkpoint")
+        for name in ("sensory_ids", "descending_ids", "motor_ids"):
+            if not torch.equal(parent["state_dict"][name], getattr(brain, name).cpu()):
+                raise ValueError("Resume neuron routing differs from graph metadata")
         if parent["config"]["internal_steps"] != args.internal_steps:
             raise ValueError("Resume must preserve the recurrent architecture")
         brain.load_state_dict(parent["state_dict"], strict=True)
