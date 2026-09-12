@@ -134,3 +134,47 @@ def test_warp_standing_geometry_and_sensors(surface):
     finally:
         cpu.close()
         gpu.close()
+
+
+def test_gpu_contact_window_matches_explicit_substeps():
+    wp = pytest.importorskip("warp")
+    pytest.importorskip("mujoco_warp")
+    wp.init()
+    if not wp.is_cuda_available():
+        pytest.skip("NVIDIA CUDA required")
+    args = {
+        "num_envs": 2,
+        "seed": 9300,
+        "randomize": False,
+        "schedule": False,
+        "cases": [(PRESETS["healthy"], "pads_high")],
+        "threads": 1,
+        "physics_backend": "warp",
+        "substep_support": True,
+    }
+    fast = StandingEnv(**args)
+    explicit = StandingEnv(**args, support_substeps=True)
+    try:
+        for _ in range(20):
+            # Same physical stepping; only diagnostic accumulation differs.
+            rf = fast.step(fast.action)[0]
+            re = explicit.step(explicit.action)[0]
+            np.testing.assert_allclose(fast.pos, explicit.pos, atol=2e-5)
+            np.testing.assert_allclose(
+                fast.groups[0].support_peaks,
+                explicit.groups[0].support_peaks,
+                atol=0.01,
+                rtol=0.002,
+            )
+            np.testing.assert_allclose(
+                fast.groups[0].support_impulses,
+                explicit.groups[0].support_impulses,
+                atol=0.001,
+                rtol=0.002,
+            )
+            np.testing.assert_allclose(rf, re, atol=0.01, rtol=0.002)
+            endpoint = np.linalg.norm(fast.groups[0].support_data[:, :, 1:4], axis=-1)
+            assert np.all(fast.groups[0].support_peaks >= endpoint - 1e-4)
+    finally:
+        fast.close()
+        explicit.close()

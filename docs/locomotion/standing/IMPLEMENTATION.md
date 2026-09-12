@@ -60,3 +60,11 @@ a fixed rehearsal dataset of valid v1 walking observations/actions from all nine
 bodies (training seed 12). PPO minibatches also minimize action error on 512
 random rehearsal examples. This is training-only behavior retention; there is
 still one actor and no teacher, replay buffer or policy switch during execution.
+
+Contact-window refinement: diagnosis found brief unintended support during the
+first second that endpoint-only training could miss. Optional `--substep-support`
+accumulates native contact force peaks and impulses at every 2 ms physics step
+on the GPU, inside the captured graph, then transfers the summaries once per
+20 ms action. The standing penalty uses these peaks. Physics and actuator targets
+are unchanged. CPU uses explicit substeps for the same mode. Validation retains
+its independent explicit-substep path. The default legacy reward path is unchanged.

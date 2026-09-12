@@ -31,6 +31,7 @@ def main():
     p.add_argument("--idle-support-weight", type=float, default=2)
     p.add_argument("--idle-drift-weight", type=float, default=0)
     p.add_argument("--idle-episode-steps", type=int, default=500)
+    p.add_argument("--substep-support", action="store_true")
     p.add_argument("--initial-std", type=float, default=0.20)
     p.add_argument("--max-iterations", type=int)
     p.add_argument(
@@ -82,6 +83,7 @@ def main():
             idle_support_weight=args.idle_support_weight,
             idle_drift_weight=args.idle_drift_weight,
             idle_episode_steps=args.idle_episode_steps,
+            substep_support=args.substep_support,
             learning_rate=args.learning_rate,
             reference=BASELINE,
             reference_loss_weight=args.reference_weight,
@@ -109,7 +111,7 @@ def main():
     else:
         from .standing_evaluate import evaluate
 
-        evaluate(
+        report = evaluate(
             args.checkpoint,
             args.output,
             args.surfaces,
@@ -120,7 +122,8 @@ def main():
             args.physics_backend,
             not args.no_transitions,
         )
+        return 0 if report["passed"] == report["trials"] else 2
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -51,7 +51,15 @@ def rotation(q):
 
 class Group:
     def __init__(
-        self, body, n, threads, terrain, sensing, timestep, physics_backend="mjbatch"
+        self,
+        body,
+        n,
+        threads,
+        terrain,
+        sensing,
+        timestep,
+        physics_backend="mjbatch",
+        native_support_peaks=False,
     ):
         self.body = body
         self.model = build_model(body, terrain, timestep, sensing)
@@ -85,6 +93,8 @@ class Group:
         self.support_data = self.batch.bind("sensordata")[
             :, first : first + 4 * len(sensor_ids)
         ].reshape(n, -1, 4)
+        if native_support_peaks and physics_backend == "warp":
+            self.batch.enable_contact_window(int(first), len(sensor_ids))
         self.support_allowed = np.array(
             [name in allowed_support_names(body) for name in self.support_names]
         )
@@ -149,6 +159,7 @@ class DogEnv:
         terrain_per_group=None,
         group_counts=None,
         healthy_posture_only=False,
+        native_support_peaks=False,
     ):
         if physics_backend not in ("mjbatch", "warp"):
             raise ValueError("Unknown physics backend")
@@ -263,6 +274,7 @@ class DogEnv:
                     True if sensing is None else sensing,
                     timestep,
                     physics_backend,
+                    native_support_peaks,
                 )
             )
             self.slices.append(slice(start, start + n))
@@ -450,8 +462,16 @@ class DogEnv:
         def advance(g):
             if not self.support_substeps:
                 g.batch.step(nstep=self.decimation)
-                g.support_peaks = np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
-                g.support_impulses = g.support_peaks * CONTROL_DT
+                g.support_peaks = (
+                    g.batch.bind("contact_peaks")
+                    if hasattr(g.batch, "contact_arrays")
+                    else np.linalg.norm(g.support_data[:, :, 1:4], axis=-1)
+                )
+                g.support_impulses = (
+                    g.batch.bind("contact_impulses")
+                    if hasattr(g.batch, "contact_arrays")
+                    else g.support_peaks * CONTROL_DT
+                )
                 return
             g.support_peaks = np.zeros((g.n, len(g.support_names)))
             g.support_impulses = np.zeros_like(g.support_peaks)
@@ -470,10 +490,16 @@ class DogEnv:
                 group.batch.step_async(self.decimation)
             for group in self.groups:
                 group.batch.wait_step()
-                group.support_peaks = np.linalg.norm(
-                    group.support_data[:, :, 1:4], axis=-1
+                group.support_peaks = (
+                    group.batch.bind("contact_peaks")
+                    if hasattr(group.batch, "contact_arrays")
+                    else np.linalg.norm(group.support_data[:, :, 1:4], axis=-1)
                 )
-                group.support_impulses = group.support_peaks * CONTROL_DT
+                group.support_impulses = (
+                    group.batch.bind("contact_impulses")
+                    if hasattr(group.batch, "contact_arrays")
+                    else group.support_peaks * CONTROL_DT
+                )
         elif self.pool:
             list(self.pool.map(advance, self.groups))
         else:

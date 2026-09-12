@@ -93,6 +93,7 @@ def train(
     idle_support_weight=2.0,
     idle_drift_weight=0.0,
     idle_episode_steps=500,
+    substep_support=False,
 ):
     if minibatch_size is not None and minibatch_size < 1:
         raise ValueError("Minibatch size must be positive")
@@ -169,6 +170,7 @@ def train(
             idle_support_weight=idle_support_weight,
             idle_drift_weight=idle_drift_weight,
             idle_episode_steps=idle_episode_steps,
+            substep_support=substep_support,
         )
     env = environment_class(
         num_envs,
@@ -328,6 +330,7 @@ def train(
         "idle_support_weight": idle_support_weight,
         "idle_drift_weight": idle_drift_weight,
         "idle_episode_steps": idle_episode_steps,
+        "substep_support": substep_support,
         "walking_replay_weight": walking_replay_weight,
         "walking_replay_rows": len(walking_replay_data[0])
         if walking_replay_data

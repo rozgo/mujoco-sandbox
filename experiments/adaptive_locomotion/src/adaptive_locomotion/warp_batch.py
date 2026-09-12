@@ -137,6 +137,25 @@ class WarpBatch:
         self.host["warning"] = np.zeros((n, mujoco.mjtWarning.mjNWARNING, 2), dtype=int)
         self.download()
 
+    def enable_contact_window(self, first, count):
+        """Capture 500 Hz contact peaks/impulses with one host transfer per control."""
+        from .warp_contact_window import accumulate
+
+        self.contact_window_kernel = accumulate
+        self.contact_first = first
+        self.contact_count = count
+        self.contact_arrays = {}
+        with self.wp.ScopedDevice(self.device):
+            for name in ("contact_peaks", "contact_impulses"):
+                self.contact_arrays[name] = self.wp.zeros(
+                    (self.n, count), dtype=self.wp.float32
+                )
+                self.buffers[name] = self.wp.zeros(
+                    (self.n, count), dtype=self.wp.float32, device="cpu", pinned=True
+                )
+                self.host[name] = self.buffers[name].numpy()
+        self.graphs.clear()
+
     def bind(self, name):
         return self.host[name]
 
@@ -164,8 +183,23 @@ class WarpBatch:
         if nstep not in self.graphs:
             started = time.perf_counter()
             with self.wp.ScopedDevice(self.device), self.wp.ScopedCapture() as capture:
+                if hasattr(self, "contact_arrays"):
+                    for array in self.contact_arrays.values():
+                        array.zero_()
                 for _ in range(nstep):
                     self.mjw.step(self.m, self.d)
+                    if hasattr(self, "contact_arrays"):
+                        self.wp.launch(
+                            self.contact_window_kernel,
+                            dim=(self.n, self.contact_count),
+                            inputs=[
+                                self.d.sensordata,
+                                self.contact_arrays["contact_peaks"],
+                                self.contact_arrays["contact_impulses"],
+                                self.contact_first,
+                                self.model.opt.timestep,
+                            ],
+                        )
             self.graphs[nstep] = capture.graph
             self.compile_seconds += time.perf_counter() - started
         return self.graphs[nstep]
@@ -195,6 +229,9 @@ class WarpBatch:
     def enqueue_download(self):
         for key in (*self.DATA_FIELDS, "overflow"):
             self.wp.copy(self.buffers[key], getattr(self.d, key))
+        if hasattr(self, "contact_arrays"):
+            for key, array in self.contact_arrays.items():
+                self.wp.copy(self.buffers[key], array)
 
     def check_download(self):
         overflow = self.host["overflow"]

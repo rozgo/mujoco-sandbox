@@ -31,6 +31,10 @@ def run_case(
     support_substeps=True,
     timestep=0.002,
 ):
+    if trials < 1 or seconds <= 2 or (transition and seconds < 10):
+        raise ValueError(
+            "Acceptance needs positive trials, >2 s standing or >=10 s transitions"
+        )
     torch.set_num_threads(1)
     env = StandingEnv(
         trials,

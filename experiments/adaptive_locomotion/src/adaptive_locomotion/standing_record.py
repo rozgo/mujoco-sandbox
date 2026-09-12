@@ -54,6 +54,26 @@ VIDEO_GROUPS = (
 )
 
 
+def ground_marks(scene, surface):
+    """Observer-only paint gives walking/head cameras a fixed distance reference."""
+    if surface != "flat":
+        return
+    for x in np.arange(-2, 12.01, 0.5):
+        if scene.ngeom >= scene.maxgeom:
+            raise RuntimeError("No room for observer ground marks")
+        geom = scene.geoms[scene.ngeom]
+        mujoco.mjv_initGeom(
+            geom,
+            mujoco.mjtGeom.mjGEOM_BOX,
+            np.array([0.003, 2, 0.0001]),
+            np.array([x, 0, 0.0003]),
+            np.eye(3).ravel(),
+            np.array([0.25, 0.36, 0.40, 1], np.float32),
+        )
+        geom.category = mujoco.mjtCatBit.mjCAT_DECOR
+        scene.ngeom += 1
+
+
 def camera(model, data, surface, kind="follow"):
     if kind == "head":
         return "head"
@@ -163,6 +183,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                             camera=camera(model, data, result["surface"]),
                             scene_option=option,
                         )
+                        ground_marks(renderer.scene, result["surface"])
                         damage_markers(
                             renderer.scene, model, data, BODY_MAP[result["body"]]
                         )
@@ -215,6 +236,7 @@ def record(checkpoint, output, physics_backend="mjbatch", fps=25, seed=9311):
                                     camera=camera(model, data, "flat", kind),
                                     scene_option=option,
                                 )
+                                ground_marks(inset.scene, "flat")
                                 canvas.paste(
                                     Image.fromarray(inset.render()),
                                     (1280, 110 + j * 380),
@@ -335,6 +357,7 @@ def view(checkpoint, surface="gap_fr", body="healthy", seconds=0, transition=Fal
                 )
                 with viewer.lock():
                     viewer.user_scn.ngeom = 0
+                    ground_marks(viewer.user_scn, surface)
                     damage_markers(viewer.user_scn, g.model, data, BODY_MAP[body])
                 viewer.sync()
                 time.sleep(max(0, CONTROL_DT - (time.perf_counter() - tick)))

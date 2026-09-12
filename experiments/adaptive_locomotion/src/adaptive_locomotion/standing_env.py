@@ -30,10 +30,17 @@ class StandingEnv(DogEnv):
         idle_support_weight=2.0,
         idle_drift_weight=0.0,
         idle_episode_steps=500,
+        substep_support=False,
         **kwargs,
     ):
         if profile not in ("healthy", "mixed"):
             raise ValueError(profile)
+        self.substep_support = substep_support
+        if substep_support:
+            if kwargs.get("physics_backend") == "warp":
+                kwargs["native_support_peaks"] = True
+            else:
+                kwargs["support_substeps"] = True
         self.idle_support_weight = idle_support_weight
         self.idle_drift_weight = idle_drift_weight
         self.idle_episode_steps = idle_episode_steps
@@ -197,6 +204,17 @@ class StandingEnv(DogEnv):
         old_action, old_tip = self.action.copy(), self.tip_positions.copy()
         reward, done, fell, info = super().step(action)
         old_reward = reward.copy()
+        if self.substep_support:
+            # Worst reaction from any physics step in this control interval.
+            # Independent acceptance still inspects each step explicitly.
+            for g, sl in zip(self.groups, self.slices, strict=True):
+                force = g.support_peaks[:, ~g.support_allowed]
+                weight = float(g.model.body_mass.sum() * 9.81)
+                self.bad_support_force[sl] = force.sum(1)
+                self.support_cost[sl] = 0.25 * np.minimum(force / 5, 1).sum(
+                    1
+                ) + 2 * np.minimum(force.sum(1) / weight, 2)
+            info["bad_support_force_n"] = self.bad_support_force.copy()
         drift = np.linalg.norm(self.pos[:, :2] - self.hold_anchor, axis=1)
         height = self.pos[:, 2] - self.reference_height
         height_error = np.maximum(0.25 - height, 0) + np.maximum(height - 0.35, 0)
