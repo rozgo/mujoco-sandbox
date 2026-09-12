@@ -60,9 +60,21 @@ class Group:
         timestep,
         physics_backend="mjbatch",
         native_support_peaks=False,
+        support_friction=None,
     ):
         self.body = body
         self.model = build_model(body, terrain, timestep, sensing)
+        if support_friction is not None:
+            if not np.isfinite(support_friction) or support_friction <= 0:
+                raise ValueError("Support friction must be finite and positive")
+            # Apply before either backend copies the model. Only sliding
+            # friction on allowed terminals and physical static supports changes.
+            support_geoms = [self.model.geom(n).id for n in allowed_support_names(body)]
+            static = (self.model.geom_bodyid == 0) & (
+                (self.model.geom_contype != 0) | (self.model.geom_conaffinity != 0)
+            )
+            self.model.geom_friction[support_geoms, 0] = support_friction
+            self.model.geom_friction[static, 0] = support_friction
         if physics_backend == "warp":
             from .warp_batch import WarpBatch
 
@@ -160,6 +172,7 @@ class DogEnv:
         group_counts=None,
         healthy_posture_only=False,
         native_support_peaks=False,
+        support_friction=None,
     ):
         if physics_backend not in ("mjbatch", "warp"):
             raise ValueError("Unknown physics backend")
@@ -275,6 +288,7 @@ class DogEnv:
                     timestep,
                     physics_backend,
                     native_support_peaks,
+                    support_friction,
                 )
             )
             self.slices.append(slice(start, start + n))

@@ -31,6 +31,7 @@ def run_case(
     support_substeps=True,
     timestep=0.002,
     capture_trial=0,
+    support_friction=None,
 ):
     if trials < 1 or seconds <= 2 or (transition and seconds < 10):
         raise ValueError(
@@ -49,6 +50,7 @@ def run_case(
         physics_backend=physics_backend,
         support_substeps=support_substeps,
         timestep=timestep,
+        support_friction=support_friction,
     )
     g = env.groups[0]
     net = net.cpu().eval()
@@ -172,6 +174,8 @@ def run_case(
         "execution_seconds": time.perf_counter() - start,
     }
     model = g.model
+    if support_friction is not None:
+        result["support_sliding_friction"] = support_friction
     env.close()
     return result, frames, model
 

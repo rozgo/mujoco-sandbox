@@ -4,13 +4,65 @@ import mujoco
 import numpy as np
 import pytest
 import torch
-
-from adaptive_locomotion.bodies import PRESETS, ROOT, build_model, initialize
+from adaptive_locomotion.bodies import (
+    PRESETS,
+    ROOT,
+    allowed_support_names,
+    build_model,
+    initialize,
+)
 from adaptive_locomotion.env import OBS_DIM
 from adaptive_locomotion.policy import Policy
 from adaptive_locomotion.standing_env import StandingEnv
 from adaptive_locomotion.standing_surfaces import SURFACES, surface_height
 from adaptive_locomotion.train import load_checkpoint, train
+
+
+def test_optional_friction_reaches_batch_feet_and_supports_only():
+    args = {
+        "num_envs": 2,
+        "seed": 12,
+        "schedule": False,
+        "threads": 1,
+        "cases": [(PRESETS["healthy"], "slope_x_18")],
+    }
+    original = StandingEnv(**args)
+    changed = StandingEnv(**args, support_friction=1.2)
+    try:
+        a, b = original.groups[0], changed.groups[0]
+        np.testing.assert_array_equal(a.qpos, b.qpos)
+        np.testing.assert_array_equal(a.qvel, b.qvel)
+        np.testing.assert_array_equal(
+            a.model.actuator_forcerange, b.model.actuator_forcerange
+        )
+        selected = (b.model.geom_bodyid == 0) & (
+            (b.model.geom_contype != 0) | (b.model.geom_conaffinity != 0)
+        )
+        selected[
+            [b.model.geom(n).id for n in allowed_support_names(PRESETS["healthy"])]
+        ] = True
+        # The batch has its own model storage: checking only g.model can miss a
+        # mutation applied after its internal copies were constructed.
+        actual = b.batch.expand("geom_friction")
+        np.testing.assert_allclose(actual[:, selected, 0], 1.2)
+        np.testing.assert_array_equal(
+            actual[:, ~selected], a.batch.expand("geom_friction")[:, ~selected]
+        )
+        np.testing.assert_array_equal(
+            actual[:, :, 1:], a.batch.expand("geom_friction")[:, :, 1:]
+        )
+        data = mujoco.MjData(b.model)
+        data.qpos[:] = b.qpos[0]
+        mujoco.mj_forward(b.model, data)
+        feet = {b.model.geom(n).id for n in allowed_support_names(PRESETS["healthy"])}
+        contacts = [
+            c for c in data.contact if int(c.geom1) in feet or int(c.geom2) in feet
+        ]
+        assert contacts
+        assert all(c.friction[0] == pytest.approx(1.2) for c in contacts)
+    finally:
+        original.close()
+        changed.close()
 
 
 def test_support_conversion_preserves_walking_and_initial_balance_actions():
