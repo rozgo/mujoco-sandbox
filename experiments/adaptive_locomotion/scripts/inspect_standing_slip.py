@@ -5,6 +5,7 @@ import json
 
 import mujoco
 import numpy as np
+
 from adaptive_locomotion.bodies import LEGS, ROOT
 
 

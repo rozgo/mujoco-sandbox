@@ -4,9 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
-from adaptive_locomotion.bodies import ROOT
 from evaluate_clearance import evaluate
 from evaluate_visible_steps import compare
+
+from adaptive_locomotion.bodies import ROOT
 
 
 def main():

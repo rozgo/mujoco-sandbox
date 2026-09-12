@@ -7,6 +7,7 @@ import time
 
 import mujoco
 import numpy as np
+
 from adaptive_locomotion.bodies import ROOT
 from adaptive_locomotion.standing_evaluate import run_case
 from adaptive_locomotion.train import load_checkpoint

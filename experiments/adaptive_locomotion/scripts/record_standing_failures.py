@@ -11,6 +11,8 @@ from pathlib import Path
 import imageio_ffmpeg
 import mujoco
 import numpy as np
+from PIL import Image, ImageDraw
+
 from adaptive_locomotion.bodies import CONTROL_DT, LEGS, ROOT, allowed_support_names
 from adaptive_locomotion.presentation import configure, damage_markers
 from adaptive_locomotion.record import font
@@ -18,7 +20,6 @@ from adaptive_locomotion.standing_evaluate import BODY_MAP, run_case
 from adaptive_locomotion.standing_record import ground_marks
 from adaptive_locomotion.standing_surfaces import surface_height
 from adaptive_locomotion.train import load_checkpoint
-from PIL import Image, ImageDraw
 
 CHECKPOINT = ROOT / "assets/locomotion/checkpoints/standing/consolidate_120s_seed12.pt"
 OUTPUT = ROOT / "previews/locomotion/standing/failure_review.mp4"

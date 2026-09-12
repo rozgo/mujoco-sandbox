@@ -262,7 +262,10 @@ def record(
                         zip(chapter, renderers, datas, strict=True)
                     ):
                         state = frames[
-                            min(round(frame_no / fps / CONTROL_DT), len(frames) - 1)
+                            min(
+                                round((frame_no + 1) / fps / CONTROL_DT) - 1,
+                                len(frames) - 1,
+                            )
                         ]
                         data.qpos[:], data.qvel[:], data.ctrl[:] = (
                             state["qpos"],
@@ -331,7 +334,9 @@ def record(
             mujoco.Renderer(model, height=430, width=640) as small,
         ):
             for frame_no in range(10 * fps):
-                state = frames[min(round(frame_no / fps / CONTROL_DT), len(frames) - 1)]
+                state = frames[
+                    min(round((frame_no + 1) / fps / CONTROL_DT) - 1, len(frames) - 1)
+                ]
                 data.qpos[:], data.qvel[:], data.ctrl[:] = (
                     state["qpos"],
                     state["qvel"],

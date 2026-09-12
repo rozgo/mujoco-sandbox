@@ -46,6 +46,18 @@ The initial round included nine-body flat training and five healthy terrain case
 
 Three matched comparisons distinguish coordinate changes from RL: the frozen standing actor with original inputs, the same weights with relative inputs, and newly trained weights with relative inputs. Original physical trajectories and failures are retained. Passing is stricter than staying upright; thresholds were saved in [the brief](BRIEF.md) before tuning.
 
+## Measured results
+
+Selected checkpoint: [round 2](../../../assets/locomotion/checkpoints/moving/round2_60s_seed22.pt), SHA-256 `5c349861f504bdb43e29e3a4351998cc22ed50bacfde86d3772f3684bc8b7879`. Selection was recorded before held-out seed 9407 and video seed 9411.
+
+Two rounds used **118.554 seconds of new GPU learning** and **5,505,024 transitions**. The policy inherited 2,459.460 seconds of earlier walking/standing learning, so its full selected lineage is **2,578.014 seconds (42 min 58 s)**. This is a fast extension of an existing policy, not learning a dog from scratch in two minutes. Setup/compilation/rehearsal collection took 13.740 and 21.713 seconds separately; short CPU interface checks are excluded from the training claim.
+
+Development retention: all **144/144 static standing/transition trials stay upright**; strict passes **100/144** versus **98/144** for the accepted parent on the same seed. All original **36/36 walking tasks and every gait-quality gate pass**, including individual foot lift, visible steps, stride/stance, speed and body motion. The original failed static conditions remain failures.
+
+Both CPU and Warp held-out moving tests improve from **16/24 strict passes** with the frozen parent to **22/24** after training; both remain **24/24 upright**. Merely changing input coordinates stays at **16/24**. The two trained strict failures on each backend are brief unintended support in combined motion; torque caps hold and sampled penetration stays below 8 mm.
+
+**Damaged moving transfer is not reliable.** The untrained whole-FR and whole-RR removal probes on combined motion pass **0/8** strict checks; only **6/8** survive the complete hold on each backend. These cases are not part of moving training. Do not infer arbitrary damaged-platform robustness from retained damaged walking and standing.
+
 ## Run
 
 From repository root:

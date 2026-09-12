@@ -7,8 +7,9 @@ from pathlib import Path
 
 import imageio_ffmpeg
 import numpy as np
-from adaptive_locomotion.bodies import ROOT
 from PIL import Image, ImageDraw
+
+from adaptive_locomotion.bodies import ROOT
 
 
 def main(video):

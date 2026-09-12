@@ -4,6 +4,7 @@ import mujoco
 import numpy as np
 import pytest
 import torch
+
 from adaptive_locomotion.bodies import (
     PRESETS,
     ROOT,

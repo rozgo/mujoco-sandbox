@@ -4,6 +4,7 @@ import mujoco
 import numpy as np
 import pytest
 import torch
+
 from adaptive_locomotion.bodies import PRESETS
 from adaptive_locomotion.moving_env import MovingEnv, point_velocity, to_local
 from adaptive_locomotion.standing_env import StandingEnv
