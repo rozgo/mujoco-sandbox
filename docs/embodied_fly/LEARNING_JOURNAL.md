@@ -700,3 +700,30 @@ prerequisite, not learned flight. Walking/flight integration, accurate commands,
 trained survival needs, brain-contribution tests and the multi-agent final film
 remain open. The next iteration must preserve current stopping and walking while
 addressing failures; it must not present separate checkpoints as one solution.
+
+### Diagnose slow walking and declare next physical-outcome pilot
+
+Replay analysis of online01 shows the first upright failure at **1.742 s** in
+slow walking. Rest was not selected in the 1.0–1.8 s windows leading to the fall;
+the actor continued choosing explore. This points to motor dynamics rather than
+an unwanted stop decision. Normal walking chose explore for all 1,000 frames;
+hold chose rest for 999/1,000. Replay analysis is diagnostic, not a new rollout.
+
+Next declared pilot: start from online01's retained single actor, request **60 s**
+physical-outcome PPO, 32 worlds / 16 CPU threads, seed 28004, learning rate 2e-6,
+initial Gaussian motor scale 0.04, original 64-step rollouts / eight-step chunks /
+two PPO epochs / original-data rehearsal. Retain the bounded stationary costs
+1.5 for translation and 0.25 for yaw to discourage loss of the new hold. Since
+the parent is an imitation checkpoint, initialize a new training-only critic,
+PPO optimizer and exploration state; inherit only actor and normalization. Keep
+all six development cases and the uninterrupted transition check. This trial
+is not accepted on reward alone and does not replace online01 automatically.
+
+The already downloaded official flight dataset includes its wing kinematics.
+Added an explicit pattern-file option to the force diagnostic. Under the same
+20 kHz physics, its supplied pattern produces 0.555 body-weight mean upward force
+versus the synthetic pattern's 0.276, and saturates wing torque on 5.78% of samples.
+Neither holds altitude. At 40 kHz the supplied pattern gives 0.596 body-weight
+force; the larger timestep sensitivity must be retained. Flight teacher export
+now labels its actual source directory rather than hard-coding "walking"; no
+teacher training or student deployment is implied by conversion.

@@ -17,7 +17,7 @@ from embodied_fly.body import FlyEnvironment
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
-def probe(output, seconds=0.03):
+def probe(output, seconds=0.03, wing_pattern=None):
     if seconds <= 0 or not np.isfinite(seconds):
         raise ValueError("Positive finite probe duration required")
     output.mkdir(parents=True, exist_ok=False)
@@ -43,7 +43,9 @@ def probe(output, seconds=0.03):
         joints = [model.joint(n).id for n in wing_names]
         actuators = [model.actuator(n).id for n in wing_names]
         addresses = model.jnt_qposadr[joints]
-        pattern = WingBeatPatternGenerator(dt_ctrl=env.control_dt)
+        pattern = WingBeatPatternGenerator(
+            base_pattern_path=wing_pattern, dt_ctrl=env.control_dt
+        )
         q, v = pattern.reset(initial_phase=0, return_qvel=True)
         # Initialization only; the complete body remains free afterward.
         data.qpos[2] = 1.0  # cm; enough for a short airborne diagnostic.
@@ -129,7 +131,9 @@ def probe(output, seconds=0.03):
     report = {
         "provenance": provenance,
         "completed_utc": utc_now(),
-        "controller": "upstream approximate WingBeatPatternGenerator plus bounded proportional wing torque",
+        "controller": "upstream WingBeatPatternGenerator plus bounded proportional wing torque",
+        "wing_pattern": "supplied dataset" if wing_pattern else "synthetic approximation",
+        "wing_pattern_sha256": sha256(wing_pattern) if wing_pattern else None,
         "learned_controller_present": False,
         "physical_preset": "flight, complete body and floor contact",
         "acceptance_eligible": False,
@@ -146,5 +150,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seconds", type=float, default=0.03)
+    parser.add_argument("--wing-pattern", type=Path)
     args = parser.parse_args()
-    probe(args.output, args.seconds)
+    probe(args.output, args.seconds, args.wing_pattern)

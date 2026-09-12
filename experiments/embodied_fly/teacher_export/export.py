@@ -53,7 +53,7 @@ def export(source: Path, output: Path):
     output.parent.mkdir(parents=True, exist_ok=True)
     np.savez(output, **arrays)
     manifest = {
-        "source": "Official FlyBody trained-fly-policies.zip / walking",
+        "source": f"Official FlyBody trained-fly-policies.zip / {source.name}",
         "saved_model_sha256": hashlib.sha256(
             (source / "saved_model.pb").read_bytes()
         ).hexdigest(),
