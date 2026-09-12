@@ -145,7 +145,7 @@ def card():
             "#b6c8ce",
         ),
         (
-            "Existing MuJoCo Warp footage + CPU terrain replay  |  Same frozen weights",
+            "One trained policy across different bodies and terrain. No retraining between scenes.",
             26,
             "#b6c8ce",
         ),
