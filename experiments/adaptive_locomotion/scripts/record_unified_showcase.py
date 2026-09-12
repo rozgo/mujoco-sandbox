@@ -459,6 +459,17 @@ def canvas_for(title, subtitle, runs, frame, chapter):
                 status = "TRIAL RESULT / " + status
             draw.text((x + 10, y + 390), status, font=font(18), fill=color)
             contact_lights(draw, run, x + 640, y + 390)
+            result, result_color = outcome_label(run.record)
+            if result != "TARGET MET" and (
+                run.spec["transition"] or run.spec["kind"] in ("walking", "moving")
+            ):
+                draw.rectangle((x + 12, y + 340, x + 592, y + 376), fill=ember.CHARCOAL)
+                draw.text(
+                    (x + 23, y + 347),
+                    "TRIAL RESULT / " + result,
+                    font=font(18),
+                    fill=result_color,
+                )
     draw = ImageDraw.Draw(canvas)
     draw.rectangle((0, 1010, 1920, 1080), fill=ember.CHARCOAL)
     draw.line((24, 1010, 1896, 1010), fill=ember.STEEL, width=2)
@@ -511,7 +522,7 @@ def stats_card(outcomes=False):
                 f"{e['moving']['passed']}/{e['moving']['trials']}",
                 "Healthy robot / six platform conditions",
             ),
-            ("REMAINED UPRIGHT", "204/204", "Eight static target misses retained"),
+            ("REMAINED UPRIGHT", "204/204", "Eight static targets missed in evaluation"),
         ]
     else:
         seconds = round(total["training_seconds"])
