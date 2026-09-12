@@ -35,6 +35,7 @@ class Needs:
             + 0.2 * (self.hydration <= 0)
         )
         injury += max(0, impact) / 0.22
+        injury = min(self.health, injury)
         self.health -= injury
         self.energy = float(np.clip(self.energy, 0, 1))
         self.hydration = float(np.clip(self.hydration, 0, 1))

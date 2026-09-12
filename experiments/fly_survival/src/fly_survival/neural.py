@@ -74,9 +74,9 @@ class NeuralPopulation:
         xy = xy[np.isfinite(xy).all(axis=1)]
         if not len(xy):
             return []
-        pixels = np.clip((xy * 96).astype(int), 0, 95)
+        pixels = np.clip((xy * 48).astype(int), 0, 47)
         unique, counts = np.unique(pixels, axis=0, return_counts=True)
         return [
-            [float(x / 96), float(y / 96), float(min(1, 0.25 + np.log1p(c) / 5))]
+            [float(x / 48), float(y / 48), float(min(1, 0.25 + np.log1p(c) / 7))]
             for (x, y), c in zip(unique, counts)
         ]

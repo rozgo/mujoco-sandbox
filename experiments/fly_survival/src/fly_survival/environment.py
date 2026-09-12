@@ -1,5 +1,6 @@
 """One shared physical habitat. No scripted fly paths or pose-driven movement."""
 
+import io
 import json
 import time
 from dataclasses import asdict
@@ -11,7 +12,7 @@ from .biology import Needs, Resources
 from .motor import Motors
 from .neural import NeuralPopulation
 from .paths import OUTPUTS
-from .scene import RESOURCE_POS, build
+from .scene import RESOURCE_POS, SPAWNS, build
 from .senses import Sensors
 from .utility import ACTIONS, Thinker, handcrafted_weights
 
@@ -30,11 +31,28 @@ class Habitat:
         record=False,
         hazards=True,
         arena=None,
+        random_spawn=False,
     ):
         self.n, self.seed = n_flies, seed
         self.rng = np.random.default_rng(seed)
         self.arena = arena or build(n_flies)
         self.m, self.d = self.arena.sim.mj_model, self.arena.sim.mj_data
+        if random_spawn:
+            slots = self.rng.choice(len(SPAWNS), n_flies, replace=False)
+            for i, slot in enumerate(slots):
+                x, y, yaw = SPAWNS[slot]
+                yaw += float(self.rng.uniform(-0.4, 0.4))
+                adr = self.m.jnt_qposadr[self.m.joint(self.arena.flies[i].name).id]
+                self.d.qpos[adr : adr + 7] = [
+                    x,
+                    y,
+                    1.05,
+                    np.cos(yaw / 2),
+                    0,
+                    0,
+                    np.sin(yaw / 2),
+                ]
+            mj.mj_forward(self.m, self.d)
         self.motors = Motors(self.arena, seed=seed)
         self.sensors = Sensors(self.arena, vision=vision)
         self.neural = NeuralPopulation(n_flies, device, seed) if neural else None
@@ -68,6 +86,7 @@ class Habitat:
         self.events = []
         self.last_event = [""] * n_flies
         self.frames = []
+        self.eye_jpeg = {}
         self.qpos = []
         self.qvel = []
         self.ctrl = []
@@ -108,11 +127,19 @@ class Habitat:
         self.d.ctrl[self.arena.swat_actuator] = target
 
     def _contacts(self, dt):
-        geoms=self.d.contact.geom
-        owners=self._geom_fly[geoms]
-        self.interfly_contacts+=int(np.count_nonzero((owners[:,0]>=0)&(owners[:,1]>=0)&(owners[:,0]!=owners[:,1])))
-        swat_ids=np.array(tuple(self.sensors.swat_ids))
-        mask=(geoms[:,0,None]==swat_ids).any(axis=1)|(geoms[:,1,None]==swat_ids).any(axis=1)
+        geoms = self.d.contact.geom
+        owners = self._geom_fly[geoms]
+        self.interfly_contacts += int(
+            np.count_nonzero(
+                (owners[:, 0] >= 0)
+                & (owners[:, 1] >= 0)
+                & (owners[:, 0] != owners[:, 1])
+            )
+        )
+        swat_ids = np.array(tuple(self.sensors.swat_ids))
+        mask = (geoms[:, 0, None] == swat_ids).any(axis=1) | (
+            geoms[:, 1, None] == swat_ids
+        ).any(axis=1)
         for k in np.flatnonzero(mask):
             c = self.d.contact[k]
             if c.efc_address < 0:
@@ -290,6 +317,14 @@ class Habitat:
         self.step_wall += time.perf_counter() - start
 
     def _capture(self, percepts):
+        if self.tick % 5 == 0:
+            from PIL import Image
+
+            for i, image in enumerate(self.sensors.eye_frames):
+                if image is not None:
+                    buf = io.BytesIO()
+                    Image.fromarray(image).save(buf, format="JPEG", quality=85)
+                    self.eye_jpeg[f"{self.tick // 5:06}_{i:02}.jpg"] = buf.getvalue()
         self.qpos.append(self.d.qpos.copy())
         self.qvel.append(self.d.qvel.copy())
         self.ctrl.append(self.d.ctrl.copy())
@@ -313,6 +348,9 @@ class Habitat:
                         len(self.neural.last_spikes[i]) if self.neural else None
                     ),
                     "brain": (self.neural.activity(i) if self.neural else []),
+                    "eye": f"eyes/{self.tick // 5:06}_{i:02}.jpg"
+                    if self.sensors.use_vision
+                    else None,
                 }
             )
         self.frames.append(
@@ -358,6 +396,10 @@ class Habitat:
         root.mkdir(parents=True, exist_ok=True)
         (root / "report.json").write_text(json.dumps(self.report(), indent=2))
         if self.record:
+            mj.mj_saveModel(self.m, str(root / "scene.mjb"), None)
+            (root / "eyes").mkdir(exist_ok=True)
+            for filename, data in self.eye_jpeg.items():
+                (root / "eyes" / filename).write_bytes(data)
             np.savez_compressed(
                 root / "physics.npz",
                 qpos=self.qpos,

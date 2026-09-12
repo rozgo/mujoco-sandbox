@@ -22,7 +22,7 @@ COLORS = {
 }
 RESOURCE_POS = np.array([[-17.0, 9.0], [13.0, 8.0], [-10.0, -11.0]])
 SHELTERS = np.array([[-19.0, -3.0], [8.0, -11.0]])
-LAMP_POS = np.array([13.0, 8.0])
+LAMP_POS = np.array([-17.0, 9.0])
 SPAWNS = [
     (-14, -7, 0.1),
     (-6, -4, 1.0),
@@ -157,16 +157,17 @@ def build(n_flies=8):
             (0.13, 0.20, 0.17, 1),
         )
     # Visible heat fixture. Heat transport is separately modeled, never implicit in lights.
-    geom(wb, "lamp_mast", "box", (23, 13, 9), (0.3, 0.3, 9), "steel", True)
-    geom(wb, "lamp_boom", "box", (18, 13, 17.8), (5, 0.3, 0.3), "steel")
-    geom(wb, "lamp_crossbar", "box", (13, 10.5, 17.8), (0.3, 2.5, 0.3), "steel")
-    geom(wb, "lamp_stem", "cylinder", (13, 8, 16.6), (0.2, 1.2, 0), "steel")
-    geom(wb, "lamp_head", "cylinder", (13, 8, 15), (2.4, 0.6, 0), "dark")
+    lx, ly = LAMP_POS
+    geom(wb, "lamp_mast", "box", (lx - 8, ly + 5, 9), (0.3, 0.3, 9), "steel", True)
+    geom(wb, "lamp_boom", "box", (lx - 4, ly + 5, 17.8), (4, 0.3, 0.3), "steel")
+    geom(wb, "lamp_crossbar", "box", (lx, ly + 2.5, 17.8), (0.3, 2.5, 0.3), "steel")
+    geom(wb, "lamp_stem", "cylinder", (lx, ly, 16.6), (0.2, 1.2, 0), "steel")
+    geom(wb, "lamp_head", "cylinder", (lx, ly, 15), (2.4, 0.6, 0), "dark")
     geom(
         wb,
         "lamp_emitter",
         "cylinder",
-        (13, 8, 14.35),
+        (lx, ly, 14.35),
         (2.1, 0.08, 0),
         (1, 0.25, 0.08, 1),
     )
@@ -176,13 +177,13 @@ def build(n_flies=8):
             wb,
             f"heat_boundary_{k}",
             "box",
-            (13 + 5.8 * math.cos(a), 8 + 5.8 * math.sin(a), 0.032),
+            (lx + 5.8 * math.cos(a), ly + 5.8 * math.sin(a), 0.032),
             (0.16, 0.08, 0.01),
             "red",
         )
     wb.add_light(
         name="heat_light",
-        pos=(13, 8, 14),
+        pos=(lx, ly, 14),
         dir=(0, 0, -1),
         diffuse=(0.7, 0.16, 0.04),
         specular=(0.1, 0.02, 0),
