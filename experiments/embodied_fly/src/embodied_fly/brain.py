@@ -140,7 +140,7 @@ class EmbodiedBrain(nn.Module):
         """Only episode resets clear memory; other worlds retain their own state."""
         return state * (~reset_mask.bool())[None, :]
 
-    def forward(self, observation, state, activity_override=None):
+    def forward(self, observation, state, activity_override=None, sample_activity=False):
         if observation.shape != (state.shape[1], self.observation_size):
             raise ValueError("Observation/world-state shape mismatch")
         encoded_observation = (
@@ -154,11 +154,20 @@ class EmbodiedBrain(nn.Module):
         state = self.core(state, drive)
         logits = self.utility_head(state[self.descending_ids].T)
         scores = logits.softmax(dim=-1)
-        activity = scores.argmax(dim=-1) if activity_override is None else activity_override
+        if activity_override is not None:
+            activity = activity_override
+        elif sample_activity:
+            activity = torch.distributions.Categorical(logits=logits).sample()
+        else:
+            activity = scores.argmax(dim=-1)
         hard = F.one_hot(activity, len(ACTIVITIES)).to(scores.dtype)
         # Exact winner forward; straight-through gradient for supervised warm start.
         # RL may supply a sampled activity and use its categorical log probability.
-        choice = hard + scores - scores.detach() if self.training else hard
+        choice = (
+            hard + scores - scores.detach()
+            if self.training and activity_override is None and not sample_activity
+            else hard
+        )
         drive = drive.index_add(0, self.descending_ids, self.intention_encoder(choice).T)
         for _ in range(self.internal_steps - 1):
             state = self.core(state, drive)

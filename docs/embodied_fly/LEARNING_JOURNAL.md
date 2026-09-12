@@ -359,3 +359,48 @@ applies changed array elements. Reset-then-initialize-then-forward fixes this;
 the regression includes the previously failing repeated-reset case. No training
 used that defective implementation. Physics remains CPU-based; CUDA is reserved
 for the full-graph actor and learning in this path.
+
+### First physical-outcome PPO recipe (declared before the run)
+
+Start from **motor_dagger_01**, which retained upright, permitted-foot support in
+all six command cases and partially learned rest. The later DAgger02 checkpoint
+lost four locomotion cases and is not this warm start. Keep the complete measured
+graph, 2,409,132 actor parameters, 383 causal inputs, 78 output channels, four
+internal recurrent updates per 2 ms action, and the walking-stage 19-channel
+passive mask. Graph neuron dynamics and both utility/motor interfaces receive
+physical-reward gradients. No teacher executes actions during PPO collection.
+
+Use 32 independent native CPU worlds with 16 threads and CUDA neural computation.
+The physics-only 1/8/16/32-world probe measured approximately 588/3,442/5,021/6,159
+transitions/s, including sensor extraction; those numbers exclude neural inference
+and optimization. The initial PPO rollout is 64 actions × 32 worlds, two epochs,
+eight-step recurrent chunks, gamma 0.995, GAE lambda 0.95, learning rate 1e-5,
+ratio clip 0.2 and KL early stopping at 0.03. Initial motor noise is 0.04 in
+pre-tanh action coordinates. Utility is sampled from the same six learned scores;
+it conditions the same graph before the motor readout. PPO uses the joint
+categorical-plus-squashed-Gaussian probability, without a straight-through
+categorical gradient. The unchanged greedy actor is used for evaluation.
+
+A separate training-only critic consumes normalized causal observations and the
+preceding descending-neuron state: 1,697 → 128 → 128 → 1. It estimates return,
+not rewards, and does not drive any actuator. Explicit task code adds rate rewards
+for measured velocity/yaw tracking, upright support, and costs for tilt, vertical
+motion, action changes and prohibited support. Rates are multiplied by 0.002 s;
+a physical fall adds a one-time −1 and resets that world. Command tracking uses a
+50 ms velocity filter to avoid equating natural within-stride yaw with command
+drift. The original raw evaluation gates remain unchanged and visible.
+
+Hold, slow/normal/fast walking and both turns coexist in the same world batch.
+Episodes last up to two seconds. Timeouts bootstrap the terminal observation's
+value; falls do not. Neither transition leaks value or recurrent memory from the
+next episode. Chunk boundaries retain the actual preceding rollout state; memory
+is cleared only at true episode resets. A short original-teacher-data rehearsal
+batch follows each rollout, with the same held-out episode split, 8-step context,
+25% reset contexts, MSE + 0.02 utility CE. Its compute and frame count are reported
+separately and also included in total training wall time. This is an explicit
+recipe change from pure imitation, not a continuation with identical optimizer.
+
+Fourteen focused tests pass, including exact recurrent sampled-action replay,
+physical-reward gradient flow into internal cells, timeout/failure return handling,
+and native/single-body physical agreement. First run is a short implementation
+pilot; a longer trial depends on its measured behavior and numerical health.
