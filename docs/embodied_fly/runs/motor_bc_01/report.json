@@ -1,0 +1,69 @@
+{
+  "source_commit": "e34d2e5541ee7867154c2530690b2ba376fbe61e",
+  "config": {
+    "device": "cuda",
+    "seconds": 300.0,
+    "worlds": 32,
+    "sequence": 8,
+    "burnin": 8,
+    "internal_steps": 4,
+    "lr": 0.0003,
+    "seed": 18001,
+    "freeze_core": false
+  },
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "neurons": 166700,
+  "connections": 25582938,
+  "trainable_parameters": 2409132,
+  "core_parameters": 500100,
+  "setup_seconds": 2.7640885752625763,
+  "training_seconds": 300.0332961380482,
+  "evaluation_seconds": 0.09907012898474932,
+  "updates": 1894,
+  "supervised_examples": 484864,
+  "unique_training_frames": 12000,
+  "parallel_neural_sequences": 32,
+  "validation_indices_in_accepted_episodes": [
+    1,
+    2,
+    11,
+    12
+  ],
+  "live_physics_worlds_during_imitation": 0,
+  "initial_validation_motor_mse": 0.6490473747253418,
+  "final_validation_motor_mse": 0.016297586262226105,
+  "peak_cuda_allocated_bytes": 2930399232,
+  "core_gradient_audit": {
+    "excitability": {
+      "finite": true,
+      "l2": 0.007818929851055145,
+      "nonzero_cells": 165350
+    },
+    "leak": {
+      "finite": true,
+      "l2": 0.0012146963272243738,
+      "nonzero_cells": 165422
+    },
+    "bias": {
+      "finite": true,
+      "l2": 0.38847190141677856,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_parameter_changes": {
+    "excitability": {
+      "l2": 6.3179731369018555,
+      "changed_cells": 165351
+    },
+    "leak": {
+      "l2": 12.930840492248535,
+      "changed_cells": 165503
+    },
+    "bias": {
+      "l2": 2.4973363876342773,
+      "changed_cells": 165503
+    }
+  },
+  "checkpoint_sha256": "7bf16a8033a1013088e9672acbd9d44e4c08194c4ff8ddd744c270e9ae874243",
+  "physical_success": "Not established by this supervised training report"
+}
