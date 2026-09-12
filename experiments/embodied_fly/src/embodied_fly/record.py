@@ -26,6 +26,23 @@ def font(size):
     return ImageFont.load_default(size=size)
 
 
+def expand_floor_display(model):
+    """MuJoCo planes collide infinitely; enlarge only their finite display bounds."""
+    changes = []
+    for i in range(model.ngeom):
+        if model.geom_type[i] == mujoco.mjtGeom.mjGEOM_PLANE:
+            before = model.geom_size[i].copy()
+            model.geom_size[i, :2] = np.maximum(before[:2], 30)
+            changes.append(
+                {
+                    "geom": model.geom(i).name,
+                    "original_size": before.tolist(),
+                    "display_size": model.geom_size[i].tolist(),
+                }
+            )
+    return changes
+
+
 def record(source, case, output):
     started = time.perf_counter()
     if output.exists():
@@ -47,6 +64,7 @@ def record(source, case, output):
             + " FORCED"
         )
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
+    floor_display = expand_floor_display(model)
     data = mujoco.MjData(model)
     states = np.load(source / f"{case}.npz", allow_pickle=False)
     thorax = model.body("walker/thorax").id
@@ -178,6 +196,7 @@ def record(source, case, output):
         "case": case,
         "state_sha256": hashlib.sha256((source / f"{case}.npz").read_bytes()).hexdigest(),
         "model_sha256": hashlib.sha256((source / "model.mjb").read_bytes()).hexdigest(),
+        "observer_only_floor_display": floor_display,
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_seconds": time.perf_counter() - started,
     }
