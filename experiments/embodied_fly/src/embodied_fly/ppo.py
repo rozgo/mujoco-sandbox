@@ -8,8 +8,10 @@ import argparse
 import json
 import math
 import time
+from collections import deque
 from pathlib import Path
 
+import mujoco
 import numpy as np
 import torch
 from torch import nn
@@ -137,6 +139,8 @@ def train(args):
     brain.train()
     critic = Critic(brain).to(device)
     env = FlyBatch(args.worlds, args.threads)
+    mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
+    trace = deque(maxlen=128)
     reward_fn = OutcomeReward(env)
     active = torch.as_tensor(~env.template.walking_inactive, device=device)
     log_std = nn.Parameter(
@@ -217,6 +221,16 @@ def train(args):
                     logp = joint_log_probability(output, distribution, latent, output.activity)
                     previous = env.previous_action.copy()
                     next_observation = env.step(action.cpu().numpy())
+                    trace.append(
+                        {
+                            "qpos": env.fields["qpos"].copy(),
+                            "qvel": env.fields["qvel"].copy(),
+                            "activation": env.fields["act"].copy(),
+                            "ctrl": env.fields["ctrl"].copy(),
+                            "action": env.previous_action.copy(),
+                            "utility": output.utility_scores.cpu().numpy(),
+                        }
+                    )
                     reward, failed, terms = reward_fn(previous)
                     physical_rewards.append(float(reward.mean()))
                     for key, term in terms.items():
@@ -244,10 +258,30 @@ def train(args):
                     dones.append(torch.as_tensor(done, device=device))
                     ids = np.flatnonzero(done)
                     for i in ids:
+                        failure_trace = None
+                        if failed[i]:
+                            failure_path = (
+                                args.output / f"failure_{len(episode_records):05d}.npz"
+                            )
+                            window = list(trace)[-min(int(env.ages[i]), len(trace)) :]
+                            np.savez_compressed(
+                                failure_path,
+                                **{
+                                    key: np.stack([frame[key][i] for frame in window])
+                                    for key in window[0]
+                                },
+                            )
+                            failure_trace = {
+                                "file": failure_path.name,
+                                "sha256": sha256(failure_path),
+                                "frames": len(window),
+                                "scope": "last up to 0.256 s; post-action physical states",
+                            }
                         episode_records.append(
                             {
                                 "case_id": int(task_ids[i]),
                                 "failed": bool(failed[i]),
+                                "failure_trace": failure_trace,
                                 "simulated_seconds": float(env.ages[i] * CONTROL_DT),
                                 "return": float(episode_return[i]),
                                 "distance_cm": float(
@@ -414,6 +448,7 @@ def train(args):
                 stream.write(json.dumps(row) + "\n")
     except Exception as error:
         failure = f"{type(error).__name__}: {error}"
+        np.savez_compressed(args.output / "error_snapshot.npz", **env.fields)
         raise
     finally:
         synchronize(device)
@@ -448,6 +483,9 @@ def train(args):
             "physics_backend": "native MuJoCo CPU / mjbatch",
             "physics_threads": env.batch.num_threads,
             "neural_device": str(device),
+            "neural_device_name": torch.cuda.get_device_name(device)
+            if device.type == "cuda"
+            else "CPU",
             "parallel_physics_worlds": args.worlds,
             "aggregate_simulated_seconds": counters["transitions"] * CONTROL_DT,
             "transitions_per_training_wall_second": counters["transitions"] / elapsed,
@@ -463,6 +501,7 @@ def train(args):
             else 0,
             "parent_checkpoint_sha256": sha256(args.resume),
             "checkpoint_sha256": sha256(args.output / "actor.pt"),
+            "model_sha256": sha256(args.output / "model.mjb"),
             "rehearsal_manifest_sha256": sha256(args.rehearsal / "manifest.json"),
             "rehearsal_episode_sha256": {
                 p.name: sha256(p) for p in sorted(args.rehearsal.glob("episode_*.npz"))

@@ -1,0 +1,167 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:35:52.472470+00:00",
+    "source_commit": "587899e6dc043622ada02b8a0a46385f3430d658",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "e2e627135ee8288690d5ead8074d8d13d47f0fb195ee7afc41ed4eb9e21bee06",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "88ec60644172ec868f26f3fdfc020f949288931ca6ad7ae199493beab5b2d118",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "83a0bb3cb57bbb2c09f09044ba942638f4cc6f5583a2f946e7423e1815713961",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 20.0,
+    "horizon": 64,
+    "sequence": 8,
+    "epochs": 2,
+    "episode_seconds": 2,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "lr": 1e-05,
+    "noise": 0.04,
+    "target_kl": 0.03,
+    "entropy": 0.001,
+    "rehearsal_weight": 1.0,
+    "seed": 28001,
+    "internal_steps": 4
+  },
+  "reward_recipe": {
+    "velocity_tracking_rate": 2.0,
+    "yaw_tracking_rate": 0.5,
+    "upright_alive_rate": 0.5,
+    "tilt_cost_rate": 0.5,
+    "vertical_speed_cost_rate": 0.05,
+    "forbidden_support_cost_rate": 2.0,
+    "action_change_cost_rate": 0.01,
+    "physical_failure_penalty": 1.0,
+    "velocity_filter_seconds": 0.05,
+    "moving_velocity_width_cm_s": 0.5,
+    "holding_velocity_width_cm_s": 0.2,
+    "yaw_width_rad_s": 0.75,
+    "failure_upright_below": 0.5,
+    "failure_height_below_cm": 0.06,
+    "units": "rates multiplied by 0.002 s each action; failure penalty once"
+  },
+  "training_started_utc": "2026-09-12T21:35:57.223038+00:00",
+  "completed_utc": "2026-09-12T21:36:18.390167+00:00",
+  "setup_seconds": 4.765654732007533,
+  "training_wall_seconds": 21.075402789283544,
+  "rollouts": 15,
+  "ppo_updates": 16,
+  "transitions": 30720,
+  "rehearsal_frames": 3840,
+  "collection_seconds": 15.905339867807925,
+  "optimization_seconds": 5.160326545126736,
+  "ppo_optimization_seconds": 3.028985113836825,
+  "rehearsal_seconds": 2.1313414312899113,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "parallel_physics_worlds": 32,
+  "aggregate_simulated_seconds": 61.44,
+  "transitions_per_training_wall_second": 1457.6233871848256,
+  "actor_parameters": 2409132,
+  "critic_parameters": 233985,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 2.8498620986938477,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 1.236422061920166,
+      "finite": true,
+      "nonzero_cells": 165477
+    },
+    "bias": {
+      "l2": 100.24195098876953,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.0052394261583685875,
+    "leak": 0.003203862113878131,
+    "bias": 0.011442391201853752
+  },
+  "peak_cuda_allocated_bytes": 5342384640,
+  "parent_checkpoint_sha256": "6e946635e0dbdcc1471529b573c8be4d6a7abc207b8fab7766530302cfa1c1d9",
+  "checkpoint_sha256": "06eca6523560a0f4c31022cdd55540a35dedc81641793d7ca704b39fd5f9411a",
+  "rehearsal_manifest_sha256": "8181e5e7749198ba4250c9ecaf3856c4c7e8dcaa12db0375e7fe9293c02a2e2d",
+  "rehearsal_episode_sha256": {
+    "episode_000.npz": "583554a27778014a9588fbf6d8be246c3a6ada87932629aeaa58b53a9f313c6a",
+    "episode_001.npz": "fa4b109170ba53b95a2a6b0bdc151aa9f271897f2ebe1053e62367fe45b16a6f",
+    "episode_002.npz": "34260dd90efaf6621dc2e071a1c47f01418449eba59dc0f0a370c8509492cb9c",
+    "episode_003.npz": "ef1523b6162664dda1bde5bb45238ea6e26f00802d1d75ef13bba63184d42b9f",
+    "episode_004.npz": "64f18042a23203e66b2cf48dd94b8272e12a287250dd5ffcfc64d8d67628964f",
+    "episode_005.npz": "5dded500e87bbf8caba8b8f83e4186ee0c1dd1f42247bcba24136198a3d9f74a",
+    "episode_006.npz": "f36597782d4e2f151a55b15d8d0d26649ea9df7febb9558b35ac4730d5fbf171",
+    "episode_007.npz": "34ec5b20f162122b0dd01786c458074221421db6acfeebdb0ccd224a63d74915",
+    "episode_008.npz": "c9f7d13bdcec720325ec436defcfd0f8bd6e14f951d264ed50fa298f2cf9612f",
+    "episode_009.npz": "2438a2b20a887b669d5e432b25d3d82350739c44e1133bf093869fe8560f4f6e",
+    "episode_010.npz": "9212860a0d771d19604898891b9a3154c310de0497852d7d81b75d7d5ee4f7c6",
+    "episode_011.npz": "5d82625df2105adbf3609414d72e1743257e64fae1fedd075c683a1f7a25cf7e",
+    "episode_012.npz": "b9a8019c00a77e95eee26a72421b7207270b63d1f661dcdeee30905286b5a0be",
+    "episode_013.npz": "fc5167100f0e6a10208d3d5cf78cff3c8c9c40e15f922303e77875e139f66ea0",
+    "episode_014.npz": "d12c8d19fe17d10f3edc64d21c10249c07eccd794150724ff9ed0658363a3109",
+    "episode_015.npz": "659dcd75cbb2e51ab50dcc31135e126bd0f32be5a0e214352ee7c63a28707fd9"
+  },
+  "rehearsal_validation_indices": [
+    1,
+    2,
+    11,
+    12
+  ],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "failed": true,
+      "simulated_seconds": 0.968,
+      "return": 1.002160174672781,
+      "distance_cm": 0.47630679138664905
+    },
+    {
+      "case_id": 2,
+      "failed": true,
+      "simulated_seconds": 1.192,
+      "return": 1.3761874556212206,
+      "distance_cm": 0.694108679518567
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained"
+}

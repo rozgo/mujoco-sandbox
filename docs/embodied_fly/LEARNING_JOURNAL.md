@@ -404,3 +404,40 @@ Fourteen focused tests pass, including exact recurrent sampled-action replay,
 physical-reward gradient flow into internal cells, timeout/failure return handling,
 and native/single-body physical agreement. First run is a short implementation
 pilot; a longer trial depends on its measured behavior and numerical health.
+
+### Outcome PPO implementation pilot 01
+
+The 20-second requested pilot completed one final rollout at **21.075403 s**,
+collecting **30,720 physical transitions / 61.44 aggregate simulated seconds**.
+Setup took **4.765655 s**. Collection (CPU physics + CUDA inference + bookkeeping)
+took **15.905340 s**; PPO optimization **3.028985 s**; explicit rehearsal
+**2.131341 s / 3,840 frame presentations**. There were 16 PPO minibatch updates
+across 15 rollouts, 32 live worlds and 16 CPU physics threads, approximately
+**1,458 transitions/s including learning**, with **5,342,384,640 bytes** peak CUDA
+allocation. The training-only critic has 233,985 parameters. Physical-reward
+gradients reached over 165,000 cells for each of excitability, leak and bias, with
+finite nonzero gradients and measurable parameter changes. This proves gradient
+flow through the measured graph; it does not yet prove useful brain causality.
+
+Two collection worlds fell; most episodes had not yet reached their two-second
+limit when this short run ended. Do not treat completed-episode counts as a
+success denominator. That pilot retained failure metrics but not training-fall
+trajectories. The next version stores the last up to 128 action frames (0.256 s)
+for every training fall, with full physical states/actions/utility and a model
+hash, and saves an error snapshot for numerical exceptions. Full six-case
+teacher-free evaluation captures already retain all states, including failures.
+
+The greedy pilot checkpoint stayed upright with valid support in all six cases,
+but still failed the original raw tracking gates. Normal walking's 100 ms
+block-mean forward error was **0.093 cm/s**, and yaw error **0.435 rad/s**. Hold
+still drifted about **10 mm net in two seconds**; the right turn remained weak.
+These are diagnostics, not integrated behavior acceptance.
+
+The initial Adam learning rate 1e-5 caused KL excursions (first approximately
+0.282, versus the 0.03 early-stop threshold), allowing only one or two PPO chunks
+per rollout. For the next **300-second trial**, reduce only the actor/exploration
+learning rate to **2e-6** and use seed 28002. Start again from the same DAgger01
+parent, not from the pilot, preserving the pilot as a separate experiment. Retain
+reward weights, recurrent architecture, 32 worlds, 16 threads, rollout/rehearsal
+recipe and evaluation cases. This is an explicitly documented step-size adjustment
+based on the measured update size. It has not changed the acceptance gates.

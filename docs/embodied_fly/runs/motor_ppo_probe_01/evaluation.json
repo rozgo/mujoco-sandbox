@@ -1,0 +1,188 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:37:10.343044+00:00",
+    "source_commit": "587899e6dc043622ada02b8a0a46385f3430d658",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "e2e627135ee8288690d5ead8074d8d13d47f0fb195ee7afc41ed4eb9e21bee06",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "88ec60644172ec868f26f3fdfc020f949288931ca6ad7ae199493beab5b2d118",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "83a0bb3cb57bbb2c09f09044ba942638f4cc6f5583a2f946e7423e1815713961",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:37:44.919713+00:00",
+  "checkpoint_sha256": "06eca6523560a0f4c31022cdd55540a35dedc81641793d7ca704b39fd5f9411a",
+  "training_source_commit": "587899e6dc043622ada02b8a0a46385f3430d658",
+  "graph_metadata_sha256": "bef7dddd63b459cdb5471869e32a5b9dd474748fa8348f0bda9b45122d4a39bf",
+  "checkpoint_metadata_verification": "SHA-256 and routing",
+  "device": "cuda",
+  "physics": "native MuJoCo CPU",
+  "setup_seconds": 3.0700450520962477,
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "evaluation_seed": 80001,
+  "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
+  "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
+  "neural_view": null,
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.149029260966927,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.6811828690254231,
+      "yaw_rmse_rad_s": 3.1968821800161282,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9754703682699306,
+      "displacement_m": [
+        0.008160100207190405,
+        0.005722553333572828
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.032615681644529,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.4417982352852329,
+      "yaw_rmse_rad_s": 2.9674558562090363,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9836141802409165,
+      "displacement_m": [
+        0.011032327293861412,
+        0.0010146659383711344
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 4.953083671163768,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.45692539359051443,
+      "yaw_rmse_rad_s": 2.868768114942816,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9889207373606776,
+      "displacement_m": [
+        0.018616691093721445,
+        0.0004857591411892895
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "fast_walk",
+      "command_cm_s_rad_s": [
+        2.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 4.952010081149638,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 1.0178375765578265,
+      "yaw_rmse_rad_s": 3.559736286276285,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9917855932701378,
+      "displacement_m": [
+        0.03401875344830338,
+        0.020325308149583613
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "left",
+      "command_cm_s_rad_s": [
+        1.5,
+        0.75
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 4.973607978783548,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.9240960381781488,
+      "yaw_rmse_rad_s": 3.4010320111404417,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9918910745092973,
+      "displacement_m": [
+        0.027555361650899703,
+        0.020138526051262318
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "right",
+      "command_cm_s_rad_s": [
+        1.5,
+        -0.75
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 4.984416434075683,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 1.0602910528775071,
+      "yaw_rmse_rad_s": 7.591008159692971,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9025200823715316,
+      "displacement_m": [
+        0.0007290976145996421,
+        -0.015524647747884583
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    }
+  ],
+  "physical_success_count": 0
+}

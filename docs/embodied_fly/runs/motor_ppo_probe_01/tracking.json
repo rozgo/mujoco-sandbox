@@ -1,0 +1,184 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:37:45.943047+00:00",
+    "source_commit": "587899e6dc043622ada02b8a0a46385f3430d658",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "e2e627135ee8288690d5ead8074d8d13d47f0fb195ee7afc41ed4eb9e21bee06",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "88ec60644172ec868f26f3fdfc020f949288931ca6ad7ae199493beab5b2d118",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "83a0bb3cb57bbb2c09f09044ba942638f4cc6f5583a2f946e7423e1815713961",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:37:47.390586+00:00",
+  "source_manifest_sha256": "cee6b789d755861e475444bd6ca91a7970a486856ed4b3497a6bc9845243c981",
+  "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+  "frame": "anatomical thorax; mjOBJ_XBODY",
+  "block_seconds": 0.1,
+  "metric_window": "whole available capture; only final incomplete block omitted from block metric",
+  "acceptance_gates_changed": false,
+  "wall_seconds": 1.5020808260887861,
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.6809572476512827,
+        3.6203406837498644
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.5227477755196981,
+        0.6311718036968391
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.5451085585416013,
+        1.061542766140118
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "c3317d5a5b781cd6b4a91177ff6140d47c49c692bcd1faa701336d6c4bd6ec97"
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.44147292973237723,
+        3.4323551151291842
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.5581781900757161,
+        0.36190155135823393
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.12746329311695917,
+        0.8526545347582872
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "f888a4c3e5dffdc71966104e79bf26010d9a2bac22d9179fc1e5ccdda2a831d8"
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.4637147825247959,
+        3.374851681144556
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.9383431222492468,
+        0.2049725737095839
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.09347203541784908,
+        0.43526461571463704
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "5f89ec3963913cfd88f33fb1a08d8ae8defda432f5f4b772103ded5ac5430a72"
+    },
+    {
+      "case": "fast_walk",
+      "command_cm_s_rad_s": [
+        2.0,
+        0.0
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        1.024360546968828,
+        3.860607096558706
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        2.0752417600051736,
+        0.5112652182014411
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.12331201841406418,
+        0.7059953649484604
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "ee4fde90d5f15e45007739faeab00f3d9522d303c5e5628760206aafd3f8bf9d"
+    },
+    {
+      "case": "left",
+      "command_cm_s_rad_s": [
+        1.5,
+        0.75
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        0.9300326265565163,
+        3.672083561575782
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        1.8388107618534073,
+        0.5951350919769545
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.3567788360575371,
+        0.45000720995133286
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "92d346b5890a722083369ffbd8370c28d34d2f35409de5dbe5a9ea3a78a6f25e"
+    },
+    {
+      "case": "right",
+      "command_cm_s_rad_s": [
+        1.5,
+        -0.75
+      ],
+      "frames": 1000,
+      "raw_rmse_cm_s_rad_s": [
+        1.0628826612919613,
+        7.738639279137071
+      ],
+      "mean_velocity_cm_s_rad_s": [
+        0.8844475145819213,
+        -1.025404020929594
+      ],
+      "block_mean_rmse_cm_s_rad_s": [
+        0.7722431288827827,
+        1.6157333282652113
+      ],
+      "frames_in_block_metric": 1000,
+      "state_sha256": "9014b9b1dfd04aee0d6efbb233a6fc932c1dd983aa80ff887a8337ea6828b635"
+    }
+  ]
+}
