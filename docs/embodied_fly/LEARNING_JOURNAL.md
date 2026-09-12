@@ -768,3 +768,33 @@ Flight teacher/pattern attribution is in assets/embodied_fly/teachers/FLIGHT_NOT
 The official dataset metadata was checked directly against Figshare's article API;
 the existing flight dataset ZIP matches its published MD5. These GPL-3.0-or-later
 teacher/data assets are distinct from the anatomical model's source license.
+
+### Longer clean-source flight-teacher checks
+
+Source `08492b4` ran the complete body with the inherited expert, supplied wing
+pattern, bounded actuators and preserved floor contacts. **One-second hover**
+maintained the 10 mm target height, with **0.174 mm** root-position RMSE and a
+minimum height of **9.952 mm**. Setup took **2.776268 s**, stepping/capture/state
+writing **3.504010 s**. **Half-second forward flight at 20 cm/s** traveled to
+99.905 mm forward while retaining altitude, with **0.319 mm** root-position RMSE
+and minimum height **9.769 mm**. Setup took **1.827285 s**, stepping/capture/state
+writing **1.771731 s**. Both had zero numerical warnings and zero prohibited
+ground loading. The free root was initialized once; all later motion came from
+actuation, gravity and fluid forces.
+
+These checks establish a useful training expert and a functioning complete-body
+flight environment. They do not establish student flight, takeoff or landing.
+The next integration question is explicit control timing: preserve the shared
+actor's walking/stopping skills while adding 5 kHz wing control. The existing
+500 Hz walking weights cannot simply be called ten times faster and declared
+transferred. Check full-flight physics with the existing policy clock, then
+validate a documented recurrent timing/curriculum scheme before accepting flight.
+
+PPO probe 02's measured training time was **61.072358 s**, setup **4.956591 s**,
+with **55,296 transitions / 110.592 aggregate simulated seconds**, **222 PPO
+updates**, and **6,912 rehearsal frames**. Collection took **29.157640 s**, PPO
+optimization **28.160629 s**, and rehearsal **3.733163 s**. One of 32 completed
+training episodes fell; its retained trace was verified. Checkpoint
+`f8459aeb48997f79f81f7cb5bfd7433a4d0b1c53a2b98c8fe21af4f79441de7e`
+remains diagnostic because the continuous resume regressed. Online01 remains the
+preserved walking/braking reference; neither is the final survival controller.

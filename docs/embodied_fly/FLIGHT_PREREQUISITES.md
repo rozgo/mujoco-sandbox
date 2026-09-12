@@ -120,3 +120,12 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.flight
 The existing walking recorder assumes a 500 Hz action clock and must not be used
 unchanged for 5 kHz flight captures. Recorded flight states carry actual timestamps;
 flight recording must honor those before any flight video is presented.
+
+Clean-source extended checks now confirm one-second inherited hover (0.174 mm
+root-position RMSE) and half-second forward flight at 20 cm/s (0.319 mm RMSE),
+with full anatomy, zero ground loading and zero solver warnings. Exact reports:
+[hover](runs/flight_teacher_hover_01/report.json),
+[forward flight](runs/flight_teacher_forward_01/report.json).
+The shared student still needs direct wing-control learning, preserved recurrent
+timing, terrestrial rehearsal, takeoff and landing. No inherited expert result
+is counted as student success.
