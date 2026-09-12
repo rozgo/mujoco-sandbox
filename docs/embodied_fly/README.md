@@ -40,7 +40,9 @@ cm, g, s; public metrics convert to SI. Torque units convert with 1 dyne·cm =
 1e-7 N·m, force with 1 dyne = 1e-5 N. Exact joint and actuator limits are generated
 beside the [static preview](../../previews/embodied_fly/anatomy_v1.png).
 The initial walking curriculum uses 5 kHz native MuJoCo physics and 500 Hz control.
-Wing flight parameters and a higher-rate flight curriculum still need validation.
+The flight preset uses 20 kHz physics / 5 kHz wing control. The inherited expert
+can hover and fly forward with the complete body; the first shared-actor wing
+imitation pilot failed physical flight and regressed ground behavior.
 
 ## Current implementation checks
 
@@ -243,7 +245,10 @@ includes all six fixed-command cases and the uninterrupted transition, including
 the slow-walk fall. It remains a development film, with actual recurrent activity
 and observer eye cameras; no teacher executes actions in these captures.
 
-The [flight prerequisites](FLIGHT_PREREQUISITES.md) now include a physically tested
-full-body flight preset. Its first scripted force probe produces some lift but
-cannot hover. This does not yet demonstrate learned flight or transfer of the
-walking checkpoint to the faster flight control rate.
+The [flight curriculum report](FLIGHT_PREREQUISITES.md) records the working
+inherited flight expert, failed clock transfer, and first mixed walking/wing
+learning pilot. A [one-second reference hover](../../previews/embodied_fly/flight_teacher_hover_v1.mp4)
+shows teacher-controlled flight, explicitly labeled with its upstream wingbeat
+generator. The student has not learned reliable flight. Its lower offline error
+did not translate to physical success; the retained walking reference remains
+online01. Full survival behavior and multi-agent integration are still open.

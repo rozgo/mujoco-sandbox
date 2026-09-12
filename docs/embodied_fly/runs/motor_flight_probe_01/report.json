@@ -1,0 +1,193 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T23:47:36.944969+00:00",
+    "source_commit": "904b8f3a454d4bcc4b177b8cfa5f2115c5499bef",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "5e16393a987e0da0d17f6752c96bfb645af339490516babcaf19899a611b9913",
+      "src/embodied_fly/body.py": "f65571063e498c037be08d3bfc69aa71a2536586bb3fee6e4e96c895765c0ee4",
+      "src/embodied_fly/brain.py": "70d6b185df89a9cf5dcef89878fdaa670a305e517d087e115aa75dcb8945f1e6",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f704422d850433f48a90de7741153dd22d2004290461203b6df45e6b2392cc65",
+      "src/embodied_fly/flight_collect.py": "8f892b2949951084f88f396662b9a1e344ac381b7d755fbb5db304db779d7484",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "083f456829240b0c68c21fc4262bd6dd01e5ae26d28206ba630f5b0253645d11",
+      "src/embodied_fly/flight_teacher.py": "3a6d1e5c683f17db3a24303a8e3ed47f8f7decec0d36bff65c7256181405c4cf",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/online.py": "f9a2d965c98aac42273002b63cd46942fdcef4c4ee7f60bed8f57da7c24f815e",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "e11c27b4f2e54dead4737116e218044dd461b4b55d3f4bbc8880d39db33a49ba",
+      "src/embodied_fly/transitions.py": "8261097b1bf643d5047d8c3c88c1c746fec540ab501fd9fb2f1e01c783f1bee1"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "optimization_started_utc": "2026-09-12T23:47:40.580866+00:00",
+  "optimization_completed_utc": "2026-09-12T23:48:40.749352+00:00",
+  "source_commit": "904b8f3a454d4bcc4b177b8cfa5f2115c5499bef",
+  "config": {
+    "reset_fraction": 0.25,
+    "device": "cuda",
+    "seconds": 60.0,
+    "worlds": 32,
+    "sequence": 16,
+    "burnin": 16,
+    "internal_steps": 4,
+    "lr": 0.0001,
+    "seed": 43001,
+    "freeze_core": false,
+    "wing_loss_weight": 1.0
+  },
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "neurons": 166700,
+  "connections": 25582938,
+  "trainable_parameters": 2409132,
+  "core_parameters": 500100,
+  "setup_seconds": 3.6459801173768938,
+  "training_seconds": 60.16845383588225,
+  "evaluation_seconds": 0.5970487170852721,
+  "updates": 207,
+  "reset_start_updates": 57,
+  "supervised_examples": 105984,
+  "unique_training_frames": 21000,
+  "parallel_neural_sequences": 32,
+  "dataset_splits": [
+    {
+      "manifest_sha256": "8181e5e7749198ba4250c9ecaf3856c4c7e8dcaa12db0375e7fe9293c02a2e2d",
+      "validation_indices": [
+        1,
+        2,
+        11,
+        12
+      ],
+      "control_hz": 500.0,
+      "neural_time_scale": 1.0,
+      "episode_file_sha256": {
+        "episode_000.npz": "583554a27778014a9588fbf6d8be246c3a6ada87932629aeaa58b53a9f313c6a",
+        "episode_001.npz": "fa4b109170ba53b95a2a6b0bdc151aa9f271897f2ebe1053e62367fe45b16a6f",
+        "episode_002.npz": "34260dd90efaf6621dc2e071a1c47f01418449eba59dc0f0a370c8509492cb9c",
+        "episode_003.npz": "ef1523b6162664dda1bde5bb45238ea6e26f00802d1d75ef13bba63184d42b9f",
+        "episode_004.npz": "64f18042a23203e66b2cf48dd94b8272e12a287250dd5ffcfc64d8d67628964f",
+        "episode_005.npz": "5dded500e87bbf8caba8b8f83e4186ee0c1dd1f42247bcba24136198a3d9f74a",
+        "episode_006.npz": "f36597782d4e2f151a55b15d8d0d26649ea9df7febb9558b35ac4730d5fbf171",
+        "episode_007.npz": "34ec5b20f162122b0dd01786c458074221421db6acfeebdb0ccd224a63d74915",
+        "episode_008.npz": "c9f7d13bdcec720325ec436defcfd0f8bd6e14f951d264ed50fa298f2cf9612f",
+        "episode_009.npz": "2438a2b20a887b669d5e432b25d3d82350739c44e1133bf093869fe8560f4f6e",
+        "episode_010.npz": "9212860a0d771d19604898891b9a3154c310de0497852d7d81b75d7d5ee4f7c6",
+        "episode_011.npz": "5d82625df2105adbf3609414d72e1743257e64fae1fedd075c683a1f7a25cf7e",
+        "episode_012.npz": "b9a8019c00a77e95eee26a72421b7207270b63d1f661dcdeee30905286b5a0be",
+        "episode_013.npz": "fc5167100f0e6a10208d3d5cf78cff3c8c9c40e15f922303e77875e139f66ea0",
+        "episode_014.npz": "d12c8d19fe17d10f3edc64d21c10249c07eccd794150724ff9ed0658363a3109",
+        "episode_015.npz": "659dcd75cbb2e51ab50dcc31135e126bd0f32be5a0e214352ee7c63a28707fd9"
+      }
+    },
+    {
+      "manifest_sha256": "561346a5171bd137a2e6276b877451a1f04fe9c38960d33e8ddd29d439a151da",
+      "validation_indices": [
+        4,
+        6
+      ],
+      "control_hz": 5000.0,
+      "neural_time_scale": 0.1,
+      "episode_file_sha256": {
+        "episode_000.npz": "dcb451707b272418795a76ad288570ef353d84c77233289f7f00ff2e499c9729",
+        "episode_001.npz": "adbc39e0be22ec795f0b1466d0141bd392f34d68b9e94d94abd6ebc3d040356e",
+        "episode_002.npz": "66a61f554bfd7667b844702e4854ae69fab46728d4e265b8fa6dc275bb693791",
+        "episode_003.npz": "ef6aa749bbb7c6ada6cd5225cffaf1f91cc4652e2879dda440291ef736157e2f",
+        "episode_004.npz": "979eff99b7275bf63b6086e894a1aa110970e579d3d739e15840c5df9dff413e",
+        "episode_005.npz": "3556ed4ad01e91239453ed3b84a47cccfc2a6fb6044c387bf1d03f1f08ddf57a",
+        "episode_006.npz": "34d4d5814611d6be84935549280311607581dfbab40ccb6eee39fdd5c4d8016a",
+        "episode_007.npz": "10053075bd2efa0ac73082053d65bd63439468fc99ea112b6460c9d0ef556178"
+      }
+    }
+  ],
+  "parent_checkpoint_sha256": "9b9ab703483a52d06eb1700172e762b8226e3b4b6597678176a89bd886b6649a",
+  "optimizer_resumed": true,
+  "normalization": "retained from parent",
+  "live_physics_worlds_during_imitation": 0,
+  "initial_validation_motor_mse": 0.24041072186082602,
+  "final_validation_motor_mse": 0.01818053238093853,
+  "initial_reset_validation_motor_mse": 0.30985677521675825,
+  "final_reset_validation_motor_mse": 0.031059810891747475,
+  "peak_cuda_allocated_bytes": 5176925696,
+  "core_gradient_audit": {
+    "excitability": {
+      "finite": true,
+      "l2": 0.0172429159283638,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "finite": true,
+      "l2": 0.016225332394242287,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "finite": true,
+      "l2": 1.803824782371521,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_parameter_changes": {
+    "excitability": {
+      "l2": 0.4517950415611267,
+      "changed_cells": 165351
+    },
+    "leak": {
+      "l2": 1.249293565750122,
+      "changed_cells": 165503
+    },
+    "bias": {
+      "l2": 0.7717190384864807,
+      "changed_cells": 165503
+    }
+  },
+  "clock_updates": {
+    "1.0": 105,
+    "0.1": 102
+  },
+  "clock_sampling": "equal probability per control rate; homogeneous recurrent minibatches; one shared actor",
+  "initial_validation_by_neural_time_scale": {
+    "1.0": 0.017633987590670586,
+    "0.1": 0.46318745613098145
+  },
+  "final_validation_by_neural_time_scale": {
+    "1.0": 0.0169186033308506,
+    "0.1": 0.01944246143102646
+  },
+  "initial_reset_validation_by_neural_time_scale": {
+    "1.0": 0.030075734481215477,
+    "0.1": 0.589637815952301
+  },
+  "final_reset_validation_by_neural_time_scale": {
+    "1.0": 0.026969250291585922,
+    "0.1": 0.03515037149190903
+  },
+  "checkpoint_sha256": "ecfdcf3e2633639e03d0f0fc94da46c727705780dd46761bc06ec8974986496c",
+  "physical_success": "Not established by this supervised training report",
+  "completed_utc": "2026-09-12T23:48:41.675619+00:00"
+}
