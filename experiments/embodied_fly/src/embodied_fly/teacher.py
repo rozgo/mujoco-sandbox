@@ -122,4 +122,4 @@ class TeacherOracle:
         raw_control = np.zeros(env.model.nu, np.float32)
         raw_control[self.actuator_ids] = self.policy.act(self.observation(step))
         raw_control = np.clip(raw_control, env.low, env.high)
-        return 2 * (raw_control - env.low) / (env.high - env.low) - 1
+        return (2 * (raw_control - env.low) / (env.high - env.low) - 1).astype(np.float32)

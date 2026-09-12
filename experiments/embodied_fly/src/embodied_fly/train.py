@@ -55,7 +55,11 @@ def sample(episodes, rng, length, worlds, device):
             {key: value[start : start + length] for key, value in episode.items()}
         )
     return {
-        key: torch.as_tensor(np.stack([s[key] for s in sequences], axis=1), device=device)
+        key: torch.as_tensor(
+            np.stack([s[key] for s in sequences], axis=1),
+            device=device,
+            dtype=torch.long if key == "activity" else torch.float32,
+        )
         for key in sequences[0]
     }
 
