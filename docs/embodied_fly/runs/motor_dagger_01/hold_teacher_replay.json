@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:03:08.731948+00:00",
+    "source_commit": "9db4a983100d41f27f57a0cc850f1758e02ff05c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "789de126f3b4ad861e32f723cfaf29ba5966a57683196072970654b3f8d4cfda",
+      "src/embodied_fly/dagger.py": "3425ce7d84782c22ed8d0a8e734cfd3410e5f02eaf222aca901d7692fd6524a7",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "78c9c4bd2a41037a93bc6042107f531947f33f54efcf596a44fea9be8f35c550",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "808e1a463a217b200baf144fd0a8b829bc33f40fe7aa600d486d901cd533dbbb",
+      "src/embodied_fly/teacher.py": "0ce36ee756b5a7d7a4092c8cd006f5303cc5b407e06a6bf061a742bb01196652",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "93ff1cf661aaa6e79ced4b1f042a71603848af6a364ee32baab9ca8979129d94"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:03:08.732211+00:00",
+  "checkpoint_sha256": "6e946635e0dbdcc1471529b573c8be4d6a7abc207b8fab7766530302cfa1c1d9",
+  "episode_sha256": "583554a27778014a9588fbf6d8be246c3a6ada87932629aeaa58b53a9f313c6a",
+  "case": "teacher-replay episode_000",
+  "full_sequence_mse": 0.0024731389712542295,
+  "first_32_frames_mse": 0.013061286881566048,
+  "last_500_frames_mse": 0.0017367196269333363,
+  "neural_state_std_first_last": [
+    0.145029678940773,
+    0.22343845665454865
+  ],
+  "activity_accuracy": 0.998,
+  "rest_fraction": 0.998,
+  "first_activity_mismatch_frame": 0,
+  "groups": {
+    "wing": {
+      "mse": 5.5306838476099074e-05,
+      "prediction_rms": 0.007436856627464294
+    },
+    "antenna": {
+      "mse": 7.768106297589839e-05,
+      "prediction_rms": 0.31347936391830444
+    },
+    "labrum": {
+      "mse": 8.060570166890102e-07,
+      "prediction_rms": 0.9947686791419983
+    },
+    "coxa": {
+      "mse": 0.003959325607866049,
+      "prediction_rms": 0.8561308979988098
+    },
+    "tibia": {
+      "mse": 0.0031746833119541407,
+      "prediction_rms": 0.7022464275360107
+    },
+    "femur": {
+      "mse": 0.0029595335945487022,
+      "prediction_rms": 0.7951234579086304
+    },
+    "tarsus": {
+      "mse": 0.0025958430487662554,
+      "prediction_rms": 0.7773473858833313
+    },
+    "head": {
+      "mse": 0.003864366328343749,
+      "prediction_rms": 0.9367401599884033
+    }
+  }
+}

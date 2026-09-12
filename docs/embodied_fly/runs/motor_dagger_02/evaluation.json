@@ -1,0 +1,181 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:09:23.805303+00:00",
+    "source_commit": "bb15547bf54d0a79c3ff0a6da75823db249f5bd8",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "789de126f3b4ad861e32f723cfaf29ba5966a57683196072970654b3f8d4cfda",
+      "src/embodied_fly/dagger.py": "3425ce7d84782c22ed8d0a8e734cfd3410e5f02eaf222aca901d7692fd6524a7",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "ce2658e7f716fd620438304c7f5736357c2f1c0f43b22b5887d6ebdf02aff32c",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "808e1a463a217b200baf144fd0a8b829bc33f40fe7aa600d486d901cd533dbbb",
+      "src/embodied_fly/teacher.py": "0ce36ee756b5a7d7a4092c8cd006f5303cc5b407e06a6bf061a742bb01196652",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "1d670ee678b09bd7f9a16360007f0d7ab52f5d7647518f3422fcb75fd1c0201f"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:09:59.868948+00:00",
+  "checkpoint_sha256": "87384d048a946ac1175084538ac49a638518e06e607ec82521633104b9b7d102",
+  "training_source_commit": "bb15547bf54d0a79c3ff0a6da75823db249f5bd8",
+  "device": "cuda",
+  "physics": "native MuJoCo CPU",
+  "setup_seconds": 3.2859242907725275,
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "evaluation_seed": 80001,
+  "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
+  "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
+  "results": [
+    {
+      "case": "hold",
+      "command_cm_s_rad_s": [
+        0.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.4417136143893,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.22665586329714046,
+      "yaw_rmse_rad_s": 1.4650267001883674,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9357539727731627,
+      "displacement_m": [
+        7.554070017385566e-07,
+        0.000197991047463873
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "slow_walk",
+      "command_cm_s_rad_s": [
+        0.5,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.194704943802208,
+      "stable": true,
+      "success": false,
+      "velocity_rmse_cm_s": 0.5150914329324914,
+      "yaw_rmse_rad_s": 1.3548335509417444,
+      "max_disallowed_ground_force_over_weight": 0.0,
+      "minimum_upright": 0.9800363164761081,
+      "displacement_m": [
+        0.00035628817707876085,
+        0.00018884733275081875
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "walk",
+      "command_cm_s_rad_s": [
+        1.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.131130621768534,
+      "stable": false,
+      "success": false,
+      "velocity_rmse_cm_s": 0.9999917010286675,
+      "yaw_rmse_rad_s": 4.953530115647854,
+      "max_disallowed_ground_force_over_weight": 9.154268812431058,
+      "minimum_upright": -0.999990342797888,
+      "displacement_m": [
+        0.002772399173994906,
+        -0.002785357312008532
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "fast_walk",
+      "command_cm_s_rad_s": [
+        2.0,
+        0.0
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.053262264933437,
+      "stable": false,
+      "success": false,
+      "velocity_rmse_cm_s": 1.9658475704607978,
+      "yaw_rmse_rad_s": 2.707783825334253,
+      "max_disallowed_ground_force_over_weight": 14.483656928210241,
+      "minimum_upright": -0.9996402820757024,
+      "displacement_m": [
+        0.0022566407511805365,
+        0.002397241038977788
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "left",
+      "command_cm_s_rad_s": [
+        1.5,
+        0.75
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.171585107687861,
+      "stable": false,
+      "success": false,
+      "velocity_rmse_cm_s": 1.4115563698222762,
+      "yaw_rmse_rad_s": 5.813558043059433,
+      "max_disallowed_ground_force_over_weight": 5.285826959257322,
+      "minimum_upright": -0.9999236776532374,
+      "displacement_m": [
+        0.007359110159092307,
+        0.0013233384100840564
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "case": "right",
+      "command_cm_s_rad_s": [
+        1.5,
+        -0.75
+      ],
+      "simulated_seconds": 2.0,
+      "wall_seconds": 5.242001433391124,
+      "stable": false,
+      "success": false,
+      "velocity_rmse_cm_s": 1.485338912219863,
+      "yaw_rmse_rad_s": 3.1135283809585514,
+      "max_disallowed_ground_force_over_weight": 10.269205663304193,
+      "minimum_upright": -0.9965668701758833,
+      "displacement_m": [
+        0.0019294601470510979,
+        0.0034710998555585533
+      ],
+      "numerical_failure": null,
+      "warning_count": 0
+    }
+  ],
+  "physical_success_count": 0
+}
