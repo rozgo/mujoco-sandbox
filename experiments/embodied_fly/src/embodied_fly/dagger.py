@@ -68,7 +68,7 @@ def collect(args):
             result = actor(torch.as_tensor(observation[None], device=device), memory)
             memory = result.state
             student_action = environment.walking_action(result.action[0].cpu().numpy())
-            teacher_action = oracle.act(step)
+            teacher_action = oracle.act(step, reference_mode=args.reference_mode)
             action = environment.walking_action(
                 args.student_fraction * student_action
                 + (1 - args.student_fraction) * teacher_action
@@ -136,6 +136,7 @@ def collect(args):
         "action_field": "teacher supervised target; executed_action is the physical mixture",
         "observations_are_causal": True,
         "future_reference_used_by_teacher_only": True,
+        "teacher_reference_mode": args.reference_mode,
     }
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(
@@ -161,4 +162,7 @@ if __name__ == "__main__":
     parser.add_argument("--episodes", type=int, default=16)
     parser.add_argument("--seed", type=int, default=22001)
     parser.add_argument("--student-fraction", type=float, default=0.25)
+    parser.add_argument(
+        "--reference-mode", choices=("world_path", "receding"), default="world_path"
+    )
     collect(parser.parse_args())

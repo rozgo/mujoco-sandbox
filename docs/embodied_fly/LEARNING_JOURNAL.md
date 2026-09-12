@@ -263,3 +263,78 @@ same metric path and window.
 Reports, learning curves, collection manifest, utility traces and the new student
 film are preserved in `runs/motor_dagger_01/` and `previews/embodied_fly/`. The film
 remains labeled as a motor-learning diagnostic.
+
+### Feedback continuation 02: holding acquired, walking lost
+
+The 100%-student collection ran **31.188 physical seconds** in **91.030721 s**
+after **6.626658 s** setup. Fifteen episodes finished; episode 9 fell at 1.188 s.
+Its failure and partial trajectory are retained, and that episode was excluded
+from this imitation dataset. Teacher controls were recorded as labels, not
+executed. A long replay of the teacher's original hold observations produced
+**99.8% rest decisions** in the prior student, compared with **23.6%** during its
+physical hold trial. That supports physical-state distribution shift as a problem,
+without proving it is the only cause.
+
+Continuation 02 preserved the actor, hyperparameters, old data, normalization and
+Adam state. It used **300.009422 s** of optimization, **3.435756 s** setup and
+**0.150242 s** offline validation, with **2,054 updates / 511 reset-start batches /
+525,824 frame presentations**. There were **36,000 unique training frames (72 s)**
+from 36 full episodes, with 11 other full episodes held out across the three data
+pools. Peak CUDA allocation was **2,930,971,648 bytes**. Current reports bind every
+episode file to SHA-256, including rejected data. Checkpoint:
+`87384d048a946ac1175084538ac49a638518e06e607ec82521633104b9b7d102`.
+Its ancestry contains **900.093201 s** of optimization; this is not a successful
+15-minute complete-fly training claim.
+
+Held-out action MSE changed **0.085706 → 0.051328**, but physical results regressed.
+The hold case moved only **0.198 mm net** in two seconds with valid foot support.
+The slow-walk command produced almost no travel. The walk, fast-walk and both
+turns fell, with prohibited support. All six still failed the original aggregate
+gates, and all had zero numerical warnings. The earlier walking checkpoint remains
+available; do not stitch these checkpoints into a claim of one successful policy.
+This continuation is retained as a failure to preserve skills.
+
+### Receding teacher diagnostic, not adopted as a solution
+
+A new optional `--reference-mode receding` anchors the teacher's command-derived
+lookahead to current xy/heading, removing its request to return to an absolute
+path invisible to the student. It leaves the physical body untouched and keeps
+the intended standing height. A regression test verifies invariance to global
+translation/heading and no pose/time mutation. This is training-only reference
+construction, not a deployed movement controller.
+
+Sixteen two-second Mac teacher probes took **29.665335 s** collection after
+**2.991828 s** setup; all stayed upright. However, low-speed tracking and some turns
+were poor: at a 0.5 cm/s command, measured mean speed ranged about **0.077–0.266
+cm/s**. One 1 cm/s negative-turn case turned the wrong way. The diagnostic is saved
+under `runs/receding_teacher_probe_01/`; it has not trained an accepted student.
+It does not justify another blind extension of the same imitation recipe.
+
+The next implementation stage is the already approved physical-outcome RL stage:
+start from a retained walking-capable checkpoint, reward actual command tracking,
+stationary hold and valid support, and preserve learned stepping through explicit
+rehearsal. Keep the same deployed graph actor and learned utility head. A separate
+training-only critic is allowed; no teacher, gait generator or action selector may
+replace the actor at evaluation. Native/GPU throughput and recurrent rollout
+requirements must be measured before selecting the live world count.
+
+### Actual neural-activity video overlay
+
+The optional observer capture bins all **140,638 located neurons** into a cached
+128 × 128 map at 50 Hz; **26,062 cells without locations remain in computation**.
+Each bin records mean signed and mean absolute recurrent latent activity. Fixed
+amber/teal colors show sign; these are not physiological spikes. The unit test
+checks independent worlds, sign/magnitude averaging and unchanged source state.
+The overlay does not change the actor, observations or rewards.
+
+Two separate diagnostic films show BC01 walking and DAgger02 holding with this
+overlay. Each is **2 s / 100 frames / 50 fps / 1×**, fully decoded and visually
+inspected. Rendering took **7.857275 s** and **8.065591 s** on the GPU machine.
+Their source/checkpoint/state/model hashes are retained. An initial setup rejection
+of legacy BC01's absent metadata digest is also recorded; the loader now checks
+exact neuron routing and graph weights for legacy files, and additionally checks
+metadata digests when stored. No simulation ran in that rejected setup.
+
+The user reconfirmed that flight remains required. Full-body wing control, takeoff,
+flight, landing, learned survival utility, multi-agent integration and the final
+combined demonstration are still open. These prototypes do not complete that goal.

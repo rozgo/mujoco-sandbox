@@ -15,7 +15,9 @@ from embodied_fly.provenance import evidence, utc_now
 from embodied_fly.teacher import TeacherOracle
 
 
-def collect(teacher_path, output, seconds=2.0, episodes=8, seed=2001):
+def collect(
+    teacher_path, output, seconds=2.0, episodes=8, seed=2001, reference_mode="world_path"
+):
     started = time.perf_counter()
     output.mkdir(parents=True, exist_ok=False)
     run_evidence = evidence()
@@ -43,7 +45,7 @@ def collect(teacher_path, output, seconds=2.0, episodes=8, seed=2001):
         physical_failure = None
         for step in range(int(seconds / CONTROL_DT)):
             observations.append(environment.observation())
-            action = oracle.act(step)
+            action = oracle.act(step, reference_mode=reference_mode)
             actions.append(action)
             qpos.append(environment.data.qpos.copy())
             qvel.append(environment.data.qvel.copy())
@@ -98,6 +100,7 @@ def collect(teacher_path, output, seconds=2.0, episodes=8, seed=2001):
         "episodes": reports,
         "observations_are_causal": True,
         "future_reference_used_by_teacher_only": True,
+        "teacher_reference_mode": reference_mode,
     }
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
@@ -108,5 +111,14 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seconds", type=float, default=2.0)
     parser.add_argument("--episodes", type=int, default=8)
+    parser.add_argument(
+        "--reference-mode", choices=("world_path", "receding"), default="world_path"
+    )
     args = parser.parse_args()
-    collect(args.teacher, args.output, args.seconds, args.episodes)
+    collect(
+        args.teacher,
+        args.output,
+        args.seconds,
+        args.episodes,
+        reference_mode=args.reference_mode,
+    )

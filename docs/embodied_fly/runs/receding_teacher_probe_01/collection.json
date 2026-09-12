@@ -1,0 +1,2615 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T21:11:50.823730+00:00",
+    "source_commit": "f439dce292e5b3f1a3cb492c6e45657bf36a4477",
+    "package_has_uncommitted_changes": true,
+    "source_file_sha256": {
+      "pyproject.toml": "0012c0279ed01d6729ca3803806e369db9401fd24e3df240fb9566bdba4271bd",
+      "uv.lock": "9f22604d120549a21dbd7f0994334099c9e271464a31d34c7d46550e6e594773",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "72624f1d0590d3b3b3e76993628e347dd175d9ad36e90e5c12a88e57416db1fd",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "dc6bf7588a4bca8e84aa3f5c330b8a25f9401d0ca1ee8abee531078d0bcde970",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/provenance.py": "bbb10974f7ca154290a1feb6ce367558d775fe9cba9abc9d02c39910d1c568c4",
+      "src/embodied_fly/record.py": "83a0bb3cb57bbb2c09f09044ba942638f4cc6f5583a2f946e7423e1815713961",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "1d670ee678b09bd7f9a16360007f0d7ab52f5d7647518f3422fcb75fd1c0201f"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Darwin",
+      "architecture": "arm64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T21:12:23.438583+00:00",
+  "source": "upstream learned teacher through full 78-actuator FlyBody",
+  "seed": 2001,
+  "setup_seconds": 2.991827791905962,
+  "collection_seconds": 29.66533520806115,
+  "teacher_sha256": "96dd572472d6d22639cb54fd54f2f43b5d45e583cc054a301f27fa099b2f1478",
+  "teacher_golden_max_error": 0.005859375,
+  "physics_backend": "native MuJoCo CPU",
+  "worlds": 1,
+  "environment": {
+    "units": "CGS retained from FlyBody; SI conversions shown explicitly",
+    "body_mass_kg": 9.846214691323196e-07,
+    "bodies_including_world": 69,
+    "degrees_of_freedom": 108,
+    "actuators": 78,
+    "observation_size": 383,
+    "physics_hz": 5000.0,
+    "control_hz": 500.0,
+    "root_is_free": true,
+    "source": "TuragaLab/flybody@d015e9bfe441bd90ae431bac24c55cb74bdbce26",
+    "joints": [
+      {
+        "name": "walker/head_abduct",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/head_twist",
+        "range_rad": [
+          -3.0,
+          3.0
+        ]
+      },
+      {
+        "name": "walker/head",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/rostrum",
+        "range_rad": [
+          -1.24,
+          0.183
+        ]
+      },
+      {
+        "name": "walker/haustellum_abduct",
+        "range_rad": [
+          -0.0873,
+          0.0873
+        ]
+      },
+      {
+        "name": "walker/haustellum",
+        "range_rad": [
+          -1.59,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/labrum_left",
+        "range_rad": [
+          -0.00524,
+          1.05
+        ]
+      },
+      {
+        "name": "walker/labrum_right",
+        "range_rad": [
+          -0.00524,
+          1.05
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_left",
+        "range_rad": [
+          -0.4,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_left",
+        "range_rad": [
+          -0.1,
+          0.09
+        ]
+      },
+      {
+        "name": "walker/antenna_left",
+        "range_rad": [
+          -0.2,
+          0.5
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_right",
+        "range_rad": [
+          -0.4,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_right",
+        "range_rad": [
+          -0.1,
+          0.09
+        ]
+      },
+      {
+        "name": "walker/antenna_right",
+        "range_rad": [
+          -0.2,
+          0.5
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_left",
+        "range_rad": [
+          -1.5,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_roll_left",
+        "range_rad": [
+          -1.0,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_left",
+        "range_rad": [
+          -1.27,
+          2.92
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_right",
+        "range_rad": [
+          -1.5,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_roll_right",
+        "range_rad": [
+          -1.0,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_right",
+        "range_rad": [
+          -1.27,
+          2.92
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_2",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_2",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_3",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_3",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_4",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_4",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_5",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_5",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_6",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_6",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_7",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_7",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/haltere_left",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/haltere_right",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_left",
+        "range_rad": [
+          -1.0,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_left",
+        "range_rad": [
+          -0.8,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_left",
+        "range_rad": [
+          -0.2,
+          1.7
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_left",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_left",
+        "range_rad": [
+          -0.7,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_right",
+        "range_rad": [
+          -1.0,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_right",
+        "range_rad": [
+          -0.8,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_right",
+        "range_rad": [
+          -0.2,
+          1.7
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_right",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_right",
+        "range_rad": [
+          -0.7,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_left",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_left",
+        "range_rad": [
+          -0.75,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_left",
+        "range_rad": [
+          -0.2,
+          0.9
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_left",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_left",
+        "range_rad": [
+          -1.0,
+          1.8
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_right",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_right",
+        "range_rad": [
+          -0.75,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_right",
+        "range_rad": [
+          -0.2,
+          0.9
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_right",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_right",
+        "range_rad": [
+          -1.0,
+          1.8
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_left",
+        "range_rad": [
+          -0.9,
+          0.25
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_left",
+        "range_rad": [
+          -0.15,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_left",
+        "range_rad": [
+          -0.3,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_left",
+        "range_rad": [
+          -0.7,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_left",
+        "range_rad": [
+          -0.8,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_right",
+        "range_rad": [
+          -0.9,
+          0.25
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_right",
+        "range_rad": [
+          -0.15,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_right",
+        "range_rad": [
+          -0.3,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_right",
+        "range_rad": [
+          -0.7,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_right",
+        "range_rad": [
+          -0.8,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      }
+    ],
+    "actuation": [
+      {
+        "name": "walker/head_abduct",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.2
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/head_twist",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -3.0,
+          3.0
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/head",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/rostrum",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.24,
+          0.183
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/haustellum_abduct",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.0873,
+          0.0873
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/haustellum",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.59,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/labrum_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.00524,
+          1.05
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/labrum_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.00524,
+          1.05
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.4,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.1,
+          0.09
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.5
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.4,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.1,
+          0.09
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.5
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -3.0,
+          3.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_roll_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -2.0,
+          2.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -1.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -3.0,
+          3.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_roll_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -2.0,
+          2.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -1.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.7,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.06999999999999999,
+          0.06999999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/abdomen",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -1.05,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.10500000000000001,
+          0.06999999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.5599999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6400000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          1.7
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          1.36
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.27999999999999997,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.5599999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6400000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          1.7
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          1.36
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.27999999999999997,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.24
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.75,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6000000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.8
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.24
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.75,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6000000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.8
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.9,
+          0.25
+        ],
+        "force_range_CGS": [
+          -0.7200000000000001,
+          0.2
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.12,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.3,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.24,
+          1.04
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.5
+        ],
+        "force_range_CGS": [
+          -0.5599999999999999,
+          1.2000000000000002
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.32000000000000006,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.9,
+          0.25
+        ],
+        "force_range_CGS": [
+          -0.7200000000000001,
+          0.2
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.12,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.3,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.24,
+          1.04
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.5
+        ],
+        "force_range_CGS": [
+          -0.5599999999999999,
+          1.2000000000000002
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.32000000000000006,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_labrum_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_labrum_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T1_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T1_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T2_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T2_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T3_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T3_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  "episodes": [
+    {
+      "episode": 0,
+      "speed_cm_s": 0.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.895829000044614,
+      "displacement_m": [
+        0.0008807317268601977,
+        0.0002601419205091945
+      ],
+      "final_height_m": 0.001307284300296844,
+      "final_upright": 0.9974854597266332,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 1,
+      "speed_cm_s": 0.5,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6032961660530418,
+      "displacement_m": [
+        0.0015583069115608418,
+        -0.00048679849122795104
+      ],
+      "final_height_m": 0.0014405888913665572,
+      "final_upright": 0.9736855598825848,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 2,
+      "speed_cm_s": 1.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6508417919976637,
+      "displacement_m": [
+        0.016831053062774284,
+        0.008075114959649252
+      ],
+      "final_height_m": 0.0013333082547908554,
+      "final_upright": 0.9966969867793141,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 3,
+      "speed_cm_s": 2.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6512951670447364,
+      "displacement_m": [
+        0.0409121989889076,
+        -0.013201958481512923
+      ],
+      "final_height_m": 0.0013352771917667127,
+      "final_upright": 0.9971841368340587,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 4,
+      "speed_cm_s": 0.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.8868255409179255,
+      "displacement_m": [
+        0.0008653910669975485,
+        0.0002687912133731541
+      ],
+      "final_height_m": 0.0013083518377492976,
+      "final_upright": 0.9975876906856053,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 5,
+      "speed_cm_s": 0.5,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.7744564580498263,
+      "displacement_m": [
+        0.0054506421668952,
+        -0.0008757137391367052
+      ],
+      "final_height_m": 0.001323423865822758,
+      "final_upright": 0.9891802722795647,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 6,
+      "speed_cm_s": 1.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6609309579944238,
+      "displacement_m": [
+        0.015535934870970372,
+        0.01105673576923685
+      ],
+      "final_height_m": 0.001316947930933238,
+      "final_upright": 0.9988800886399257,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 7,
+      "speed_cm_s": 2.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.650014250073582,
+      "displacement_m": [
+        0.03868371339615323,
+        -0.018292851218754194
+      ],
+      "final_height_m": 0.0013057613466720996,
+      "final_upright": 0.9979426131020583,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 8,
+      "speed_cm_s": 0.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.8982283750083297,
+      "displacement_m": [
+        0.0009080641992836907,
+        0.00019340294271182312
+      ],
+      "final_height_m": 0.0013068777074766117,
+      "final_upright": 0.9975882597424747,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 9,
+      "speed_cm_s": 0.5,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.7258829160127789,
+      "displacement_m": [
+        0.0018467779887288275,
+        -7.119573660709272e-05
+      ],
+      "final_height_m": 0.0013750396499390791,
+      "final_upright": 0.9975318017664782,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 10,
+      "speed_cm_s": 1.0,
+      "yaw_rad_s": -0.75,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6546148749766871,
+      "displacement_m": [
+        0.0197697570678904,
+        0.008165502912878436
+      ],
+      "final_height_m": 0.0013857533650579942,
+      "final_upright": 0.9965757980183683,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 11,
+      "speed_cm_s": 2.0,
+      "yaw_rad_s": -0.75,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6522864170838147,
+      "displacement_m": [
+        0.019208786700291785,
+        -0.03285773500165456
+      ],
+      "final_height_m": 0.001320686250226959,
+      "final_upright": 0.9983114570719256,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 12,
+      "speed_cm_s": 0.0,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.9478918330278248,
+      "displacement_m": [
+        0.0009231151149298935,
+        0.00015965340458429526
+      ],
+      "final_height_m": 0.0013051019057026712,
+      "final_upright": 0.9978124605700777,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 13,
+      "speed_cm_s": 0.5,
+      "yaw_rad_s": 0.0,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.7702187079703435,
+      "displacement_m": [
+        0.005104324486532223,
+        -0.0002612615322083656
+      ],
+      "final_height_m": 0.0013310539738217873,
+      "final_upright": 0.9964211208537066,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 14,
+      "speed_cm_s": 1.0,
+      "yaw_rad_s": 0.75,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.6666521669831127,
+      "displacement_m": [
+        0.011549582225257388,
+        0.011924490432258081
+      ],
+      "final_height_m": 0.0013744942860030476,
+      "final_upright": 0.9940502089255664,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    },
+    {
+      "episode": 15,
+      "speed_cm_s": 2.0,
+      "yaw_rad_s": 0.75,
+      "steps": 1000,
+      "simulated_seconds": 2.0,
+      "wall_seconds": 1.654425207991153,
+      "displacement_m": [
+        0.040222857144180744,
+        0.013548742362199667
+      ],
+      "final_height_m": 0.0013249564408095963,
+      "final_upright": 0.9951505215248875,
+      "failure": null,
+      "physical_failure": null,
+      "warning_count": 0
+    }
+  ],
+  "observations_are_causal": true,
+  "future_reference_used_by_teacher_only": true,
+  "teacher_reference_mode": "receding"
+}

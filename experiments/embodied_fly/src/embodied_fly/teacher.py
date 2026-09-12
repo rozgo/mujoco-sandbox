@@ -90,15 +90,38 @@ class TeacherOracle:
             init_pos=(0, 0, 0.1278),
             control_timestep=0.002,
         )
+        self.local_reference, _ = constant_speed_trajectory(
+            n_steps=65,
+            speed=speed,
+            yaw_speed=yaw_speed,
+            init_pos=(0, 0, 0.1278),
+            init_heading=0.0,
+            control_timestep=0.002,
+        )
 
-    def observation(self, step):
-        from flybody.quaternions import get_dquat_local
+    def observation(self, step, reference_mode="world_path"):
+        from flybody.quaternions import get_dquat_local, mult_quat
 
         env = self.environment
         model, data = env.model, env.data
         rotation = data.xmat[env.thorax_id].reshape(3, 3)
         pose = data.qpos[:7]
-        future = self.reference[step : step + 65]
+        if reference_mode == "world_path":
+            future = self.reference[step : step + 65]
+        elif reference_mode == "receding":
+            # A velocity teacher should not ask the student to return to an
+            # invisible absolute path. Anchor the same command-derived horizon
+            # to the current xy/heading; retain target standing height/uprightness.
+            heading = np.arctan2(rotation[1, 0], rotation[0, 0])
+            c, s = np.cos(heading), np.sin(heading)
+            planar_rotation = np.array([[c, -s], [s, c]])
+            future = self.local_reference.copy()
+            future[:, :2] = future[:, :2] @ planar_rotation.T + pose[:2]
+            future[:, 3:] = mult_quat(
+                np.array([np.cos(heading / 2), 0, 0, np.sin(heading / 2)]), future[:, 3:]
+            )
+        else:
+            raise ValueError(f"Unknown reference mode: {reference_mode}")
         observation = {
             "walker/" + k: env.mean_sensors[idx].copy() for k, idx in self.sensors.items()
         }
@@ -117,9 +140,11 @@ class TeacherOracle:
         )
         return observation
 
-    def act(self, step):
+    def act(self, step, reference_mode="world_path"):
         env = self.environment
         raw_control = np.zeros(env.model.nu, np.float32)
-        raw_control[self.actuator_ids] = self.policy.act(self.observation(step))
+        raw_control[self.actuator_ids] = self.policy.act(
+            self.observation(step, reference_mode)
+        )
         raw_control = np.clip(raw_control, env.low, env.high)
         return (2 * (raw_control - env.low) / (env.high - env.low) - 1).astype(np.float32)
