@@ -48,8 +48,10 @@ Adaptive dog v1 is now the official baseline on `main`, pinned by the
 `adaptive-dog-v1` tag. Its checkpoint and video identities are recorded in
 [the release manifest](locomotion/OFFICIAL_V1.json). Start subsequent learning
 work on a new branch and use new artifact names; preserve the v1 checkpoint,
-video, GIF and recorded limitations. The original `experiment/adaptive-dog`
-branch remains available as development history.
+video, GIF and recorded limitations. Development history is retained in main
+and the release tags. After the September 12, 2026 cleanup, `main` is the only
+local or origin branch. See [the branch archive](BRANCH_ARCHIVE.md) for the paused
+experiment included in main and the retained capture worktrees.
 
 ## Large files and generated data
 

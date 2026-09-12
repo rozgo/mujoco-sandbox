@@ -10,6 +10,7 @@ def main():
     from .limb_loss import LOSS_CASES
 
     p = sub.add_parser("demo", help="View the frozen, user-accepted adaptive dog v1")
+    p.add_argument("--theme", choices=("classic", "graphite"), default="classic")
     p.add_argument("--case", choices=LOSS_CASES, default="whole_fr")
     p.add_argument("--seconds", type=float, default=0)
     p = sub.add_parser("preview")
@@ -153,7 +154,7 @@ def main():
     if args.command == "demo":
         from .official import view_demo
 
-        view_demo(case=args.case, seconds=args.seconds)
+        view_demo(case=args.case, seconds=args.seconds, theme=args.theme)
     elif args.command == "preview":
         print(preview(args.output))
     elif args.command == "train":

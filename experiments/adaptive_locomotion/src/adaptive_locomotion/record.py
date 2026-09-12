@@ -410,7 +410,12 @@ def compare(left, right, output, case="short_steps", seconds=12, fps=25):
 
 
 def view(
-    checkpoint, case="short_fl", seconds=0, presentation="original", timestep=0.002
+    checkpoint,
+    case="short_fl",
+    seconds=0,
+    presentation="original",
+    timestep=0.002,
+    theme="classic",
 ):
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
         env = os.environ.copy()
@@ -438,10 +443,12 @@ def view(
     net, _ = load_checkpoint(checkpoint)
     env = make_case(case, trials=1, timestep=timestep)
     group = env.groups[0]
-    from .presentation import camera_azimuth, configure, damage_markers
+    from .presentation import camera_azimuth, theme_hooks
+
+    configure_view, decorate_view = theme_hooks(theme)
 
     if presentation == "damage":
-        configure(group.model)
+        configure_view(group.model)
     data = mujoco.MjData(group.model)
     start = time.perf_counter()
     try:
@@ -473,7 +480,7 @@ def view(
                 if presentation == "damage":
                     with viewer.lock():
                         viewer.user_scn.ngeom = 0
-                        damage_markers(viewer.user_scn, group.model, data, group.body)
+                        decorate_view(viewer.user_scn, group.model, data, group.body)
                 viewer.sync()
                 time.sleep(max(0, CONTROL_DT - (time.perf_counter() - tick)))
     finally:

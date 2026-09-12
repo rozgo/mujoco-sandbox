@@ -55,6 +55,7 @@ def main():
     p.add_argument("--seed", type=int, default=9311)
     p.add_argument("--replay-from", type=Path)
     p = commands.add_parser("view")
+    p.add_argument("--theme", choices=("classic", "graphite"), default="classic")
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--surface", default="gap_fr")
     p.add_argument("--body", default="healthy")
@@ -114,7 +115,14 @@ def main():
     elif args.command == "view":
         from .standing_record import view
 
-        view(args.checkpoint, args.surface, args.body, args.seconds, args.transition)
+        view(
+            args.checkpoint,
+            args.surface,
+            args.body,
+            args.seconds,
+            args.transition,
+            theme=args.theme,
+        )
     else:
         from .standing_evaluate import evaluate
 

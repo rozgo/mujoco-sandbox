@@ -9,7 +9,7 @@ CHECKPOINT_SHA256 = "174b3094eaf20233f151ff0ad19fc21c4612e8b1e7468e683c81ab8f980
 TIMESTEP = 0.0005
 
 
-def view_demo(case="whole_fr", seconds=0):
+def view_demo(case="whole_fr", seconds=0, theme="classic"):
     from .record import view
 
     if hashlib.sha256(CHECKPOINT.read_bytes()).hexdigest() != CHECKPOINT_SHA256:
@@ -20,4 +20,5 @@ def view_demo(case="whole_fr", seconds=0):
         seconds=seconds,
         presentation="damage",
         timestep=TIMESTEP,
+        theme=theme,
     )

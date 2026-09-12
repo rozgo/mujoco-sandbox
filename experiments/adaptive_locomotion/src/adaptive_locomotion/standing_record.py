@@ -418,7 +418,14 @@ def record(
     return report
 
 
-def view(checkpoint, surface="gap_fr", body="healthy", seconds=0, transition=False):
+def view(
+    checkpoint,
+    surface="gap_fr",
+    body="healthy",
+    seconds=0,
+    transition=False,
+    theme="classic",
+):
     if sys.platform == "darwin" and not os.environ.get("MJPYTHON_BIN"):
         env = os.environ.copy()
         paths = [sysconfig.get_config_var("LIBDIR"), str(Path(sys.base_prefix) / "lib")]
@@ -448,7 +455,10 @@ def view(checkpoint, surface="gap_fr", body="healthy", seconds=0, transition=Fal
         1, 9311, cases=[(BODY_MAP[body], surface)], schedule=False, randomize=True
     )
     g = env.groups[0]
-    configure(g.model)
+    from .presentation import theme_hooks
+
+    configure_view, decorate_view = theme_hooks(theme)
+    configure_view(g.model)
     data = mujoco.MjData(g.model)
     start = time.perf_counter()
     try:
@@ -486,7 +496,7 @@ def view(checkpoint, surface="gap_fr", body="healthy", seconds=0, transition=Fal
                 with viewer.lock():
                     viewer.user_scn.ngeom = 0
                     ground_marks(viewer.user_scn, surface)
-                    damage_markers(viewer.user_scn, g.model, data, BODY_MAP[body])
+                    decorate_view(viewer.user_scn, g.model, data, BODY_MAP[body])
                 viewer.sync()
                 time.sleep(max(0, CONTROL_DT - (time.perf_counter() - tick)))
     finally:
