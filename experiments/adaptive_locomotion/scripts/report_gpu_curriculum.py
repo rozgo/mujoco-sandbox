@@ -8,7 +8,6 @@ from datetime import datetime
 from pathlib import Path
 
 import torch
-
 from adaptive_locomotion.bodies import ROOT
 
 
