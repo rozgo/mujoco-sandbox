@@ -863,3 +863,50 @@ The evaluator for this pilot loads only the first physical state from a declared
 expert capture, then runs the student with all 78 bounded actuators and no teacher
 or oscillator calls. It measures short airborne tracking against a declared
 1 mm root-RMSE / 8 mm minimum-height envelope, preserving failure trajectories.
+
+### First direct-wing learning result and diagnosed information loss
+
+Source `904b8f3` collected eight complete physical flight demonstrations in
+**20.218079 s**, after **4.194998 s** setup: 12,000 actuator transitions / 2.4
+simulated seconds. All eight met the predeclared training envelope with zero
+warnings or prohibited support; all local copies passed hashes, finite-state,
+clock and shape checks. The inherited teacher alone generated these examples.
+
+The mixed-clock full-graph pilot trained for **60.168454 s**, setup **3.645980 s**,
+validation **0.597049 s**, on the RTX 4090. Its 32 offline neural sequences gave
+**207 updates / 105,984 supervised examples**, with 105 walking and 102 flight
+batches. Peak CUDA allocation was **5,176,925,696 bytes**. All three internal-cell
+parameter groups received finite nonzero gradients and changed. Checkpoint
+`ecfdcf3e2633639e03d0f0fc94da46c727705780dd46761bc06ec8974986496c`
+is archived as `motor_flight_probe_01.pt` and **not promoted**.
+
+Flight imitation validation improved 0.463187 → 0.019442, while walking validation
+changed 0.017634 → 0.016919. Nevertheless, both held-out-initial-state airborne
+probes lost altitude: hover root RMSE 7.382 mm, forward-flight RMSE 15.462 mm over
+0.3 seconds. The same checkpoint lost stability in hold, normal walking and right
+turning; its continuous stop toppled and resume did not recover. All raw tracking
+gates and failure captures remain archived. No numerical warnings occurred.
+This demonstrates that low supervised error on teacher states is insufficient
+for closed-loop control; online01 remains the prior walking/braking reference.
+
+A clean-source replay diagnostic (`d10a919`) compared the first 30 ms at identical
+initial physical pose. The student's wing excursions were larger, but its sampled
+mean upward passive force was only **0.0900 body weight**, versus the teacher's
+**0.9630**. These are 150 control-boundary samples, not physics-substep averages.
+The student crossed below the 8 mm flight envelope at **21.6 ms**.
+
+Crucially, wing yaw/pitch speeds exceed the inherited 1,000 rad/s observation clip
+in about 41–55% of teacher samples. The walking-trained normalization followed by
+encoder clipping saturates **90–100%** of all six wing-velocity channels in this
+window. We have identified information loss, not proved it is the only cause.
+Before extending the failed training, add continuous wing-speed feedback with an
+explicit observation-schema migration that preserves the old actor's outputs at
+initialization; retain the old capture/reproduction path. Ground retention should
+also use the preserved student's actual walking/stopping behavior, because
+original-teacher MSE alone failed to preserve those skills. Re-evaluate physical
+wingbeats and ground behavior after the correction rather than trusting MSE.
+
+The new one-second inherited hover video is accurately labeled **reference
+teacher + wingbeat generator**, with no MaleCNS learner. Rendering took
+**3.843421 s**; all 50 frames decoded at 1600×900 / 50 fps / 1×, with visual checks
+at the start, middle and end. It is a reference for training, not student success.
