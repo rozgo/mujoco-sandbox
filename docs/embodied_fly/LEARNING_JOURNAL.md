@@ -600,3 +600,27 @@ check the saved student on fixed commands and continuous walk–stop–walk.
 The batched braking adapter was compared with the inherited single-world oracle
 on actual physical states and verified not to write poses. Native single/batched
 physics agreement remains tested. Nineteen focused tests passed before this pilot.
+
+### Online pilot outcome and next retention trial
+
+The 60-second online pilot kept all six fixed cases upright with permitted support
+and zero numerical warnings. Teacher-free hold moved approximately 0.803 mm,
+compared with PPO01's 8.72 mm. In the continuous test, stop travel was **1.314 mm**
+and late drift **0.229 mm**, without clearing recurrent state. Mean late forward
+velocity was 0.0156 cm/s. However, normal walking regressed: continuous forward
+speed was only 0.341 cm/s initially and 0.374 cm/s after resuming, with substantial
+yaw drift. All original raw gates and the overall transition test still failed.
+This demonstrates learned braking with incomplete skill retention, not a solution.
+
+The inherited braking diagnostic's 100 ms block-planar RMS is 0.00451 cm/s while
+its raw RMS is 0.165 cm/s. Preserve both: an instantaneous-speed gate can reject
+stationary contact vibration. This observation does not excuse walking drift.
+
+Next run declared before execution: return to PPO01 weights, same seed family
+(seed 38002), 32 worlds / 16 threads, same 3e-5 new imitation Adam, eight-step
+chunks, command mixture, targets and 0.02 utility CE. Increase moving retention
+loss weight from one to **four** and request **300 seconds**. The original 50%
+training-only assistance still fades to zero halfway through the timed run.
+The frozen retention actor remains PPO01. Independently test the final single
+student, with no inherited or frozen teacher present. The pilot remains separate
+and is not part of this new checkpoint's ancestry.

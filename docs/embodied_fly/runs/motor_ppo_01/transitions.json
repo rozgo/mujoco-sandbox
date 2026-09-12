@@ -1,0 +1,200 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-12T22:21:36.959886+00:00",
+    "source_commit": "472f584e10fd07308630cf64af99ff1f2205ab73",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d7f4ca9acc2b876f612b1502d03c3966b919a20c62148e18dd05b609134eaf21",
+      "src/embodied_fly/body.py": "77a12a6b86286c090cef849d2fa4abd5a3fc7d7b0ae8063987489d1b85ab2094",
+      "src/embodied_fly/brain.py": "43916c76aebc2bb308c246042d35930c32abc175833fdc884df5926ef03ca6ff",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "72a2df42341a20937575dc13a311b6222d07aeb2ba33b98872c7b9c0618b4656",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/ppo.py": "c76fc7568be8c10a964c438cf47b32ec5eca47e7645af5e9629aa79ce462b45b",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "a4afbb2ccbf883b45152d375b896b74aae065b1ab0881674cdb46c8f84ec4dcf",
+      "src/embodied_fly/teacher.py": "8f93a3be25977300bdb6796b454d362e37cf5e68144ed0eb357a71c27ebc5593",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "043a732cac5dfa19f2712bb3078d59c04b59d0d067a12180ce9aed7ee8cd9ed3",
+      "src/embodied_fly/transitions.py": "d472d757b06d117e6880cb2eba3bfdeb5d26380cbec10545f87a9f5c0096fa19"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-12T22:21:55.687219+00:00",
+  "setup_seconds": 3.282204173039645,
+  "checkpoint_sha256": "6983be3ccc477ecab3812e751c26e77311f93390c94830821ba8037aedb3449f",
+  "model_sha256": "6408128e374699c6d2932dcc5845ead1e939220f5fdb8776e7496c2b56b0e0ee",
+  "training_method": "recurrent physical-outcome PPO plus explicit imitation rehearsal",
+  "one_checkpoint_for_all_cases": true,
+  "teacher_present": false,
+  "scripted_gait_present": false,
+  "walking_action_mask": true,
+  "active_actuators": 59,
+  "neural_view": null,
+  "gates": {
+    "settle_seconds": 0.25,
+    "minimum_upright": 0.5,
+    "minimum_height_m": 0.0006,
+    "max_forbidden_load_over_weight": 0.1,
+    "moving_mean_forward_error_cm_s": 0.25,
+    "moving_mean_lateral_error_cm_s": 0.25,
+    "moving_mean_yaw_error_rad_s": 0.35,
+    "stop_late_planar_speed_rms_cm_s": 0.1,
+    "stop_block_yaw_rms_rad_s": 0.3,
+    "stop_late_drift_m": 0.001,
+    "stop_total_drift_m": 0.002
+  },
+  "command_boundary_events": [
+    {
+      "phase": "walk",
+      "physics_time": 0.0,
+      "root_position_cm": [
+        0.0,
+        0.0,
+        0.1278
+      ],
+      "preceding_memory_l2": 0.0,
+      "reset_performed": false
+    },
+    {
+      "phase": "stop",
+      "physics_time": 1.9999999999998124,
+      "root_position_cm": [
+        1.838269493369825,
+        0.44320380538846815,
+        0.13129749932455204
+      ],
+      "preceding_memory_l2": 79.8828125,
+      "reset_performed": false
+    },
+    {
+      "phase": "resume",
+      "physics_time": 3.9999999999995923,
+      "root_position_cm": [
+        2.387042619198744,
+        1.1110063792782159,
+        0.1425289807397475
+      ],
+      "preceding_memory_l2": 82.77600860595703,
+      "reset_performed": false
+    }
+  ],
+  "physics": "native MuJoCo CPU",
+  "neural_device": "cuda",
+  "scope": "development transition test, separate from original six fixed-command gates",
+  "results": [
+    {
+      "case": "walk_stop_walk",
+      "success": false,
+      "stable": true,
+      "gate_label": "Transition gates",
+      "phases": [
+        {
+          "phase": "walk",
+          "command_cm_s_rad_s": [
+            1,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            0.9735601510730811,
+            -0.048400600233128616,
+            0.2907118974071096
+          ],
+          "late_planar_speed_rms_cm_s": 1.3013967309441556,
+          "late_block_yaw_rms_rad_s": 0.39871882138197046,
+          "total_planar_displacement_m": 0.018909427128723313,
+          "late_planar_displacement_m": 0.016843684421790645,
+          "minimum_upright": 0.99039059804883,
+          "minimum_height_m": 0.001223707028986753,
+          "max_disallowed_ground_force_over_weight": 0.0
+        },
+        {
+          "phase": "stop",
+          "command_cm_s_rad_s": [
+            0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            0.4392704517637264,
+            -0.06506486771336223,
+            0.613230766913684
+          ],
+          "late_planar_speed_rms_cm_s": 0.9362740348756122,
+          "late_block_yaw_rms_rad_s": 0.9316025654247564,
+          "total_planar_displacement_m": 0.008643565359999396,
+          "late_planar_displacement_m": 0.007545816797038909,
+          "minimum_upright": 0.9887519721213361,
+          "minimum_height_m": 0.001223684755882451,
+          "max_disallowed_ground_force_over_weight": 0.0
+        },
+        {
+          "phase": "resume",
+          "command_cm_s_rad_s": [
+            1,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            0.9731738856420908,
+            -0.030790237370883683,
+            0.36800961823378175
+          ],
+          "late_planar_speed_rms_cm_s": 1.2842685205706539,
+          "late_block_yaw_rms_rad_s": 0.4840303603157549,
+          "total_planar_displacement_m": 0.019033191062348128,
+          "late_planar_displacement_m": 0.016934284896075916,
+          "minimum_upright": 0.9921322710269406,
+          "minimum_height_m": 0.0012280488469067084,
+          "max_disallowed_ground_force_over_weight": 0.0
+        }
+      ],
+      "simulated_seconds": 6.000000000003813,
+      "wall_seconds": 15.453659052960575,
+      "numerical_failure": null,
+      "warning_count": 0,
+      "state_sha256": "9f2c546d430cd22c688ec31298b5d4a867c2e1ac61ede4d2c4a94c55ea6814c2"
+    }
+  ],
+  "physical_success_count": 0
+}

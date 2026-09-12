@@ -24,7 +24,17 @@ from embodied_fly.train import synchronize
 
 
 def train(args):
-    if min(args.worlds, args.threads, args.sequence, args.seconds, args.lr) <= 0:
+    if (
+        min(
+            args.worlds,
+            args.threads,
+            args.sequence,
+            args.seconds,
+            args.lr,
+            args.retention_weight,
+        )
+        <= 0
+    ):
         raise ValueError(
             "Worlds, threads, sequence, duration and learning rate must be positive"
         )
@@ -105,7 +115,7 @@ def train(args):
                     groups.append(error[stationary].mean())
                 if (~stationary).any():
                     moving_errors.append(float(error[~stationary].mean().detach()))
-                    groups.append(error[~stationary].mean())
+                    groups.append(args.retention_weight * error[~stationary].mean())
                 motor_losses.append(torch.stack(groups).mean())
                 utility_losses.append(
                     F.cross_entropy(result.utility_logits, (~stationary).long())
@@ -283,5 +293,6 @@ if __name__ == "__main__":
     parser.add_argument("--sequence", type=int, default=8)
     parser.add_argument("--lr", type=float, default=0.00003)
     parser.add_argument("--initial-teacher-mix", type=float, default=0.5)
+    parser.add_argument("--retention-weight", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=38001)
     train(parser.parse_args())
