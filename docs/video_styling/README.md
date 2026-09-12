@@ -88,3 +88,21 @@ Visual inspection can reveal deviations; it cannot certify exact physical fideli
 The implementation's tests cover duplicate submission prevention, unknown-model and
 long-clip rejection, and resuming an ambiguous job without creating another charge.
 No physics or learning tests are rerun for this presentation-only workflow.
+
+## First result — paused after review
+
+[Watch the comparison](../../previews/video_styling/moving_brushed_metal_comparison_v1.mp4)
+· [Generated clip](../../previews/video_styling/moving_brushed_metal_seedance25_v1.mp4)
+· [Original crop](../../previews/video_styling/moving_source_5s.mp4).
+
+The single Seedance 2.5 trial produced a metallic robot and a softly lit industrial
+lab. Fine limb/contact details and platform pose diverge from the original; motion
+is recognizable but not exact. The provider returned **1148×808, 24 fps, 113 frames
+(4.708 s)** from the five-second source. The comparison uses the common interval
+without stretching: **1920×900, 25 fps, 117 frames (4.68 s)**. All frames decode;
+opening, intermediate and ending samples were inspected.
+
+Verified completed-task debit: **$1.98**. Provider inference timing: **215,120 ms**;
+observed submission-to-completion polling interval: **217.213 s**. No local GPU
+training or new physics. User paused generative styling to improve native MuJoCo
+presentation instead. No further generation is queued.
