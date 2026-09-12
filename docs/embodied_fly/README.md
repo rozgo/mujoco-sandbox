@@ -10,6 +10,12 @@ curves are in [`runs/`](runs/). The first five-minute graph warm start reduced
 offline imitation error, but failed all six teacher-free physical acceptance cases;
 its checkpoint is retained as diagnostic.
 
+The subsequent walking-stage actuator mask kept six of six cases upright with
+valid foot support. Stop/turn tracking is still under evaluation. Earlier reports
+used rotated inertia axes for velocity metrics; corrected reports explicitly use
+anatomical thorax axes. The same actor's original six velocity observation features
+retain their inertia-frame coordinates for checkpoint compatibility.
+
 The actor contains a measured MaleCNS graph with learned internal cell dynamics,
 a learned utility head and an individual-actuator decoder. Utilities choose among
 rest, exploration, feeding, drinking, escape and grooming; names declare intended
@@ -93,6 +99,41 @@ contain current joint position/velocity, activation, local body velocity/orienta
 foot contact, previous action, current command and needs. They contain no future
 reference, gait phase, clock or ghost position. Dataset collection, supervised
 learning, later RL, evaluation and rendering will be timed separately.
+
+## Continue the motor curriculum
+
+These are the selected short-pilot settings, with independent data, optimization
+and evaluation clocks. `--worlds 32` means simultaneous neural sequences during
+offline imitation. Data collection runs one native CPU physics world with CUDA
+brain inference. The initial curriculum keeps 19 nonwalking actuator commands at
+raw zero; it retains the complete body and all 78 actor outputs.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.dagger \
+  --checkpoint assets/embodied_fly/diagnostics/motor_bc_01.pt \
+  --graph outputs/fly_survival/malecns \
+  --teacher assets/embodied_fly/teachers/walking.npz \
+  --output outputs/embodied_fly/dagger_01 --episodes 16 --seconds 2 \
+  --student-fraction 0.25
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.train \
+  --graph outputs/fly_survival/malecns \
+  --data outputs/embodied_fly/demonstrations_02 \
+  --additional-data outputs/embodied_fly/dagger_01 \
+  --resume assets/embodied_fly/diagnostics/motor_bc_01.pt \
+  --output outputs/embodied_fly/motor_dagger_01 \
+  --worlds 32 --seconds 300 --reset-fraction 0.25 --seed 18002
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.evaluate \
+  --checkpoint outputs/embodied_fly/motor_dagger_01/actor.pt \
+  --graph outputs/fly_survival/malecns \
+  --output outputs/embodied_fly/motor_dagger_01_evaluation --walking-action-mask
+```
+
+Old checkpoints lack optimizer state; their first continuation resets Adam while
+retaining weights and observation normalization. New checkpoints also retain Adam
+state and parent hashes. Dataset aggregation remains supervised learning, not PPO.
+Recorded demonstrations and teacher-free student rollouts can be inspected with
+`python -m embodied_fly.tracking CAPTURE NEW_REPORT.json` for anatomical velocity
+and block-mean tracking diagnostics, without changing acceptance gates or physics.
 
 ## Source and attribution
 
