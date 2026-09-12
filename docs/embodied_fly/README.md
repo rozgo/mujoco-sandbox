@@ -166,3 +166,52 @@ the source capture contains them; older diagnostic captures remain usable.
 - [FlyBody paper](https://www.nature.com/articles/s41586-025-09029-4).
 - [FlyGM](https://arxiv.org/html/2602.17997v3) informs the trainable internal-core
   approach; our implementation is not its released reproduction or its FlyWire data.
+
+## Physical-outcome learning
+
+The new `embodied_fly.ppo` path runs **32 independent complete FlyBody worlds**
+through native MuJoCo CPU threads, with the shared full MaleCNS actor on CUDA.
+These are separate training worlds, not yet interacting flies in the survival
+arena. The deployed actor remains 383 inputs, four recurrent graph updates and
+78 bounded outputs; the walking stage keeps 19 nonwalking channels passive.
+A separate 1,697 → 128 → 128 → 1 critic is used only during learning.
+
+The [declared recipe and first measurements](LEARNING_JOURNAL.md) distinguish
+physical collection, PPO optimization, explicit imitation rehearsal and setup.
+The 21.075-second implementation pilot collected 30,720 transitions, approximately
+1,458/s including learning. It maintained upright valid-foot support in six
+teacher-free tests, but did not solve stopping or all command-tracking gates.
+Physical-outcome gradients reached trainable internal cells; useful neural
+causality and the full locomotion/survival goal remain to be established.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
+  --graph outputs/fly_survival/malecns \
+  --resume assets/embodied_fly/diagnostics/motor_dagger_01.pt \
+  --rehearsal outputs/embodied_fly/demonstrations_02 \
+  --output outputs/embodied_fly/motor_ppo_01 \
+  --worlds 32 --threads 16 --seconds 300 --lr 0.000002 --seed 28002
+```
+
+The requested duration bounds the training loop; its final rollout completes
+before saving, and actual wall time is reported. No teacher actions are executed
+in live PPO physics. The separate rehearsal batch uses only the original
+whole-episode training split. Rates reward physical tracking and support every
+2 ms; terminal falls get one additional penalty. Timeouts bootstrap their actual
+final state and reset only the affected world's recurrent memory. New runs retain
+short physical traces of training falls and a compiled model; the initial short
+pilot retained fall metrics only.
+
+Evaluation saves raw tracking gates plus 100 ms block-mean diagnostics. A CLI
+exit status of **2** means the declared physical task gates failed, while saved
+reports and trajectories remain available for inspection. Default seed 80001 is
+explicitly a repeatedly used development/model-selection seed; it is not a final
+held-out robustness test. `--seed` permits separate final evaluation seeds later.
+Neither filtered diagnostics nor readable walking footage silently changes a
+failed gate. Subsequent curricula must also validate commands changing within an
+episode, before adding flight, needs and the shared survival arena.
+
+Native batching reuses [mjbatch](https://github.com/kevinzakka/mjbatch) with the
+repository's pinned source and Apache-2.0 attribution. Additional contact sensors
+follow the [MuJoCo contact sensor specification](https://mujoco.readthedocs.io/en/stable/XMLreference.html#sensor-contact);
+a regression test compares this sensor/batch path with the original physical body.

@@ -48,6 +48,8 @@ def load_actor(path, graph_path, device):
 
 @torch.no_grad()
 def evaluate(args):
+    if args.seconds <= 0 or not 1 <= args.cases <= 6:
+        raise ValueError("Positive duration and one to six cases required")
     torch.set_num_threads(4)
     started = time.perf_counter()
     args.output.mkdir(parents=True, exist_ok=False)
@@ -58,7 +60,7 @@ def evaluate(args):
     projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
-    rng = np.random.default_rng(80001)
+    rng = np.random.default_rng(args.seed)
     cases = [
         ("hold", 0.0, 0.0),
         ("slow_walk", 0.5, 0.0),
@@ -124,10 +126,17 @@ def evaluate(args):
             and yaw_rmse < 0.5
             and support_ratio < 0.1
         )
+        block = round(0.1 / CONTROL_DT)
+        usable = len(speed_errors) // block * block
+        block_errors = (
+            np.column_stack([speed_errors, yaw_errors])[:usable].reshape(-1, block, 2).mean(1)
+            if usable
+            else None
+        )
         report = {
             "case": name,
             "command_cm_s_rad_s": [speed, turn],
-            "simulated_seconds": len(actions) * CONTROL_DT,
+            "simulated_seconds": float(environment.data.time),
             "wall_seconds": time.perf_counter() - wall_start,
             "stable": stable,
             "success": success,
@@ -135,6 +144,12 @@ def evaluate(args):
             "yaw_rmse_rad_s": yaw_rmse,
             "max_disallowed_ground_force_over_weight": support_ratio,
             "minimum_upright": min(upright) if upright else None,
+            "block_mean_rmse_cm_s_rad_s": np.sqrt(np.square(block_errors).mean(0)).tolist()
+            if block_errors is not None
+            else None,
+            "block_mean_window_seconds": block * CONTROL_DT,
+            "block_mean_frames": usable,
+            "block_mean_is_diagnostic_only": True,
             "displacement_m": distance.tolist(),
             "numerical_failure": numerical_failure,
             "warning_count": int(environment.data.warning.number.sum()),
@@ -160,11 +175,13 @@ def evaluate(args):
                 else {}
             ),
         )
+        report["state_sha256"] = sha256(args.output / f"{name}.npz")
         print(json.dumps(report), flush=True)
     manifest = {
         "provenance": run_evidence,
         "completed_utc": utc_now(),
         "checkpoint_sha256": hashlib.sha256(args.checkpoint.read_bytes()).hexdigest(),
+        "model_sha256": sha256(args.output / "model.mjb"),
         "training_source_commit": checkpoint["source_commit"],
         "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
         "checkpoint_metadata_verification": "SHA-256 and routing"
@@ -180,7 +197,10 @@ def evaluate(args):
         "active_actuators": int((~environment.walking_inactive).sum())
         if args.walking_action_mask
         else environment.model.nu,
-        "evaluation_seed": 80001,
+        "evaluation_seed": args.seed,
+        "seed_role": "development/model-selection"
+        if args.seed == 80001
+        else "explicit alternate seed",
         "tracking_coordinate_frame": "anatomical thorax (mjOBJ_XBODY), x forward / z yaw",
         "actor_velocity_observation_frame": "principal inertia frame retained for v1 checkpoint compatibility",
         "neural_view": projection.report() if projection is not None else None,
@@ -188,6 +208,7 @@ def evaluate(args):
         "physical_success_count": sum(r["success"] for r in results),
     }
     (args.output / "report.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    return manifest
 
 
 if __name__ == "__main__":
@@ -200,4 +221,6 @@ if __name__ == "__main__":
     parser.add_argument("--cases", type=int, default=6)
     parser.add_argument("--walking-action-mask", action="store_true")
     parser.add_argument("--neural-view", action="store_true")
-    evaluate(parser.parse_args())
+    parser.add_argument("--seed", type=int, default=80001)
+    report = evaluate(parser.parse_args())
+    raise SystemExit(0 if report["physical_success_count"] == len(report["results"]) else 2)
