@@ -13,6 +13,7 @@ from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.evaluate import load_actor
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.provenance import evidence, sha256, utc_now
+from embodied_fly.teacher import TeacherOracle
 
 PHASES = (("walk", 2.0, (1, 0, 0)), ("stop", 2.0, (0, 0, 0)), ("resume", 2.0, (1, 0, 0)))
 GATES = {
@@ -101,6 +102,9 @@ def evaluate(args):
     environment = FlyEnvironment()
     environment.reset(yaw=0.1)
     memory = actor.initial_state(1)
+    teacher = (
+        TeacherOracle(environment, args.braking_teacher) if args.braking_teacher else None
+    )
     projection = NeuralProjection.from_graph(args.graph, device) if args.neural_view else None
     mujoco.mj_saveModel(environment.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - setup_start
@@ -125,6 +129,8 @@ def evaluate(args):
     numerical_failure = None
     for phase_id, (name, seconds, command) in enumerate(PHASES):
         environment.command[:] = command
+        if teacher is not None and name == "stop":
+            teacher.set_reference(0, 0, seconds)
         before = environment.data.qpos[:3].copy()
         boundary_events.append(
             {
@@ -144,6 +150,8 @@ def evaluate(args):
             )
             memory = result.state
             action = environment.walking_action(result.action[0].cpu().numpy())
+            if teacher is not None and name == "stop":
+                action = teacher.act(0, reference_mode="receding")
             for key, value in (
                 ("qpos", environment.data.qpos),
                 ("qvel", environment.data.qvel),
@@ -184,6 +192,11 @@ def evaluate(args):
                 / (environment.model.body_mass.sum() * 981),
             )
         )
+        phase_results[-1]["executed_controller"] = (
+            "inherited teacher"
+            if teacher is not None and name == "stop"
+            else "MaleCNS student"
+        )
         if numerical_failure:
             break
     arrays = {key: np.asarray(value) for key, value in captures.items()}
@@ -217,7 +230,11 @@ def evaluate(args):
         "model_sha256": sha256(args.output / "model.mjb"),
         "training_method": checkpoint.get("method"),
         "one_checkpoint_for_all_cases": True,
-        "teacher_present": False,
+        "teacher_present": teacher is not None,
+        "braking_teacher_sha256": sha256(args.braking_teacher)
+        if teacher is not None
+        else None,
+        "policy_acceptance_eligible": teacher is None,
         "scripted_gait_present": False,
         "walking_action_mask": True,
         "active_actuators": 59,
@@ -232,7 +249,7 @@ def evaluate(args):
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(result), flush=True)
-    return success
+    return success and teacher is None
 
 
 if __name__ == "__main__":
@@ -242,4 +259,9 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--neural-view", action="store_true")
+    parser.add_argument(
+        "--braking-teacher",
+        type=Path,
+        help="Training-only braking demonstration; not student-policy acceptance",
+    )
     raise SystemExit(0 if evaluate(parser.parse_args()) else 2)

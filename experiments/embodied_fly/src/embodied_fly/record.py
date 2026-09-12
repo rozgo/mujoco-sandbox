@@ -63,6 +63,8 @@ def record(source, case, output):
             + evaluation["diagnostic_activity_override"].upper()
             + " FORCED"
         )
+    if evaluation.get("braking_teacher_sha256"):
+        title = "TRAINING DEMONSTRATION / inherited teacher during STOP"
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
     floor_display = expand_floor_display(model)
     data = mujoco.MjData(model)
