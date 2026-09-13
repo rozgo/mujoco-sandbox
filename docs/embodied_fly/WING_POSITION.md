@@ -1,5 +1,8 @@
 # Wing position actuator pilot
 
+Latest [full motor review](runs/position_fullbody_01/SUMMARY.md): standing passes;
+walking and hover remain incomplete. Both pilots and all failures are retained.
+
 The full fly now has an opt-in `wing_position` physical profile. All motor
 commands in this experiment use it. Existing `wing_motion` recordings and
 checkpoints remain reproducible and retain their exact fingerprints.
@@ -41,3 +44,9 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_
 Use the native rendering backend on macOS; headless Linux can set `MUJOCO_GL=egl`.
 An initialization or an assisted reference is not a trained autonomous result.
 Each checkpoint must pass complete, teacher-free evaluation before promotion.
+
+The full-body follow-up resumes `position_feedback_01.pt` with
+`--trainable-subset all --lr .0001 --stand-initial-form --hover-teacher-mix 1
+--nonwing-retention-weight 0`, seed 95023. Its unassisted review uses seed 95033.
+Other world counts, physical clocks and loss weights remain as above. See the
+[predeclared full-body plan](runs/position_fullbody_01/PLAN.md).

@@ -2350,3 +2350,58 @@ Feedback_readout01 completes180.911450s after10.294863ssetup,178,176transitions/
 Training has14two-secondhover timeouts among105hover episodes;these areloose-envelope completions,nothoveracceptance. All109failure traces areverified. The unassisted5secondreviewkeepsstanding/walking upright withvalidsupport, butwingpostureandhoverfail;zeronumericalwarnings. Setup5.984868s,capture32.375438s. The complete15s/750frame film isdecoded,inspectedandopened;render59.647187s. Retention02remainsselected.
 
 This continuation made progress through two measured frozen-feedback probes, implemented/tested encoder-and-decoder training with explicit parameter limits and ground distillation, two real GPU pilots, two full physical evaluations and reviewed films. No body, force law, output override or acceptance threshold changed. It did not yield anaccepted motor controller;the broader utility/multi-fly goal staysactive. There is noexternal blocker. Further work must resolve weak immediate motorfeedback andphysicalstability ratherthanrepeatunchangedreadoutfits orclaimsuccessfromtrainingtimeouts.
+
+### Versioned wing position actuation — 2026-09-13
+
+Continuation started at 13:23:09 UTC after a read-only clarification turn. The
+old torque-output trials had not produced reliable wing posture or hover.
+Implemented `wing_position` alongside preserved `wing_motion`, with explicit
+checkpoint migration and a shared physical fingerprint for all three commands.
+Only four actuator arrays differ; all other physical arrays and solver options
+are exactly equal in the independent saved-model audit. Wings remain massless,
+non-colliding and non-aerodynamic, with no inertial reaction on the thorax.
+
+The initial physical reference held the resting wings accurately, but hover
+tracking failed at 5.147 mm RMSE. A training-only half-interval velocity lead
+compensated the held position target's lag; hover then passed at 1.376 mm over
+five seconds. Standing passed. The legacy walking teacher fell in both reference
+runs, which are preserved. These demonstrations are not learned-policy results.
+
+Position_feedback01 trained the wing sensory extension and residual decoder for
+180.174339 s across 32 worlds, collecting 145,408 transitions. All 193 failure
+traces were checked. Its complete autonomous evaluation kept ground wings within
+0.353 degrees standing and 0.571 degrees walking, but body posture/tracking and
+hover failed. Both ground cases remained upright. The 15 s full review was
+decoded, inspected and opened; the preserved checkpoint remains selected.
+
+Inspection exposed a supervision mismatch: retaining the old ground controller
+also retained its standing body commands, instead of teaching the full initial
+pose requested by the user. Added explicit training-only `--stand-initial-form`
+supervision, preserving walking body labels separately. Position_fullbody01
+trains the existing motor network and modeled cell dynamics, with immutable
+connectome edges and frozen utility/intentions, on the same physical profile.
+Its hover collection uses the complete teacher to acquire sustained stroke
+histories. Autonomous evaluation is still required; assistance cannot establish
+flight success. The arena, utility and multi-agent goal remains active.
+
+
+### Full standing posture learned — 2026-09-13 13:51:33 UTC
+
+Position_fullbody01 completed 180.165843 s of training across 32 worlds, with
+144,384 transitions and 2,336,540 trainable motor/cell-dynamics parameters. The
+saved graph identities, utility/intentions, normalization and physical fingerprint
+were independently verified; modeled cell gains, leaks and biases received finite
+nonzero gradients. The connectome edge multiply has no weight-gradient path.
+
+The complete seed95033 unassisted review passes standing: initial pose held,
+0.155 mm root RMSE, no height loss, maximum wing deviation 0.144 degrees. This is
+one declared five-second test, not a robustness claim. Walking holds the wings
+but produces little forward movement; hover falls. All 27 training failures and
+all 7,500 evaluation frames are verified. The 15-second full review is decoded,
+visually inspected and opened. Final suite: 124 passed / 85.40 s.
+
+This is progress toward the requested body behavior, with a successful standing
+case and unresolved walking/hover. Do not promote a complete motor controller.
+Keep the new body fixed while improving actual command tracking and autonomous
+stroke feedback; the preserved historical torque-model artifacts remain intact.
+The full utility, multi-agent arena and video objective stays active.

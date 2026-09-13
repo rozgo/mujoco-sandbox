@@ -5,6 +5,12 @@ selection and needs-driven behavior are deferred. Takeoff, landing and transitio
 between ground and air remain later requirements; the first pilot starts each
 primitive from its declared ground or airborne state.
 
+The latest [position-actuator motor candidate](runs/position_fullbody_01/SUMMARY.md)
+passes its complete five-second standing check with the full initial body pose.
+Walking remains mostly stationary, and autonomous hover fails. All three commands
+use one checkpoint and one `wing_position` body. This is progress on motor
+learning, not a complete motor release. [Run guide](WING_POSITION.md).
+
 Current preserved development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
 It uses the same command-conditioned actor for standing, walking and hover.
@@ -12,7 +18,7 @@ Ground support remains stable, but strict posture/tracking gates and hover are
 incomplete. It is a development checkpoint, not a released motor solution.
 Earlier ground_outcome03 and motor_focus06 remain preserved.
 
-The latest sequence trains the existing wing-sensor encoder and nonlinear motor
+The preceding torque-model sequence trains the existing wing-sensor encoder and nonlinear motor
 readout through the fixed graph, then freezes that encoder for a decoder-only
 follow-up. The [encoder trial](runs/wing_feedback_01/SUMMARY.md) fails standing
 and hover in its complete review. The [staged follow-up](runs/feedback_readout_01/SUMMARY.md)

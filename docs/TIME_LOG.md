@@ -752,3 +752,41 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Feedback_readout01:10.294863ssetup+180.911450straining;174.575517scollection/forward and6.324239soptimization. Same32worlds/physicalclocks;178,176transitions/356.352aggregatesimseconds,174updates;peakCUDA897,061,376bytes.105,222readoutparameterslearned,allremainingparentstatefixed.
 - Its fullreview:5.984868ssetup+32.375438scapture,7,500transitions/15aggregate seconds.Standing/walkingstable,wingpostureandhoverfail;zero numericalwarnings.109trainingfailuretracesverified.15s/750frame/1600×900/50fps/1×film rendered59.647187s,decoded,inspectedandopened.
 - Combined actualtraining thiscontinuation:361.395974s,326,656physicaltransitions/653.312aggregatesimseconds. Twoevaluations add15,000transitions/30seconds separately. Focusedtests18passed/25.13s;completesuite118passed/79.25s(27dependencywarnings). Tests,probes,transfersandrenderingareexcludedfromtrainingtime.
+
+
+### Fly wing position actuation and full standing posture — 2026-09-13
+
+Observed interval: 13:23:09–13:51:33 UTC, 28 min 24 s. This is elapsed development,
+not training time. From the full fly-goal anchor (Sep 12 18:05:28 UTC): 19 h 46 min
+05 s. From the full-brain course correction (Sep 12 19:35:03 UTC): 18 h 16 min 30 s.
+The preceding clarification turn was read-only; this turn implemented and tested
+a physical actuation profile, ran real training and completed two reviewed videos.
+
+- Position initialization: 9.059585 s, zero training transitions.
+- Reference01: 3.368688 s setup + 10.865332 s physical capture; 5 s per task.
+  Standing passed; hover stayed upright but tracking failed; walking failed.
+- Reference02: 3.221948 s setup + 10.627315 s capture.
+  Adds training-only hold compensation. Standing/hover pass;
+  hover RMSE 1.376 mm. The legacy walking reference still fails. These are
+  reference demonstrations, not learned-policy successes.
+- Position_feedback01: 10.136163 s setup + 180.174339 s training. Collection/forward
+  147.231872 s; optimization 32.929403 s; 145,408 transitions / 290.816 aggregate
+  simulated seconds, 142 updates; peak CUDA 3,825,026,560 bytes.
+- Its autonomous review: 7.029955 s setup + 34.310978 s capture; 7,500 transitions,
+  15 aggregate simulated seconds. Wings hold on the ground, but all complete task
+  gates fail. All 193 failure traces verified. Video render/encode 59.186656 s.
+- Position_fullbody01: 11.526114 s setup + 180.165843 s training. Collection/forward
+  144.110337 s; optimization 36.042687 s; 144,384 transitions / 288.768 aggregate
+  simulated seconds, 141 updates; peak CUDA 9,450,888,192 bytes.
+- Its autonomous review: 6.902338 s setup + 31.738248 s capture; 7,500 transitions,
+  15 aggregate simulated seconds. Standing passes its full check; walking remains
+  mostly stationary; hover fails. All 27 failure traces verified. Video
+  render/encode 58.193610 s.
+- Both use 32 worlds, 16 CPU physics threads, native MuJoCo/mjbatch at 5 kHz,
+  500 Hz actions and RTX 4090 neural work. Combined actual training: 360.340182 s,
+  289,792 transitions / 579.584 aggregate simulated seconds. Evaluations add
+  15,000 transitions / 30 aggregate seconds separately. References, tests,
+  initialization, transfers and rendering are excluded from training time.
+- Final suite: 124 passed / 85.40 s, 29 known dependency warnings. Both 15-second
+  750-frame, 1600x900, 50 fps, 1x videos were fully decoded, inspected and opened.
+  The broad goal remains active; no complete motor/survival release is claimed.
