@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 import torch
 from test_motor_focus import TEACHER, tiny_brain
 
@@ -44,7 +45,10 @@ def test_command_change_preserves_body_history_and_uses_correct_label_source():
     assert all(e["neural_state_l2_at_boundary"] > 0 for e in curriculum.events)
 
 
-def test_training_collects_command_changes_without_teacher_actions(tmp_path, monkeypatch):
+@pytest.mark.parametrize("hover_mix", [0.0, 0.8])
+def test_training_collects_command_changes_without_ground_teacher_actions(
+    tmp_path, monkeypatch, hover_mix
+):
     from embodied_fly import motor_focus
 
     actor = tiny_brain()
@@ -67,6 +71,7 @@ def test_training_collects_command_changes_without_teacher_actions(tmp_path, mon
             seconds=0.01,
             lr=1e-5,
             teacher_mix=0.0,
+            hover_teacher_mix=hover_mix,
             resume=parent,
             graph=graph,
             teacher=TEACHER,
@@ -91,7 +96,10 @@ def test_training_collects_command_changes_without_teacher_actions(tmp_path, mon
     assert all(not e["physical_or_neural_reset"] for e in c["command_events"])
     assert report["ground_retention"]["weights_unchanged"]
     assert report["utility_and_intention_weights_unchanged"]
-    assert all(e["teacher_mix"] == 0 for e in report["completed_episodes"])
+    assert all(
+        e["teacher_mix"] == (hover_mix if e["task"] == "hover" else 0)
+        for e in report["completed_episodes"]
+    )
     assert (
         sum(e["command_transition_world"] for e in report["completed_episodes"])
         == 2 * report["updates"]

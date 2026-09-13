@@ -550,11 +550,11 @@ def train(args):
         or not getattr(args, "stand_initial_form", False)
         or getattr(args, "task_set", "all") != "all"
         or getattr(args, "preset", "wing_motion") != "wing_position"
-        or np.any(mixture_by_task != 0)
+        or np.any(mixture_by_task[:2] != 0)
         or subset_mode != "all"
     ):
         raise ValueError(
-            "Command curriculum requires unassisted all-task position learning with ground retention and initial-form targets"
+            "Command curriculum requires unassisted ground actions, all-task position learning, ground retention and initial-form targets"
         )
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
