@@ -821,3 +821,34 @@ investigation, implementation, testing, transfers, recording and documentation.
 - Full review: 58.985950 s render/encode; 15 s / 750 frames / 1600x900 / 50 fps / 1x,
   decoded, visually inspected and opened. Full tests: 126 passed / 89.01 s,
   33 known dependency warnings. No completed motor/survival release is claimed.
+
+### Fly sustained-flight and walking-retention pilots — 2026-09-13
+
+Observed milestone interval 14:33:47–14:51:46 UTC: 17 min 59 s elapsed development.
+From the fly goal's Sep 12 18:05:28 UTC anchor: 20 h 46 min 18 s. From the full-brain
+course correction at Sep 12 19:35:03 UTC: 19 h 16 min 43 s. This is an ongoing
+goal milestone, not a completion time; final archiving/synchronization follows.
+
+- Reference recovery: 1.544749 s setup + 20.408615 s capture; 12 worlds × five
+  seconds, 30,000 world/action transitions / 60 aggregate simulated seconds.
+  No learning. Eleven pass the declared recovery diagnostic; one touches down.
+- Position_sustain01: 11.640446 s setup + 180.682384 s training; 137.172816 s
+  collection/forward, 43.480416 s optimization; 172,032 transitions / 344.064
+  aggregate simulated seconds; 168 updates; 9,420,270,080 bytes peak CUDA.
+  Evaluation: 8.402364 s setup + 29.023983 s capture. Render/encode: 59.319069 s.
+- Position_sustain_retention01: 11.481816 s setup + 181.159775 s training;
+  142.545569 s collection/forward, 38.602594 s optimization; 150,528 transitions /
+  301.056 aggregate simulated seconds; 147 updates; 9,451,158,528 bytes peak CUDA.
+  Evaluation: 8.408059 s setup + 31.806296 s capture. Render/encode: 59.426399 s.
+- Both use 32 worlds, 16 native CPU MuJoCo/mjbatch physics threads, RTX 4090
+  neural work, 5 kHz physics / 500 Hz actions. Combined training: 361.842159 s,
+  322,560 transitions / 645.120 aggregate simulated seconds. These are sibling
+  trials from position_motion01; sustain01 is not in the retained candidate's
+  training ancestry. The training-only frozen parent adds inference work to the
+  retained trial's measured collection time; nothing is subtracted from timing.
+- Both full evaluations add 15,000 transitions / 30 aggregate simulated seconds
+  separately from training. Zero numerical warnings; all 325 training failure
+  traces and all six command captures verified. Both 750-frame, 1600x900, 50 fps,
+  15-second, 1x videos decoded, visually inspected and opened. A premature local
+  archive hash check waited for its still-running transfer to finish, then passed
+  on the completed files; no simulation or training was restarted.

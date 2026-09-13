@@ -5,14 +5,15 @@ selection and needs-driven behavior are deferred. Takeoff, landing and transitio
 between ground and air remain later requirements; the first pilot starts each
 primitive from its declared ground or airborne state.
 
-The latest [motor candidate](runs/position_motion_01/SUMMARY.md) passes standing,
-walks forward and remains airborne/upright for its complete five-second review.
-Walking yaw and hover position still fail: the fly climbs and drifts in flight.
+The latest [motor candidate](runs/position_sustain_retention_01/SUMMARY.md) passes
+standing, retains forward walking and remains airborne/upright for its complete
+five-second review. Hover root RMSE is 6.00 mm, still above the 5 mm gate;
+walking yaw also fails. The earlier position_motion01 candidate is preserved.
 All commands use one checkpoint and the same `wing_position` body. This is a
 motor-learning candidate, not a complete release. [Run guide](WING_POSITION.md).
 The prior position_fullbody01 standing candidate remains preserved.
 
-Current preserved development checkpoint is
+The historical torque-model development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
 It uses the same command-conditioned actor for standing, walking and hover.
 Ground support remains stable, but strict posture/tracking gates and hover are
@@ -171,7 +172,9 @@ do not introduce runtime output masks to turn this into a visual-only success.
 The inherited walking observation format already contains every wing angle
 and velocity. Dedicated continuous wing channels were added during the earlier
 aerodynamic experiments to avoid clipping. Keeping these sensor channels does
-not reintroduce aerodynamic forces: all current tasks retain `wing_motion`.
+not reintroduce aerodynamic forces. Current position-actuator trials use the
+same `wing_position` body for all commands; historical torque trials retain
+`wing_motion`. These are live sensors, not playback of older walking inputs.
 
 [Frozen response probes](runs/motor_response_01/SUMMARY.md) show weak restoring
 responses and some wrong-sign commands. An opt-in training-only paired-response

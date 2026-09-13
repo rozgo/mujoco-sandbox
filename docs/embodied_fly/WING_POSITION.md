@@ -1,8 +1,9 @@
 # Wing position actuator pilot
 
-Latest [motor review](runs/position_motion_01/SUMMARY.md): standing passes;
-walking advances, and flight remains airborne, but yaw/altitude accuracy is still
-incomplete. All candidates and failed gates are retained.
+Latest [motor review](runs/position_sustain_retention_01/SUMMARY.md): standing
+passes, walking is retained during flight learning, and hover root RMSE is
+6.00 mm. Walking yaw and the 5 mm hover gate remain incomplete. All earlier
+candidates, including the intermediate walking regression, are retained.
 
 The full fly now has an opt-in `wing_position` physical profile. All motor
 commands in this experiment use it. Existing `wing_motion` recordings and

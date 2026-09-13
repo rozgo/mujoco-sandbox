@@ -2469,3 +2469,32 @@ with normal startup weighting while rehearsing the ground commands. Nominal
 reference hover success does not prove recovery over the newly encountered
 state distribution. Keep the body and actor interfaces fixed, preserve all
 failed gates, and keep the full survival/multi-agent goal active.
+
+### Reference recovery and retained walking — 2026-09-13 14:51:46 UTC
+
+The unchanged measured-state reference recovers eleven of twelve declared
+height/vertical-speed starts. The 1 cm / -20 cm/s case touches down and remains
+failed. Every world runs five seconds without live resets or numerical warnings.
+This supports keeping the physical flight law and reference unchanged.
+
+Position_sustain01 uses five-second episodes and ordinary startup weighting.
+After 180.682384 s, hover root RMSE is 20.34 mm but walking becomes stationary.
+The failed candidate is preserved. Position_sustain_retention01 returns to the
+walking parent and uses a frozen copy as its training-only ground reference.
+Every physical action comes from the student; extra weight-4 ground body-command
+imitation discourages forgetting. Initial-form standing/resting-wing labels remain.
+No physical, sensor, graph or runtime architecture changes are made.
+
+After 181.159775 s, the single frozen actor passes standing, walks 4.84 cm with
+valid support and stays airborne for its entire review. Hover root RMSE 6.00 mm
+still exceeds the 5 mm gate; walking yaw RMS 2.67 rad/s also fails. Hover ranges
+0.90–2.11 cm around a 1.87 cm target. The residual error includes an early dip
+and horizontal drift. These two trials share evaluation seed97013 but differ
+in supervision and collection; this is not an isolated loss ablation.
+
+All 325 training failure traces, six full command captures, graph/physical
+identities and frozen normalization/utility parameters are verified. Both
+15-second videos are decoded, visually inspected and opened. The previous
+126-test suite covers unchanged training/controller/physics code; this turn
+adds a directly executed reference diagnostic. Retention01 is the latest motor
+candidate; complete hover, transitions and learned survival utility remain open.
