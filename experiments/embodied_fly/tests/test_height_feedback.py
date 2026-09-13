@@ -97,3 +97,13 @@ def test_offline_height_matches_declared_command_and_never_future_state(tmp_path
     np.testing.assert_array_equal(episodes[0]["observation"][:, -2], (np.arange(6) + 1) / 2)
     np.testing.assert_array_equal(episodes[0]["observation"][:, -1], 1.25)
     assert episodes[0]["observation"].shape == (6, 397)
+
+
+def test_migration_roundoff_rule_is_bounded_and_retains_signal():
+    from embodied_fly.migration import compatible_with_repetition
+
+    repeat = {"action": 2e-6, "state": 1e-5, "utility_scores": 3e-7}
+    delta = {"action": 1.5e-6, "state": 1.4e-5, "utility_scores": 2e-7}
+    assert compatible_with_repetition(delta, repeat)
+    assert not compatible_with_repetition(delta | {"action": 6e-6}, repeat)
+    assert not compatible_with_repetition(delta | {"action": 1e-3}, repeat | {"action": 1e-3})
