@@ -22,6 +22,7 @@ from embodied_fly.body import CONTROL_DT
 from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_outcome import FlightOutcomeReward, FlightResets
 from embodied_fly.physical_contract import physical_contract
+from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import load_episodes, sample, synchronize
 
@@ -174,6 +175,15 @@ def train(args):
     motor_ground = getattr(args, "motor_ground", False)
     motor_all = getattr(args, "motor_all", False)
     motor_mode = motor_ground or motor_all
+    hover_physical = getattr(args, "hover_physical", False)
+    recompute = getattr(args, "checkpoint_activations", False)
+    if hover_physical and (
+        not motor_all
+        or getattr(args, "motor_retention_weight", 0)
+        or args.rehearsal is not None
+        or getattr(args, "wing_supervision", 0)
+    ):
+        raise ValueError("Hover physical PPO requires all motors and no imitation losses")
     critic_warmup = getattr(args, "critic_warmup_rollouts", 0)
     if critic_warmup < 0:
         raise ValueError("Critic warmup rollouts must be nonnegative")
@@ -249,10 +259,15 @@ def train(args):
             getattr(args, "wing_angle_perturbation", 0.0),
             getattr(args, "wing_speed_perturbation", 0.0),
         )
+        if hover_physical:
+            from embodied_fly.hover_ppo import HoverPPOTasks
+
+            tasks = HoverPPOTasks(env, args.seed)
     control_dt = env.control_dt
     time_scale = control_dt / CONTROL_DT
     # CLI discount factors retain their original 2 ms physical horizons.
     gamma, gae_lambda = args.gamma**time_scale, args.gae_lambda**time_scale
+    timing = physical_timescales(control_dt, gamma, gae_lambda, args.horizon, args.sequence)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     trace = deque(maxlen=128)
     flight_resets = (
@@ -267,6 +282,12 @@ def train(args):
     )
     if tasks is not None:
         reward_fn = AllMotorReward(tasks) if motor_all else GroundMotorReward(tasks)
+        if hover_physical:
+            from embodied_fly.hover_ppo import HoverPPOReward
+
+            reward_fn.flight = HoverPPOReward(env)
+            reward_fn.recipe["version"] = "stand_walk_hover_physical_v2"
+            reward_fn.recipe["hover"] = reward_fn.flight.recipe
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
         if flight_resets or motor_mode
@@ -381,8 +402,13 @@ def train(args):
     gradient_audit = wing_gradient_audit = retention_gradient_audit = None
     failure = None
     progress = []
+    task_transitions = {name: 0 for name in ("stand", "walk", "hover")}
     try:
         while time.perf_counter() - start < args.seconds:
+            if hover_physical:
+                tasks.widening = min(
+                    1.0, counters["transitions"] * control_dt / args.worlds / 10.0
+                )
             warming_critic = counters["rollouts"] < critic_warmup
             collect_start = time.perf_counter()
             obs_buf, latent_buf, activity_buf, logp_buf, values, rewards, dones = (
@@ -442,6 +468,9 @@ def train(args):
                         trace[-1]["wing_activity"] = env.wing_forces.activity.copy()
                         trace[-1]["wing_wrench"] = env._wing_applied.copy()
                     reward, failed, terms = reward_fn(previous)
+                    if motor_mode:
+                        for i, name in enumerate(task_transitions):
+                            task_transitions[name] += int(np.sum(task_ids == i))
                     trace[-1]["physical_reward"] = reward.copy()
                     trace[-1]["failed"] = failed.copy()
                     trace[-1]["reward_rates"] = np.stack(list(terms.values()), axis=1)
@@ -543,6 +572,22 @@ def train(args):
                 gamma,
                 gae_lambda,
             )
+            critic_quality = {}
+            if motor_mode:
+                for i, name in enumerate(task_transitions):
+                    mask = torch.as_tensor(task_ids == i, device=device)
+                    if mask.any():
+                        target = returns[:, mask]
+                        residual = target - data["value"][:, mask]
+                        variance = target.var(unbiased=False)
+                        critic_quality[name] = {
+                            "return_mean": float(target.mean()),
+                            "return_std": float(variance.sqrt()),
+                            "prediction_rmse": float(residual.square().mean().sqrt()),
+                            "explained_variance": float(
+                                1 - residual.var(unbiased=False) / variance.clamp_min(1e-8)
+                            ),
+                        }
             adv = (adv - adv.mean()) / adv.std().clamp_min(1e-6)
             synchronize(device)
             counters["collection_seconds"] += time.perf_counter() - collect_start
@@ -559,12 +604,17 @@ def train(args):
                     entropy, wing_errors, retention_errors = [], [], []
                     for t in range(a, b):
                         predictions.append(critic(brain, data["obs"][t], state))
-                        result = brain(
-                            data["obs"][t],
-                            state,
-                            activity_override=data["activity"][t],
-                            time_scale=time_scale,
-                        )
+                        # Critic warmup needs no actor graph. Later updates can
+                        # recompute the identical actor to fit longer sequences.
+                        with torch.set_grad_enabled(not warming_critic):
+                            result = recurrent_forward(
+                                brain,
+                                data["obs"][t],
+                                state,
+                                data["activity"][t],
+                                time_scale,
+                                recompute,
+                            )
                         dist = motor_distribution(result, active, log_std, minimum_noise)
                         new_logps.append(
                             joint_log_probability(
@@ -742,6 +792,9 @@ def train(args):
                 else None,
                 "completed_episodes": len(episode_records),
                 "failed_episodes": sum(e["failed"] for e in episode_records),
+                "critic_by_task_before_update": critic_quality,
+                "transitions_by_task": task_transitions.copy(),
+                "hover_reset_widening": tasks.widening if hover_physical else None,
             }
             progress.append(row)
             print(json.dumps(row), flush=True)
@@ -856,6 +909,13 @@ def train(args):
             "neural_time_scale": time_scale,
             "effective_gamma": gamma,
             "effective_gae_lambda": gae_lambda,
+            "physical_timescales": timing,
+            "activation_recomputation": recompute,
+            "transitions_by_task": task_transitions,
+            "aggregate_simulated_seconds_by_task": {
+                k: v * control_dt for k, v in task_transitions.items()
+            },
+            "hover_reset_curriculum": tasks.report() if hover_physical else None,
             "airborne_resets": flight_resets.report if flight_resets else None,
             "rehearsal_control_hz": rehearsal_hz,
             "transitions_per_training_wall_second": counters["transitions"] / elapsed,
@@ -909,6 +969,8 @@ if __name__ == "__main__":
     parser.add_argument("--rehearsal", type=Path)
     parser.add_argument("--motor-ground", action="store_true")
     parser.add_argument("--motor-all", action="store_true")
+    parser.add_argument("--hover-physical", action="store_true")
+    parser.add_argument("--checkpoint-activations", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)
     parser.add_argument("--critic-warmup-rollouts", type=int, default=0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)

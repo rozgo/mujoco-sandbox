@@ -37,11 +37,17 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
 
 
 @pytest.mark.parametrize(
-    "wing_weight,all_motor,warmup",
-    [(0.0, False, 0), (100.0, False, 0), (0.0, True, 0), (0.0, True, 1)],
+    "wing_weight,all_motor,warmup,physical",
+    [
+        (0.0, False, 0, False),
+        (100.0, False, 0, False),
+        (0.0, True, 0, False),
+        (0.0, True, 1, False),
+        (0.0, True, 0, True),
+    ],
 )
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch, wing_weight, all_motor, warmup
+    tmp_path, monkeypatch, wing_weight, all_motor, warmup, physical
 ):
     from embodied_fly import ppo
 
@@ -56,6 +62,8 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     }
     initial_actor = {k: v.clone() for k, v in brain.state_dict().items()}
     worlds = 3 if all_motor else 2
+    if physical:
+        worlds = 4
     preset = "wing_position" if all_motor else "wing_motion"
     env = FlyBatch(worlds, 2, 14, preset=preset)
     parent = {"graph_sha256": "test", "physical_contract": physical_contract(env.model)}
@@ -72,7 +80,9 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         device="cpu",
         motor_ground=not all_motor,
         motor_all=all_motor,
-        motor_retention_weight=4.0 if all_motor else 0.0,
+        motor_retention_weight=4.0 if all_motor and not physical else 0.0,
+        hover_physical=physical,
+        checkpoint_activations=physical,
         critic_warmup_rollouts=warmup,
         wing_supervision=wing_weight,
         preset=preset,
@@ -105,7 +115,9 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         assert all(v == 0 for v in report["core_changes"].values())
     assert report["active_motor_channels"] == 78
     assert report["rehearsal_frames"] == report["rehearsal_seconds"] == 0
-    assert report["teacher_present_during_collection"] == bool(wing_weight or all_motor)
+    assert report["teacher_present_during_collection"] == bool(
+        wing_weight or (all_motor and not physical)
+    )
     assert not report["executed_teacher_actions"]
     assert report["wing_supervision"]["weight"] == wing_weight
     assert report["wing_supervised_presentations"] == (
@@ -117,7 +129,12 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
             for x in report["core_gradient_audit_from_weighted_wing_supervision"].values()
         )
     assert report["utility_and_intention_weights_unchanged"]
-    assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": int(all_motor)}
+    assert report["worlds_by_task"] == {
+        "stand": 1,
+        "walk": 1,
+        "hover": 2 if physical else int(all_motor),
+    }
+    assert sum(report["transitions_by_task"].values()) == report["transitions"]
     assert len(report["completed_episodes"]) == worlds * 4
     assert warmup or all(
         x["l2"] > 0 and x["finite"]
@@ -130,13 +147,17 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     assert checkpoint["physical_contract"] == physical_contract(model)
     if all_motor:
         assert checkpoint["wing_residual_enabled"] and checkpoint["wing_residual_hidden"] == 8
-        assert report["motor_retention"]["weights_unchanged"]
+        assert report["motor_retention"]["weights_unchanged"] == (not physical)
         assert not report["motor_retention"]["runtime_module"]
         restored = tiny_brain()
         restored.enable_wing_residual(checkpoint["wing_residual_hidden"])
         restored.load_state_dict(checkpoint["state_dict"], strict=True)
         # The physical reward gradient was audited before adding the retention loss.
-        assert warmup or report["core_gradient_audit_from_ground_retention"] is not None
+        assert (
+            warmup
+            or physical
+            or report["core_gradient_audit_from_ground_retention"] is not None
+        )
     json.dumps(report, allow_nan=False)
     # The second run must consume the optimizer and critic from the first, while
     # retaining exactly the same physical identity and inactive utility weights.
