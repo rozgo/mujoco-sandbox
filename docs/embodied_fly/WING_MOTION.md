@@ -31,7 +31,7 @@ zero coupling and saved-model reload. Walking and aerodynamic presets are intact
 The force law receives only actual wing angles/velocities, body orientation and
 body velocities. Rectified sweep speed is filtered independently for each wing
 over 12 ms. Wing pitch modulates stroke effectiveness. Combined activity generates
-lift; differences generate roll/yaw torque; mean stroke orientation modulates
+lift at whole-fly center of mass; differences generate roll/yaw torque; mean stroke orientation modulates
 forward thrust. Filter state is per world and resets with that world's episode.
 It must be captured alongside physical state for exact live resumption.
 
@@ -82,3 +82,14 @@ controller performance. No speedup claim precedes measurement.
 User language: describe **flight dynamics driven by wing motion** and state that
 the force law is custom and non-aerodynamic. Do not claim recovered biological
 flight mechanics or hide provided stabilization.
+
+The initial reference test exposed a pitching moment from applying the force
+at thorax COM. The final law applies its resultant at whole-fly COM, adding
+the corresponding lever moment to MuJoCo's thorax force array. The first
+failed reference is preserved. With this correction, the second reference
+passes a two-second hover; this is a mechanism check, not student learning.
+
+All five new force-model tests and the existing suite pass (59 total). Single
+and sensor-augmented batch agreement is checked at a declared small numerical
+tolerance; it is not bitwise equality. The independent mass-matrix check gives
+exactly zero wing-to-body inertial coupling.

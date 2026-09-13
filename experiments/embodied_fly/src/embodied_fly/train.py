@@ -93,6 +93,17 @@ def sample(episodes, rng, length, worlds, device, reset_start=False):
     }
 
 
+def weighted_motor_loss(prediction, target, flight, wing_channels, wing_weight, ground_weight):
+    """Task identity is independent of clock: walking and wing flight both use 500 Hz."""
+    per_world = (prediction - target).square().mean(-1)
+    if wing_weight:
+        per_world = per_world + wing_weight * flight * (
+            prediction[:, wing_channels] - target[:, wing_channels]
+        ).square().mean(-1)
+    weights = torch.where(flight.bool(), 1.0, ground_weight)
+    return (weights * per_world).mean()
+
+
 def configure_optimizer(brain, args, parent, sensory_migrated):
     """Change the sensory learning rate while preserving existing Adam moments."""
     multiplier = args.sensor_lr_multiplier
@@ -147,6 +158,14 @@ def train(args):
         episodes = load_episodes(dataset, args.wing_velocity_inputs, args.wing_angle_inputs)
         manifest = json.loads((dataset / "manifest.json").read_text())
         hz = manifest.get("control_hz", manifest.get("environment", {}).get("control_hz", 500))
+        preset = manifest.get(
+            "physical_preset", manifest.get("environment", {}).get("physical_preset")
+        )
+        flight = preset in ("flight", "wing_motion") or manifest.get("role") == "flight"
+        if preset is None and manifest.get("role") is None:
+            flight = hz == 5000  # legacy aerodynamic corpora predate explicit roles
+        for episode in episodes:
+            episode["flight_task"] = np.full(len(episode["action"]), flight, np.float32)
         time_scale = 1 / hz / CONTROL_DT
         if not np.isfinite(time_scale) or time_scale <= 0:
             raise ValueError("Invalid dataset action clock")
@@ -311,19 +330,28 @@ def train(args):
             for t in range(burnin, burnin + args.sequence):
                 result = brain(batch["observation"][t], state, time_scale=time_scale)
                 state = result.state
-                motor_losses.append(F.mse_loss(result.action, batch["action"][t]))
-                if args.wing_loss_weight and time_scale < 1:
-                    motor_losses[-1] = motor_losses[-1] + args.wing_loss_weight * F.mse_loss(
-                        result.action[:, wing_channels], batch["action"][t][:, wing_channels]
+                flight = batch["flight_task"][t]
+                motor_losses.append(
+                    weighted_motor_loss(
+                        result.action,
+                        batch["action"][t],
+                        flight,
+                        wing_channels,
+                        args.wing_loss_weight,
+                        args.ground_loss_weight,
                     )
+                )
                 utility_losses.append(
-                    F.cross_entropy(result.utility_logits, batch["activity"][t])
+                    (
+                        F.cross_entropy(
+                            result.utility_logits, batch["activity"][t], reduction="none"
+                        )
+                        * torch.where(flight.bool(), 1.0, args.ground_loss_weight)
+                    ).mean()
                 )
             motor_loss = torch.stack(motor_losses).mean()
             utility_loss = torch.stack(utility_losses).mean()
             loss = motor_loss + 0.02 * utility_loss
-            if time_scale == 1.0:
-                loss = args.ground_loss_weight * loss
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite loss")
             loss.backward()
@@ -450,6 +478,7 @@ def train(args):
         "core_parameter_changes": changes,
         "clock_updates": clock_updates,
         "clock_sampling": "equal probability per control rate; homogeneous recurrent minibatches; one shared actor",
+        "task_loss_weighting": "explicit flight/ground identity per example; independent of control rate",
         "initial_validation_by_neural_time_scale": initial_by_clock,
         "final_validation_by_neural_time_scale": final_by_clock,
         "initial_reset_validation_by_neural_time_scale": initial_reset_by_clock,

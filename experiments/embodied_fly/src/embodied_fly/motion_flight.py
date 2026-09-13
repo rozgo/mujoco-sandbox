@@ -251,7 +251,9 @@ def collect(args):
             "controller": "reference",
             "episodes": 0,
             "output": args.output / f"reference_{episode:03d}",
-            "phase": float(rng.uniform(0, 2 * np.pi)),
+            "phase": float(rng.uniform(0, 2 * np.pi))
+            if args.cold_start_phase is None
+            else args.cold_start_phase,
             "heading": float(rng.uniform(-0.2, 0.2)),
             "height": float(rng.uniform(1.8, 2.2)),
             "speed": (0, 0, 1, 2)[episode % 4],
@@ -294,6 +296,8 @@ def collect(args):
         "physical_transitions": sum(e["frames"] for e in episodes),
         "aggregate_simulated_seconds": args.seconds * args.episodes,
         "controller": "training-only wing reference; not a learned brain",
+        "cold_start_phase": args.cold_start_phase,
+        "startup_scope": "All episodes initialize stationary wings. A fixed reference phase gives consistent cold-start action labels; phase is never a student input.",
     }
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(
@@ -322,6 +326,7 @@ if __name__ == "__main__":
     parser.add_argument("--neural-view", action="store_true")
     parser.add_argument("--episodes", type=int, default=0)
     parser.add_argument("--seed", type=int, default=61001)
+    parser.add_argument("--cold-start-phase", type=float)
     config = parser.parse_args()
     if config.controller == "student" and (config.checkpoint is None or config.graph is None):
         parser.error("Student requires --checkpoint and --graph")

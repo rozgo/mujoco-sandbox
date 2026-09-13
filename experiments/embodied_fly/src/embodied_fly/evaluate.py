@@ -265,7 +265,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--actor-interval", type=float, default=CONTROL_DT)
     parser.add_argument("--walking-action-mask", action="store_true")
-    parser.add_argument("--physical-preset", choices=("walking", "flight"), default="walking")
+    parser.add_argument(
+        "--physical-preset", choices=("walking", "flight", "wing_motion"), default="walking"
+    )
     parser.add_argument("--neural-view", action="store_true")
     parser.add_argument("--seed", type=int, default=80001)
     parser.add_argument(

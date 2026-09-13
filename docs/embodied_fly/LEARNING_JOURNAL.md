@@ -1419,3 +1419,32 @@ frames. Upstream actor and measured graph stay fixed during this warm start;
 no new deployed network or runtime oscillator. Run independent student hover
 and forward tests, then ground checks if there is flight traction. Preserve
 all outcomes and classify training/reference performance separately.
+
+### First wing-motion decoder outcome and next declared pilot
+
+Source39960b2: all eight reference episodes pass. Parent readout01 and the
+60-second decoder-only student both fail independent two-second hover.
+Excluded flight wing MSE improves0.366067→0.000974, with startup0.446364→
+0.005563, without autonomous control. Preserve those results.
+
+The current decoder-only objective retains parent non-wing outputs even in
+flight, while the reference flies with folded legs. The first student steps
+therefore depart from the demonstrated body posture and rapidly change wing
+outputs. Also, the phase-diverse references start with identical stationary
+wing states but different unobserved teacher phases, yielding conflicting
+cold-start labels. These are curriculum issues to address before more time.
+
+Next declare eight two-second reference episodes with a consistent phase-zero
+cold start (seed64001); phase is not supplied to the learner. Keep heading,
+height and speed variations. Resume decoder01 and train the entire existing
+actor for180 seconds, seed63001,16 recurrent sequences,32 learned steps plus
+16 burn-in,25% reset starts,Adam1e-5,wing loss2 and ground retention4. Flight
+labels cover all78 outputs, including flight posture; ground examples retain
+walking. Intrinsic cell/interface parameters can learn; measured graph edges
+stay fixed. Physical flight model and gates stay unchanged.
+
+Flight and walking now share a500 Hz clock, so task weights must depend on
+explicit per-example flight/ground identity, not clock speed. The training
+loss now supports this and has a direct gradient/weight test; legacy mixed
+clock tests pass. Run independent hover/forward and both original/new-preset
+ground evaluations after training. Do not promote solely from imitation loss.
