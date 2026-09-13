@@ -82,19 +82,25 @@ class WingOutputSubset:
 class WingResidualSubset:
     """Online learning of the existing optional decoder, with original state frozen."""
 
-    def __init__(self, actor, channels):
+    def __init__(self, actor, channels, feedback=False):
         if actor.wing_residual is None or list(channels) != list(range(14, 20)):
             raise ValueError("An enabled canonical wing readout is required")
         self.actor = actor
+        self.feedback = feedback
+        if feedback and actor.sensor_extension_size != 14:
+            raise ValueError("Feedback learning requires the existing 14 measured inputs")
         self.initial = {k: v.detach().clone() for k, v in actor.state_dict().items()}
         actor.zero_grad(set_to_none=True)
         actor.requires_grad_(False)
         actor.wing_residual.requires_grad_(True)
+        if feedback:
+            actor.sensor_extension.requires_grad_(True)
+        self.eligible = {name for name, p in actor.named_parameters() if p.requires_grad}
 
     def gradient_audit(self):
         audit = {}
         for name, parameter in self.actor.named_parameters():
-            if name.startswith("wing_residual."):
+            if name in self.eligible:
                 if parameter.grad is None or not torch.isfinite(parameter.grad).all():
                     raise RuntimeError("Wing readout must receive finite gradients")
                 audit[name] = {"gradient_l2": float(parameter.grad.norm())}
@@ -111,13 +117,14 @@ class WingResidualSubset:
             if name not in eligible and not torch.equal(value, self.initial[name]):
                 raise RuntimeError(f"Frozen original state or normalization changed: {name}")
         return {
-            "mode": "wing-residual",
+            "mode": "wing-feedback" if self.feedback else "wing-residual",
             "effective_trainable_parameters": sum(
                 p.numel() for p in self.actor.parameters() if p.requires_grad
             ),
-            "upstream_parameters_and_buffers_unchanged": True,
+            "upstream_parameters_and_buffers_unchanged": not self.feedback,
             "nonwing_output_rows_unchanged": True,
-            "all_original_actor_state_unchanged": True,
+            "all_original_actor_state_unchanged": not self.feedback,
+            "original_core_and_motor_decoder_unchanged": True,
             "feature_normalization_unchanged": True,
             "selected_parameter_changes_l2": {
                 name: float((current[name] - self.initial[name]).norm())
@@ -126,3 +133,10 @@ class WingResidualSubset:
             "runtime_action_mask": False,
             "runtime_readout": "same optional feedforward decoder in the actor",
         }
+
+
+class WingFeedbackSubset(WingResidualSubset):
+    """Train existing measured-wing encoding and readout through the fixed graph."""
+
+    def __init__(self, actor, channels):
+        super().__init__(actor, channels, feedback=True)

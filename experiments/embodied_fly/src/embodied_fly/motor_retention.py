@@ -37,3 +37,13 @@ def task_loss(group_losses, ground_weight=1.0):
         raise ValueError("Ground retention weight must be finite and positive")
     weights = {i: ground_weight if i != 2 else 1.0 for i in group_losses}
     return sum(group_losses[i] * w for i, w in weights.items()) / sum(weights.values())
+
+
+def ground_nonwing_loss(action, reference, task_ids, nonwing_channels):
+    """Distill the frozen parent's ground body commands; never overwrite actions."""
+    ground = torch.as_tensor(np.asarray(task_ids) != 2, device=action.device)
+    channels = torch.as_tensor(nonwing_channels, device=action.device)
+    reference = torch.as_tensor(reference, device=action.device)
+    if reference.shape != action.shape or not ground.any():
+        raise ValueError("Matching reference actions and at least one ground world required")
+    return (action[ground][:, channels] - reference[ground][:, channels]).square().mean()

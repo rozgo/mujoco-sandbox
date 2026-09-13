@@ -20,8 +20,17 @@ from embodied_fly.braking import BrakingTeacher
 from embodied_fly.evaluate import load_actor
 from embodied_fly.ground_posture import GroundPosture
 from embodied_fly.motion_flight import initialize
-from embodied_fly.motor_parameter_subset import WingOutputSubset, WingResidualSubset
-from embodied_fly.motor_retention import FrozenMotorReference, task_loss, task_mixtures
+from embodied_fly.motor_parameter_subset import (
+    WingFeedbackSubset,
+    WingOutputSubset,
+    WingResidualSubset,
+)
+from embodied_fly.motor_retention import (
+    FrozenMotorReference,
+    ground_nonwing_loss,
+    task_loss,
+    task_mixtures,
+)
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
@@ -431,13 +440,25 @@ def train(args):
     if not 0 <= args.teacher_mix <= 1:
         raise ValueError("Teacher mixture must be in [0,1]")
     subset_mode = getattr(args, "trainable_subset", "all")
-    if subset_mode not in ("all", "wing-output", "wing-residual"):
+    if subset_mode not in ("all", "wing-output", "wing-residual", "wing-feedback"):
         raise ValueError("Unknown motor training parameter subset")
     retain_ground = getattr(args, "retain_ground", False)
     ground_weight = getattr(args, "ground_retention_weight", 1.0)
     task_loss({0: torch.tensor(0.0)}, ground_weight)
     if ground_weight != 1.0 and not retain_ground:
         raise ValueError("Ground retention weighting requires --retain-ground")
+    nonwing_retention_weight = getattr(args, "nonwing_retention_weight", 0.0)
+    feedback_lr = getattr(args, "feedback_lr", 0.003)
+    if (
+        not np.isfinite([nonwing_retention_weight, feedback_lr]).all()
+        or nonwing_retention_weight < 0
+        or feedback_lr <= 0
+    ):
+        raise ValueError(
+            "Finite nonnegative retention and positive feedback learning rate required"
+        )
+    if nonwing_retention_weight and not retain_ground:
+        raise ValueError("Non-wing retention requires a frozen ground reference")
     mixture_by_task = task_mixtures(
         np.arange(3), args.teacher_mix, getattr(args, "hover_teacher_mix", None)
     )
@@ -480,12 +501,20 @@ def train(args):
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     memory = actor.initial_state(args.worlds)
     retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
-    subset_class = {"wing-output": WingOutputSubset, "wing-residual": WingResidualSubset}.get(
-        subset_mode
-    )
+    subset_class = {
+        "wing-output": WingOutputSubset,
+        "wing-residual": WingResidualSubset,
+        "wing-feedback": WingFeedbackSubset,
+    }.get(subset_mode)
     subset = subset_class(actor, teacher.channels) if subset_class else None
     optimizer = torch.optim.Adam(
-        [p for p in actor.parameters() if p.requires_grad], lr=args.lr
+        [
+            {"params": actor.sensor_extension.parameters(), "lr": feedback_lr},
+            {"params": actor.wing_residual.parameters(), "lr": args.lr},
+        ]
+        if subset_mode == "wing-feedback"
+        else [p for p in actor.parameters() if p.requires_grad],
+        lr=args.lr,
     )
     retention_initial = (
         {k: v.detach().cpu().clone() for k, v in retainer.actor.state_dict().items()}
@@ -517,6 +546,7 @@ def train(args):
             memory = memory.detach()
             losses = []
             response_errors = []
+            retention_errors = []
             per_task = [[] for _ in TASKS]
             for _ in range(args.sequence):
                 obs = env.observation()
@@ -541,6 +571,12 @@ def train(args):
                     for i in active_tasks
                 }
                 loss = task_loss(group_losses, ground_weight)
+                if nonwing_retention_weight:
+                    retention_error = ground_nonwing_loss(
+                        result.action, ground_actions, tasks.task_ids, nonwing_channels
+                    )
+                    loss = loss + nonwing_retention_weight * retention_error
+                    retention_errors.append(float(retention_error.detach()))
                 if response_weight:
                     correction = response_loss(
                         actor,
@@ -654,6 +690,9 @@ def train(args):
                     "wing_response_loss": float(np.mean(response_errors))
                     if response_errors
                     else None,
+                    "ground_nonwing_retention_mse": float(np.mean(retention_errors))
+                    if retention_errors
+                    else None,
                     "completed_episodes": len(episodes),
                     "failed_episodes": sum(e["failed"] for e in episodes),
                     "posture_by_task": {
@@ -677,7 +716,11 @@ def train(args):
         subset_report["same_history_world_actions_checked"] = (
             transitions if same_history_body_delta is not None else 0
         )
-        if same_history_body_delta is not None and same_history_body_delta > 1e-4:
+        if (
+            subset_mode != "wing-feedback"
+            and same_history_body_delta is not None
+            and same_history_body_delta > 1e-4
+        ):
             raise RuntimeError(
                 "Non-wing outputs diverged from the frozen parent on identical histories"
             )
@@ -692,6 +735,7 @@ def train(args):
         "checkpoint_sha256": sha256(args.resume) if retain_ground else None,
         "weights_unchanged": True if retain_ground else None,
         "ground_task_loss_weight": ground_weight,
+        "additional_nonwing_mse_weight": nonwing_retention_weight,
         "independent_recurrent_state": retain_ground,
         "runtime_module": False,
         "ground_wing_targets": "initial-pose corrective labels"
@@ -818,12 +862,16 @@ if __name__ == "__main__":
     parser.add_argument("--sequence", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument(
-        "--trainable-subset", choices=("all", "wing-output", "wing-residual"), default="all"
+        "--trainable-subset",
+        choices=("all", "wing-output", "wing-residual", "wing-feedback"),
+        default="all",
     )
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--hover-teacher-mix", type=float)
     parser.add_argument("--retain-ground", action="store_true")
     parser.add_argument("--ground-retention-weight", type=float, default=1.0)
+    parser.add_argument("--nonwing-retention-weight", type=float, default=0.0)
+    parser.add_argument("--feedback-lr", type=float, default=0.003)
     parser.add_argument("--ground-wing-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-worlds", type=int, default=8)

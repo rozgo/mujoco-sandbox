@@ -83,3 +83,18 @@ def test_assistance_and_loss_are_accounted_for_per_task():
     for invalid in [0, -1, float("nan")]:
         with pytest.raises(ValueError):
             task_loss(losses, invalid)
+
+
+def test_ground_nonwing_distillation_excludes_wings_and_hover_without_overrides():
+    from embodied_fly.motor_retention import ground_nonwing_loss
+
+    action = torch.ones((3, 78), requires_grad=True)
+    reference = np.zeros((3, 78), np.float32)
+    channels = np.r_[0:14, 20:78]
+    loss = ground_nonwing_loss(action, reference, np.array([0, 1, 2]), channels)
+    torch.testing.assert_close(loss, torch.tensor(1.0))
+    loss.backward()
+    assert not action.grad[2].any() and not action.grad[:2, 14:20].any()
+    torch.testing.assert_close(action.grad[:2, channels], torch.full((2, 72), 2 / 144))
+    torch.testing.assert_close(action, torch.ones_like(action))
+    np.testing.assert_array_equal(reference, 0)

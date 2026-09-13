@@ -143,6 +143,7 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
         ("all", True, "all"),
         ("all", True, "wing-output"),
         ("all", True, "wing-residual"),
+        ("all", True, "wing-feedback"),
     ],
 )
 def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
@@ -153,7 +154,7 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
 
     actor = tiny_brain()
     actor.set_motor_only()
-    if subset == "wing-residual":
+    if subset in ("wing-residual", "wing-feedback"):
         actor.enable_wing_residual(8)
     fixed = {
         k: v.clone()
@@ -177,6 +178,8 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
         seconds=0.01,
         lr=1e-5,
         trainable_subset=subset,
+        feedback_lr=0.003,
+        nonwing_retention_weight=4.0 if subset == "wing-feedback" else 0.0,
         teacher_mix=0.0 if retain_ground else 1.0,
         hover_teacher_mix=0.8 if retain_ground else None,
         hover_reference="state" if retain_ground else "clock",
@@ -213,12 +216,26 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["ground_wing_loss_weight"] == 10
     assert report["ground_retention"]["enabled"] == retain_ground
     assert report["parameter_subset"]["mode"] == subset
-    if subset in ("wing-output", "wing-residual"):
+    if subset in ("wing-output", "wing-residual", "wing-feedback"):
         assert report["core_gradient_audit"] is None
         assert report["subset_gradient_audit"]
-        assert report["parameter_subset"]["upstream_parameters_and_buffers_unchanged"]
+        assert report["parameter_subset"]["upstream_parameters_and_buffers_unchanged"] == (
+            subset != "wing-feedback"
+        )
         assert report["parameter_subset"]["nonwing_output_rows_unchanged"]
-        assert report["parameter_subset"]["same_history_nonwing_action_max_delta"] < 1e-5
+        if subset != "wing-feedback":
+            assert report["parameter_subset"]["same_history_nonwing_action_max_delta"] < 1e-5
+        else:
+            assert (
+                report["parameter_subset"]["selected_parameter_changes_l2"][
+                    "sensor_extension.weight"
+                ]
+                > 0
+            )
+            assert (
+                report["subset_gradient_audit"]["sensor_extension.weight"]["gradient_l2"] > 0
+            )
+            assert report["ground_retention"]["additional_nonwing_mse_weight"] == 4
         assert (
             report["parameter_subset"]["same_history_world_actions_checked"]
             == report["transitions"]
@@ -235,7 +252,7 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["transitions"] >= 6
     assert report["checkpoint_sha256"] == sha256(args.output / "actor.pt")
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in fixed.items())
-    if subset == "wing-residual":
+    if subset in ("wing-residual", "wing-feedback"):
         assert checkpoint["wing_residual_enabled"]
         assert checkpoint["wing_residual_hidden"] == 8
         restored = tiny_brain()

@@ -2322,3 +2322,15 @@ Training retains569completed episodes:58stand(15failures),73walk(40failures),438
 Both completed training films are fully decoded, visually inspected and opened. The online film is15s/750frames/1600×900/50fps/1×;render/encode60.252149s. All493training failure traces and all7500evaluation frames are hash-verified, finite, bounded and causal. Original actor state and feature normalization remain unchanged. The complete116-test suite passes; GitLFSintegrity passes. The motor guide now identifies retention02 and links the current failed diagnostics rather than the older ground-outcome choice.
 
 This continuation made progress: implemented/tested nonlinear readout learning and online decoder selection, executed two measured GPU learning runs, ran two complete physical evaluations, verified and opened both films, and preserved the failures. It did not produce an accepted motor controller. No external blocker exists. The full motor/utility/multi-fly goal remains active. Further work must resolve actual-state wing feedback and flight, rather than treating low recorded fitting error as acceptance.
+
+### Feedback path course correction — 2026-09-13 12:42 UTC
+
+This continuation began12:34:43UTC. Previous goal turn made progress through two implemented/executed decoder experiments, complete physical reviews and verified videos. Mac/GPUstartatcc14700withno active training process. The broad goal remains active; motor learning still has priority.
+
+Frozen nonlinear_online01feedback probe:5.506291s setup +1.875014s diagnostic;75neural sequences,zero physics ortraining updates. Causal replay differs atmost4.33e-7. Next-action angle responses average-0.07152/-0.05204action/rad forstand/walk versus target-0.66667. Speed responses average-0.000717/-0.000405 versus-0.005,with7/8wrong-sign cases outof24each. This identifies weak feedback on these recorded states, not aunique cause.
+
+Implemented an explicit wing-feedback parameter subset:train the existing1792sensor-extension weights and105222wing-readout parameters through the fixed graph. Original sensory encoder, cell dynamics, original motor decoder, allnormalization andphysicalbody remainfixed. Because changed input encoding can change leg commands, a separate ground non-wing distillation loss is available;outputs are never overridden. Two declared optimizer groups allow faster encoder learning. Olddecoder-only contracts remain unchanged.
+
+Eighteen focused tests pass in25.13s. They include actual canonical-world training/export withnonzero sensor-extension gradients/changes, unchanged core parameters andcorrect checkpoint metadata, plus retention-loss gradients confined toground non-wing outputs. Fullsuite isrunning. The180s/32world pilot isdeclared beforeexecution inruns/wing_feedback_01/PLAN.md.
+
+The complete suite passes118tests in79.25s with27known dependency warnings;Ruff/diff checks pass. Source, the frozen feedback diagnostic and the declared learning pilot are committed before GPUexecution.
