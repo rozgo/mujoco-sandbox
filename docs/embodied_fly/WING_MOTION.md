@@ -112,3 +112,10 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.motion
 ```
 
 CPU full-graph inference can be slow; use CUDA on the GPU host for evaluation. A failed physical gate exits with status 2 and still saves its report/capture. Output directories must be unused. Rendering a saved capture uses `python -m embodied_fly.record CAPTURE_DIR flight NEW_VIDEO.mp4`.
+
+
+## Height-feedback curriculum
+
+The opt-in `--height-inputs` actor extends the same encoder from 395 to 397 inputs. Two extra columns encode current root altitude above the z=0 floor and the explicitly requested altitude, each divided by 2 cm. These are ideal simulator measurements/commands, not biological sensors or learned vision. Ground examples request zero altitude; flight examples carry their declared reference target. Old corpus targets are read from the corresponding reference report and its hash is saved; no future trajectory is queried. A flat floor is assumed for this altitude measurement.
+
+New columns start at zero and leave all old normalization and weights intact. Full-graph numerical migration and native/batch/recorded-observation tests precede learning. The force model receives no height command, so the brain must coordinate its wings to respond. The first longer-context pilot is declared in the learning journal; it is not yet a flight result.

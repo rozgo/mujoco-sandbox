@@ -19,6 +19,7 @@ from torch.nn import functional as F
 from embodied_fly.body import CONTROL_DT
 from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
 from embodied_fly.observations import (
+    append_height,
     append_wing_angles,
     append_wing_velocity,
     wing_angle_indices,
@@ -32,7 +33,11 @@ def synchronize(device):
         torch.cuda.synchronize(device)
 
 
-def load_episodes(path, wing_velocity_inputs=False, wing_angle_inputs=False):
+def load_episodes(
+    path, wing_velocity_inputs=False, wing_angle_inputs=False, height_inputs=False
+):
+    if height_inputs and not wing_angle_inputs:
+        raise ValueError("Height inputs require complete wing feedback")
     if wing_angle_inputs and not wing_velocity_inputs:
         raise ValueError("Wing angles require velocity extension in the observation schema")
     manifest = json.loads((path / "manifest.json").read_text())
@@ -65,6 +70,25 @@ def load_episodes(path, wing_velocity_inputs=False, wing_angle_inputs=False):
             if wing_angle_inputs:
                 episode["observation"] = append_wing_angles(
                     episode["observation"], data["qpos"], angle_indices
+                )
+            if height_inputs:
+                if "requested_height_cm" in data:
+                    requested = data["requested_height_cm"]
+                elif manifest.get("physical_preset") == "wing_motion":
+                    item = next(
+                        e
+                        for e in manifest["episodes"]
+                        if e["episode"] == int(file.stem.split("_")[-1])
+                    )
+                    # Legacy corpus records the declared target in its reference report.
+                    reference = json.loads((path / item["report"]).read_text())
+                    requested = reference["initial_height_cm"]
+                elif manifest.get("role") == "flight":
+                    raise ValueError("Flight corpus must declare its requested height")
+                else:
+                    requested = 0.0  # explicit ground command
+                episode["observation"] = append_height(
+                    episode["observation"], data["qpos"], requested
                 )
             episodes.append(episode)
     if len(episodes) < 4:
@@ -144,6 +168,7 @@ def train(args):
         raise ValueError("Reset fraction must be between zero and one")
     if not np.isfinite(args.ground_loss_weight) or args.ground_loss_weight <= 0:
         raise ValueError("Ground retention weight must be finite and positive")
+    args.height_inputs = getattr(args, "height_inputs", False)
     setup_start = time.perf_counter()
     args.output.mkdir(parents=True, exist_ok=False)
     run_evidence = evidence()
@@ -155,7 +180,9 @@ def train(args):
     clock_groups = {}
     wing_channels = None
     for dataset in [args.data, *args.additional_data]:
-        episodes = load_episodes(dataset, args.wing_velocity_inputs, args.wing_angle_inputs)
+        episodes = load_episodes(
+            dataset, args.wing_velocity_inputs, args.wing_angle_inputs, args.height_inputs
+        )
         manifest = json.loads((dataset / "manifest.json").read_text())
         hz = manifest.get("control_hz", manifest.get("environment", {}).get("control_hz", 500))
         preset = manifest.get(
@@ -204,6 +231,13 @@ def train(args):
                 "validation_indices": sorted(validation_indices),
                 "control_hz": hz,
                 "neural_time_scale": time_scale,
+                "height_reference_report_sha256": {
+                    item["report"]: sha256(dataset / item["report"])
+                    for item in manifest["episodes"]
+                    if "report" in item
+                }
+                if args.height_inputs and preset == "wing_motion"
+                else {},
                 "episode_file_sha256": {
                     file.name: sha256(file) for file in sorted(dataset.glob("episode_*.npz"))
                 },
@@ -220,7 +254,9 @@ def train(args):
         observation_size,
         action_size,
         internal_steps=args.internal_steps,
-        sensor_extension_size=12
+        sensor_extension_size=14
+        if args.height_inputs
+        else 12
         if args.wing_angle_inputs
         else 6
         if args.wing_velocity_inputs
@@ -515,4 +551,5 @@ if __name__ == "__main__":
     parser.add_argument("--ground-loss-weight", type=float, default=1)
     parser.add_argument("--wing-velocity-inputs", action="store_true")
     parser.add_argument("--wing-angle-inputs", action="store_true")
+    parser.add_argument("--height-inputs", action="store_true")
     train(parser.parse_args())

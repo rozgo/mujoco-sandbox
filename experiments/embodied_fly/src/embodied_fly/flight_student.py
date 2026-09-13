@@ -16,6 +16,7 @@ import torch
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.evaluate import load_actor
 from embodied_fly.neural_view import NeuralProjection
+from embodied_fly.observations import actor_observation
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -33,6 +34,7 @@ def initialize_from_capture(env, path, speed):
                 raise ValueError("Initial capture and flight model differ")
             array[:] = state
     env.command[:] = (speed, 0, 0)
+    env.requested_height_cm = float(env.data.qpos[2])
     mujoco.mj_forward(env.model, env.data)
     env.mean_sensors = env.data.sensordata.copy()
 
@@ -73,9 +75,7 @@ def evaluate(args):
     failure = None
     stepping_started = time.perf_counter()
     for step in range(round(args.seconds / env.control_dt)):
-        observation = env.observation(
-            actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
-        )
+        observation = actor_observation(env, actor)
         result = actor(
             torch.as_tensor(observation[None], device=device),
             memory,

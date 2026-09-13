@@ -78,6 +78,7 @@ def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(
         fields=fields,
         command=np.zeros((4, 3)),
         reset=reset,
+        requested_height_cm=np.zeros(4),
     )
     resets = FlightResets(env, tmp_path, np.random.default_rng(15))
     assert resets.report["validation_indices_excluded"] == [4, 6]
@@ -87,6 +88,7 @@ def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(
     resets.reset([0, 2])
     np.testing.assert_array_equal(fields["qpos"][[0, 2], 2], 1)
     np.testing.assert_array_equal(fields["qpos"][[1, 3]], 0)
+    np.testing.assert_array_equal(env.requested_height_cm, [1, 0, 1, 0])
     assert len(calls) == 1
     resets.reset([])
     assert len(calls) == 1

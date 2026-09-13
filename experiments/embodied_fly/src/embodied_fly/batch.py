@@ -15,14 +15,14 @@ import numpy as np
 from mjbatch import Batch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
-from embodied_fly.observations import append_wing_angles, append_wing_velocity
+from embodied_fly.observations import append_height, append_wing_angles, append_wing_velocity
 from embodied_fly.provenance import evidence, utc_now
 from embodied_fly.wing_motion import WingMotionForces, configure_model
 
 
 class FlyBatch:
     def __init__(self, worlds, threads=0, sensor_extension_size=0, *, preset="walking"):
-        if sensor_extension_size not in (0, 6, 12):
+        if sensor_extension_size not in (0, 6, 12, 14):
             raise ValueError("Unknown batched sensory extension")
         self.sensor_extension_size = sensor_extension_size
         self.template = FlyEnvironment(preset)
@@ -100,6 +100,7 @@ class FlyBatch:
         self.mean_sensors = self.fields["sensordata"].copy()
         self.previous_action = np.zeros((worlds, self.model.nu), np.float32)
         self.command = np.zeros((worlds, 3), np.float32)
+        self.requested_height_cm = np.zeros(worlds, np.float32)
         self.needs = np.zeros((worlds, 5), np.float32)
         self.ages = np.zeros(worlds, np.int64)
         self.forbidden_peak = np.zeros(worlds)
@@ -156,6 +157,7 @@ class FlyBatch:
         self.mean_sensors[ids] = self.fields["sensordata"][ids]
         self.previous_action[ids] = 0
         self.ages[ids] = 0
+        self.requested_height_cm[ids] = 0
         self.forbidden_peak[ids] = 0
         if self.wing_forces is not None:
             self.wing_forces.reset(ids)
@@ -200,9 +202,13 @@ class FlyBatch:
             observation = append_wing_velocity(
                 observation, self.fields["qvel"], single.wing_velocity_indices
             )
-        if self.sensor_extension_size == 12:
+        if self.sensor_extension_size >= 12:
             observation = append_wing_angles(
                 observation, self.fields["qpos"], single.wing_angle_indices
+            )
+        if self.sensor_extension_size == 14:
+            observation = append_height(
+                observation, self.fields["qpos"], self.requested_height_cm
             )
         return observation
 

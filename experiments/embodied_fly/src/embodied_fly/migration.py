@@ -11,6 +11,7 @@ import torch
 from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
 from embodied_fly.evaluate import load_actor
 from embodied_fly.observations import (
+    append_height,
     append_wing_angles,
     append_wing_velocity,
     wing_angle_indices,
@@ -26,10 +27,10 @@ def verify(args):
     torch.set_num_threads(4)
     device = torch.device(args.device)
     parent, checkpoint = load_actor(args.checkpoint, args.graph, device)
-    extension = 12 if args.wing_angle_inputs else 6
+    extension = 14 if args.height_inputs else 12 if args.wing_angle_inputs else 6
     observation_size = 383 + extension
     if (
-        parent.observation_size not in (383, 389)
+        parent.observation_size not in (383, 389, 395)
         or parent.observation_size >= observation_size
     ):
         raise ValueError("Expected a smaller preserved actor with the 383-input base schema")
@@ -59,8 +60,10 @@ def verify(args):
         augmented = append_wing_velocity(
             observations, data["qvel"], wing_velocity_indices(model)
         )
-        if args.wing_angle_inputs:
+        if args.wing_angle_inputs or args.height_inputs:
             augmented = append_wing_angles(augmented, data["qpos"], wing_angle_indices(model))
+        if args.height_inputs:
+            augmented = append_height(augmented, data["qpos"], args.requested_height_cm)
         observations = augmented[:, : parent.observation_size].copy()
     offsets = np.arange(args.sequences) * args.steps
     if offsets[-1] + args.steps > len(observations):
@@ -153,4 +156,6 @@ if __name__ == "__main__":
     parser.add_argument("--steps", type=int, default=64)
     parser.add_argument("--sequences", type=int, default=8)
     parser.add_argument("--wing-angle-inputs", action="store_true")
+    parser.add_argument("--height-inputs", action="store_true")
+    parser.add_argument("--requested-height-cm", type=float, default=2.0)
     verify(parser.parse_args())

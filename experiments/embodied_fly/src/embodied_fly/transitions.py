@@ -12,6 +12,7 @@ import torch
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.evaluate import load_actor
 from embodied_fly.neural_view import NeuralProjection
+from embodied_fly.observations import actor_observation
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.teacher import TeacherOracle
 
@@ -146,9 +147,7 @@ def evaluate(args):
         environment.maximum_disallowed_ground_force = 0.0
         velocities, positions, upright, heights = [], [], [], []
         for _ in range(round(seconds / CONTROL_DT)):
-            observation = environment.observation(
-                actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
-            )
+            observation = actor_observation(environment, actor)
             captures["observation"].append(observation)
             result = actor(torch.as_tensor(observation[None], device=device), memory)
             memory = result.state

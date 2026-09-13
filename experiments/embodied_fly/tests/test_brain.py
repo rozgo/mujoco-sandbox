@@ -122,7 +122,7 @@ def test_extra_sensors_preserve_old_actor_exactly_then_receive_gradients():
     assert torch.isfinite(child.sensor_extension.weight.grad).all()
 
 
-@pytest.mark.parametrize("extension", (6, 12))
+@pytest.mark.parametrize("extension", (6, 12, 14))
 def test_extra_sensors_still_require_the_connectome_path_to_motors(extension):
     graph = sparse.csr_matrix((6, 6), dtype=np.float32)
     brain = EmbodiedBrain(

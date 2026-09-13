@@ -33,3 +33,30 @@ def append_wing_angles(observation, qpos, indices):
     if not np.isfinite(angles).all():
         raise ValueError("Nonfinite measured wing angle")
     return np.concatenate((observation, angles), axis=-1).astype(np.float32)
+
+
+HEIGHT_SCALE_CM = 2.0
+
+
+def append_height(observation, qpos, requested_height_cm):
+    """Ideal root altitude above the z=0 floor and a current command, both / 2 cm.
+
+    This is simulator sensing, not image perception or a biological organ model.
+    The requested height is an explicit current task input, never a future state.
+    """
+    height = np.asarray(qpos)[..., 2]
+    target = np.broadcast_to(np.asarray(requested_height_cm), height.shape)
+    measured = np.stack((height, target), axis=-1) / HEIGHT_SCALE_CM
+    if not np.isfinite(measured).all():
+        raise ValueError("Nonfinite altitude or requested height")
+    return np.concatenate((observation, measured), axis=-1).astype(np.float32)
+
+
+def actor_observation(env, actor):
+    """Load each preserved schema explicitly; extensions always keep the old prefix."""
+    extension = actor.sensor_extension_size
+    if extension not in (0, 6, 12, 14):
+        raise ValueError("Unsupported live actor observation schema")
+    return env.observation(
+        extension >= 6, wing_angles=extension >= 12, height_inputs=extension == 14
+    )

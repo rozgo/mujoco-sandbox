@@ -85,6 +85,7 @@ class FlightResets:
         }
         self.env.reset(ids, state=state)
         self.env.command[ids] = self.commands[choices]
+        self.env.requested_height_cm[ids] = state["qpos"][:, 2]
         self.task_ids[ids] = choices
 
 

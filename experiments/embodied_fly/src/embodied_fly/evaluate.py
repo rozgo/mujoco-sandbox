@@ -13,6 +13,7 @@ import torch
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.brain import ACTIVITIES, EmbodiedBrain, load_malecns
 from embodied_fly.neural_view import NeuralProjection
+from embodied_fly.observations import actor_observation
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -100,9 +101,7 @@ def evaluate(args):
         numerical_failure = None
         neural_stride = max(1, round(0.02 / actor_dt))
         for step in range(round(args.seconds / actor_dt)):
-            raw_observation = environment.observation(
-                actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
-            )
+            raw_observation = actor_observation(environment, actor)
             observations.append(raw_observation)
             observation = torch.as_tensor(raw_observation[None], device=device)
             result = actor(

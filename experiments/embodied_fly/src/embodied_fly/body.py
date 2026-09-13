@@ -16,6 +16,7 @@ from dm_control.locomotion.arenas import floors
 from flybody.fruitfly.fruitfly import FruitFly
 
 from embodied_fly.observations import (
+    append_height,
     append_wing_angles,
     append_wing_velocity,
     wing_angle_indices,
@@ -189,6 +190,7 @@ class FlyEnvironment:
                 address = self.model.jnt_qposadr[jid]
                 self.data.qpos[address] = self.model.qpos_spring[address]
         self.command = np.zeros(3, np.float32)  # forward cm/s, lateral cm/s, yaw rad/s
+        self.requested_height_cm = 0.0  # explicit ground-task command
         self.needs = np.zeros(len(NEED_NAMES), np.float32)
         self.previous_action = np.zeros(self.model.nu, np.float32)
         self.maximum_disallowed_ground_force = 0.0
@@ -200,7 +202,11 @@ class FlyEnvironment:
         self.mean_sensors = self.data.sensordata.copy()
         return self.observation()
 
-    def observation(self, extended_wing_velocity=False, *, wing_angles=False):
+    def observation(
+        self, extended_wing_velocity=False, *, wing_angles=False, height_inputs=False
+    ):
+        if height_inputs and not wing_angles:
+            raise ValueError("Height inputs require the complete wing observation prefix")
         if wing_angles and not extended_wing_velocity:
             raise ValueError("Wing-angle extension requires the existing velocity extension")
         rotation = self.data.xmat[self.thorax_id].reshape(3, 3)
@@ -243,6 +249,8 @@ class FlyEnvironment:
             observation = append_wing_angles(
                 observation, self.data.qpos, self.wing_angle_indices
             )
+        if height_inputs:
+            observation = append_height(observation, self.data.qpos, self.requested_height_cm)
         return observation
 
     def actuator_activation(self):

@@ -208,7 +208,10 @@ def train(args):
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
     # Preserve the same whole-episode held-out split as the imitation experiments.
     episodes = load_episodes(
-        args.rehearsal, brain.sensor_extension_size >= 6, brain.sensor_extension_size == 12
+        args.rehearsal,
+        brain.sensor_extension_size >= 6,
+        brain.sensor_extension_size >= 12,
+        brain.sensor_extension_size == 14,
     )
     rehearsal_manifest = json.loads((args.rehearsal / "manifest.json").read_text())
     rehearsal_hz = rehearsal_manifest.get(

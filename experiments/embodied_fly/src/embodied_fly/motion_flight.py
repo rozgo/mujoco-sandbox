@@ -15,6 +15,7 @@ import mujoco
 import numpy as np
 
 from embodied_fly.body import FlyEnvironment
+from embodied_fly.observations import actor_observation
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.wing_motion import CONFIG
 
@@ -89,6 +90,7 @@ def run(args):
     env = FlyEnvironment("wing_motion")
     base = initialize(env, args.height, args.heading)
     env.command[:] = (args.speed, 0, 0)
+    env.requested_height_cm = args.height
     oracle = WingReference(env, base, height=args.height, speed=args.speed, phase=args.phase)
     actor = checkpoint = memory = projection = None
     if args.controller == "student":
@@ -128,6 +130,7 @@ def run(args):
             "activity",
             "wing_activity",
             "wing_wrench",
+            "requested_height_cm",
         )
     }
     maps, heights, uprights, errors = [], [], [], []
@@ -140,9 +143,7 @@ def run(args):
 
             with torch.no_grad():
                 result = actor(
-                    torch.as_tensor(
-                        env.observation(True, wing_angles=True)[None], device=args.device
-                    ),
+                    torch.as_tensor(actor_observation(env, actor)[None], device=args.device),
                     memory,
                     sample_activity=args.sampling == "policy",
                 )
@@ -164,6 +165,7 @@ def run(args):
             action = oracle.act() if args.controller == "reference" else base.copy()
             utility = np.array([0, 1, 0, 0, 0, 0], np.float32)
         for k, value in (
+            ("requested_height_cm", env.requested_height_cm),
             ("qpos", env.data.qpos),
             ("qvel", env.data.qvel),
             ("activation", env.data.act),
@@ -172,7 +174,7 @@ def run(args):
             ("action", action),
             ("observation", observation),
             ("utility", utility),
-            ("activity", np.argmax(utility)),
+            ("activity", int(result.activity[0]) if actor is not None else 1),
             ("wing_activity", env.wing_forces.activity[0]),
             ("wing_wrench", env.wing_forces.wrench[0]),
         ):
@@ -221,6 +223,10 @@ def run(args):
         "physical_preset": "wing_motion",
         "control_hz": 500,
         "physics_hz": 5000,
+        "sensor_extension_size": actor.sensor_extension_size if actor is not None else None,
+        "height_sensor": "ideal current root altitude and requested altitude / 2 cm"
+        if actor is not None and actor.sensor_extension_size == 14
+        else None,
         "setup_seconds": setup,
         "stepping_capture_and_state_write_wall_seconds": elapsed,
         "requested_seconds": args.seconds,
@@ -303,6 +309,7 @@ def collect(args):
                 "report": str(source.relative_to(args.output) / "report.json"),
                 "phase": options["phase"],
                 "speed_cm_s": options["speed"],
+                "requested_height_cm": options["height"],
             }
         )
     manifest = {
