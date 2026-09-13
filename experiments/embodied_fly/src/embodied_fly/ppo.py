@@ -21,6 +21,7 @@ from embodied_fly.batch import FlyBatch
 from embodied_fly.body import CONTROL_DT
 from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_outcome import FlightOutcomeReward, FlightResets
+from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import load_episodes, sample, synchronize
 
@@ -51,10 +52,12 @@ def motor_distribution(output, active, log_std):
     )
 
 
-def joint_log_probability(output, distribution, latent_action, activity):
+def joint_log_probability(output, distribution, latent_action, activity, *, motor_only=False):
     # Stable tanh change-of-variables; sum over this stage's active channels.
     jacobian = 2 * (math.log(2) - latent_action - F.softplus(-2 * latent_action))
     motor = (distribution.log_prob(latent_action) - jacobian).sum(-1)
+    if motor_only:
+        return motor
     utility = torch.distributions.Categorical(logits=output.utility_logits).log_prob(activity)
     return motor + utility
 
@@ -152,7 +155,18 @@ def train(args):
         raise ValueError(
             "Positive rollout dimensions and horizon divisible by sequence required"
         )
-    if args.preset in ("flight", "wing_motion") and args.flight_resets is None:
+    motor_ground = getattr(args, "motor_ground", False)
+    if motor_ground and (args.preset != "wing_motion" or args.rehearsal is not None):
+        raise ValueError(
+            "Motor ground PPO requires wing_motion and no legacy rehearsal corpus"
+        )
+    if not motor_ground and args.rehearsal is None:
+        raise ValueError("Utility PPO requires its declared rehearsal corpus")
+    if (
+        not motor_ground
+        and args.preset in ("flight", "wing_motion")
+        and args.flight_resets is None
+    ):
         raise ValueError("Flight PPO requires declared training-split airborne resets")
     args.output.mkdir(parents=True, exist_ok=False)
     started_setup = time.perf_counter()
@@ -164,11 +178,35 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
     critic = Critic(brain).to(device)
-    if brain.motor_only:
+    if brain.motor_only != motor_ground:
         raise ValueError(
-            "Use the motor curriculum trainer; utility PPO is not a motor-only objective"
+            "Motor-only actors require --motor-ground; utility actors require the utility PPO path"
         )
     env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size, preset=args.preset)
+    contract = physical_contract(env.model) if motor_ground else None
+    if motor_ground and parent.get("physical_contract") != contract:
+        raise ValueError("Motor PPO must match the parent physical fly")
+    frozen = (
+        {
+            k: v.detach().clone()
+            for k, v in brain.state_dict().items()
+            if k.startswith(("utility_head.", "intention_encoder."))
+        }
+        if motor_ground
+        else {}
+    )
+    tasks = None
+    if motor_ground:
+        from embodied_fly.motor_focus import MotorTasks
+        from embodied_fly.motor_outcome import GroundMotorReward
+
+        tasks = MotorTasks(
+            env,
+            args.seed,
+            "ground",
+            getattr(args, "wing_angle_perturbation", 0.0),
+            getattr(args, "wing_speed_perturbation", 0.0),
+        )
     control_dt = env.control_dt
     time_scale = control_dt / CONTROL_DT
     # CLI discount factors retain their original 2 ms physical horizons.
@@ -177,7 +215,7 @@ def train(args):
     trace = deque(maxlen=128)
     flight_resets = (
         FlightResets(env, args.flight_resets, rng)
-        if args.preset in ("flight", "wing_motion")
+        if not motor_ground and args.preset in ("flight", "wing_motion")
         else None
     )
     reward_fn = (
@@ -185,19 +223,24 @@ def train(args):
         if flight_resets
         else OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
     )
+    if tasks is not None:
+        reward_fn = GroundMotorReward(tasks)
     active = torch.as_tensor(
-        np.ones(env.model.nu, bool) if flight_resets else ~env.template.walking_inactive,
+        np.ones(env.model.nu, bool)
+        if flight_resets or motor_ground
+        else ~env.template.walking_inactive,
         device=device,
     )
     log_std = nn.Parameter(
         torch.full((int(active.sum()),), math.log(args.noise), device=device)
     )
-    parameters = [*brain.parameters(), log_std]
+    parameters = [p for p in brain.parameters() if p.requires_grad] + [log_std]
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
     value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
     optimizer_resumed = (
         parent.get("method", "").startswith("recurrent physical-outcome PPO")
         and parent.get("config", {}).get("preset", "walking") == args.preset
+        and parent.get("motor_only", False) == motor_ground
     )
     if optimizer_resumed:
         # Same actor/critic/exploration ordering as the preceding PPO stage.
@@ -210,22 +253,27 @@ def train(args):
         for group in optimizer.param_groups:
             group["lr"] = args.lr
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
-    # Preserve the same whole-episode held-out split as the imitation experiments.
-    episodes = load_episodes(
-        args.rehearsal,
-        brain.sensor_extension_size >= 6,
-        brain.sensor_extension_size >= 12,
-        brain.sensor_extension_size == 14,
-    )
-    rehearsal_manifest = json.loads((args.rehearsal / "manifest.json").read_text())
-    rehearsal_hz = rehearsal_manifest.get(
-        "control_hz", rehearsal_manifest.get("environment", {}).get("control_hz", 500)
-    )
-    rehearsal_time_scale = 1 / rehearsal_hz / CONTROL_DT
-    validation_ids = set(
-        np.random.default_rng(1193).permutation(len(episodes))[: max(1, len(episodes) // 4)]
-    )
-    rehearsal = [episode for i, episode in enumerate(episodes) if i not in validation_ids]
+    rehearsal_hz = None
+    validation_ids = set()
+    if args.rehearsal is not None:
+        # Preserve the same whole-episode held-out split as the imitation experiments.
+        episodes = load_episodes(
+            args.rehearsal,
+            brain.sensor_extension_size >= 6,
+            brain.sensor_extension_size >= 12,
+            brain.sensor_extension_size == 14,
+        )
+        rehearsal_manifest = json.loads((args.rehearsal / "manifest.json").read_text())
+        rehearsal_hz = rehearsal_manifest.get(
+            "control_hz", rehearsal_manifest.get("environment", {}).get("control_hz", 500)
+        )
+        rehearsal_time_scale = 1 / rehearsal_hz / CONTROL_DT
+        validation_ids = set(
+            np.random.default_rng(1193).permutation(len(episodes))[
+                : max(1, len(episodes) // 4)
+            ]
+        )
+        rehearsal = [episode for i, episode in enumerate(episodes) if i not in validation_ids]
     cases = np.array(
         [
             [0, 0, 0],
@@ -238,15 +286,23 @@ def train(args):
         ],
         np.float32,
     )
-    task_ids = flight_resets.task_ids if flight_resets else np.arange(args.worlds) % len(cases)
+    task_ids = (
+        tasks.task_ids
+        if tasks is not None
+        else flight_resets.task_ids
+        if flight_resets
+        else np.arange(args.worlds) % len(cases)
+    )
 
     def reset_worlds(ids):
-        if flight_resets:
+        if tasks is not None:
+            tasks.reset(ids)
+        elif flight_resets:
             flight_resets.reset(ids)
         else:
             env.reset(ids, yaw=rng.uniform(-0.2, 0.2, len(ids)))
 
-    if not flight_resets:
+    if not flight_resets and tasks is None:
         env.command[:] = cases[task_ids]
     reset_worlds(np.arange(args.worlds))
     reward_fn.reset(np.arange(args.worlds))
@@ -299,11 +355,14 @@ def train(args):
                     latent = distribution.sample()
                     action = output.action.clone()
                     action[:, active] = latent.tanh()
-                    logp = joint_log_probability(output, distribution, latent, output.activity)
+                    logp = joint_log_probability(
+                        output, distribution, latent, output.activity, motor_only=motor_ground
+                    )
                     previous = env.previous_action.copy()
                     next_observation = env.step(action.cpu().numpy())
                     trace.append(
                         {
+                            "observation": observation.cpu().numpy().copy(),
                             "qpos": env.fields["qpos"].copy(),
                             "qvel": env.fields["qvel"].copy(),
                             "activation": env.fields["act"].copy(),
@@ -362,6 +421,9 @@ def train(args):
                         episode_records.append(
                             {
                                 "case_id": int(task_ids[i]),
+                                "task": ("stand", "walk")[task_ids[i]]
+                                if motor_ground
+                                else None,
                                 "failed": bool(failed[i]),
                                 "failure_trace": failure_trace,
                                 "simulated_seconds": float(env.ages[i] * control_dt),
@@ -377,7 +439,7 @@ def train(args):
                     reward_fn.reset(ids)
                     episode_return[ids] = 0
                     episode_start[ids] = env.fields["qpos"][ids, :2]
-                    if not flight_resets:
+                    if not flight_resets and tasks is None:
                         task_ids[ids] = rng.integers(len(cases), size=len(ids))
                         env.command[ids] = cases[task_ids[ids]]
                     memory = brain.reset_worlds(output.state, dones[-1])
@@ -427,11 +489,17 @@ def train(args):
                         dist = motor_distribution(result, active, log_std)
                         new_logps.append(
                             joint_log_probability(
-                                result, dist, data["latent"][t], data["activity"][t]
+                                result,
+                                dist,
+                                data["latent"][t],
+                                data["activity"][t],
+                                motor_only=motor_ground,
                             )
                         )
                         entropy.append(
-                            torch.distributions.Categorical(logits=result.utility_logits)
+                            dist.entropy().mean()
+                            if motor_ground
+                            else torch.distributions.Categorical(logits=result.utility_logits)
                             .entropy()
                             .mean()
                         )
@@ -482,41 +550,49 @@ def train(args):
             ppo_seconds = time.perf_counter() - update_start
             counters["ppo_optimization_seconds"] += ppo_seconds
             rehearsal_start = time.perf_counter()
-            # One short explicit rehearsal batch per rollout, including reset contexts.
-            reset_start = rng.random() < 0.25
-            burnin = 0 if reset_start else 8
-            demo = sample(
-                rehearsal,
-                rng,
-                burnin + args.sequence,
-                args.worlds,
-                device,
-                reset_start=reset_start,
-            )
-            state = brain.initial_state(args.worlds)
-            with torch.no_grad():
-                for t in range(burnin):
-                    state = brain(
-                        demo["observation"][t], state, time_scale=rehearsal_time_scale
-                    ).state
-            rehearsal_losses = []
-            for t in range(burnin, burnin + args.sequence):
-                result = brain(demo["observation"][t], state, time_scale=rehearsal_time_scale)
-                state = result.state
-                rehearsal_losses.append(
-                    F.mse_loss(result.action, demo["action"][t])
-                    + 0.02 * F.cross_entropy(result.utility_logits, demo["activity"][t])
+            rehearsal_loss = None
+            if args.rehearsal is not None:
+                # One short explicit rehearsal batch per rollout, including reset contexts.
+                reset_start = rng.random() < 0.25
+                burnin = 0 if reset_start else 8
+                demo = sample(
+                    rehearsal,
+                    rng,
+                    burnin + args.sequence,
+                    args.worlds,
+                    device,
+                    reset_start=reset_start,
                 )
-            rehearsal_loss = torch.stack(rehearsal_losses).mean()
-            optimizer.zero_grad(set_to_none=True)
-            (args.rehearsal_weight * rehearsal_loss).backward()
-            nn.utils.clip_grad_norm_(parameters, 1.0)
-            optimizer.step()
+                state = brain.initial_state(args.worlds)
+                with torch.no_grad():
+                    for t in range(burnin):
+                        state = brain(
+                            demo["observation"][t], state, time_scale=rehearsal_time_scale
+                        ).state
+                rehearsal_losses = []
+                for t in range(burnin, burnin + args.sequence):
+                    result = brain(
+                        demo["observation"][t], state, time_scale=rehearsal_time_scale
+                    )
+                    state = result.state
+                    rehearsal_losses.append(
+                        F.mse_loss(result.action, demo["action"][t])
+                        + 0.02 * F.cross_entropy(result.utility_logits, demo["activity"][t])
+                    )
+                rehearsal_loss = torch.stack(rehearsal_losses).mean()
+                optimizer.zero_grad(set_to_none=True)
+                (args.rehearsal_weight * rehearsal_loss).backward()
+                nn.utils.clip_grad_norm_(parameters, 1.0)
+                optimizer.step()
             synchronize(device)
-            rehearsal_seconds = time.perf_counter() - rehearsal_start
+            rehearsal_seconds = (
+                time.perf_counter() - rehearsal_start if args.rehearsal else 0.0
+            )
             counters["rehearsal_seconds"] += rehearsal_seconds
             counters["optimization_seconds"] += ppo_seconds + rehearsal_seconds
-            counters["rehearsal_frames"] += args.sequence * args.worlds
+            counters["rehearsal_frames"] += (
+                args.sequence * args.worlds if args.rehearsal else 0
+            )
             counters["rollouts"] += 1
             row = {
                 **counters,
@@ -526,7 +602,9 @@ def train(args):
                 "max_kl": max(kl_values),
                 "policy_loss": float(np.mean(policy_losses)) if policy_losses else None,
                 "value_loss": float(np.mean(value_losses)) if value_losses else None,
-                "rehearsal_loss": float(rehearsal_loss.detach()),
+                "rehearsal_loss": float(rehearsal_loss.detach())
+                if rehearsal_loss is not None
+                else None,
                 "completed_episodes": len(episode_records),
                 "failed_episodes": sum(e["failed"] for e in episode_records),
             }
@@ -553,7 +631,11 @@ def train(args):
             "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
             "source_commit": run_evidence["source_commit"],
             "parent_checkpoint_sha256": sha256(args.resume),
-            "method": "recurrent physical-outcome PPO plus explicit imitation rehearsal",
+            "method": "recurrent physical-outcome PPO, motor-only ground curriculum"
+            if motor_ground
+            else "recurrent physical-outcome PPO plus explicit imitation rehearsal",
+            "motor_only": motor_ground,
+            "physical_contract": contract,
             "critic_state_dict": critic.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
             "value_optimizer_state_dict": value_optimizer.state_dict(),
@@ -564,6 +646,22 @@ def train(args):
             "provenance": run_evidence,
             "config": config,
             "reward_recipe": reward_fn.recipe,
+            "motor_only": motor_ground,
+            "physical_contract": contract,
+            "training_tasks": ["stand", "walk"] if motor_ground else None,
+            "worlds_by_task": {
+                name: int((task_ids == i).sum())
+                for i, name in enumerate(("stand", "walk", "hover"))
+            }
+            if motor_ground
+            else None,
+            "utility_and_intention_weights_unchanged": all(
+                torch.equal(brain.state_dict()[k], v) for k, v in frozen.items()
+            )
+            if motor_ground
+            else None,
+            "active_motor_channels": int(active.sum()),
+            "teacher_present_during_collection": False,
             "training_started_utc": training_started_utc,
             "completed_utc": utc_now(),
             "setup_seconds": setup_seconds,
@@ -599,10 +697,14 @@ def train(args):
             "checkpoint_sha256": sha256(args.output / "actor.pt"),
             "model_sha256": sha256(args.output / "model.mjb"),
             "flight_force_model": env.wing_forces.report() if env.wing_forces else None,
-            "rehearsal_manifest_sha256": sha256(args.rehearsal / "manifest.json"),
+            "rehearsal_manifest_sha256": sha256(args.rehearsal / "manifest.json")
+            if args.rehearsal
+            else None,
             "rehearsal_episode_sha256": {
                 p.name: sha256(p) for p in sorted(args.rehearsal.glob("episode_*.npz"))
-            },
+            }
+            if args.rehearsal
+            else {},
             "rehearsal_validation_indices": sorted(int(i) for i in validation_ids),
             "completed_episodes": episode_records,
             "failure": failure,
@@ -613,13 +715,17 @@ def train(args):
             else "new PPO and critic Adam; parent actor and normalization retained",
         }
         (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--graph", type=Path, required=True)
     parser.add_argument("--resume", type=Path, required=True)
-    parser.add_argument("--rehearsal", type=Path, required=True)
+    parser.add_argument("--rehearsal", type=Path)
+    parser.add_argument("--motor-ground", action="store_true")
+    parser.add_argument("--wing-angle-perturbation", type=float, default=0.0)
+    parser.add_argument("--wing-speed-perturbation", type=float, default=0.0)
     parser.add_argument(
         "--preset", choices=("walking", "flight", "wing_motion"), default="walking"
     )

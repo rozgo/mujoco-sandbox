@@ -194,3 +194,48 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_
 after verifying that the complete upstream feature map is identical. It keeps
 the source hashes and original training/validation world partitions. Pooling
 reuses examples and collects no additional physical experience.
+
+## Ground curriculum with physical disturbances
+
+`motor_focus train --task-set ground` assigns16standing and16walking worlds
+when using32worlds. It trains the existing sensory encoder, intrinsic cell
+dynamics and motor decoder. Utility remains inactive. One resulting checkpoint
+is still evaluated on allthree commands; hover remains unfinished and is not
+trained during this ground stage.
+
+`--wing-angle-perturbation` and `--wing-speed-perturbation` change only ground
+training reset states. Angles stay within physical limits, and the full nominal
+resting-pose target stays fixed. This creates actual recovery trajectories for
+feedback learning. Evaluation retains the original undisturbed initial states.
+
+The [first ground pilot](runs/motor_focus_09/SUMMARY.md) stays upright through
+all128 completed training episodes and both five-second ground evaluations.
+Wing accuracy still does not improve on06, so it is not promoted. The declared
+follow-up changes only the optimizer learning rate in a continuation from09.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_focus train \
+  --resume assets/embodied_fly/diagnostics/motor_focus_06.pt \
+  --graph outputs/fly_survival/malecns --teacher assets/embodied_fly/teachers/walking.npz \
+  --output outputs/embodied_fly/ground_motor_reproduction --device cuda \
+  --seconds 180 --worlds 32 --threads 16 --sequence 32 --lr 0.00001 \
+  --teacher-mix 0 --task-set ground --ground-posture --ground-wing-loss 10 \
+  --wing-response-loss 1 --wing-response-worlds 8 --episode-seconds 2 --seed 71009 \
+  --wing-angle-perturbation 0.15 --wing-speed-perturbation 2
+```
+
+## Physical-outcome ground PPO
+
+`embodied_fly.ppo --motor-ground --preset wing_motion` trains the motor-only
+checkpoint directly on measured movement, support and posture. It requires the
+parent's exact physical fingerprint and activates all78 motor outputs. No
+utility loss, teacher or legacy rehearsal corpus is used. The critic and
+exploration distribution exist only during training. The actor remains the
+same command-conditioned MaleCNS network.
+
+The ground curriculum rewards resting wing angles and low wing speed for both
+standing and walking; standing additionally rewards the initial leg pose.
+Body pose and height terms discourage collapse. Every reward is computed per
+world per2ms action, rate-scaled by elapsed time. Full task evaluation remains
+separate and includes hover, even when this curriculum stage only trains ground
+commands. `motor_outcome.py` records the exact weights and scales in each run.

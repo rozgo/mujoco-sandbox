@@ -14,8 +14,12 @@ from embodied_fly.ppo import (
 
 
 @pytest.mark.parametrize("time_scale", (1.0, 0.1))
-def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core(time_scale):
+@pytest.mark.parametrize("motor_only", (False, True))
+def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core(
+    time_scale, motor_only
+):
     brain = make_brain().train()
+    brain.set_motor_only(motor_only)
     active = torch.tensor([True, False, True])
     log_std = torch.full((2,), -3.0)
     obs = torch.randn(8, 3, 4)
@@ -28,7 +32,9 @@ def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core
             result = brain(obs[t], memory, sample_activity=True, time_scale=time_scale)
             dist = motor_distribution(result, active, log_std)
             latent = dist.sample()
-            probability = joint_log_probability(result, dist, latent, result.activity)
+            probability = joint_log_probability(
+                result, dist, latent, result.activity, motor_only=motor_only
+            )
             samples.append((latent, result.activity, probability))
             memory = brain.reset_worlds(result.state, done[t])
     memory = brain.initial_state(3)
@@ -36,7 +42,7 @@ def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core
     for t, (latent, activity, old) in enumerate(samples):
         result = brain(obs[t], memory, activity_override=activity, time_scale=time_scale)
         dist = motor_distribution(result, active, log_std)
-        new = joint_log_probability(result, dist, latent, activity)
+        new = joint_log_probability(result, dist, latent, activity, motor_only=motor_only)
         torch.testing.assert_close(new, old)
         probabilities.append(new)
         memory = brain.reset_worlds(result.state, done[t])

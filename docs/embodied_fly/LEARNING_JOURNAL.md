@@ -1884,3 +1884,46 @@ Seed71010;evaluate allthree full5s cases at72001. Test whether the conservative
 step size limits representation learning; do not assume it is the sole cause.
 This changes the optimization rate only, with one continuing actor and identical
 body/force parameters. No new physics, controller, observation or reward recipe.
+
+### Physical motor rewards — 2026-09-13 08:34:30 UTC
+
+The last user-question turn clarified inherited input encoding; it made no
+implementation progress. Revalidated the terminal09/10 training and transfer
+handles and existing artifacts before continuing. No job was restarted.
+Motor-focus10 completed180.398s/132,096transitions,128episodes/5failures.
+Standing is quieter but wings remain inaccurate and walking becomes nearly
+stationary. Allthree full task gates fail. Preserve preferred06. Both09/10
+complete three-task films are now decoded, inspected and opened for review.
+
+Corrective imitation has improved support but has not produced resting wings
+and good command tracking together. Implement an explicit motor-only path in
+the existing recurrent PPO trainer: utility/intention heads stay frozen, all78
+motor channels remain learned, same397inputs/4graphupdates and exact physical
+fingerprint. A separate training-only critic estimates return. No teacher,
+rehearsal data, output mask, pose writes or new deployed controller is used.
+
+Rewards are calculated from each world's post-action physical state every2ms.
+Retain velocity/yaw tracking, uprightness, valid support and action smoothness;
+add resting-wing position/stillness rewards in both ground tasks, initial leg
+pose only when standing, and initial body pose/height on the ground. Pose terms
+use weight/(1+MSE/scale²), avoiding a fully saturated exponential at large error.
+Rates are multiplied by0.002s; physical failure has one penalty before reset.
+Timeouts bootstrap the final physical state; recurrent memory is cleared only
+for reset worlds. Utility log probabilities are excluded from motor-only PPO.
+
+Declare motor_ppo01: resume preferred motor_focus06,32worlds(16stand/16walk),
+16CPUphysics threads,180s budget,128-actionrollouts,16-actionrecurrentchunks,
+2epochs,Adam1e-5,initial latent action noise0.02,targetKL0.03,entropy0.001,
+gamma0.998 andlambda0.99 at500Hz. The longer discount/advantage horizon gives
+wing position and balance consequences time to influence credit assignment.
+Two-second episodes;training resets perturb wing angles±0.15rad andspeed±2rad/s.
+Seed81001. Ground-only curriculum stages learning; hover remains required and
+is evaluated from the same resulting checkpoint. Evaluate allthree complete5s
+cases,seed72001, no perturbation/teacher/reset; open the complete film. Compare
+physical results with06, not just training reward. This is a changed learning
+method, not a matched speed benchmark or a new deployed policy.
+
+Pre-run validation:89tests pass in56.26s (15known upstreamwarnings), including
+canonical wing decoupling and both old utility-PPO and new motor-only likelihood
+paths. Ruff and diff whitespace checks pass. No physics or deployed architecture
+change is included. GPU is idle with about20GiB free before launching the pilot.
