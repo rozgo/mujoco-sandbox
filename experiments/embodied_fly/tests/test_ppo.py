@@ -10,6 +10,7 @@ from embodied_fly.ppo import (
     advantages,
     joint_log_probability,
     motor_distribution,
+    reset_motor_exploration,
 )
 
 
@@ -24,6 +25,25 @@ def test_explicit_exploration_floor_changes_sampling_and_replay_consistently():
     for bad in [0, -1, float("nan"), 0.2]:
         with pytest.raises(ValueError):
             motor_distribution(output, active, log_std, bad)
+
+
+def test_exploration_reset_preserves_actor_and_its_optimizer_history():
+    actor = torch.nn.Parameter(torch.tensor([0.3, -0.2]))
+    log_std = torch.nn.Parameter(torch.full((2,), np.log(0.003)))
+    optimizer = torch.optim.Adam([actor, log_std], lr=1e-3)
+    (actor.square().sum() + log_std.square().sum()).backward()
+    optimizer.step()
+    weights = actor.detach().clone()
+    history = {k: v.clone() for k, v in optimizer.state[actor].items()}
+    reset_motor_exploration(log_std, optimizer, 0.001)
+    torch.testing.assert_close(log_std.exp(), torch.full((2,), 0.001))
+    torch.testing.assert_close(actor, weights, rtol=0, atol=0)
+    assert log_std not in optimizer.state
+    for k, v in history.items():
+        torch.testing.assert_close(optimizer.state[actor][k], v, rtol=0, atol=0)
+    for bad in (0, -1, float("nan"), 0.2):
+        with pytest.raises(ValueError):
+            reset_motor_exploration(log_std, optimizer, bad)
 
 
 @pytest.mark.parametrize("time_scale", (1.0, 0.1))

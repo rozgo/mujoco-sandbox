@@ -241,9 +241,17 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     # retaining exactly the same physical identity and inactive utility weights.
     parent.update(checkpoint)
     args.resume, args.output = args.output / "actor.pt", tmp_path / "continuation"
+    if bounded:
+        args.reset_exploration = True
+        args.reset_critic = False
+        args.noise = args.minimum_noise = 0.001
     continued = ppo.train(args)
     assert continued["optimizer_resumed"]
     assert continued["utility_and_intention_weights_unchanged"]
+    if bounded:
+        assert continued["exploration_reset_explicitly"]
+        assert not continued["critic_reset_for_new_reward"]
+        np.testing.assert_allclose(continued["initial_exploration_std"], 0.001)
 
 
 def test_all_motor_rewards_select_task_once_and_do_not_move_physics():

@@ -58,6 +58,19 @@ def motor_distribution(output, active, log_std, minimum_std=0.01):
     )
 
 
+def reset_motor_exploration(log_std, optimizer, standard_deviation):
+    """Explicit distribution migration; preserve actor/critic weights and Adam.
+
+    Discard only the exploration parameter's moments so its old optimizer state
+    cannot immediately undo the requested new scale.
+    """
+    if not 0 < standard_deviation <= 0.15:
+        raise ValueError("Exploration standard deviation must be positive and <=.15")
+    with torch.no_grad():
+        log_std.fill_(math.log(standard_deviation))
+    optimizer.state.pop(log_std, None)
+
+
 def joint_log_probability(output, distribution, latent_action, activity, *, motor_only=False):
     # Stable tanh change-of-variables; sum over this stage's active channels.
     jacobian = 2 * (math.log(2) - latent_action - F.softplus(-2 * latent_action))
@@ -182,6 +195,7 @@ def train(args):
     hover_only = getattr(args, "hover_only", False)
     bounded_hover = getattr(args, "bounded_hover_reward", False)
     reset_critic = getattr(args, "reset_critic", False)
+    reset_exploration = getattr(args, "reset_exploration", False)
     if bounded_hover and not hover_only:
         raise ValueError("Bounded hover reward requires hover-only training")
     if hover_only and (not hover_physical or args.preset != "wing_position"):
@@ -373,6 +387,11 @@ def train(args):
             group["lr"] = args.lr
         for group in value_optimizer.param_groups:
             group["lr"] = critic_lr
+    if reset_exploration:
+        reset_motor_exploration(log_std, optimizer, args.noise)
+    initial_exploration = (
+        log_std.detach().clamp(math.log(minimum_noise), math.log(0.15)).exp().cpu().tolist()
+    )
     from embodied_fly.motor_retention import FrozenMotorReference
 
     retainer = FrozenMotorReference(brain, args.worlds) if retention_weight else None
@@ -1067,8 +1086,15 @@ def train(args):
             "failure": failure,
             "physical_success": "Not established by training reward; independent evaluation required",
             "optimizer_resumed": optimizer_resumed,
+            "exploration_reset_explicitly": reset_exploration,
+            "initial_exploration_std": initial_exploration,
             "critic_reset_for_new_reward": reset_critic,
-            "optimizer_initialization": "retained actor Adam/exploration; new critic and critic Adam"
+            "optimizer_initialization": (
+                "retained actor Adam; explicitly reset exploration and its Adam; "
+                + ("new critic/critic Adam" if reset_critic else "retained critic/critic Adam")
+            )
+            if optimizer_resumed and reset_exploration
+            else "retained actor Adam/exploration; new critic and critic Adam"
             if optimizer_resumed and reset_critic
             else "retained actor/critic Adam and exploration from PPO parent"
             if optimizer_resumed
@@ -1096,6 +1122,7 @@ if __name__ == "__main__":
     parser.add_argument("--hover-only", action="store_true")
     parser.add_argument("--bounded-hover-reward", action="store_true")
     parser.add_argument("--reset-critic", action="store_true")
+    parser.add_argument("--reset-exploration", action="store_true")
     parser.add_argument("--critic-lr", type=float, default=3e-4)
     parser.add_argument("--checkpoint-activations", action="store_true")
     parser.add_argument("--independent-critic", action="store_true")
