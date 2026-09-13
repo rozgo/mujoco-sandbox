@@ -30,7 +30,7 @@ preserves both ground skills and is the next development parent. The subsequent
 standing posture but regresses walking; hover remains failed. The better combined
 [run02 review](../../previews/embodied_fly/state_hover_retention_02_all_tasks_v1.mp4)
 is preserved alongside the full failed continuation. Only unassisted evaluation
-can establish learned flight. The subsequent [wing-output-only pilot](runs/wing_output_01/SUMMARY.md) preserves ground stability but worsens resting-wing posture and still fails hover. Its complete failed review is retained; run02 remains the development parent. A [declared physical decoder search](runs/sweep_search_01/PLAN.md) now tests whether small existing-output changes improve hover without losing ground behavior.
+can establish learned flight. The subsequent [wing-output-only pilot](runs/wing_output_01/SUMMARY.md) preserves ground stability but worsens resting-wing posture and still fails hover. Its complete failed review is retained; run02 remains the development parent. A [physical decoder search](runs/sweep_search_01/SUMMARY.md) found no accepted combined improvement. A subsequent [state-readout fit](runs/state_readout_01/SUMMARY.md) improves reference-history prediction but still fails autonomous hover. The recorded startup and wing-limit errors guide the next training-data change; retention02 remains the development parent.
 
 The original walking sensor layout is retained as the first 383 inputs, all
 read live from the current body. Fourteen added inputs expose wing speeds,

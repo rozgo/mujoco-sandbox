@@ -2252,3 +2252,13 @@ The rejected gain1.3/bias0.02candidate has the best unconstrained hover cost. On
 The next executed implementation is canonical state-readout fitting. Actual frozen graph/decoder features from parent ground histories and successful state-hover reference history train the existing six wing rows by weighted ridge regression. Two focused tests pass in1.66s, including complete training/export and frozen non-wing/upstream state. This is offline readout learning, not PPO and not new physical experience. The fullsuite and run are pending at this checkpoint.
 
 State-readout source passes the full105-test suite in72.93s with23known dependency warnings;Ruff passes. Allthree real fitting sources pass current-body, model/capture-hash and causal-feedback checks. The diagnostic film is decoded,inspected andopened. Commit this source before the boundedGPUfit.
+
+### State-readout outcome and explicit boundary errors — 2026-09-13 11:23:36 UTC
+
+State_readout01completed19.015356s total (4.521751setup,13.565234frozenGPUreplay,0.928369fit/packing/save). Five ridge candidates use6,000fitframes and1,500temporally-relatedvalidationframes fromthreealreadyrecordedhistories. Zero new physical experience. Selectedregularization0.01reduces reference-history wing error while preserving allupstream andnon-wingweights. Independent recomputation verifies the fit, validationmetrics andexactphysicalcontract.
+
+Unassisted5s-per-command evaluation takes7.295372s setup +32.408363s capture, withzero numericalwarnings. Stand/walkstayuprightandproperlysupported butwingposturefails;hoverfalls. No candidate is promoted;retention02remainsselected. The full15s film is decoded,inspected andopened (750frames,1600×900,50fps,1x;60.334684srender/encode).
+
+Recorded-state audit usesmj_forwardandtheexistingtraining-onlyreference,withoutintegration: at0.20s the actualsweepanglesareapproximately-1.45rad,actorcommands-0.32/-0.31pushoutward,whilereferencecommands+0.47/+0.48reverse. At0.002s actorstartupcommands0.22/0.27arebelowreference0.87/0.91. This is concrete evidence for training on actual startup and near-limit mistakes as well as successful-reference histories. It does not prove auniquephysical/neuralcause. Adding those actual-state corrections is the next action; it has not yet been implemented or executed.
+
+This continuation made progress: archived the prior real trial, implemented andtested physical parametersearch andcanonicalreadoutfitting,ranbothonGPU,retainedfullfailures,openedallcompletedfilms,andidentifiedexplicitwrong-sign boundarycommands. The broadermotor/utility/multi-flygoalremainsactiveandunfulfilled. Noexternalblockerexists.
