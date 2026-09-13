@@ -1448,3 +1448,27 @@ explicit per-example flight/ground identity, not clock speed. The training
 loss now supports this and has a direct gradient/weight test; legacy mixed
 clock tests pass. Run independent hover/forward and both original/new-preset
 ground evaluations after training. Do not promote solely from imitation loss.
+
+### Complete-actor imitation outcome and physical-reward pilot
+
+Source d4ac5e7,seed63001:180.274561 s of training,393 updates,14,000 unique
+training frames. Validation motor MSE0.103644→0.020944. Both two-second
+student flights fail. Five of six original-model ground cases remain stable
+(slow walking falls); only the left-turn case is stable in the new physical
+preset. All raw ground gates fail. Preserve all results and the earlier
+accepted walking reference; no promotion. Changed observation/body dynamics
+require their own ground training before unified deployment.
+
+Next declared pilot: physical-outcome PPO on `wing_motion`, resume brain01,
+32 native CPU worlds,16 threads,64-step rollouts,16-step recurrent chunks,
+two epochs,0.5 s episodes,180 s wall cap,seed65001,Adam3e-6,noise0.03,
+explicit ground rehearsal weight4. Use only first training-split frames from
+phase-zero corpus02 for resets; no teacher acts in live rollouts. Physics,
+force law and the existing airborne reward stay fixed; rate-based reward
+uses the actual2 ms interval. This is the first physical-reward learning
+trial for this force model, separate from the two imitation stages.
+
+The batch uses the same force implementation as native evaluation. PPO
+failure traces now retain causal wing activity and applied wrench. Reset
+validation rejects a corpus from another flight model, even if array shapes
+match. Evaluation still runs the student without a teacher.

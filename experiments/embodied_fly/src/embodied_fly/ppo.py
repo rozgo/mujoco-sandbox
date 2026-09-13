@@ -152,7 +152,7 @@ def train(args):
         raise ValueError(
             "Positive rollout dimensions and horizon divisible by sequence required"
         )
-    if args.preset == "flight" and args.flight_resets is None:
+    if args.preset in ("flight", "wing_motion") and args.flight_resets is None:
         raise ValueError("Flight PPO requires declared training-split airborne resets")
     args.output.mkdir(parents=True, exist_ok=False)
     started_setup = time.perf_counter()
@@ -172,7 +172,9 @@ def train(args):
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     trace = deque(maxlen=128)
     flight_resets = (
-        FlightResets(env, args.flight_resets, rng) if args.preset == "flight" else None
+        FlightResets(env, args.flight_resets, rng)
+        if args.preset in ("flight", "wing_motion")
+        else None
     )
     reward_fn = (
         FlightOutcomeReward(env)
@@ -303,6 +305,9 @@ def train(args):
                             "utility": output.utility_scores.cpu().numpy(),
                         }
                     )
+                    if env.wing_forces is not None:
+                        trace[-1]["wing_activity"] = env.wing_forces.activity.copy()
+                        trace[-1]["wing_wrench"] = env._wing_applied.copy()
                     reward, failed, terms = reward_fn(previous)
                     physical_rewards.append(float(reward.mean()))
                     for key, term in terms.items():
@@ -586,6 +591,7 @@ def train(args):
             "parent_checkpoint_sha256": sha256(args.resume),
             "checkpoint_sha256": sha256(args.output / "actor.pt"),
             "model_sha256": sha256(args.output / "model.mjb"),
+            "flight_force_model": env.wing_forces.report() if env.wing_forces else None,
             "rehearsal_manifest_sha256": sha256(args.rehearsal / "manifest.json"),
             "rehearsal_episode_sha256": {
                 p.name: sha256(p) for p in sorted(args.rehearsal.glob("episode_*.npz"))
@@ -607,7 +613,9 @@ if __name__ == "__main__":
     parser.add_argument("--graph", type=Path, required=True)
     parser.add_argument("--resume", type=Path, required=True)
     parser.add_argument("--rehearsal", type=Path, required=True)
-    parser.add_argument("--preset", choices=("walking", "flight"), default="walking")
+    parser.add_argument(
+        "--preset", choices=("walking", "flight", "wing_motion"), default="walking"
+    )
     parser.add_argument("--flight-resets", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")

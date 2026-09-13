@@ -39,8 +39,11 @@ def test_airborne_rewards_distinguish_hover_sink_and_failure_with_physical_time(
     assert reward[3] < -0.99
 
 
-def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(tmp_path):
-    manifest = {"control_hz": 5000, "episodes": []}
+@pytest.mark.parametrize("preset,hz", [("flight", 5000), ("wing_motion", 500)])
+def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(
+    tmp_path, preset, hz
+):
+    manifest = {"control_hz": hz, "physical_preset": preset, "episodes": []}
     for i in range(8):
         qpos = np.zeros((2, 7))
         qpos[0, 2:4] = 1
@@ -69,9 +72,9 @@ def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(t
             fields[key][ids] = value
 
     env = SimpleNamespace(
-        preset="flight",
+        preset=preset,
         n=4,
-        control_dt=0.0002,
+        control_dt=1 / hz,
         fields=fields,
         command=np.zeros((4, 3)),
         reset=reset,
@@ -87,3 +90,7 @@ def test_airborne_resets_exclude_validation_and_read_only_first_physical_frame(t
     assert len(calls) == 1
     resets.reset([])
     assert len(calls) == 1
+    manifest["physical_preset"] = "wing_motion" if preset == "flight" else "flight"
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="force model"):
+        FlightResets(env, tmp_path, np.random.default_rng(15))

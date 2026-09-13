@@ -14,9 +14,12 @@ from embodied_fly.provenance import sha256
 
 class FlightResets:
     def __init__(self, env, path, rng):
-        if env.preset != "flight":
+        if env.preset not in ("flight", "wing_motion"):
             raise ValueError("Airborne resets require the flight physical preset")
         manifest = json.loads((path / "manifest.json").read_text())
+        capture_preset = manifest.get("physical_preset", "flight")
+        if capture_preset != env.preset:
+            raise ValueError("Reset corpus must match the flight force model")
         if manifest["control_hz"] != 1 / env.control_dt:
             raise ValueError("Capture and flight control clocks differ")
         eligible = [
@@ -65,6 +68,7 @@ class FlightResets:
         self.task_ids = np.zeros(env.n, np.int64)
         self.report = {
             "scope": "First training-split physical frame only; no live reference or teacher",
+            "physical_preset": env.preset,
             "manifest_sha256": sha256(path / "manifest.json"),
             "validation_indices_excluded": sorted(validation),
             "sources": sources,
@@ -103,7 +107,7 @@ class FlightOutcomeReward:
             "failure_height_below_cm": 0.8,
             "failure_upright_below": 0.5,
             "physical_failure_penalty_once": 1.0,
-            "units": "CGS state; rates times actual 0.0002 s action interval; terminal penalty once",
+            "units": f"CGS state; rates times actual {env.control_dt:g} s action interval; terminal penalty once",
             "excluded": "No wing-phase/action imitation or direct lift target in physical reward",
         }
 

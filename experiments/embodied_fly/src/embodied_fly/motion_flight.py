@@ -211,6 +211,7 @@ def run(args):
         "root_tracking_rmse_m": rmse,
         "minimum_root_height_m": min(heights) if heights else None,
         "minimum_upright": min(uprights) if uprights else None,
+        "final_upright": uprights[-1] if uprights else None,
         "max_forbidden_ground_force_over_weight": ratio,
         "warning_count": int(env.data.warning.number.sum()),
         "numerical_failure": failure,
@@ -233,6 +234,7 @@ def run(args):
         "model_sha256": sha256(args.output / "model.mjb"),
         "state_sha256": sha256(args.output / "flight.npz"),
         "force_state": "wing_activity is causal filter state; wing_wrench is the previous applied contribution",
+        "neural_view": projection.report() if projection is not None else None,
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({k: v for k, v in report.items() if k != "environment"}), flush=True)
@@ -274,7 +276,7 @@ def collect(args):
                 "episode": episode,
                 "failure": report["numerical_failure"],
                 "physical_failure": not report["success"],
-                "final_upright": report["minimum_upright"],
+                "final_upright": report["final_upright"],
                 "state_sha256": sha256(target),
                 "frames": round(args.seconds * 500),
                 "report": str(source.relative_to(args.output) / "report.json"),
