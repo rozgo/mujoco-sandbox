@@ -9,7 +9,7 @@ from test_motor_focus import tiny_brain
 from embodied_fly.batch import FlyBatch
 from embodied_fly.brain import EmbodiedBrain
 from embodied_fly.hover_migrate import transfer
-from embodied_fly.hover_only import HoverOnlyReward, HoverOnlyTasks
+from embodied_fly.hover_only import HoverBalancedReward, HoverOnlyReward, HoverOnlyTasks
 from embodied_fly.observations import actor_observation
 from embodied_fly.physical_contract import physical_contract
 
@@ -90,3 +90,31 @@ def test_hover_only_feedback_reward_and_performance_curriculum():
     tasks.reset([3])
     np.testing.assert_array_equal(env.fields["qpos"][0], untouched)
     assert abs(env.fields["qpos"][3, 2] - env.requested_height_cm[3]) <= 0.002
+
+
+def test_bounded_hover_scores_never_make_valid_airborne_failure_cheaper():
+    env = FlyBatch(4, 2, 16, preset="wing_position", wing_response="instant", physics_hz=1000)
+    HoverOnlyTasks(env, 901)
+    old, new = HoverOnlyReward(env), HoverBalancedReward(env)
+    original = {k: v.copy() for k, v in env.fields.items()}
+    ideal = new(env.previous_action)[0].copy()
+    for k, v in original.items():
+        np.testing.assert_array_equal(env.fields[k], v)
+    # Gross but finite position/velocity errors still permit positive recovery
+    # return. The old recipe could make >0.1 s continued flight cost more than -1.
+    env.fields["qpos"][1, 0] += 10
+    env.fields["qvel"][2, :3] = 100
+    env.fields["qvel"][2, 3:6] = 100
+    env.batch.forward()
+    reward, failed, terms = new(env.previous_action)
+    assert not failed.any()
+    assert np.all(reward >= 0.498 * env.control_dt)
+    assert np.all(reward <= 6.1 * env.control_dt)
+    assert reward[1] < ideal[1] and reward[2] < ideal[2]
+    assert old(env.previous_action)[0][1] * 50 < -1
+    np.testing.assert_allclose(reward, sum(terms.values()) * 0.002 - failed)
+    env.forbidden_peak[0] = env.body_weight * 0.11
+    env.fields["qpos"][1, 2] = 0.4
+    reward, failed, _ = new(env.previous_action)
+    assert failed[:2].all()
+    np.testing.assert_array_equal(reward[:2], -1)

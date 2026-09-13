@@ -49,6 +49,7 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
         (0.0, True, 1, True, True, False, "filtered"),
         (0.0, True, 0, True, True, False, "instant"),
         (0.0, True, 1, True, True, False, "hover-only"),
+        (0.0, True, 0, True, True, False, "hover-bounded"),
     ],
 )
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
@@ -64,7 +65,8 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
 ):
     from embodied_fly import ppo
 
-    hover_only = response == "hover-only"
+    bounded = response == "hover-bounded"
+    hover_only = response in ("hover-only", "hover-bounded")
     if hover_only:
         response = "instant"
 
@@ -128,6 +130,8 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         motor_retention_weight=4.0 if all_motor and not physical else 0.0,
         hover_physical=physical,
         hover_only=hover_only,
+        bounded_hover_reward=bounded,
+        reset_critic=bounded,
         critic_lr=1e-4,
         checkpoint_activations=physical,
         independent_critic=independent,
@@ -156,6 +160,9 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     report = ppo.train(args)
     assert report["transitions"] == worlds * 8
     assert report["critic_updates"] > 0
+    assert report["critic_reset_for_new_reward"] == bounded
+    if bounded:
+        assert report["reward_recipe"]["version"] == "hover_bounded_scores_v2"
     assert (report["ppo_updates"] == 0) == bool(warmup or force_kl_stop)
     if warmup or force_kl_stop:
         assert all(torch.equal(brain.state_dict()[k], v) for k, v in initial_actor.items())

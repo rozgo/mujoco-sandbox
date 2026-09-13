@@ -180,6 +180,10 @@ def train(args):
     motor_mode = motor_ground or motor_all
     hover_physical = getattr(args, "hover_physical", False)
     hover_only = getattr(args, "hover_only", False)
+    bounded_hover = getattr(args, "bounded_hover_reward", False)
+    reset_critic = getattr(args, "reset_critic", False)
+    if bounded_hover and not hover_only:
+        raise ValueError("Bounded hover reward requires hover-only training")
     if hover_only and (not hover_physical or args.preset != "wing_position"):
         raise ValueError("Hover-only requires the physical hover motor curriculum")
     critic_lr = getattr(args, "critic_lr", 3e-4)
@@ -242,6 +246,12 @@ def train(args):
     critic_rng = np.random.default_rng(args.seed ^ 0xC8171C)
     device = torch.device(args.device)
     brain, parent = load_actor(args.resume, args.graph, device)
+    if (
+        hover_only
+        and parent.get("config", {}).get("bounded_hover_reward", False) != bounded_hover
+        and not reset_critic
+    ):
+        raise ValueError("Changed hover reward requires an explicit fresh critic")
     brain.train()
     critic = Critic(brain).to(device)
     if brain.motor_only != motor_mode:
@@ -297,6 +307,8 @@ def train(args):
                 from embodied_fly.hover_only import HoverOnlyTasks
 
                 tasks = HoverOnlyTasks(env, args.seed)
+                if bounded_hover:
+                    tasks.promotion_rate = 5.5
     control_dt = env.control_dt
     time_scale = control_dt / CONTROL_DT
     # CLI discount factors retain their original 2 ms physical horizons.
@@ -326,6 +338,10 @@ def train(args):
                 from embodied_fly.hover_only import HoverOnlyReward
 
                 reward_fn = HoverOnlyReward(env)
+                if bounded_hover:
+                    from embodied_fly.hover_only import HoverBalancedReward
+
+                    reward_fn = HoverBalancedReward(env)
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
         if flight_resets or motor_mode
@@ -346,9 +362,11 @@ def train(args):
     if optimizer_resumed:
         # Same actor/critic/exploration ordering as the preceding PPO stage.
         # Imitation checkpoints use another optimizer layout and cannot resume it.
-        critic.load_state_dict(parent["critic_state_dict"], strict=True)
+        if not reset_critic:
+            critic.load_state_dict(parent["critic_state_dict"], strict=True)
         optimizer.load_state_dict(parent["optimizer_state_dict"])
-        value_optimizer.load_state_dict(parent["value_optimizer_state_dict"])
+        if not reset_critic:
+            value_optimizer.load_state_dict(parent["value_optimizer_state_dict"])
         with torch.no_grad():
             log_std.copy_(parent["log_std"].to(device))
         for group in optimizer.param_groups:
@@ -1049,7 +1067,10 @@ def train(args):
             "failure": failure,
             "physical_success": "Not established by training reward; independent evaluation required",
             "optimizer_resumed": optimizer_resumed,
-            "optimizer_initialization": "retained actor/critic Adam and exploration from PPO parent"
+            "critic_reset_for_new_reward": reset_critic,
+            "optimizer_initialization": "retained actor Adam/exploration; new critic and critic Adam"
+            if optimizer_resumed and reset_critic
+            else "retained actor/critic Adam and exploration from PPO parent"
             if optimizer_resumed
             else "new PPO and critic Adam; parent actor and normalization retained",
             "critic_warmup": {
@@ -1073,6 +1094,8 @@ if __name__ == "__main__":
     parser.add_argument("--motor-all", action="store_true")
     parser.add_argument("--hover-physical", action="store_true")
     parser.add_argument("--hover-only", action="store_true")
+    parser.add_argument("--bounded-hover-reward", action="store_true")
+    parser.add_argument("--reset-critic", action="store_true")
     parser.add_argument("--critic-lr", type=float, default=3e-4)
     parser.add_argument("--checkpoint-activations", action="store_true")
     parser.add_argument("--independent-critic", action="store_true")
