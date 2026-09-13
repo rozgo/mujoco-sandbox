@@ -136,7 +136,13 @@ class MotorTeacher:
     """Batched current-state corrections; this object never controls evaluation."""
 
     def __init__(
-        self, tasks, teacher_path, device, ground_posture=False, hover_reference="clock"
+        self,
+        tasks,
+        teacher_path,
+        device,
+        ground_posture=False,
+        hover_reference="clock",
+        stand_initial_form=False,
     ):
         if hover_reference not in ("clock", "state"):
             raise ValueError("Unknown hover reference")
@@ -147,6 +153,9 @@ class MotorTeacher:
                 "Position pilot requires ground posture and measured-state hover reference"
             )
         self.hover_reference = hover_reference
+        if stand_initial_form and not ground_posture:
+            raise ValueError("Initial-form stand supervision requires ground posture")
+        self.stand_initial_form = stand_initial_form
         self.tasks, self.env = tasks, tasks.env
         self.ground = BrakingTeacher(self.env, teacher_path, device, track_command=True)
         self.posture = (
@@ -172,6 +181,8 @@ class MotorTeacher:
         if self.posture is not None and ground_actions is None:
             actions = self.posture.targets(actions, t.task_ids)
         elif self.posture is not None:
+            if self.stand_initial_form:
+                actions[t.task_ids == 0] = self.posture.rest_action
             ids = np.flatnonzero(t.task_ids != 2)
             actions[np.ix_(ids, self.channels)] = self.posture.wing_targets(ids)
         ids = np.flatnonzero(t.task_ids == 2)
@@ -267,6 +278,7 @@ def review(args):
             device,
             posture_enabled,
             getattr(args, "hover_reference", "clock"),
+            getattr(args, "stand_initial_form", False),
         )
     else:
         actor, checkpoint = load_actor(args.resume, args.graph, device)
@@ -524,6 +536,7 @@ def train(args):
         device,
         getattr(args, "ground_posture", False),
         getattr(args, "hover_reference", "clock"),
+        getattr(args, "stand_initial_form", False),
     )
     posture = GroundPosture(env, tasks.ground["qpos"])
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
@@ -903,6 +916,11 @@ if __name__ == "__main__":
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--hover-teacher-mix", type=float)
     parser.add_argument("--retain-ground", action="store_true")
+    parser.add_argument(
+        "--stand-initial-form",
+        action="store_true",
+        help="Training labels hold the full initial stand pose; retain parent only for walking",
+    )
     parser.add_argument("--ground-retention-weight", type=float, default=1.0)
     parser.add_argument("--nonwing-retention-weight", type=float, default=0.0)
     parser.add_argument("--feedback-lr", type=float, default=0.003)

@@ -68,3 +68,27 @@ def test_reference_conversion_matches_requested_torque_at_current_state():
     np.testing.assert_array_equal(normalize_targets(m, limits[:, 0]), -1)
     np.testing.assert_array_equal(normalize_targets(m, limits[:, 1]), 1)
     assert physical_contract(m) == physical_contract(t.model)
+
+
+def test_full_stand_labels_do_not_retain_the_parents_crouched_body_targets():
+    from pathlib import Path
+
+    from embodied_fly.motor_focus import MotorTeacher
+
+    env = FlyBatch(3, 3, 14, preset="wing_position")
+    tasks = MotorTasks(env, 95021)
+    teacher = MotorTeacher(
+        tasks,
+        Path(__file__).resolve().parents[3] / "assets/embodied_fly/teachers/walking.npz",
+        "cpu",
+        ground_posture=True,
+        hover_reference="state",
+        stand_initial_form=True,
+    )
+    supplied = np.full((3, 78), 0.43, np.float32)
+    before = env.fields["qpos"].copy()
+    targets = teacher.act(supplied)
+    np.testing.assert_array_equal(targets[0], teacher.posture.rest_action)
+    other = np.r_[0:14, 20:78]
+    np.testing.assert_array_equal(targets[1, other], supplied[1, other])
+    np.testing.assert_array_equal(env.fields["qpos"], before)
