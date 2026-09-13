@@ -168,7 +168,9 @@ class EmbodiedBrain(nn.Module):
         ).clamp(-10, 10)
         if self.sensor_extension_size:
             split = self.observation_size - self.sensor_extension_size
-            sensory = self.sensory_encoder[0](encoded_observation[:, :split])
+            # Preserve the original contiguous GEMM layout too: strided input
+            # selects different CUDA arithmetic despite identical logical values.
+            sensory = self.sensory_encoder[0](encoded_observation[:, :split].contiguous())
             sensory = sensory + self.sensor_extension(encoded_observation[:, split:])
             for layer in list(self.sensory_encoder)[1:]:
                 sensory = layer(sensory)

@@ -938,3 +938,13 @@ initial function; Adam is explicitly initialized fresh because parameter layout
 changed. Existing normalization is retained, with mean 0/std 1 for the six new
 scaled measurements. First verify full-graph migration on CUDA, then train and
 measure physical flight and ground retention. No outcome is assumed from MSE.
+
+The first full-graph CUDA migration check retained a small numerical difference:
+maximum action error 4.18e-7 and latent-state error 1.01e-5 over 64 steps × eight
+sequences at both clocks. The strict equality check failed and its report is
+preserved. The extended tensor passed a strided 383-column view into the original
+linear layer; explicitly restoring the original contiguous matrix layout is the
+next check. Do not silently weaken the exact-migration assertion. Separately,
+all 12,000 flight frames have zero encoder clipping in the six new channels
+(maximum scaled absolute speed 1.775 versus the safety bound 10), with identical
+legacy observation values. This verifies information preservation, not flight.
