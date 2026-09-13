@@ -1472,3 +1472,21 @@ The batch uses the same force implementation as native evaluation. PPO
 failure traces now retain causal wing activity and applied wrench. Reset
 validation rejects a corpus from another flight model, even if array shapes
 match. Evaluation still runs the student without a teacher.
+
+### Physical reward outcome and action-selection diagnostic
+
+PPO01 runs182.873925 s,129,024 physical transitions /258.048 aggregate sim
+seconds,211 PPO updates. Of716 completed episodes,127 reach the0.5 s timeout
+without leaving the training height/orientation envelope;589 fail. Timeouts
+are not tracking success. Quarterly survival counts37/31/21/38 out of179
+episodes each show no sustained improvement trend. Both independent mean-
+action two-second tests fail. Do not promote or blindly extend this run.
+
+The imitation parent first crosses below8 mm at0.490 s; the PPO checkpoint
+does so at0.244 s in the declared hover case. Thus imitation did produce
+transient airborne control despite failing the full gate; PPO did not extend
+it. Its motor standard deviation stays about0.03. Test the actual learned
+stochastic PPO policy separately at predetermined seeds66001–66004, all
+two-second hover trials, without more training. Preserve mean-action tests
+and every sampled-policy outcome. Categorical activity plus the checkpoint's
+motor distribution matches training action selection; it is not a new controller.

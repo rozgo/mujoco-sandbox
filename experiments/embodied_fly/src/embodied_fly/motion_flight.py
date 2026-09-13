@@ -98,6 +98,15 @@ def run(args):
 
         torch.set_num_threads(4)
         actor, checkpoint = load_actor(args.checkpoint, args.graph, torch.device(args.device))
+        torch.manual_seed(args.seed)
+        if args.sampling == "policy" and (
+            "log_std" not in checkpoint
+            or checkpoint["log_std"].shape != (env.model.nu,)
+            or checkpoint.get("config", {}).get("preset") != "wing_motion"
+        ):
+            raise ValueError(
+                "Policy sampling requires a full-action wing-motion PPO checkpoint"
+            )
         memory = actor.initial_state(1)
         if args.neural_view:
             from embodied_fly.neural_view import NeuralProjection
@@ -135,9 +144,19 @@ def run(args):
                         env.observation(True, wing_angles=True)[None], device=args.device
                     ),
                     memory,
+                    sample_activity=args.sampling == "policy",
                 )
             memory = result.state
-            action = result.action[0].cpu().numpy()
+            if args.sampling == "policy":
+                from embodied_fly.ppo import motor_distribution
+
+                active = torch.ones(env.model.nu, dtype=torch.bool, device=args.device)
+                distribution = motor_distribution(
+                    result, active, checkpoint["log_std"].to(args.device)
+                )
+                action = distribution.sample().tanh()[0].cpu().numpy()
+            else:
+                action = result.action[0].cpu().numpy()
             utility = result.utility_scores[0].cpu().numpy()
             if projection is not None and step % 10 == 0:
                 maps.append(projection.project(memory)[0].astype(np.float16))
@@ -188,6 +207,8 @@ def run(args):
         "completed_utc": utc_now(),
         "environment": env.report(),
         "controller": args.controller,
+        "action_selection": args.sampling if actor is not None else args.controller,
+        "sampling_seed": args.seed if actor is not None else None,
         "student_present": actor is not None,
         "teacher_present": args.controller == "reference",
         "scripted_gait_present": False,
@@ -320,6 +341,7 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint", type=Path)
     parser.add_argument("--graph", type=Path)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--sampling", choices=("mean", "policy"), default="mean")
     parser.add_argument("--seconds", type=float, default=1)
     parser.add_argument("--height", type=float, default=2)
     parser.add_argument("--speed", type=float, default=0)
