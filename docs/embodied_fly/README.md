@@ -255,3 +255,11 @@ shows teacher-controlled flight, explicitly labeled with its upstream wingbeat
 generator. The student has not learned reliable flight. Its lower offline error
 did not translate to physical success; the retained walking reference remains
 online01. Full survival behavior and multi-agent integration are still open.
+
+The [continuous-wing feedback pilot](runs/motor_flight_probe_02/SUMMARY.md) and
+[corrective flight pilot](runs/motor_flight_correction_probe_01/SUMMARY.md) retain
+their measured training costs and failed physical outcomes. Eight assisted
+correction episodes stayed airborne; unassisted student flight still failed.
+These candidates use the same 389-input graph architecture and remain diagnostic.
+Continuous wing-angle feedback is the next measured input repair; the successful
+inherited teacher and preserved student walking reference remain separately labeled.

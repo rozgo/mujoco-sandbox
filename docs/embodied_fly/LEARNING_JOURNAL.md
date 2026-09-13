@@ -1018,3 +1018,25 @@ The earlier 16-step supervised window covered only 3.2 ms. This combined pilot
 tests corrective data plus longer context and stronger retention; it cannot
 isolate which change causes any improvement. Evaluate the same teacher-free
 airborne and ground cases afterward. No extra deployed controller is added.
+
+The assisted collection completed all eight episodes with no physical/numerical
+failure: 45.966942 seconds collection, 5.629544 seconds setup, 12,000 physical
+transitions / 2.4 simulated seconds. Every capture hash, timestamp, finite state,
+actuator mixture and causal previous-executed-action input was checked on both
+machines. This is teacher-assisted data, not learned flight.
+
+The corrective pilot ran 60.676444 seconds, 82 updates and 83,968 supervised
+examples. Both airborne tests still fell. Five fixed ground cases stayed upright;
+normal walking fell. Continuous walk and stop stayed stable, with 0.0246 mm late
+stop drift, but resume toppled. Preserve all failed gates and keep online01 as
+the walking reference. The changed data/context means absolute MSE should not be
+compared directly to earlier pilots. No candidate was promoted.
+
+The clean-source angle audit over the first 30 ms of expert hover confirms
+**64–85.3% wing-angle encoder clipping**. New wing-speed feedback remains unclipped.
+Next extend the same sensory layer with six continuous angle measurements, while
+preserving the existing velocity extension and original 383-input path. Use
+zero-initialized extra columns, verify full-graph numerical migration, and verify
+single/batched physics observation agreement before a bounded learning pilot.
+This is an input-information repair, not evidence that flight will then succeed.
+Avoid further identical-data extensions without a new physical result.

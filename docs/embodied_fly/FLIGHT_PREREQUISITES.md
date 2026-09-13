@@ -205,6 +205,15 @@ tracking is degraded. The old walking reference is preserved. A bounded
 learning rate, clocks and 32 neural sequences, preserving pilot 02's Adam state.
 No success is inferred from its lower offline loss.
 
+The continuation completed 180.173966 seconds and still failed physical flight;
+continuous ground behavior regressed. A subsequent
+[corrective-data pilot](runs/motor_flight_correction_probe_01/SUMMARY.md) trained
+60.676444 seconds with longer recurrent history and stronger ground rehearsal.
+Its eight assisted collection episodes stayed airborne, but unassisted flight
+still failed and continuous resume toppled. These candidates remain diagnostic.
+The next measured input issue is wing-angle clipping under the retained walking
+normalizer. Training assistance is absent from every student acceptance test.
+
 ```sh
 uv run --project experiments/embodied_fly --locked python -m embodied_fly.retention \
   --checkpoint assets/embodied_fly/diagnostics/motor_online_01.pt \
