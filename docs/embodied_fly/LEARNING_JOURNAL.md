@@ -1927,3 +1927,11 @@ Pre-run validation:89tests pass in56.26s (15known upstreamwarnings), including
 canonical wing decoupling and both old utility-PPO and new motor-only likelihood
 paths. Ruff and diff whitespace checks pass. No physics or deployed architecture
 change is included. GPU is idle with about20GiB free before launching the pilot.
+
+Launch naming correction: `motor_ppo_01` was already used by the September12
+walking/utility PPO experiment (source082bdc2). The CLI's exclusive directory
+creation refused the new run before model setup or training. Its saved checkpoint,
+report, trajectories and archived evidence remain intact; the scratch launch log
+was reused. The newly declared canonical-body motor-only trial is named
+**ground_outcome_01**, with exactly the parameters above. No previous experiment
+is resumed or overwritten by this naming correction.
