@@ -1332,3 +1332,31 @@ cases and continuous transitions are required again before any promotion. First
 verify causal feature capture, whole-episode exclusion and unchanged upstream
 parameters, then use a bounded GPU fit and teacher-free physical flight. This is
 a declared next scope, not completed training or a claim that it will solve flight.
+
+### Declared nonlinear motor-decoder pilot
+
+Implement a causal frozen-actor feature cache for the **actual 815 motor-cell
+states**. Replay every frame of each accepted episode, preserving full variable
+lengths and independent recurrent columns; padded tails never become examples.
+Capture parent outputs and external labels separately. The decoder never receives
+raw observations or labels as inputs. Verify source/capture hashes and exclude
+whole episodes with the existing split seed 1193.
+
+Use readout01 as the parent and three corpora: original flight demonstrations,
+64 short phase-diverse starts, and all accepted `retention_online01_01` ground
+histories, including both complete stop/resume sequences. Ground loss preserves
+the parent's full outputs on those histories. Flight loss supervises six wing
+outputs with training-only axis scaling and retains the parent's other 72 outputs.
+Sample ground with probability **0.5**, otherwise choose a flight corpus uniformly;
+**25%** of flight draws come from each episode's first 25 frames / 5 ms.
+
+Fit only the **existing nonlinear motor decoder**, 815→256→78 with the existing
+LayerNorm/tanh layers: **230,572 parameters**, zero new deployed parameters.
+The encoder, intrinsic core, utility/intention interfaces and measured graph stay
+bitwise unchanged. Run **60 seconds** of RTX 4090 optimization, learning rate
+**1e-4**, batch **1,024**, retention multiplier **4**, seed **58001**. This is
+supervised decoder calibration on cached real graph states, not fresh RL or new
+physical experience. Unlike wing-row-only fits, leg outputs can change; evaluate
+both original unassisted flights, all six fixed ground cases and continuous
+walk/stop/resume before any promotion. A smaller imitation error remains
+insufficient evidence of flight or preserved walking.
