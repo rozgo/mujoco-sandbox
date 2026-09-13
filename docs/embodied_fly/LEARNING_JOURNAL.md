@@ -2310,3 +2310,15 @@ The cached-feature fit completes19.509097s total, including1.527266ssetup and17.
 Implemented wing-residual training selection in the existing online motor loop, freezing every original parameter and the feature-normalization buffers. Standard checkpoints now retain optional decoder metadata after online training. Thirteen focused tests pass in21.48s, including actual canonical three-world collection/learning/export with unchanged non-wing outputs on matched histories. The new180s/32world pilot is declared before execution, with purely actor-executed actions and current-state posture/hover labels. Fullsuite is running.
 
 The complete suite passes116tests in77.77s,25dependency warnings. Ruff and diff checks pass. Commit source, offline evidence/video, and the online declaration before remote training.
+
+### Online nonlinear readout outcome — 2026-09-13 12:28 UTC
+
+The real three-minute run completes180.376794s,174,080transitions/348.16aggregate simulated seconds,170updates in32worlds. NativeCPUphysics5kHz,RTX4090brain/learning500Hz. Setup10.172478s;collection174.544957s;optimization5.818723s;peakCUDA896,806,912bytes. The105,222readout parameters change; all original actor state and feature normalization remain bitwise unchanged. Non-wing outputs match the frozen starting actor on174,080identical histories within9.54e-7.
+
+Training retains569completed episodes:58stand(15failures),73walk(40failures),438hover(allfailed). Training timeouts and resets are not physical acceptance. A mistyped graph path caused the first evaluation launch to exit before any rollout; its directory/log are preserved separately. The corrected launch uses the same checkpoint and declared seed72011. Five-second standing/walking stayupright withvalid ground support, butwingposturestillfails;hoverfalls. No numericalwarnings. Setup6.297731s;capture31.530508s. Retention02 remains selected. Fullvideo transfer/render/audit is pending at this checkpoint.
+
+### Archived review — 2026-09-13 12:31:30 UTC
+
+Both completed training films are fully decoded, visually inspected and opened. The online film is15s/750frames/1600×900/50fps/1×;render/encode60.252149s. All493training failure traces and all7500evaluation frames are hash-verified, finite, bounded and causal. Original actor state and feature normalization remain unchanged. The complete116-test suite passes; GitLFSintegrity passes. The motor guide now identifies retention02 and links the current failed diagnostics rather than the older ground-outcome choice.
+
+This continuation made progress: implemented/tested nonlinear readout learning and online decoder selection, executed two measured GPU learning runs, ran two complete physical evaluations, verified and opened both films, and preserved the failures. It did not produce an accepted motor controller. No external blocker exists. The full motor/utility/multi-fly goal remains active. Further work must resolve actual-state wing feedback and flight, rather than treating low recorded fitting error as acceptance.

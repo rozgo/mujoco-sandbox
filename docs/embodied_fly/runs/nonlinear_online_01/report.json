@@ -1,0 +1,6303 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T12:22:42.269456+00:00",
+    "source_commit": "f145777038738856dad929d1c8650c816c08657d",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "e221e38b2d551c55acfa3a91454b384a1fc4ada5fc7ddc6d207f4ad3a2fee3a1",
+      "src/embodied_fly/body.py": "79247ee194af39220a7d0665f8a815ad8a4f6e88844c96a8c509d5be127504e7",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "a8960f91fd50d9362101e5cd762e085ec4f5853c4ca0ea43d9ddbcc0eecdc5ac",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f0818b436ab8470abf5676de799c92e75e322bde7c72b53dacdebc832b46cdce",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "ea9f6daeca9ced837112da368c06e97261fa8d3d8e787f93cb12d40fa395d6b5",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "943c7ba8e0d56882dda257d29ef8d29ff69314bfcc2d5da03136d94d94858ffb",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "f1fe1b4c504d2cc0635fff2bff4c5f0512676b3a7aa9ebce1aa8d4d1ed43e6be",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "69ad047c9867b347b45f66e97c9b053f0179967abcb468882f47e9e135963411",
+      "src/embodied_fly/motor_parameter_subset.py": "e613bf22a0302b66addb66c367b12177b183d439767da06923230fad4ef68fc4",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "b78ad46d0101fbe97de517399eb32282a1f8013577dd58c6209f99e5b2af01c6",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "83e036ac378aef32c052a9a7a7d54789fc9bcf20adfcb7795071d63cc9a0b9fd",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "fcb6bc7c8a9dfd94d6cbdde992f1d5119a267a5ec3c7dcb79cd572ee82d1c1f2",
+      "src/embodied_fly/ppo.py": "de738e5822279322717eaa076c2d3ee10d9b1c51629a75a9e92f0ba9dfe86508",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "e2aa31f23394c48676020217ca5ee55aa7bdce3363c83a5107a54045a3fb6a5e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "d27d896cef957e178303a6be3a748bfd5ea2f682e17855fd945b48779403aeab",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "851c0d60e501273dce24bbe497864402197151610e6eecb9831c364e96474108",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "started_utc": "2026-09-13T12:22:52.317829+00:00",
+  "completed_utc": "2026-09-13T12:25:52.766122+00:00",
+  "config": {
+    "mode": "train",
+    "hover_reference": "state",
+    "device": "cuda",
+    "seconds": 180.0,
+    "seed": 93002,
+    "worlds": 32,
+    "threads": 16,
+    "sequence": 32,
+    "lr": 0.0003,
+    "trainable_subset": "wing-residual",
+    "teacher_mix": 0.0,
+    "hover_teacher_mix": 0.0,
+    "retain_ground": true,
+    "ground_retention_weight": 4.0,
+    "ground_wing_loss": 10.0,
+    "wing_response_loss": 0.0,
+    "wing_response_worlds": 8,
+    "ground_posture": true,
+    "episode_seconds": 2.0,
+    "task_set": "all",
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "neural_view": false,
+    "internal_steps": 4,
+    "state_hover_recipe": {
+      "frequency_hz": 12.0,
+      "energy_gain_per_s": 60.0,
+      "energy_floor_rad": 0.05,
+      "startup_radius_fraction": 0.1,
+      "startup_velocity_time_s": 0.01,
+      "amplitude_height_gain_rad_per_cm": 0.4,
+      "amplitude_vertical_speed_gain": 0.02,
+      "clock_or_external_phase": false,
+      "deployed_module": false
+    }
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "5714889570466138e23e99240d97009e5dc06f1f115f22a144cfe446340dfdd8",
+    "preset": "wing_motion",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded"
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "parent_checkpoint_sha256": "9a39a8011eeac00a6bc5be600176a83558fea1425a298735733af6c121bfb049",
+  "checkpoint_sha256": "e3248b4db2adf40a26e94960674fbf2568d67fbfc7fdcd2aa0c2a4348761861c",
+  "model_sha256": "50bf15b9dcaf88e2da2bacfbc7eedad676759bf623936b03e25a678b8e27f7f6",
+  "setup_seconds": 10.17247810214758,
+  "training_seconds": 180.3767942013219,
+  "collection_forward_seconds": 174.54495707526803,
+  "backward_optimization_seconds": 5.818722856231034,
+  "updates": 170,
+  "transitions": 174080,
+  "aggregate_simulated_seconds": 348.16,
+  "parallel_physics_worlds": 32,
+  "worlds_by_task": {
+    "stand": 11,
+    "walk": 11,
+    "hover": 10
+  },
+  "physics_backend": "native CPU MuJoCo/mjbatch",
+  "brain_device": "cuda",
+  "physics_hz": 5000,
+  "control_hz": 500,
+  "neurons": 166700,
+  "connections": 25582938,
+  "actor_parameters": 2516146,
+  "trainable_parameters": 105222,
+  "peak_cuda_allocated_bytes": 896806912,
+  "core_gradient_audit": null,
+  "parameter_subset": {
+    "mode": "wing-residual",
+    "effective_trainable_parameters": 105222,
+    "upstream_parameters_and_buffers_unchanged": true,
+    "nonwing_output_rows_unchanged": true,
+    "all_original_actor_state_unchanged": true,
+    "feature_normalization_unchanged": true,
+    "selected_parameter_changes_l2": {
+      "wing_residual.network.0.bias": 0.04173003509640694,
+      "wing_residual.network.0.weight": 1.4107497930526733,
+      "wing_residual.network.2.bias": 0.005622491240501404,
+      "wing_residual.network.2.weight": 0.07615604251623154
+    },
+    "runtime_action_mask": false,
+    "runtime_readout": "same optional feedforward decoder in the actor",
+    "same_history_nonwing_action_max_delta": 9.5367431640625e-07,
+    "same_history_world_actions_checked": 174080
+  },
+  "subset_gradient_audit": {
+    "wing_residual.network.0.weight": {
+      "gradient_l2": 0.31641077995300293
+    },
+    "wing_residual.network.0.bias": {
+      "gradient_l2": 0.010308509692549706
+    },
+    "wing_residual.network.2.weight": {
+      "gradient_l2": 1.169508457183838
+    },
+    "wing_residual.network.2.bias": {
+      "gradient_l2": 0.1181780993938446
+    }
+  },
+  "core_parameter_changes": {
+    "excitability": 0.0,
+    "leak": 0.0,
+    "bias": 0.0
+  },
+  "completed_episodes": [
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "fcdf7fd3789626f5891286c72ee42e0af93444f84ca26054338966d0d0d02109",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.278,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "3f1d5f971964e44ca591fd2281ca0b6daff20546423dca62782310aa292ba1bb",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "2cbd1b9515ae20021a7964d34ee7ba7bc2b7e80785cc3dac79b7d10b59248d6f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "ea0162bc4e8d1c3befc89d14c5d4632f72c38bcc45ac5ec207a2c5c14da54da5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "81274c66d083f05d5ea687d2c8276050f9f2f8b3981a3cc00903f81d05c3ca8d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00005.npz",
+        "sha256": "eacd73c5c2fa606a248d75008959786d7609af9d61b90de07e874f68bcfee00a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00006.npz",
+        "sha256": "1847f516e6ec2489234119af3be610231a270c1094aa8165ba6347b7eb32a2ae",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00007.npz",
+        "sha256": "ca665e1a77177f4b63c31c773002ddc40912581034719d87dce7e945f98eb19a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00008.npz",
+        "sha256": "fbe88085f2a670ba0f5bfc168883ea2787b3a9dfcc783d8f635daf879b3e2f3e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00009.npz",
+        "sha256": "1120857bb86690b3b333e61086c81105c3a2945a57da06d4ff1e3ae4742a6e9c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00010.npz",
+        "sha256": "05ca8f9651241b4ba56638be07188e2ac65df0b79d22a4cf9ecc0b2fcdedf321",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00011.npz",
+        "sha256": "afcde3fe3d97f22f8af014a42668d742ff7719b5e762b28c006c4c53d726112d",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.098,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00012.npz",
+        "sha256": "2a89b96840ca615e15247fb39d697a4f74e206be08fe6f72d4fdf0b27845253b",
+        "frames": 49
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00013.npz",
+        "sha256": "609d736229aa6c4b9bfa97f2c8d83bae69d5f0b14ae4fa1a11b2d350b99e8e81",
+        "frames": 48
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00014.npz",
+        "sha256": "9dc11fe16170d5c76f829c68b9a4bccb41303aca3d887410bdd7bb9aba6fa765",
+        "frames": 47
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.1,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00015.npz",
+        "sha256": "b5685fa2bdb686aa2a7dfd27f447cee483f2ed0eb00360f008d477f1a806ec17",
+        "frames": 50
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00016.npz",
+        "sha256": "ba0ca91306df343eb3330bfbb2e040b652e761045175af1c3b6ffb7ef588db68",
+        "frames": 47
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00017.npz",
+        "sha256": "0b07d564878619aaaf17b6dc5afefe15a6029e101975ea6a06561ce477414e33",
+        "frames": 48
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.1,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00018.npz",
+        "sha256": "20c5da2882dacebafc225db9dba34f111264c9ab13475041f101626394af43c2",
+        "frames": 50
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.098,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00019.npz",
+        "sha256": "4977a3364f417b2026b78a7ac34458c296f6b41e750c67dca38bca12776ed705",
+        "frames": 49
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00020.npz",
+        "sha256": "eb24681d3f85aba52aa0293780d6c8b9b37d28be69594577204d39366e6c6ce4",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00021.npz",
+        "sha256": "3a5fcc11e99f4edfbd9d1df6180c6cd09cd134fcba0a6e4ad4c810d710c91b92",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00022.npz",
+        "sha256": "1ff88030e34d4a8b0dbaea09e60f1dcb2128dc1ec7a8c2861e0274e8cbaf9f6c",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08600000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00023.npz",
+        "sha256": "524497508c424cfcf8146e59d730aa0c58ee4031f4d64c463a0dc7fcb8cc54a2",
+        "frames": 43
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00024.npz",
+        "sha256": "3098644414e6456756c04f1958d4cdfd3a2f0abd2eff10555fbc67f77f7a6675",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00025.npz",
+        "sha256": "9822364fdc74e7c8c2f9c62cc23749a32d188cda9a09c544225792ca78ba1d5c",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00026.npz",
+        "sha256": "a0cee76e0f9f8c37d8fbb5094bb5ffcea75e2c574d5d582a5393a41327313c91",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08600000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00027.npz",
+        "sha256": "a2f80edf7b0f9f27f5372573560565c870b8f4a8c811f2d5ff699da8e53d52a9",
+        "frames": 43
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00028.npz",
+        "sha256": "4edb8081bffcfabe52b04cf14c5f3a24969245c63eaa22f921d403e52028097e",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00029.npz",
+        "sha256": "9096589e441973859d983c122dc277e2e078892204fd8888b049e501a1f8815c",
+        "frames": 44
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.528,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00030.npz",
+        "sha256": "5187ac5059d01046da5c35c8ca5f24f06ab1de97c96c07045531bea64ec5cd9c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00031.npz",
+        "sha256": "d0f9658f191f14b75c825b5dbd803638488097acd2a8dcf8c00d090faa988c9f",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00032.npz",
+        "sha256": "c48e6342239c98b7bc959aa35bebbd77e96def883dc3f8dfe4d6b10fdbfdb8b6",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00033.npz",
+        "sha256": "483dc9cb598994e4ee0a5fec79f88387b29041de2c379990619ac072cb1f91a5",
+        "frames": 37
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.084,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00034.npz",
+        "sha256": "1fbaaf67d21faeec669c1ef366eae3aae029fe2b60625a9104a9beaa33b40204",
+        "frames": 42
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00035.npz",
+        "sha256": "d8cc40d1d8af0d8de375e374cd0aadde08460211085d4932124cbfbc9d2135b5",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00036.npz",
+        "sha256": "ab26ee1602e14d22c3dc29da8ac4ea65c1ba882c93fe9181c061da12351db1f1",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00037.npz",
+        "sha256": "102b8e286dbd9ed92291e39fddec8af4a1ecd6efef9d582355224fe9dfd84a4f",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.084,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00038.npz",
+        "sha256": "2350ec2ab276e63ad748f86b472d983017a9ac85f96678b959eed969037c3772",
+        "frames": 42
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00039.npz",
+        "sha256": "f40c1d74e601fad4c753789e9c23d919d39d9be56e4a3cc43363a6b34cd11714",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00040.npz",
+        "sha256": "3986439547917c6ddd11aeeec800b05e5be01bcab095ed083d222c7de4de97b9",
+        "frames": 41
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.5760000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00041.npz",
+        "sha256": "8f31c644a98eb8d32f5af2df50c3d6cf33ea88c62ac04cfbae70cb644c556025",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00042.npz",
+        "sha256": "675646e80d2e2bad14d9ec10deb982dfdd8e5114568d8d143dd1c2fa7cea2bdb",
+        "frames": 37
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.61,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00043.npz",
+        "sha256": "499e1a2cf690b58d5396c9fcac46a02575bf644eaaf96cb1d4c88485db24f508",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00044.npz",
+        "sha256": "40beda9dccfe27964a70c3e43824a55b6b7ba1de17eb4f3d32487c80dbd0bda1",
+        "frames": 37
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00045.npz",
+        "sha256": "28aef65fe528d901e2cd3489cc64fb9bf0647cd8c34c898ce3ea914da6aff0f6",
+        "frames": 37
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00046.npz",
+        "sha256": "d1005b705a3ccd2cf9543b22a518f0bff0e3ebcb3a30529026a485e4be79ad70",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00047.npz",
+        "sha256": "edbc2eaf6f44ef8dbc950920083f6efcb4d8c783ee2403743b810a6cbb0c6350",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00048.npz",
+        "sha256": "8f4dae80b0aeb60804aa5d27c7d921a648a2756bd500b5c739573e9ff16e884e",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00049.npz",
+        "sha256": "84bafc990c9e565f81ba4ab93e51701fcbbb931c0596a5a95e59ad288c84489a",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00050.npz",
+        "sha256": "6966ddfbe98d91d04a7088920facd3387d149bc706cd3c7c56c2b1ec82c34ec4",
+        "frames": 37
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.626,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00051.npz",
+        "sha256": "b642153a77e6e8f9ad9b29ae5069681db0bd45ce73158af7843f82a29543b2e3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.626,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00052.npz",
+        "sha256": "75b6a7d26f27689f086fb473b3a26ec2be72d888fd3f5dd1634d03816dd5838b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00053.npz",
+        "sha256": "e524096631166b54caa0828dc51517195dcf0330c45666d84666738aea6bc355",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08600000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00054.npz",
+        "sha256": "41ac9f8b0f2145d3383ecf22c2712ebbbfc20c85b3e89a4e09dff78390516dd0",
+        "frames": 43
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00055.npz",
+        "sha256": "d37262810c541c5c58f5fd457ae2e9e00fd2c6ddda70ae96674524790f07d0bd",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00056.npz",
+        "sha256": "26894930ba8d32a7e68b040c73ac0a4e7ffd6f6999ff850573ff282d98c22eb9",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00057.npz",
+        "sha256": "17e93e26cdfb53b47c874af6fac6241be94b4f0f8a48c46490ddb4636cdd2bcc",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00058.npz",
+        "sha256": "b5c7c6e8d681fc12a5629de4f836a36787c4edb6cbf96a0c9be1e32fa69606ab",
+        "frames": 37
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00059.npz",
+        "sha256": "2de537772ba92a58b9391c742a104b5af04eb9bbe84f52a6638f8a6563177381",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00060.npz",
+        "sha256": "8635a729d0463702d6c4b6d34186544b6d9e9c4c0d6111c27627cf1490754b7c",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00061.npz",
+        "sha256": "cae0a00d98283cbae013cc0c023618f385e2c41fcfd40a13e396ce95bd72e172",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.074,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00062.npz",
+        "sha256": "ed1b941e0f93ed0c1fe49df1590bcd248af77e271a7b3bc0fead2ed3662a2a48",
+        "frames": 37
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08600000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00063.npz",
+        "sha256": "ea5930f1b17f0cbbc490cd8c67bea1cf869c25818f842f5534c9d3bf6170796e",
+        "frames": 43
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08600000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00064.npz",
+        "sha256": "13c73ace9dc6b834adb88c370ec84f160256201d79b6fc00ad0b50618fc9ec65",
+        "frames": 43
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00065.npz",
+        "sha256": "772448676a1bac6e7b6d2a72417521d7dbad37fc65182783f04e2c7790bafa0b",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00066.npz",
+        "sha256": "99850a3ef2d8f178f7c4cd2da736b2495c78e4b2e246efb37eeced76c7d76ac6",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00067.npz",
+        "sha256": "fd6cf881cefb295384f39bd794fd55fb0607b113067aa37783d85cc9bc08d141",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00068.npz",
+        "sha256": "bad8ff5031e8a70adf983ba7742b81e9bf13579e836da803bfa074966e5b4695",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00069.npz",
+        "sha256": "6cc4a7c0fa5313ef6508c61d08511cf1a18c240b14b95dedcb01d26731e35312",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.1,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00070.npz",
+        "sha256": "00de10bd3aa807911fae4020c83bc1f846b6886ef0a60178b4df55f145bc63b2",
+        "frames": 50
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.112,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00071.npz",
+        "sha256": "d97dc52bfce867616715434679c0ec74f901f4e6a83e8af1b6f6968123c599d5",
+        "frames": 56
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.108,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00072.npz",
+        "sha256": "68bc69090a908a3d89e2d99d0516c884176c60b6d2bb9707a6a7f9784371d8e2",
+        "frames": 54
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.112,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00073.npz",
+        "sha256": "be2b133753868bd6c6a902239d8de2c123847f8bf980af880658338b9d507bdf",
+        "frames": 56
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00074.npz",
+        "sha256": "b519788955869d950e9fb62da47e4aa3fa5a3682083fea56beb591ddf9408d42",
+        "frames": 58
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.922,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00075.npz",
+        "sha256": "a05002d088d0e3c18f666ad1ac721eb97a6deea9e76e15f07d7fff4c7fcf3ca5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.342,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00076.npz",
+        "sha256": "9c3e2a62d625991f164ba8648eaecfe28a289c72eebae7b5dcb248eeb4fe85e6",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.342,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00077.npz",
+        "sha256": "14a7eab9e2907e5497aa109efc75b89e639a93dc43b93d11b2dad55dfdf94448",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.352,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00078.npz",
+        "sha256": "ed0632091a5c7e03b4265a02dca437f4cc2c56a3753d7748a6d9d7e2e88dd235",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00079.npz",
+        "sha256": "320bd952868e41edf3b0fa205f2f270bce44a912ae6db85340bed434037bdd5a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.336,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00080.npz",
+        "sha256": "609ebcdbb370e729b6cbc9db6037f8cb9bfdf39649e3312423b72bd20355fa85",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00081.npz",
+        "sha256": "49c18c9099d8766c4ecb8e774ea68f028576c2c50baa82993257f1cea39f6a64",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.544,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00082.npz",
+        "sha256": "75797ea2c3e2d21e659d03012b1305d13f40861455c51768306845c02a8aa653",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.162,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00083.npz",
+        "sha256": "a570285dec6b7f426894a5af3e7c13c6f1bb6ba6b1ee5f138d970576e517a485",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00084.npz",
+        "sha256": "c88760455a8d024ff01350795367e25090cf3f900ca8cc193d4d8f060ff7bc44",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.406,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00085.npz",
+        "sha256": "96dd11b43570d9fa29bdfa355b9e833f78cc39b720c2fcd9b0c62a658e89cead",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.36,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00086.npz",
+        "sha256": "41d9346bdd10eb68b8c2de5ea4d4aa8e7bb6d2e1631f8c23054935ca93fdafb5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.198,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00087.npz",
+        "sha256": "356af1cc7f0a426d1eb80c7b29058f81ca3967b2c6c99bb6ff4c3ea4e75dc9c0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00088.npz",
+        "sha256": "e4fff1195e090dc3c2b19a761caf75d5db8adb3e1ee37f5a90e28ba11e772def",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.084,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00089.npz",
+        "sha256": "3ef1f896827ef805a17ba4475ebb0f86a7036803f81c6579104c5aa68ea3115a",
+        "frames": 42
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00090.npz",
+        "sha256": "cddc2be55d6e05e4d5fb73dec0a472f87f95b9abd79857dca58d57647ddc532e",
+        "frames": 47
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.22,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00091.npz",
+        "sha256": "ff9485143adb3fe781ff346407e3e9812153f5b2d1ebb2709a827dce479446f7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00092.npz",
+        "sha256": "1378beab4437c7bc7394a95fbbbf980e5d7a1be7507fadef31bec64e0a38812e",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00093.npz",
+        "sha256": "3505857a97d24434e5c4781ffc727892fff0b2bd04f7c4a646e3c219edd75efc",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.446,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00094.npz",
+        "sha256": "6470a2f30117d722a20d49c12e6f5b39eaf506ae6713b0de2ff22f24fcf2b36f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00095.npz",
+        "sha256": "0fca0f5a4e361cbc5afdfb54be793dd4b486dee8afabdaf8030e9310c15cb920",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00096.npz",
+        "sha256": "50027e3c78f63e6d8955ede0bd2e4c220ba7f91b5605f4cb21b322099ee50657",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00097.npz",
+        "sha256": "92f7aa3ebf7b68cf5c5b62ebca0115215c0b9720d49f8ad8d46d0ac9c41f88b7",
+        "frames": 40
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.676,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00098.npz",
+        "sha256": "a5799e44bc04419394f5f5e51dd22a52d1eca0b495aa670950d0a26088a8e578",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.258,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00099.npz",
+        "sha256": "2b206d42353299f037915ed924c6a73c73f897b039940fe23e13523d1c53ef83",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00100.npz",
+        "sha256": "5844b0060851ba769e47eb5576788abe36cdbf6538a1af82fbd6e1a38d050014",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00101.npz",
+        "sha256": "e6108d4cd19a0cc8256da3a34aaab2e488ca8ffbc81d34ac5d81300c1176eccf",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00102.npz",
+        "sha256": "74afaab3d2d2ca1735ae45d6615593c372767a32e0a025fecad9da22f7b99f04",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00103.npz",
+        "sha256": "2da903be98ab5bfe9df879b4412cfe555af78cc1b344672e81aa2b86f9d6e765",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00104.npz",
+        "sha256": "d3533efe626a663a8165c21e7647e81d689cdf26cf4406c8f261866985fca8c4",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.076,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00105.npz",
+        "sha256": "de6545058ba6d5b87e337b121a20cb3b68f0e59e6aeae52ad384ce2e16ccc635",
+        "frames": 38
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00106.npz",
+        "sha256": "ee44b4435228d8226fe84c8687c7fd8819b58fc30efae94cb1bac9e3c2e206bf",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.078,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00107.npz",
+        "sha256": "644aba3336db2531b9938116ea4084c1cbdc68c808b8b67cf840634468f1cf76",
+        "frames": 39
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.084,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00108.npz",
+        "sha256": "aad7fec64278fcfe36271d73efaba83478cd00b92643322d77bc6729e33890e1",
+        "frames": 42
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.08,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00109.npz",
+        "sha256": "649931e570fee6745088f120d98a2fd738f8ecd5dd763ef616ea683fb8da5127",
+        "frames": 40
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00110.npz",
+        "sha256": "fb35c715c80d22f0dd4b60282041fb9ea1f22813094a2ae12e30a08ade5c3ada",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00111.npz",
+        "sha256": "6e127757bc3a55a594ec0dcb5afcd2db76b9af20bd8c5e76aacdfab7cac79432",
+        "frames": 48
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.098,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00112.npz",
+        "sha256": "43e2c35137151f39322b6e9f49603f980dc76aaf513dda50c8d415a4841eb22a",
+        "frames": 49
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.848,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00113.npz",
+        "sha256": "1f86660df4cf57cd44fd56ec5edf1a08d6c631e5d44de277cbdcd763b5d14c88",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00114.npz",
+        "sha256": "a301caeaf8826e80103ca77aaf2c808c07c4d07dfe0b66fcb31a980590e86ec7",
+        "frames": 48
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00115.npz",
+        "sha256": "81e339ded14f1ee7b4ea3a5a51206f7a3118e407fe0349c2e86dc055b33a6863",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00116.npz",
+        "sha256": "d4f468240c2a77c5199bf477cb94fc70c129bf3b5cbcf47a09ad7518245c381e",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00117.npz",
+        "sha256": "852828f1616b47c7fa609e6e0761d89dceccca064d1d1dcc134e15beca2b719a",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00118.npz",
+        "sha256": "7ea16407e4808004b01d5b8e14ccb3e187391f2d25f215b01a3b41bb140de4bd",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00119.npz",
+        "sha256": "9eea0a77a93ec5e86f25ac8662ce4ce93eda2c937a5e9280182c73a03a59c861",
+        "frames": 47
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00120.npz",
+        "sha256": "98b60f36d6d1af0b4d2de7dd88b27c96e0f7bd6403115772b1a5f6a6e84019b6",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00121.npz",
+        "sha256": "cf5b6d5f76ba604c7684b511d4161cebed12bf8d022dc00047af65f14588d39d",
+        "frames": 41
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00122.npz",
+        "sha256": "3693899485ba8bb567782fc1f3ed8707a166a6093d4bff225533c737d92c31f9",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00123.npz",
+        "sha256": "53113862d52f31c35d057c4c75b30f4c3b017bededbdf04d9d12ee5bfa67e972",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.082,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00124.npz",
+        "sha256": "a21b84c99300f82aabccfb181923273b2a243169e8a6cc70ac8da6ef65546adf",
+        "frames": 41
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.85,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00125.npz",
+        "sha256": "d1dd714979728181cc2b36c83ae72f7d6989c27e6fcbba3141a362cf91e7b408",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00126.npz",
+        "sha256": "0d938f05951247a75c901b5bec40ec4635b4c96f39abcf278ba2c97c9d6ea85b",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10400000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00127.npz",
+        "sha256": "1fda7192bfa59a4657011bf33846447d4fa4914735ae8a2901e4c6aa5cf57fe7",
+        "frames": 52
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00128.npz",
+        "sha256": "3d01dbe2c4bd4e4399da9343fc9421f606663c64ff9d206d38a8b828604c46a0",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00129.npz",
+        "sha256": "a079d7ee762d96de9f2e49f07cb14655ef8101f94d69e815639b02b351cdb091",
+        "frames": 48
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.52,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00130.npz",
+        "sha256": "5b601b3433ebf7c180e45d3e17bd6728f5279e6fc88a20a6c29370958a2622c1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00131.npz",
+        "sha256": "4497c16741c498277460d5650519aee56f900bd738bef1903ad0cb446f5ea882",
+        "frames": 48
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00132.npz",
+        "sha256": "47b8a63c96f4e03fb79ee37eee0ff1a23d1b6aa48602e05cd03433554ce5e567",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00133.npz",
+        "sha256": "a973322b4a40a5ca449eccd7b34a2d6aa62242e8985064e29be988c1dfeb22b0",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.088,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00134.npz",
+        "sha256": "d8b24a7b9353a5bab274e1b55e56b6f8c10bef26c47c2964633ac42bc16eb1d4",
+        "frames": 44
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00135.npz",
+        "sha256": "96f72a94e85851be52ecf6c9c35571c706cfa1afaba4e625aa1bb4bd7493f2c4",
+        "frames": 47
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.098,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00136.npz",
+        "sha256": "6afeeeac38e298e9053b8248ea77e06ae4703c1a0fd992c6e1b480598bcb64bf",
+        "frames": 49
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.094,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00137.npz",
+        "sha256": "2e10a7df6b59a596e0bc701ec7a6175f939ae665a198fe9cb1ff6c839595319e",
+        "frames": 47
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00138.npz",
+        "sha256": "25f17c579dc44ccd460ec91b57ce384bcf9de405f727666022ab12493102e44c",
+        "frames": 45
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.098,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00139.npz",
+        "sha256": "db69c35aafc470484eaeb83364abd39ebb8299352c9fc25ff5175f16af22daba",
+        "frames": 49
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.092,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00140.npz",
+        "sha256": "6550e1264e798fae643674ca8652f5940646c651674b7976215e75124d8c5abe",
+        "frames": 46
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.09,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00141.npz",
+        "sha256": "92a551df6e701b44a43f42a7e21cc3149e6cd1454e7ec9676e6fb204e30325d5",
+        "frames": 45
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.624,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00142.npz",
+        "sha256": "94c3376be2d57760f9e4f49ddac612615f48ef11622a2e7e4c6adebe507bee67",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00143.npz",
+        "sha256": "a941fe9abaffc3eb34501a7ecfcc0e5245afd03216c6e945c1b40c4aa022add5",
+        "frames": 53
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.6340000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00144.npz",
+        "sha256": "31a5bb27514d545aca3725afb174139ec90dd5d720a7e1c81803e3a2a38bf55a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00145.npz",
+        "sha256": "fba919a32effd4223db16b702bca0a77819cef800adaded19b51d4bbd798e966",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00146.npz",
+        "sha256": "5f6d97bff05f2cd20ab0a132386fb94cdd91b2f3f47f1b8a24e05c36452663f9",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00147.npz",
+        "sha256": "f011c84fe5f1811ca8f535736954c50ae13bc32148cbaaf038fb7251df652bc3",
+        "frames": 53
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.6640000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00148.npz",
+        "sha256": "77498dce988bd12e55aee717fc00b7b42b6a66b2c27b41d471f460107d86d80e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00149.npz",
+        "sha256": "c808b4576dfd8ef5ea8eb073ae42832562885a72b865b8e02a6a610eadee84d3",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.096,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00150.npz",
+        "sha256": "e9a2f5ce9537daf13b81d99f250ad3d388f4e1a8a0579af9c79cc18bd3f6b294",
+        "frames": 48
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.69,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00151.npz",
+        "sha256": "2d88ddc320358536db3e8879fb16f9d05fe85c50c627c6439040a5ac29b0b92b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00152.npz",
+        "sha256": "57712f6bc43fd87a544e10c86abef480801a5b1c948d1147342e5dfe914e8ccf",
+        "frames": 53
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.696,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00153.npz",
+        "sha256": "0b1cd5cce94fe4c9fe48c0d832655356311f79c2412d2360d0a0a93da37bd7af",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.108,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00154.npz",
+        "sha256": "efee376b0ca3833cbe73c2c8f6abf51574f0c305549c03deab03a0d150c59bbc",
+        "frames": 54
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00155.npz",
+        "sha256": "2c8fdf354ea64a9a5b98acb7c04cbc4c0b83a75abcbb58a219b0a0126e1fffcd",
+        "frames": 55
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00156.npz",
+        "sha256": "e9806e3fa2805dae6df85b3fe6ceb3c89ee9766b2c9500ad360c04c4a88b0a4c",
+        "frames": 55
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.732,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00157.npz",
+        "sha256": "b6e6d692905d616ea0b29b8135465be398f1f78b465964b54acd2087ec257fbb",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00158.npz",
+        "sha256": "c394446751f4d68a91c1022f6e541552e975abce0824b7cda85d7df46f81f921",
+        "frames": 51
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.752,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00159.npz",
+        "sha256": "a006d6f412b0baff26c1aaef7624c0112b5830c79790890a07962237682d4f05",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.1,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00160.npz",
+        "sha256": "ff4f8ccee21772c309d1d647e7d3f7c884b43c7b8a4d571231cad59e824edc64",
+        "frames": 50
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.112,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00161.npz",
+        "sha256": "0bd21f5d0fffe4c23a77a656c0102d98ac96dbc12f370264f426dcf8d045b714",
+        "frames": 56
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00162.npz",
+        "sha256": "b054883454c4c78eacaa5243e44cda7d440373c949473b42120730372012ac30",
+        "frames": 53
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00163.npz",
+        "sha256": "f5fa446da6d1268a61dbe888c63b603ef17dcb78eed7eb0610966b6ce2de9185",
+        "frames": 57
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.1,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00164.npz",
+        "sha256": "36eb9a60488f246056b659d2d3d6c6bed389fa0f405ca57b2090eea8527ded95",
+        "frames": 50
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00165.npz",
+        "sha256": "3dd20801969e971228a05b6cff2e0062367f46742a96de6ffafccc00ca35baa2",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00166.npz",
+        "sha256": "9b9c3a77c880558c8b803f723a871cfd714a4466e0d29c8436e4bc46570d25c8",
+        "frames": 57
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.814,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00167.npz",
+        "sha256": "be8943d72fa1893828d5f029fc2942b9fa364e683729f6c93aa84273c5553b4f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00168.npz",
+        "sha256": "1d404470452f1ee103febab4e733fc8f61647ebe511ef9d8b70de04c20cfa661",
+        "frames": 58
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.834,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00169.npz",
+        "sha256": "92b0fcda78f0ab6fc91d168adfc14627c87f9a6a6b7eb1b24e671d7042d53f51",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00170.npz",
+        "sha256": "45e46d7b3abb8822a63fdb1ab6f48a162c08853aa9a96b509b5bb9889e8ceb87",
+        "frames": 58
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.112,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00171.npz",
+        "sha256": "b5d4d7655cacf5e04033a7953cd8ac10f8c108c6000e4e8365bf1ec84157c791",
+        "frames": 56
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00172.npz",
+        "sha256": "d4dfd16b9b02ed4cd5a977d80f41b246d4c2b693e1ad4ca681f6fcab2889cec7",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.12,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00173.npz",
+        "sha256": "b92cdaf8ccf93931fdabf446507a821cfe5fa10d8103267dc46e74fc7509c112",
+        "frames": 60
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00174.npz",
+        "sha256": "1e7420b05d773126277a689dd8b7afc09c5f7e9f46c1027d5c73ec7e2a839c02",
+        "frames": 57
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00175.npz",
+        "sha256": "2cf8e9f4e719f2a6618663b02887366f9edad20b11f4f05d408dd671291d8a1e",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.128,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00176.npz",
+        "sha256": "6703ab66e14d473d44b2f1b04365363510b5e4b6f8a8fdc7e7304a98f6324b54",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00177.npz",
+        "sha256": "0a27ffb6cf37e4d68687de9386cbffa255838e6076ba099f540e88ce3d559058",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00178.npz",
+        "sha256": "a5015d55d626f7504de1e483b4850c735d39ace0b048dac4acb59df43d46cd05",
+        "frames": 57
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.93,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00179.npz",
+        "sha256": "e37acb099a0c30b860efb40d5035b68f22da73d1c0ce668a5a9cb8f45143829d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00180.npz",
+        "sha256": "15894e2156ece61fe674c0ac407585b2d2978d165deabd79c344f5b316632534",
+        "frames": 55
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00181.npz",
+        "sha256": "95fbf556d635fbf3c434e0c4980f26cad56f565f3e54f50f7f172e38dba8a309",
+        "frames": 55
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.13,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00182.npz",
+        "sha256": "32a30ace2cf4029cead074e245bc8cc3210516958ed32a6e6ff4d18f852982b9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.122,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00183.npz",
+        "sha256": "98fdc45d22ce5605530a5eb769aab17abf679750a1d6a661bc3dcb974894c59d",
+        "frames": 61
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 0.36,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00184.npz",
+        "sha256": "24c28a3cd7731ff2dba2de57c1f4ca51543d6c9bf6e7505bf2de5c7862e83651",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00185.npz",
+        "sha256": "217359ee4ecbd97cbe92233c7a4ba84d195c62edd2da4c3f112102cc59103b59",
+        "frames": 57
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11800000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00187.npz",
+        "sha256": "f6114798923f518ff0b166f11926c117029bebc8e87234bf8e4cae4613370543",
+        "frames": 59
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00188.npz",
+        "sha256": "e2ca7ffd37dd704d5d0d58e8df6d4396b91bfd632deba49ddadd44df261822d4",
+        "frames": 58
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.124,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00189.npz",
+        "sha256": "685c599b151458a2f0551e40724a96ea99ae3f42e6286010bcda450b3cd56cda",
+        "frames": 62
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.132,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00190.npz",
+        "sha256": "e2022060be3b525b66caed1152665ae6ca9a54d68ecbcd6355903a38819b94a8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.138,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00191.npz",
+        "sha256": "073cdde3dde156618baec4e680bf879a0929a98336c8b314b2bcefa2fa360ca1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11800000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00192.npz",
+        "sha256": "5763793745daf10e7ab4b371b0cfe3a0c9bd30216a69c0576474168f0f3955bd",
+        "frames": 59
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.844,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00193.npz",
+        "sha256": "1e8568a09ae4fbb4a599e342938071263c9361b1eec46789ef2b167ecaf5abba",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.12,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00194.npz",
+        "sha256": "3705c3a40b8e3d72a770cb51a67db5108aa62cb894386a4b5b46d60803416099",
+        "frames": 60
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00195.npz",
+        "sha256": "7407f1ae6f3807a5257e79a2b676fa06debf203552275925a0f5faf3f1f2b921",
+        "frames": 58
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.9,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00196.npz",
+        "sha256": "ad881a5cb3233ea6d2c5e3b431f2e3a169670688f111544df3472a5c16df20d5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 0.47800000000000004,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00197.npz",
+        "sha256": "e894b6e181ebb575b6b537d01f2d5ecba87b509dd192ebad24e486b644e8ad36",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00198.npz",
+        "sha256": "3890019d53c41e505dec374c55a0f145999b7ea1929008bef07eec345aece5b3",
+        "frames": 53
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.126,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00199.npz",
+        "sha256": "031555d542a77fb7bd5f2153dc41042383e66fbb5a8419bb67bfde20050f30d9",
+        "frames": 63
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.112,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00200.npz",
+        "sha256": "bb25cb4db333de659f9a2e51393cdb33621fcaadf1b3e259c3ac151f950e83a7",
+        "frames": 56
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00201.npz",
+        "sha256": "b3ff141b052b4f07a5bef988f783c0df5ea2d73ab6f2792ea9707667dbb82250",
+        "frames": 57
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.12,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00202.npz",
+        "sha256": "03f44abb0fe82da22ebf5e6043add5ff35f1c561f6e251b380d7208a02f4ceb0",
+        "frames": 60
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.108,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00203.npz",
+        "sha256": "c16c694305793e0bb96e08acebadf52bfe55bdfcef74af9b0b21d354009d64fe",
+        "frames": 54
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00204.npz",
+        "sha256": "90ae32070d1b670421825e03a9b3df5a22a6f9930f7c785312e896e43b18a1bf",
+        "frames": 58
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.108,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00205.npz",
+        "sha256": "95a4a1193d3bd9e89f0408a172f96da5c84567155fcf3cd52a272d2cdba502cb",
+        "frames": 54
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00206.npz",
+        "sha256": "9327a5343d2c9d91e73c659b330c1b2d64065e2253bf959d38ef7edee215e1b8",
+        "frames": 51
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00207.npz",
+        "sha256": "8c19502a962aa46495ca03a5b7e21472be14195d857c3cd3a9603efe24467bf6",
+        "frames": 57
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00208.npz",
+        "sha256": "856e0d634b840c81ac028f38d60c337af248c1a37de7526ba95f8563c90f983e",
+        "frames": 53
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.122,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00209.npz",
+        "sha256": "376ea44916416d5d7c233a944c0b559baf7b64bf6bfa8c5cd037ccbc5130f90e",
+        "frames": 61
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.124,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00210.npz",
+        "sha256": "e73af8f8f1265f3f53a1927adf7cb385a7c48dd0a987b08c2d80964a2d208fc0",
+        "frames": 62
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00211.npz",
+        "sha256": "a0f914950d9ae4f413350e95cb31cce838994ca735ba36c96b0d09553ea15461",
+        "frames": 53
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.10400000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00212.npz",
+        "sha256": "588354f5c9ac52f4ef3816ea98119fa2687eade4cc5c09a077b26244eb8a9e48",
+        "frames": 52
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.114,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00213.npz",
+        "sha256": "040b17a9c2cc1b80eae82a640046ad5b562edd89ecaa5488e8c2bf5286633018",
+        "frames": 57
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.106,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00214.npz",
+        "sha256": "e358b1d687505de8fdf9b05c591da7aa1699f9db52aa1b99b3fa0f6de03437a8",
+        "frames": 53
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.122,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00215.npz",
+        "sha256": "da32c50c852b06f29553c5197ef4828ed151dc9efebdfc44a6e26ad4a134342c",
+        "frames": 61
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.124,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00216.npz",
+        "sha256": "b667243ac5035e8c9e7249dc4146942dc0ee91da7a9f745d182587bff3a9a1eb",
+        "frames": 62
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.132,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00217.npz",
+        "sha256": "2f494c6f31bf289cbd346bb59739e95ed13fd6ad1bfba0adb5803de717bc0ea8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.11800000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00218.npz",
+        "sha256": "91e82f68b2a1b8c50aa3fc7d75821ddd848c29b433ebff1d659fc1fe6d42dea2",
+        "frames": 59
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.116,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00219.npz",
+        "sha256": "1309a02c65b14833e31fabcfe1b13f0124444d8e8b69dca1e78418874764624b",
+        "frames": 58
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.124,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00220.npz",
+        "sha256": "5af8862d17bda92b380f45c17328bb5491cefc5dbc9349bdddace9895415881c",
+        "frames": 62
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.132,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00221.npz",
+        "sha256": "2a0e4b6c1d1acd4dfed47211484567fcf023cc58f53cd0a6f8b05fe48a1740b7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.146,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00222.npz",
+        "sha256": "deaf6fd2b8d6a1cad1e6ee950c7d0dc6288aa8c6a87f75e8f655bc921a1c256a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.13,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00223.npz",
+        "sha256": "db7ea8f098c0656c95f60e57ae54f185faf4edf38683aecf9cfc881200864fc2",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.15,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00224.npz",
+        "sha256": "e82089f56ee65d4ba0847db81875c60b8974a2e9d29fdd5d79d578fd814e6e70",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.152,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00225.npz",
+        "sha256": "329ce27d5c762248850c1a29ca6605b115ddf876c6d35d2389f379ffb35a5d2b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.18,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00226.npz",
+        "sha256": "e8e184d2a80c5055edc23f3f953d7977e96d13b9a808673bc1e69bdb114c2e97",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.316,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00227.npz",
+        "sha256": "2dd4869357d8435aabd7028b1f93f73b56ea9ce0e310fc069eaeb12f64a6e035",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.176,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00228.npz",
+        "sha256": "55b1ffbced22c6f10d685cdde433cee93acb3473781cd7018729d8397f9a6f2b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.012,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00229.npz",
+        "sha256": "6a2e1e003b6ea2978f42002c77cb75d288fdd1043731203200c77beec15ebfb5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.154,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00230.npz",
+        "sha256": "1d9f5e692c7d3391cae0e0ad7e6519ca64a698bdbcffeae9c18d930895bf7304",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.154,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00231.npz",
+        "sha256": "270153be9191905cf1b4cfa677c4f06cd1bf8bf5d00d29cfa2a77e71fe9f3df4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.186,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00232.npz",
+        "sha256": "dcb0cf745efe2994c16ef7153820475fa9a42c18fa0c11e0a803e1850ed019a5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.184,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00233.npz",
+        "sha256": "6a76920e89137b91c15eef7b88077255583fb2fe534def23d38ff8fed338d0aa",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.432,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00234.npz",
+        "sha256": "2420db2021d8cc5d84e6f8edb08c5661ee7bea881065dc6565da2d93b5a13add",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.6480000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00235.npz",
+        "sha256": "e7301e3b19409bd5313279aa2ea11755ed234204175f65f92ea7cb2148c014b2",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.506,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00236.npz",
+        "sha256": "febf3676357fbf754817d011734289c090da1fd13758e7cd8fb69a3144fbbe4a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.928,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00237.npz",
+        "sha256": "87c11a99733c87d8b96ce7ba99c67c52fba41d8075e20739d41e7f0e76009217",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.222,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00238.npz",
+        "sha256": "55286e4fad85c5fd480ebba5f96f5a44774300fb0451d3dd6288a7c107efcf03",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.214,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00239.npz",
+        "sha256": "276562b13574f6ce0741eb75542b0c287db0c9a3a4fd4ed0d12c919b822016a0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.234,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00240.npz",
+        "sha256": "1303b42ca5ee7baed1a679f2412ec247160c4f85ad562bce76b82162b5c4d52c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.216,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00242.npz",
+        "sha256": "4fb562c5fadc4c9efcbca873748a98e221422aa34c9a7aceb3e04b79cc971f03",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.228,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00243.npz",
+        "sha256": "ec282da9b2ffa10c7c825fed020eca0df47da128000a3b28c857c21be48111ba",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.214,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00244.npz",
+        "sha256": "e91d6cdfbb6c0daa509bc71997d19ef2c1a7232a865013143188a7cc6069fa12",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.232,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00245.npz",
+        "sha256": "96d59a4ea3e58ca4a45fed1c14b446ca94ed2f5f84b530bfe1ff8f74c3b6a31f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.23,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00246.npz",
+        "sha256": "df2be07e798bf245411bf9ff633b8818b63b791fb76f7b183a8eff61b9d37f07",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.228,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00247.npz",
+        "sha256": "c7222975efe4bf9c971b1a8ba35c17e61e2691759786be2043bf72b8bee78cb7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.624,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00248.npz",
+        "sha256": "d2aa5ac67e0ffb3b78bf7826409445d014c458c913eb2f8b5cf15ed64b027cb8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.574,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00249.npz",
+        "sha256": "48898ea2446cd3894f4fc9c0b2129f2e4006191222723bb639c6172f215f5685",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.246,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00250.npz",
+        "sha256": "2a9b18fd1bd4494e2da85c5359dcc114f4250e492a509f6dd7d113cbbecd1285",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.248,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00251.npz",
+        "sha256": "ea1a158713686f4357adb39319de0ea4b1bb5658b0c0edf20a107bf29ad01c51",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.262,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00252.npz",
+        "sha256": "f9ef0139d0d69eabacf37766594c0334e39627c9a2ca822c137833b797162142",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.268,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00253.npz",
+        "sha256": "f6b57531e147e104c310847cabf3bae99b94fd1e30d08c333ced20ab384a740b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.266,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00254.npz",
+        "sha256": "dc7e429cc9204a42f70180947046b82996975f6f91d7247be8a7ae2a009d3f9d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.254,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00255.npz",
+        "sha256": "9ce8f2b300182d68e7abb1598dfb122cf08067460e85b0605d8ab98d1a3e4160",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.466,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00256.npz",
+        "sha256": "a61a6d93b5cfe74aeb6f75c11bbb60023866934e10d57c3d199c7e2ceb07509b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.446,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00257.npz",
+        "sha256": "d622c706bc32ba45c7c8abe3a57c50715469c6aaee0f72a709d1f6b5c7ebbfe4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34800000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00258.npz",
+        "sha256": "22c34e5269e7f7fcf50718a6f2981a641a6706b0e625527a173cbdfea97c1ad3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.37,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00259.npz",
+        "sha256": "57d97a7ad5f39a723eebf8663ff39cee146d3d94b9f662266479e8e5dff8478f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.64,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00260.npz",
+        "sha256": "9f3192f666e311ad4515b9941da01e47c19b9780b2a9a6ed611e5a71852d6d1b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.388,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00261.npz",
+        "sha256": "7d8f7191b5e070fe7a5951946f02e6ba4e9b57f3e429ff29359dabe1920e497f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.372,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00262.npz",
+        "sha256": "adea1d2d35d8a925459a77bbbd4d95af3e923a85bb9a94227ad532b8d317b0ba",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.37,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00263.npz",
+        "sha256": "463d687cf474aad5878acfa884c59d6d2ca0ea3aaebce85ba138b7543b16dd83",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.376,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00264.npz",
+        "sha256": "3372d95d81fa4013a9061a14c06fdd1bad639a8bbd751fd21193c989ef669464",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.374,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00265.npz",
+        "sha256": "e93372c62e49f3c8ad0684c67125a3c4fdc5183a70d14ed3f144c40c8f378d63",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.378,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00266.npz",
+        "sha256": "9b0b4b9c2f753a0fdc62547a595e36dcb40f69b8622b54c6cca9deb8abd52823",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.378,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00267.npz",
+        "sha256": "60254b24385b77afbf348b105a1135c6c885dec2e68f16dada009dc9bdf88b55",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.376,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00268.npz",
+        "sha256": "1044c66df7ed38b72a190063d9b2ca8e6b7da4946bb8e34efbb9cb3a34140b44",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.366,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00270.npz",
+        "sha256": "b64943261bc34ca55dae895ec724448b77f81c9353b7fc3308bae8a464340b7f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.352,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00271.npz",
+        "sha256": "ad45786685462ce4bfd1f8cf147f501ef1b82bd7b29e277a51398b6a74d8e5b9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.358,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00272.npz",
+        "sha256": "d5fffa667f20c1aeceffc14b44fd3deb27660bd9fa585edde7ad7d04fb40c458",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.35000000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00274.npz",
+        "sha256": "aa9e5334dc75a8a4faca9eab741f23beb010cc3b493fb465dc25800025cf04f1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.36,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00275.npz",
+        "sha256": "232b0c194c75d3b4dde5ba0e2fec5ad3ce66b2832260450bedd5dd5e35c0e198",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00276.npz",
+        "sha256": "25523442706c6136701cde5a69d6c545d1376f68d7feadbd6469f223db445278",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.196,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00277.npz",
+        "sha256": "3ecf79bd03bf2e9954830640bd3026ca800d49de74a3b6aadeaeb23ecd1204ec",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.368,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00278.npz",
+        "sha256": "eef89ca26da6587de857610127cab8bd964907fddcbf14dc9518ebf1dc05c2e1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.418,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00279.npz",
+        "sha256": "9fca4df767bd092213be0089e05fba1cb9875af8d60de51f76de5abc5af81308",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.20600000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00280.npz",
+        "sha256": "859f84ae32ce964e20b5ed1311eca12c75bf3fd9fe0e7f70980ace31046da2ae",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.39,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00283.npz",
+        "sha256": "14934ebd90e2d500f9f82ab6c2234015d305d57797dfbc5593ba886d8d831029",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.218,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00284.npz",
+        "sha256": "ef40bd0014eca67025d8da771edabf1da19def47d6fadd8f9afcc68e75bd9e6d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.392,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00286.npz",
+        "sha256": "4784756bdedddc7a117d8dde6d5114e82dceff536003f32b88f361a90687b012",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.202,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00288.npz",
+        "sha256": "c145f1c690f44cff5b19d87d1e596a04c6f92b300d7892202fa0d833c1dbff81",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.202,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00289.npz",
+        "sha256": "d08016ca147ae66ff4c2016c08baa4b83b96ca9495b08b774c417d6f93aba87d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.198,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00291.npz",
+        "sha256": "fb4cf9c740557c0f33bf6d64feb2ec82fb9828a906f79b828b9272416408dce6",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.19,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00292.npz",
+        "sha256": "2a800ed64b1f7134338529509f387f42a4f88aff74fb8e07b1b72bb08ed5d089",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.20600000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00294.npz",
+        "sha256": "0e6238d64049fbd90d37013df82a0100d987ca3affde3c25d3fd5fa2c06a68f7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.184,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00295.npz",
+        "sha256": "c2a1843751f800847b6acb8fef180b08ee696c34b9ab51d3bed6f2f2b3c6f233",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.162,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00296.npz",
+        "sha256": "f8be77010a828faae703299093a8f6fb3f182d3cf20c549e624792e1dd89be1d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.194,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00297.npz",
+        "sha256": "92aa1bcd4f2222dd526c0f0bd2f446d02d16d2a39246acb4232dc79bab519674",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.17200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00298.npz",
+        "sha256": "0166b9975df782160d39f94ad7960616e14c46f5d75e2f6b3d0642da5f7cd5e8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.164,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00299.npz",
+        "sha256": "d8ff301a08964a9bde97477047d2d9e8527f4fb79ece6d948e6733ab4d869ded",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.352,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00304.npz",
+        "sha256": "a41fdc44bcff1b8516c3d4eb21ac4bde71f45e0659271260eecd0ee54b943d7a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.252,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00305.npz",
+        "sha256": "ecb493c03be2854c69d7da82bd05aa0216e2d20a9809122891ff1203b942db04",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.358,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00306.npz",
+        "sha256": "56e2924f6ca654d4d1dff644b28bcef7924e91018fd83ce202d84dc0ab8cca82",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.358,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00307.npz",
+        "sha256": "2e5e7b79e245afda4622b4c82a9101536b5929e46b0ff90816e027f9b5398e46",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.314,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00308.npz",
+        "sha256": "b03c6053ba78213762657ab88dd083bbef0e322afba1ac59e9f4d066a262f34d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.366,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00309.npz",
+        "sha256": "53648033639fbc605953395c1354f89f726230c55d7dccb66e11fa136cb99f73",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.366,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00310.npz",
+        "sha256": "55438f861a8a1bf057e62eecfa424ca339fa0451939e73cbf196f36934be601b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.354,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00311.npz",
+        "sha256": "224ff130783a4b3db101317f00c9c7ddd512d774ad719e976769c91f62ccb4d0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00312.npz",
+        "sha256": "a8cfee73a0502b9645dcfd61fbd8518d47afa19a77dc6567ad04fc370172ac22",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.336,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00313.npz",
+        "sha256": "0f7ad5468dcc4f3c1eef7403cb2c8a4979f9832e4b1e24c1de1f785bf5404f97",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.20800000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00314.npz",
+        "sha256": "1cd9348510521293401e06c6b1324850878b6e78a88f52e8fd87ead1a8fd4b89",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.21,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00315.npz",
+        "sha256": "afbbd0c0b3df8778a5f1db48f3d4d594331fa6a84dab466b47f9c53b27c7926f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.224,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00316.npz",
+        "sha256": "264d6ab546d773a033f5b43c78da977071ae07b1dc56cbd70dcc860a32c9071b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.212,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00317.npz",
+        "sha256": "38f0b1c3dd472a9e0e5282ac7e3891e92f95905c8833f29f88832760e975bc6f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.224,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00318.npz",
+        "sha256": "5c6034dbe6d7c34292287c952833b1fec296446c94564dc9b574f11889050c3a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.232,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00319.npz",
+        "sha256": "6e34d93b6dc44de1a553539d5196ed072c88090bba246e172ebb71fd4fea0c5b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.21,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00320.npz",
+        "sha256": "33c776cb27663f1baa3ff2b47a41d510270f2751d3264b5c450b4935f352e8cf",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.216,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00322.npz",
+        "sha256": "b400cfff957a956f08de51f781aa9125d9c6535454563e0650a876c29d425b86",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.218,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00323.npz",
+        "sha256": "255e8d69b64c813f9bb85e8b93f32b209ddae6c11ff3bab3599cedf1b1d3f1b8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.226,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00324.npz",
+        "sha256": "5d77af7a7fbb6dcc99eaf332896455bb1f5721533735e1d31fa3716f17cd447f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.392,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00330.npz",
+        "sha256": "aaf8e6b913796c57e935d264831c7f3033f4464772c80986f9f1c3120ae50c22",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.374,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00331.npz",
+        "sha256": "469fee8db6c53abe689e239e3be61c37674cb96a2917c3e73b6ce428ecfa1b69",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.44,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00333.npz",
+        "sha256": "9d399707774fe7e89a184b57d99255db28aa2e23649b8827fdc6345b22435c80",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.392,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00334.npz",
+        "sha256": "bc3162defa75c974b074af823ef53a41bec6e50d9cb77d7dfa7ddb27dcfb1422",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.38,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00335.npz",
+        "sha256": "6e61ca3bab08dc53785339f4a0b0610901ff6fe65fbe10834195a42b2f8d83db",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.384,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00336.npz",
+        "sha256": "54328a82c4bfa25cb0b741c15e4dcb8f26541a7805cbb0c58d37697328c99492",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.618,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00339.npz",
+        "sha256": "1ee41de5ff8fa854acde372cafc670a9a3be8b81ded186e54dc8441c95ded9a4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.656,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00340.npz",
+        "sha256": "01819ee93b29d6a277655514c4efaf6085f42213ba9cc65cc9fb9d3ba20890f9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.632,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00341.npz",
+        "sha256": "0ffabcc1082ae3896c1ff0ffe30946f90f8f89cda8b8d71abba8338707bce232",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.6960000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00342.npz",
+        "sha256": "f6d13f93aa0a02243b050a31a925db6c85c494efb3715adf63c8eadc3e308231",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.42,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00344.npz",
+        "sha256": "6bd681f369f58c4cdfcd0059436fd58fce22a7a06a7d2a2203bac55575903b75",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.40800000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00345.npz",
+        "sha256": "7abe0d260b4f4c61cacf171b4fd77404c5bd10cacc6b50a6b57b8c6fd6ebb47f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.4,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00346.npz",
+        "sha256": "c50758150322cc1924f1a210c52ab6dc07fb05bc24ed844b002f7987ac69d070",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.394,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00347.npz",
+        "sha256": "e841749c487421019c9c6fe13e7e7ff0485365aacb4c72d6245f2cb879666b88",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.394,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00348.npz",
+        "sha256": "c3cad0f0d81083861483388648394c6b88f2db401310082e39c7bc53165b164d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.398,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00349.npz",
+        "sha256": "067a10742842d0475e94a49c6f60b6bf2d6012b467a17dabe2314096a71fb368",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.184,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00350.npz",
+        "sha256": "0c0154d1abc3efbfc5c631e69aea8a42995e6f23a0e5a8fd4380d38e0292204e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.194,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00351.npz",
+        "sha256": "bea1344bd3f841851bdbb639a7ec7ea4dfdb358687c31d93fc34f9438ce4b376",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28800000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00352.npz",
+        "sha256": "20400481f5e3a737cdc65e0c5944ac802f2b8b7f52a342fed3f56c39bc39cf84",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.196,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00354.npz",
+        "sha256": "5c5d281f70a028e9543b6d00b36d0dddee96a54dac0db0fcee8b3f5063ff51fa",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.188,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00355.npz",
+        "sha256": "cef18625d1781cf12a1a588c69d03caefffe7e3b611d2681192c388e35936ebb",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.302,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00356.npz",
+        "sha256": "a474fa72e19d6112d05982870a3466269030d027fbd0e275aa324728b82417e7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.20800000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00357.npz",
+        "sha256": "a0e746fbfe1900886ecd92f59d0577d82b2f3498baf5643ae310b787bd8336b4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.226,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00358.npz",
+        "sha256": "6cbdfc550514e8b0e2124ab14b6fb942e5a13851159e27d5f256cf624b8bdfd8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.20600000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00359.npz",
+        "sha256": "b0588e4b39cb992dfab75a76bc76e0079c99e77ff8a30c59ae3f9318747af5f5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.194,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00360.npz",
+        "sha256": "0241353fb70b4cad205af264695fcde184fdae7fd92486fcd3b6d9750379ace1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.318,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00361.npz",
+        "sha256": "c755c2c21bfe182051f476c4ef1a6cd07f4e9282c1189032919feed1157c147b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.394,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00363.npz",
+        "sha256": "dc0339cf986635119bec297cb394a6b2673780e4a339b5e5c966a431a4f72c50",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.786,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00364.npz",
+        "sha256": "aff50e5052e1d9a6165b5871be3071253573ce0aaced31e705854d9ecbcca9f2",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00367.npz",
+        "sha256": "59a603a998173f73aea4d3df9347ba04ff750551fa00618e40be42af72f3d606",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.308,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00368.npz",
+        "sha256": "d25623ea89378a6a67f15f200df14746b30045cb7c3efae6f2930d70ef4290c1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00370.npz",
+        "sha256": "fab76d37011c16f793aa80ff547fdb4d5d255bf9af16ee2c5078ade24627008a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.422,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00372.npz",
+        "sha256": "8a9149a5da15f715762baafdd6120d9699e1a0f6933232524987db832224efd5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.386,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00374.npz",
+        "sha256": "3a883904f3f2e940f9c6a3687237a8934165c1f0a0f4d501066af3851ce5c6a9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.42,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00375.npz",
+        "sha256": "fd117a72a49ff3b1967e86045caa8925f06b9ff51879fe785a6a62435557c1b2",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.49,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00376.npz",
+        "sha256": "fa07c0b0accd0fb39b94285d35ec9a1bf86af993cd71b059497a6150ca36b3c7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.394,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00378.npz",
+        "sha256": "b8761e58ac75ddd8edcb0f4fd90f3480345a68f3cc71bf94b008f94dfdaa61ca",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.486,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00379.npz",
+        "sha256": "44e2ba24256e4b775ead059b5be74e145322531aae7fa87acd9cd5da37215d42",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.3800000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00382.npz",
+        "sha256": "93346ab4b619c4cea802c19b53e4b9759a47355a2eb64a7d424048c1faa5ccb1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.634,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00383.npz",
+        "sha256": "c26b6d447e0b359fa542eac57feb8205376e49ec3582b21ace26135765436d27",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.484,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00384.npz",
+        "sha256": "c668c58698803ee028bf15c4e490896fb8ce27933ec67c04378cb57917174ded",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.39,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00385.npz",
+        "sha256": "efbf65d53e3d1017b44187fe39ec222cd8a4c22c3947fdf0190804810798f208",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.398,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00387.npz",
+        "sha256": "7a4d6c9a999503c745b9bdc0fda3e508128cc378d5fcad905fa44bd44d3bba97",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.794,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00388.npz",
+        "sha256": "3b059e00f12c229deb425fb93c579188c754fc15641a7aa14c80ee845d24f05e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.6540000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00389.npz",
+        "sha256": "187426c91990eaeba72c35194ee49a23e455e99fbb01107d66201a533a4dcd5b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.294,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00390.npz",
+        "sha256": "f725da4698d019242dd32b8794b2c2b0fabd0ca6268ff6b57011325ef98baf7d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 0.54,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00391.npz",
+        "sha256": "5ef35966987d2cdf2d7653c31c687c848c4a8deb39b401cfedea34e9e5483e66",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.312,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00392.npz",
+        "sha256": "eb28dbdadc78c427a1ebed74135197349eaa05808ef58aaba57eed9b156a2f3c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.23800000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00393.npz",
+        "sha256": "9821b6c0e801e3fb920e3fa118bdd9b732506c5178bf0da43499622e1b048346",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.41200000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00394.npz",
+        "sha256": "870bb7cbd03ef0b13c2aa9bae2d63ce3c712a17b8088ecc84882412f7d5cbb61",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.22,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00395.npz",
+        "sha256": "62654035522d8de230b3823dee9a6070cf2f93badf5611f72947431794126f38",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.234,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00396.npz",
+        "sha256": "c553281c62aa4b825b6c9d79148f9de37cc992c1064e770509c64ac12acb208a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.43,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00397.npz",
+        "sha256": "4ac865a998ea5c25a86b2005d2b0938f782a29e490af2384d7393c89239c8cb4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.764,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00398.npz",
+        "sha256": "1e8cec2476891396f7cbb870ba48cefc9677cef8f354d267f0fd325a61f8f10e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.9060000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00399.npz",
+        "sha256": "f44fccb897a65e3cd6d496c9f789e12a3f058141c298f735d276ad537c1399d5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.262,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00400.npz",
+        "sha256": "0ce0f058b7d223943617d14fa58afdd4f58ce8136e090fa7f8f927222a2a61c3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.256,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00401.npz",
+        "sha256": "e14ac7fb269c001e30418fe76df3e6dd4435a67e2d3e5d34dc9bc12033fc427d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.294,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00402.npz",
+        "sha256": "19d05bc125be37f0f8c0934d4cfce75e4717a47f2877b7e605fb56a83f94232a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.26,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00403.npz",
+        "sha256": "c0036fc2ea98bf6a7d3fad00e765ccba4311c1a8a09dc5f629f3ffebda7cde54",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.262,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00404.npz",
+        "sha256": "07a2e8bc8342a2b2415c7982a93bee40932d69f3e045805ae86807b072f93b0c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00405.npz",
+        "sha256": "dde026351d0402923694220b7395cfe75ff0e308a57c8b4f24940a6c401b7f9e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.272,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00406.npz",
+        "sha256": "c00c384e36c3b6c81ab139a1e161f241deedd98971739b9b085717abef43d6a0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.278,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00407.npz",
+        "sha256": "185545a43c68aa5c12e27e718a204eabf62e282cb398078277bd226c3bdb3ece",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.41600000000000004,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00408.npz",
+        "sha256": "0f5cbca7a2cb400419483a526495151cd0bde89507803784c88648d7637b890d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.404,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00410.npz",
+        "sha256": "68e923505b81e1ebb2a8a0bd1298efaa86fbef1bf84ef0b47bab704342a5cf4d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.314,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00411.npz",
+        "sha256": "c8cdc64fce66fc3b2b41eabf99ef10ac15f3aaf1ff1998f90e7b483855ecf3cb",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.308,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00412.npz",
+        "sha256": "655067aee2557c7d57f2a6fb1c1bf39ed513435006eef2cd6e91cd903033b62b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.316,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00413.npz",
+        "sha256": "d031df8530d257450fcf24b7cf2e2534f0d4230e338f8eb177de4c84d0c18d31",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.312,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00414.npz",
+        "sha256": "bbc9584e10e5550f92ee6648dd1b63ded2eba1b83566d7e6be526732d9a4615d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.31,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00415.npz",
+        "sha256": "15b6eb4eb6d9a2b697e942ca89fe0afba380f61822c2a714f541c07451f24a5a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.41600000000000004,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00416.npz",
+        "sha256": "9b653ff9d5d0d5fe3769ccf5ab98cb4e9de8970ea8adc225181d9e23707dde26",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.442,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00419.npz",
+        "sha256": "e43901b8305129f3aef71fb6a2b4d6b627137d0b2b55bddecc4bb78acfbc2036",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.41200000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00420.npz",
+        "sha256": "bf43a8805715c07f4c64cd2b9e69bee5fb3fc6d7157259b718a36c04a44fdbc3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.40800000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00421.npz",
+        "sha256": "4af1d28a11b0a4d6722793b135e1901ac8e3c609f05f89271c8530e1fd7aa457",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.378,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00423.npz",
+        "sha256": "799abf0dc59d336b3a72d232513febd0994a3d33e49ae428e97a61e55ab7e665",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.42,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00425.npz",
+        "sha256": "0c3aa82071e95930c21944841adf7e10e298d83e8509b585015edadfeb73043e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": true,
+      "simulated_seconds": 1.42,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00426.npz",
+        "sha256": "44371dfd31e67a99484d852cb60c4bce6ae2b711ca9560a3d4ec49ea98e3a179",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.424,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00427.npz",
+        "sha256": "bbb4cf3496a1c1d714af2e2620d9c0716c7cf1d09594564dfea7a08550ee368a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.424,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00428.npz",
+        "sha256": "7fe67ce433d64626d5f6ac93c8cfa70999567b9860b563cbeb35f104f1862fb5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.432,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00429.npz",
+        "sha256": "d8ae1223641a6252c59fe308640b043c8dafe2600269a8a699973ea081df9502",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.248,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00430.npz",
+        "sha256": "cfccbd7a0ee2c13df607110b1949995954ea6c197a5131e821caa424057d604b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.41600000000000004,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00431.npz",
+        "sha256": "6920ef9a6a2b7e22b3b0c26707ec9c7a61942eb6fa7a9cf37f01e76b34ca6796",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.448,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00432.npz",
+        "sha256": "5f96c0153e3e1255868555bfb5a224c8b6b28bf999dfb1e7093fb006c1185670",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.634,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00433.npz",
+        "sha256": "ede28c2a089dc3e5c9b9d838b5da4931b033aa6ff20054c30d3235326663635c",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00434.npz",
+        "sha256": "d18d6ed3e893149b69e79bdf14c48b3c6184fa1b0ec35dd39c6436a996ed5866",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28200000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00435.npz",
+        "sha256": "9593741ed95bab21e4f30d5af53424ee5d0b372a59af2476cf4b5face5a4be0e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.274,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00436.npz",
+        "sha256": "8f9313eb96c2706f6ce7f7d003f1aa2d10748549417fbc649e57d9d99637bf5a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00437.npz",
+        "sha256": "f395685fb7d5375f97afbd5d2475ff42bacff7ec572f9b50c7f5dadd099f99ce",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00438.npz",
+        "sha256": "e5656750424baab0bc16cc452a8cdc8e21935c838f4423cda38f6f975d618d3d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00439.npz",
+        "sha256": "237daace77ece19384a20245189ab5af8ae02026426aeb71b20044771b1b2d51",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28200000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00440.npz",
+        "sha256": "a488385ca83b1259055fc6349508596628bc3e6c534610f3edf1d79a75815a69",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.6980000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00442.npz",
+        "sha256": "829a067c1daad5bf031a03c9b58cc35237d20af464ffc5f9b3d1bbc871d8a4d1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.258,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00443.npz",
+        "sha256": "b8a7ed9566f8ef9fa9c9c1d904a455759811e2cc9a25b77f8626c72bced5373b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28800000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00446.npz",
+        "sha256": "dde838d1b1ee1b4d44a791805cb6fc0ed9e8bb0c696087788c52d0a79a80bf50",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.292,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00447.npz",
+        "sha256": "e419575465fd42b5f90edea719d764783e938b9da08a21b49550d8569ba9f8fa",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.292,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00448.npz",
+        "sha256": "a2208197465cd7712069d2d5c0d59ada279851f3e280352e0cfa776c5c3a3a4e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.3,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00449.npz",
+        "sha256": "e68ca3e1999a3fa6c4416383c7d9b35eadde656960f6041786f81738de4ba014",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.306,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00451.npz",
+        "sha256": "c58b3c4cb7a97542755c5f511e4d0fc404440c795bb68c7364bc9648e37e2b71",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.442,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00452.npz",
+        "sha256": "3a479eae263a6eff1cbeb187aaff168da360518048a993b35f3005ca57dea790",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00453.npz",
+        "sha256": "6bfbe0016efd46a2ce1400a10148cf251edd897387cfc2a690ae2373b4075287",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.332,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00455.npz",
+        "sha256": "cf8b6f7377b71370dfd0e20e3faf863b79987a1dbe341e8779f3669fe8b30383",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.496,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00456.npz",
+        "sha256": "36934abff696f22f99557174785756b707a967271de679508914281b5e821560",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00457.npz",
+        "sha256": "0e7856ef1a0d75fb8cf00d0acc62389ddbc736c97d083511676e25914308dc35",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.326,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00463.npz",
+        "sha256": "02c6d8f73eac6648ee74fa8ee3b2b06a86f823449bd9a4d0b1a71224701e6a60",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.452,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00468.npz",
+        "sha256": "f407c54607dbe9ae2dc46d35a028e0450bf15a323bf09cebf3a18d87e38035a4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.274,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00469.npz",
+        "sha256": "bd90ea3c6e6357a0e1336817e8438c855ff5423cfcd8a7e643912628416dced7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.27,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00470.npz",
+        "sha256": "ad22bb561776999ccffe5f9f25f132b1c7b2918290c9dbfd11f85d172471149d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.466,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00471.npz",
+        "sha256": "d1a9285a6583d804f3365e0e335d433ae4557f4c35b5ef848bbbc8dac3e5af04",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.464,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00472.npz",
+        "sha256": "3322b9f0b6a3eb084d339f064412a01c9f17f7338310c7146b23f838af40a08d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.44,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00473.npz",
+        "sha256": "b5f49119c1fdc8af5f4780363742d3dc4bc72fa980f23dfee02f9664277cb78f",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.558,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00474.npz",
+        "sha256": "5f65cbe28e7375889eea49de9296899e25d9b6d9534e30987fb7b2cf9f2b6335",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.506,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00475.npz",
+        "sha256": "0d57405c0f1708f4eba1980de9239acf34e9b3f7f80de40adc8fd0051f597ba8",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.47600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00478.npz",
+        "sha256": "483de5e695c9ee586244378899ca3eb9ff905346e0ed75a0c4bf61b6863c178e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.182,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00479.npz",
+        "sha256": "eca3140d1c2b6738ec17ec880db4efb1b5fc5eac999d0249f40c10f3a1849a71",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.19,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00480.npz",
+        "sha256": "7c0c1621cee9435ad05894bce7ef92b57f212c3468c7ca4b76830dd25246b268",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.182,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00481.npz",
+        "sha256": "e28fb5c063399aa7d1ad4730d825fb82e38e23d1fc1cce6bb44406a7e9165808",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.324,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00482.npz",
+        "sha256": "6001c651c9e2578cefbc4b284cf86a0c3f14f37fbd8e2ae31197ee78a663c83b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.216,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00483.npz",
+        "sha256": "a93f92b6450012d7b69b341d97812f825bc4dfa764e1ca222b5cd34c316595cd",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.198,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00484.npz",
+        "sha256": "8def6a9a3e806ec144af2e94d5cf9c3f059c16663edb027dc916f382a9ab9481",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.166,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00485.npz",
+        "sha256": "1ffd89adbb501c4af7f98e452b87e4902ac23129b2cd9da9e78574f8dbe01653",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.17,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00486.npz",
+        "sha256": "b7804811e97dd9b2920b1a392898d6e5ca3675a613703cda76ec27131886b695",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.154,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00487.npz",
+        "sha256": "d0ed00066a31de1b11d3301ef49cfef7f437af6887e9dfb53ef532b7bbb5b3b7",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.162,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00488.npz",
+        "sha256": "d2d05524af4ed62a0b27dbf55052bfd02ac527b1b2cf44c9d885511f0a598e1b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.16,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00489.npz",
+        "sha256": "3c2b19d887bc03b7b6f3433cc54ae78e6546f3ca0826780b8075d2279ff6cff0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.168,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00491.npz",
+        "sha256": "72df3c9325cf6eda5feb913e69504e7fa6323cbe52a4867adadcd6cc682fc66a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.17200000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00492.npz",
+        "sha256": "876e1d83f78bf442c062b6c29164638038c573f2cbb42b8a76e16f4297e517c6",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.17,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00493.npz",
+        "sha256": "816cefdf5312769e92a57c12acd9229c54ba5b4698abacef4d9c3ba5702cb9d9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.168,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00494.npz",
+        "sha256": "ec106088c71d80bfc31b10ff2b22cc254a36cbabc39936c84cda3d55a6dd36bc",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.16,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00495.npz",
+        "sha256": "eb906c017c4df63f6135ec577c8edecbc40f3395816d38278bae6c9c28eba894",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.17400000000000002,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00496.npz",
+        "sha256": "1bfc3da07b6bffa93ece81dd68c349b46320b823f0d58c6808750433edb14ecf",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.938,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00497.npz",
+        "sha256": "b15bcd4765496383670ee16725dc98d2146d1195e2e578760c29890b157fa436",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.6300000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00498.npz",
+        "sha256": "c0c861e7c41b833ce48ee5d895d492f92df56d44e66e5724280fe37885510d9d",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.368,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00500.npz",
+        "sha256": "ae575c22bdcf6dda2b2bb5453728da30eea84f580e78105a07423d3dd32421c5",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.37,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00501.npz",
+        "sha256": "f3cce5358afcf2197bf8de46f1a1ae2655cf41da948a1d16926c03675cfb8944",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00502.npz",
+        "sha256": "0a4441f8ab52c482468c0167f25a9cf70db0f56638d9203a49635b46cc169216",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.352,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00503.npz",
+        "sha256": "52d93eb1e81240ada0a9dbd9f3df07e7ac64614d0501fd6c82b653e9b65bd492",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.366,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00504.npz",
+        "sha256": "310b984268b2652943ea8a02ec92186477e724512871431bbb0242e171adccbc",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00505.npz",
+        "sha256": "904906c6d25b52cfb6e40b4f9f115d21c73a5ab7ba947521f28733c2d5f0b502",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.342,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00506.npz",
+        "sha256": "6dd11c109c3a1958df4ed8ed608d518e9a94925fe108dde1aa3a6b21b8f790f1",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.606,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00507.npz",
+        "sha256": "4a0f3b88ca84ea7634ff7ebd99647da4dc7b0c26de016cd443600b988550f59e",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.342,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00508.npz",
+        "sha256": "3335c2b9f6aad786263030ba14433739a99bcab7eb5d4c4cbe5d858138564224",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.64,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00510.npz",
+        "sha256": "18a5e3f55a1dc73bbae4bf488b00fb18fe6ce7c5c68c18f39fd620f18c2bda48",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00512.npz",
+        "sha256": "8b403c6b656721373294e1e4b3c4672680ae743983ab80349376a36d6a6b5dff",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.722,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00513.npz",
+        "sha256": "ce097708c31cee7c8770963406827f6b6add31c2ee9c4c0f143704b0f0b2ae88",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.34,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00514.npz",
+        "sha256": "df56dde6a2163446a2cbc08c86ff599b21de2cb18a9cb818e08df2731512a363",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.458,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00515.npz",
+        "sha256": "f316d82e88c69893ff8b56363597284a80a590009ea96d24061251ef9315c063",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.332,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00516.npz",
+        "sha256": "92fb8342c1c91fe87549b6a7aa439e92ba4ad52af0c04acdcd30d93cf2cb82c3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 1.408,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00517.npz",
+        "sha256": "5b1f84cc7a350bfb84d9a2ab833b1dbbc002730efc8a1d8aedd7fc4db60f24b6",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.326,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00518.npz",
+        "sha256": "660820ce30590b735d24ad2a47548499853eb89dae6bd5cbaca609900bae1499",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.318,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00519.npz",
+        "sha256": "e9a737ff2db748650f8a5b9f8999215db321b42b8cda759f3e1ff8fa57950c0b",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.3,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00520.npz",
+        "sha256": "bda0c511e6426456d4531288bf78a908f0ae0da6968e3b50c515aad1de35aaaa",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.656,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00522.npz",
+        "sha256": "a4c62024b413324b99c4f936e4d89c8712d329b50f5e846cfcbc2ee124aa3ffe",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.64,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00523.npz",
+        "sha256": "1f85cc536cc2fc811540228e7b2020784cf1c888884a3cce3d2a7a46159d6cb0",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00524.npz",
+        "sha256": "e995338fba82c4fd7c234ba9fba3350acec1a66b29276933c03fd35e424ba5e9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": true,
+      "simulated_seconds": 0.856,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00525.npz",
+        "sha256": "fe2b3b69c29b8f919c681fd98a6feb798a69060e558cc714c03c46b380603533",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.67,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00526.npz",
+        "sha256": "8144ca9dbb238051c304afc574be3f5d24b6cde9dc53031b93fb80b20a0d25ae",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.722,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00527.npz",
+        "sha256": "32d66616e528b0e897ae4f942ccaa010f86e08a9b021de6f6be832f1bc73f711",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28200000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00528.npz",
+        "sha256": "9200a61fe4bb81fa81440c4183d86248aab150e229ac05244257abb67a6d1216",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.796,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00529.npz",
+        "sha256": "9c8eddcf9b08cce28d1b6b7d0ddb2e8c764badc06e848d0a82e09dba14f648b9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.296,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00532.npz",
+        "sha256": "a2d29978d8e28732d193a7a6d035d1579e3abef5d1813fa6ded3e75d5df06f78",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28400000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00534.npz",
+        "sha256": "c594a0d2f66a1210ebc4d90f719058684f0f6e7367edf5718a278ae7289f72c9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00535.npz",
+        "sha256": "cd70418eb3c2f8377d14711a9c0273d9c5f46aa9aadf4b24087acb441f763245",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00536.npz",
+        "sha256": "0f926f2eefc7d0a8408f92a92a265150ca1c7cedb08e8685fc1572a02cf89671",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00538.npz",
+        "sha256": "523390f22b4f3c6b2705ee21425449a63589962e9f2f09e1c707cf0ec538d98a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.278,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00539.npz",
+        "sha256": "b4f7c0c3573669938bb90a70b8640f2d84ddc83826d9dcdfba2acf6dea95f367",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.292,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00540.npz",
+        "sha256": "bfedb171a6ed0694ea0b34e5c52131af5422dbafb304dde2d87ed6cd858e9859",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.29,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00541.npz",
+        "sha256": "dd2821111db0e3653e5d52cb0a01285a810dc3b9dfd4fd8337769b0b43c19b33",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.28600000000000003,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00542.npz",
+        "sha256": "974a9592b58d6f2bfc8b39ceec9d31c558b07d52b09f0138cfa5b8bf8da54a86",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.318,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00546.npz",
+        "sha256": "f338969299b95fc6febc735761df974dd9dd5faba926459890f368d8d080192a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.312,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00548.npz",
+        "sha256": "3d5e686ed51fbfdb24838184186e5801dc3a46c1afb512637e6e3af7b35aa7fe",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.308,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00549.npz",
+        "sha256": "f586cec85f86bf173866b3bb6d063ff56a588bdc44615783bdd27a3f2501da54",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.312,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00550.npz",
+        "sha256": "d4a99573b68e6c8f13e6ffcd48e96c74bada6026187ed950766b7ada184f27c4",
+        "frames": 64
+      }
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.276,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00552.npz",
+        "sha256": "65b6c8a125040eb3441e8e71bb12fbb2fe3f98350a1f721c03049c9fa2c6378a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.306,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00556.npz",
+        "sha256": "769259e00b193d1440d37b915a68d71e74cbd8c7dcdfc6e56a2f5c4425a5042a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.296,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00557.npz",
+        "sha256": "e2f091117392c8928784895b262a4e3e3597a032f2eab91da37502f4e3f08b40",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.308,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00558.npz",
+        "sha256": "ec4772341594016e082ad97954c7c71629850774ae4a041a10ac33d014a9edbc",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.604,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00559.npz",
+        "sha256": "e12475d580ada12a91ef9c965ee8c66b29abcfe8ff99cd7cdf156d6dffb9f12a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.628,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00560.npz",
+        "sha256": "061559acae3c8bd47d48b17acb246b577a2a570022831de5793113690bc2dbfb",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.7000000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00562.npz",
+        "sha256": "2907cd5edaa276bf3ba15b1d1ce44149e682e31f406255f78f5898d5dfde62c3",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.888,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00563.npz",
+        "sha256": "2d7d1d0730620fea966f93861c1c2e2fbabce858aa973ab00c147a2152626d9a",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.482,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00565.npz",
+        "sha256": "dc27a841dbb392494d1a5ae10596fa4820f53b2bcfd495d3292872842648cbbf",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.8180000000000001,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00566.npz",
+        "sha256": "17e33f2971b86d7be9eb534d3bb53d399271205b733f0f47541a71b961a85ec9",
+        "frames": 64
+      }
+    },
+    {
+      "task": "hover",
+      "failed": true,
+      "simulated_seconds": 0.902,
+      "teacher_mix": 0.0,
+      "failure_trace": {
+        "file": "failure_00567.npz",
+        "sha256": "18411579915a994bca4a99176e4158bd91898854936049705e2a57a733734229",
+        "frames": 64
+      }
+    },
+    {
+      "task": "walk",
+      "failed": false,
+      "simulated_seconds": 2.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    }
+  ],
+  "teacher_present_during_collection": true,
+  "ground_retention": {
+    "enabled": true,
+    "checkpoint_sha256": "9a39a8011eeac00a6bc5be600176a83558fea1425a298735733af6c121bfb049",
+    "weights_unchanged": true,
+    "ground_task_loss_weight": 4.0,
+    "independent_recurrent_state": true,
+    "runtime_module": false,
+    "ground_wing_targets": "initial-pose corrective labels"
+  },
+  "teacher_mix_by_task": {
+    "stand": 0.0,
+    "walk": 0.0,
+    "hover": 0.0
+  },
+  "loss": "normalized weighted mean of active task motor MSE; hover adds 2x wing MSE; ground wing and task weights explicit; no utility loss",
+  "training_tasks": [
+    "stand",
+    "walk",
+    "hover"
+  ],
+  "ground_wing_loss_weight": 10.0,
+  "ground_posture": {
+    "target": "canonical initial hinge pose; zero wing angular velocity on stand and walk",
+    "initial_hinge_angles_rad": {
+      "walker/head_abduct": 0.0,
+      "walker/head_twist": 0.0,
+      "walker/head": 0.0,
+      "walker/rostrum": 0.0,
+      "walker/haustellum_abduct": 0.0,
+      "walker/haustellum": 0.0,
+      "walker/labrum_left": 0.0,
+      "walker/labrum_right": 0.0,
+      "walker/antenna_abduct_left": 0.0,
+      "walker/antenna_twist_left": 0.0,
+      "walker/antenna_left": 0.0,
+      "walker/antenna_abduct_right": 0.0,
+      "walker/antenna_twist_right": 0.0,
+      "walker/antenna_right": 0.0,
+      "walker/wing_yaw_left": 1.5,
+      "walker/wing_roll_left": 0.7,
+      "walker/wing_pitch_left": -1.0,
+      "walker/wing_yaw_right": 1.5,
+      "walker/wing_roll_right": 0.7,
+      "walker/wing_pitch_right": -1.0,
+      "walker/abdomen_abduct": 0.0,
+      "walker/abdomen": 0.0,
+      "walker/abdomen_abduct_2": 0.0,
+      "walker/abdomen_2": 0.0,
+      "walker/abdomen_abduct_3": 0.0,
+      "walker/abdomen_3": 0.0,
+      "walker/abdomen_abduct_4": 0.0,
+      "walker/abdomen_4": 0.0,
+      "walker/abdomen_abduct_5": 0.0,
+      "walker/abdomen_5": 0.0,
+      "walker/abdomen_abduct_6": 0.0,
+      "walker/abdomen_6": 0.0,
+      "walker/abdomen_abduct_7": 0.0,
+      "walker/abdomen_7": 0.0,
+      "walker/haltere_left": 0.0,
+      "walker/haltere_right": 0.0,
+      "walker/coxa_abduct_T1_left": 0.0,
+      "walker/coxa_twist_T1_left": 0.0,
+      "walker/coxa_T1_left": 0.0,
+      "walker/femur_twist_T1_left": 0.0,
+      "walker/femur_T1_left": 0.0,
+      "walker/tibia_T1_left": 0.0,
+      "walker/tarsus_T1_left": 0.0,
+      "walker/tarsus2_T1_left": 0.0,
+      "walker/tarsus3_T1_left": 0.0,
+      "walker/tarsus4_T1_left": 0.0,
+      "walker/tarsus5_T1_left": 0.0,
+      "walker/coxa_abduct_T1_right": 0.0,
+      "walker/coxa_twist_T1_right": 0.0,
+      "walker/coxa_T1_right": 0.0,
+      "walker/femur_twist_T1_right": 0.0,
+      "walker/femur_T1_right": 0.0,
+      "walker/tibia_T1_right": 0.0,
+      "walker/tarsus_T1_right": 0.0,
+      "walker/tarsus2_T1_right": 0.0,
+      "walker/tarsus3_T1_right": 0.0,
+      "walker/tarsus4_T1_right": 0.0,
+      "walker/tarsus5_T1_right": 0.0,
+      "walker/coxa_abduct_T2_left": 0.0,
+      "walker/coxa_twist_T2_left": 0.0,
+      "walker/coxa_T2_left": 0.0,
+      "walker/femur_twist_T2_left": 0.0,
+      "walker/femur_T2_left": 0.0,
+      "walker/tibia_T2_left": 0.0,
+      "walker/tarsus_T2_left": 0.0,
+      "walker/tarsus2_T2_left": 0.0,
+      "walker/tarsus3_T2_left": 0.0,
+      "walker/tarsus4_T2_left": 0.0,
+      "walker/tarsus5_T2_left": 0.0,
+      "walker/coxa_abduct_T2_right": 0.0,
+      "walker/coxa_twist_T2_right": 0.0,
+      "walker/coxa_T2_right": 0.0,
+      "walker/femur_twist_T2_right": 0.0,
+      "walker/femur_T2_right": 0.0,
+      "walker/tibia_T2_right": 0.0,
+      "walker/tarsus_T2_right": 0.0,
+      "walker/tarsus2_T2_right": 0.0,
+      "walker/tarsus3_T2_right": 0.0,
+      "walker/tarsus4_T2_right": 0.0,
+      "walker/tarsus5_T2_right": 0.0,
+      "walker/coxa_abduct_T3_left": 0.0,
+      "walker/coxa_twist_T3_left": 0.0,
+      "walker/coxa_T3_left": 0.0,
+      "walker/femur_twist_T3_left": 0.0,
+      "walker/femur_T3_left": 0.0,
+      "walker/tibia_T3_left": 0.0,
+      "walker/tarsus_T3_left": 0.0,
+      "walker/tarsus2_T3_left": 0.0,
+      "walker/tarsus3_T3_left": 0.0,
+      "walker/tarsus4_T3_left": 0.0,
+      "walker/tarsus5_T3_left": 0.0,
+      "walker/coxa_abduct_T3_right": 0.0,
+      "walker/coxa_twist_T3_right": 0.0,
+      "walker/coxa_T3_right": 0.0,
+      "walker/femur_twist_T3_right": 0.0,
+      "walker/femur_T3_right": 0.0,
+      "walker/tibia_T3_right": 0.0,
+      "walker/tarsus_T3_right": 0.0,
+      "walker/tarsus2_T3_right": 0.0,
+      "walker/tarsus3_T3_right": 0.0,
+      "walker/tarsus4_T3_right": 0.0,
+      "walker/tarsus5_T3_right": 0.0
+    },
+    "initial_root_height_cm": 0.1278,
+    "wing_kp": 0.02,
+    "wing_kd": 0.00015,
+    "stand_foot_adhesion": 0.0,
+    "method": "bounded corrective imitation labels; measured posture scores are not PPO rewards",
+    "passive_joints": "included in posture measurement; only existing actuators receive targets",
+    "runtime_override": false,
+    "gates": {
+      "ground_wing_max_deviation_rad": 0.2,
+      "ground_wing_velocity_rms_rad_s": 2.0,
+      "stand_group_angle_rms_rad": 0.15,
+      "stand_max_height_loss_fraction": 0.1
+    }
+  },
+  "wing_response_supervision": {
+    "weight": 0.0,
+    "ground_worlds_sampled_per_action": 0,
+    "angle_perturbation_rad": 0.05,
+    "speed_perturbation_rad_s": 2.0,
+    "kind": "paired synthetic wing feedback from copied actual prior neural state",
+    "normalization": "finite difference divided by the requested unsaturated response",
+    "extra_physics_worlds": 0,
+    "runtime_module": false
+  },
+  "optimizer": "fresh Adam for declared motor-only parameter subset",
+  "physical_success": "Training assistance is not student acceptance; run independent review"
+}

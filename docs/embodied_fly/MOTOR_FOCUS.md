@@ -5,12 +5,22 @@ selection and needs-driven behavior are deferred. Takeoff, landing and transitio
 between ground and air remain later requirements; the first pilot starts each
 primitive from its declared ground or airborne state.
 
-Current development choice for the next motor curriculum is
-[ground_outcome_03](runs/ground_outcome_03/SUMMARY.md), which improves resting
-wings in both ground commands. Its unchanged continuation04 was not better.
-The same03 checkpoint drives all commands; there is no per-command policy
-selection. Previous motor_focus_06 remains preserved. Full posture/tracking
-gates and hover are still incomplete; this is not a released motor solution.
+Current preserved development checkpoint is
+[state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
+It uses the same command-conditioned actor for standing, walking and hover.
+Ground support remains stable, but strict posture/tracking gates and hover are
+incomplete. It is a development checkpoint, not a released motor solution.
+Earlier ground_outcome03 and motor_focus06 remain preserved.
+
+The latest [nonlinear readout trial](runs/nonlinear_motor_readout_01/SUMMARY.md)
+improves predictions on recorded histories but fails live walking and hover.
+It adds a feedforward wing decoder from existing motor-neuron activity, with all
+original actor weights and the body unchanged. Its full failure video is retained;
+it does not replace retention02. The subsequent
+[online trial](runs/nonlinear_online_01/SUMMARY.md) keeps standing and walking
+upright in its full review, but wing posture and hover still fail. It learns
+corrections on its own physical states, with the same body and one actor. See the learning journal
+and immutable per-run evidence for outcomes and timing.
 
 Every world uses `wing_motion`: 5 kHz native MuJoCo physics and 500 Hz control.
 The checkpoint records a fingerprint of masses, inertias, joints, contacts,
@@ -278,7 +288,7 @@ mean squared normalized-action error; it does not change a physical torque limit
 This variant is **PPO plus corrective supervision**, with separate gradient audits
 and label-presentation counts. The auxiliary adds no deployed module or policy.
 
-## Next hover investigation
+## Historical hover-reference course correction
 
 The [clock audit](runs/hover_clock_audit_01/SUMMARY.md) shows that the current
 hover reference can request different wing commands from identical current
@@ -287,8 +297,8 @@ unlearnability. Before further hover training, test a reference driven by
 measured wing position/speed and current altitude error. Its purpose is to
 provide more direct teaching targets, not to become a deployed controller.
 
-Keep the canonical body, torque limits and force law. Validate the reference
-physically before training, including startup from zero wing speed. Then train
-one continuing actor with ground rehearsal and hover examples together, using03
-as the development parent. Do not change the actor into a scripted oscillator,
-add a hidden phase input or substitute a controller during evaluation.
+That investigation produced the current measured-state hover reference, validated
+for five seconds on the same body. Subsequent retention training led to the
+preserved retention02 checkpoint. Learned hover remains unproven. The reference
+supplies training targets only; it is never substituted for the actor during
+acceptance evaluation. Canonical body, torque limits and force law remain fixed.
