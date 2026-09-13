@@ -13,20 +13,33 @@ import mujoco
 import numpy as np
 import torch
 
-from embodied_fly.body import FlyEnvironment
+from embodied_fly.body import CONTROL_DT, FlyEnvironment
+from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_teacher import FlightTeacherOracle
+from embodied_fly.observations import append_wing_velocity
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
+@torch.no_grad()
 def collect(args):
-    if args.seconds <= 0 or args.episodes < 4:
+    if not np.isfinite(args.seconds) or args.seconds <= 0 or args.episodes < 4:
         raise ValueError("Positive duration and at least four episodes required")
+    if not 0 <= args.student_fraction <= 1:
+        raise ValueError("Student actuator fraction must be between zero and one")
+    if bool(args.student_checkpoint) != bool(args.graph):
+        raise ValueError("Student checkpoint and graph must be supplied together")
+    if args.student_fraction and not args.student_checkpoint:
+        raise ValueError("A nonzero student fraction requires a student checkpoint")
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
     provenance = evidence()
     torch.set_num_threads(4)
     env = FlyEnvironment("flight")
     teacher = FlightTeacherOracle(env, args.teacher, args.wing_pattern)
+    device = torch.device(args.device)
+    actor = None
+    if args.student_checkpoint:
+        actor, _ = load_actor(args.student_checkpoint, args.graph, device)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
     rng = np.random.default_rng(args.seed)
@@ -36,27 +49,52 @@ def collect(args):
         speed = (0, 5, 10, 20)[episode % 4]
         phase = float(rng.random())
         teacher.initialize(speed, args.seconds, phase)
+        memory = actor.initial_state(1) if actor is not None else None
         rows = {
             k: []
             for k in ("qpos", "qvel", "activation", "ctrl", "observation", "action", "time")
         }
+        if actor is not None:
+            rows.update(student_action=[], executed_action=[])
         errors, heights, tilts = [], [], []
         failure = physical_failure = None
         episode_started = time.perf_counter()
         for step in range(round(args.seconds / env.control_dt)):
+            observation = env.observation()
             action = teacher.act(step)
+            executed = action
+            if actor is not None:
+                actor_observation = (
+                    append_wing_velocity(observation, env.data.qvel, env.wing_velocity_indices)
+                    if actor.sensor_extension_size == 6
+                    else observation
+                )
+                result = actor(
+                    torch.as_tensor(actor_observation[None], device=device),
+                    memory,
+                    time_scale=env.control_dt / CONTROL_DT,
+                )
+                memory = result.state
+                student = result.action[0].cpu().numpy()
+                executed = (
+                    args.student_fraction * student + (1 - args.student_fraction) * action
+                )
+                if not np.isfinite(executed).all() or np.max(np.abs(executed)) > 1.000001:
+                    raise RuntimeError("Nonfinite or unbounded mixed actuator command")
+                rows["student_action"].append(student.copy())
+                rows["executed_action"].append(executed.copy())
             for k, value in (
                 ("qpos", env.data.qpos),
                 ("qvel", env.data.qvel),
                 ("activation", env.data.act),
                 ("ctrl", env.data.ctrl),
-                ("observation", env.observation()),
+                ("observation", observation),
                 ("action", action),
                 ("time", env.data.time),
             ):
                 rows[k].append(np.array(value, copy=True))
             try:
-                env.step(action)
+                env.step(executed)
             except RuntimeError as error:
                 failure = str(error)
                 break
@@ -97,8 +135,20 @@ def collect(args):
         "provenance": provenance,
         "completed_utc": utc_now(),
         "seed": args.seed,
-        "source": "Inherited flight teacher plus supplied wing pattern; complete body and individual bounded actuator labels",
-        "student_present": False,
+        "source": "Inherited flight teacher plus supplied wing pattern; complete body and individual bounded actuator labels"
+        if actor is None
+        else "Teacher corrections on states visited by a physical student/teacher actuator mixture; supervised dataset aggregation, not RL or student acceptance",
+        "student_present": actor is not None,
+        "student_checkpoint_sha256": sha256(args.student_checkpoint)
+        if actor is not None
+        else None,
+        "graph_sha256": sha256(args.graph / "weights.npz") if actor is not None else None,
+        "student_fraction": args.student_fraction,
+        "student_inference_device": str(device) if actor is not None else None,
+        "executed_action": "teacher label"
+        if actor is None
+        else "student_fraction * student_action + (1-student_fraction) * teacher label; saved separately",
+        "recurrent_memory": "Reset only between episodes; persists at every 5 kHz decision",
         "policy_acceptance_eligible": False,
         "setup_seconds": setup_seconds,
         "collection_seconds": time.perf_counter() - collection_started,
@@ -116,6 +166,7 @@ def collect(args):
         "episodes": reports,
     }
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    return manifest
 
 
 if __name__ == "__main__":
@@ -125,4 +176,8 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=float, default=0.3)
     parser.add_argument("--episodes", type=int, default=8)
     parser.add_argument("--seed", type=int, default=42001)
+    parser.add_argument("--student-checkpoint", type=Path)
+    parser.add_argument("--graph", type=Path)
+    parser.add_argument("--student-fraction", type=float, default=0)
+    parser.add_argument("--device", default="cuda")
     collect(parser.parse_args())

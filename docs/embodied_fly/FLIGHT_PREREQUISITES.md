@@ -183,3 +183,40 @@ The student evaluator uses a declared captured airborne state only for reset,
 then drives all 78 actuators directly. No teacher or oscillator runs in its loop.
 Takeoff, landing, altitude/perception inputs, control-clock transitions and
 survival utility remain future curriculum work.
+
+## Continuous wing-speed feedback and retained ground behavior
+
+[Pilot 02](runs/motor_flight_probe_02/SUMMARY.md) adds six continuous wing-speed
+measurements through the existing sensory encoder. It trains the same fixed-graph
+actor with 389 inputs and 78 outputs. The old 383-input path is retained, and
+zero initialization of the new input matrix preserves the parent function within
+measured CUDA execution precision. Two failed strict-equality checks and the
+parent's repeat-run numerical variation are preserved in the migration reports.
+
+The flight input repair leaves all six added channels unclipped. Ground rehearsal
+now uses eight captured episodes from online01 itself, including continuous
+walk-stop-walk. This explicitly replaces inherited-teacher ground labels for this
+pilot; it is not a claim that the original recipe was unchanged.
+
+The 60.094962-second RTX 4090 pilot still failed both physical airborne probes.
+Five of six fixed ground cases and the continuous transition remained stable;
+tracking is degraded. The old walking reference is preserved. A bounded
+180-second continuation was declared before running it, with the same data,
+learning rate, clocks and 32 neural sequences, preserving pilot 02's Adam state.
+No success is inferred from its lower offline loss.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.retention \
+  --checkpoint assets/embodied_fly/diagnostics/motor_online_01.pt \
+  --graph outputs/fly_survival/malecns \
+  --output outputs/embodied_fly/retention_reproduction --seed 44001
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.train \
+  --graph outputs/fly_survival/malecns \
+  --data outputs/embodied_fly/retention_reproduction \
+  --additional-data outputs/embodied_fly/flight_demonstrations_reproduction \
+  --resume assets/embodied_fly/diagnostics/motor_online_01.pt \
+  --output outputs/embodied_fly/continuous_wing_feedback_reproduction \
+  --seconds 60 --worlds 32 --sequence 16 --burnin 16 \
+  --reset-fraction 0.25 --lr 0.00003 --seed 45001 \
+  --wing-loss-weight 1 --wing-velocity-inputs
+```

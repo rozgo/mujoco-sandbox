@@ -174,8 +174,11 @@ the source capture contains them; older diagnostic captures remain usable.
 The new `embodied_fly.ppo` path runs **32 independent complete FlyBody worlds**
 through native MuJoCo CPU threads, with the shared full MaleCNS actor on CUDA.
 These are separate training worlds, not yet interacting flies in the survival
-arena. The deployed actor remains 383 inputs, four recurrent graph updates and
+arena. The retained walking actor has 383 inputs, four recurrent graph updates and
 78 bounded outputs; the walking stage keeps 19 nonwalking channels passive.
+Flight pilot 02 adds six continuous wing-speed inputs through the same sensory
+encoder (389 inputs). Its checkpoint also works with the native batched learning
+path. It is a diagnostic candidate, not a replacement for the walking reference.
 A separate 1,697 → 128 → 128 → 1 critic is used only during learning.
 
 The [declared recipe and first measurements](LEARNING_JOURNAL.md) distinguish

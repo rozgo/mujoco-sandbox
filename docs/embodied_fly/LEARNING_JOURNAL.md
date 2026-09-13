@@ -979,3 +979,28 @@ all ground commands and continuous transitions afterward. Do not infer success
 from lower loss or silently promote this candidate. The prior reference remains
 online01; a failed continuation should motivate corrective/on-policy learning,
 not indefinite extensions of this same warm start.
+
+### Three-minute continuation and corrective flight collection
+
+The declared continuation (`motor_flight_01`, seed 45002, source `71b48e8`) ran
+180.173966 seconds, 608 updates and 311,296 supervised examples. Adam resumed.
+Flight validation MSE improved 0.052054 → 0.017615, but both 0.3-second airborne
+probes still fell. Five fixed ground cases remained stable; hold fell, and the
+continuous walk-stop-walk trial toppled. Zero numerical warnings. Preserve this
+checkpoint as rejected; lower teacher-state error did not improve physical skill.
+
+Next collect eight 0.3-second flight episodes using **pilot 02** (the candidate
+that retained continuous ground stability), seed 46001, **15% student / 85%
+teacher** bounded actuator mixtures. At each actual visited state the inherited
+teacher supplies a correction label. Save teacher, student and executed actions
+separately; recurrent state persists within each episode. The teacher alone has
+its reference and wingbeat generator. This is supervised data collection with
+training assistance, not teacher-free flight or PPO. All failures remain captured
+and whole failed episodes are ineligible for imitation, as before. Start with a
+small mixture because the current unassisted student loses height within tens of
+milliseconds. Validate the mixture physically before training on it.
+
+A diagnostic over the 0.3-second held-out hover capture also found inherited
+wing-position normalization saturates roughly 62–84% of angle samples. The new
+velocity inputs are continuous. This identifies another information limitation;
+we have not yet established its causal contribution or changed the angle schema.
