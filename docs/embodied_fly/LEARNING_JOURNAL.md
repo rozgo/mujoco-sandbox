@@ -1289,3 +1289,26 @@ startup draws from first 25 frames and training-only axis scaling. The graph,
 upstream actor, utility, remaining motor outputs, physics and acceptance gates
 stay fixed. Evaluate the original declared hover/forward captures; more diverse
 assisted starts are data, not student flight success.
+
+### Phase-coverage outcome and declared neural-memory handover diagnostic
+
+All **64** short expert starts pass the original demonstration envelope:
+6,400 physical frames / 1.28 simulated seconds, **4.150386 s** setup and
+**10.873399 s** collection. Frozen replay of 64 sequences takes **4.049921 s**
+total. Startup02 fits for **10.000448 s**, 16,517 updates, 13,800 distinct training
+frames across original and new corpora. New-corpus excluded-episode wing MSE
+improves **0.034882→0.010548**. Original excluded startup pitch MSE improves to
+0.02762/0.02926, but both unassisted physical flights still fall. Keep this as
+coverage evidence; do not promote the checkpoint.
+
+Next test **readout01** in a paired diagnostic, not a new acceptance condition.
+Four 150 ms physical episodes (speeds 0/5/10/20 cm/s), seed **57001**, begin with
+**50 ms** of real expert actuation while the graph actor continuously observes
+the causal sensor stream. At handover, execute **100% student** commands for the
+remaining 100 ms. Compare one run retaining neural memory with another clearing
+only neural memory at that same handover; match the entire physical prefix.
+The teacher continues computing counterfactual labels for capture but cannot
+contribute to executed commands after handover. Save per-frame executed fractions,
+release neural state, actual actions and post-release metrics. Neither condition
+can count as teacher-free flight acceptance. This isolates whether prior neural
+history materially helps, before spending more training time on startup alone.

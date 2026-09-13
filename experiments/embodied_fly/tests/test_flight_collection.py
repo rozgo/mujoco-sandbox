@@ -12,9 +12,12 @@ from embodied_fly.body import FlyEnvironment
 from embodied_fly.train import load_episodes
 
 
-@pytest.mark.parametrize("extension_size", (6, 12))
+@pytest.mark.parametrize(
+    "extension_size,warmup,reset_at_release",
+    ((6, 0, False), (12, 0, False), (12, 0.0006, False), (12, 0.0006, True)),
+)
 def test_corrective_capture_records_executed_physics_and_causal_previous_action(
-    tmp_path, monkeypatch, extension_size
+    tmp_path, monkeypatch, extension_size, warmup, reset_at_release
 ):
     """A small deterministic test actor checks collection, not learned behavior."""
 
@@ -42,7 +45,9 @@ def test_corrective_capture_records_executed_physics_and_causal_previous_action(
         wing_pattern=assets / "wing_pattern_fmech.npy",
         student_checkpoint=fake,
         graph=tmp_path,
-        student_fraction=0.15,
+        student_fraction=1.0 if warmup else 0.15,
+        teacher_warmup_seconds=warmup,
+        reset_memory_at_release=reset_at_release,
         device="cpu",
         seed=46001,
         seconds=0.002,
@@ -52,17 +57,34 @@ def test_corrective_capture_records_executed_physics_and_causal_previous_action(
     assert manifest["recorded_observation_size"] == 383
     assert manifest["student_observation_size"] == 383 + extension_size
     assert manifest["student_present"] and not manifest["policy_acceptance_eligible"]
+    assert manifest["release_diagnostic"] == bool(warmup)
     env = FlyEnvironment("flight")
     for episode in range(4):
         with np.load(args.output / f"episode_{episode:03d}.npz") as capture:
             actions = capture["executed_action"]
+            fractions = np.full((len(actions), 1), args.student_fraction)
+            fractions[: round(warmup / env.control_dt)] = 0
+            np.testing.assert_array_equal(
+                capture["executed_student_fraction"], fractions[:, 0]
+            )
             np.testing.assert_allclose(
                 actions,
-                0.15 * capture["student_action"] + 0.85 * capture["action"],
+                fractions * capture["student_action"] + (1 - fractions) * capture["action"],
                 rtol=0,
                 atol=1e-7,
             )
-            np.testing.assert_allclose(capture["student_action"][:, 0], np.arange(10) * 0.01)
+            if warmup:
+                np.testing.assert_array_equal(actions[:3], capture["action"][:3])
+                np.testing.assert_array_equal(actions[3:], capture["student_action"][3:])
+                assert manifest["episodes"][episode]["after_teacher_warmup"]["frames"] == 7
+            expected = np.arange(10) * 0.01
+            if reset_at_release:
+                expected[3:] -= 0.03
+            np.testing.assert_allclose(capture["student_action"][:, 0], expected, atol=1e-8)
+            if warmup:
+                np.testing.assert_array_equal(
+                    capture["release_neural_state"], 0 if reset_at_release else 3
+                )
             # Original sensor schema ends with previous action, command, five needs.
             np.testing.assert_array_equal(capture["observation"][1:, -86:-8], actions[:-1])
             env.reset()
