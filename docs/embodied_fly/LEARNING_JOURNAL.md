@@ -1264,3 +1264,28 @@ sequence, clock input, neural bypass, teacher or physics change is added.
 Evaluate the same original-model hover/forward initial captures, then the fixed
 walking cases and continuous transition; preserve all outcomes. Do not infer
 physical flight from either improved startup error or fitted expert histories.
+
+### Startup-weighting outcome and declared phase-coverage collection
+
+Startup01 changes only the six existing wing outputs and still fails both
+unassisted 0.3-second flights. Its startup pitch errors decrease, while roll
+errors and overall excluded-episode MSE worsen (0.006163→0.007537). The fit took
+10.000220 s and 16,875 updates. Do not promote it. Its report's generic
+`corpus_sampling` sentence still says uniform, but the explicit startup sampling
+fields correctly describe the actual 40% startup / 60% uniform implementation;
+the generic sentence is corrected in subsequent reports without rewriting evidence.
+
+The original eight demonstrations provide only **six training reset phases**;
+held-out episodes use other phases. Thousands of later frames do not supply
+additional zero-memory starts. Collect **64 episodes × 20 ms** using the unchanged
+expert and original physics, seed **55001**. Random initial wing phase is a reset
+condition only, never a student observation. Save every failure and causal action.
+Replay the frozen readout01 graph on the valid new episodes, using the existing
+whole-episode split with seed 1193, independently of the original split.
+
+Then fit the same 1,542 wing parameters from readout01 for **10 seconds**, seed
+**56001**, learning rate **0.001**, equal original/new corpus sampling, **40%**
+startup draws from first 25 frames and training-only axis scaling. The graph,
+upstream actor, utility, remaining motor outputs, physics and acceptance gates
+stay fixed. Evaluate the original declared hover/forward captures; more diverse
+assisted starts are data, not student flight success.

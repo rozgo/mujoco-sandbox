@@ -243,7 +243,9 @@ def train(args):
         "validation_episode_indices": corpora[0]["report"]["validation_episode_indices"],
         "unique_training_frames": sum(len(corpus["x"]) for corpus in corpora),
         "corpora": [corpus["report"] for corpus in corpora],
-        "corpus_sampling": "Equal probability per corpus per update; uniform training-frame sampling within corpus",
+        "corpus_sampling": "Equal probability per corpus per update; configured startup/uniform frame mixture within corpus"
+        if args.startup_fraction
+        else "Equal probability per corpus per update; uniform training-frame sampling within corpus",
         "corpus_updates": corpus_updates,
         "updates": updates,
         "sampled_training_examples": updates * args.batch_size,
