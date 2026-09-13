@@ -2234,3 +2234,11 @@ It includes an actual training/save integration, changed wing weights, frozen
 upstream/body rows, and identical-history non-wing inference. The full suite passes100tests in69.80seconds, with23dependency warnings.
 The wing_output01pilot is declared but has not started. This stage is output-decoder imitation, with deliberately frozen
 internal cell parameters, not a claim of end-to-end brain learning in this run.
+
+### Selective wing-output trial outcome and next physical search — 2026-09-13 11:02 UTC
+
+Wing_output01 completed:180.428s,174,080transitions,170updates. The selective parameter boundary is independently verified, but stand/walk wing RMS worsened and hover still fell. All495failure traces were verified. Its full15s film is decoded, inspected and opened. Retention02remains selected. The preceding goal turn made progress through implementation, a real GPU pilot, and full physical evidence; the intervening user question clarified sensor history without changing the controller.
+
+A declared next experiment searches two constants in the existing sweep-output matrices, using physical outcomes instead of torque-label fit. Sixteen candidates run in two batches of32worlds: eight candidates, each with stand, walk and two airborne starts. Initial physical states are matched across all candidates. All actions still originate in the same frozen graph actor, with candidate-specific constant decoder rows. Selected constants are baked into ordinary actor weights; there is no new runtime module or sensor bypass. Ground retention constrains selection; a >=5% lower two-start hover cost is required. Short search results require separate full-length evaluation. This is parameter-space physical calibration, not PPO or full-core learning.
+
+The new search passes3focused tests in3.78s and the complete103-test suite in71.78s (23dependency warnings). Ruff passes. Source, declared grid and archived preceding trial are committed before remote execution.

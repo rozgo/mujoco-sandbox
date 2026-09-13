@@ -1,0 +1,30 @@
+{
+  "checkpoint_sha256": "75060d7e558557f526397fd3ee10750a116b617d724556c0a2d58840bf27b736",
+  "parent_sha256": "f5d383485f37478b02b74cf9502c603f35b24e2f08b35e0ca6035b76b0bd87c6",
+  "eligible_parameters": 1542,
+  "frozen_state_scalars_including_buffers": 2423543,
+  "all_unselected_state_bitwise_unchanged": true,
+  "graph_and_physical_contracts_match": true,
+  "wing_actuator_names": [
+    "walker/wing_yaw_left",
+    "walker/wing_roll_left",
+    "walker/wing_pitch_left",
+    "walker/wing_yaw_right",
+    "walker/wing_roll_right",
+    "walker/wing_pitch_right"
+  ],
+  "changed": [
+    {
+      "tensor": "motor_decoder.3.weight",
+      "changed_selected_scalars": 1536,
+      "selected_delta_l2": 0.05060404911637306
+    },
+    {
+      "tensor": "motor_decoder.3.bias",
+      "changed_selected_scalars": 6,
+      "selected_delta_l2": 0.00048398817307315767
+    }
+  ],
+  "same_history_nonwing_action_max_delta": 1.385807991027832e-06,
+  "same_history_world_actions_checked": 174080
+}
