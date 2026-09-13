@@ -1869,3 +1869,18 @@ The new stage trains the complete existing representation on actual ground
 disturbances, without simultaneous hover imitation gradients. It is corrective
 online imitation, not PPO. No runtime wing mask, controller bypass, actuator
 change or observation-normalization change is introduced.
+
+Motor-focus09 completes181.150672s/129updates/132,096physicaltransitions.
+All128 completed ground episodes reach the2s timeout, without assistance.
+Five-second evaluation keeps both ground cases upright with permitted support,
+but standing/walking wing RMS0.1637/0.0751rad does not improve preferred06.
+Standing height loss is0.508%;full tracking/posture gates still fail. Hover,
+which was not trained in this stage, still falls. Do not promote09.
+
+Declare motor_focus10 as one bounded optimizer-rate continuation from09:
+same ground curriculum,32worlds(16/16),reset disturbances,targets,response loss,
+zero execution assistance and180s budget; freshAdam1e-4 instead of1e-5.
+Seed71010;evaluate allthree full5s cases at72001. Test whether the conservative
+step size limits representation learning; do not assume it is the sole cause.
+This changes the optimization rate only, with one continuing actor and identical
+body/force parameters. No new physics, controller, observation or reward recipe.
