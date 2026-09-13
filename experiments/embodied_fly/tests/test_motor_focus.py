@@ -142,6 +142,7 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
         ("ground", False, "all"),
         ("all", True, "all"),
         ("all", True, "wing-output"),
+        ("all", True, "wing-residual"),
     ],
 )
 def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
@@ -152,6 +153,8 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
 
     actor = tiny_brain()
     actor.set_motor_only()
+    if subset == "wing-residual":
+        actor.enable_wing_residual(8)
     fixed = {
         k: v.clone()
         for k, v in actor.state_dict().items()
@@ -210,7 +213,7 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["ground_wing_loss_weight"] == 10
     assert report["ground_retention"]["enabled"] == retain_ground
     assert report["parameter_subset"]["mode"] == subset
-    if subset == "wing-output":
+    if subset in ("wing-output", "wing-residual"):
         assert report["core_gradient_audit"] is None
         assert report["subset_gradient_audit"]
         assert report["parameter_subset"]["upstream_parameters_and_buffers_unchanged"]
@@ -232,6 +235,12 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["transitions"] >= 6
     assert report["checkpoint_sha256"] == sha256(args.output / "actor.pt")
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in fixed.items())
+    if subset == "wing-residual":
+        assert checkpoint["wing_residual_enabled"]
+        assert checkpoint["wing_residual_hidden"] == 8
+        restored = tiny_brain()
+        restored.enable_wing_residual(8)
+        restored.load_state_dict(checkpoint["state_dict"], strict=True)
     loaded = mujoco.MjModel.from_binary_path(str(args.output / "model.mjb"))
     assert checkpoint["physical_contract"] == physical_contract(loaded)
     json.dumps(report, allow_nan=False)

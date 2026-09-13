@@ -2302,3 +2302,11 @@ Implemented an optional 815→128 tanh→6 wing-logit readout, with training-set
 Five focused tests pass in1.39s: zero-output identity, same-history non-wing and neural-state preservation, ordinary checkpoint loading, an actual bounded fitting/export run, exact exported predictions, and tampered-cache rejection. The real five-history cache verifies6758fit/1680validation frames and815features. A one-off Mac audit initially omitted CPU map_location for a CUDA-saved parent; the corrected audit passes. The production fit already explicitly loads to CPU. The complete suite is running; no GPU fit has started yet.
 
 The complete suite passes115tests in75.24s with23known dependency warnings; Ruff and diff checks pass. Source and the declared pilot are committed before remote execution.
+
+### Nonlinear offline outcome and physical-state continuation — 2026-09-13 12:19:37 UTC
+
+The cached-feature fit completes19.509097s total, including1.527266ssetup and17.907381sfitting. It reaches18,000updates, selects10,500, and improves descriptive recorded-history error. The full unassisted test still fails walking/hover and standing wing posture; zero numerical warnings. Every original actor weight, physical contract and causal capture is verified. Exported predictions match acrossGPU/Mac within3.28e-7. The full15s film is decoded, inspected and opened. Retention02remainsselected.
+
+Implemented wing-residual training selection in the existing online motor loop, freezing every original parameter and the feature-normalization buffers. Standard checkpoints now retain optional decoder metadata after online training. Thirteen focused tests pass in21.48s, including actual canonical three-world collection/learning/export with unchanged non-wing outputs on matched histories. The new180s/32world pilot is declared before execution, with purely actor-executed actions and current-state posture/hover labels. Fullsuite is running.
+
+The complete suite passes116tests in77.77s,25dependency warnings. Ruff and diff checks pass. Commit source, offline evidence/video, and the online declaration before remote training.

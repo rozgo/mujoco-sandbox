@@ -20,7 +20,7 @@ from embodied_fly.braking import BrakingTeacher
 from embodied_fly.evaluate import load_actor
 from embodied_fly.ground_posture import GroundPosture
 from embodied_fly.motion_flight import initialize
-from embodied_fly.motor_parameter_subset import WingOutputSubset
+from embodied_fly.motor_parameter_subset import WingOutputSubset, WingResidualSubset
 from embodied_fly.motor_retention import FrozenMotorReference, task_loss, task_mixtures
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.physical_contract import physical_contract
@@ -431,7 +431,7 @@ def train(args):
     if not 0 <= args.teacher_mix <= 1:
         raise ValueError("Teacher mixture must be in [0,1]")
     subset_mode = getattr(args, "trainable_subset", "all")
-    if subset_mode not in ("all", "wing-output"):
+    if subset_mode not in ("all", "wing-output", "wing-residual"):
         raise ValueError("Unknown motor training parameter subset")
     retain_ground = getattr(args, "retain_ground", False)
     ground_weight = getattr(args, "ground_retention_weight", 1.0)
@@ -480,9 +480,10 @@ def train(args):
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     memory = actor.initial_state(args.worlds)
     retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
-    subset = (
-        WingOutputSubset(actor, teacher.channels) if subset_mode == "wing-output" else None
+    subset_class = {"wing-output": WingOutputSubset, "wing-residual": WingResidualSubset}.get(
+        subset_mode
     )
+    subset = subset_class(actor, teacher.channels) if subset_class else None
     optimizer = torch.optim.Adam(
         [p for p in actor.parameters() if p.requires_grad], lr=args.lr
     )
@@ -708,6 +709,8 @@ def train(args):
         "state_dict": {k: v.detach().cpu() for k, v in actor.state_dict().items()},
         "optimizer_state_dict": optimizer.state_dict(),
         "motor_only": True,
+        "wing_residual_enabled": actor.wing_residual is not None,
+        "wing_residual_hidden": actor.wing_residual_hidden,
         "physical_contract": physical_contract(env.model),
         "observation_size": 397,
         "sensor_extension_size": 14,
@@ -814,7 +817,9 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=16)
     parser.add_argument("--sequence", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
-    parser.add_argument("--trainable-subset", choices=("all", "wing-output"), default="all")
+    parser.add_argument(
+        "--trainable-subset", choices=("all", "wing-output", "wing-residual"), default="all"
+    )
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--hover-teacher-mix", type=float)
     parser.add_argument("--retain-ground", action="store_true")

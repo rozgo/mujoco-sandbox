@@ -77,3 +77,52 @@ class WingOutputSubset:
             "runtime_action_mask": False,
             "scope": "Gradient selection only; changed wing feedback can still change physical ground behavior",
         }
+
+
+class WingResidualSubset:
+    """Online learning of the existing optional decoder, with original state frozen."""
+
+    def __init__(self, actor, channels):
+        if actor.wing_residual is None or list(channels) != list(range(14, 20)):
+            raise ValueError("An enabled canonical wing readout is required")
+        self.actor = actor
+        self.initial = {k: v.detach().clone() for k, v in actor.state_dict().items()}
+        actor.zero_grad(set_to_none=True)
+        actor.requires_grad_(False)
+        actor.wing_residual.requires_grad_(True)
+
+    def gradient_audit(self):
+        audit = {}
+        for name, parameter in self.actor.named_parameters():
+            if name.startswith("wing_residual."):
+                if parameter.grad is None or not torch.isfinite(parameter.grad).all():
+                    raise RuntimeError("Wing readout must receive finite gradients")
+                audit[name] = {"gradient_l2": float(parameter.grad.norm())}
+            elif parameter.grad is not None:
+                raise RuntimeError("Original actor parameters received gradients")
+        if not any(item["gradient_l2"] > 0 for item in audit.values()):
+            raise RuntimeError("No wing readout learning gradient")
+        return audit
+
+    def verify_and_report(self):
+        current = self.actor.state_dict()
+        eligible = {name for name, p in self.actor.named_parameters() if p.requires_grad}
+        for name, value in current.items():
+            if name not in eligible and not torch.equal(value, self.initial[name]):
+                raise RuntimeError(f"Frozen original state or normalization changed: {name}")
+        return {
+            "mode": "wing-residual",
+            "effective_trainable_parameters": sum(
+                p.numel() for p in self.actor.parameters() if p.requires_grad
+            ),
+            "upstream_parameters_and_buffers_unchanged": True,
+            "nonwing_output_rows_unchanged": True,
+            "all_original_actor_state_unchanged": True,
+            "feature_normalization_unchanged": True,
+            "selected_parameter_changes_l2": {
+                name: float((current[name] - self.initial[name]).norm())
+                for name in sorted(eligible)
+            },
+            "runtime_action_mask": False,
+            "runtime_readout": "same optional feedforward decoder in the actor",
+        }
