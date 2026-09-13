@@ -72,3 +72,17 @@ by rounding (maximum observed absolute difference2.60e-14, with all physical
 arrays agreeing at1e-12). Each host's native/batched bodies match exactly; replay
 uses the captured training MJB. Cross-host live recompilation must not bypass the
 strict fingerprint check silently. This is not a different body preset.
+
+## Measured outcome
+
+The first [three-minute pilot](runs/motor_focus_01/SUMMARY.md) and its
+[lower-assistance continuation](runs/motor_focus_02/SUMMARY.md) both failed
+all three unassisted cases. Their combined training time was360.924648 s,
+with324,608 real physical transitions in32 worlds. Assisted training survival
+improved, but this has not become reliable stand/walk/hover control.
+
+- [First complete review](../../previews/embodied_fly/motor_focus_01_all_tasks_v1.mp4).
+- [Lower-assistance review](../../previews/embodied_fly/motor_focus_02_all_tasks_v1.mp4).
+
+Both films include every case and its failed gate, actual simulated neural
+activity and observer eye cameras. Earlier reviewed walking remains unchanged.

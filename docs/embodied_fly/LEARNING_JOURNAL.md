@@ -1556,3 +1556,17 @@ reference assistance from80% to25%. Fresh optimizer is explicitly recorded.
 This tests current-state corrections where the student has more control; do not
 interpret assisted survival as autonomous acceptance. Evaluate all three tasks
 teacher-free at the same development seed72001. No additional physics changes.
+
+Motor-focus02 completed180.300127 s,155updates,158,720transitions. Of618 completed
+assisted episodes,99 reach two seconds and519 fail (stand23/60falls,walk17/59,
+hover479/499). Timeouts increase late in training, but all three independent
+cases still fail. First envelope exits are0.388/0.478/0.064 s for stand/walk/hover.
+Only the walking duration improves; this does not establish learned motor
+reliability. Preserve the second full video and its actual neural activity.
+Both new videos were opened automatically after full decode and visual review.
+
+No further unchanged continuation is justified by these two pilots alone.
+The next motor gate is stable unassisted standing on this same body, followed
+by walking and hover with explicit retention of already-working primitives.
+Keep a single command-conditioned checkpoint throughout; do not return to
+the earlier physical preset or activate utility selection prematurely.

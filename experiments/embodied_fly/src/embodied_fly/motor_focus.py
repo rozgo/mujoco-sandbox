@@ -308,6 +308,10 @@ def train(args):
     actor, parent = load_motor_actor(args.resume, args.graph, device)
     actor.train()
     env = FlyBatch(args.worlds, args.threads, 14, preset="wing_motion")
+    if parent.get("motor_only") and parent.get("physical_contract") != physical_contract(
+        env.model
+    ):
+        raise ValueError("Motor continuation must use the parent's exact physical fly")
     tasks = MotorTasks(env, args.seed)
     teacher = MotorTeacher(tasks, args.teacher, device)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
