@@ -28,6 +28,7 @@ from embodied_fly.motor_parameter_subset import (
 from embodied_fly.motor_retention import (
     FrozenMotorReference,
     ground_nonwing_loss,
+    hover_start_weights,
     task_loss,
     task_mixtures,
 )
@@ -143,6 +144,7 @@ class MotorTeacher:
         ground_posture=False,
         hover_reference="clock",
         stand_initial_form=False,
+        walking_reference="receding",
     ):
         if hover_reference not in ("clock", "state"):
             raise ValueError("Unknown hover reference")
@@ -157,7 +159,16 @@ class MotorTeacher:
             raise ValueError("Initial-form stand supervision requires ground posture")
         self.stand_initial_form = stand_initial_form
         self.tasks, self.env = tasks, tasks.env
-        self.ground = BrakingTeacher(self.env, teacher_path, device, track_command=True)
+        if walking_reference not in ("receding", "anchored"):
+            raise ValueError("Unknown walking reference")
+        self.walking_reference = walking_reference
+        self.ground = BrakingTeacher(
+            self.env,
+            teacher_path,
+            device,
+            track_command=True,
+            reference_tasks=tasks if walking_reference == "anchored" else None,
+        )
         self.posture = (
             GroundPosture(self.env, tasks.ground["qpos"]) if ground_posture else None
         )
@@ -279,6 +290,7 @@ def review(args):
             posture_enabled,
             getattr(args, "hover_reference", "clock"),
             getattr(args, "stand_initial_form", False),
+            getattr(args, "walking_reference", "receding"),
         )
     else:
         actor, checkpoint = load_actor(args.resume, args.graph, device)
@@ -481,7 +493,10 @@ def train(args):
     retain_ground = getattr(args, "retain_ground", False)
     ground_weight = getattr(args, "ground_retention_weight", 1.0)
     task_loss({0: torch.tensor(0.0)}, ground_weight)
-    if ground_weight != 1.0 and not retain_ground:
+    walking_reference = getattr(args, "walking_reference", "receding")
+    if walking_reference == "anchored" and retain_ground:
+        raise ValueError("Choose anchored walking supervision or retained actor labels")
+    if ground_weight != 1.0 and not retain_ground and walking_reference != "anchored":
         raise ValueError("Ground retention weighting requires --retain-ground")
     nonwing_retention_weight = getattr(args, "nonwing_retention_weight", 0.0)
     feedback_lr = getattr(args, "feedback_lr", 0.003)
@@ -496,8 +511,14 @@ def train(args):
     if nonwing_retention_weight and not retain_ground:
         raise ValueError("Non-wing retention requires a frozen ground reference")
     mixture_by_task = task_mixtures(
-        np.arange(3), args.teacher_mix, getattr(args, "hover_teacher_mix", None)
+        np.arange(3),
+        args.teacher_mix,
+        getattr(args, "hover_teacher_mix", None),
+        getattr(args, "walk_teacher_mix", None),
     )
+    start_duration = getattr(args, "hover_start_seconds", 0.05)
+    start_weight = getattr(args, "hover_start_weight", 1.0)
+    hover_start_weights(np.arange(3), np.zeros(3), 0.002, start_duration, start_weight)
     response_weight = getattr(args, "wing_response_loss", 0.0)
     response_worlds = getattr(args, "wing_response_worlds", 8)
     if not np.isfinite(response_weight) or response_weight < 0 or response_worlds < 1:
@@ -537,6 +558,7 @@ def train(args):
         getattr(args, "ground_posture", False),
         getattr(args, "hover_reference", "clock"),
         getattr(args, "stand_initial_form", False),
+        walking_reference,
     )
     posture = GroundPosture(env, tasks.ground["qpos"])
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
@@ -572,6 +594,7 @@ def train(args):
     }
     initial_core = {k: v.detach().clone() for k, v in actor.core.named_parameters()}
     transitions = updates = 0
+    startup_presentations = 0
     episodes = []
     trace = deque(maxlen=64)
     gradient_audit = None
@@ -607,6 +630,11 @@ def train(args):
                     flight,
                     getattr(args, "ground_wing_loss", 0.0),
                 )
+                startup_weights = hover_start_weights(
+                    tasks.task_ids, env.ages, env.control_dt, start_duration, start_weight
+                )
+                error = error * torch.as_tensor(startup_weights, device=device)
+                startup_presentations += int((startup_weights > 1).sum())
                 group_losses = {
                     i: error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
                     for i in active_tasks
@@ -658,6 +686,7 @@ def train(args):
                         "teacher_action": target_np.copy(),
                         "executed_action": executed.copy(),
                         "teacher_mix": mixture.copy(),
+                        "supervision_weight": startup_weights.copy(),
                         "wing_activity": env.wing_forces.activity.copy(),
                         "wing_wrench": env.wing_forces.wrench.copy(),
                         "wing_actuator_force": env.fields["actuator_force"][
@@ -812,6 +841,13 @@ def train(args):
         "parameter_subset": subset_report,
         "ground_retention": retention,
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
+        "startup_supervision": {
+            "hover_seconds": start_duration,
+            "weight": start_weight,
+            "weighted_presentations": startup_presentations,
+            "extra_physics_transitions": 0,
+            "runtime_module": False,
+        },
         "ground_posture": posture.report() if teacher.posture is not None else None,
         "wing_response_supervision": {
             "weight": response_weight,
@@ -863,6 +899,13 @@ def train(args):
         "teacher_present_during_collection": True,
         "ground_retention": retention,
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
+        "startup_supervision": {
+            "hover_seconds": start_duration,
+            "weight": start_weight,
+            "weighted_presentations": startup_presentations,
+            "extra_physics_transitions": 0,
+            "runtime_module": False,
+        },
         "loss": "normalized weighted mean of active task motor MSE; hover adds 2x wing MSE; ground wing and task weights explicit; no utility loss",
         "training_tasks": [TASKS[i] for i in active_tasks],
         "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
@@ -899,6 +942,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--teacher", type=Path)
     parser.add_argument("--hover-reference", choices=("clock", "state"), default="clock")
+    parser.add_argument(
+        "--walking-reference", choices=("receding", "anchored"), default="receding"
+    )
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--graph", type=Path)
     parser.add_argument("--device", default="cuda")
@@ -915,6 +961,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--hover-teacher-mix", type=float)
+    parser.add_argument("--walk-teacher-mix", type=float)
+    parser.add_argument("--hover-start-seconds", type=float, default=0.05)
+    parser.add_argument("--hover-start-weight", type=float, default=1)
     parser.add_argument("--retain-ground", action="store_true")
     parser.add_argument(
         "--stand-initial-form",

@@ -23,13 +23,30 @@ class FrozenMotorReference:
         self.memory = self.actor.reset_worlds(self.memory, done)
 
 
-def task_mixtures(task_ids, teacher_mix, hover_teacher_mix=None):
+def task_mixtures(task_ids, teacher_mix, hover_teacher_mix=None, walk_teacher_mix=None):
     hover_mix = teacher_mix if hover_teacher_mix is None else hover_teacher_mix
-    if not np.isfinite([teacher_mix, hover_mix]).all() or not (
-        0 <= teacher_mix <= 1 and 0 <= hover_mix <= 1
+    walk_mix = teacher_mix if walk_teacher_mix is None else walk_teacher_mix
+    if not np.isfinite([teacher_mix, hover_mix, walk_mix]).all() or not (
+        0 <= teacher_mix <= 1 and 0 <= hover_mix <= 1 and 0 <= walk_mix <= 1
     ):
         raise ValueError("Teacher mixtures must be finite and in [0,1]")
-    return np.where(np.asarray(task_ids) == 2, hover_mix, teacher_mix).astype(np.float32)
+    ids = np.asarray(task_ids)
+    return np.where(ids == 2, hover_mix, np.where(ids == 1, walk_mix, teacher_mix)).astype(
+        np.float32
+    )
+
+
+def hover_start_weights(task_ids, ages, interval, duration, weight):
+    """Weight rare initial hover corrections in training; never an actor input."""
+    if (
+        not np.isfinite([interval, duration, weight]).all()
+        or interval <= 0
+        or duration < 0
+        or weight < 1
+    ):
+        raise ValueError("Positive interval, nonnegative window and weight >= 1 required")
+    early = (np.asarray(task_ids) == 2) & (np.asarray(ages) * interval < duration)
+    return np.where(early, weight, 1).astype(np.float32)
 
 
 def task_loss(group_losses, ground_weight=1.0):

@@ -11,8 +11,15 @@ from embodied_fly.teacher import TeacherOracle
 
 
 class BrakingTeacher:
-    def __init__(self, environment, path, device="cpu", *, track_command=False):
+    def __init__(
+        self, environment, path, device="cpu", *, track_command=False, reference_tasks=None
+    ):
         self.track_command = track_command
+        if reference_tasks is not None and (
+            not track_command or reference_tasks.env is not environment
+        ):
+            raise ValueError("Anchored reference requires matching motor tasks")
+        self.reference_tasks = reference_tasks
         self.env = environment
         self.oracle = TeacherOracle(environment.template, path)
         self.policy = self.oracle.policy.to(device).eval()
@@ -36,11 +43,22 @@ class BrakingTeacher:
         pose = env.fields["qpos"][:, :7]
         rotation = env.fields["xmat"][:, env.template.thorax_id].reshape(-1, 3, 3)
         heading = np.arctan2(rotation[:, 1, 0], rotation[:, 0, 0])
+        if self.reference_tasks is not None:
+            heading = self.reference_tasks.heading
         upright = np.zeros((env.n, 4))
         upright[:, 0], upright[:, 3] = np.cos(heading / 2), np.sin(heading / 2)
         relative = get_dquat_local(pose[:, 3:], upright)
         delta = np.zeros((env.n, 3))
         delta[:, 2] = 0.1278 - pose[:, 2]
+        if self.reference_tasks is not None:
+            distance = env.ages * env.control_dt * env.command[:, 0]
+            desired = self.reference_tasks.start[:, :2] + distance[:, None] * np.column_stack(
+                (np.cos(heading), np.sin(heading))
+            )
+            error = desired - pose[:, :2]
+            # Training-only preview; never let the target run arbitrarily ahead.
+            norm = np.linalg.norm(error, axis=1)
+            delta[:, :2] = error * np.minimum(1, 0.15 / np.maximum(norm, 1e-12))[:, None]
         local_delta = np.einsum("ni,nij->nj", delta, rotation)
         appendages = (
             self.sites[:, oracle.appendage_ids] - self.xpos[:, env.template.thorax_id, None]

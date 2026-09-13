@@ -92,3 +92,51 @@ def test_full_stand_labels_do_not_retain_the_parents_crouched_body_targets():
     other = np.r_[0:14, 20:78]
     np.testing.assert_array_equal(targets[1, other], supplied[1, other])
     np.testing.assert_array_equal(env.fields["qpos"], before)
+
+
+def test_anchored_walking_teacher_matches_native_path_and_preserves_physics():
+    from pathlib import Path
+
+    from embodied_fly.body import FlyEnvironment
+    from embodied_fly.motor_focus import MotorTeacher
+    from embodied_fly.teacher import TeacherOracle
+
+    env = FlyBatch(3, 3, 14, preset="wing_position")
+    tasks = MotorTasks(env, 96001)
+    path = Path(__file__).resolve().parents[3] / "assets/embodied_fly/teachers/walking.npz"
+    teacher = MotorTeacher(tasks, path, "cpu", True, "state", True, "anchored")
+    native = FlyEnvironment("wing_position")
+    oracle = TeacherOracle(native, path)
+    oracle.set_reference(1.0, 0.0, 1.0, heading=tasks.heading[1])
+    contract = physical_contract(env.model)
+    for step in range(20):
+        env.batch.forward()
+        before = env.fields["qpos"].copy()
+        actual = teacher.act()
+        for key in ("qpos", "qvel", "act", "ctrl"):
+            getattr(native.data, key)[:] = env.fields[key][1]
+        native.data.time = step * env.control_dt
+        mujoco.mj_forward(native.model, native.data)
+        native.mean_sensors = env.mean_sensors[1, : native.model.nsensordata].copy()
+        expected = oracle.act(step, "world_path")
+        expected[wing_actuators(native.model)] = teacher.posture.wing_targets([1])[0]
+        np.testing.assert_allclose(actual[1], expected, atol=5e-5, rtol=5e-5)
+        np.testing.assert_array_equal(env.fields["qpos"], before)
+        env.step(actual)
+    assert physical_contract(env.model) == contract
+
+
+def test_hover_start_weight_and_per_task_assistance_are_training_only():
+    import pytest
+
+    from embodied_fly.motor_retention import hover_start_weights, task_mixtures
+
+    ids = np.array([0, 1, 2, 2, 2])
+    ages = np.array([0, 0, 0, 24, 25])
+    np.testing.assert_array_equal(task_mixtures(ids, 0.0, 0.0, 1.0), [0, 1, 0, 0, 0])
+    np.testing.assert_array_equal(
+        hover_start_weights(ids, ages, 0.002, 0.05, 10), [1, 1, 10, 10, 1]
+    )
+    for weight in (-1, 0.5, float("nan")):
+        with pytest.raises(ValueError):
+            hover_start_weights(ids, ages, 0.002, 0.05, weight)
