@@ -2163,3 +2163,49 @@ out the same saved evaluation starts replicated into32worlds for one second,
 using the frozen actor alone. This is a bounded diagnostic with zero learning;
 no teacher action, physical parameter or acceptance threshold changes. It tests
 setup/batch discrepancies and retains the current failure as evidence.
+
+### Frozen-reset audit and smaller-step motor curriculum — September13
+
+The reset audit reproduces the saved evaluation starts in32worlds. Inputs are
+identical before/after training-reference construction; loaded/mode/batch first
+actions differ by at most4.18e-7. All standing copies still fail at0.494s and all
+hover copies at0.332s, while walking copies survive the one-second diagnostic.
+These are duplicate starts, not independent trials. This rejects a changed input
+schema or a failure restricted to the three-world evaluation batch. The original
+wing-velocity channels still carry measured speed; extension scaling was inspected
+and left unchanged. No physics or network changes were made in this audit.
+
+Retention02 changes only learning rate1e-5→1e-6 from run01, with the same parent,
+seed and all other settings. Both runs collect151,552transitions and148updates.
+The smaller step preserves upright standing/walking, improves average resting-wing
+error relative to parent03, but still fails peak-wing/command gates and hover.
+Its181.192194s training and full three-command review are archived;02 becomes
+the next development parent, with ground_outcome03 preserved.
+
+Retention03 continues02 at1e-6 and removes hover collection assistance. The actor
+executes every control; references remain labels only.180.599455s learning,
+147,456transitions/144updates. Standing posture passes (wing maximum0.16559rad,
+height loss1.366%), but walking fails after0.378s and hover still falls. Preserve
+this diagnostic and keep02 as the better combined controller. All200saved failure
+traces across02/03 and all model/checkpoint/capture hashes are verified.
+
+The recorded02 flight trace already shows stroke reversals. Its first-quarter-
+second mean modeled lift magnitude is0.934bodyweights versus0.991for the reference;
+wing pitch is near nominal. This descriptive reconstruction excludes drag/body
+orientation and uses different reference/actor target heights; it is not a matched
+success comparison. A modest lift deficit can still produce substantial altitude
+loss at this scale. We did not change the flight law to hide that deficit.
+
+Both15s complete films (750frames each,1600×900/50fps/1x) are decoded, visually
+inspected and opened. The final03result is not promoted. The next actionable
+experiment is training only the existing six wing-output rows from02 while
+freezing the upstream network and other output rows. This keeps one graph actor
+and the same runtime shape. It needs parameter/inference invariance checks and
+full physical evaluation, since changed wing feedback can still affect body
+behavior. No such selective-output training is implemented or running yet.
+
+This turn made progress: a concrete setup/batch audit ruled out a suspected
+mismatch; a controlled learning-rate repeat restored ground behavior; an actor-
+only continuation exposed continued cross-task interference while passing the
+standing posture gate. The full motor/utility/survival goal remains active and
+unfulfilled. There is no external blocker.

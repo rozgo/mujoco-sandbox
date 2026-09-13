@@ -24,7 +24,13 @@ shows teaching commands, not a learned actor. The
 imitation with frozen parent-actor ground targets and explicit hover assistance.
 Its [first pilot](runs/state_hover_retention_01/SUMMARY.md) improves walking wing
 posture, but standing regresses and hover still falls. It is not promoted over
-ground_outcome_03. Only unassisted evaluation can establish learned flight.
+ground_outcome_03. A [smaller-step repeat](runs/state_hover_retention_02/SUMMARY.md)
+preserves both ground skills and is the next development parent. The subsequent
+[actor-only collection run](runs/state_hover_retention_03/SUMMARY.md) passes
+standing posture but regresses walking; hover remains failed. The better combined
+[run02 review](../../previews/embodied_fly/state_hover_retention_02_all_tasks_v1.mp4)
+is preserved alongside the full failed continuation. Only unassisted evaluation
+can establish learned flight.
 
 The original walking sensor layout is retained as the first 383 inputs, all
 read live from the current body. Fourteen added inputs expose wing speeds,
