@@ -29,6 +29,15 @@ PPO-level noise also destabilizes the recorded successful start; lower noise
 preserves it in that diagnostic. The parent is preserved as a development
 checkpoint, with hover robustness still unproven.
 
+The latest [longer PPO continuation](runs/position_ppo_timing_02/SUMMARY.md)
+restores five-second hover and sustains one of three additional ten-second
+starts, where the preserved parent fails all three. Bobbing is still substantial.
+The [new review video](../../previews/embodied_fly/position_ppo_timing_02_all_tasks_v1.mp4)
+uses one actor for all commands. Two stages take 20 min 10.586 s of measured
+training, using 32 then 64 CPU physics worlds with RTX 4090 neural training.
+No body, graph, action interface or runtime helper changes were needed for this
+limited gain. See the report for all failures and the remaining critic-update issue.
+
 ## Historical torque-model experiments
 
 The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)

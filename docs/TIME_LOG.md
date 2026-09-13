@@ -936,3 +936,43 @@ goal milestone, not a completion time; final archiving/synchronization follows.
 - First full suite: 137 passed in 111.67 s. After enabling explicitly labeled
   hover guidance with ground switching: 138 passed in 115.99 s, 43 dependency
   warnings. Focused command-state/label/mixture checks and source lint pass.
+
+## Fly hover PPO with longer credit and more experience — September 13, 2026
+
+- Observed work start: **17:55:29 UTC**. Final paired capture completes
+  **18:34:13.443 UTC**. Both videos are reviewed/opened and final sensor-probe
+  analysis/documentation reaches **18:42:30 UTC**, 47 min 1 s after start.
+  Final archival/push follows this milestone. This is project wall time, not
+  training time; discussion, code, testing, evaluation and transfer are included.
+- Exactly two new PPO runs. Combined measured training **1,210.585537 s**
+  (20 min 10.586 s), **1,392,640 transitions**, **2,785.28 aggregate simulated
+  seconds**. Hover contributes 1,392.64 simulated seconds. No imitation occurs.
+- timing01 starts **18:03:25.179858 UTC**, report completes **18:13:32.255641 UTC**.
+  Setup 9.133460 s; training 606.981945 s; collection/forward 467.722505 s;
+  optimization 139.240045 s. 32 worlds (8 stand, 8 walk, 16 hover),
+  573,440 transitions, 35 rollouts, 33 actor / 49 critic updates including
+  two critic-only warmup rollouts. Peak CUDA allocation 6,539,169,280 bytes.
+- timing02 starts **18:15:29.772945 UTC**, report completes **18:25:33.521138 UTC**.
+  Setup 8.384539 s; training 603.603592 s; collection/forward 466.165813 s;
+  optimization 137.424022 s. 64 worlds (16 stand, 16 walk, 32 hover),
+  819,200 transitions, 25 rollouts, 25 actor / 25 critic updates. Both
+  optimizers resume; no repeated warmup. Peak CUDA 12,394,289,664 bytes.
+- Both: 16 CPU MuJoCo/mjbatch physics threads, RTX 4090 neural work,
+  5 kHz physics, 500 Hz actions, 512-action rollouts, 128-action recurrent
+  gradients with activation recomputation. No MuJoCo Warp. Throughputs
+  944.740 and 1,357.182 transitions/training-second respectively; this is
+  not an isolated matched scaling benchmark.
+- Nominal timing01 evaluation: 8.174788 s setup, 31.626228 s capture;
+  timing02: 7.746852 s setup, 32.256468 s capture. Each has 7,500 transitions
+  and 15 aggregate simulated seconds, with no resets or optimization.
+- Three additional ten-second starts per checkpoint, all three commands:
+  candidate 7.906389 s setup / 203.337647 s capture; parent 7.714690 s setup /
+  204.830078 s capture. Each collects 45,000 transitions. Total evaluation
+  experience including nominal captures: 105,000 transitions / 210 aggregate s.
+- Latest frozen sensor probe: 6.431241 s setup, 11.716416 s diagnosis;
+  zero optimization and zero physical transitions.
+- Video renders: timing01 61.397560 s; timing02 62.448826 s. Each 15 s,
+  750 frames, 1600x900, 50 fps, 1x. Both fully decoded, visually inspected
+  and opened automatically on the Mac.
+- Full suite: 143 passed, 43 known dependency warnings, 121.56 s;
+  focused checks: 12 passed, 21.46 s. Changed-source lint passes.

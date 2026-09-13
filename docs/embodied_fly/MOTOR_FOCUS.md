@@ -19,6 +19,13 @@ PPO-level noise also destabilizes the recorded successful start; lower noise
 preserves it in that diagnostic. The parent is preserved as a development
 checkpoint, with hover robustness still unproven.
 
+The [longer PPO continuation](runs/position_ppo_timing_02/SUMMARY.md) now sustains
+one of those three additional starts for ten seconds, compared with none for
+the parent, and retains the nominal five-second hover. Large vertical oscillation
+remains. Its checkpoint and review are preserved as the next hover development
+candidate; no complete motor release is claimed. The body and sensor/action
+interfaces are unchanged, with 64 worlds in the second training stage.
+
 The [continuous-command check](runs/position_sequence_01/SUMMARY.md) now shows
 another boundary: after standing, this checkpoint fails to start walking or
 resume, despite staying upright. The commands and persistent neural/physical

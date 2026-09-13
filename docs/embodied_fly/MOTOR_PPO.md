@@ -70,3 +70,39 @@ locked view available explicitly. Camera improvements must not be described
 as calmer physical flight.
 
 The completed [additional-start comparison](runs/position_outcome_04_exploration/SUMMARY.md) still fails all three deterministic hover starts (and all six noisy hover cases). Outcome04 is not promoted over the preserved parent. The two-pilot round is complete; further work should address hover consistency and vertical oscillation explicitly.
+
+## Physical-time PPO follow-up
+
+The user approved a fixed ten-minute [timing01 recipe](runs/position_ppo_timing_01/PLAN.md)
+after reviewing the prior failures, then explicitly authorized a further
+[continuation with more worlds](runs/position_ppo_timing_02/PLAN.md). The actor,
+physical body and measured graph remain unchanged. No MuJoCo Warp port occurs
+in these runs: native CPU physics and RTX 4090 neural training remain explicit.
+
+The opt-in `--hover-physical` stage uses half hover worlds and equal quarters
+standing/walking, no imitation losses, and a declared reset-widening curriculum.
+`--checkpoint-activations` recomputes identical actor activations during backward
+passes. This enables 128-action recurrent sequences (256 ms), 512-action rollouts
+(1.024 s/world), discount .999 and GAE lambda .995 without changing the physical
+or policy clock. Output/gradient equivalence and true episode resets are tested.
+The hover reward uses physical outcome costs that retain differences away from
+the target, rather than the earlier exponential bands.
+
+[Timing01 results](runs/position_ppo_timing_01/SUMMARY.md) preserve ground stability
+but lose the nominal hover. A specific remaining limitation is observed in the
+trainer: the joint policy KL stop also terminates critic optimization. Most
+rollouts consequently receive one actor and one critic update after warmup,
+while hover value predictions remain weak. Longer credit and more experience
+have not by themselves established reliable hover. A future independent critic
+schedule would be an explicit new recipe, not a change hidden inside these runs.
+
+[Timing02](runs/position_ppo_timing_02/SUMMARY.md) continues for another measured
+603.604 s with 64 worlds, preserving actor/critic optimizers. It restores the
+nominal five-second hover and sustains one of three additional ten-second starts;
+the original parent fails all three matched additional starts. Bobbing remains
+large, including a 9.178 mm final-two-second height span in the sustained case.
+Both stages total 20 min 10.586 s of training and 1,392,640 transitions. This is
+progress in maintaining flight, with accuracy and robustness still unfinished.
+The latest sensor probe confirms that height and vertical-speed inputs change
+wing outputs. Receiving feedback is not the same as learning a stable response;
+the next bounded change should address the coupled actor/critic stop.

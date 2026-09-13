@@ -2608,3 +2608,51 @@ configuration and episode logs; its unassisted evaluation is fully captured.
 All four videos are decoded, visually inspected (including fall onsets), and
 opened locally. Body/graph identities, frozen normalization/utility parameters,
 bounded actions, observed commands and causal prior-action feedback are checked.
+
+### Longer physical-time PPO and sustained hover — 2026-09-13 18:42:30 UTC
+
+After discussion, the user approved renewed PPO work on the existing body and
+then a second ten-minute continuation with more resources. We keep native CPU
+MuJoCo/mjbatch physics and RTX 4090 neural training, explicitly confirmed during
+the run. No Warp port, new body, sensor interface or extra deployed brain occurs.
+
+The first stage replaces short credit settings with 512-action rollouts,
+128-action recurrent gradients, gamma .999 and GAE lambda .995 at 500 Hz.
+Activation recomputation preserves outputs/gradients while reducing training
+memory. Hover learns only from physical outcomes: altitude and velocity costs,
+orientation, support and survival. Half the worlds hover and equal quarters
+stand/walk; half of hovering worlds gradually receive wider reset perturbations.
+Commands remain fixed within episodes in this declared stage. These changes
+occur together, so they do not isolate timing as the cause of any improvement.
+
+Timing01 uses 32 worlds and two critic-only warmup rollouts. It takes 606.981945 s
+and collects 573,440 transitions, but loses nominal hover. Timing02 resumes all
+learning state for 603.603592 s with 64 worlds and no repeated warmup, collecting
+819,200 transitions. Combined: 20 min 10.586 s training, 1,392,640 transitions.
+No imitation or teacher actions occur in either run.
+
+Timing02 restores the five-second airborne review and sustains one of three
+additional ten-second starts; the original parent fails all three matched starts.
+The other two candidates delay their envelope violations but still fail. The
+user sees the sustained hover as meaningful progress. Bobbing remains large:
+14.708 mm full nominal height span, and 9.178 mm final-two-second span in the
+sustained additional case. Keep survival separate from accuracy and calmness.
+Standing passes; walking yaw remains failed. Preserve this continuation and
+its predecessors independently rather than mixing checkpoints across commands.
+
+A frozen neural probe confirms that measured altitude and vertical-speed
+perturbations reach wing outputs through the same graph actor. Current/target
+height are explicit inputs, not outputs. Response magnitude/direction differs
+from the working reference at sampled wingbeat phases; this local probe does
+not establish closed-loop stability. The next concrete training limitation is
+the shared KL stop: it cuts critic optimization off with actor optimization.
+Timing02 gets only 25 updates of each; hover value explained variance remains
+negative. Decoupling the critic schedule is proposed, not yet implemented or
+claimed to solve oscillation. No third training run occurred in this round.
+
+143 tests and source lint pass. All 584 training failure windows, six nominal
+captures, 18 additional task captures and both checkpoint parameter comparisons
+are verified. Both full training videos are decoded, inspected and opened.
+Measured graph connectivity, physical contracts and frozen utility/normalization
+weights remain unchanged. Robust quiet hover, walking yaw, combined command
+transitions, takeoff/landing, learned utility and multi-agent survival remain open.
