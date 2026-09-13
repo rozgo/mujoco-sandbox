@@ -1100,3 +1100,10 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   waiting for transfer completion resolved it. No extra simulation or training.
 - New-plant ancestry01/04/05/06:2,131.976371 s; all six pilots3,041.234037 s.
   Earlier motor learning predates these figures; not a from-scratch training claim.
+
+## September 13 — PID imitation followed by PPO
+
+User-approved work observed start **2026-09-13 23:20:04 UTC**. Teach the existing
+motor actor on the accepted instantaneous1 kHz plant, then independently evaluate
+and continue PPO. Record teaching/handoff, PPO, evaluation and rendering separately.
+The PID clock/integral remain training-only. Previous checkpoints remain intact.

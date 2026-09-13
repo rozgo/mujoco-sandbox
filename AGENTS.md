@@ -162,3 +162,9 @@ ground rehearsal is deferred until another stage is introduced. Continue one
 actor/checkpoint across stages, preserve the prior motor baseline, and document
 explicit physics/observation/optimizer transfers. Compare learned hover against
 the accepted PID in a side-by-side 1x video with matching starts and error scales.
+
+User approved PID teaching followed by PPO on September13. The PID may generate
+training labels and an explicitly recorded share of training actuator commands.
+Its clock/integral must remain outside the deployed actor. Preserve the same
+graph/body/action interface; evaluate the actor alone after teaching and PPO.
+Label imitation and policy-gradient learning separately, including their times.

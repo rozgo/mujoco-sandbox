@@ -1,5 +1,11 @@
 # Hover first, with a PID comparison
 
+Current approved work: [PID imitation followed by PPO](runs/pid_imitation_01/PLAN.md).
+The existing PID may now teach the same actor and supply an explicitly recorded
+share of training actions. Its phase clock and integral stay outside the actor.
+Independent evaluation uses only learned commands. The earlier PPO-only recipe
+below remains historical evidence; its no-imitation statements describe those runs.
+
 Latest completed result: [pilot06](runs/hover_only_06/SUMMARY.md). A phase-matched
 probe finds prompt command changes but weak, phase-dependent lift correction.
 One tighter vertical-speed PPO continuation improves mean altitude error slightly
