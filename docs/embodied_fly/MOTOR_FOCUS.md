@@ -5,11 +5,12 @@ selection and needs-driven behavior are deferred. Takeoff, landing and transitio
 between ground and air remain later requirements; the first pilot starts each
 primitive from its declared ground or airborne state.
 
-The latest [position-actuator motor candidate](runs/position_fullbody_01/SUMMARY.md)
-passes its complete five-second standing check with the full initial body pose.
-Walking remains mostly stationary, and autonomous hover fails. All three commands
-use one checkpoint and one `wing_position` body. This is progress on motor
-learning, not a complete motor release. [Run guide](WING_POSITION.md).
+The latest [motor candidate](runs/position_motion_01/SUMMARY.md) passes standing,
+walks forward and remains airborne/upright for its complete five-second review.
+Walking yaw and hover position still fail: the fly climbs and drifts in flight.
+All commands use one checkpoint and the same `wing_position` body. This is a
+motor-learning candidate, not a complete release. [Run guide](WING_POSITION.md).
+The prior position_fullbody01 standing candidate remains preserved.
 
 Current preserved development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).

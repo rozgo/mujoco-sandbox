@@ -1,7 +1,8 @@
 # Wing position actuator pilot
 
-Latest [full motor review](runs/position_fullbody_01/SUMMARY.md): standing passes;
-walking and hover remain incomplete. Both pilots and all failures are retained.
+Latest [motor review](runs/position_motion_01/SUMMARY.md): standing passes;
+walking advances, and flight remains airborne, but yaw/altitude accuracy is still
+incomplete. All candidates and failed gates are retained.
 
 The full fly now has an opt-in `wing_position` physical profile. All motor
 commands in this experiment use it. Existing `wing_motion` recordings and
@@ -50,3 +51,10 @@ The full-body follow-up resumes `position_feedback_01.pt` with
 --nonwing-retention-weight 0`, seed 95023. Its unassisted review uses seed 95033.
 Other world counts, physical clocks and loss weights remain as above. See the
 [predeclared full-body plan](runs/position_fullbody_01/PLAN.md).
+
+The moving-reference pilot resumes `position_fullbody_01.pt`, removes
+`--retain-ground`, selects `--walking-reference anchored --walk-teacher-mix 1
+--hover-teacher-mix 0 --hover-start-weight 10`, and uses seed 96003. Other
+world counts, clocks and motor loss weights remain unchanged. Its complete
+unassisted review uses seed 96013. See the
+[predeclared plan](runs/position_motion_01/PLAN.md).

@@ -790,3 +790,34 @@ a physical actuation profile, ran real training and completed two reviewed video
 - Final suite: 124 passed / 85.40 s, 29 known dependency warnings. Both 15-second
   750-frame, 1600x900, 50 fps, 1x videos were fully decoded, inspected and opened.
   The broad goal remains active; no complete motor/survival release is claimed.
+
+### Fly moving-reference and hover-start learning — 2026-09-13
+
+Observed interval 13:55:50–14:26:24 UTC: 30 min 34 s elapsed development. From the
+fly goal's Sep 12 18:05:28 UTC anchor: 20 h 20 min 56 s. From the full-brain
+course correction at Sep 12 19:35:03 UTC: 18 h 51 min 21 s. Elapsed time includes
+investigation, implementation, testing, transfers, recording and documentation.
+
+- Native reference probe02: four five-second trajectories on the fixed body;
+  physical-loop times 8.184890, 8.337474, 8.189078 and 8.427473 s. Setup was not
+  separately timed. Probe01's initial five-second trajectory is preserved after
+  a report-serialization error; its loop time was lost and is not guessed.
+- Hover divergence probe: replayed nine recorded states, zero learning or extra
+  physical transitions.
+- Batched anchored reference: 3.348501 s setup + 10.852388 s capture; three worlds,
+  five seconds per command, no learning. Standing/hover pass. Walking has valid
+  support and good path tracking but fails the yaw gate.
+- Position_motion01 training: 12.127465 s setup + 180.972660 s training. Collection
+  and forward inference 139.260770 s; backward/optimization 41.696225 s. 165,888
+  world/action transitions / 331.776 aggregate simulated seconds; 162 updates;
+  peak CUDA 9,420,270,080 bytes. 32 worlds, 16 CPU physics threads, native MuJoCo /
+  mjbatch at 5 kHz, 500 Hz actions; RTX 4090 neural work. Walking is teacher-driven
+  in collection; standing/hover are student-driven. 4,800 early-hover samples get
+  extra loss weight; these are not extra transitions.
+- Full student evaluation: 7.928524 s setup + 31.287544 s capture. 7,500 transitions /
+  15 aggregate simulated seconds, separately from training; zero numerical
+  warnings. Standing passes; walking advances but yaw fails; flight stays airborne
+  but altitude/position fail. All 152 training failures and full captures verified.
+- Full review: 58.985950 s render/encode; 15 s / 750 frames / 1600x900 / 50 fps / 1x,
+  decoded, visually inspected and opened. Full tests: 126 passed / 89.01 s,
+  33 known dependency warnings. No completed motor/survival release is claimed.

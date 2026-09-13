@@ -2405,3 +2405,67 @@ case and unresolved walking/hover. Do not promote a complete motor controller.
 Keep the new body fixed while improving actual command tracking and autonomous
 stroke feedback; the preserved historical torque-model artifacts remain intact.
 The full utility, multi-agent arena and video objective stays active.
+
+### Moving reference and startup correction — 2026-09-13
+
+This continuation begins at 13:55:50 UTC. The prior turn made concrete progress
+and left one complete standing pass, with walking and hover unresolved.
+
+A native, no-learning walking probe compared receding and initial-path teacher
+previews on the unchanged wing_position body. At the 1 cm/s command, receding
+moved -0.453 cm along the initial heading while the anchored path moved 5.001 cm
+in five seconds with valid support. At 2 cm/s, the anchored case moved 10.010 cm.
+High yaw RMS remains a failed gate. The first probe hit a NumPy-bool JSON error
+after saving one complete trajectory; the failed output is retained. Probe02
+corrected serialization and saved all four cases.
+
+Added an explicit, training-only anchored preview to the existing batched teacher.
+Planar correction is capped at 0.15 cm. Its future path and initial heading are
+privileged teacher inputs, absent from the unchanged student schema; therefore
+expert tracking is not proof of student tracking. The native/batched equivalence
+check passes. Five-second reference review: standing and hover pass; walking has
+0.185 mm root RMSE and valid support but yaw RMS 3.091 rad/s fails the old gate.
+
+A replay diagnostic on position_fullbody01 finds a wrong-direction sweep command
+at 2 ms: actor -0.356 versus current-state reference +0.217. The first command
+at rest is already close, so a correct first output alone does not solve hover.
+Added 10x loss weighting for the first 50 ms of hover, without adding an actor
+input, runtime controller, oscillator or physical transition.
+
+Position_motion01 uses the same 32-world, three-command body and full motor
+network. Walking collection uses the anchored teacher; standing and hover execute
+the student. Standing retains the complete initial-pose target. This is a bounded
+180 s imitation pilot with fixed connectome edges and utility/intentions, followed
+by the original full autonomous gates. Final code suite: 126 passed / 89.01 s,
+33 known dependency warnings. The larger survival objective remains active.
+
+### Walking and five-second airborne review — 2026-09-13 14:26:24 UTC
+
+Position_motion01 completes 180.972660 s after 12.127465 s setup, collecting
+165,888 physical world/action transitions / 331.776 aggregate simulated seconds,
+162 updates. Collection/forward takes 139.260770 s; optimization 41.696225 s;
+peak CUDA allocation is 9,420,270,080 bytes. All 152 training failures are hover
+cases; all traces are independently verified. There are 30 two-second student
+hover timeouts, distinct from the full evaluation.
+
+The complete, unassisted seed96013 review passes standing. Walking advances
+4.872 cm along its initial heading over the captured 4.998 s, stays upright with
+valid support, and has 1.56 mm root RMSE. Yaw RMS 2.70 rad/s fails the preserved
+gate. Flight remains airborne/upright over all five seconds, but overshoots:
+initial altitude 1.84 cm, minimum 1.52 cm, maximum 14.74 cm, final 13.16 cm,
+backward drift about 3.4 cm. Root RMSE is 89.06 mm. This is sustained flight,
+not accurate hovering or a complete motor release.
+
+Evaluation setup is 7.928524 s and capture 31.287544 s, with zero numerical
+warnings. All 7,500 evaluation frames pass finite-state, bounded-action and
+causal-feedback checks. All graph and physical identities, frozen normalizers,
+utility/intentions and declared parameter changes are independently checked.
+The 15 s, 750-frame, 1600x900, 50 fps, 1x video is decoded, visually inspected
+and opened. Render/encode takes 58.985950 s. Older candidates remain intact.
+
+Next work should check reference recovery from the student's observed high
+altitudes before more imitation, then test longer unassisted hover episodes
+with normal startup weighting while rehearsing the ground commands. Nominal
+reference hover success does not prove recovery over the newly encountered
+state distribution. Keep the body and actor interfaces fixed, preserve all
+failed gates, and keep the full survival/multi-agent goal active.
