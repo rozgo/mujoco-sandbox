@@ -66,6 +66,32 @@ def run(args):
         state = {k: env.fields[k][paired].copy() for k in ("qpos", "qvel", "act", "ctrl")}
         target_height = env.requested_height_cm[paired].copy()
         heading = tasks.heading[paired].copy()
+        capture = getattr(args, "initial_capture", None)
+        if capture is not None:
+            recorded = json.loads((capture / "report.json").read_text())
+            if recorded["physical_contract"] != checkpoint["physical_contract"]:
+                raise ValueError("Recorded start must match physical contract")
+            starts = []
+            for task in TASKS:
+                with np.load(capture / f"{task}.npz") as data:
+                    starts.append(
+                        {
+                            k: data[k][0].copy()
+                            for k in (
+                                "qpos",
+                                "qvel",
+                                "activation",
+                                "ctrl",
+                                "requested_height_cm",
+                            )
+                        }
+                    )
+            state = {
+                k: np.stack([starts[i]["activation" if k == "act" else k] for i in paired])
+                for k in state
+            }
+            target_height = np.asarray([starts[i]["requested_height_cm"] for i in paired])
+            heading = 2 * np.arctan2(state["qpos"][:, 6], state["qpos"][:, 3])
         env.reset(np.arange(worlds), state=state)
         env.command[:] = 0
         env.command[:, 0] = paired == 1
@@ -178,6 +204,9 @@ def run(args):
         "critic_present": False,
         "noise_rule": "PPO pre-tanh independent Gaussian; common standard samples in paired worlds",
         "initial_states_matched": True,
+        "initial_capture_report_sha256": sha256(args.initial_capture / "report.json")
+        if getattr(args, "initial_capture", None)
+        else None,
         "noise_levels": levels.tolist(),
         "seeds": args.seeds,
         "seconds_per_case": args.seconds,
@@ -202,6 +231,7 @@ if __name__ == "__main__":
     parser.add_argument("--graph", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--initial-capture", type=Path)
     parser.add_argument("--seconds", type=float, default=5)
     parser.add_argument("--seeds", type=int, nargs="+", default=[98103, 98113, 98123])
     parser.add_argument("--noise", type=float, nargs="+", default=[0, 0.003, 0.01])
