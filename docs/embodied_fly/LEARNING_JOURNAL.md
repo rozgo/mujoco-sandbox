@@ -1951,3 +1951,39 @@ and trainingseed81002. Still180s,32worlds,16stand/16walk,128rollout/16recurrent
 chunks,2epochs,noise0.02,gamma0.998/lambda0.99,ground reset disturbances and
 2sepisodes. Same actor/physical body/reward;evaluate allthree5s cases at72001 and
 open the complete video. No claim of improvement until that physical review.
+
+### Ground-outcome result — 2026-09-13 08:55:59 UTC
+
+Ground-outcome02 completes182.308462s,32rollouts/288PPOupdates and131,072physical
+transitions. The smaller learning rate resolves the one-update bottleneck;
+128episodes include3physical failures. Both five-second ground cases are upright
+with permitted supports. Standing wing RMS0.1486rad/max0.5787rad and6.76% height
+loss are worse than preferred06. Walking wing RMS0.05966rad/max0.25262rad is
+slightly better than06, but the complete tracking/posture gates still fail.
+Hover falls. Zero numerical warnings;utility/intention weights stay unchanged.
+Do not promote either ground-outcome checkpoint.
+
+Both complete15s/750frame/50fps/1x films are decoded, visually inspected and
+opened automatically. Captures, models, checkpoints and every failure trace are
+hash-verified; previous-action feedback is causal and controls are bounded.
+The paired comparison verifies identical initial qpos, qvel, observation and
+commands to06 in every case. These are reused development cases, not held-out
+robustness evidence. Source/reward/optimizer configurations and exact timings
+are archived in each run directory.
+
+Recorded-state windows add useful diagnosis:01 standing first leaves the
+physical envelope at3.616s, beyond its2s training episodes.02 fixes that fall,
+but its standing wing error persists over2–5s (RMS0.1469rad,max0.3622rad).
+Walking last-three-second wing max0.2060rad approaches the0.2rad gate, but full
+history still fails. Neither startup trimming nor a longer identical run is
+justified as a solution to persistent standing wing bias.
+
+This goal turn is progress: canonical motor-only physical PPO is implemented
+and tested, two bounded trials are complete, and their failures change the
+next action. Preferred06 remains intact. Next work should address sustained
+rest-wing feedback while preserving ground movement, rather than repeatedly
+increasing PPO runtime. Existing corrective wing supervision can be evaluated
+as a training-only auxiliary to physical rewards; no runtime helper or new
+brain is authorized or needed. Declare any such changed objective before its
+pilot. Hover, motor transitions and later needs/utility/survival integration
+remain required and incomplete; the full goal stays active.
