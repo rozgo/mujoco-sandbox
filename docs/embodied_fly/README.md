@@ -8,14 +8,29 @@ The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same wing-motion body in every
 task. Utility selection is temporarily disabled while these primitives are
 learned. Older presets and experiments below remain historical evidence.
-The current [motor review](../../previews/embodied_fly/motor_focus_06_all_tasks_v1.mp4)
-keeps both standing and walking upright for five seconds after initial-form
-training. Standing body-height loss is about1%, with no prohibited support.
-The wings are quieter, but their rest-angle gate still fails; this is a development
-checkpoint, not an accepted solution. [Run06](runs/motor_focus_06/SUMMARY.md) is the
-preferred ground review; stronger wing weighting in07 did not improve wing angles.
-Tracking gates and hover remain unresolved. Earlier videos and failed runs remain
-preserved. This motor stage uses corrective imitation, not PPO.
+The current [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)
+keeps standing and walking upright for five seconds with permitted support.
+Physical-reward PPO plus training-only wing corrections halves standing wing-angle
+RMS relative to the earlier run06 (0.114 to 0.057 rad). Walking wing RMS is
+0.053 rad. Full rest-angle and tracking gates still fail, as does hover; this is
+a development checkpoint. The earlier [run06](runs/motor_focus_06/SUMMARY.md)
+and subsequent unsuccessful updates remain preserved.
+
+A new [state-based hover reference](runs/state_hover_gain_probe_01/SUMMARY.md)
+uses measured wing angle/speed and altitude, without an episode timer. Its
+[five-second clip](../../previews/embodied_fly/state_hover_reference_02_hover_v1.mp4)
+shows teaching commands, not a learned actor. The
+[declared learning stage](runs/state_hover_retention_01/PLAN.md) uses online
+imitation with frozen parent-actor ground targets and explicit hover assistance.
+Its [first pilot](runs/state_hover_retention_01/SUMMARY.md) improves walking wing
+posture, but standing regresses and hover still falls. It is not promoted over
+ground_outcome_03. Only unassisted evaluation can establish learned flight.
+
+The original walking sensor layout is retained as the first 383 inputs, all
+read live from the current body. Fourteen added inputs expose wing speeds,
+wing angles and measured/requested altitude more clearly. This does not load
+an older physical body or restore aerodynamic forces. Current motor learning
+always uses the same canonical `wing_motion` mechanics for every command.
 
 The earlier [ground review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
 shows one graph actor walking, attempting to stop and resuming, with synchronized

@@ -2116,3 +2116,34 @@ required evaluation path. The complete embodied suite passes 97 tests in
 67.46 seconds, with 21 dependency warnings. Focused checks include unchanged
 reference weights, per-world reset, no ground assistance, clock invariance,
 physical startup and unchanged body fingerprints.
+
+### State-hover retention01 result: walking wings improve; candidate rejected
+
+The declared pilot completes180.791216s of learning,151,552physical transitions
+and148updates on32worlds. Native CPU MuJoCo/mjbatch supplies physics; RTX4090
+executes both the learning graph and frozen ground reference. Graph weights and
+body fingerprint match the parent. The frozen reference, utility and intention
+parameters stay unchanged; internal cell parameters receive nonzero gradients.
+
+Unassisted5s evaluation: walking remains upright with permitted support, and its
+wing-posture gate now passes (RMS0.0405rad,maximum0.1654rad). Standing fails after
+0.542s and hover falls. These results reject promotion over ground_outcome03.
+All initial physical states and397observations match the parent's review exactly.
+The mixed training had44successful stand episodes,44successful walk episodes,
+40assisted hover episodes and3walking failures; those counts do not establish
+frozen-checkpoint success from a fresh neural state. Inspect the fresh-reset
+response before blindly continuing training. Lower learning rate and startup
+retention remain hypotheses. No additional pilot is running at this handoff.
+
+All training/evaluation hashes,3failure traces, actual per-task action mixtures
+and causal observation feedback are verified. The15s full diagnostic video is
+fully decoded (750frames,1600×900,50fps), visually inspected and opened. The
+separate5s reference hover clip is also decoded/inspected/opened and clearly
+labeled training demonstration, with no MaleCNS actor. Its canonical-Linux
+hover result matches the CPU/Mac reference; it does not establish learned hover.
+
+This is progress on the active motor-learning priority. Same body, same single
+command-conditioned actor, no restored aerodynamic preset, no runtime teacher.
+The original walking sensor prefix carries current measurements; its historical
+name refers to the input layout. Full motor acceptance and the broader learned
+utility, flight transitions and multi-agent survival goal remain unfinished.
