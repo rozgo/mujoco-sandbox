@@ -1570,3 +1570,16 @@ The next motor gate is stable unassisted standing on this same body, followed
 by walking and hover with explicit retention of already-working primitives.
 Keep a single command-conditioned checkpoint throughout; do not return to
 the earlier physical preset or activate utility selection prematurely.
+
+### Ground-control isolation — 2026-09-13 05:47:44 UTC
+
+The previous goal turn made concrete progress: one canonical body, motor-only
+training and two measured failed pilots, with complete reviewed videos and
+verified causal traces. Before more training, test matched current-state
+reference substitutions on the same motor-focus02 checkpoint and body. For both
+stand and1 cm/s walk, compare pure student, reference wings, reference19
+nonwalking channels, reference6 foot-adhesion channels, reference48 leg joints,
+reference legs+adhesion, and full reference. Fixed initial headings−0.1/+0.1 rad,
+one second per case,14 worlds, no learning or resets. Every substitution is a
+diagnostic and is ineligible for policy acceptance. It should distinguish
+unintended extra-body commands from inaccurate leg or adhesion control.
