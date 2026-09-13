@@ -33,7 +33,9 @@ FLIGHT_CONTROL_DT = 0.0002
 NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
-def make_body(preset="walking", *, wing_limits="original", wing_response="filtered"):
+def make_body(
+    preset="walking", *, wing_limits="original", wing_response="filtered", physics_hz=None
+):
     if preset not in ("walking", "flight", "wing_motion", "wing_position"):
         raise ValueError(f"Unknown physical preset: {preset}")
     if wing_response not in ("filtered", "instant") or (
@@ -46,6 +48,13 @@ def make_body(preset="walking", *, wing_limits="original", wing_response="filter
         raise ValueError("Firm wing limits are an explicit flight-only physical pilot")
     physics_dt = FLIGHT_PHYSICS_DT if preset == "flight" else PHYSICS_DT
     control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
+    if physics_hz is not None:
+        steps = physics_hz * control_dt
+        if not np.isfinite(steps) or steps < 1 or not np.isclose(steps, round(steps)):
+            raise ValueError(
+                "Physics rate must be a positive integer multiple of control rate"
+            )
+        physics_dt = 1 / physics_hz
     fly = FruitFly(
         use_legs=True,
         use_wings=True,
@@ -125,12 +134,19 @@ def make_body(preset="walking", *, wing_limits="original", wing_response="filter
 
 
 class FlyEnvironment:
-    def __init__(self, preset="walking", *, wing_limits="original", wing_response="filtered"):
+    def __init__(
+        self,
+        preset="walking",
+        *,
+        wing_limits="original",
+        wing_response="filtered",
+        physics_hz=None,
+    ):
         self.preset = preset
         self.wing_limits = wing_limits
         self.control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
         self.physics, self.fly = make_body(
-            preset, wing_limits=wing_limits, wing_response=wing_response
+            preset, wing_limits=wing_limits, wing_response=wing_response, physics_hz=physics_hz
         )
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr

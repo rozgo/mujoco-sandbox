@@ -62,7 +62,7 @@ def replay_clock(states, metadata, fps=50):
 
 
 def record(source, case, output, camera_profile="damped"):
-    if camera_profile not in ("locked", "damped"):
+    if camera_profile not in ("locked", "damped", "fixed"):
         raise ValueError("Unknown observer camera profile")
     started = time.perf_counter()
     if output.exists():
@@ -115,7 +115,7 @@ def record(source, case, output, camera_profile="damped"):
     option.geomgroup[3:] = 0
     camera = mujoco.MjvCamera()
     camera.azimuth, camera.elevation = 135, -25
-    camera.distance = 1.3 if camera_profile == "damped" else 0.95
+    camera.distance = 1.3 if camera_profile in ("damped", "fixed") else 0.95
     follow = None
     camera_positions, body_positions = [], []
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -145,7 +145,9 @@ def record(source, case, output, camera_profile="damped"):
             data.time = timestamps[step]
             mujoco.mj_forward(model, data)
             target = data.xpos[thorax].copy()
-            if camera_profile == "locked" or follow is None:
+            if camera_profile == "fixed" and follow is not None:
+                pass  # Stationary observer; no tracking or smoothing.
+            elif camera_profile == "locked" or follow is None:
                 follow = target.copy()
             else:
                 # Observer-only smoothing at the encoded 50 Hz clock. Vertical
@@ -295,14 +297,21 @@ def record(source, case, output, camera_profile="damped"):
                 and case == "hover"
             ):
                 draw.text(
-                    (1125, 355), "REFERENCE HOVER CONTROLLER", font=font(19), fill="#ffc31f"
+                    (1125, 355),
+                    "PID HOVER REFERENCE"
+                    if evaluation.get("pid")
+                    else "REFERENCE HOVER CONTROLLER",
+                    font=font(19),
+                    fill="#ffc31f",
                 )
                 for y, label in zip(
                     (400, 435, 470, 505),
                     (
                         "Measured wings -> flight forces",
                         "No wing-activity averaging",
-                        "Free body / bounded actuators",
+                        "PID -> bounded wing actuators"
+                        if evaluation.get("pid")
+                        else "Free body / bounded actuators",
                         "No learned actor in this clip",
                     ),
                 ):
@@ -324,8 +333,12 @@ def record(source, case, output, camera_profile="damped"):
                     font=font(18),
                     fill="#e6e1db",
                 )
+                chart_range = 1 if evaluation.get("pid") else 5
                 draw.text(
-                    (1125, 625), "ALTITUDE ERROR / +/-5 mm", font=font(15), fill="#a8b0b5"
+                    (1125, 625),
+                    f"ALTITUDE ERROR / +/-{chart_range} mm",
+                    font=font(15),
+                    fill="#a8b0b5",
                 )
                 draw.rectangle((1125, 655, 1565, 755), fill="#1b2025", outline="#33383c")
                 draw.line((1125, 705, 1565, 705), fill="#646c73", width=1)
@@ -336,7 +349,7 @@ def record(source, case, output, camera_profile="damped"):
                 points = list(
                     zip(
                         1125 + 440 * history / max(len(states["qpos"]) - 1, 1),
-                        705 - 10 * np.clip(errors, -5, 5),
+                        705 - 50 / chart_range * np.clip(errors, -chart_range, chart_range),
                     )
                 )
                 if len(points) > 1:
@@ -394,6 +407,8 @@ def record(source, case, output, camera_profile="damped"):
             else [0, 0, 0],
             "maximum_follow_lag_xyz_cm": [0.25, 0.25, 0.3]
             if camera_profile == "damped"
+            else None
+            if camera_profile == "fixed"
             else [0, 0, 0],
             "measured_maximum_lag_xyz_cm": np.abs(
                 np.asarray(camera_positions) - body_positions
@@ -428,6 +443,8 @@ if __name__ == "__main__":
     parser.add_argument("source", type=Path)
     parser.add_argument("case")
     parser.add_argument("output", type=Path)
-    parser.add_argument("--camera-profile", choices=("locked", "damped"), default="damped")
+    parser.add_argument(
+        "--camera-profile", choices=("locked", "damped", "fixed"), default="damped"
+    )
     args = parser.parse_args()
     record(args.source, args.case, args.output, args.camera_profile)

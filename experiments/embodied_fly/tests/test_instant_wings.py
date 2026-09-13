@@ -9,9 +9,11 @@ from embodied_fly.physical_contract import physical_contract
 from embodied_fly.wing_motion import CONFIG, INSTANT_CONFIG, WingMotionForces, config_for_model
 
 
-@pytest.fixture(scope="module")
-def worlds():
-    return FlyBatch(3, 3, 14, preset="wing_position", wing_response="instant")
+@pytest.fixture(scope="module", params=(5000, 1000))
+def worlds(request):
+    return FlyBatch(
+        3, 3, 14, preset="wing_position", wing_response="instant", physics_hz=request.param
+    )
 
 
 def test_current_wing_motion_sets_force_immediately_without_history_or_dt_dependence(worlds):
@@ -45,7 +47,9 @@ def test_physics_marker_survives_native_batch_and_binary_reload(worlds, tmp_path
     loaded = mujoco.MjModel.from_binary_path(str(path))
     assert config_for_model(loaded) == INSTANT_CONFIG
     assert physical_contract(loaded) == physical_contract(worlds.model)
-    legacy = FlyBatch(1, 1, 14, preset="wing_position")
+    legacy = FlyBatch(
+        1, 1, 14, preset="wing_position", physics_hz=1 / worlds.model.opt.timestep
+    )
     assert config_for_model(legacy.model) == CONFIG
     assert physical_contract(legacy.model) != physical_contract(worlds.model)
     parent = {
@@ -88,7 +92,7 @@ def test_every_physics_tick_reads_evolving_physical_wings(worlds, monkeypatch):
     action = np.repeat(worlds.template.passive_action[None], 3, axis=0)
     action[:, 14:20] = 0.1
     worlds.step(action)
-    assert len(calls) == worlds.substeps == 10
+    assert len(calls) == worlds.substeps == round(0.002 / worlds.model.opt.timestep)
     assert all(dt == worlds.model.opt.timestep for _, _, dt in calls)
     assert not np.array_equal(calls[0][1], calls[-1][1])
     expected = np.clip(np.abs(calls[-1][1].reshape(3, 2, 3)[:, :, 0]) / 50, 0, 1.4)

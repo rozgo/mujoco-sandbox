@@ -142,3 +142,9 @@ physics. Use `instant_migrate` for an explicit frozen-weight physical transfer;
 do not silently relabel a checkpoint. Keep native and batched physics identical.
 The hover plant video must show bounded wing commands supporting the free body,
 clearly labeled as a reference controller rather than learned MaleCNS behavior.
+
+User steering, September 13: keep RL paused until the hover reference video is
+nearly perfect. Work on the PID reference at 1,000 Hz physics / 500 Hz controls,
+with instantaneous per-physics-tick wing forces. Preserve cold-start motion and
+show a fixed observer camera plus numeric errors. Do not call a loose survival
+gate sufficient visual acceptance or resume training while this review is open.

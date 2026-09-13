@@ -31,11 +31,14 @@ class FlyBatch:
         *,
         preset="walking",
         wing_response="filtered",
+        physics_hz=None,
     ):
         if sensor_extension_size not in (0, 6, 12, 14):
             raise ValueError("Unknown batched sensory extension")
         self.sensor_extension_size = sensor_extension_size
-        self.template = FlyEnvironment(preset, wing_response=wing_response)
+        self.template = FlyEnvironment(
+            preset, wing_response=wing_response, physics_hz=physics_hz
+        )
         self.preset = preset
         self.control_dt = self.template.control_dt
         self.substeps = self.template.substeps

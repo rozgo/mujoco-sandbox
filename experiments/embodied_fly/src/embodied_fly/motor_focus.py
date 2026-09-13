@@ -298,6 +298,7 @@ def review(args):
         14,
         preset=getattr(args, "preset", "wing_motion"),
         wing_response=response or "filtered",
+        physics_hz=checkpoint["physical_contract"]["physics_hz"] if checkpoint else None,
     )
     tasks = MotorTasks(env, args.seed)
     posture = GroundPosture(env, tasks.ground["qpos"])
@@ -600,6 +601,7 @@ def train(args):
         14,
         preset=getattr(args, "preset", "wing_motion"),
         wing_response=response,
+        physics_hz=parent.get("physical_contract", {}).get("physics_hz"),
     )
     if parent.get("motor_only") and parent.get("physical_contract") != physical_contract(
         env.model

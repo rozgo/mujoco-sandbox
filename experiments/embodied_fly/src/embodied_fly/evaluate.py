@@ -70,6 +70,7 @@ def evaluate(args):
     environment = FlyEnvironment(
         args.physical_preset,
         wing_response=checkpoint.get("physical_contract", {}).get("wing_response", "filtered"),
+        physics_hz=checkpoint.get("physical_contract", {}).get("physics_hz"),
     )
     if actor.motor_only and checkpoint.get("physical_contract") != physical_contract(
         environment.model

@@ -249,6 +249,7 @@ def train(args):
         brain.sensor_extension_size,
         preset=args.preset,
         wing_response=wing_response,
+        physics_hz=parent.get("physical_contract", {}).get("physics_hz"),
     )
     contract = physical_contract(env.model) if motor_mode else None
     if motor_mode and parent.get("physical_contract") != contract:
