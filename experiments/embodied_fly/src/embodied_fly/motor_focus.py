@@ -541,6 +541,21 @@ def train(args):
         )
     hover_feedback_rng = np.random.default_rng(args.seed + 2203)
     synthetic_hover_inputs = 0
+    switch_seconds = getattr(args, "ground_switch_seconds", 0.0)
+    if not np.isfinite(switch_seconds) or switch_seconds < 0:
+        raise ValueError("Finite nonnegative ground command interval required")
+    if switch_seconds and (
+        not retain_ground
+        or not getattr(args, "ground_posture", False)
+        or not getattr(args, "stand_initial_form", False)
+        or getattr(args, "task_set", "all") != "all"
+        or getattr(args, "preset", "wing_motion") != "wing_position"
+        or np.any(mixture_by_task != 0)
+        or subset_mode != "all"
+    ):
+        raise ValueError(
+            "Command curriculum requires unassisted all-task position learning with ground retention and initial-form targets"
+        )
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
     provenance = evidence()
@@ -577,6 +592,11 @@ def train(args):
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     memory = actor.initial_state(args.worlds)
     retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
+    curriculum = None
+    if switch_seconds:
+        from embodied_fly.motor_curriculum import GroundCommandCurriculum
+
+        curriculum = GroundCommandCurriculum(tasks, args.transition_worlds, switch_seconds)
     subset_class = {
         "wing-output": WingOutputSubset,
         "wing-residual": WingResidualSubset,
@@ -627,11 +647,15 @@ def train(args):
             per_task = [[] for _ in TASKS]
             hover_feedback_error = None
             for sequence_step in range(args.sequence):
+                if curriculum is not None:
+                    curriculum.advance(memory)
                 obs = env.observation()
                 observation = torch.as_tensor(obs, device=device)
                 ground_actions = (
                     retainer.act(observation).cpu().numpy() if retainer is not None else None
                 )
+                if curriculum is not None:
+                    ground_actions = curriculum.supervised_actions(ground_actions, teacher)
                 target = torch.as_tensor(teacher.act(ground_actions), device=device)
                 memory_before = memory
                 if hover_feedback_weight and sequence_step == 0:
@@ -714,6 +738,8 @@ def train(args):
                             :, wing_actuators(env.model)
                         ].copy(),
                         "requested_height_cm": env.requested_height_cm.copy(),
+                        "task_ids": tasks.task_ids.copy(),
+                        "command": env.command.copy(),
                     }
                 )
                 env.step(executed)
@@ -737,12 +763,17 @@ def train(args):
                     episodes.append(
                         {
                             "task": TASKS[tasks.task_ids[i]],
+                            "command_transition_world": bool(
+                                curriculum is not None and i in curriculum.ids
+                            ),
                             "failed": bool(failed[i]),
                             "simulated_seconds": float(env.ages[i] * env.control_dt),
                             "teacher_mix": float(mixture[i]),
                             "failure_trace": info,
                         }
                     )
+                if curriculum is not None:
+                    curriculum.prepare_reset(ids)
                 tasks.reset(ids)
                 memory = actor.reset_worlds(memory, torch.as_tensor(done, device=device))
                 if retainer is not None:
@@ -838,6 +869,7 @@ def train(args):
         "additional_nonwing_mse_weight": nonwing_retention_weight,
         "independent_recurrent_state": retain_ground,
         "runtime_module": False,
+        "transition_world_label_override": curriculum is not None,
         "ground_wing_targets": "initial-pose corrective labels"
         if teacher.posture is not None
         else "reference actor"
@@ -867,6 +899,7 @@ def train(args):
         "method": "motor-only online imitation on actual teacher/student-mixture physical states",
         "parameter_subset": subset_report,
         "ground_retention": retention,
+        "command_curriculum": curriculum.report() if curriculum is not None else None,
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
         "startup_supervision": {
             "hover_seconds": start_duration,
@@ -935,6 +968,7 @@ def train(args):
         "completed_episodes": episodes,
         "teacher_present_during_collection": True,
         "ground_retention": retention,
+        "command_curriculum": checkpoint["command_curriculum"],
         "hover_feedback_supervision": checkpoint["hover_feedback_supervision"],
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
         "startup_supervision": {
@@ -1015,6 +1049,8 @@ if __name__ == "__main__":
     parser.add_argument("--wing-response-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-worlds", type=int, default=8)
     parser.add_argument("--hover-feedback-loss", type=float, default=0.0)
+    parser.add_argument("--ground-switch-seconds", type=float, default=0.0)
+    parser.add_argument("--transition-worlds", type=int, default=12)
     parser.add_argument(
         "--ground-posture",
         action="store_true",
