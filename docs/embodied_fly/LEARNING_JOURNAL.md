@@ -1138,3 +1138,21 @@ One measured ground imitation batch per rollout rehearses the training split of
 `retention_online01_01` at its original 500 Hz. This is shared-actor continuation,
 not separate walking and flying policies. Physical results must still pass the
 unchanged airborne and ground evaluations; reward alone cannot promote it.
+
+The first flight PPO pilot completed **62.569215 s**, 65,536 physical transitions
+and 32 PPO chunk updates. All 892 completed airborne episodes failed in 6.2–22 ms.
+Physical-reward gradients reached all trainable internal-cell parameter groups,
+but both excluded-initial-state flight evaluations fell. Six fixed ground cases
+remained stable; continuous resume toppled. Do not promote or extend this run
+merely because its training path executes. Full results and trace hashes are in
+[the PPO report](runs/motor_flight_ppo_probe_01/SUMMARY.md).
+
+Next diagnostic: replay complete causal expert histories through angle01 with
+frozen weights, read its actual motor-cell states, and fit a fixed-regularization
+linear readout using only training episodes. Compare excluded episodes 4 and 6
+against the current motor decoder and a readout using measured wing angles and
+velocities. Keep the regression diagnostic-only; no fitted coefficient is added
+to the deployed actor and no body is controlled. Expert previous actions remain
+part of those recorded histories. Linear decodability can identify recoverable
+information, but cannot establish autonomous oscillation, closed-loop flight,
+or biological neural causality. Avoid drawing those broader conclusions.

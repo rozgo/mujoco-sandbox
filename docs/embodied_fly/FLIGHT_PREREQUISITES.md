@@ -1,10 +1,11 @@
-# Flight curriculum: required physical setup
+# Flight curriculum: physical setup and measured outcomes
 
-Flight remains part of the approved goal, inside the same learned actor. It is
-not trained yet. This check records what the pinned FlyBody code actually needs
-before collecting wing-control demonstrations or applying flight rewards.
+Flight remains part of the approved goal, inside the same learned actor. Student
+training is underway, but sustained student flight is still unsuccessful. The
+initial setup audit below is retained as history; later sections record the
+implemented preset, working inherited expert and failed student learning trials.
 
-The current full walking model retains six wing joints and all wing actuators.
+The full walking model retains six wing joints and all wing actuators.
 Its compiled air density is 0.00128 g/cm³ (1.28 kg/m³), viscosity 0.000185
  g/(cm·s) (1.85e-5 Pa·s), and gravity −981 cm/s². However, its two dedicated
 wing-fluid geoms currently have zero fluid-model coefficients. Their presence
@@ -232,7 +233,7 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.train 
 
 ## Continuous angle and velocity feedback
 
-The next candidate uses 395 inputs: the original 383, then six wing velocities
+The angle-feedback candidate uses 395 inputs: the original 383, then six wing velocities
 divided by 2,000 rad/s, then six measured hinge angles divided by pi. Each six-value
 group is ordered left yaw/roll/pitch, right yaw/roll/pitch. No clock, desired wing
 phase or teacher action is added to student observations. The raw angles come from
@@ -272,3 +273,22 @@ to the original collection command, using the new `flight_corrections_reproducti
 output. The inherited teacher and wing-pattern arguments still apply. The angle
 pilot starts fresh Adam for its changed sensory parameter shape; earlier 383- and
 389-input checkpoints retain their exact observation recipes.
+
+The 60.494686-second angle pilot improved ground stability: all six fixed cases
+and the uninterrupted walk/stop/resume remained stable with valid support.
+Stopping and original raw tracking gates still fail. Both airborne probes fell.
+Its sampled first-30-ms upward passive force was only 0.0547 body weight. A
+subsequent 60.607377-second faster-input adaptation reduced offline error but
+regressed ground behavior and still failed flight. Preserve both reports; use
+angle01 as the next shared-actor warm start and online01 as the historical
+walking/braking reference.
+
+Native batching now supports the same complete flight preset. Driven-wing tests
+match single MuJoCo poses, velocities, passive aerodynamic forces, observations
+and repeated partial resets. Flight uses all 78 outputs, including direct wing
+controls alongside 72 filtered activation states; ground defaults retain their
+existing action mask and clock. Airborne PPO reads only training-split initial
+physical frames, then learns from physical velocity, height, orientation and
+failure rewards. The original 2 ms PPO discount horizons scale to the 0.2 ms
+flight action interval. Ground imitation rehearsal remains at 500 Hz. See the
+[run command](README.md) and [declared pilot](LEARNING_JOURNAL.md).
