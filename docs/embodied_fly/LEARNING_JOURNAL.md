@@ -2656,3 +2656,38 @@ are verified. Both full training videos are decoded, inspected and opened.
 Measured graph connectivity, physical contracts and frozen utility/normalization
 weights remain unchanged. Robust quiet hover, walking yaw, combined command
 transitions, takeoff/landing, learned utility and multi-agent survival remain open.
+
+### Independent critic updates — 2026-09-13 19:26:13 UTC
+
+The user asks to continue and fix the critic. A new opt-in path caches its
+existing causal input features during physical collection. Policy updates retain
+the KL stop; the separate value network completes all two epochs without
+replaying the connectome. Saved inputs and GAE targets are detached, and the
+deployed actor is unchanged. Tests force immediate policy rejection and verify
+continued critic updates, actor isolation, reset-aware feature values and exact
+optimizer continuation. Historical commands preserve their original behavior.
+
+Source c455261 is tested and synchronized before the run. Starting from sustained
+timing02, critic01 uses the same 64 worlds and all other hyperparameters for
+617.449570 s, collecting 851,968 transitions. It performs 26 actor and 208 critic
+updates; all 208 value updates occur after the actor's early stop. Independent
+value fitting uses only 0.345939 s. The original critic LR3e-4 is deliberately
+unchanged to isolate this scheduling correction.
+
+The critic fit improves in 21/26 rollouts but increases error in several late
+rollouts. In the last, hover value RMSE rises from 0.3259 to 0.4651 during fitting.
+Positive explained variance alone cannot establish accurate values or better
+control. A smaller critic step is a plausible next hypothesis, not a proven
+explanation for the physical regression.
+
+The frozen nominal review retains standing/walking stability, with walking yaw
+still failed. Hover crosses the 0.5 cm floor at1.656 s and falls; root RMSE is
+16.324 mm versus7.065 mm for timing02. The candidate is not promoted. Planned
+additional-start testing is omitted after this failure, without rerunning the
+preserved parent. No second training run or hidden reward/body change occurs.
+
+All 229 failure windows and three complete captures are verified. Parameter
+and optimizer comparisons establish unchanged graph/body contracts, 14 fixed
+tensors, 18 changed tensors, and exact Adam step increments. 149 tests and
+source lint pass. The complete 15-second video is decoded, visually inspected
+and opened. Timing02 remains the sustained-hover development checkpoint.

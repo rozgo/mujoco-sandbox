@@ -140,3 +140,10 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
 Use the recorded graph-cache location and matching compiled-body platform for
 the actual run. The command above documents the parameters; Linux headless
 evaluation uses EGL, while macOS replay uses its native rendering backend.
+
+The [completed critic pilot](runs/position_ppo_critic_01/SUMMARY.md) confirms all
+208 planned critic updates and exact optimizer continuation, at 0.346 s of
+independent fitting cost. The actor nevertheless loses nominal hover. Late value
+fits sometimes increase error, so the next hypothesis is a smaller critic step;
+the sustained timing02 actor stays the working candidate. This pilot changes
+neither the reward nor the deployed controller architecture.

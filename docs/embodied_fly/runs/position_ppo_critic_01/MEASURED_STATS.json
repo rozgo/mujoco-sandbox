@@ -1,0 +1,88 @@
+{
+  "training_started_utc": "2026-09-13T19:11:44.474353+00:00",
+  "completed_utc": "2026-09-13T19:22:02.051167+00:00",
+  "setup_seconds": 8.07226599007845,
+  "training_wall_seconds": 617.4495703941211,
+  "transitions": 851968,
+  "aggregate_simulated_seconds": 1703.9360000000001,
+  "transitions_by_task": {
+    "stand": 212992,
+    "walk": 212992,
+    "hover": 425984
+  },
+  "aggregate_simulated_seconds_by_task": {
+    "stand": 425.98400000000004,
+    "walk": 425.98400000000004,
+    "hover": 851.9680000000001
+  },
+  "transitions_per_training_wall_second": 1379.8179492718484,
+  "collection_seconds": 476.67586092371494,
+  "optimization_seconds": 140.76284302165732,
+  "independent_critic_seconds": 0.3459393451921642,
+  "rollouts": 26,
+  "ppo_updates": 26,
+  "critic_updates": 208,
+  "actor_kl_stops": 26,
+  "critic_updates_after_actor_stop": 208,
+  "critic_sample_presentations": 1703936,
+  "parallel_physics_worlds": 64,
+  "physics_threads": 16,
+  "worlds_by_task": {
+    "stand": 16,
+    "walk": 16,
+    "hover": 32
+  },
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "physics_hz": 5000.0,
+  "control_hz": 500.0,
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 1.024,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 1.9989998332499455,
+    "gae_trace_efold_seconds": 0.33261034061256733,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "peak_cuda_allocated_bytes": 12554405888,
+  "actor_parameters": 2516146,
+  "critic_parameters": 235777,
+  "parent_checkpoint_sha256": "1b926a9e1489d1792177519b3b7de6d56cc2723882077daf7ff7a1bf1ad0fd1e",
+  "checkpoint_sha256": "6da9932a2e3247d098d5fab62b773ecbbefcbbf7af5a5d4940abe44b190f7579",
+  "optimizer_resumed": true,
+  "body_reward_architecture_and_other_hyperparameters_match_parent": true,
+  "critic_presentations_are_not_additional_environment_experience": true,
+  "completed_training_episodes": {
+    "stand": {
+      "completed": 80,
+      "failed": 0
+    },
+    "walk": {
+      "completed": 80,
+      "failed": 0
+    },
+    "hover": {
+      "completed": 60,
+      "failed": 229
+    }
+  },
+  "nominal_evaluation": {
+    "setup_seconds": 7.66437043203041,
+    "stepping_and_capture_seconds": 32.02228298271075,
+    "simulated_seconds_per_world": 5.0
+  },
+  "video": {
+    "render_and_encode_seconds": 60.5730402499903,
+    "duration_seconds": 15.0,
+    "frames": 750,
+    "fps": 50,
+    "video_sha256": "c27adf578537bbc91fee21624673775fe4d8761b68f4ee7b7c3542637c3b5bd0"
+  },
+  "recorded_implementation_tests": {
+    "passed": 149,
+    "dependency_warnings": 43,
+    "seconds": 128.91,
+    "focused_passed": 21,
+    "focused_seconds": 26.37
+  }
+}

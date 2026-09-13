@@ -38,6 +38,11 @@ training, using 32 then 64 CPU physics worlds with RTX 4090 neural training.
 No body, graph, action interface or runtime helper changes were needed for this
 limited gain. See the report for all failures and the remaining critic-update issue.
 
+The [critic scheduling fix](runs/position_ppo_critic_01/SUMMARY.md) now lets value
+training complete after the policy stops. Its ten-minute continuation confirms
+the fix but loses nominal hover, so the sustained checkpoint above remains the
+working candidate. Both the failure video and measured critic behavior are retained.
+
 ## Historical torque-model experiments
 
 The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)

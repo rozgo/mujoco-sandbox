@@ -976,3 +976,33 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   and opened automatically on the Mac.
 - Full suite: 143 passed, 43 known dependency warnings, 121.56 s;
   focused checks: 12 passed, 21.46 s. Changed-source lint passes.
+
+## Fly independent critic schedule — September 13, 2026
+
+- Observed start **19:03:18 UTC**. Training starts **19:11:44.474353 UTC**;
+  report completes **19:22:02.051167 UTC**. Video reviewed/opened by
+  **19:26:13 UTC**, 22 min 55 s after work began. Archival/push follows this
+  milestone. Development, tests, discussion, evaluation and transfer are separate
+  from training; overlapping activities must not be summed as elapsed time.
+- Exactly one new PPO continuation, source c455261. Setup **8.072266 s**;
+  training **617.449570 s** (10 min 17.450 s). The 600-second budget finishes
+  its last complete rollout. **851,968 transitions / 1,703.936 aggregate
+  simulated seconds**, including **851.968 s hover**.
+- 64 worlds: 16 stand, 16 walk, 32 hover. 16 CPU MuJoCo/mjbatch physics threads,
+  RTX 4090 neural work, 5 kHz physics, 500 Hz policy actions. 512-action
+  rollouts, 128-action recurrent gradients, unchanged body/network/rewards.
+- Collection/forward **476.675861 s**; optimization **140.762843 s**.
+  Independent critic fitting **0.345939 s** is included in optimization.
+  Throughput **1,379.818 transitions/training-second**; peak CUDA allocation
+  **12,554,405,888 bytes**. No GPU OOM or training exception.
+- 26 policy updates, 208 critic updates, 1,703,936 critic sample presentations.
+  All critic passes finish after policy early stopping. Reused critic samples
+  are not additional physical experience. Both Adam optimizers resume exactly.
+- Nominal evaluation: setup **7.664370 s**, stepping/capture **32.022283 s**;
+  7,500 transitions / 15 aggregate seconds. Hover fails, so planned additional
+  starts are omitted. No redundant parent simulation and no second PPO run.
+- Video render/encode **60.573040 s**; 15 seconds, 750 frames, 1600x900,
+  50 fps, 1x. Fully decoded, 13 frames visually inspected, opened automatically.
+- Focused tests: **21 passed**, one dependency warning, **26.37 s**.
+  Full suite: **149 passed**, 43 known dependency warnings, **128.91 s**.
+  Changed-source lint and all capture/failure/optimizer audits pass.
