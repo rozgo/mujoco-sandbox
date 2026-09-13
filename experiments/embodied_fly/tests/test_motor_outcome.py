@@ -36,9 +36,12 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
     )
 
 
-@pytest.mark.parametrize("wing_weight,all_motor", [(0.0, False), (100.0, False), (0.0, True)])
+@pytest.mark.parametrize(
+    "wing_weight,all_motor,warmup",
+    [(0.0, False, 0), (100.0, False, 0), (0.0, True, 0), (0.0, True, 1)],
+)
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch, wing_weight, all_motor
+    tmp_path, monkeypatch, wing_weight, all_motor, warmup
 ):
     from embodied_fly import ppo
 
@@ -51,6 +54,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         for k, v in brain.state_dict().items()
         if k.startswith(("utility_head.", "intention_encoder."))
     }
+    initial_actor = {k: v.clone() for k, v in brain.state_dict().items()}
     worlds = 3 if all_motor else 2
     preset = "wing_position" if all_motor else "wing_motion"
     env = FlyBatch(worlds, 2, 14, preset=preset)
@@ -69,6 +73,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         motor_ground=not all_motor,
         motor_all=all_motor,
         motor_retention_weight=4.0 if all_motor else 0.0,
+        critic_warmup_rollouts=warmup,
         wing_supervision=wing_weight,
         preset=preset,
         rehearsal=None,
@@ -91,7 +96,13 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         seed=81001,
     )
     report = ppo.train(args)
-    assert report["transitions"] == worlds * 8 and report["ppo_updates"] > 0
+    assert report["transitions"] == worlds * 8
+    assert report["critic_updates"] > 0
+    assert (report["ppo_updates"] == 0) == bool(warmup)
+    if warmup:
+        assert all(torch.equal(brain.state_dict()[k], v) for k, v in initial_actor.items())
+        assert report["core_gradient_audit_from_physical_reward"] is None
+        assert all(v == 0 for v in report["core_changes"].values())
     assert report["active_motor_channels"] == 78
     assert report["rehearsal_frames"] == report["rehearsal_seconds"] == 0
     assert report["teacher_present_during_collection"] == bool(wing_weight or all_motor)
@@ -108,7 +119,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     assert report["utility_and_intention_weights_unchanged"]
     assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": int(all_motor)}
     assert len(report["completed_episodes"]) == worlds * 4
-    assert all(
+    assert warmup or all(
         x["l2"] > 0 and x["finite"]
         for x in report["core_gradient_audit_from_physical_reward"].values()
     )
@@ -125,7 +136,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         restored.enable_wing_residual(checkpoint["wing_residual_hidden"])
         restored.load_state_dict(checkpoint["state_dict"], strict=True)
         # The physical reward gradient was audited before adding the retention loss.
-        assert report["core_gradient_audit_from_ground_retention"] is not None
+        assert warmup or report["core_gradient_audit_from_ground_retention"] is not None
     json.dumps(report, allow_nan=False)
     # The second run must consume the optimizer and critic from the first, while
     # retaining exactly the same physical identity and inactive utility weights.

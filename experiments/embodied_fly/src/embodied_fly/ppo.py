@@ -45,10 +45,12 @@ class Critic(nn.Module):
         return self.network(features).squeeze(-1)
 
 
-def motor_distribution(output, active, log_std):
+def motor_distribution(output, active, log_std, minimum_std=0.01):
+    if not 0 < minimum_std <= 0.15:
+        raise ValueError("Exploration floor must be positive and no greater than 0.15")
     location = torch.atanh(output.action[:, active].clamp(-0.9999, 0.9999))
     return torch.distributions.Normal(
-        location, log_std.clamp(math.log(0.01), math.log(0.15)).exp()
+        location, log_std.clamp(math.log(minimum_std), math.log(0.15)).exp()
     )
 
 
@@ -172,6 +174,14 @@ def train(args):
     motor_ground = getattr(args, "motor_ground", False)
     motor_all = getattr(args, "motor_all", False)
     motor_mode = motor_ground or motor_all
+    critic_warmup = getattr(args, "critic_warmup_rollouts", 0)
+    if critic_warmup < 0:
+        raise ValueError("Critic warmup rollouts must be nonnegative")
+    if critic_warmup and not motor_all:
+        raise ValueError("Critic warmup currently requires the all-motor curriculum")
+    minimum_noise = getattr(args, "minimum_noise", 0.01)
+    if not 0 < minimum_noise <= args.noise <= 0.15:
+        raise ValueError("Initial exploration must lie between its positive floor and 0.15")
     retention_weight = getattr(args, "motor_retention_weight", 0.0)
     if motor_ground and motor_all:
         raise ValueError("Choose one motor curriculum")
@@ -356,6 +366,8 @@ def train(args):
     counters = {
         "rollouts": 0,
         "ppo_updates": 0,
+        "critic_updates": 0,
+        "critic_warmup_rollouts": 0,
         "transitions": 0,
         "rehearsal_frames": 0,
         "wing_supervised_presentations": 0,
@@ -371,6 +383,7 @@ def train(args):
     progress = []
     try:
         while time.perf_counter() - start < args.seconds:
+            warming_critic = counters["rollouts"] < critic_warmup
             collect_start = time.perf_counter()
             obs_buf, latent_buf, activity_buf, logp_buf, values, rewards, dones = (
                 [],
@@ -394,7 +407,7 @@ def train(args):
                     output = brain(
                         observation, memory, sample_activity=True, time_scale=time_scale
                     )
-                    distribution = motor_distribution(output, active, log_std)
+                    distribution = motor_distribution(output, active, log_std, minimum_noise)
                     latent = distribution.sample()
                     action = output.action.clone()
                     action[:, active] = latent.tanh()
@@ -552,7 +565,7 @@ def train(args):
                             activity_override=data["activity"][t],
                             time_scale=time_scale,
                         )
-                        dist = motor_distribution(result, active, log_std)
+                        dist = motor_distribution(result, active, log_std, minimum_noise)
                         new_logps.append(
                             joint_log_probability(
                                 result,
@@ -608,7 +621,11 @@ def train(args):
                     if not torch.isfinite(loss + value_loss):
                         raise RuntimeError("Nonfinite PPO loss")
                     optimizer.zero_grad(set_to_none=True)
-                    if gradient_audit is None and (wing_weight or retention_weight):
+                    if (
+                        not warming_critic
+                        and gradient_audit is None
+                        and (wing_weight or retention_weight)
+                    ):
                         gradient_audit = core_gradient_stats(brain, physical_loss)
                         if wing_weight:
                             wing_gradient_audit = core_gradient_stats(
@@ -622,8 +639,9 @@ def train(args):
                             x["finite"] and x["l2"] > 0 for x in gradient_audit.values()
                         ):
                             raise RuntimeError("Physical reward did not reach neural core")
-                    loss.backward()
-                    if gradient_audit is None:
+                    if not warming_critic:
+                        loss.backward()
+                    if not warming_critic and gradient_audit is None:
                         gradient_audit = {
                             n: {
                                 "l2": float(p.grad.norm()),
@@ -637,13 +655,15 @@ def train(args):
                             for item in gradient_audit.values()
                         ):
                             raise RuntimeError("Physical reward did not reach neural core")
-                    nn.utils.clip_grad_norm_(parameters, 1.0)
-                    optimizer.step()
+                    if not warming_critic:
+                        nn.utils.clip_grad_norm_(parameters, 1.0)
+                        optimizer.step()
                     value_optimizer.zero_grad(set_to_none=True)
                     value_loss.backward()
                     nn.utils.clip_grad_norm_(critic.parameters(), 1.0)
                     value_optimizer.step()
-                    counters["ppo_updates"] += 1
+                    counters["ppo_updates"] += int(not warming_critic)
+                    counters["critic_updates"] += 1
                     if wing_weight:
                         counters["wing_supervised_presentations"] += (
                             args.sequence * args.worlds
@@ -703,9 +723,11 @@ def train(args):
                 args.sequence * args.worlds if args.rehearsal else 0
             )
             counters["rollouts"] += 1
+            counters["critic_warmup_rollouts"] += int(warming_critic)
             row = {
                 **counters,
                 "elapsed_seconds": time.perf_counter() - start,
+                "actor_updates_enabled": not warming_critic,
                 "mean_physical_reward": float(np.mean(physical_rewards)),
                 "reward_rates": term_sums,
                 "max_kl": max(kl_values),
@@ -868,6 +890,13 @@ def train(args):
             "optimizer_initialization": "retained actor/critic Adam and exploration from PPO parent"
             if optimizer_resumed
             else "new PPO and critic Adam; parent actor and normalization retained",
+            "critic_warmup": {
+                "requested_rollouts": critic_warmup,
+                "completed_rollouts": counters["critic_warmup_rollouts"],
+                "actor_and_exploration_frozen_during_warmup": True,
+                "included_in_training_wall_seconds": True,
+                "extra_physics_worlds": 0,
+            },
         }
         (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     return report
@@ -881,6 +910,7 @@ if __name__ == "__main__":
     parser.add_argument("--motor-ground", action="store_true")
     parser.add_argument("--motor-all", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)
+    parser.add_argument("--critic-warmup-rollouts", type=int, default=0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)
     parser.add_argument("--wing-angle-perturbation", type=float, default=0.0)
     parser.add_argument("--wing-speed-perturbation", type=float, default=0.0)
@@ -903,6 +933,7 @@ if __name__ == "__main__":
     parser.add_argument("--gae-lambda", type=float, default=0.95)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--noise", type=float, default=0.04)
+    parser.add_argument("--minimum-noise", type=float, default=0.01)
     parser.add_argument("--target-kl", type=float, default=0.03)
     parser.add_argument("--entropy", type=float, default=0.001)
     parser.add_argument("--rehearsal-weight", type=float, default=1.0)

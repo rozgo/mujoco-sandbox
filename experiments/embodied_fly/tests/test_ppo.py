@@ -13,6 +13,19 @@ from embodied_fly.ppo import (
 )
 
 
+def test_explicit_exploration_floor_changes_sampling_and_replay_consistently():
+    output = SimpleNamespace(action=torch.zeros(2, 3))
+    active = torch.ones(3, dtype=torch.bool)
+    log_std = torch.full((3,), np.log(0.003))
+    old = motor_distribution(output, active, log_std)
+    reduced = motor_distribution(output, active, log_std, 0.003)
+    torch.testing.assert_close(old.scale, torch.full((2, 3), 0.01))
+    torch.testing.assert_close(reduced.scale, torch.full((2, 3), 0.003))
+    for bad in [0, -1, float("nan"), 0.2]:
+        with pytest.raises(ValueError):
+            motor_distribution(output, active, log_std, bad)
+
+
 @pytest.mark.parametrize("time_scale", (1.0, 0.1))
 @pytest.mark.parametrize("motor_only", (False, True))
 def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core(
