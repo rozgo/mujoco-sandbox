@@ -1,0 +1,3493 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T02:36:31.261824+00:00",
+    "source_commit": "4a35d6c0d4d647408ac210e5e6641e36d615a6f2",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "8828e222a59ec3b3d18fcbd9368cd790fdb2ab3e6c17a9265b39ac30d4f65dbc",
+      "src/embodied_fly/body.py": "e994f299c1ec67fe636c0545e8926cd56461ac9ddfdceb185fb7adb9dc2f393b",
+      "src/embodied_fly/brain.py": "42c226d013c90aa32abaf421f368e17911b2eaaf25ee37110b2c7b4826f8c464",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "20de3b61a98bbed3ca560160f8c8a1335794edc578e17fe10b02c91d348da2af",
+      "src/embodied_fly/flight_collect.py": "4b387f9c649a9796d288dc66f20c44b20b0bb441b670435ddbc6fcdde419a4c6",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "156d0ec4c0ef10dfa6b835f970a14307ffa0245b66fa938b7f16334e9fb34f99",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "a5e3085363269e48df98b932e333e23a0d95baa1e7e1eaf4dc94ae2fb5f80385",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/migration.py": "f6cce849f465b7f117d3c6c1867d975e1d0c009d0f04ae12f13b1c0a5ad8aa70",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "9c49a616cbe6ff2c4b51d8dd1ffdd53f0f70b79a86e83ea1a908130af292e128",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/ppo.py": "e3a54a3ab417f9124459e44ccfaca52613008b0e48080300a55813a834a8e154",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "19458e643c85966e68611ca89ce2f70a5f88a389b94a26272de00ce59cd8fc74",
+      "src/embodied_fly/transitions.py": "8e8f0fbc4a3f51bb16fdf323d6b23d4e95fa850e0141b9068f63412e46c02a66",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-13T02:36:46.270664+00:00",
+  "seed": 55001,
+  "source": "Inherited flight teacher plus supplied wing pattern; complete body and individual bounded actuator labels",
+  "student_present": false,
+  "student_checkpoint_sha256": null,
+  "graph_sha256": null,
+  "student_fraction": 0,
+  "student_inference_device": null,
+  "executed_action": "teacher label",
+  "recurrent_memory": "Reset only between episodes; persists at every 5 kHz decision",
+  "policy_acceptance_eligible": false,
+  "setup_seconds": 4.150386281777173,
+  "collection_seconds": 10.873398759402335,
+  "teacher_sha256": "d49129e5c30e390a5614abd48727f76a03919e18124f50e166a2061bea3cfcb5",
+  "wing_pattern_sha256": "f97b975ef1b5adbe42c208ea9665f3c37fa432914f56f3943f1697cdb090d1ce",
+  "model_sha256": "3c38ca5db6c85853b89813d3ab729b6e753883c7f4552db96a53ade7ea121c73",
+  "environment": {
+    "units": "CGS retained from FlyBody; SI conversions shown explicitly",
+    "body_mass_kg": 9.846214691323196e-07,
+    "bodies_including_world": 69,
+    "degrees_of_freedom": 108,
+    "actuators": 78,
+    "observation_size": 383,
+    "physical_preset": "flight",
+    "wing_limit_profile": "original",
+    "wing_limit_solref": [
+      [
+        0.001,
+        1.0
+      ],
+      [
+        0.001,
+        1.0
+      ],
+      [
+        0.001,
+        1.0
+      ],
+      [
+        0.001,
+        1.0
+      ],
+      [
+        0.001,
+        1.0
+      ],
+      [
+        0.001,
+        1.0
+      ]
+    ],
+    "physics_hz": 20000.0,
+    "control_hz": 5000.0,
+    "activation_states": 72,
+    "activation_observation": "78 effective actuator inputs; filtered state or direct control",
+    "root_is_free": true,
+    "source": "TuragaLab/flybody@d015e9bfe441bd90ae431bac24c55cb74bdbce26",
+    "joints": [
+      {
+        "name": "walker/head_abduct",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/head_twist",
+        "range_rad": [
+          -3.0,
+          3.0
+        ]
+      },
+      {
+        "name": "walker/head",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/rostrum",
+        "range_rad": [
+          -1.24,
+          0.183
+        ]
+      },
+      {
+        "name": "walker/haustellum_abduct",
+        "range_rad": [
+          -0.0873,
+          0.0873
+        ]
+      },
+      {
+        "name": "walker/haustellum",
+        "range_rad": [
+          -1.59,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/labrum_left",
+        "range_rad": [
+          -0.00524,
+          1.05
+        ]
+      },
+      {
+        "name": "walker/labrum_right",
+        "range_rad": [
+          -0.00524,
+          1.05
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_left",
+        "range_rad": [
+          -0.4,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_left",
+        "range_rad": [
+          -0.1,
+          0.09
+        ]
+      },
+      {
+        "name": "walker/antenna_left",
+        "range_rad": [
+          -0.2,
+          0.5
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_right",
+        "range_rad": [
+          -0.4,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_right",
+        "range_rad": [
+          -0.1,
+          0.09
+        ]
+      },
+      {
+        "name": "walker/antenna_right",
+        "range_rad": [
+          -0.2,
+          0.5
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_left",
+        "range_rad": [
+          -1.5,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_roll_left",
+        "range_rad": [
+          -1.0,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_left",
+        "range_rad": [
+          -1.27,
+          2.92
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_right",
+        "range_rad": [
+          -1.5,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_roll_right",
+        "range_rad": [
+          -1.0,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_right",
+        "range_rad": [
+          -1.27,
+          2.92
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_2",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_2",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_3",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_3",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_4",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_4",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_5",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_5",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_6",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_6",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct_7",
+        "range_rad": [
+          -0.1,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/abdomen_7",
+        "range_rad": [
+          -0.15,
+          0.1
+        ]
+      },
+      {
+        "name": "walker/haltere_left",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/haltere_right",
+        "range_rad": [
+          -0.2,
+          0.2
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_left",
+        "range_rad": [
+          -1.0,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_left",
+        "range_rad": [
+          -0.8,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_left",
+        "range_rad": [
+          -0.2,
+          1.7
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_left",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_left",
+        "range_rad": [
+          -0.7,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T1_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_right",
+        "range_rad": [
+          -1.0,
+          0.7
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_right",
+        "range_rad": [
+          -0.8,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_right",
+        "range_rad": [
+          -0.2,
+          1.7
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_right",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_right",
+        "range_rad": [
+          -0.7,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T1_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_left",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_left",
+        "range_rad": [
+          -0.75,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_left",
+        "range_rad": [
+          -0.2,
+          0.9
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_left",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_left",
+        "range_rad": [
+          -1.0,
+          1.8
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T2_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_right",
+        "range_rad": [
+          -0.5,
+          0.3
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_right",
+        "range_rad": [
+          -0.75,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_right",
+        "range_rad": [
+          -0.2,
+          0.9
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_right",
+        "range_rad": [
+          -0.15,
+          2.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_right",
+        "range_rad": [
+          -1.0,
+          1.8
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T2_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_left",
+        "range_rad": [
+          -0.9,
+          0.25
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_left",
+        "range_rad": [
+          -0.15,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_left",
+        "range_rad": [
+          -0.3,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_left",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_left",
+        "range_rad": [
+          -0.7,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_left",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_left",
+        "range_rad": [
+          -0.8,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T3_left",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_right",
+        "range_rad": [
+          -0.9,
+          0.25
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_right",
+        "range_rad": [
+          -0.15,
+          0.8
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_right",
+        "range_rad": [
+          -0.3,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_right",
+        "range_rad": [
+          -1.0,
+          1.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_right",
+        "range_rad": [
+          -0.7,
+          1.5
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_right",
+        "range_rad": [
+          -1.35,
+          1.3
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_right",
+        "range_rad": [
+          -0.8,
+          1.2
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus3_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus4_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      },
+      {
+        "name": "walker/tarsus5_T3_right",
+        "range_rad": [
+          -0.36,
+          0.36
+        ]
+      }
+    ],
+    "actuation": [
+      {
+        "name": "walker/head_abduct",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.2
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/head_twist",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -3.0,
+          3.0
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/head",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/rostrum",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.24,
+          0.183
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/haustellum_abduct",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.0873,
+          0.0873
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/haustellum",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.59,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.1,
+          0.1
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/labrum_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.00524,
+          1.05
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/labrum_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.00524,
+          1.05
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.4,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.1,
+          0.09
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.5
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_abduct_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.4,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_twist_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.1,
+          0.09
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/antenna_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.5
+        ],
+        "force_range_CGS": [
+          -0.01,
+          0.01
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_roll_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_yaw_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_roll_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/wing_pitch_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -18.0,
+          18.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/abdomen_abduct",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.7,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.06999999999999999,
+          0.06999999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/abdomen",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -1.05,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.10500000000000001,
+          0.06999999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.5599999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6400000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          1.7
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          1.36
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.27999999999999997,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          0.7
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.5599999999999999
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6400000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          1.7
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          1.36
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T1_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.27999999999999997,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T1_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.24
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.75,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6000000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.8
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.5,
+          0.3
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.24
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.75,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.6000000000000001,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.2,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.16000000000000003,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          2.0
+        ],
+        "force_range_CGS": [
+          -0.12,
+          1.6
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T2_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.8
+        ],
+        "force_range_CGS": [
+          -0.4,
+          0.7200000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T2_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.9,
+          0.25
+        ],
+        "force_range_CGS": [
+          -0.7200000000000001,
+          0.2
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.12,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.3,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.24,
+          1.04
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.5
+        ],
+        "force_range_CGS": [
+          -0.5599999999999999,
+          1.2000000000000002
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_left",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.32000000000000006,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_left",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_abduct_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.9,
+          0.25
+        ],
+        "force_range_CGS": [
+          -0.7200000000000001,
+          0.2
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_twist_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.15,
+          0.8
+        ],
+        "force_range_CGS": [
+          -0.12,
+          0.6400000000000001
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/coxa_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.3,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.24,
+          1.04
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_twist_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          -0.8,
+          0.8
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/femur_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.7,
+          1.5
+        ],
+        "force_range_CGS": [
+          -0.5599999999999999,
+          1.2000000000000002
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tibia_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -1.35,
+          1.3
+        ],
+        "force_range_CGS": [
+          -0.54,
+          0.52
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus_T3_right",
+        "transmission_type": 0,
+        "ctrl_range": [
+          -0.8,
+          1.2
+        ],
+        "force_range_CGS": [
+          -0.32000000000000006,
+          0.48
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/tarsus2_T3_right",
+        "transmission_type": 3,
+        "ctrl_range": [
+          -0.9,
+          0.9
+        ],
+        "force_range_CGS": [
+          -0.36000000000000004,
+          0.36000000000000004
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_labrum_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_labrum_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          1.0
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T1_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T1_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T2_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T2_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T3_left",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "name": "walker/adhere_claw_T3_right",
+        "transmission_type": 5,
+        "ctrl_range": [
+          0.0,
+          1.0
+        ],
+        "force_range_CGS": [
+          0.0,
+          0.985
+        ],
+        "gear": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  "control_hz": 5000.0,
+  "physics_backend": "native MuJoCo CPU",
+  "worlds": 1,
+  "utility_labels": "explore for this commanded flight warm start; not yet learned survival selection",
+  "observations_are_causal": true,
+  "future_reference_used_by_teacher_only": true,
+  "recorded_observation_size": 383,
+  "student_observation_size": null,
+  "student_sensor_extension_size": null,
+  "student_observation_limit": "Legacy capture stores 383 fields; student appends its declared measured wing velocity/angle extension. No altitude target, camera pixels or teacher phase enters student input.",
+  "episodes": [
+    {
+      "episode": 0,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.32986841517997056,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16644657216966152,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6641743302820946,
+      "minimum_upright": 0.6638798792779891,
+      "minimum_height_m": 0.009954432670220224,
+      "root_tracking_rmse_m": 0.00010000017090462122,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7797463241bb81288843bf4ae098566b93bc7c06dfc4d29274dd46f2ec28fe0e"
+    },
+    {
+      "episode": 1,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.02673704171283231,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16608647536486387,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329213136661302,
+      "minimum_upright": 0.6308944140550967,
+      "minimum_height_m": 0.009993953115843435,
+      "root_tracking_rmse_m": 0.00013209496741828613,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "1d6e5dbf5c924a47ed2a7cd25558199d077ea8c7382607beafd02d6eaee6afe7"
+    },
+    {
+      "episode": 2,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.9362502575244538,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1706212628632784,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6404644147573902,
+      "minimum_upright": 0.6283460310815633,
+      "minimum_height_m": 0.009951498117665407,
+      "root_tracking_rmse_m": 0.0001804391797866729,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "f2f09ed60157c52af4980a8f48663f5d4d776cc663ffdd0104a7b1eb94654fc7"
+    },
+    {
+      "episode": 3,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.5162222201860119,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1681717112660408,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.782576718653064,
+      "minimum_upright": 0.66457904143303,
+      "minimum_height_m": 0.009771537028089217,
+      "root_tracking_rmse_m": 0.00017639190202323193,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9672554718a0a102cb948ff2520d2669c401feb2ac9a4a199e281765f26533c7"
+    },
+    {
+      "episode": 4,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.16129178811347544,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1658771550282836,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6684968435191321,
+      "minimum_upright": 0.6560184235748173,
+      "minimum_height_m": 0.00992260397225359,
+      "root_tracking_rmse_m": 0.00010632712361844373,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "c0f96d5855bdbca87899ce889ede7a896d76a403143c89e13f00838df6952511"
+    },
+    {
+      "episode": 5,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.46482513944175663,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16901064198464155,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6647413142124033,
+      "minimum_upright": 0.6561443664758748,
+      "minimum_height_m": 0.00993813633584334,
+      "root_tracking_rmse_m": 9.868736047151838e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "d49115223721037f220b5b7381bf1838fa0934bfc2344be834c472aa4f67a0ee"
+    },
+    {
+      "episode": 6,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.8592285514507935,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.17063269205391407,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.637630475810024,
+      "minimum_upright": 0.6219980164063236,
+      "minimum_height_m": 0.009949112178389516,
+      "root_tracking_rmse_m": 0.0001963261860953335,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "a562255b4c833160e7368c8eb84c05e1f5213263efea658372f2e336754f970f"
+    },
+    {
+      "episode": 7,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.3495962173333811,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16753926407545805,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.8112853324093687,
+      "minimum_upright": 0.6622804257207998,
+      "minimum_height_m": 0.009745922617073188,
+      "root_tracking_rmse_m": 0.0002412050533474738,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "a23d5281c9f9c9798105946575eeaa3d7a04b4dc98190872ff5d93ce28e7669b"
+    },
+    {
+      "episode": 8,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.06823696656518219,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16916953912004828,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6248323359904648,
+      "minimum_upright": 0.6248323359904648,
+      "minimum_height_m": 0.00992173290595612,
+      "root_tracking_rmse_m": 0.00013561400814634684,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "777aeedff9d4cb33e3004351411bdcbb2082054e8b8443808c3071871c87acb2"
+    },
+    {
+      "episode": 9,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.35373078071754094,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16901527112349868,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6886337620434817,
+      "minimum_upright": 0.6663185865939897,
+      "minimum_height_m": 0.009931361380801827,
+      "root_tracking_rmse_m": 9.881586870926425e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "86bed9f2598a6049d92a43af4e3c8d46c35a156b979b64656be24440e57388d4"
+    },
+    {
+      "episode": 10,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.5398360936368554,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16971608204767108,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6898035947019985,
+      "minimum_upright": 0.6668223207779572,
+      "minimum_height_m": 0.009944083995399743,
+      "root_tracking_rmse_m": 7.584808458789197e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "56c0233ff2e41b598ae82c21baf1673c107d480cc5e7c2c586bf782e86712508"
+    },
+    {
+      "episode": 11,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.03635602183834208,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16995531879365444,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7322204070676326,
+      "minimum_upright": 0.633342172058318,
+      "minimum_height_m": 0.009874276192547425,
+      "root_tracking_rmse_m": 0.00010382099397753822,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "572754ec42def074fd91c808746808a87853d491ef838309db5725684d524a68"
+    },
+    {
+      "episode": 12,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.3541149709945942,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16949725663289428,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6641743302820946,
+      "minimum_upright": 0.6638798792779891,
+      "minimum_height_m": 0.009954432670220224,
+      "root_tracking_rmse_m": 0.00010000017090462122,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7797463241bb81288843bf4ae098566b93bc7c06dfc4d29274dd46f2ec28fe0e"
+    },
+    {
+      "episode": 13,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.39187135807720797,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.17619599029421806,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6729457440915614,
+      "minimum_upright": 0.6622235515446615,
+      "minimum_height_m": 0.009933563715058097,
+      "root_tracking_rmse_m": 9.24715783577925e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "abdc9b6bad706aa1574143940f905830dba6e7051116ad83bd4e0e180e95d2d5"
+    },
+    {
+      "episode": 14,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.7887914801270258,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1750596878118813,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329754468306289,
+      "minimum_upright": 0.6083056575745359,
+      "minimum_height_m": 0.009930116129092338,
+      "root_tracking_rmse_m": 0.00023290437687982805,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "51dd9240d76ce8cbf7772e64353b24e715af5ca2b7ec1d87c9e89ddab12da889"
+    },
+    {
+      "episode": 15,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.2927851327905563,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.17500346479937434,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.8266703309154326,
+      "minimum_upright": 0.6648024580498982,
+      "minimum_height_m": 0.009755053513066922,
+      "root_tracking_rmse_m": 0.0002710611780268753,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7c142f67acc4e1152eba039ba50c1a47e6030ffb8d5204e3705caf8b21a06bac"
+    },
+    {
+      "episode": 16,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.6785601647567493,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.17343987012282014,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.5618427978994545,
+      "minimum_upright": 0.5515641759818993,
+      "minimum_height_m": 0.009959172453092704,
+      "root_tracking_rmse_m": 0.00023607049775821307,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9b5cce4ab1990b1c169764711908e06a7a7c3297845c9fdc45ec886db2f4b64e"
+    },
+    {
+      "episode": 17,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.8615960328621685,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1661211741156876,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.5833210901030508,
+      "minimum_upright": 0.5727527661917048,
+      "minimum_height_m": 0.00996691818676112,
+      "root_tracking_rmse_m": 0.0002225625419225235,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "3813bc9afd104a8616b0ab768835253cd683f323890a584a3af3467fdc4fa312"
+    },
+    {
+      "episode": 18,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.5553608281572485,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1655128439888358,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6857077672789669,
+      "minimum_upright": 0.6670827867051562,
+      "minimum_height_m": 0.009943300622328503,
+      "root_tracking_rmse_m": 8.002466204976296e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9d0688ea22869172ff5062c1bb17de997b01e525dff2df48018653f12f205b21"
+    },
+    {
+      "episode": 19,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.5098423048488225,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1689950441941619,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.782576718653064,
+      "minimum_upright": 0.66457904143303,
+      "minimum_height_m": 0.009771537028089217,
+      "root_tracking_rmse_m": 0.00017639190202323193,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9672554718a0a102cb948ff2520d2669c401feb2ac9a4a199e281765f26533c7"
+    },
+    {
+      "episode": 20,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.27308023369335754,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16877306019887328,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.69924107268128,
+      "minimum_upright": 0.6655372311976581,
+      "minimum_height_m": 0.009954120799580378,
+      "root_tracking_rmse_m": 0.00011900892955919758,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "6332ce0900f01fe3c5c1253ab40c8b284bf5cf07781e7eb4e3025dbb9dbdc10b"
+    },
+    {
+      "episode": 21,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.3254702155704915,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1660288362763822,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7121967636280632,
+      "minimum_upright": 0.6675592826750247,
+      "minimum_height_m": 0.009928633310382379,
+      "root_tracking_rmse_m": 0.0001179817235003343,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "b08dc77fb9f77c99372d189fe72ad06f36ec54ce2cc0cc7d6ce555c1c23b38f1"
+    },
+    {
+      "episode": 22,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.3521705809357121,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1699506500735879,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7233521223407053,
+      "minimum_upright": 0.6656477745910339,
+      "minimum_height_m": 0.00992094634313737,
+      "root_tracking_rmse_m": 0.00010822818663580097,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "b7b8d5fea7a1a0868cda5e2b88d1ecf4035296d55bb74e45099e21556ca86d4f"
+    },
+    {
+      "episode": 23,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.5874884933100708,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1686974368058145,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7776563804552759,
+      "minimum_upright": 0.664524516765783,
+      "minimum_height_m": 0.009776279200379757,
+      "root_tracking_rmse_m": 0.00017336837925377988,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "02718093efc7f11e89dfb35a03e480df80fac6189c4236d5efbcf8f6f253dbf7"
+    },
+    {
+      "episode": 24,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.1438180821952918,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16514493757858872,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6293734888654315,
+      "minimum_upright": 0.6293734888654315,
+      "minimum_height_m": 0.009891158751664231,
+      "root_tracking_rmse_m": 0.00012158535129937212,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7f757fd08f3a50f39a2e534e643d80302dd80388bb0093a61d873635de09fce6"
+    },
+    {
+      "episode": 25,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.7706117666066256,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16506021888926625,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.5704092962408108,
+      "minimum_upright": 0.5503723599881121,
+      "minimum_height_m": 0.009954939932163943,
+      "root_tracking_rmse_m": 0.0002576361761102295,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "47ae960eda9ef1ac28bbd203fa782491cd104cf7099b055c2ddd1f4f04659075"
+    },
+    {
+      "episode": 26,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.30867608014908676,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16655419673770666,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7490518556079161,
+      "minimum_upright": 0.6673291544604696,
+      "minimum_height_m": 0.009913650856776469,
+      "root_tracking_rmse_m": 0.00013804984495929435,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "ace35de45d0fcb2683c3b0dbf2ba50db9162a11d327f82deb65f2a0547737fd4"
+    },
+    {
+      "episode": 27,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.9797415725031342,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16633084416389465,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6962853003769028,
+      "minimum_upright": 0.6549969387673688,
+      "minimum_height_m": 0.009893506381617442,
+      "root_tracking_rmse_m": 0.0001510594767382915,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "f22d632737ccf8065d3b6b194f0506ab5fbded08842de4640d84c508696ec15b"
+    },
+    {
+      "episode": 28,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.20325473104767522,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16506451508030295,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6966480390233964,
+      "minimum_upright": 0.6613931305896394,
+      "minimum_height_m": 0.009946583221266299,
+      "root_tracking_rmse_m": 0.00011543042354640746,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "bce3d9f2118abb23b1dea0d422ed6df45c87a304ea4257c1f48161a2dd87b90f"
+    },
+    {
+      "episode": 29,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.6171764740581955,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16519403271377087,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.649686666651749,
+      "minimum_upright": 0.6455716300719277,
+      "minimum_height_m": 0.00993621216437212,
+      "root_tracking_rmse_m": 0.00010799469511960737,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "37e233fccc623387fe05876649005403e6ee69877ce9d7e0e68cd4cef8ed06a6"
+    },
+    {
+      "episode": 30,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.6049382525382981,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1667628837749362,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6849523782004241,
+      "minimum_upright": 0.6590030285789755,
+      "minimum_height_m": 0.009926041378385262,
+      "root_tracking_rmse_m": 9.22803743786464e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9685510b95b778b776604a83d9b40eecb0ee0330e0c56325376064b4c29f1fdb"
+    },
+    {
+      "episode": 31,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.7080197869691924,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16859536990523338,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7208168057141662,
+      "minimum_upright": 0.6600585031633692,
+      "minimum_height_m": 0.009871694079576544,
+      "root_tracking_rmse_m": 0.00013811922651406174,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "cccd82c84faf8d4385472f298f616902d406b2bdd4525047d98148afa202460e"
+    },
+    {
+      "episode": 32,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.5624327199008708,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16661921003833413,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6244925582236573,
+      "minimum_upright": 0.6241127347716712,
+      "minimum_height_m": 0.009973265962410102,
+      "root_tracking_rmse_m": 0.00013173177147097508,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "c672d04440c5971138647c409b1d4bac0c571fc2b797820a784f03910921613f"
+    },
+    {
+      "episode": 33,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.26698603503821616,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16608412005007267,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7287014888368668,
+      "minimum_upright": 0.6662221892921905,
+      "minimum_height_m": 0.00992658985072531,
+      "root_tracking_rmse_m": 0.00013393778892283718,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "b39da9942a4aa77dea74fd2d11a5dfc034256f7d7da7dd1c96c8e7fb67393f7b"
+    },
+    {
+      "episode": 34,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.78342555889458,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16709469119086862,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329754468306289,
+      "minimum_upright": 0.6083056575745359,
+      "minimum_height_m": 0.009930116129092338,
+      "root_tracking_rmse_m": 0.00023290437687982805,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "51dd9240d76ce8cbf7772e64353b24e715af5ca2b7ec1d87c9e89ddab12da889"
+    },
+    {
+      "episode": 35,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.9849607083551676,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16616363869979978,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6977422700931051,
+      "minimum_upright": 0.6469226137835319,
+      "minimum_height_m": 0.00991864847101681,
+      "root_tracking_rmse_m": 0.00013398508758703472,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "dc19b89f42891ac7f7de9e0d824de70e7029c2b1e50f8123262806bc402a86ef"
+    },
+    {
+      "episode": 36,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.01953628251306261,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.165890755597502,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.5557016742178446,
+      "minimum_upright": 0.5557016742178446,
+      "minimum_height_m": 0.009971742239971394,
+      "root_tracking_rmse_m": 0.00024199267447408906,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "c1d5835ff5c26bc2064203dea58ad2a4ad867b18d063d136df9e82e31611aebf"
+    },
+    {
+      "episode": 37,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.0011627018883747509,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16603634599596262,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.5933534999668514,
+      "minimum_upright": 0.5889310804696282,
+      "minimum_height_m": 0.009969097382075843,
+      "root_tracking_rmse_m": 0.0002070957225661942,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "46b1d3f3c67787e3083f6b94cb4abda380c3bd997b80a5481a0baaff1e32d258"
+    },
+    {
+      "episode": 38,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.8062971358025043,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16553744301199913,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329754468306289,
+      "minimum_upright": 0.6083056575745359,
+      "minimum_height_m": 0.009930116129092338,
+      "root_tracking_rmse_m": 0.00023290437687982805,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "51dd9240d76ce8cbf7772e64353b24e715af5ca2b7ec1d87c9e89ddab12da889"
+    },
+    {
+      "episode": 39,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.7739875213697961,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16703134216368198,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6875655307593198,
+      "minimum_upright": 0.6446235019545089,
+      "minimum_height_m": 0.009888155557553768,
+      "root_tracking_rmse_m": 0.00018176636618557737,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "40b9c22eb6d45fa80f6661a85e5cbfe78f729ede6df8ff75285a5f47ebfaf145"
+    },
+    {
+      "episode": 40,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.32734810561551075,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1670933347195387,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6641743302820946,
+      "minimum_upright": 0.6638798792779891,
+      "minimum_height_m": 0.009954432670220224,
+      "root_tracking_rmse_m": 0.00010000017090462122,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7797463241bb81288843bf4ae098566b93bc7c06dfc4d29274dd46f2ec28fe0e"
+    },
+    {
+      "episode": 41,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.3873737516554593,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16424317518249154,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6729457440915614,
+      "minimum_upright": 0.6622235515446615,
+      "minimum_height_m": 0.009933563715058097,
+      "root_tracking_rmse_m": 9.24715783577925e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "abdc9b6bad706aa1574143940f905830dba6e7051116ad83bd4e0e180e95d2d5"
+    },
+    {
+      "episode": 42,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.7527319621461007,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16624683141708374,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6399239852977604,
+      "minimum_upright": 0.6152306955185988,
+      "minimum_height_m": 0.009934702364843987,
+      "root_tracking_rmse_m": 0.00021399154394519186,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "df5876397fb8582e9e851e3784167104154bf7c251431ac359ae441ef29dc7f1"
+    },
+    {
+      "episode": 43,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.4735486447325665,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16864638403058052,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7939320148177895,
+      "minimum_upright": 0.6533706065550204,
+      "minimum_height_m": 0.009755698644875523,
+      "root_tracking_rmse_m": 0.0002062711084358372,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "50ea673cbd001f5669ff6552c1ee2c8fd835fbd76186d46f47738ca42ba854ce"
+    },
+    {
+      "episode": 44,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.18550999449031547,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1658086972311139,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6684968435191321,
+      "minimum_upright": 0.6560184235748173,
+      "minimum_height_m": 0.00992260397225359,
+      "root_tracking_rmse_m": 0.00010632712361844373,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "c0f96d5855bdbca87899ce889ede7a896d76a403143c89e13f00838df6952511"
+    },
+    {
+      "episode": 45,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.03895321587745859,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16848975885659456,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329213136661302,
+      "minimum_upright": 0.6308944140550967,
+      "minimum_height_m": 0.009993953115843435,
+      "root_tracking_rmse_m": 0.00013209496741828613,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "1d6e5dbf5c924a47ed2a7cd25558199d077ea8c7382607beafd02d6eaee6afe7"
+    },
+    {
+      "episode": 46,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.12907497281757407,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1659909477457404,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6956813941553486,
+      "minimum_upright": 0.6563586115701784,
+      "minimum_height_m": 0.009878953036378405,
+      "root_tracking_rmse_m": 0.00010301370777134025,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "dec0b3b479edf1225a9c43e9304fbd1195a94e053254af9118fa0587b8fb0629"
+    },
+    {
+      "episode": 47,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.5201429396775475,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16598641918972135,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.782576718653064,
+      "minimum_upright": 0.66457904143303,
+      "minimum_height_m": 0.009771537028089217,
+      "root_tracking_rmse_m": 0.00017639190202323193,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "9672554718a0a102cb948ff2520d2669c401feb2ac9a4a199e281765f26533c7"
+    },
+    {
+      "episode": 48,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.8396060125314659,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16596853407099843,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.533865636734054,
+      "minimum_upright": 0.5283133553873497,
+      "minimum_height_m": 0.009962197393714534,
+      "root_tracking_rmse_m": 0.0002809604863585987,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "52d7057a363643ce9aa0db952bb0442b2701fdbe1769f1d6cf97df302e63ae0d"
+    },
+    {
+      "episode": 49,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.49403612676300745,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16585258394479752,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6647413142124033,
+      "minimum_upright": 0.6561443664758748,
+      "minimum_height_m": 0.00993813633584334,
+      "root_tracking_rmse_m": 9.868736047151838e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "d49115223721037f220b5b7381bf1838fa0934bfc2344be834c472aa4f67a0ee"
+    },
+    {
+      "episode": 50,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.06543293886934709,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16660668700933456,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6779348706183272,
+      "minimum_upright": 0.649570977482109,
+      "minimum_height_m": 0.009910700758875176,
+      "root_tracking_rmse_m": 9.266229870060971e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "a8edd3255fd8f611c60555608bfb12106129478e5d78946883e5615c878efa33"
+    },
+    {
+      "episode": 51,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.9975886234485827,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16890514083206654,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6977422700931051,
+      "minimum_upright": 0.6469226137835319,
+      "minimum_height_m": 0.00991864847101681,
+      "root_tracking_rmse_m": 0.00013398508758703472,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "dc19b89f42891ac7f7de9e0d824de70e7029c2b1e50f8123262806bc402a86ef"
+    },
+    {
+      "episode": 52,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.10033785922100702,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16568387486040592,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6248323359904648,
+      "minimum_upright": 0.6248323359904648,
+      "minimum_height_m": 0.00992173290595612,
+      "root_tracking_rmse_m": 0.00013561400814634684,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "777aeedff9d4cb33e3004351411bdcbb2082054e8b8443808c3071871c87acb2"
+    },
+    {
+      "episode": 53,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.49381729586693524,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16512470273301005,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6647413142124033,
+      "minimum_upright": 0.6561443664758748,
+      "minimum_height_m": 0.00993813633584334,
+      "root_tracking_rmse_m": 9.868736047151838e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "d49115223721037f220b5b7381bf1838fa0934bfc2344be834c472aa4f67a0ee"
+    },
+    {
+      "episode": 54,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.08846921152416654,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16537417890504003,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6779348706183272,
+      "minimum_upright": 0.649570977482109,
+      "minimum_height_m": 0.009910700758875176,
+      "root_tracking_rmse_m": 9.266229870060971e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "a8edd3255fd8f611c60555608bfb12106129478e5d78946883e5615c878efa33"
+    },
+    {
+      "episode": 55,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.7969824209182009,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16738710226491094,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6875655307593198,
+      "minimum_upright": 0.6446235019545089,
+      "minimum_height_m": 0.009888155557553768,
+      "root_tracking_rmse_m": 0.00018176636618557737,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "40b9c22eb6d45fa80f6661a85e5cbfe78f729ede6df8ff75285a5f47ebfaf145"
+    },
+    {
+      "episode": 56,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.1779112381711596,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.1654439503327012,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6684968435191321,
+      "minimum_upright": 0.6560184235748173,
+      "minimum_height_m": 0.00992260397225359,
+      "root_tracking_rmse_m": 0.00010632712361844373,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "c0f96d5855bdbca87899ce889ede7a896d76a403143c89e13f00838df6952511"
+    },
+    {
+      "episode": 57,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.05700795677779902,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16756784915924072,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6329213136661302,
+      "minimum_upright": 0.6308944140550967,
+      "minimum_height_m": 0.009993953115843435,
+      "root_tracking_rmse_m": 0.00013209496741828613,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "1d6e5dbf5c924a47ed2a7cd25558199d077ea8c7382607beafd02d6eaee6afe7"
+    },
+    {
+      "episode": 58,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.48822192397319597,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16579861007630825,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6993227851214578,
+      "minimum_upright": 0.6552261487781242,
+      "minimum_height_m": 0.009930014107400754,
+      "root_tracking_rmse_m": 8.653392955303611e-05,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "e576144429f514a0df532d5f223848e5d0c8b68500f3c07f2eaa2104d0ab3672"
+    },
+    {
+      "episode": 59,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.2864369351201601,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16598877822980285,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.8266703309154326,
+      "minimum_upright": 0.6648024580498982,
+      "minimum_height_m": 0.009755053513066922,
+      "root_tracking_rmse_m": 0.0002710611780268753,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7c142f67acc4e1152eba039ba50c1a47e6030ffb8d5204e3705caf8b21a06bac"
+    },
+    {
+      "episode": 60,
+      "speed_cm_s": 0,
+      "initial_wing_phase": 0.34262375965801184,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16438918700441718,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.6641743302820946,
+      "minimum_upright": 0.6638798792779891,
+      "minimum_height_m": 0.009954432670220224,
+      "root_tracking_rmse_m": 0.00010000017090462122,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "7797463241bb81288843bf4ae098566b93bc7c06dfc4d29274dd46f2ec28fe0e"
+    },
+    {
+      "episode": 61,
+      "speed_cm_s": 5,
+      "initial_wing_phase": 0.27026264013451806,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16488003311678767,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7287014888368668,
+      "minimum_upright": 0.6662221892921905,
+      "minimum_height_m": 0.00992658985072531,
+      "root_tracking_rmse_m": 0.00013393778892283718,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "b39da9942a4aa77dea74fd2d11a5dfc034256f7d7da7dd1c96c8e7fb67393f7b"
+    },
+    {
+      "episode": 62,
+      "speed_cm_s": 10,
+      "initial_wing_phase": 0.3181596757748567,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16648228000849485,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7490518556079161,
+      "minimum_upright": 0.6673291544604696,
+      "minimum_height_m": 0.009913650856776469,
+      "root_tracking_rmse_m": 0.00013804984495929435,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "ace35de45d0fcb2683c3b0dbf2ba50db9162a11d327f82deb65f2a0547737fd4"
+    },
+    {
+      "episode": 63,
+      "speed_cm_s": 20,
+      "initial_wing_phase": 0.09407119576138101,
+      "steps": 100,
+      "simulated_seconds": 0.02000000000000006,
+      "wall_seconds": 0.16718875197693706,
+      "failure": null,
+      "physical_failure": null,
+      "final_upright": 0.7626904590838527,
+      "minimum_upright": 0.6501579820486265,
+      "minimum_height_m": 0.009788315965276014,
+      "root_tracking_rmse_m": 0.00018020664899025474,
+      "warning_count": 0,
+      "max_forbidden_ground_force_over_weight": 0.0,
+      "state_sha256": "cbefcd83532cc7c908be2bfe475a2638b7ab31489a1b991ac6c54de862537bf6"
+    }
+  ]
+}

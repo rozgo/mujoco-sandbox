@@ -1,0 +1,320 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T02:37:53.485031+00:00",
+    "source_commit": "4a35d6c0d4d647408ac210e5e6641e36d615a6f2",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "8828e222a59ec3b3d18fcbd9368cd790fdb2ab3e6c17a9265b39ac30d4f65dbc",
+      "src/embodied_fly/body.py": "e994f299c1ec67fe636c0545e8926cd56461ac9ddfdceb185fb7adb9dc2f393b",
+      "src/embodied_fly/brain.py": "42c226d013c90aa32abaf421f368e17911b2eaaf25ee37110b2c7b4826f8c464",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "20de3b61a98bbed3ca560160f8c8a1335794edc578e17fe10b02c91d348da2af",
+      "src/embodied_fly/flight_collect.py": "4b387f9c649a9796d288dc66f20c44b20b0bb441b670435ddbc6fcdde419a4c6",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "156d0ec4c0ef10dfa6b835f970a14307ffa0245b66fa938b7f16334e9fb34f99",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "a5e3085363269e48df98b932e333e23a0d95baa1e7e1eaf4dc94ae2fb5f80385",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/migration.py": "f6cce849f465b7f117d3c6c1867d975e1d0c009d0f04ae12f13b1c0a5ad8aa70",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "9c49a616cbe6ff2c4b51d8dd1ffdd53f0f70b79a86e83ea1a908130af292e128",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/ppo.py": "e3a54a3ab417f9124459e44ccfaca52613008b0e48080300a55813a834a8e154",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "19458e643c85966e68611ca89ce2f70a5f88a389b94a26272de00ce59cd8fc74",
+      "src/embodied_fly/transitions.py": "8e8f0fbc4a3f51bb16fdf323d6b23d4e95fa850e0141b9068f63412e46c02a66",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-13T02:37:57.034918+00:00",
+  "checkpoint_sha256": "749926b8f12c676c4f793e1e8b5d0ddfef1c096f785e41783abf21b0d623ae58",
+  "graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "data_manifest_sha256": "e14039838b0baa9011f71260fba5a6be6603e7661d05f4c9cd1a5af0433b8e3e",
+  "scope": "Offline linear readout probes of frozen actor under expert histories; never deployed",
+  "limitations": "Expert previous actions are causal inputs. Linear decodability does not prove autonomous oscillation, closed-loop stability or causal necessity.",
+  "new_deployed_parameters": 0,
+  "physical_steps": 0,
+  "neural_device": "cuda",
+  "parallel_neural_sequences": 64,
+  "frames_per_sequence": 100,
+  "training_episode_indices": [
+    0,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    12,
+    13,
+    14,
+    15,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    26,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    36,
+    39,
+    40,
+    42,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+  ],
+  "validation_episode_indices": [
+    1,
+    5,
+    9,
+    10,
+    11,
+    16,
+    23,
+    24,
+    25,
+    27,
+    35,
+    37,
+    38,
+    41,
+    43,
+    54
+  ],
+  "ridge_alpha": 0.001,
+  "wing_channel_names": [
+    "walker/wing_yaw_left",
+    "walker/wing_roll_left",
+    "walker/wing_pitch_left",
+    "walker/wing_yaw_right",
+    "walker/wing_roll_right",
+    "walker/wing_pitch_right"
+  ],
+  "mean_predictor": {
+    "mse": 0.2136695384979248,
+    "per_wing_axis_mse": [
+      0.28463998436927795,
+      0.026161804795265198,
+      0.34394240379333496,
+      0.25953683257102966,
+      0.03180824965238571,
+      0.3359279930591583
+    ],
+    "r2_against_training_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "current_motor_decoder": {
+    "mse": 0.03488196060061455,
+    "per_wing_axis_mse": [
+      0.009089577943086624,
+      0.017771350219845772,
+      0.07144978642463684,
+      0.012858560308814049,
+      0.021016420796513557,
+      0.0771060660481453
+    ],
+    "r2_against_training_mean": [
+      0.968066394329071,
+      0.3207138776779175,
+      0.7922623157501221,
+      0.9504557251930237,
+      0.3392776846885681,
+      0.7704684734344482
+    ]
+  },
+  "readouts": {
+    "measured_wing_angles_and_velocities": {
+      "features": 12,
+      "training_feature_std_mean": 0.33976805210113525,
+      "unbounded_regression": {
+        "mse": 0.013274450904911103,
+        "per_wing_axis_mse": [
+          0.0036356458447860396,
+          0.003263356684680712,
+          0.03112116414416566,
+          0.003967824963077612,
+          0.004689435386888243,
+          0.032969278405868344
+        ],
+        "r2_against_training_mean": [
+          0.9872272131659854,
+          0.8752625550791007,
+          0.9095163498279628,
+          0.9847119003350259,
+          0.8525717246897765,
+          0.9018561147416425
+        ]
+      },
+      "bounded_action_prediction": {
+        "mse": 0.013041374672685931,
+        "per_wing_axis_mse": [
+          0.0036356458447860396,
+          0.003263356684680712,
+          0.030405166425466326,
+          0.003967824963077612,
+          0.004689435386888243,
+          0.03228681873121666
+        ],
+        "r2_against_training_mean": [
+          0.9872272131659854,
+          0.8752625550791007,
+          0.911598087092117,
+          0.9847119003350259,
+          0.8525717246897765,
+          0.9038876801031261
+        ]
+      }
+    },
+    "motor_cell_state": {
+      "features": 815,
+      "training_feature_std_mean": 0.022810811176896095,
+      "unbounded_regression": {
+        "mse": 0.007760537810663877,
+        "per_wing_axis_mse": [
+          0.002985365004207051,
+          0.002321353487034073,
+          0.017000389394079798,
+          0.0035159208972486557,
+          0.0031298593114799937,
+          0.017610338769933693
+        ],
+        "r2_against_training_mean": [
+          0.9895117862277073,
+          0.9112693674920243,
+          0.9505719876159997,
+          0.9864530946824804,
+          0.9016022778466452,
+          0.9475770428967125
+        ]
+      },
+      "bounded_action_prediction": {
+        "mse": 0.00762396771774936,
+        "per_wing_axis_mse": [
+          0.002985365004207051,
+          0.002321353487034073,
+          0.01658758633853831,
+          0.0035159208972486557,
+          0.0031298593114799937,
+          0.017203721267988078
+        ],
+        "r2_against_training_mean": [
+          0.9895117862277073,
+          0.9112693674920243,
+          0.9517721974505204,
+          0.9864530946824804,
+          0.9016022778466452,
+          0.9487874734364324
+        ]
+      }
+    },
+    "existing_motor_hidden_layer": {
+      "features": 256,
+      "training_feature_std_mean": 0.3084438443183899,
+      "unbounded_regression": {
+        "mse": 0.007577189558188736,
+        "per_wing_axis_mse": [
+          0.003584270503986797,
+          0.0028826821919245306,
+          0.015049618454691903,
+          0.0039076457245261825,
+          0.0036521667395469594,
+          0.01638675373445605
+        ],
+        "r2_against_training_mean": [
+          0.9874077055199078,
+          0.8898133284578958,
+          0.9562437830034625,
+          0.9849437720040883,
+          0.8851817758141547,
+          0.9512194456162208
+        ]
+      },
+      "bounded_action_prediction": {
+        "mse": 0.007381366120227083,
+        "per_wing_axis_mse": [
+          0.003579904242130132,
+          0.0028826821919245306,
+          0.01453109393488862,
+          0.0038261043162865177,
+          0.0036521667395469594,
+          0.01581624529658574
+        ],
+        "r2_against_training_mean": [
+          0.9874230451141195,
+          0.8898133284578958,
+          0.9577513741410614,
+          0.9852579524902717,
+          0.8851817758141547,
+          0.9529177513533371
+        ]
+      }
+    }
+  },
+  "setup_seconds": 2.261195538099855,
+  "frozen_actor_replay_seconds": 1.1988709000870585,
+  "regression_and_metrics_seconds": 0.10392875224351883,
+  "total_wall_seconds": 4.049920680932701,
+  "frozen_feature_cache": {
+    "file": "readout01_startup_features_01.npz",
+    "sha256": "5357430fff56e4c7c2e4d992f9a06daa5bea07d377f4778259984485694da05c"
+  },
+  "cache_write_seconds": 0.47839695820584893
+}

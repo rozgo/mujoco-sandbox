@@ -4,6 +4,14 @@ Work in progress on `feature/fly-brain`. This is the approved successor to the
 utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
+The current [ground review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
+shows one graph actor walking, attempting to stop and resuming, with synchronized
+simulated neural activity and observer eyes. Its stop gate still fails. Later
+wing-only fits remain diagnostics: improved expert-history predictions have not
+produced stable unassisted flight. [Startup trials](runs/motor_wing_startup_02/SUMMARY.md)
+and the [matched neural-memory handover](runs/flight_handover_01/SUMMARY.md) explain
+the latest evidence. The inherited flight expert remains a separate reference.
+
 The [learning journal](LEARNING_JOURNAL.md) records the hypotheses, failures,
 architecture changes, measured runs and reporting limits. Exact GPU reports and
 curves are in [`runs/`](runs/). The first five-minute graph warm start reduced

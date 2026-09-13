@@ -1312,3 +1312,23 @@ contribute to executed commands after handover. Save per-frame executed fraction
 release neural state, actual actions and post-release metrics. Neither condition
 can count as teacher-free flight acceptance. This isolates whether prior neural
 history materially helps, before spending more training time on startup alone.
+
+### Handover outcome and next motor-decoder scope
+
+All four matched physical prefixes are bit-identical through the release frame.
+After release, captured actions equal student outputs exactly; teacher labels
+have zero actuator contribution. Retained-memory flights fail the envelope after
+4.8/12.4/17.6/17.6 ms; cleared-memory counterparts fail after
+6.8/12.2/12.8/11.4 ms. All eight complete their 100 ms post-release capture with
+finite physics and zero warnings. Keeping prior neural history does not rescue
+flight. See [the paired diagnostic](runs/flight_handover_01/SUMMARY.md).
+
+The next learning pilot should train the **existing nonlinear motor decoder**
+from cached actual motor-cell states, keeping the same deployed architecture,
+encoder, measured graph and utility path. Include ground histories and preserve
+the parent's non-wing outputs through explicit retention loss. Unlike the recent
+six-row fits, changing shared motor hidden weights can affect legs; fixed ground
+cases and continuous transitions are required again before any promotion. First
+verify causal feature capture, whole-episode exclusion and unchanged upstream
+parameters, then use a bounded GPU fit and teacher-free physical flight. This is
+a declared next scope, not completed training or a claim that it will solve flight.
