@@ -1223,3 +1223,22 @@ before spending more learning time: preserve ranges, masses, actuation and all
 other physics, strengthen only the wing limit solver response, and first verify
 the inherited expert. This is an unvalidated parameter experiment, not an assumed
 fix or a relaxation of flight acceptance. The original body remains the default.
+
+### Wing-stop outcome and aerodynamic scope — 2026-09-13 02:28:17 UTC
+
+The opt-in firmer-stop diagnostic from source `48008f1` preserves inherited
+expert hover (1 s, 0.174 mm root RMSE) and forward flight (0.3 s, 0.102 mm RMSE).
+The same readout01 student fails both tasks with original and firm stops.
+Worst angular overshoot falls about 83%, but neither stability nor tracking is
+rescued. All six runs are finite and warning-free; every state/model hash and
+causal previous-action sequence is verified. No training took place in this
+diagnostic. Keep the original default and both failure pairs.
+[Detailed outcomes](runs/wing_stops_01/SUMMARY.md).
+
+The user confirmed that the inherited, established aerodynamic approximation
+is appropriate. Physical wing joints and bounded torques are integrated by
+MuJoCo; the ellipsoid model estimates aerodynamic forces without a resolved
+Navier–Stokes field or explicit wakes. This agreement does not change the
+teacher-free student acceptance criteria. Flight remains unsolved; the next
+controller work must address autonomous feedback stability rather than treat
+offline decoder error or constrained wing travel as a success.

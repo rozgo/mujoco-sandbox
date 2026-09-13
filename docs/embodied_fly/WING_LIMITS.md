@@ -14,6 +14,14 @@ constant is four 50 μs physics steps, above MuJoCo's documented two-step minimu
 It is an illustrative mechanical-stop choice, not a measured fly-joint calibration.
 The original model remains the default. [MuJoCo solver parameters](https://mujoco.readthedocs.io/en/latest/modeling.html#solver-parameters)
 
+Aerodynamics remain the inherited ellipsoid fluid-force approximation. MuJoCo
+integrates physical wing joints, inertia and bounded actuator forces, and
+estimates lift/drag from body motion and air properties. There is no resolved
+Navier–Stokes flow field, fluid memory or explicit wake simulation. MuJoCo's
+documentation identifies insect flight as the motivating application for this
+model. The user confirmed this level of aerodynamic approximation is acceptable.
+[MuJoCo fluid forces](https://mujoco.readthedocs.io/en/latest/computation/fluid.html)
+
 Limits act through the MuJoCo constraint solver. No pose clipping, body force,
 wing oscillator or learned-controller correction is introduced. Tests compare
 all unchanged physical parameters and show less overshoot under an identical
@@ -21,12 +29,17 @@ bounded actuator input. Native evaluation now measures maximum wing-limit
 violation at every physical substep. Batched training still uses the original
 flight preset; adoption of firmer stops is conditional on physical evidence.
 
-Before any retraining, run the inherited flight expert with the new stops for
+The declared diagnostic, before any retraining, runs the inherited flight expert with the new stops for
 one second of hover and 0.3 seconds of forward flight. Then run the preserved
 wing-readout student from the same declared airborne initial captures. Record
 all outcomes, limit violations, warnings and models. Keep the existing height,
 orientation and tracking gates. A better-looking constrained trajectory would
 not establish learned flight.
+
+The diagnostic is complete: the inherited expert remains airborne, but all
+four student flights fail. Firmer stops substantially reduce angular overshoot;
+they do not establish better control. Keep the original default and preserve
+the optional variant for investigation. See [outcomes](runs/wing_stops_01/SUMMARY.md).
 
 ```sh
 uv run --project experiments/embodied_fly --locked python -m embodied_fly.flight_teacher \
