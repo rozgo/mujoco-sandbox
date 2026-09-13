@@ -19,6 +19,7 @@ from embodied_fly.observations import append_height, append_wing_angles, append_
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, utc_now
 from embodied_fly.wing_motion import WingMotionForces, configure_model
+from embodied_fly.wing_position import configure_position
 
 
 class FlyBatch:
@@ -77,8 +78,8 @@ class FlyBatch:
         ).compile()
         self.model.actuator_forcelimited[:] = single.model.actuator_forcelimited
         self.model.actuator_forcerange[:] = single.model.actuator_forcerange
-        if preset == "wing_motion":
-            configure_model(self.model)
+        if preset in ("wing_motion", "wing_position"):
+            (configure_position if preset == "wing_position" else configure_model)(self.model)
             if physical_contract(self.model) != physical_contract(single.model):
                 raise ValueError("Sensor augmentation changed the canonical fly physics")
         self.n = worlds
@@ -95,6 +96,7 @@ class FlyBatch:
                 "sensordata",
                 "warning",
                 "qfrc_passive",
+                "actuator_force",
                 "xfrc_applied",
                 "xipos",
                 "subtree_com",
@@ -109,7 +111,9 @@ class FlyBatch:
         self.forbidden_peak = np.zeros(worlds)
         self.body_weight = self.model.body_mass.sum() * 981
         self.wing_forces = (
-            WingMotionForces(self.model, worlds) if preset == "wing_motion" else None
+            WingMotionForces(self.model, worlds)
+            if preset in ("wing_motion", "wing_position")
+            else None
         )
         self._wing_applied = np.zeros((worlds, 6))
         self.sensor_addresses = {

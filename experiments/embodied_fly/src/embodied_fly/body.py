@@ -23,6 +23,7 @@ from embodied_fly.observations import (
     wing_velocity_indices,
 )
 from embodied_fly.wing_motion import WingMotionForces, configure_model
+from embodied_fly.wing_position import configure_position
 
 PHYSICS_DT = 0.0002
 CONTROL_DT = 0.002
@@ -33,7 +34,7 @@ NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
 def make_body(preset="walking", *, wing_limits="original"):
-    if preset not in ("walking", "flight", "wing_motion"):
+    if preset not in ("walking", "flight", "wing_motion", "wing_position"):
         raise ValueError(f"Unknown physical preset: {preset}")
     if wing_limits not in ("original", "firm") or (
         wing_limits != "original" and preset != "flight"
@@ -51,7 +52,7 @@ def make_body(preset="walking", *, wing_limits="original"):
         joint_filter=0.01,
         adhesion_filter=0.007,
     )
-    if preset in ("flight", "wing_motion"):
+    if preset in ("flight", "wing_motion", "wing_position"):
         # Pinned upstream Flying coefficients, with complete limbs and floor
         # contacts retained. Only wing filters are removed; terrestrial actuator
         # dynamics stay unchanged. No external body forces or wing generator.
@@ -112,8 +113,8 @@ def make_body(preset="walking", *, wing_limits="original"):
             gain = model.actuator_gainprm[i, 0]
             model.actuator_forcelimited[i] = True
             model.actuator_forcerange[i] = (lo * gain, hi * gain)
-    if preset == "wing_motion":
-        configure_model(model)
+    if preset in ("wing_motion", "wing_position"):
+        (configure_position if preset == "wing_position" else configure_model)(model)
     return physics, fly
 
 
@@ -176,7 +177,11 @@ class FlyEnvironment:
             for i in range(self.model.ngeom)
             if any(part in self.model.geom(i).name for part in ("tarsus", "tarsal", "claw"))
         }
-        self.wing_forces = WingMotionForces(self.model) if preset == "wing_motion" else None
+        self.wing_forces = (
+            WingMotionForces(self.model)
+            if preset in ("wing_motion", "wing_position")
+            else None
+        )
         self._wing_applied = np.zeros(6)
         self.reset()
 

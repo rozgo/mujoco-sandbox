@@ -8,9 +8,9 @@ from embodied_fly.motion_flight import WingReference, initialize
 from embodied_fly.wing_motion import CONFIG, WingMotionForces
 
 
-@pytest.fixture(scope="module")
-def env():
-    return FlyEnvironment("wing_motion")
+@pytest.fixture(scope="module", params=("wing_motion", "wing_position"))
+def env(request):
+    return FlyEnvironment(request.param)
 
 
 def test_wing_model_keeps_interface_with_exactly_decoupled_inertia(env, tmp_path):
@@ -41,8 +41,9 @@ def test_wing_model_keeps_interface_with_exactly_decoupled_inertia(env, tmp_path
     assert np.isfinite(data.qacc).all()
 
 
-def test_wing_motion_has_no_mechanical_body_reaction_when_force_law_disabled():
-    a, b = FlyEnvironment("wing_motion"), FlyEnvironment("wing_motion")
+@pytest.mark.parametrize("preset", ("wing_motion", "wing_position"))
+def test_wing_motion_has_no_mechanical_body_reaction_when_force_law_disabled(preset):
+    a, b = FlyEnvironment(preset), FlyEnvironment(preset)
     for e in (a, b):
         e.wing_forces = None  # diagnostic only: cut the declared coupling
         e.data.qpos[2] = 5

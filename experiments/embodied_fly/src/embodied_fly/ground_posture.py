@@ -8,6 +8,7 @@ import mujoco
 import numpy as np
 
 from embodied_fly.wing_motion import CONFIG
+from embodied_fly.wing_position import is_position, normalize_targets
 
 
 class GroundPosture:
@@ -42,6 +43,12 @@ class GroundPosture:
         e, t = self.env, self.env.template
         if ids is None:
             ids = np.arange(e.n)
+        if is_position(e.model):
+            return np.repeat(
+                normalize_targets(e.model, self.qref[t.wing_angle_indices])[None],
+                len(ids),
+                axis=0,
+            )
         q = e.fields["qpos"][ids][:, t.wing_angle_indices]
         v = e.fields["qvel"][ids][:, t.wing_velocity_indices]
         torque = self.wing_kp * (self.qref[t.wing_angle_indices] - q) - self.wing_kd * v
@@ -92,6 +99,9 @@ class GroundPosture:
             "method": "bounded corrective imitation labels; measured posture scores are not PPO rewards",
             "passive_joints": "included in posture measurement; only existing actuators receive targets",
             "runtime_override": False,
+            "wing_label_semantics": "constant resting position"
+            if is_position(self.env.model)
+            else "corrective torque",
             "gates": {
                 "ground_wing_max_deviation_rad": 0.2,
                 "ground_wing_velocity_rms_rad_s": 2.0,

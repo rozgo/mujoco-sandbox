@@ -21,7 +21,11 @@ Both are diagnostics; neither replaces retention02. Each checkpoint controls
 all three commands with the same physical body. Full videos, failure traces,
 parameter-boundary checks and measured timings are archived in the run reports.
 
-Every world uses `wing_motion`: 5 kHz native MuJoCo physics and 500 Hz control.
+The versioned [wing position pilot](runs/position_feedback_01/PLAN.md) now tests
+MuJoCo position actuators with the same torque limit and measured-motion force
+law. `position_migrate` records its incompatible action-unit change explicitly.
+All three commands use `wing_position` in that pilot; historical trials keep
+`wing_motion`. Both use 5 kHz native MuJoCo physics and 500 Hz control.
 The checkpoint records a fingerprint of masses, inertias, joints, contacts,
 actuation, solver settings and flight-force parameters. Native and batched
 evaluation must match. Wing bodies have zero mass/spatial inertia, no collisions

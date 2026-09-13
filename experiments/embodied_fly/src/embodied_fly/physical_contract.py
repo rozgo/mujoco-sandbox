@@ -7,6 +7,7 @@ from dataclasses import asdict
 import numpy as np
 
 from embodied_fly.wing_motion import CONFIG
+from embodied_fly.wing_position import POSITION, is_position
 
 ARRAYS = [
     "body_parentid",
@@ -120,10 +121,13 @@ def physical_contract(model):
     options = {n: np.asarray(getattr(model.opt, n)).tolist() for n in OPTIONS}
     digest.update(json.dumps(options, sort_keys=True).encode())
     digest.update(json.dumps(asdict(CONFIG), sort_keys=True).encode())
+    position = is_position(model)
+    if position:
+        digest.update(json.dumps(asdict(POSITION), sort_keys=True).encode())
     return {
         "schema": "fly-motor-physical-contract-v1",
         "sha256": digest.hexdigest(),
-        "preset": "wing_motion",
+        "preset": "wing_position" if position else "wing_motion",
         "body_and_force_law_shared_across_tasks": True,
         "wing_mass_inertia_collision_aerodynamics": "zero",
         "wing_body_coupling": "custom flight law reads measured wing motion",

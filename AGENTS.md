@@ -129,7 +129,7 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 
 ## Canonical fly body for motor learning
 
-User requirement, September 13, 2026: use the **same physical FlyBody for standing, walking, hovering, training and evaluation**. New motor work uses the `wing_motion` preset and `physical_contract.py`; do not silently use the old walking or aerodynamic preset for any part of that curriculum. Checkpoints record a physical fingerprint and evaluation must match it. Old experiments remain preserved as historical evidence.
+User requirement, September 13, 2026: use the **same physical FlyBody for standing, walking, hovering, training and evaluation**. The preserved torque-control model uses `wing_motion`; the explicitly versioned position-actuator pilot uses `wing_position` for all three tasks and requires the recorded `position_migrate` initialization. Both use `physical_contract.py`; do not silently use the old walking or aerodynamic preset for any part of that curriculum. Checkpoints record a physical fingerprint and evaluation must match it. Old experiments remain preserved as historical evidence.
 
 Wing bodies have **zero mass and spatial inertia**, no collisions and no aerodynamic terms. Their six actuated coordinates retain only independent diagonal armature for angular response. Wing movement must not create mechanical reaction on the body; the declared flight model is the only wing-to-body force path. Keep and run the decoupled-mass and disabled-force-law tests when changing this configuration. Observer cameras and added sensors may differ; robot mechanics and the force law must match.
 

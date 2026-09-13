@@ -37,6 +37,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.state_hover import RECIPE as STATE_HOVER_RECIPE
 from embodied_fly.train import synchronize
 from embodied_fly.wing_motion import CONFIG
+from embodied_fly.wing_position import reference_torque_to_position, wing_actuators
 from embodied_fly.wing_response_learning import response_loss
 
 TASKS = ("stand", "walk", "hover")
@@ -139,6 +140,12 @@ class MotorTeacher:
     ):
         if hover_reference not in ("clock", "state"):
             raise ValueError("Unknown hover reference")
+        if tasks.env.preset == "wing_position" and (
+            not ground_posture or hover_reference != "state"
+        ):
+            raise ValueError(
+                "Position pilot requires ground posture and measured-state hover reference"
+            )
         self.hover_reference = hover_reference
         self.tasks, self.env = tasks, tasks.env
         self.ground = BrakingTeacher(self.env, teacher_path, device, track_command=True)
@@ -182,6 +189,14 @@ class MotorTeacher:
                 e.requested_height_cm[ids],
                 e.model.qpos_spring[e.template.wing_angle_indices],
             )
+            if e.preset == "wing_position":
+                actions[np.ix_(ids, self.channels)] = reference_torque_to_position(
+                    e.model,
+                    actions[np.ix_(ids, self.channels)],
+                    e.fields["qpos"][ids][:, e.template.wing_angle_indices],
+                    e.fields["qvel"][ids][:, e.template.wing_velocity_indices],
+                    e.control_dt,
+                )
             return actions
         angle = e.fields["qpos"][ids][:, e.template.wing_angle_indices]
         velocity = e.fields["qvel"][ids][:, e.template.wing_velocity_indices]
@@ -240,7 +255,7 @@ def review(args):
     provenance = evidence()
     torch.set_num_threads(4)
     device = torch.device(args.device)
-    env = FlyBatch(3, 3, 14, preset="wing_motion")
+    env = FlyBatch(3, 3, 14, preset=getattr(args, "preset", "wing_motion"))
     tasks = MotorTasks(env, args.seed)
     posture = GroundPosture(env, tasks.ground["qpos"])
     posture_enabled = getattr(args, "ground_posture", False)
@@ -297,6 +312,9 @@ def review(args):
                 "requested_height_cm": env.requested_height_cm.copy(),
                 "wing_activity": env.wing_forces.activity.copy(),
                 "wing_wrench": env.wing_forces.wrench.copy(),
+                "wing_actuator_force": env.fields["actuator_force"][
+                    :, wing_actuators(env.model)
+                ].copy(),
                 "initial_qpos": np.repeat(tasks.ground["qpos"][None], 3, axis=0),
             }
         )
@@ -319,6 +337,9 @@ def review(args):
                 "root_error": np.linalg.norm(env.fields["qpos"][:, :3] - target, axis=1)
                 * 0.01,
                 "forbidden_load": env.forbidden_peak.copy() / env.body_weight,
+                "wing_torque_max": np.abs(
+                    env.fields["actuator_force"][:, wing_actuators(env.model)]
+                ).max(axis=1),
                 **posture.measure(),
             }
         )
@@ -382,6 +403,9 @@ def review(args):
                 "speed_rmse_cm_s": rmse("speed_error"),
                 "yaw_rmse_rad_s": rmse("yaw_error"),
                 "minimum_height_m": float(measurements["height"].min()),
+                "post_action_wing_torque_max_CGS": float(
+                    measurements["wing_torque_max"].max()
+                ),
                 "minimum_upright": float(measurements["upright"].min()),
                 "max_forbidden_ground_force_over_weight": support,
                 "state_sha256": sha256(args.output / f"{task}.npz"),
@@ -403,7 +427,7 @@ def review(args):
         "controller": "student" if actor else "reference",
         "one_checkpoint_for_all_cases": actor is not None,
         "policy_acceptance_eligible": actor is not None,
-        "physical_preset": "wing_motion",
+        "physical_preset": env.preset,
         "physical_contract": physical_contract(env.model),
         "physics_hz": 5000,
         "control_hz": 500,
@@ -468,6 +492,8 @@ def train(args):
         raise ValueError("Invalid wing-response learning settings")
     if response_weight and not getattr(args, "ground_posture", False):
         raise ValueError("Wing-response supervision requires ground posture targets")
+    if getattr(args, "preset", "wing_motion") == "wing_position" and response_weight:
+        raise ValueError("Legacy torque-response loss is incompatible with position targets")
     response_rng = np.random.default_rng(args.seed + 1101)
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
@@ -477,7 +503,9 @@ def train(args):
     device = torch.device(args.device)
     actor, parent = load_motor_actor(args.resume, args.graph, device)
     actor.train()
-    env = FlyBatch(args.worlds, args.threads, 14, preset="wing_motion")
+    env = FlyBatch(
+        args.worlds, args.threads, 14, preset=getattr(args, "preset", "wing_motion")
+    )
     if parent.get("motor_only") and parent.get("physical_contract") != physical_contract(
         env.model
     ):
@@ -619,6 +647,9 @@ def train(args):
                         "teacher_mix": mixture.copy(),
                         "wing_activity": env.wing_forces.activity.copy(),
                         "wing_wrench": env.wing_forces.wrench.copy(),
+                        "wing_actuator_force": env.fields["actuator_force"][
+                            :, wing_actuators(env.model)
+                        ].copy(),
                         "requested_height_cm": env.requested_height_cm.copy(),
                     }
                 )
@@ -850,6 +881,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=("reference", "train", "evaluate"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--preset", choices=("wing_motion", "wing_position"), default="wing_motion"
+    )
     parser.add_argument("--teacher", type=Path)
     parser.add_argument("--hover-reference", choices=("clock", "state"), default="clock")
     parser.add_argument("--resume", type=Path)
