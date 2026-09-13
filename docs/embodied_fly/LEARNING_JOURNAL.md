@@ -2262,3 +2262,13 @@ Unassisted5s-per-command evaluation takes7.295372s setup +32.408363s capture, wi
 Recorded-state audit usesmj_forwardandtheexistingtraining-onlyreference,withoutintegration: at0.20s the actualsweepanglesareapproximately-1.45rad,actorcommands-0.32/-0.31pushoutward,whilereferencecommands+0.47/+0.48reverse. At0.002s actorstartupcommands0.22/0.27arebelowreference0.87/0.91. This is concrete evidence for training on actual startup and near-limit mistakes as well as successful-reference histories. It does not prove auniquephysical/neuralcause. Adding those actual-state corrections is the next action; it has not yet been implemented or executed.
 
 This continuation made progress: archived the prior real trial, implemented andtested physical parametersearch andcanonicalreadoutfitting,ranbothonGPU,retainedfullfailures,openedallcompletedfilms,andidentifiedexplicitwrong-sign boundarycommands. The broadermotor/utility/multi-flygoalremainsactiveandunfulfilled. Noexternalblockerexists.
+
+### Actual-state wing corrections — 2026-09-13 11:30:20 UTC
+
+This continuation began 11:26:08 UTC. The previous goal turn made progress: two implemented and executed approaches, full evaluations and videos, and explicit startup/wing-limit errors. Retention02 remains selected; no training process was live at the start and there is no external blocker.
+
+The optional correction-capture path relabels an actor's real pre-fall hover states with the existing measured-state reference. It performs offline kinematics only and leaves capture files unchanged. Current source audits retain 116 and 822 frames from the two failed actors, excluding their post-fall histories. Every fifth 20 ms block is held out, leaving actual near-limit examples in training. The original stand/walk/reference histories remain in the fit; startup frames get a declared weight of four. Runtime architecture, body, and graph remain unchanged.
+
+Five focused tests pass in 3.88 s. They include the original and extended full fitting/export path, unchanged upstream/body rows, bounded correction labels with the correct reversing sign at a real canonical wing limit, exclusion after body failure, unchanged source data, and nonoverlapping fitting masks. The full suite is pending at this checkpoint. The new pilot is declared before execution.
+
+The complete motor suite passes 108 tests in 74.52 s, with 23 known dependency warnings. Ruff and diff checks pass. Commit the declared source before executing state_readout02 on the GPU machine.

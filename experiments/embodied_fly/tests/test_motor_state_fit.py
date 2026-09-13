@@ -22,7 +22,10 @@ def test_weighted_readout_recovers_known_mapping_and_regularization_limits_chang
         fit_delta(x, y, weights, 0.1)
 
 
-def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(tmp_path, monkeypatch):
+@pytest.mark.parametrize("with_corrections", [False, True])
+def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(
+    tmp_path, monkeypatch, with_corrections
+):
     import json
     from types import SimpleNamespace
 
@@ -64,6 +67,15 @@ def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(tmp_path, monkeyp
         "read_capture",
         lambda root, case, contract: (observation, action, {"case": case}),
     )
+    monkeypatch.setattr(
+        motor_state_fit,
+        "correction_capture",
+        lambda *args: (
+            observation,
+            action,
+            {"case": "hover_correction", "retained_pre_failure_frames": 125},
+        ),
+    )
     output = tmp_path / "fit"
     motor_state_fit.train(
         SimpleNamespace(
@@ -73,6 +85,8 @@ def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(tmp_path, monkeyp
             hover=hover,
             output=output,
             device="cpu",
+            correction_capture=[tmp_path / "correction"] if with_corrections else [],
+            startup_weight=4.0 if with_corrections else 1.0,
         )
     )
     result = torch.load(output / "actor.pt", weights_only=True)["state_dict"]
@@ -88,5 +102,73 @@ def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(tmp_path, monkeyp
     )
     report = json.loads((output / "report.json").read_text())
     assert report["physical_transitions_collected"] == 0
-    assert report["training_frames"] == 6000
-    assert report["validation_frames"] == 1500
+    assert report["training_frames"] == (6105 if with_corrections else 6000)
+    assert report["validation_frames"] == (1520 if with_corrections else 1500)
+
+
+def test_correction_masks_retain_near_failure_training_examples_and_exclude_post_fall():
+    from embodied_fly.motor_state_fit import history_masks
+
+    train, valid = history_masks(2500, [2500, 2500, 2500, 115])
+    assert not (train & valid).any()
+    assert train[100:115, 3].all()
+    assert valid[90:100, 3].all()
+    assert not train[115:, 3].any() and not valid[115:, 3].any()
+    assert np.sum(train[:, 3] | valid[:, 3]) == 115
+
+
+def test_current_state_corrections_reverse_at_wing_limit_and_stop_before_body_failure(
+    tmp_path,
+):
+    import json
+
+    import mujoco
+
+    from embodied_fly.batch import FlyBatch
+    from embodied_fly.motor_focus import MotorTasks
+    from embodied_fly.motor_state_fit import correction_capture
+    from embodied_fly.physical_contract import physical_contract
+    from embodied_fly.provenance import sha256
+
+    env = FlyBatch(1, 1, 14, preset="wing_motion")
+    tasks = MotorTasks(env, 501)
+    tasks.task_ids[:] = 2
+    tasks.reset(np.array([0]))
+    state = {k: env.fields[k].copy() for k in ("qpos", "qvel", "act", "ctrl")}
+    captured = {
+        "qpos": np.repeat(state["qpos"], 2500, axis=0),
+        "qvel": np.repeat(state["qvel"], 2500, axis=0),
+        "activation": np.repeat(state["act"], 2500, axis=0),
+        "ctrl": np.repeat(state["ctrl"], 2500, axis=0),
+        "observation": np.repeat(env.observation(), 2500, axis=0),
+        "action": np.zeros((2500, 78), np.float32),
+        "requested_height_cm": np.full(2500, 2.0),
+    }
+    # Initialization-only fixture states: canonical free fly, then sweep-limit
+    # position, then an explicitly failed height. No claimed physical rollout.
+    state["qpos"][0, env.template.wing_angle_indices[[0, 3]]] = -1.45
+    env.reset(np.array([0]), state=state)
+    env.requested_height_cm[:] = 2
+    captured["qpos"][60:80] = state["qpos"][0]
+    captured["observation"][60:80] = env.observation()[0]
+    captured["qpos"][80:, 2] = 0.4
+    np.savez_compressed(tmp_path / "hover.npz", **captured)
+    mujoco.mj_saveModel(env.model, str(tmp_path / "model.mjb"))
+    contract = physical_contract(env.model)
+    report = {
+        "physical_contract": contract,
+        "control_hz": 500,
+        "model_sha256": sha256(tmp_path / "model.mjb"),
+        "teacher_present": False,
+        "student_present": True,
+        "checkpoint_sha256": "fixture",
+        "results": [{"case": "hover", "state_sha256": sha256(tmp_path / "hover.npz")}],
+    }
+    (tmp_path / "report.json").write_text(json.dumps(report))
+    source_hash = sha256(tmp_path / "hover.npz")
+    obs, labels, identity = correction_capture(tmp_path, contract)
+    assert identity["retained_pre_failure_frames"] == 80
+    assert identity["excluded_frames"] == 2420
+    assert labels[60, 14] > 0.4 and labels[60, 17] > 0.4
+    np.testing.assert_array_equal(obs, captured["observation"])
+    assert sha256(tmp_path / "hover.npz") == source_hash

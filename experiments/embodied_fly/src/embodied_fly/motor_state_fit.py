@@ -9,11 +9,14 @@ import json
 import time
 from pathlib import Path
 
+import mujoco
 import numpy as np
 import torch
 
 from embodied_fly.evaluate import load_actor
+from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
+from embodied_fly.state_hover import wing_commands
 from embodied_fly.train import synchronize
 from embodied_fly.wing_readout import replace_wing_rows
 
@@ -63,8 +66,88 @@ def read_capture(root, case, expected_contract):
     )
 
 
+def correction_capture(root, expected_contract):
+    """Relabel an actor's actual pre-fall history; never modify or integrate it."""
+    observation, action, identity = read_capture(root, "hover", expected_contract)
+    report = json.loads((root / "report.json").read_text())
+    if report["teacher_present"] or not report["student_present"]:
+        raise ValueError("Corrections require unassisted actor history")
+    model = mujoco.MjModel.from_binary_path(str(root / "model.mjb"))
+    if physical_contract(model) != expected_contract:
+        raise ValueError("Correction compiled mechanics differ")
+    data = mujoco.MjData(model)
+    thorax = model.body("walker/thorax").id
+    joints = [
+        model.joint(f"walker/wing_{axis}_{side}").id
+        for side in ("left", "right")
+        for axis in ("yaw", "roll", "pitch")
+    ]
+    qa, va = model.jnt_qposadr[joints], model.jnt_dofadr[joints]
+    wings = [model.actuator(model.joint(j).name).id for j in joints]
+    if wings != list(range(14, 20)):
+        raise ValueError("Unexpected canonical wing actuator routing")
+    labels = action.copy()
+    retained = 0
+    with np.load(root / "hover.npz") as captured:
+        for i in range(min(1000, len(action))):
+            data.qpos[:] = captured["qpos"][i]
+            data.qvel[:] = captured["qvel"][i]
+            data.act[:] = captured["activation"][i]
+            data.ctrl[:] = captured["ctrl"][i]
+            mujoco.mj_forward(model, data)
+            rotation = data.xmat[thorax].reshape(3, 3)
+            if data.qpos[2] < 0.5 or rotation[2, 2] < 0.5:
+                break
+            velocity = []
+            for kind in ("angvel", "linvel"):
+                adr = model.sensor(f"batch_xbody_{kind}").adr[0]
+                velocity.extend(rotation.T @ data.sensordata[adr : adr + 3])
+            labels[i, wings] = wing_commands(
+                data.qpos[qa][None],
+                data.qvel[va][None],
+                np.asarray(velocity)[None],
+                np.array([data.qpos[2]]),
+                np.array([captured["requested_height_cm"][i]]),
+                model.qpos_spring[qa],
+            )[0]
+            retained += 1
+    if retained < 50:
+        raise ValueError("Correction history needs at least 100ms before failure")
+    identity.update(
+        case="hover_correction",
+        producing_checkpoint_sha256=report["checkpoint_sha256"],
+        retained_pre_failure_frames=retained,
+        excluded_frames=len(action) - retained,
+        label_method="existing measured-state hover reference on actual actor states",
+        physics_integration_steps=0,
+    )
+    return observation, labels, identity
+
+
+def history_masks(length, counts):
+    """Ground/reference final second; correction every fifth 20ms block held out."""
+    train = np.zeros((length, len(counts)), bool)
+    valid = np.zeros_like(train)
+    for j, count in enumerate(counts):
+        if not 50 <= count <= length:
+            raise ValueError("Invalid retained history length")
+        if j < 3:
+            train[:2000, j] = True
+            valid[2000:count, j] = True
+        else:
+            held = np.arange(count) // 10 % 5 == 4
+            train[:count, j] = ~held
+            valid[:count, j] = held
+        if not train[:, j].any() or not valid[:, j].any():
+            raise ValueError("Both fit and descriptive validation frames required")
+    return train, valid
+
+
 @torch.no_grad()
 def train(args):
+    startup_weight = getattr(args, "startup_weight", 1.0)
+    if not np.isfinite(startup_weight) or startup_weight < 1:
+        raise ValueError("Startup weight must be finite and at least one")
     args.output.mkdir(parents=True, exist_ok=False)
     started, started_utc = time.perf_counter(), utc_now()
     provenance = evidence()
@@ -88,11 +171,20 @@ def train(args):
             (args.hover, "hover"),
         )
     ]
+    corrections = getattr(args, "correction_capture", []) or []
+    episodes.extend(
+        correction_capture(path, parent["physical_contract"]) for path in corrections
+    )
+    retained = [2500] * 3 + [e[2]["retained_pre_failure_frames"] for e in episodes[3:]]
+    train_mask, valid_mask = history_masks(2500, retained)
+    history_weights = np.asarray([8.0, 8.0, 1.0] + [1.0] * len(corrections))
+    frame_weights = np.tile(history_weights, (2500, 1))
+    frame_weights[:50, 2:] *= startup_weight
     observations = np.stack([e[0] for e in episodes], axis=1)
     targets = np.stack([e[1] for e in episodes], axis=1)
     wings = np.arange(14, 20)
     frozen_state = {k: v.detach().cpu().clone() for k, v in actor.state_dict().items()}
-    memory = actor.initial_state(3)
+    memory = actor.initial_state(len(episodes))
     captured = {}
 
     def capture(module, inputs, output):
@@ -109,7 +201,7 @@ def train(args):
             prediction = actor(torch.as_tensor(obs, device=device), memory)
             memory = prediction.state
             label = prediction.action.cpu().numpy().copy()
-            label[2, wings] = targets[frame, 2, wings]
+            label[2:, wings] = targets[frame, 2:][:, wings]
             hidden.append(captured["hidden"])
             logits.append(captured["logits"][:, wings])
             labels.append(label[:, wings])
@@ -121,23 +213,25 @@ def train(args):
     hidden, logits, labels = map(np.asarray, (hidden, logits, labels))
     # Whole contiguous time windows: validation is descriptive and temporally
     # related, not an independent episode or a physical acceptance experiment.
-    cutoff = 2000
     residual = np.arctanh(np.clip(labels, -0.999, 0.999)) - logits
-    weight = np.tile([8.0, 8.0, 1.0], cutoff)
-    x, y = hidden[:cutoff].reshape(-1, 256), residual[:cutoff].reshape(-1, 6)
+    weight = frame_weights[train_mask]
+    x, y = hidden[train_mask], residual[train_mask]
     candidates = []
     deltas = []
     for regularization in (1e-5, 1e-4, 1e-3, 1e-2, 1e-1):
         delta = fit_delta(x, y, weight, regularization)
         prediction = np.tanh(logits + hidden @ delta[:-1] + delta[-1])
         mse = np.square(prediction - labels).mean(axis=-1)
-        train_mse, valid_mse = mse[:cutoff].mean(0), mse[cutoff:].mean(0)
+        train_mse = np.array([mse[train_mask[:, j], j].mean() for j in range(len(episodes))])
+        valid_mse = np.array([mse[valid_mask[:, j], j].mean() for j in range(len(episodes))])
         candidates.append(
             {
                 "regularization": regularization,
                 "train_action_mse_by_task": train_mse.tolist(),
                 "validation_action_mse_by_task": valid_mse.tolist(),
-                "validation_selection_score": float(np.dot(valid_mse, [8, 8, 1]) / 17),
+                "validation_selection_score": float(
+                    np.dot(valid_mse, history_weights) / history_weights.sum()
+                ),
                 "delta_l2": float(np.linalg.norm(delta)),
             }
         )
@@ -176,11 +270,19 @@ def train(args):
         state_dict=state,
         source_commit=provenance["source_commit"],
         parent_checkpoint_sha256=sha256(args.resume),
-        method="canonical state-hover ridge readout with frozen ground outputs",
+        method="canonical state-hover ridge readout with frozen ground outputs"
+        + (" and actual actor-error corrections" if corrections else ""),
     )
     torch.save(child, args.output / "actor.pt")
     np.savez_compressed(
-        args.output / "features.npz", hidden=hidden, logits=logits, target=labels, delta=delta
+        args.output / "features.npz",
+        hidden=hidden,
+        logits=logits,
+        target=labels,
+        delta=delta,
+        train_mask=train_mask,
+        validation_mask=valid_mask,
+        frame_weights=frame_weights,
     )
     report = {
         "provenance": provenance,
@@ -194,13 +296,18 @@ def train(args):
         "features_sha256": sha256(args.output / "features.npz"),
         "candidates": candidates,
         "selected": candidates[selected],
-        "initial_action_mse_by_task": np.square(np.tanh(logits) - labels)
-        .mean(axis=(0, 2))
-        .tolist(),
-        "training_frames": 6000,
-        "validation_frames": 1500,
-        "parallel_neural_histories": 3,
-        "validation_split": "first four seconds fit, final second validation in each of three recorded histories; temporally related",
+        "initial_action_mse_by_task": [
+            float(np.square(np.tanh(logits[:n, j]) - labels[:n, j]).mean())
+            for j, n in enumerate(retained)
+        ],
+        "training_frames": int(train_mask.sum()),
+        "validation_frames": int(valid_mask.sum()),
+        "retained_frames_by_history": retained,
+        "parallel_neural_histories": len(episodes),
+        "neural_frames_including_excluded_history": len(episodes) * 2500,
+        "startup_weight_first_100ms_air_histories": startup_weight,
+        "history_weights": history_weights.tolist(),
+        "validation_split": "ground/reference first4s fit, last1s validation; actor corrections every fifth20ms block held out; temporally related, not independent episodes",
         "searched_ridge_values": 5,
         "eligible_existing_parameters": 1542,
         "all_other_state_unchanged": True,
@@ -212,6 +319,9 @@ def train(args):
         "fit_and_save_seconds": time.perf_counter() - fit_start,
         "total_wall_seconds": time.perf_counter() - started,
         "device": str(device),
+        "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(device)
+        if device.type == "cuda"
+        else 0,
         "physical_success": "Unproven; requires unassisted three-task evaluation",
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -223,4 +333,6 @@ if __name__ == "__main__":
     for name in ("resume", "graph", "ground", "hover", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--correction-capture", type=Path, action="append", default=[])
+    parser.add_argument("--startup-weight", type=float, default=1.0)
     train(parser.parse_args())
