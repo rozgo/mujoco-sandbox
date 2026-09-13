@@ -1360,3 +1360,30 @@ physical experience. Unlike wing-row-only fits, leg outputs can change; evaluate
 both original unassisted flights, all six fixed ground cases and continuous
 walk/stop/resume before any promotion. A smaller imitation error remains
 insufficient evidence of flight or preserved walking.
+
+### Nonlinear decoder outcome and declared physical-reward continuation
+
+The motor caches preserve **12,000 ground frames**, including both 3,000-frame
+stop/resume histories, **12,000 original flight frames** and **6,400 startup
+frames**. Standalone decoder reconstruction matches parent outputs within
+7.12e-6 maximum absolute action difference (declared tolerance 2e-5).
+The **60.000718 s** fit makes 49,201 updates from 21,800 distinct training frames.
+Excluded original/startup wing MSE improves to **0.002702/0.004972**, but both
+unassisted flights fail. Five fixed ground cases stay stable; slow walking falls.
+Continuous walk/stop/resume has permitted stable support, but stopping misses its
+gate. Preserve the candidate without promotion.
+
+Use this stronger imitation fit for one **60-second physical-reward PPO pilot**,
+seed **59001**. Keep **32 native CPU worlds / 16 threads**, 20 kHz physics / 5 kHz
+control, horizon 128, recurrent chunks 32, two epochs and 60 ms training episodes.
+Use the new 64-start corpus for training-split airborne resets (48 starts), not
+held-out starts. Keep the existing physical reward unchanged. Set exploration
+standard deviation **0.01** (from 0.04), actor learning rate **1e-6** (from 5e-6),
+and explicit ground rehearsal multiplier **4** (from 1) for this conservative
+continuation. Fresh PPO/critic Adam is required after the supervised parent.
+All actor interfaces and intrinsic cell parameters can learn; signed measured
+connectivity stays fixed. No runtime teacher, wing oscillator, root force or
+forced utility action is introduced. This is not a matched speed benchmark or
+an attribution of outcomes to any one of these changes. Save all training falls,
+measure physical collection and optimization separately, then evaluate the same
+unassisted flights and complete ground suite before promotion.
