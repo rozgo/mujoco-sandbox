@@ -162,6 +162,9 @@ def record(source, case, output):
             if "command" in states:
                 command = states["command"][step]
                 context = f"target {command[0]:.1f} cm/s / yaw {command[2]:.2f} rad/s"
+            elif case_result and "command_cm_s_rad_s" in case_result:
+                speed, yaw = case_result["command_cm_s_rad_s"]
+                context = f"target {speed:.1f} cm/s / yaw {yaw:.2f} rad/s"
             if case == "hover" and "requested_height_cm" in states:
                 context = f"target altitude {states['requested_height_cm'][step]:.2f} cm"
             draw.text(
@@ -234,17 +237,33 @@ def record(source, case, output):
                 if case_result:
                     draw.text(
                         (1125, 670),
-                        "Full-clip posture: "
-                        + ("STABLE" if case_result["stable"] else "UNSTABLE"),
+                        "Upright for full clip: " + ("YES" if case_result["stable"] else "NO"),
                         font=font(18),
                         fill="#a8b0b5",
                     )
                     draw.text(
                         (1125, 705),
-                        "Raw tracking gate: " + ("PASS" if case_result["success"] else "FAIL"),
+                        "Combined task gate: "
+                        + ("PASS" if case_result["success"] else "FAIL"),
                         font=font(18),
                         fill="#70a88a" if case_result["success"] else "#ce6654",
                     )
+                    if case_result.get("ground_posture_pass") is not None:
+                        good = case_result["ground_posture_pass"]
+                        label = "Initial-form check" if case == "stand" else "Rest-wing check"
+                        draw.text(
+                            (1125, 745),
+                            label + (": PASS" if good else ": FAIL"),
+                            font=font(18),
+                            fill="#70a88a" if good else "#ce6654",
+                        )
+                        peak = np.degrees(case_result["posture"]["wing_max_deviation_rad"])
+                        draw.text(
+                            (1125, 780),
+                            f"Wing deviation max: {peak:.1f} deg",
+                            font=font(16),
+                            fill="#a8b0b5",
+                        )
             else:
                 draw.text(
                     (1125, 380), "Demonstration for imitation", font=font(19), fill="#ffc31f"

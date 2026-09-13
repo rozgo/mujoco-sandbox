@@ -635,3 +635,21 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Motor-focus02: same body/network/worlds/loss, reference assistance reduced to25%, fresh Adam1e-5. **180.300127 s** training, **7.823445 s** setup, **141.741318 s** collection/forward and **38.552273 s** backward/optimization. **155 updates /158,720 transitions /317.440 aggregate simulated seconds**, **9,411,467,264 bytes** peak CUDA allocation. **99/618** assisted episodes time out;519 fail. All three unassisted cases still fail. Walking's first envelope exit moves0.268→0.478 s; standing does not improve and hover remains unsupported. No promotion.
 - The two motor pilots total **360.924648 s (6m00.925s)**, **324,608 physical transitions /649.216 aggregate simulated seconds**. Same2,410,924-parameter actor,2,231,318 trainable parameters; fixed measured166,700-neuron /25,582,938-connection graph. Utility/context weights stay bitwise frozen; finite motor gradients reach and update intrinsic cell parameters.
 - Recorded both complete three-task reviews: each **6 seconds,300 frames,1600×900,50 fps,1×**. Render/encode/full-decode times **20.100203 /20.529743 s**. Both received visual inspection and were automatically opened on the Mac as requested. Prior accepted walking and every failed candidate remain intact. Stable autonomous motor primitives, transitions, utility learning, shared survival arena and final multi-agent film remain open.
+
+- **2026-09-13 06:23:36 UTC:** Continued motor work since05:47:44 UTC. Ground
+  intervention14-world/1-second diagnostic took6.907916 s setup and8.442436 s
+  stepping. Motor-focus03 took181.184887 s training,7.538387 s setup,141.558038 s
+  collection/forward and39.622251 s backward,160 updates/163,840 transitions.
+  32 worlds(11stand/11walk/10hover),16 CPU MuJoCo threads,RTX4090 brain/learning.
+  PeakCUDA9,411,467,264 bytes.152/160 assisted episodes time out;8 fall.
+- Unassisted03 two-second ground cases remain upright;hover falls. Native five
+  seconds keeps standing upright with0.801mm drift,while walking falls at3.28s.
+  Body shape and wings are visibly poor despite uprightness. All raw tracking
+  gates remain failed. Two complete videos(6s and10s) were encoded/decoded in
+  20.062869/40.048730s,inspected and opened automatically.74 tests passed before
+  the newly requested initial-form correction. This is progress,not release.
+- User requests preserving initial body form while standing and rest-wing angles
+  while walking. Measured initial-pose probe(no learning) takes3.121042s. The
+  three-task corrective reference takes3.312887s setup/4.118766s capture. No
+  physical body changes or runtime overrides. Next bounded training declaration
+  and exact objectives are saved in the learning journal.

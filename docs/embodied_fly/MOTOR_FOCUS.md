@@ -86,3 +86,25 @@ improved, but this has not become reliable stand/walk/hover control.
 
 Both films include every case and its failed gate, actual simulated neural
 activity and observer eye cameras. Earlier reviewed walking remains unchanged.
+
+The [ground-wing correction](runs/motor_focus_03/SUMMARY.md) then adds the same
+explicit wing-accuracy term to ground tasks. After181.184887 s of training,
+unassisted standing and walking remain upright with valid foot support for two
+seconds. A native five-second test confirms upright standing, with0.801 mm drift;
+walking falls at3.28 s. Raw tracking gates and hover still fail. No runtime wing
+override is used. These are motor-imitation results, not PPO results.
+
+- [Updated complete three-task review](../../previews/embodied_fly/motor_focus_03_all_tasks_v1.mp4).
+- [Full five-second ground cases](../../previews/embodied_fly/motor_focus_03_ground5s_v1.mp4).
+
+## Initial form on the ground
+
+`--ground-posture` teaches the initial pose during idle and restoring wing
+commands during both idle and walking. The wing target depends on measured
+angle and speed; it is no longer simply zero torque. Walking legs and hover
+retain their task targets. All78 outputs remain learned at runtime.
+
+Evaluation records every hinge's initial angle, separate leg/wing/body errors,
+wing speed and body sag. These measured scores supplement the existing physical
+gates. Training currently optimizes corrective imitation, not a physical PPO
+reward; passive joints are measured but not given invented actuators.

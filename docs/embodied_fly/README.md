@@ -8,9 +8,11 @@ The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same wing-motion body in every
 task. Utility selection is temporarily disabled while these primitives are
 learned. Older presets and experiments below remain historical evidence.
-The [latest three-task review](../../previews/embodied_fly/motor_focus_02_all_tasks_v1.mp4)
-retains all failures: the first two motor-only pilots have not yet achieved
-reliable unassisted control. The earlier reviewed walking film is preserved.
+The latest [three-task review](../../previews/embodied_fly/motor_focus_03_all_tasks_v1.mp4)
+shows upright standing and walking over two seconds after learning quieter ground
+wings. The [longer ground review](../../previews/embodied_fly/motor_focus_03_ground5s_v1.mp4)
+confirms five seconds of upright standing; walking falls at about3.28 seconds.
+Tracking gates and hover remain unresolved. The earlier walking film is preserved.
 
 The current [ground review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
 shows one graph actor walking, attempting to stop and resuming, with synchronized

@@ -1598,3 +1598,65 @@ ground tasks**, matching the existing hover wing weight. Previously ground
 wing error was diluted among78 outputs; only hover received the extra term.
 The runtime actor still controls its wings; no output override or force gate
 is added. Evaluate all three tasks teacher-free at development seed72001.
+
+Motor-focus03 completed181.184887 s /160updates /163,840transitions;152 of160
+assisted episodes reach two seconds (47/55stand,55/55walk,50/50hover). All8 falls
+were during standing training and retain verified causal traces. Both unassisted
+two-second ground cases are now upright with valid foot support. Heading/speed
+tracking gates still fail and unassisted hover still falls.
+
+An explicitly extended native evaluation uses the same physical fingerprint,
+seed73001, hold and1 cm/s walk for five seconds, no teacher or output mask.
+Standing remains upright with zero prohibited support and0.801 mm drift.
+Walking first leaves the envelope at3.28 s. Both raw tracking gates still fail.
+Complete6-second three-task and10-second ground reviews were decoded, inspected
+and opened automatically. Preserve03 as ground-stability progress, not a release.
+
+The next hover diagnosis should inspect reference-target observability: the
+current wing teacher reads a private12 Hz phase clock, whereas the actor receives
+physical feedback and recurrent memory. A current-wing-state reference may make
+the correction target easier to learn. This is a hypothesis, not an established
+cause or permission to add a runtime wing generator. Keep the same body, full
+actor and learned ground control while testing it before another training run.
+
+### Initial-form correction — 2026-09-13 06:19:24 UTC
+
+User review identifies body crouching during idle and wings dipping into the
+body during both idle and walking. Uprightness alone missed this. Prioritize
+this correction before the proposed hover phase-observability diagnosis.
+
+A two-world, two-second bounded initial-position reference works with either
+zero or half foot adhesion: no forbidden support, minimum uprightness above
+0.99987, full-hinge RMS about0.0254 rad. Select **zero adhesion** for idle.
+No physical parameter, contact, mass, joint limit or runtime action mask changes.
+The first probe's terminal output was lost during context compaction; no process
+remained. Its explicit repeat is saved as initial_pose_probe_02, never reported
+as training.
+
+Add opt-in `--ground-posture`: all position-actuated joints target their canonical
+initial angles during stand. Passive hinges are measured too. Both stand and
+walk receive wing restoring targets: torque=0.02×(initial-angle)−0.00015×velocity,
+bounded at the unchanged0.03 torque limit. Walking leg labels and hover labels
+remain unchanged. Zero torque alone did not actively restore a displaced wing.
+Measure three joint groups independently, body-height loss and wing speed; do
+not dilute six wings among102 hinges. Gate ground wing excursion at0.2 rad and
+RMS speed at2 rad/s; idle additionally requires each group RMS below0.15 rad
+and less than10% body-height loss. Keep old tracking gates.
+
+This remains **online corrective imitation**, not PPO. The optimized loss fits
+commands that restore posture; measured physical posture scores do not receive
+gradients through CPU MuJoCo. The full102-hinge reference is saved in checkpoint
+and evaluation reports. No deployed teacher or pose reset is added.
+
+Reference01: stand and hover pass, walking preserves upright valid support but
+still fails heading/speed gates. Both ground references hold wings exactly at
+rest. Standing group angle RMS: legs0.01199, wings0, remaining body0.04343 rad;
+zero height loss. Three worlds×2 s,4.118766 s capture,3.312887 s setup. This is
+a reference demonstration only. Eight focused tests pass including displaced
+wing recovery using bounded physical actuation and unchanged hover labels.
+
+Declare motor_focus04: resume03, seed71004,180 seconds,32 worlds(11/11/10),
+16 physics threads,32-step chunks,fresh Adam1e-5,25% teacher assistance. Activate
+ground posture targets and increase ground wing imitation weight2→10. Everything
+else, including the one actor and canonical body, stays the same. Evaluate all
+three cases teacher-free for5 seconds at seed72001, retaining all failures.

@@ -18,6 +18,7 @@ from embodied_fly.batch import FlyBatch
 from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
 from embodied_fly.braking import BrakingTeacher
 from embodied_fly.evaluate import load_actor
+from embodied_fly.ground_posture import GroundPosture
 from embodied_fly.motion_flight import initialize
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.physical_contract import physical_contract
@@ -83,9 +84,12 @@ class MotorTasks:
 class MotorTeacher:
     """Batched current-state corrections; this object never controls evaluation."""
 
-    def __init__(self, tasks, teacher_path, device):
+    def __init__(self, tasks, teacher_path, device, ground_posture=False):
         self.tasks, self.env = tasks, tasks.env
         self.ground = BrakingTeacher(self.env, teacher_path, device, track_command=True)
+        self.posture = (
+            GroundPosture(self.env, tasks.ground["qpos"]) if ground_posture else None
+        )
         self.channels = np.array(
             [
                 self.env.model.actuator(self.env.model.joint(j).name).id
@@ -97,6 +101,8 @@ class MotorTeacher:
     def act(self):
         e, t, c = self.env, self.tasks, CONFIG
         actions = self.ground.act().cpu().numpy()
+        if self.posture is not None:
+            actions = self.posture.targets(actions, t.task_ids)
         ids = np.flatnonzero(t.task_ids == 2)
         if not len(ids):
             return actions
@@ -159,11 +165,14 @@ def review(args):
     device = torch.device(args.device)
     env = FlyBatch(3, 3, 14, preset="wing_motion")
     tasks = MotorTasks(env, args.seed)
+    posture = GroundPosture(env, tasks.ground["qpos"])
+    posture_enabled = getattr(args, "ground_posture", False)
     actor = reference = memory = projection = None
     if args.mode == "reference":
-        reference = MotorTeacher(tasks, args.teacher, device)
+        reference = MotorTeacher(tasks, args.teacher, device, posture_enabled)
     else:
         actor, checkpoint = load_actor(args.resume, args.graph, device)
+        posture_enabled |= checkpoint.get("config", {}).get("ground_posture", False)
         if checkpoint["physical_contract"] != physical_contract(env.model):
             raise ValueError("Evaluation must use the checkpoint's exact physical fly")
         if not actor.motor_only or actor.observation_size != 397:
@@ -205,6 +214,7 @@ def review(args):
                 "requested_height_cm": env.requested_height_cm.copy(),
                 "wing_activity": env.wing_forces.activity.copy(),
                 "wing_wrench": env.wing_forces.wrench.copy(),
+                "initial_qpos": np.repeat(tasks.ground["qpos"][None], 3, axis=0),
             }
         )
         try:
@@ -226,6 +236,7 @@ def review(args):
                 "root_error": np.linalg.norm(env.fields["qpos"][:, :3] - target, axis=1)
                 * 0.01,
                 "forbidden_load": env.forbidden_peak.copy() / env.body_weight,
+                **posture.measure(),
             }
         )
     elapsed = time.perf_counter() - started
@@ -250,6 +261,35 @@ def review(args):
             passed &= rmse("root_error") < 0.005
         else:
             passed &= rmse("speed_error") < 0.5 and rmse("yaw_error") < 0.5
+        pose_metrics = {
+            name + "_angle_rms_rad": float(
+                np.sqrt(measurements[name + "_angle_mse_rad2"].mean())
+            )
+            for name in posture.groups
+        }
+        pose_metrics.update(
+            wing_velocity_rms_rad_s=float(
+                np.sqrt(measurements["wings_velocity_mse_rad2_s2"].mean())
+            ),
+            wing_max_deviation_rad=float(measurements["wing_max_deviation_rad"].max()),
+            max_body_height_loss_fraction=float(
+                measurements["body_height_loss_fraction"].max()
+            ),
+            mean_initial_form_score=float(measurements["initial_form_score"].mean()),
+        )
+        pose_pass = None
+        if task != "hover":
+            pose_pass = (
+                pose_metrics["wing_max_deviation_rad"] < 0.2
+                and pose_metrics["wing_velocity_rms_rad_s"] < 2
+            )
+            if task == "stand":
+                pose_pass &= (
+                    max(pose_metrics[k + "_angle_rms_rad"] for k in posture.groups) < 0.15
+                )
+                pose_pass &= pose_metrics["max_body_height_loss_fraction"] < 0.1
+            if posture_enabled:
+                passed &= pose_pass
         results.append(
             {
                 "case": task,
@@ -262,6 +302,8 @@ def review(args):
                 "minimum_upright": float(measurements["upright"].min()),
                 "max_forbidden_ground_force_over_weight": support,
                 "state_sha256": sha256(args.output / f"{task}.npz"),
+                "posture": pose_metrics,
+                "ground_posture_pass": bool(pose_pass) if pose_pass is not None else None,
             }
         )
     report = {
@@ -290,6 +332,8 @@ def review(args):
         "neural_view": projection.report() if projection is not None else None,
         "warning_count": int(env.fields["warning"].sum()),
         "numerical_failure": failure,
+        "ground_posture": posture.report(),
+        "posture_gates_enabled": bool(posture_enabled),
         "results": results,
         "scope": "motor primitives from declared initial states; no takeoff, landing or learned utility",
     }
@@ -322,7 +366,8 @@ def train(args):
     ):
         raise ValueError("Motor continuation must use the parent's exact physical fly")
     tasks = MotorTasks(env, args.seed)
-    teacher = MotorTeacher(tasks, args.teacher, device)
+    teacher = MotorTeacher(tasks, args.teacher, device, getattr(args, "ground_posture", False))
+    posture = GroundPosture(env, tasks.ground["qpos"])
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     optimizer = torch.optim.Adam(
         [p for p in actor.parameters() if p.requires_grad], lr=args.lr
@@ -447,6 +492,13 @@ def train(args):
                     "task_motor_loss": dict(zip(TASKS, map(np.mean, per_task))),
                     "completed_episodes": len(episodes),
                     "failed_episodes": sum(e["failed"] for e in episodes),
+                    "posture_by_task": {
+                        task: {
+                            key: float(value[tasks.task_ids == i].mean())
+                            for key, value in posture.measure().items()
+                        }
+                        for i, task in enumerate(TASKS)
+                    },
                 }
                 log.write(json.dumps(row) + "\n")
                 log.flush()
@@ -470,6 +522,7 @@ def train(args):
         "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
         "parent_checkpoint_sha256": sha256(args.resume),
         "method": "motor-only online imitation on actual teacher/student-mixture physical states",
+        "ground_posture": posture.report() if teacher.posture is not None else None,
     }
     torch.save(checkpoint, args.output / "actor.pt")
     report = {
@@ -513,6 +566,7 @@ def train(args):
         "teacher_present_during_collection": True,
         "loss": "equal mean of task motor MSE; hover adds 2x wing MSE; ground wing weight is explicit; no utility loss",
         "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
+        "ground_posture": posture.report() if teacher.posture is not None else None,
         "optimizer": "fresh Adam for declared motor-only parameter subset",
         "physical_success": "Training assistance is not student acceptance; run independent review",
     }
@@ -542,6 +596,11 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--ground-wing-loss", type=float, default=0.0)
+    parser.add_argument(
+        "--ground-posture",
+        action="store_true",
+        help="Teach initial-form standing and restoring wing torques on both ground tasks",
+    )
     parser.add_argument("--episode-seconds", type=float, default=2)
     parser.add_argument("--neural-view", action="store_true")
     args = parser.parse_args()
