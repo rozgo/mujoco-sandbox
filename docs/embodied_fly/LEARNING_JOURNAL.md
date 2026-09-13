@@ -1769,3 +1769,30 @@ use each checkpoint's own histories. They are descriptive, not matched causal
 estimates. Better local response does not imply better physical control:
 absolute bias, cross-axis coupling and the weak target gain remain unresolved.
 Do not promote08 or simply run it longer based on the auxiliary loss.
+
+### Frozen wing-output fit — 2026-09-13 07:26:59 UTC
+
+Previous turn is progress: new response supervision and an evaluated failed
+pilot narrow the problem;06 remains preferred. Mac/GPU synchronized atb3a9891;
+GPU is idle before this step. No external blocker.
+
+Declare ground_readout01 using parent06:32worlds,16 CPU threads,2s perworld,
+seed73009. Execute only parent actions, no resets, retain every failed history.
+Every10actions copy actual prior neural state and probe each ground wing angle
+by±0.2rad and speed by±5rad/s. Capture the existing256-unit motor hidden layer;
+the only labels are bounded ground resting-wing corrections and inherited hover
+commands. The synthetic probes add zero physical transitions. Hold out the last
+world of each task, including all its sensory variants.
+
+Fit only the existing6×257 wing output weights/biases by residual ridge
+regression in inverse-tanh action space. Equal task weights; within each ground
+task, nominal and synthetic examples each receive half its weight. Select
+alpha from[1,0.1,0.01,0.001,0.0001] by whole-world validation action error.
+No new deployed module, input normalization, physics changes or action mask.
+Keep all upstream parameters/non-wing rows exactly fixed; preserve motor-only
+context and physical fingerprint in the checkpoint, omit stale Adam state.
+
+Evaluate the fitted checkpoint on allthree full5s cases at developmentseed72001,
+with no teacher and no resets. A better offline fit does not establish physical
+success. This diagnostic fit tests whether the existing motor features can
+decode the required wing feedback before spending another end-to-end pilot.
