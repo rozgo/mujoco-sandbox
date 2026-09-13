@@ -4,6 +4,16 @@ This is the permanent account for future demos, videos and technical reporting.
 Keep failed hypotheses as well as successful runs. The current project is in
 progress; its complete flight/survival curriculum has not passed acceptance.
 
+Latest reference-only course correction: the user rejected jerky hover despite
+the old numerical gate passing. [Per-tick wing forces](INSTANT_WING_FORCES.md)
+remove the extra activity average, and the [PID reference](PID_HOVER_REFERENCE.md)
+uses 1,000 Hz physics. Its ten-second capture has a 0.13 mm settled height band and
+0.16 mm settled peak position error, with a 0.60 mm cold-start peak error retained
+in the video. Eleven brief controller probes and a committed-source capture are
+archived; no policy training occurred. A fixed camera and live error readouts
+supported visual review. The user accepted `pid_hover_reference_v1.mp4` on
+September 13: "hover looks great." The learned checkpoint remains intact.
+
 Project began **2026-09-12 18:05:28 UTC**. The approved architecture correction
 began **19:35:03 UTC**. Clocked milestones are in [TIME_LOG](../TIME_LOG.md).
 Development elapsed time, setup, data generation, optimization, physical evaluation

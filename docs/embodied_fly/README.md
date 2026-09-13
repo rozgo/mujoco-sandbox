@@ -43,6 +43,13 @@ training complete after the policy stops. Its ten-minute continuation confirms
 the fix but loses nominal hover, so the sustained checkpoint above remains the
 working candidate. Both the failure video and measured critic behavior are retained.
 
+The user accepted the [PID hover reference](PID_HOVER_REFERENCE.md) on September 13.
+It uses 1,000 Hz physics and instantaneous wing-derived forces, with a fixed-camera
+[ten-second video](../../previews/embodied_fly/pid_hover_reference_v1.mp4).
+The settled height band is 0.13 mm and peak position error 0.16 mm. This is a
+controller/plant reference, not a newly trained fly. The preceding unfiltered
+reference video is retained with the user's rejection of its jerky motion.
+
 ## Historical torque-model experiments
 
 The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)

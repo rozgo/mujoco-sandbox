@@ -1,0 +1,74 @@
+{
+  "completed_utc": "2026-09-13T19:55:39.618270+00:00",
+  "source_commit": "ccbd172529e5db02c95a9ca562c23dbc1cd1fdb9",
+  "source_was_committed": true,
+  "controller": "measured-state reference with fore-aft wing-stroke position feedback; no RL actor",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "4fba6d8e43292cc21375f0b3dcd7d5b09075f6c1a427520db64f752d1dfba537",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "windows": {
+    "whole_10_seconds": {
+      "height_min_mm": 16.77087500907533,
+      "height_max_mm": 19.891893895813233,
+      "height_span_mm": 3.121018886737903,
+      "altitude_error_rms_mm": 0.6785146473109399,
+      "vertical_speed_rms_mm_s": 34.971840076481755,
+      "root_position_error_rms_mm": 2.8806540038547994
+    },
+    "after_first_second": {
+      "height_min_mm": 18.93517647415242,
+      "height_max_mm": 19.660957028785077,
+      "height_span_mm": 0.7257805546326557,
+      "altitude_error_rms_mm": 0.670124781914875,
+      "vertical_speed_rms_mm_s": 34.791626699914275,
+      "root_position_error_rms_mm": 3.023850034628348
+    }
+  },
+  "initial_position_mm": [
+    0.0,
+    0.0,
+    18.665164322087712
+  ],
+  "final_position_mm": [
+    -1.8515234340890032,
+    4.328622115444027,
+    19.362917907768743
+  ],
+  "captures": {
+    "stand": {
+      "frames": 5000,
+      "sha256": "de1642e2e952dd6e0f2748767559c030fba4d60c45109f2466a01ae93a75d2db",
+      "finite_and_bounded_actions": true
+    },
+    "walk": {
+      "frames": 5000,
+      "sha256": "10be50d5f97ff07a6d8b8aeee4ab5065c7d9e790f38e5b16a7155c77a60b4f95",
+      "finite_and_bounded_actions": true
+    },
+    "hover": {
+      "frames": 5000,
+      "sha256": "9c04b08fe0281a75d7e8978f87e60cc01207acdafcdcc57102f23edceebf72b2",
+      "finite_and_bounded_actions": true
+    }
+  },
+  "training_seconds": 0,
+  "optimizer_updates": 0,
+  "physics_backend": "native MuJoCo/mjbatch on Apple Silicon CPU",
+  "parallel_worlds": 3,
+  "control_hz": 500,
+  "physics_hz": 5000,
+  "action_transitions": 15000,
+  "aggregate_simulated_seconds": 30,
+  "nominal_setup_seconds": 3.6203050420153886,
+  "nominal_capture_seconds": 21.27580449997913,
+  "note": "Each action has ten integrated physics steps; wing forces are recalculated before each one. No learning or neural policy inference occurred.",
+  "all_three_reference_captures_seconds": 63.393315667053685
+}

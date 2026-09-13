@@ -152,3 +152,11 @@ The subsequent [clock review](CLOCKS.md) traces 5 kHz physics to FlyBody's walki
 defaults, independently of the MaleCNS graph and 500 Hz action clock. A smaller
 critic learning rate and a larger physics timestep are separate experiments;
 neither was changed during this completed pilot.
+
+The subsequent user correction removes temporal wing-activity averaging, then
+requests 1,000 Hz physics and a [PID reference](PID_HOVER_REFERENCE.md) before any
+further RL. This reference now passes tighter nominal hover gates and has a new
+fixed-camera video. The learned checkpoint remains preserved with its original
+filtered 5 kHz contract; no policy has been retrained or silently transferred to
+the new plant. The user accepted the reference video on September 13. Explicit
+physical transfer and motor learning on the accepted plant are the next stage.

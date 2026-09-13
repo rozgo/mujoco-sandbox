@@ -148,3 +148,9 @@ nearly perfect. Work on the PID reference at 1,000 Hz physics / 500 Hz controls,
 with instantaneous per-physics-tick wing forces. Preserve cold-start motion and
 show a fixed observer camera plus numeric errors. Do not call a loose survival
 gate sufficient visual acceptance or resume training while this review is open.
+
+The user accepted `pid_hover_reference_v1.mp4` on September 13: "hover looks
+great." Preserve this PID configuration/video as the hover plant reference.
+The review gate is closed. Subsequent motor learning must explicitly adopt this
+same 1,000 Hz, instantaneous-wing-force physical contract for all motor commands;
+the PID controller is reference machinery, not evidence of a learned actor.

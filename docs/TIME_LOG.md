@@ -1006,3 +1006,24 @@ goal milestone, not a completion time; final archiving/synchronization follows.
 - Focused tests: **21 passed**, one dependency warning, **26.37 s**.
   Full suite: **149 passed**, 43 known dependency warnings, **128.91 s**.
   Changed-source lint and all capture/failure/optimizer audits pass.
+
+## Instant wing force and PID reference videos — September 13, 2026
+
+- Initial force-law correction observed start **19:43:19 UTC**; first reference
+  video inspected/opened **19:56:39 UTC**: 13 min 20 s. Three ten-second, three-world
+  reference captures total 63.393316 s stepping. Final capture 21.275804 s plus
+  3.620305 s setup; rendering 53.127069 s. User rejected the motion as too jerky.
+- PID/1 kHz effort observed start **20:00:55 UTC**; new video inspected/opened
+  **20:19:48 UTC**: 18 min 53 s. Archival and synchronization follow this milestone.
+- Eleven brief PID probes: 80 aggregate simulated seconds, 31.921763 s total
+  stepping. Some probes ran concurrently. Final committed-source capture:
+  1.370181 s setup, 3.906184 s stepping, one world, ten simulated seconds,
+  5,000 actions and 10,000 physics steps. No RL or optimizer updates.
+- Native MuJoCo on Apple Silicon CPU; 1 kHz physics, 500 Hz controller. RTX GPU
+  unused. Render/encode 51.023093 s, ten-second 1x video, 500 frames at 50 fps,
+  1600x900. Fixed camera, fully decoded, eight frames visually inspected and
+  automatically opened. Startup remains visible.
+- Relevant full suite 168 passed/45 dependency warnings in 140.61 s; focused
+  checks 27 passed in 15.70 s. Source lint passes. No RL ran in this reference stage.
+- User accepted the PID hover video; acceptance recorded **20:25:44 UTC**.
+  A separate native/batch 1 kHz trajectory check passes (one test, 2.37 s).
