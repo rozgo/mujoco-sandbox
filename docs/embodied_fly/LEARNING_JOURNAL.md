@@ -1205,3 +1205,21 @@ same readout01 checkpoint, keep its entire upstream actor frozen, and calibrate
 the same 1,542 existing wing output parameters for **10 seconds**, Adam 0.003,
 1,024-frame minibatches, seed **53001**. This is supervised corrective training;
 neither assisted collection nor low validation error establishes student flight.
+
+All eight corrective episodes passed their collection envelope (12,000 frames,
+2.4 simulated seconds; **6.392281 s** setup, **46.319653 s** collection). Captured
+actions, exact 25/75 execution mixtures, previous-action feedback, timestamps and
+state/model hashes were verified. Two frozen-feature replays took 12.025874 s
+and 12.198033 s. The mixed readout fit used **10.000270 s**, 19,163 updates and
+18,000 distinct training frames. Excluded original/corrective MSE changed from
+0.006163/0.014430 to 0.006403/0.008380. Both unassisted flights still fell.
+Continuous ground transitions stayed stable; slow fixed-command walking fell.
+As in the preceding output-only fit, non-wing parameters are unchanged; retain
+the observed outcomes without claiming a learned change in ground control.
+
+The compiled wing joints do have angular limits, but compliant stops allow large
+overshoots. Investigate an explicitly separate [firmer-stop physical pilot](WING_LIMITS.md)
+before spending more learning time: preserve ranges, masses, actuation and all
+other physics, strengthen only the wing limit solver response, and first verify
+the inherited expert. This is an unvalidated parameter experiment, not an assumed
+fix or a relaxation of flight acceptance. The original body remains the default.

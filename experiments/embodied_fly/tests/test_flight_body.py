@@ -71,3 +71,40 @@ def test_original_actor_interval_preserves_fine_physics_and_elapsed_time():
     with pytest.raises(ValueError):
         held.advance(held.passive_action, 0.0003)
     np.testing.assert_array_equal(held.data.qpos, before)
+
+
+def test_firmer_wing_stops_preserve_body_ranges_and_actuation_and_reduce_overshoot():
+    original = FlyEnvironment("flight")
+    firm = FlyEnvironment("flight", wing_limits="firm")
+    for name in (
+        "body_mass",
+        "body_inertia",
+        "jnt_range",
+        "dof_damping",
+        "actuator_gainprm",
+        "actuator_forcerange",
+        "geom_contype",
+        "geom_conaffinity",
+        "geom_fluid",
+    ):
+        np.testing.assert_array_equal(getattr(original.model, name), getattr(firm.model, name))
+    others = [i for i in range(firm.model.njnt) if i not in firm.wing_joint_ids]
+    np.testing.assert_array_equal(
+        original.model.jnt_solref[others], firm.model.jnt_solref[others]
+    )
+    np.testing.assert_array_equal(firm.model.jnt_solref[firm.wing_joint_ids, 0], 0.0002)
+    assert 0.0002 >= 2 * firm.model.opt.timestep
+    overshoot = []
+    for env in (original, firm):
+        env.data.qpos[2] = 1  # airborne initialization only
+        env.data.qpos[env.wing_angle_indices[1]] = 1.4
+        env.data.qvel[env.wing_velocity_indices[1]] = 500
+        mujoco.mj_forward(env.model, env.data)
+        action = env.passive_action.copy()
+        action[env.model.actuator("walker/wing_roll_left").id] = 0.2
+        for _ in range(25):
+            env.step(action)
+        overshoot.append(env.maximum_wing_limit_violation[1])
+        assert not env.data.warning.number.any()
+        assert not env.data.xfrc_applied.any() and not env.data.qfrc_applied.any()
+    assert overshoot[0] > 0.1 and overshoot[1] < 0.5 * overshoot[0]

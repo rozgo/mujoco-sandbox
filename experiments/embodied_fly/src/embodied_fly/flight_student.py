@@ -47,7 +47,7 @@ def evaluate(args):
     provenance = evidence()
     device = torch.device(args.device)
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
-    env = FlyEnvironment("flight")
+    env = FlyEnvironment("flight", wing_limits=getattr(args, "wing_limits", "original"))
     initialize_from_capture(env, args.initial, args.speed)
     start_pos = env.data.qpos[:3].copy()
     memory = actor.initial_state(1)
@@ -138,6 +138,8 @@ def evaluate(args):
         "scope": "Airborne direct-wing development probe; not takeoff, landing or survival",
         "physics": "native MuJoCo CPU",
         "physical_preset": "flight",
+        "wing_limit_profile": env.wing_limits,
+        "maximum_wing_limit_violation_rad": env.maximum_wing_limit_violation.tolist(),
         "device": str(device),
         "physics_hz": 1 / env.model.opt.timestep,
         "control_hz": 1 / env.control_dt,
@@ -184,4 +186,5 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=float, default=0.3)
     parser.add_argument("--speed", type=float, default=0)
     parser.add_argument("--neural-view", action="store_true")
+    parser.add_argument("--wing-limits", choices=("original", "firm"), default="original")
     raise SystemExit(0 if evaluate(parser.parse_args())["success"] else 2)

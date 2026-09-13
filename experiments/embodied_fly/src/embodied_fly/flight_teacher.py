@@ -139,7 +139,7 @@ def probe(args):
     torch.set_num_threads(4)
     setup = time.perf_counter()
     provenance = evidence()
-    env = FlyEnvironment("flight")
+    env = FlyEnvironment("flight", wing_limits=getattr(args, "wing_limits", "original"))
     teacher = FlightTeacherOracle(env, args.teacher, args.wing_pattern)
     teacher.initialize(args.speed, args.seconds)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
@@ -149,7 +149,7 @@ def probe(args):
         k: [] for k in ("qpos", "qvel", "activation", "ctrl", "observation", "action", "time")
     }
     failure = None
-    errors = []
+    errors, heights, upright = [], [], []
     try:
         for i in range(round(args.seconds / env.control_dt)):
             action = teacher.act(i)
@@ -165,6 +165,8 @@ def probe(args):
                 rows[k].append(np.array(v, copy=True))
             env.step(action)
             errors.append(np.linalg.norm(env.data.qpos[:3] - teacher.reference[i + 1, :3]))
+            heights.append(float(env.data.qpos[2] * 0.01))
+            upright.append(float(env.data.xmat[env.thorax_id, 8]))
             assert not env.data.xfrc_applied.any() and not env.data.qfrc_applied.any()
     except RuntimeError as e:
         failure = str(e)
@@ -179,15 +181,20 @@ def probe(args):
         "controller": "inherited flight policy plus upstream wingbeat generator; retracted leg servo targets",
         "student_present": False,
         "policy_acceptance_eligible": False,
+        "wing_limit_profile": env.wing_limits,
+        "maximum_wing_limit_violation_rad": env.maximum_wing_limit_violation.tolist(),
         "physics_hz": 1 / env.model.opt.timestep,
         "control_hz": 1 / env.control_dt,
         "speed_cm_s": args.speed,
         "requested_seconds": args.seconds,
         "simulated_seconds": env.data.time,
         "final_root_position_m": (env.data.qpos[:3] * 0.01).tolist(),
-        "root_tracking_rmse_m": float(np.sqrt(np.mean(np.square(errors))) * 0.01),
-        "maximum_root_tracking_error_m": float(max(errors) * 0.01),
-        "minimum_root_height_m": float(np.min(np.asarray(rows["qpos"])[:, 2]) * 0.01),
+        "root_tracking_rmse_m": float(np.sqrt(np.mean(np.square(errors))) * 0.01)
+        if errors
+        else None,
+        "maximum_root_tracking_error_m": float(max(errors) * 0.01) if errors else None,
+        "minimum_root_height_m": min(heights) if heights else None,
+        "minimum_upright": min(upright) if upright else None,
         "warning_count": int(env.data.warning.number.sum()),
         "numerical_failure": failure,
         "max_forbidden_ground_force_over_weight": env.maximum_disallowed_ground_force
@@ -208,4 +215,5 @@ if __name__ == "__main__":
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--seconds", type=float, default=0.2)
     parser.add_argument("--speed", type=float, default=0)
+    parser.add_argument("--wing-limits", choices=("original", "firm"), default="original")
     probe(parser.parse_args())

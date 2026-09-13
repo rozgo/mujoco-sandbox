@@ -30,9 +30,13 @@ FLIGHT_CONTROL_DT = 0.0002
 NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
-def make_body(preset="walking"):
+def make_body(preset="walking", *, wing_limits="original"):
     if preset not in ("walking", "flight"):
         raise ValueError(f"Unknown physical preset: {preset}")
+    if wing_limits not in ("original", "firm") or (
+        wing_limits != "original" and preset != "flight"
+    ):
+        raise ValueError("Firm wing limits are an explicit flight-only physical pilot")
     physics_dt = FLIGHT_PHYSICS_DT if preset == "flight" else PHYSICS_DT
     control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
     fly = FruitFly(
@@ -54,6 +58,10 @@ def make_body(preset="walking"):
         wing_joint = fly.mjcf_model.find("default", "wing").joint
         wing_joint.damping = 0.007769230
         wing_joint.stiffness = 0.01
+        if wing_limits == "firm":
+            # Same ranges and actuation; firmer compliant mechanical stops.
+            # 0.2 ms is four flight physics steps, above MuJoCo's 2-step floor.
+            wing_joint.solreflimit = (0.0002, 1)
         for geom in fly.mjcf_model.find_all("geom"):
             if "fluid" in geom.name:
                 geom.fluidshape = "ellipsoid"
@@ -106,10 +114,11 @@ def make_body(preset="walking"):
 
 
 class FlyEnvironment:
-    def __init__(self, preset="walking"):
+    def __init__(self, preset="walking", *, wing_limits="original"):
         self.preset = preset
+        self.wing_limits = wing_limits
         self.control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
-        self.physics, self.fly = make_body(preset)
+        self.physics, self.fly = make_body(preset, wing_limits=wing_limits)
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr
         self.substeps = round(self.control_dt / self.model.opt.timestep)
@@ -121,6 +130,19 @@ class FlyEnvironment:
         self.joint_names = [self.model.joint(i).name for i in self.joint_ids]
         self.wing_velocity_indices = wing_velocity_indices(self.model)
         self.wing_angle_indices = wing_angle_indices(self.model)
+        self.wing_joint_ids = np.array(
+            [
+                self.model.joint(name).id
+                for name in (
+                    "walker/wing_yaw_left",
+                    "walker/wing_roll_left",
+                    "walker/wing_pitch_left",
+                    "walker/wing_yaw_right",
+                    "walker/wing_roll_right",
+                    "walker/wing_pitch_right",
+                )
+            ]
+        )
         self.low = self.model.actuator_ctrlrange[:, 0].copy()
         self.high = self.model.actuator_ctrlrange[:, 1].copy()
         self.walking_inactive = np.array(
@@ -165,6 +187,7 @@ class FlyEnvironment:
         self.needs = np.zeros(len(NEED_NAMES), np.float32)
         self.previous_action = np.zeros(self.model.nu, np.float32)
         self.maximum_disallowed_ground_force = 0.0
+        self.maximum_wing_limit_violation = np.zeros(6)
         mujoco.mj_forward(self.model, self.data)
         self.mean_sensors = self.data.sensordata.copy()
         return self.observation()
@@ -245,6 +268,14 @@ class FlyEnvironment:
         sensor_total = np.zeros(self.model.nsensordata)
         for _ in range(self.substeps):
             mujoco.mj_step(self.model, self.data)
+            ranges = self.model.jnt_range[self.wing_joint_ids]
+            angles = self.data.qpos[self.wing_angle_indices]
+            violation = np.maximum(angles - ranges[:, 1], ranges[:, 0] - angles)
+            np.maximum(
+                self.maximum_wing_limit_violation,
+                violation,
+                out=self.maximum_wing_limit_violation,
+            )
             sensor_total += self.data.sensordata
             for cid, contact in enumerate(self.data.contact):
                 body1 = self.model.geom_bodyid[contact.geom1]
@@ -295,6 +326,8 @@ class FlyEnvironment:
             "actuators": model.nu,
             "observation_size": len(self.observation()),
             "physical_preset": self.preset,
+            "wing_limit_profile": self.wing_limits,
+            "wing_limit_solref": model.jnt_solref[self.wing_joint_ids].tolist(),
             "physics_hz": 1 / model.opt.timestep,
             "control_hz": 1 / self.control_dt,
             "activation_states": model.na,

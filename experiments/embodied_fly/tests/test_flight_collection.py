@@ -20,6 +20,7 @@ def test_corrective_capture_records_executed_physics_and_causal_previous_action(
 
     class Actor:
         sensor_extension_size = extension_size
+        observation_size = 383 + extension_size
 
         def initial_state(self, worlds):
             return torch.zeros(1, worlds)
@@ -48,6 +49,8 @@ def test_corrective_capture_records_executed_physics_and_causal_previous_action(
         episodes=4,
     )
     manifest = flight_collect.collect(args)
+    assert manifest["recorded_observation_size"] == 383
+    assert manifest["student_observation_size"] == 383 + extension_size
     assert manifest["student_present"] and not manifest["policy_acceptance_eligible"]
     env = FlyEnvironment("flight")
     for episode in range(4):
