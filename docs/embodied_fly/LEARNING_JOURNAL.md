@@ -2498,3 +2498,37 @@ identities and frozen normalization/utility parameters are verified. Both
 126-test suite covers unchanged training/controller/physics code; this turn
 adds a directly executed reference diagnostic. Retention01 is the latest motor
 candidate; complete hover, transitions and learned survival utility remain open.
+
+### Bounded PPO diagnosis and observer camera — 2026-09-13 16:28:22 UTC
+
+The user authorized a frozen-actor exploration check and at most two additional
+three-minute PPO runs. Diagnostics reveal two limitations: three new hover
+starts fail even without noise; on the known successful start .01 noise causes
+a fall while .003 noise preserves the five-second rollout. Every parameter
+remains frozen in these probes, and paired starts/feedback/hashes are verified.
+
+Outcome03 lowers initial/minimum noise to .003 and still loses hover. Outcome04
+adds eight critic-only rollouts before actor updates. It retains airborne
+control in the original review and reduces root RMSE from 6.004 to 5.499 mm,
+but vertical bobbing is essentially unchanged. It still fails every additional
+hover start, including all three deterministic starts; it is not promoted.
+Ground stability is retained. No body, graph, reward, actor architecture or
+command changes were made. Utility remains disabled. Both checkpoints are
+siblings from position_sustain_retention01, which stays the baseline.
+
+The user's camera correction adds a wider view and slower vertical target
+following. A new version of the original good video uses identical physical
+captures and model hashes. Its existing roughly 5 Hz, 1.204 cm height span is
+now visible; the camera had masked that motion. Outcome04 height span is
+1.356 cm and vertical-speed RMS 8.20 cm/s versus 8.27 for the parent. Do not
+call the lower root RMSE steadier hover or the camera improvement better physics.
+
+The two new pilots take 367.473632 s in total, with 258,048 transitions.
+Outcome04 warmup is included (48.194531 s and 64 critic updates). 132 tests and
+changed-source lint checks pass. All 386 training failure traces from outcome01
+through04 and all 12 evaluation captures are archived and verified, including
+the earlier two runs pending archival at the start of this round. Completed
+videos are fully decoded, visually inspected and opened. No third PPO pilot
+is launched. See PPO_FOLLOWUP.md for evidence and limitations. Further work
+must target consistent, quieter hover; practical motor transitions and learned
+needs/utility remain unfinished.

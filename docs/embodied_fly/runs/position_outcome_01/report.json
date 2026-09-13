@@ -1,0 +1,3772 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T15:06:52.350866+00:00",
+    "source_commit": "452f97e48ed56c4b8995025533ca3261235bd640",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "51af15245cf445dedcf11a1b57cd7b3117a184b9e70ad1adb25d0fd635b15995",
+      "src/embodied_fly/body.py": "45d6da6a68e5b0e600a7c183214d440b20cee52c0eefa6036a1f5689c6757765",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f0818b436ab8470abf5676de799c92e75e322bde7c72b53dacdebc832b46cdce",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "f240ef6d779e2ad32708abe90f86964e771151e8cbb19b7cd7936e0d65b4d865",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "83e036ac378aef32c052a9a7a7d54789fc9bcf20adfcb7795071d63cc9a0b9fd",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "5c58a0361948ef50e4d59a96e43de98dab37a3a1e4e35de605acab8acb9fca7c",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "480869b6e6c6ba288911b744decfc97ff66e41523981ca45c962ef305d6e44e8",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "e2aa31f23394c48676020217ca5ee55aa7bdce3363c83a5107a54045a3fb6a5e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "d27d896cef957e178303a6be3a748bfd5ea2f682e17855fd945b48779403aeab",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "851c0d60e501273dce24bbe497864402197151610e6eecb9831c364e96474108",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "rehearsal": null,
+    "motor_ground": false,
+    "motor_all": true,
+    "motor_retention_weight": 4.0,
+    "wing_supervision": 0.0,
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "preset": "wing_position",
+    "flight_resets": null,
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 180.0,
+    "horizon": 128,
+    "sequence": 32,
+    "epochs": 2,
+    "episode_seconds": 5.0,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "lr": 3e-06,
+    "noise": 0.01,
+    "target_kl": 0.03,
+    "entropy": 0.0,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 0.0,
+    "stationary_turn_cost": 0.0,
+    "seed": 98003,
+    "internal_steps": 4,
+    "ground_posture": true
+  },
+  "reward_recipe": {
+    "version": "stand_walk_hover_outcome_v1",
+    "ground": {
+      "velocity_tracking_rate": 2.0,
+      "yaw_tracking_rate": 0.5,
+      "upright_alive_rate": 0.5,
+      "tilt_cost_rate": 0.5,
+      "vertical_speed_cost_rate": 0.05,
+      "forbidden_support_cost_rate": 2.0,
+      "action_change_cost_rate": 0.01,
+      "physical_failure_penalty": 1.0,
+      "velocity_filter_seconds": 0.05,
+      "moving_velocity_width_cm_s": 0.5,
+      "holding_velocity_width_cm_s": 0.2,
+      "yaw_width_rad_s": 0.75,
+      "failure_upright_below": 0.5,
+      "failure_height_below_cm": 0.06,
+      "units": "rates multiplied by 0.002 s each action; failure penalty once",
+      "stationary_translation_cost_rate": 1.5,
+      "stationary_rotation_cost_rate": 0.25,
+      "stationary_speed_scale_cm_s": 0.25,
+      "stationary_yaw_scale_rad_s": 0.5,
+      "stationary_cost_formula": "zero command only: -weight * magnitude / (scale + magnitude)",
+      "ground_wing_position_rate": 2.0,
+      "ground_wing_velocity_rate": 1.0,
+      "stand_leg_pose_rate": 1.0,
+      "ground_body_pose_rate": 0.5,
+      "ground_height_rate": 0.5,
+      "wing_angle_scale_rad": 0.1,
+      "wing_speed_scale_rad_s": 2.0,
+      "leg_body_angle_scale_rad": 0.15,
+      "height_scale_fraction": 0.1,
+      "pose_formula": "weight / (1 + group mean squared error / scale squared)",
+      "task_scope": "stand: full initial hinge pose; walk: resting wings and body, legs free",
+      "teacher": false,
+      "action_mask_or_runtime_override": false
+    },
+    "hover": {
+      "forward_and_lateral_velocity_tracking_rate": 2.0,
+      "horizontal_width_cm_s": 0.5,
+      "vertical_velocity_tracking_rate": 2.0,
+      "vertical_width_cm_s": 5.0,
+      "height_tracking_rate": 1.0,
+      "height_width_cm": 0.3,
+      "orientation_tracking_rate": 1.0,
+      "orientation_error": "1 - squared dot of unit root quaternions; exp(-error / 0.1)",
+      "airborne_alive_rate": 0.5,
+      "forbidden_support_cost_rate": 2.0,
+      "failure_height_below_cm": 0.5,
+      "failure_upright_below": 0.5,
+      "physical_failure_penalty_once": 1.0,
+      "units": "CGS state; rates times actual 0.002 s action interval; terminal penalty once",
+      "excluded": "No wing-phase/action imitation or direct lift target in physical reward"
+    },
+    "selection": "task 0/1: ground reward; task 2: hover reward, never their sum",
+    "failure_penalty": "one selected -1 penalty on failure; world resets immediately",
+    "runtime_controller": false
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "222eb2326e6ba8d0429ad31c55fd189b98921bfceec9f66d7af528828b3645fa",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded"
+  },
+  "training_tasks": [
+    "stand",
+    "walk",
+    "hover"
+  ],
+  "worlds_by_task": {
+    "stand": 11,
+    "walk": 11,
+    "hover": 10
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "active_motor_channels": 78,
+  "teacher_present_during_collection": true,
+  "executed_teacher_actions": false,
+  "wing_supervision": {
+    "weight": 0.0,
+    "channels": [],
+    "target": "bounded corrective torque from pre-action measured wing q/qvel",
+    "kp": null,
+    "kd": null,
+    "loss": "mean squared normalized action error over six wing channels only",
+    "included_in_ppo_optimization_seconds": true,
+    "deployed_module": false
+  },
+  "motor_retention": {
+    "weight": 4.0,
+    "parent_checkpoint_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+    "weights_unchanged": true,
+    "scope": "all 78 mean motor outputs, ground worlds only",
+    "runtime_module": false,
+    "extra_physics_transitions": 0
+  },
+  "core_gradient_audit_from_ground_retention": {
+    "excitability": {
+      "l2": 5.83477710591751e-10,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 8.183058397559506e-11,
+      "finite": true,
+      "nonzero_cells": 165480
+    },
+    "bias": {
+      "l2": 1.6932188984242202e-08,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "training_started_utc": "2026-09-13T15:07:01.258950+00:00",
+  "completed_utc": "2026-09-13T15:10:02.340771+00:00",
+  "setup_seconds": 8.924502719193697,
+  "training_wall_seconds": 180.9614225178957,
+  "rollouts": 37,
+  "ppo_updates": 37,
+  "transitions": 151552,
+  "rehearsal_frames": 0,
+  "wing_supervised_presentations": 0,
+  "collection_seconds": 153.11388103524223,
+  "optimization_seconds": 27.82998839300126,
+  "ppo_optimization_seconds": 27.82998839300126,
+  "rehearsal_seconds": 0.0,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 32,
+  "aggregate_simulated_seconds": 303.104,
+  "physics_hz": 5000.0,
+  "control_hz": 500.0,
+  "neural_time_scale": 1.0,
+  "effective_gamma": 0.995,
+  "effective_gae_lambda": 0.95,
+  "airborne_resets": null,
+  "rehearsal_control_hz": null,
+  "transitions_per_training_wall_second": 837.4823644250071,
+  "actor_parameters": 2516146,
+  "critic_parameters": 235777,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 10.819051742553711,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 2.8933558464050293,
+      "finite": true,
+      "nonzero_cells": 165480
+    },
+    "bias": {
+      "l2": 410.48699951171875,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_gradient_audit_from_weighted_wing_supervision": null,
+  "core_changes": {
+    "excitability": 0.0017199243884533644,
+    "leak": 0.000715723552275449,
+    "bias": 0.004234611988067627
+  },
+  "peak_cuda_allocated_bytes": 18218412544,
+  "parent_checkpoint_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+  "checkpoint_sha256": "e6210841c42e48de584d51a8675deba346c33190cacac0f8b9ef53a12ef4a411",
+  "model_sha256": "672a5c0144d97d56dbb5372d50095cc3a347e9410c4897f71b2d5598774542ba",
+  "flight_force_model": {
+    "name": "Flight dynamics driven by measured wing motion",
+    "config": {
+      "version": "wing_motion_v1",
+      "angular_armature": 2e-06,
+      "joint_damping": 0.0002,
+      "joint_stiffness": 0.001,
+      "joint_torque_limit": 0.03,
+      "activity_filter_seconds": 0.012,
+      "reference_sweep_speed": 50.0,
+      "maximum_activity": 1.4,
+      "lift_weight_multiplier": 1.6,
+      "horizontal_drag_seconds": 0.12,
+      "vertical_drag_seconds": 0.08,
+      "angular_drag_seconds": 0.025,
+      "attitude_stiffness": 100.0,
+      "steering_acceleration": 60.0,
+      "maximum_angular_acceleration": 250.0,
+      "inertia_radius_cm": 0.06,
+      "forward_force_fraction": 0.25
+    },
+    "inputs": "six actual wing angles and speeds; measured body orientation/velocity",
+    "body_mass_kg": 9.686214691323194e-07,
+    "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
+    "aerodynamic_force_model": false,
+    "causal_activity_state_shape": [
+      32,
+      2
+    ],
+    "attitude_assistance": "activity-dependent angular damping and restoring torque",
+    "translation": "bounded wing-motion lift/thrust and drag; no target-position servo"
+  },
+  "rehearsal_manifest_sha256": null,
+  "rehearsal_episode_sha256": {},
+  "rehearsal_validation_indices": [],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "40e88428527145f98561bc7d2bf04c5f1fd8b1f803278f1531d847540a5c2abc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.546,
+      "return": 1.3294659941457212,
+      "distance_cm": 0.06424969050562107
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "7d022cbcc3e1118f23f6d452b58cef6c09ca19dccabac8de86c4869ba53cfce7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.56,
+      "return": 1.379295531194657,
+      "distance_cm": 0.05867485738606418
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "b4202549be5686714a0c098ae30fddf0e8a20a330278fb4972a9dfbe3b742d7f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.62,
+      "return": 1.6774486233480275,
+      "distance_cm": 0.07192187420811642
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "91523fc686d9c70017824fac9714db826065843a4a29027410285a995782b544",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.654,
+      "return": 1.5979368113912642,
+      "distance_cm": 0.08314383784577652
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "f68e1aca53d6235a94dda0df508e917cb7fa888ed74db678718c34ddf5d605b9",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.656,
+      "return": 1.689285317901522,
+      "distance_cm": 0.06309785568553344
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00005.npz",
+        "sha256": "8359a7207b2495a8f251ce1e10e4e41bcf676535774e85dc4dd24655e1a42ea2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.754,
+      "return": 2.19989519380033,
+      "distance_cm": 0.054713704263291814
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00006.npz",
+        "sha256": "9d165260c971083476e1589c32a39b6bcf2ea534068d2aca88c32022528d78b0",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.9500000000000001,
+      "return": 2.933426517061889,
+      "distance_cm": 0.08510471158607562
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00007.npz",
+        "sha256": "5d3c0cc87298a1fbe2adc72fd0104b8de80a95d2e438972cef2ef457a1cd4ef6",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.2,
+      "return": 3.945605732034892,
+      "distance_cm": 0.13217877639134756
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00008.npz",
+        "sha256": "e9831bdb28f4eba071aad9e17b4e35e9498937e65dd33ed8734b420564f7f388",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.294,
+      "return": 4.2679294822737575,
+      "distance_cm": 0.16282713918169928
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00009.npz",
+        "sha256": "1cea5940c2b48d152ecc7fad96977370ee2596d0fa3ee7c8ec82e700610c8ce1",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.354,
+      "return": 4.203039458952844,
+      "distance_cm": 0.24831862325787665
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00010.npz",
+        "sha256": "9c23540af3354ea43e27abdfea6a19d9c338d7c5ea193b2d41565c55cde1dd70",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.662,
+      "return": 1.5774061479605734,
+      "distance_cm": 0.10862106914146923
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00011.npz",
+        "sha256": "95505796e15c5e038aae01d1e09a6ca88881ccf12631c2352e32ecba807cd541",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.02,
+      "return": 3.025953527074307,
+      "distance_cm": 0.14017629294668277
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00012.npz",
+        "sha256": "9550366b0bd71fa91de428b9609daeef7078638ec4e00858a5b6fe4151fa6154",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47600000000000003,
+      "return": 0.75234136544168,
+      "distance_cm": 0.10218269592787602
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00013.npz",
+        "sha256": "2699099ed0fd3721aae37af006002a780455e68d0a50a32a21c490651f615647",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.204,
+      "return": 3.678514488041401,
+      "distance_cm": 0.19185742073008374
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00014.npz",
+        "sha256": "a123689d3ea031c4bf756045348c664b4ac18eade0274820f8ab4960d740a823",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.198,
+      "return": 3.706928885076195,
+      "distance_cm": 0.16711856826343013
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00015.npz",
+        "sha256": "4403d3309642aac19fdbbf2b8fc0d5c1efc2b8d828a52d4f62b5e6cad18e273d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.468,
+      "return": 0.8980867303907871,
+      "distance_cm": 0.06850686744212797
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00016.npz",
+        "sha256": "306746289ce158034509f94b4f195b00fb2e6a8aa59962ffd1cdeaa86b4a9e32",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.21,
+      "return": 3.8702378077432513,
+      "distance_cm": 0.15945385240508528
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00017.npz",
+        "sha256": "ad41ceafdf712bd2dcbb774f6849bd661887db9411403309430bae600dc6d993",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.932,
+      "return": 2.7047373866662383,
+      "distance_cm": 0.13477073713628968
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00018.npz",
+        "sha256": "766b3f23d295da45d796facff610cb91082e810f92438599675197bd0539fd7d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8180000000000001,
+      "return": 2.1496726726181805,
+      "distance_cm": 0.15142111265516078
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00019.npz",
+        "sha256": "83f406b326cd897a218b230872a06db694a66fc7c2df34349706743e0b2d9f18",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.296,
+      "return": 0.18751908047124743,
+      "distance_cm": 0.045516648837034955
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00020.npz",
+        "sha256": "80627eb2573e4f9cb4825193fbbc994a996a2d81a81117728aabf53e0fa3b12c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.274,
+      "return": 0.0399751216173172,
+      "distance_cm": 0.04790075865211796
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00021.npz",
+        "sha256": "9835cf3a316d2f980f0ffec0670fece95d3ff26a86b352ba7e1fdf061284c8ff",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.494,
+      "return": 0.8635471514426172,
+      "distance_cm": 0.09827803886836871
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00022.npz",
+        "sha256": "91a2c26d4a6317622ec3b9b1131be07b4216e25bb96753bccdf1203a2ad78038",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.678,
+      "return": 5.927158194594085,
+      "distance_cm": 0.1559539771421218
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00023.npz",
+        "sha256": "9e48448fa2a79ea1230a8ec330bc879ecea68f3e23a4311bb1cf736e3c49b7ab",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.464,
+      "return": 0.6190618681721389,
+      "distance_cm": 0.13036007515738515
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00024.npz",
+        "sha256": "e15c430b4123f068cd27ad4cd0273c4f287b074f5849f9b1aa64887877cfd3b3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.874,
+      "return": 2.4175103860907257,
+      "distance_cm": 0.16766745695948385
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00025.npz",
+        "sha256": "df5e0b5d012daef2e081569ce7b7e8e54a552cd3ab7387dab9f2e911382f97ae",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47000000000000003,
+      "return": 0.7592144506052136,
+      "distance_cm": 0.104997061364316
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00026.npz",
+        "sha256": "8f3dfa52e0c30fca8c4163c4170f9689bd396e1eb1c4ee3092ee769886d37e42",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.7690698779188097,
+      "distance_cm": 0.10906663084804227
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00027.npz",
+        "sha256": "1519d128e9773a67d7c3ea357fc5fc7ab6028f34d4627edf55fb54d14ed31081",
+        "frames": 92,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.184,
+      "return": -0.2778855739161372,
+      "distance_cm": 0.019938706762209914
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00028.npz",
+        "sha256": "db8e4520ce4ae0783b82aaf531c268b93bffe635ebdfeb7eceedcadb151c49cf",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.708,
+      "return": 1.7601828551851213,
+      "distance_cm": 0.16074144854439645
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00029.npz",
+        "sha256": "2dc3072a922ba0d5e5d2a983180eb7bb58a1b6a473919033bf51fea93640c1b2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.278,
+      "return": 0.19284309120848775,
+      "distance_cm": 0.04386625191903863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00030.npz",
+        "sha256": "c0eeb8f73a8cd791efff9409d38c4868e01d6e549608c47b688379d41f428c63",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47000000000000003,
+      "return": 0.7841202383860946,
+      "distance_cm": 0.09132814446842406
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00031.npz",
+        "sha256": "5ae66c3dcd31041964a143a3fa7d79e2d6c4e9d74d3490d8bf27085cc21d959b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.296,
+      "return": 0.14106467552483082,
+      "distance_cm": 0.06379812565659766
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00032.npz",
+        "sha256": "07dfb4a239065e787da99fe4053d83bd84a8ce4c6109776cb8518a9df81ba640",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28800000000000003,
+      "return": 0.11890371982008219,
+      "distance_cm": 0.048453779826353474
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00033.npz",
+        "sha256": "f67481f4577c1512a977966685dfbba89521f5c00111a0aae82531386a438eaa",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47200000000000003,
+      "return": 0.8152120457962155,
+      "distance_cm": 0.08526478374954395
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00034.npz",
+        "sha256": "c3f73e4b1227f1630f639315c273081c2761356ee840373954c1a1d39a70277e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.622,
+      "return": 1.3910502986982465,
+      "distance_cm": 0.1146612709167912
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00035.npz",
+        "sha256": "7b9edb32d94307ff87e5cd5e166bfd7a686f62e8c0193e178da08a040b507750",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.45,
+      "return": 0.7207165877334774,
+      "distance_cm": 0.08992286965001718
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00036.npz",
+        "sha256": "18984981aa901d6907e8db045d99bf9b50920c39e08c87e61b0023d1ef34d008",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.462,
+      "return": 0.7481656027957797,
+      "distance_cm": 0.09303194496332365
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00037.npz",
+        "sha256": "f1863dd85c1ae2b9ea23d0d60533461a856bebc8553e7b200fd01f944bab5ec7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.622,
+      "return": 1.2495640399865806,
+      "distance_cm": 0.14365247557170666
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00038.npz",
+        "sha256": "2ca1a5bb49d6deb0fae45e49dcb30888b503814176f8ab27aa6dda4a2b09a521",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.464,
+      "return": 0.6393628702498972,
+      "distance_cm": 0.12600525891286835
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00039.npz",
+        "sha256": "fde8c07b6304ab03fe5f9dece839601ecdcb1cdf4ebee5ac35f8440e412e3ba6",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.454,
+      "return": 0.6790968575514853,
+      "distance_cm": 0.0921281135742144
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00040.npz",
+        "sha256": "7879d02d0d013a1026b5b9fc18e093c1c6df60fb48b30756b846a21f2d8d7570",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8220000000000001,
+      "return": 2.0661005466245115,
+      "distance_cm": 0.16560558567331327
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00041.npz",
+        "sha256": "5349bf8c093d32a1e99bc9a9969f6f44a21197a57c1ee6384a978051db2d7897",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.446,
+      "return": 0.7031357726082206,
+      "distance_cm": 0.08851065093622358
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00042.npz",
+        "sha256": "4a902dd05c4c03da03e972782687c74308891e5dcf0c9a0a739f8206a91a9a8b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.524,
+      "return": 1.1722891181707382,
+      "distance_cm": 0.08156908476738944
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00043.npz",
+        "sha256": "58dd658ca62702294b552f5db138fab43cd9be777a45debdd8759e25b0a084dd",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.52,
+      "return": 1.0500445663928986,
+      "distance_cm": 0.10879108772042176
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00044.npz",
+        "sha256": "050a93dce1637c224526b003355be362a0ac9d85086b5759b2500434897c164f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.46,
+      "return": 0.7537190206348896,
+      "distance_cm": 0.09050674827000933
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00045.npz",
+        "sha256": "7fc3c2fc7b9df4dd7861671ea544fb21edba34242417e8bb0204325460c1980b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.456,
+      "return": 0.6531147849746048,
+      "distance_cm": 0.11843606271140641
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00046.npz",
+        "sha256": "db82303845b6c27380228eee5e697acc01a74e5997b439cbe95de6059ad212dc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.7861294588074088,
+      "distance_cm": 0.08215988178767254
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00047.npz",
+        "sha256": "023f0dda19c720fb4573dd835bad6156508462d95e8e164118e13aa110fa9064",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28200000000000003,
+      "return": 0.06348773930221796,
+      "distance_cm": 0.055786816522942206
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00048.npz",
+        "sha256": "6d9f7dc1c197eacabeb21bc62273d3e9aa574500e18430b5e58929c5c295fb53",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.644,
+      "return": 1.3877612296491861,
+      "distance_cm": 0.13439244110892345
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00049.npz",
+        "sha256": "95419197b89398d3f1f5783a753d2ddad0646631b8c207efc6e3945162498f90",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.306,
+      "return": 0.2020005718804896,
+      "distance_cm": 0.054930522949527834
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00050.npz",
+        "sha256": "aea37b2215a1dc52dd9ee7372488a2074bdff098ee5196a546489bbe34a95fce",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.444,
+      "return": 0.6754680485464633,
+      "distance_cm": 0.08492778476497498
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00051.npz",
+        "sha256": "e1b3ae4ccb2974dde92b2036608b37877255f59e2dbfafb20a244aad8b3024e3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.462,
+      "return": 0.7929186779074371,
+      "distance_cm": 0.07270272228468215
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00052.npz",
+        "sha256": "fd39bef13de3d09335d75f8e215306c019e709bf5838a2768d11dab75776b8af",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.46,
+      "return": 0.744546317961067,
+      "distance_cm": 0.09074179287017209
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00053.npz",
+        "sha256": "2cc2cb523961dafc86fd5c96a8ff486525e2e8bbb4dae1a2ac599888483c183a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.3,
+      "return": 0.17786999326199293,
+      "distance_cm": 0.05731182387164318
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00054.npz",
+        "sha256": "d9af6c6ea1985eca57a1d3b0298154c7790d6e48a3df7be59b89b3c2f3c22451",
+        "frames": 122,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.244,
+      "return": 0.03625964745879173,
+      "distance_cm": 0.027991823983318623
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00055.npz",
+        "sha256": "dbcb592580d3e958475625eb73291fd1357548c51106c7aa04deb1f9345e6768",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47400000000000003,
+      "return": 0.7591708865948021,
+      "distance_cm": 0.0970035936364415
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00056.npz",
+        "sha256": "52412e1fa66e58f59259fea60c118d0fae66addeacef90f46a5d7fc8188eeff1",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.528,
+      "return": 1.151917810086161,
+      "distance_cm": 0.08806010599200063
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00057.npz",
+        "sha256": "09436273a907cb4f5f3fc1ea259db4fafad2830be017637a59857f654c4c1823",
+        "frames": 91,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.182,
+      "return": -0.31503996765241027,
+      "distance_cm": 0.013803897741921079
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00058.npz",
+        "sha256": "7b38ec1561066072f43aaf87edb650ab97f50fbfc84350fec7a1bed67bb419a8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.45,
+      "return": 0.6658508307300508,
+      "distance_cm": 0.09399812694649426
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00059.npz",
+        "sha256": "c34d33f584fa7f5ed19b30f7700059c248d8a88ec724f4bf5db51b8f1c0dae81",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.264,
+      "return": 0.07801413582637906,
+      "distance_cm": 0.0374322623221423
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00060.npz",
+        "sha256": "79d4f680f276905b4b52ea1a7f711cd3bb6e8423eefc2cb3b388574e465458c8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.512,
+      "return": 1.1291912999004126,
+      "distance_cm": 0.07254316401346787
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00061.npz",
+        "sha256": "dd7bb37fd48da08d868c884b73d6e020ce1ca96ba9e7b0ee59f1017a4efa9ed8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.338,
+      "return": 0.5227854452095926,
+      "distance_cm": 0.04431290655031224
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00062.npz",
+        "sha256": "1b8a405b5376c8e665fbe012396e7d6d13410f09b63701cb95584071ad6bf6dc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.8076381962746382,
+      "distance_cm": 0.06707857255622175
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00063.npz",
+        "sha256": "f2aa2d71fdc28344552bc3ddcceabaa51a812ec487cab7de21817d495cca16a8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.638,
+      "return": 1.5133006912656128,
+      "distance_cm": 0.10258555166169715
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00064.npz",
+        "sha256": "b9f1df6ca3f76f3552de04701b39f7b2ab32e5878604e594b665b680ccd13cf1",
+        "frames": 82,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.164,
+      "return": -0.3774856235831976,
+      "distance_cm": 0.01804624618704909
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00065.npz",
+        "sha256": "4b03def794e6110997cbf213c4acb860dfac93ac447cc4c00e111b6db023dbcd",
+        "frames": 86,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.17200000000000001,
+      "return": -0.33243333688005805,
+      "distance_cm": 0.01138378403695438
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00066.npz",
+        "sha256": "2051671f3403dbcd1667dced6d53566840c181b9bf27031aea0fa6bb6d99f1b5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28600000000000003,
+      "return": 0.13798596430569887,
+      "distance_cm": 0.04458615896596766
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00067.npz",
+        "sha256": "5eec62302df67519c46d54b4a28cee7805aa3038b0cb6cfc04ae18386a946390",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.27,
+      "return": 0.14091584971174598,
+      "distance_cm": 0.02296902057515266
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00068.npz",
+        "sha256": "03a58e2088ab7385e6b037d0183ef6932f3a88d724cf6a2164225e1797244754",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.628,
+      "return": 1.6541265626437962,
+      "distance_cm": 0.09977045536340579
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00069.npz",
+        "sha256": "dd8f3830b6db84ff645b67c3e1c6452124b2c03b64f71dc4827064d700d288db",
+        "frames": 95,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.19,
+      "return": -0.2429468403570354,
+      "distance_cm": 0.011420024112228718
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00070.npz",
+        "sha256": "8f528a344bb97ded501fdcc8c04a30bdbf3ec043c43410e448f56e3c66465776",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.458,
+      "return": 0.7579034236259758,
+      "distance_cm": 0.07670470803728578
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00071.npz",
+        "sha256": "76825f41b61ffe5620e3f6229e0db4f6bdf47194783423813d141c556cf1b4ad",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.312,
+      "return": 0.3533231671899557,
+      "distance_cm": 0.02882924299137812
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00072.npz",
+        "sha256": "9aa223b6e631c05d9c819c3e3aa56f23ff2c402f39c327e7ce9ad64934964822",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.632,
+      "return": 1.474888623226434,
+      "distance_cm": 0.10493667042195816
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00073.npz",
+        "sha256": "789e872e2348b8b3068465f0b5eb46065c16ff5b54742c9428c216e9e5ac99e4",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.322,
+      "return": 0.3194868955761194,
+      "distance_cm": 0.04082708588517323
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00074.npz",
+        "sha256": "ee7a2724ee7950a3c02175f9d44f3a0e671f33cf9a5dbf448c599e9c344b2c1d",
+        "frames": 93,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.186,
+      "return": -0.2890328816138208,
+      "distance_cm": 0.01266105951319606
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00075.npz",
+        "sha256": "d10832dddc1cb4f9f46d2711560f5e38d45c02393ef20d046bf9a42480d17243",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.31,
+      "return": 0.24739265255630016,
+      "distance_cm": 0.048015521663537036
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00076.npz",
+        "sha256": "3deffc443f6eccdfe92d0a1d606079a7a65c91dcbd85d6fc417efa4d7e1ffc01",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28600000000000003,
+      "return": 0.11985797109082341,
+      "distance_cm": 0.04619889733083898
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00077.npz",
+        "sha256": "47ff96c7b4ab40167ecd610ec22947b20068eb8ab1e7546a06969d79619c2a5c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.522,
+      "return": 1.1185663118958473,
+      "distance_cm": 0.09241886200733497
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00078.npz",
+        "sha256": "309084e4e7186aa85077e23974e9ed0a01a312b5211b786026e446de05ab7427",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.292,
+      "return": 0.15143919503316283,
+      "distance_cm": 0.04041164045406501
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00079.npz",
+        "sha256": "8d6d7b186e1f8c5017225e23d16cebc8562b017c8685c8df669f098dfb516e5a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.626,
+      "return": 1.3216584450565279,
+      "distance_cm": 0.13394432000390885
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00080.npz",
+        "sha256": "64301256652f1c1abef198e00b09d268a4bfa06bb1624c58b16df78eb6774eb5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.458,
+      "return": 0.7845616531558335,
+      "distance_cm": 0.07030963727567432
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00081.npz",
+        "sha256": "e129a2f38adbf4ac154488df45d201bb332db66b3efeef23516c540072e9a093",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.45,
+      "return": 0.7378571485169232,
+      "distance_cm": 0.0720800752237916
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00082.npz",
+        "sha256": "e3058fb9c8c4da00020eef16cc0e49f7d1336641610acaa4bbb4cdb623e4ec98",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.438,
+      "return": 0.7962106168270111,
+      "distance_cm": 0.058008284355677175
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00083.npz",
+        "sha256": "84b0b72e39c0d2754c6ec4dbf41115d19069ea78d512c8f9918bdad14a04a97e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.526,
+      "return": 1.2166596511378884,
+      "distance_cm": 0.07321183082920603
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00084.npz",
+        "sha256": "e870929c3215327145f07bdfe41e48372a3b73da454f0d699d5e8b4112bb7301",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.292,
+      "return": 0.18298972118645906,
+      "distance_cm": 0.038055717485378254
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00085.npz",
+        "sha256": "482b6321506cf4935c5d0aee825f0461245d5e7479fd17096f905fae8e7c271e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.298,
+      "return": 0.19574922695755959,
+      "distance_cm": 0.03695448133346063
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00086.npz",
+        "sha256": "a55f123bfdf9fcf5bd27c15bac76459e56b1ef6de761a2f1390f8c0970492581",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.266,
+      "return": 0.05731443641707301,
+      "distance_cm": 0.03579802772426822
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00087.npz",
+        "sha256": "88754db0a2831561126a3f98a744d73e1d8b9295433acde0c0949691aa987383",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.7574105495586991,
+      "distance_cm": 0.0861719085079671
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00088.npz",
+        "sha256": "23f80551309d1c4c902b749f89ebed522049d49988174a25b4ba79842dd52a8f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.314,
+      "return": 0.36315193166956306,
+      "distance_cm": 0.03624585327852052
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00089.npz",
+        "sha256": "472b2d45ddd0976011f3510ba82a74f36c9ba236ce40347a1ed63f7a1b9b9307",
+        "frames": 90,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.18,
+      "return": -0.2780852452851832,
+      "distance_cm": 0.009853532414395034
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.50295895524323,
+      "distance_cm": 0.01811040838737185
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.536681476980448,
+      "distance_cm": 5.006966136056353
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.47807398159057,
+      "distance_cm": 0.01615944331488798
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.512095484882593,
+      "distance_cm": 5.0263640523809165
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.52149877604097,
+      "distance_cm": 0.016569915399172293
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.51780656632036,
+      "distance_cm": 4.970351783302388
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.51234741136432,
+      "distance_cm": 0.016148609318713304
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.579497722908854,
+      "distance_cm": 4.9746328340730015
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.48115890938789,
+      "distance_cm": 0.016335677273097548
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.537157558836043,
+      "distance_cm": 4.980193442372551
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.51237787120044,
+      "distance_cm": 0.017447219477342596
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.559674073942006,
+      "distance_cm": 4.978508345970364
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.49512434285134,
+      "distance_cm": 0.016867321225181604
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.54314778186381,
+      "distance_cm": 4.9761229566591325
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.556283343583345,
+      "distance_cm": 0.017549095498058744
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.534337698481977,
+      "distance_cm": 4.94854219511169
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.5482039982453,
+      "distance_cm": 0.018176124447551918
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.526434333994985,
+      "distance_cm": 5.030661315223408
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.50900033861399,
+      "distance_cm": 0.017795046930880454
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.543765421025455,
+      "distance_cm": 5.040786810879396
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 38.522970674559474,
+      "distance_cm": 0.016922600456968365
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 31.5179147683084,
+      "distance_cm": 4.9899734377030125
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00112.npz",
+        "sha256": "58e2356477e9ca320de5302cfafa67dc25b46deef4904e0f0e28679941f2093f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.746,
+      "return": 2.0055038393475115,
+      "distance_cm": 0.09590586351862347
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00113.npz",
+        "sha256": "6dd4d5ccc9ee5b9e5c7257f0d764be08745159b424ff09553cf41ce0f939235a",
+        "frames": 92,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.184,
+      "return": -0.2483633952215314,
+      "distance_cm": 0.009671839612406023
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00114.npz",
+        "sha256": "827cbafafdf2b35dcad1f6e714f95910b42e53de5b4afa5b740f9bd9a9605bdf",
+        "frames": 86,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.17200000000000001,
+      "return": -0.33222492411732674,
+      "distance_cm": 0.004934205631485111
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00115.npz",
+        "sha256": "9d37c82c1cf006b3b2d4e6a9fa54b20b12cdf8a0c9f3758d74ecd0b2baa624bb",
+        "frames": 95,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.19,
+      "return": -0.24231016915291548,
+      "distance_cm": 0.0048449755141519975
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00116.npz",
+        "sha256": "5148bd885fd15b50d4662f9354e0b8735c89597ec27e67e092e6051cd6724dad",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.278,
+      "return": 0.112649941816926,
+      "distance_cm": 0.026867090228668768
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00117.npz",
+        "sha256": "c7d452f49ceb032307ed2b08df078c00e91934cd5f4cdd805bb20856d265492e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.258,
+      "return": 0.060571355279535055,
+      "distance_cm": 0.030582339571095237
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00118.npz",
+        "sha256": "46d614ac42f378b10555fdd27daaa7b32d86dd95e57ace71dee9ff2e495d290b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.542,
+      "return": 1.154096535872668,
+      "distance_cm": 0.07679712420096844
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00119.npz",
+        "sha256": "7a9f589d089d3d9341f61c0a26001a21a170cb67beff2c8872a6a2f802ac2872",
+        "frames": 83,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.166,
+      "return": -0.3520834189839661,
+      "distance_cm": 0.009341789093530357
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00120.npz",
+        "sha256": "d0bb91f2d1acee2a21ffb926c11615f294b0855fb2723057690ad63a839bd9bc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.456,
+      "return": 0.7398360623046756,
+      "distance_cm": 0.07946080046857046
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00121.npz",
+        "sha256": "67a7790af00abab0c2767cf346b602b42f95f4c607e76094ef79ac8f16415e93",
+        "frames": 89,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.178,
+      "return": -0.32357461005449295,
+      "distance_cm": 0.006819695383372924
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00122.npz",
+        "sha256": "b8cb58c8bd2ffae759886e039c1a86eece4a62ea1b055f1f11c745adb9745393",
+        "frames": 95,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.19,
+      "return": -0.26593309501186013,
+      "distance_cm": 0.015087747518794006
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00123.npz",
+        "sha256": "24df3cfb4d97ed47c3029ae6d36ffc89536c4fb44bd7a9423b171942545d365a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.274,
+      "return": 0.11712351627647877,
+      "distance_cm": 0.03250331027697274
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00124.npz",
+        "sha256": "95130f670a788a75112ac013098c1544926b45449072e2161dedad6c82f31453",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28600000000000003,
+      "return": 0.1429740386083722,
+      "distance_cm": 0.034157955531098017
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00125.npz",
+        "sha256": "8a3c6ca39f9f7d5b87332cd690951e6e6e47944d541ddc000e031e2bb202c58c",
+        "frames": 65,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.13,
+      "return": -0.5097682303749025,
+      "distance_cm": 0.007038390844308565
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00126.npz",
+        "sha256": "73db72dcd5ce8339cca663068aaf91c48134b78c3dabde28a2aeec09c07b2f56",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.54,
+      "return": 1.2845004266127944,
+      "distance_cm": 0.05906597177694361
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00127.npz",
+        "sha256": "d77b33da340c093453a233d6a07847fd931c7cb3ca3f9e7566501d12065052af",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.294,
+      "return": 0.1517751864157617,
+      "distance_cm": 0.06128094887248804
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00128.npz",
+        "sha256": "992a5877ba895720c2a44324edd0ea253938f8b21f67646b3e0d13f9811cf2bf",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.294,
+      "return": 0.17834728816524148,
+      "distance_cm": 0.0424317139434352
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00129.npz",
+        "sha256": "ff90d03ce5f4acc682c4053026d4259f37f4d82534871cfb011d655d984efcc7",
+        "frames": 98,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.196,
+      "return": -0.25504800537601113,
+      "distance_cm": 0.014029130347189953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00130.npz",
+        "sha256": "9270771f0d21bdf99a4e2e34a545de5a102ea1c2e20b5932d3b84ccba4809dac",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.0,
+      "return": 3.083416980225593,
+      "distance_cm": 0.12319561316858338
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00131.npz",
+        "sha256": "d3d6dfc91ad7850f64ecd09d74af1b82bfdad4a69d617eca2f22630dc8ee6285",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.29,
+      "return": 0.11742754420265555,
+      "distance_cm": 0.05629178983811877
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00132.npz",
+        "sha256": "a04523920e0a324d7bb3f672e36a2065af103d0d868492b27fc4e5bb827d3a21",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.62,
+      "return": 1.3968687974847853,
+      "distance_cm": 0.09160912131775431
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00133.npz",
+        "sha256": "603d3ec1022c93448c3c0da8bf337639dab07a112c6e7a5191e9fce51eb17699",
+        "frames": 101,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.202,
+      "return": -0.2044728621840477,
+      "distance_cm": 0.0068441210675996645
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00134.npz",
+        "sha256": "7f315cebb231bb68a66ebe0119a3d8f33918dfe974290a83d78861e72dd2bf1f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.35000000000000003,
+      "return": 0.45858192816376686,
+      "distance_cm": 0.025649334204832477
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00135.npz",
+        "sha256": "2376ad7a4b1115b95a892abfa722b70db21a9fc9c8518be35e0da87d48883aba",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28400000000000003,
+      "return": 0.14722425770014524,
+      "distance_cm": 0.029936860245992562
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00136.npz",
+        "sha256": "2e7450c993c6e1e87f87e2f9e4cb9b08ac7a145dd7d0f6db12e968f2534770f5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.468,
+      "return": 0.8290839325636625,
+      "distance_cm": 0.06748324594902855
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00137.npz",
+        "sha256": "f7373b413433078750a176b7910376389dde803ec48bc3fe2aa2d2dee9994b5d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28400000000000003,
+      "return": 0.13406314235180616,
+      "distance_cm": 0.026430926835732185
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00138.npz",
+        "sha256": "d6cc007bd465e12b0a56381d7415335f5f01fec79de6cec25b9c6de60bafbbb0",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.456,
+      "return": 0.837091077119112,
+      "distance_cm": 0.04934920261341862
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00139.npz",
+        "sha256": "d9184f1d0c4f9337dcee2b6f44964210757a72ee6b22abd53f236a2873683136",
+        "frames": 85,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.17,
+      "return": -0.34058679081499577,
+      "distance_cm": 0.006271889053526626
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00140.npz",
+        "sha256": "5581526443f6fe7af45aa623fdb4fd635ab7cfd132d744bfc550772d505d2064",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.628,
+      "return": 1.435051986016333,
+      "distance_cm": 0.10187814758337892
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00141.npz",
+        "sha256": "809b78b9a7f7be84ba681da74ff84fdedbad0894a5096ef7cfbfd8b020bddcd9",
+        "frames": 127,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.254,
+      "return": 0.10257389908656478,
+      "distance_cm": 0.02016478643418829
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00142.npz",
+        "sha256": "92910fd2a5e8cf19a5ce77b78800480bee78fc2714707d5e7932d62db39c4922",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.522,
+      "return": 1.166021591052413,
+      "distance_cm": 0.06446799841925524
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00143.npz",
+        "sha256": "0136fb60a234c10708d24bc5fbeea5bad4745b2825ef3aaf68eb79e51a25342e",
+        "frames": 88,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.176,
+      "return": -0.32294594775885344,
+      "distance_cm": 0.00992983156634098
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00144.npz",
+        "sha256": "51dceef4993254d561ed0d2668f51645032c93a5e01ec6eccbb51c206eb384e5",
+        "frames": 106,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.212,
+      "return": -0.1820009807124734,
+      "distance_cm": 0.011848189584310198
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00145.npz",
+        "sha256": "082d5f090caae1fff0c094f24381953f14380be5a7f468e64909a97ec4bdfe88",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.44,
+      "return": 0.7448219042271376,
+      "distance_cm": 0.06574835162744713
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00146.npz",
+        "sha256": "8af5a78f417602b88f618be5c6c03fcb604e705a38bd192b5ef4eacc9275a305",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.338,
+      "return": 0.28310693241655827,
+      "distance_cm": 0.04660741302920899
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00147.npz",
+        "sha256": "cd1dc1211640fc4fc3a0f53b9810e1c62fea9327ff8f1f375adcd751b15d6e5e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.308,
+      "return": 0.26251408737152815,
+      "distance_cm": 0.014396755608508473
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00148.npz",
+        "sha256": "99a2940b9789b76195d7557b8f2e58db276ba2cfb8082be5d7a7159e14c4771a",
+        "frames": 83,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.166,
+      "return": -0.37065178295597434,
+      "distance_cm": 0.010588884123424305
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00149.npz",
+        "sha256": "40cd8a0f5c19d2be3f80ecdda84f5e5a494564501d5b06fc75b55d49fd9b9129",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.318,
+      "return": 0.27705996856093407,
+      "distance_cm": 0.014860022517722978
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00150.npz",
+        "sha256": "f266f456b7c31d3a8271f5b49d6b3ec08eaabe33f593c741aa2e39a0063cda81",
+        "frames": 88,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.176,
+      "return": -0.314039149787277,
+      "distance_cm": 0.00825079018734427
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00151.npz",
+        "sha256": "5bd16a662d3c7951a12737d6beff18bf69a6c4457aaf9f4082e281eddd345a8f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.452,
+      "return": 0.8134708697907627,
+      "distance_cm": 0.04989445517584286
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00152.npz",
+        "sha256": "04a4e4e8a0b27ff8c86c74a44e9cb00dc9b09f8186b08b86a5c6fc2a5386dab1",
+        "frames": 103,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20600000000000002,
+      "return": -0.17424875544384122,
+      "distance_cm": 0.013302751671428598
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00153.npz",
+        "sha256": "5d7265087733308f3a6bacee4eaefdfe67901102996b41982f5c4f07a3e71533",
+        "frames": 89,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.178,
+      "return": -0.31572439707815647,
+      "distance_cm": 0.010665858545178136
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00154.npz",
+        "sha256": "ab9b54255cc1fa9a98097512bc539c3a863a1afe9a7b951e1b6f254d7ea10f36",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.3,
+      "return": 0.2130267582833767,
+      "distance_cm": 0.04354280910085676
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00155.npz",
+        "sha256": "0d074de04ca7db786938707700c8e75fdc0b43f7d64e57552ef5aba803527c6e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28,
+      "return": 0.14395890990272164,
+      "distance_cm": 0.02334795269787793
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00156.npz",
+        "sha256": "59f0503acdc3713d7ac7b23aa3c62288b115a6dfe9017639ba05595c37f650b2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.448,
+      "return": 0.7899605603888631,
+      "distance_cm": 0.06227635144889752
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00157.npz",
+        "sha256": "aa2789c8774df692b6d5caf928d62c1d7d068a66556b75f38485c1d483bbc430",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28800000000000003,
+      "return": 0.2724327938631177,
+      "distance_cm": 0.020443566366893793
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00158.npz",
+        "sha256": "32e70e5c12ccc6a324a9cc28ce306fb2005e024fc9383dba6a4c5141d771d093",
+        "frames": 114,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.228,
+      "return": -0.0646748561412096,
+      "distance_cm": 0.007281348754399047
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00159.npz",
+        "sha256": "86721b1cb5d6a1b69c18dbf6395d4cae310940a34df502011b863aa17cbf5192",
+        "frames": 127,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.254,
+      "return": 0.11762062134221196,
+      "distance_cm": 0.01562302720869948
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00160.npz",
+        "sha256": "b68b5856214905f562d89a6333c48dbe2f0660cedabad6ba4edba248bdfd6acc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.26,
+      "return": 0.021837974898517132,
+      "distance_cm": 0.03082832874102111
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00161.npz",
+        "sha256": "9a06ab2530233edc40ae679fecee488504ec15009336cc178c9df3f78652919c",
+        "frames": 78,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.156,
+      "return": -0.3901739800348878,
+      "distance_cm": 0.009531329453539725
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00162.npz",
+        "sha256": "b6819a22132d2a9c65fd5f4ed469b121933c2ef784062628d4802cdcd175dee8",
+        "frames": 103,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20600000000000002,
+      "return": -0.16779556032270193,
+      "distance_cm": 0.008013359460255736
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00163.npz",
+        "sha256": "0873e194d9feeca64fb7a86b4506f5d3445359eac019050e264988e61a9a952b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.306,
+      "return": 0.209499791264534,
+      "distance_cm": 0.03615693451014004
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00164.npz",
+        "sha256": "0193c298e52109d36dbe597a6dd66f237a68250da77f4a910ef741d62cb0a091",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.456,
+      "return": 0.7671870728954673,
+      "distance_cm": 0.07754989469241143
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00165.npz",
+        "sha256": "24b90c04a691b40492edad52fd8a1cc8e68c302ebd0e18c8569cf32ab9c375b7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.256,
+      "return": 0.09964187256991863,
+      "distance_cm": 0.025896158999237168
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00166.npz",
+        "sha256": "78a40ae928799dd9b2516b14804026ab94b72572c807d63d09104becaf9fce76",
+        "frames": 71,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.14200000000000002,
+      "return": -0.4654423254542053,
+      "distance_cm": 0.008403549746323685
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00167.npz",
+        "sha256": "eac3098418f3ff942b75eb279c35c9c3094101bd4b5474be120861b7798349cc",
+        "frames": 96,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.192,
+      "return": -0.2165005118586123,
+      "distance_cm": 0.00702593357099073
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00168.npz",
+        "sha256": "6d98cc50a766e660a9d010d5e2ff7c50dfe3d27247ff702f400a18c963a40200",
+        "frames": 113,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.226,
+      "return": -0.06493893964216113,
+      "distance_cm": 0.010047040291566642
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00169.npz",
+        "sha256": "3c9ccd431cf23e2530ffbb4ceecf66f29624953f2552041be865fb6051741c50",
+        "frames": 109,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.218,
+      "return": -0.1230677142739296,
+      "distance_cm": 0.007238747999691024
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00170.npz",
+        "sha256": "19ed3884dc13ab14f0e1166dd8eb5fe370b64b82ac5c4fc42af57681003be4f5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.258,
+      "return": 0.09456033864989877,
+      "distance_cm": 0.018506017442264353
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00171.npz",
+        "sha256": "23fead06c45f6f87b398cd17c4cedcb211c22e83e91959e4e2bcc0f969037c1f",
+        "frames": 81,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.162,
+      "return": -0.389411429874599,
+      "distance_cm": 0.009754388376024098
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00172.npz",
+        "sha256": "2945910e9f23f6453c54bdefe7a48ef2fcfe3e3b943791fceeed18d522d99366",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.258,
+      "return": 0.11205957550555468,
+      "distance_cm": 0.00769703533765972
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00173.npz",
+        "sha256": "3431341626e2712d694b80c7b71fb37cee9489dfc14b3a03b8f87418ccbd881e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.35000000000000003,
+      "return": 0.3289209809154272,
+      "distance_cm": 0.04208009389848532
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00174.npz",
+        "sha256": "01ddc43c7c6f9bfe1e37199a98994e1aac6b886d61f5e4846a24ddd93e94fca6",
+        "frames": 95,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.19,
+      "return": -0.25026701064780354,
+      "distance_cm": 0.010958150749230778
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00175.npz",
+        "sha256": "a6c483bf3ee016d997fe8b27a5120bc4f2c297e7cc57e0bda616187623b4e1c4",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.592,
+      "return": 1.5696898833848536,
+      "distance_cm": 0.06388874781532645
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00176.npz",
+        "sha256": "5c8935cc86d17060acbd88fb05662f2301fbbcc2785b597b9370a04901c169c7",
+        "frames": 109,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.218,
+      "return": -0.14245607471093535,
+      "distance_cm": 0.0035515646309720347
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00177.npz",
+        "sha256": "9b38c9c9acfbbf180e1b7cb9bdb14ddefd3c8b3f46ad3f84087d5ba0280ebafe",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.352,
+      "return": 0.4572123931720853,
+      "distance_cm": 0.038896406602592415
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00178.npz",
+        "sha256": "43bd5782443120a0e4e099408d7a39c8919044a463700f0eb94dd226a75cf9e1",
+        "frames": 116,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.232,
+      "return": -0.033055977430194616,
+      "distance_cm": 0.015519887213127134
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00179.npz",
+        "sha256": "dcd70b9af1784038c1108de91218165d4c58e591ae9270afc08b8d052280f9f3",
+        "frames": 65,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.13,
+      "return": -0.5091705550439656,
+      "distance_cm": 0.00880958206111331
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00180.npz",
+        "sha256": "982923148333f6a3a60e712008ac6f1768ae1cf39c11f82f5c24f122f79711c6",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.264,
+      "return": 0.1432080757804215,
+      "distance_cm": 0.015643226718987314
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00181.npz",
+        "sha256": "e1f0891c72e63bc43365ad404b53832edb5f2a45c0d910c87b67dad020e88e70",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.448,
+      "return": 0.7578356126323342,
+      "distance_cm": 0.06652668965944784
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00182.npz",
+        "sha256": "f2b1b98becf1e9d1bf93a2f989a288b97f19b2e05290f163d377a1b476aa591a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.34,
+      "return": 0.49521425971761346,
+      "distance_cm": 0.04086344012735595
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00183.npz",
+        "sha256": "08916b027ddf704596cf16025701b4c9cbba76fef7060acecb0f906a8738f48d",
+        "frames": 127,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.254,
+      "return": 0.08601140463724732,
+      "distance_cm": 0.027390768721639622
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00184.npz",
+        "sha256": "4fd5e81b6ad3644708e605f2ec4cf1ecbd93517d2e2ed730bc4b3ded1903aae0",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.49,
+      "return": 1.0252878055907786,
+      "distance_cm": 0.07674689470821774
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00185.npz",
+        "sha256": "639ac7a0173e48aad04b493269e7dbf23f24d373498170163141c4e24ccd3c48",
+        "frames": 117,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.234,
+      "return": -0.030223446898162365,
+      "distance_cm": 0.0067718032760795575
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00186.npz",
+        "sha256": "6e19859f940b931336bbe30a890e33bfa4fd00109a24580e5dfe287c41afe808",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.27,
+      "return": 0.13788602640852332,
+      "distance_cm": 0.01883090544786347
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00187.npz",
+        "sha256": "6aebf859dbb73ef166c44160d5d3f99c7c849e5c48b50573e155fa2e6649ebf3",
+        "frames": 97,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.194,
+      "return": -0.22951199440285563,
+      "distance_cm": 0.016662524950601266
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00188.npz",
+        "sha256": "6580f2dfe3c39ab73067cca0e0e89bc779407270c83a32a8ca56797d3a193bdc",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.526,
+      "return": 1.0871555567719042,
+      "distance_cm": 0.0916411993129498
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00189.npz",
+        "sha256": "916fb0880ad9687f3afbaa72f98a54ce9eff813bb504f5c450e4507a00a154aa",
+        "frames": 91,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.182,
+      "return": -0.30165784945711493,
+      "distance_cm": 0.007927114018523529
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00190.npz",
+        "sha256": "5c342ad92b6b220255057866d2d9c0970aefa7101b3aeba745a5c8a07f081a7c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.278,
+      "return": 0.0892777070403099,
+      "distance_cm": 0.037362519921404075
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00191.npz",
+        "sha256": "3e74c9365ad76c2965c16c78915d3c2aba9a0134a331495c38b1ce9d7a21fc82",
+        "frames": 125,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.25,
+      "return": 0.039121635258197784,
+      "distance_cm": 0.013344891487921869
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00192.npz",
+        "sha256": "888f7079191c48538d8fd794114ac475a0ef2367c230ffd42ab95ba452d862ba",
+        "frames": 86,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.17200000000000001,
+      "return": -0.3126737605780363,
+      "distance_cm": 0.010935416870162556
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00193.npz",
+        "sha256": "78af9fe654430ce9403a511914b076708e170494aee7e4dc675de4ed224c2b9c",
+        "frames": 113,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.226,
+      "return": -0.07456492586061358,
+      "distance_cm": 0.013616847146300685
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00194.npz",
+        "sha256": "d7e898e868824431725d87314ac20cbebcf0399e894a0ba46184f1634bc854fd",
+        "frames": 122,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.244,
+      "return": 0.019441216252744198,
+      "distance_cm": 0.006463351450972733
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00195.npz",
+        "sha256": "481a00389c4ee4fd7b264124a5aa8115179eaae22d92c5d37f9e5f49c5ce9766",
+        "frames": 103,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20600000000000002,
+      "return": -0.1882476364262402,
+      "distance_cm": 0.016506343232739598
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00196.npz",
+        "sha256": "c600e69d5eefb449082e788de1ef455652fcbf6cd603cdd87defda33c37b3c65",
+        "frames": 99,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.198,
+      "return": -0.21827419567853212,
+      "distance_cm": 0.013491834638866116
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00197.npz",
+        "sha256": "a9e2d36555af61f32d5571feefef030958a43b590daa2eee0f66fd7824f65ade",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28400000000000003,
+      "return": 0.13382347347214818,
+      "distance_cm": 0.03358523274439769
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00198.npz",
+        "sha256": "17fa6badd920abc7a36ff52b961d95b4af678f5b1c30359c3eb0d9975530b161",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28,
+      "return": 0.11827957117930055,
+      "distance_cm": 0.028542087171171262
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00199.npz",
+        "sha256": "c0f935c7a459f01602eba52db2781268c503a0ca19ae5e9665420b2f22dd34bd",
+        "frames": 89,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.178,
+      "return": -0.30952527886256576,
+      "distance_cm": 0.013222164843740789
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00200.npz",
+        "sha256": "01b36a36964705226183bfec3e2b30f2859dbc09f63259bc6d92a17e4bda4e44",
+        "frames": 91,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.182,
+      "return": -0.2858216855674982,
+      "distance_cm": 0.011316033051399233
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00201.npz",
+        "sha256": "90b22ed7685932b430d8cde35b1718ba9cdf4cbb439a83bd26b60ba9cfb85357",
+        "frames": 103,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20600000000000002,
+      "return": -0.17930646240711212,
+      "distance_cm": 0.012029505277198208
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00202.npz",
+        "sha256": "8d79949a6ee71ac3facd4edad3979a9ca61b38262e91794d2dd9e2aeca420103",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.256,
+      "return": 0.05483476910740137,
+      "distance_cm": 0.02547625320079353
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00203.npz",
+        "sha256": "7dca5728bf81439b45d4e5b9480eaae29a0a0c7c3153a919882472f6e0b52112",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.36,
+      "return": 0.48038651840761304,
+      "distance_cm": 0.04479537725729005
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00204.npz",
+        "sha256": "de49b8d1a98cbb4a58990a4af29e49e86fc64deddee41b462e68fa397f28aaa9",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.256,
+      "return": 0.11711994046345353,
+      "distance_cm": 0.02283971268065076
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00205.npz",
+        "sha256": "106e7c180ca1fda2c4befc03e2e4ac076e41634f2f27c5ede62ad6d8f8ef42f3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.296,
+      "return": 0.21142656542360783,
+      "distance_cm": 0.029931560642257295
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00206.npz",
+        "sha256": "e100d8ac69c28309fe81dc31d01f0c411aae7a811859142abbdc14dc33f143c3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.638,
+      "return": 1.5360489701852202,
+      "distance_cm": 0.0681630669857904
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00207.npz",
+        "sha256": "91be816e2bbbdee369b318fe2d97e66000adbc6af5b376fe97ee374c02971b41",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.452,
+      "return": 0.7660839459858835,
+      "distance_cm": 0.06334762455759045
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00208.npz",
+        "sha256": "91901f0fe04bc9cad2763b0f9299196bc35ec0ab3da4ccde404544d610747070",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.456,
+      "return": 0.7650898420251906,
+      "distance_cm": 0.07505676014017058
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00209.npz",
+        "sha256": "6f812bd6b3579360f77e8d0483ac34220458999c0b5d2a7176eb5965bc91369f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.34,
+      "return": 0.34862369345501065,
+      "distance_cm": 0.052629077048998225
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00210.npz",
+        "sha256": "8c8e6cac9c9167346784f6abfbe2f6d274a3a33f4f85731d6a224df8904828c7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.322,
+      "return": 0.24805844528600574,
+      "distance_cm": 0.03886904180016067
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00211.npz",
+        "sha256": "bf32ad7b8ff67b26cc90c0c16105c3fd6f9932ba6053ddeb3aae8974ee5b5c94",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.264,
+      "return": 0.11364352144300938,
+      "distance_cm": 0.016729523848160448
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00212.npz",
+        "sha256": "68933b8bfeca49694729026416ad1d67fc0d822c5881f3787926074e22351654",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.454,
+      "return": 0.7771961307153106,
+      "distance_cm": 0.07406386229868124
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00213.npz",
+        "sha256": "4fe2a7e5ff7fe2b7d449f3a5ebdbc02e5976f8eb90ee0794553a3854e73ebf2a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.308,
+      "return": 0.35975517239421606,
+      "distance_cm": 0.021373518922472613
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00214.npz",
+        "sha256": "a52ffe64af971faa044f4d407898b39e95028d75cf256fbc148782e81d70f007",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.26,
+      "return": 0.041791757103055716,
+      "distance_cm": 0.02741018318983808
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00215.npz",
+        "sha256": "67694e9fc46145927b7266e2a246fa8acec91a6f154046f5c477bb162b224f83",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47200000000000003,
+      "return": 0.8247241284698248,
+      "distance_cm": 0.08142679282164293
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00216.npz",
+        "sha256": "d8e26d8b5467a55f5150eb36a175ed19dcb19b993ad572162d8e8fdf186da15e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.28600000000000003,
+      "return": 0.25890537165105343,
+      "distance_cm": 0.029308227200492434
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00217.npz",
+        "sha256": "249d2ae22e5d0cc88ebea56980d01c96f0b5507e9e771734fcc9694be8b7b36b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.264,
+      "return": 0.09885160159319639,
+      "distance_cm": 0.03278680188164835
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00218.npz",
+        "sha256": "cf079111cec5ab992aa2d5030e27b5b90586155bcfd8e5dcc3e7c801162fee48",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.508,
+      "return": 1.0807468392886221,
+      "distance_cm": 0.08100039491880161
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00219.npz",
+        "sha256": "80c466b33d377171a38ca1ba036876ef9ddc293b13e4d6fc609eaf3e30600543",
+        "frames": 83,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.166,
+      "return": -0.3648463375866413,
+      "distance_cm": 0.009616856233807466
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00220.npz",
+        "sha256": "0dc8d1155ccb6f4cf6dd4757ee63c7b72c08790c95586e1391a99463a24a51b2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.266,
+      "return": 0.07434542383998632,
+      "distance_cm": 0.03134891860492086
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00221.npz",
+        "sha256": "6780860d323e2e1bcfad6df8476727f15ac1463209f0209f494e34e14caf7de1",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.258,
+      "return": 0.06587261101230979,
+      "distance_cm": 0.024920577276242695
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00222.npz",
+        "sha256": "2858c550ba4b8b6407a54a9fc84e81aa314c139bb7263c6231fe5d6e4f7a9000",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.522,
+      "return": 1.0639523803256452,
+      "distance_cm": 0.10518257164821179
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00223.npz",
+        "sha256": "bc579788cca00ec0433b8321be805ed2f033eff3ac525dfdf1a80da210eee259",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.606,
+      "return": 1.5334082660265267,
+      "distance_cm": 0.08363966503510363
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00224.npz",
+        "sha256": "c4573f3520f51d0fc136f85a264f9dfb79e518f928a932331ed63ba6944c9665",
+        "frames": 123,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.246,
+      "return": 0.05214936565607786,
+      "distance_cm": 0.02048402069160607
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00225.npz",
+        "sha256": "f12bc337d2c1cb6278b89893eea6d2750290ff3784e192de8f29341f849d1ea5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.256,
+      "return": 0.04811955522745848,
+      "distance_cm": 0.029188662809188616
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00226.npz",
+        "sha256": "aa0a9f1aa9634f27f056cac8e78bd23612c021af62a1d180dd09e1f2a10a6eed",
+        "frames": 82,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.164,
+      "return": -0.3717609974555671,
+      "distance_cm": 0.015376081158684003
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00227.npz",
+        "sha256": "3fffc82167e99d5a40b54526cf4e80e5356d08afb03d568916ab35bf2a8ed602",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.626,
+      "return": 1.4250163258984685,
+      "distance_cm": 0.10959740245955535
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00228.npz",
+        "sha256": "34932f7ff95f7a5592c4e8011cb0295efb278a4770f45766c94aeab7fd82ce70",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.526,
+      "return": 1.1241370718926191,
+      "distance_cm": 0.08538275259315413
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00229.npz",
+        "sha256": "0c133ca20c454d603ff95628892416354e7560d66019545e3065c7484531cdec",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.638,
+      "return": 1.5335566410794854,
+      "distance_cm": 0.07753315993487937
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00230.npz",
+        "sha256": "3a42011c50eae1be96bbe5de4444f4bbe7e33fa8696ce94fd6ca8a5cdc13db8d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.47200000000000003,
+      "return": 0.8255312726832926,
+      "distance_cm": 0.07745271734908982
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00231.npz",
+        "sha256": "6e46c89508c4fb0e3ad2b5b88f63e5ff6284739768becbee204dae1d73747045",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.796,
+      "return": 2.079928698949516,
+      "distance_cm": 0.119532096918066
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00232.npz",
+        "sha256": "8a944ba34489a917e2f334ba2a3b0ee2c6345dbf445cc4ac5ec28798bfe56537",
+        "frames": 103,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20600000000000002,
+      "return": -0.21554244542494416,
+      "distance_cm": 0.0147006916245085
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00233.npz",
+        "sha256": "ac3084af618dd6a5584f1738f28be0aafce9c70b2295c50818a7b83e36f778cf",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.262,
+      "return": 0.08676248416304588,
+      "distance_cm": 0.03370801654455064
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00234.npz",
+        "sha256": "846e5c00d37f11f002a1289edf7d5966d4b693ff774203125bf129c1e5dda50c",
+        "frames": 89,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.178,
+      "return": -0.29607619252055883,
+      "distance_cm": 0.013346685950778177
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00235.npz",
+        "sha256": "8d8eb5a4a5e8a443b78b63a678dac57a881336a592b9a3598703fbba80c0ee84",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.36,
+      "return": 0.49081331165507436,
+      "distance_cm": 0.027793266220015593
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00236.npz",
+        "sha256": "e4772e88a21b95c5352eb3cf29a85deed5a049903031c9cd1f687e8d0a584e43",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.6542241191491485,
+      "distance_cm": 0.12166836075401402
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00237.npz",
+        "sha256": "cac966e8c24c18562fa50de78463f457a8f2846889914f5fb59bffb5e63ddfe0",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.454,
+      "return": 0.671954776160419,
+      "distance_cm": 0.09069269149884972
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00238.npz",
+        "sha256": "921ae97774fdc7846022348bb57bd49bcde27cbe0d791a96e8473adeac4857cc",
+        "frames": 90,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.18,
+      "return": -0.3144246004521847,
+      "distance_cm": 0.014135191449899559
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00239.npz",
+        "sha256": "140778008c7370a0a06e2f102349324024d21333895fe19caea3340f658d44f5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.444,
+      "return": 0.7075988971628249,
+      "distance_cm": 0.07836331366999222
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00240.npz",
+        "sha256": "ee3538ba3760b231f41acd9aa4b68920afa6e785c598027fae4db252fabe1904",
+        "frames": 89,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.178,
+      "return": -0.3262495077215135,
+      "distance_cm": 0.011928917844723722
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00241.npz",
+        "sha256": "0ae1d89f2bb4f6ce26603fc15c19375b92d4095b1c1e32a0f347926ec13a0773",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.704,
+      "return": 1.8789223250932992,
+      "distance_cm": 0.10209135817010778
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00242.npz",
+        "sha256": "ddda3c7d1c2346aeb1b3ff059c9dcdb89aa48e552226140d2d00e79c858fcfcf",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.312,
+      "return": 0.2786942790262401,
+      "distance_cm": 0.039429048433626095
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00243.npz",
+        "sha256": "b1143fda339aba9a060596adc8e8119d22cdfc8174ad274501c8aafc4c56dea6",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.352,
+      "return": 0.3970064981840551,
+      "distance_cm": 0.05759111877823671
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00244.npz",
+        "sha256": "0dceb7c76d7c1050ba229c899241346cc58b8f5d88c489d89531f8b2d1e73182",
+        "frames": 98,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.196,
+      "return": -0.23138373717665672,
+      "distance_cm": 0.02371313174391592
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00245.npz",
+        "sha256": "68b7f0cfc18927f6f21ab2e1d4ffdd39e34b0fa313ee57be7094b3aad733cc96",
+        "frames": 104,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.20800000000000002,
+      "return": -0.18101121112704277,
+      "distance_cm": 0.023742480793208405
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00246.npz",
+        "sha256": "ae961362947e686508d1e8c40057840cbb988beafc163605c06e48af58136851",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.464,
+      "return": 0.7507815165445209,
+      "distance_cm": 0.08107925370586065
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00247.npz",
+        "sha256": "606697a298a0b97450bd95304160a3a17f1bf4fd91e0cbed19f7ef678bf6debf",
+        "frames": 123,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.246,
+      "return": 0.01831504935398698,
+      "distance_cm": 0.02512176082331497
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00248.npz",
+        "sha256": "5f883d557e4cffa9060b0af5df7a363754a009ce707f938272cf1701c375a248",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.464,
+      "return": 0.7328936900012195,
+      "distance_cm": 0.09024603581523745
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00249.npz",
+        "sha256": "3a7c24acd73ce7985e19f101e8433f6a4a16e98bda3c394ce7a3077d4b64717c",
+        "frames": 87,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.17400000000000002,
+      "return": -0.3517280709929764,
+      "distance_cm": 0.021253812338561873
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00250.npz",
+        "sha256": "d9cd65065d12596f36a13ebaf67ec81557ee817b5f15e144822cac74163e6ac2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.264,
+      "return": 0.1498584900982678,
+      "distance_cm": 0.02749113040178659
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00251.npz",
+        "sha256": "6e9c5fe51510e0ae04fcdbbf5b6ba94cca43b2f661d3a198e7d7985c000b4cf9",
+        "frames": 91,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.182,
+      "return": -0.26456979662179947,
+      "distance_cm": 0.012116273104115786
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00252.npz",
+        "sha256": "dc578e6d940f5b8025e94fa2062909c0c6224d2777abcad81046255a44932ab7",
+        "frames": 90,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.18,
+      "return": -0.3268466778099537,
+      "distance_cm": 0.015020015272330435
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00253.npz",
+        "sha256": "ae655f292cc546682298560a3fd21f5ed424c10738624ac0b706e726233ff656",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.706,
+      "return": 1.7748096073046327,
+      "distance_cm": 0.12536863599817533
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": false,
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained"
+}

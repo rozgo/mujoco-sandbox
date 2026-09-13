@@ -40,3 +40,33 @@ Follow the run with `motor_focus evaluate --preset wing_position --seconds 5`,
 using the saved actor and the same graph. Evaluation uses mean actions and loads
 no critic or teacher. Preserve existing gates and every failed capture; training
 return is not proof of a usable skill. See the [predeclared first pilot](runs/position_outcome_01/PLAN.md).
+
+## Bounded exploration and critic diagnosis
+
+[Paired frozen-actor tests](runs/position_exploration_01/SUMMARY.md) show two
+separate limitations: the parent fails hover from three additional starting
+states even without noise, and .01 exploration disrupts its recorded successful
+start while .003 preserves that start in one paired trial.
+
+[Outcome03](runs/position_outcome_03/SUMMARY.md) therefore uses initial and minimum
+noise .003. It preserves the ground motors but fails hover. [Outcome04](runs/position_outcome_04/SUMMARY.md)
+adds eight critic-only rollouts, then ordinary actor learning, all within the
+same three-minute budget. It is the first position PPO candidate to retain
+five-second airborne control in the matched review. Root error falls from
+6.004 to 5.499 mm, but the accuracy gate and walking yaw gate still fail.
+Vertical oscillation remains substantial and essentially unchanged. Additional
+starting-state checks are required before treating this as a robustness gain.
+
+`--minimum-noise` makes the exploration floor explicit; its default .01 keeps
+older recipes unchanged. `--critic-warmup-rollouts` defaults to zero and is
+restricted to the all-motor curriculum. During warmup the actor and exploration
+receive no optimizer updates; the critic learns from actual sampled physical
+experience. Warmup time and transitions are included in training totals, with
+actor and critic update counts reported separately. No extra deployed module
+is introduced.
+
+Reviews now use the [damped observer camera](CAMERAS.md), with the previous
+locked view available explicitly. Camera improvements must not be described
+as calmer physical flight.
+
+The completed [additional-start comparison](runs/position_outcome_04_exploration/SUMMARY.md) still fails all three deterministic hover starts (and all six noisy hover cases). Outcome04 is not promoted over the preserved parent. The two-pilot round is complete; further work should address hover consistency and vertical oscillation explicitly.

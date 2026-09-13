@@ -1,0 +1,1306 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T16:09:39.637268+00:00",
+    "source_commit": "b5460788c5e13614bfef760aa3fe882d4acad33c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "51af15245cf445dedcf11a1b57cd7b3117a184b9e70ad1adb25d0fd635b15995",
+      "src/embodied_fly/body.py": "45d6da6a68e5b0e600a7c183214d440b20cee52c0eefa6036a1f5689c6757765",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f0818b436ab8470abf5676de799c92e75e322bde7c72b53dacdebc832b46cdce",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_exploration.py": "8a0b8fbfd4bc6efea19658ac0c0ad42d7ee6be285f04a9501e4d7e65897d1986",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "f240ef6d779e2ad32708abe90f86964e771151e8cbb19b7cd7936e0d65b4d865",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "83e036ac378aef32c052a9a7a7d54789fc9bcf20adfcb7795071d63cc9a0b9fd",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "5c58a0361948ef50e4d59a96e43de98dab37a3a1e4e35de605acab8acb9fca7c",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "6ff96dbc1d936930434131d9ac5e79d4f85835296a0c448f19f187844df45c97",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "e2aa31f23394c48676020217ca5ee55aa7bdce3363c83a5107a54045a3fb6a5e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "d27d896cef957e178303a6be3a748bfd5ea2f682e17855fd945b48779403aeab",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "851c0d60e501273dce24bbe497864402197151610e6eecb9831c364e96474108",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "rehearsal": null,
+    "motor_ground": false,
+    "motor_all": true,
+    "motor_retention_weight": 4.0,
+    "critic_warmup_rollouts": 0,
+    "wing_supervision": 0.0,
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "preset": "wing_position",
+    "flight_resets": null,
+    "device": "cuda",
+    "worlds": 32,
+    "threads": 16,
+    "seconds": 180.0,
+    "horizon": 128,
+    "sequence": 32,
+    "epochs": 2,
+    "episode_seconds": 5.0,
+    "gamma": 0.995,
+    "gae_lambda": 0.95,
+    "lr": 3e-07,
+    "noise": 0.003,
+    "minimum_noise": 0.003,
+    "target_kl": 0.03,
+    "entropy": 0.0,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 0.0,
+    "stationary_turn_cost": 0.0,
+    "seed": 98003,
+    "internal_steps": 4,
+    "ground_posture": true
+  },
+  "reward_recipe": {
+    "version": "stand_walk_hover_outcome_v1",
+    "ground": {
+      "velocity_tracking_rate": 2.0,
+      "yaw_tracking_rate": 0.5,
+      "upright_alive_rate": 0.5,
+      "tilt_cost_rate": 0.5,
+      "vertical_speed_cost_rate": 0.05,
+      "forbidden_support_cost_rate": 2.0,
+      "action_change_cost_rate": 0.01,
+      "physical_failure_penalty": 1.0,
+      "velocity_filter_seconds": 0.05,
+      "moving_velocity_width_cm_s": 0.5,
+      "holding_velocity_width_cm_s": 0.2,
+      "yaw_width_rad_s": 0.75,
+      "failure_upright_below": 0.5,
+      "failure_height_below_cm": 0.06,
+      "units": "rates multiplied by 0.002 s each action; failure penalty once",
+      "stationary_translation_cost_rate": 1.5,
+      "stationary_rotation_cost_rate": 0.25,
+      "stationary_speed_scale_cm_s": 0.25,
+      "stationary_yaw_scale_rad_s": 0.5,
+      "stationary_cost_formula": "zero command only: -weight * magnitude / (scale + magnitude)",
+      "ground_wing_position_rate": 2.0,
+      "ground_wing_velocity_rate": 1.0,
+      "stand_leg_pose_rate": 1.0,
+      "ground_body_pose_rate": 0.5,
+      "ground_height_rate": 0.5,
+      "wing_angle_scale_rad": 0.1,
+      "wing_speed_scale_rad_s": 2.0,
+      "leg_body_angle_scale_rad": 0.15,
+      "height_scale_fraction": 0.1,
+      "pose_formula": "weight / (1 + group mean squared error / scale squared)",
+      "task_scope": "stand: full initial hinge pose; walk: resting wings and body, legs free",
+      "teacher": false,
+      "action_mask_or_runtime_override": false
+    },
+    "hover": {
+      "forward_and_lateral_velocity_tracking_rate": 2.0,
+      "horizontal_width_cm_s": 0.5,
+      "vertical_velocity_tracking_rate": 2.0,
+      "vertical_width_cm_s": 5.0,
+      "height_tracking_rate": 1.0,
+      "height_width_cm": 0.3,
+      "orientation_tracking_rate": 1.0,
+      "orientation_error": "1 - squared dot of unit root quaternions; exp(-error / 0.1)",
+      "airborne_alive_rate": 0.5,
+      "forbidden_support_cost_rate": 2.0,
+      "failure_height_below_cm": 0.5,
+      "failure_upright_below": 0.5,
+      "physical_failure_penalty_once": 1.0,
+      "units": "CGS state; rates times actual 0.002 s action interval; terminal penalty once",
+      "excluded": "No wing-phase/action imitation or direct lift target in physical reward"
+    },
+    "selection": "task 0/1: ground reward; task 2: hover reward, never their sum",
+    "failure_penalty": "one selected -1 penalty on failure; world resets immediately",
+    "runtime_controller": false
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "222eb2326e6ba8d0429ad31c55fd189b98921bfceec9f66d7af528828b3645fa",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded"
+  },
+  "training_tasks": [
+    "stand",
+    "walk",
+    "hover"
+  ],
+  "worlds_by_task": {
+    "stand": 11,
+    "walk": 11,
+    "hover": 10
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "active_motor_channels": 78,
+  "teacher_present_during_collection": true,
+  "executed_teacher_actions": false,
+  "wing_supervision": {
+    "weight": 0.0,
+    "channels": [],
+    "target": "bounded corrective torque from pre-action measured wing q/qvel",
+    "kp": null,
+    "kd": null,
+    "loss": "mean squared normalized action error over six wing channels only",
+    "included_in_ppo_optimization_seconds": true,
+    "deployed_module": false
+  },
+  "motor_retention": {
+    "weight": 4.0,
+    "parent_checkpoint_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+    "weights_unchanged": true,
+    "scope": "all 78 mean motor outputs, ground worlds only",
+    "runtime_module": false,
+    "extra_physics_transitions": 0
+  },
+  "core_gradient_audit_from_ground_retention": {
+    "excitability": {
+      "l2": 4.5925110936373414e-10,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 8.81672790331578e-11,
+      "finite": true,
+      "nonzero_cells": 165480
+    },
+    "bias": {
+      "l2": 1.4564886186008152e-08,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "training_started_utc": "2026-09-13T16:09:48.478442+00:00",
+  "completed_utc": "2026-09-13T16:12:53.568459+00:00",
+  "setup_seconds": 8.858194666914642,
+  "training_wall_seconds": 184.97646888019517,
+  "rollouts": 31,
+  "ppo_updates": 110,
+  "critic_updates": 110,
+  "critic_warmup_rollouts": 0,
+  "transitions": 126976,
+  "rehearsal_frames": 0,
+  "wing_supervised_presentations": 0,
+  "collection_seconds": 122.19372032629326,
+  "optimization_seconds": 62.76797269145027,
+  "ppo_optimization_seconds": 62.76797269145027,
+  "rehearsal_seconds": 0.0,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 32,
+  "aggregate_simulated_seconds": 253.952,
+  "physics_hz": 5000.0,
+  "control_hz": 500.0,
+  "neural_time_scale": 1.0,
+  "effective_gamma": 0.995,
+  "effective_gae_lambda": 0.95,
+  "airborne_resets": null,
+  "rehearsal_control_hz": null,
+  "transitions_per_training_wall_second": 686.4440691763843,
+  "actor_parameters": 2516146,
+  "critic_parameters": 235777,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 30.531944274902344,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 9.950671195983887,
+      "finite": true,
+      "nonzero_cells": 165480
+    },
+    "bias": {
+      "l2": 1187.841552734375,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_gradient_audit_from_weighted_wing_supervision": null,
+  "core_changes": {
+    "excitability": 0.00016559187497477978,
+    "leak": 9.669329301686957e-05,
+    "bias": 0.00028794354875572026
+  },
+  "peak_cuda_allocated_bytes": 18218412544,
+  "parent_checkpoint_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+  "checkpoint_sha256": "0e6a62fbc08c4716b8457526731fb66a04353edc1ab1fd0c79f8ee349dbf98aa",
+  "model_sha256": "672a5c0144d97d56dbb5372d50095cc3a347e9410c4897f71b2d5598774542ba",
+  "flight_force_model": {
+    "name": "Flight dynamics driven by measured wing motion",
+    "config": {
+      "version": "wing_motion_v1",
+      "angular_armature": 2e-06,
+      "joint_damping": 0.0002,
+      "joint_stiffness": 0.001,
+      "joint_torque_limit": 0.03,
+      "activity_filter_seconds": 0.012,
+      "reference_sweep_speed": 50.0,
+      "maximum_activity": 1.4,
+      "lift_weight_multiplier": 1.6,
+      "horizontal_drag_seconds": 0.12,
+      "vertical_drag_seconds": 0.08,
+      "angular_drag_seconds": 0.025,
+      "attitude_stiffness": 100.0,
+      "steering_acceleration": 60.0,
+      "maximum_angular_acceleration": 250.0,
+      "inertia_radius_cm": 0.06,
+      "forward_force_fraction": 0.25
+    },
+    "inputs": "six actual wing angles and speeds; measured body orientation/velocity",
+    "body_mass_kg": 9.686214691323194e-07,
+    "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
+    "aerodynamic_force_model": false,
+    "causal_activity_state_shape": [
+      32,
+      2
+    ],
+    "attitude_assistance": "activity-dependent angular damping and restoring torque",
+    "translation": "bounded wing-motion lift/thrust and drag; no target-position servo"
+  },
+  "rehearsal_manifest_sha256": null,
+  "rehearsal_episode_sha256": {},
+  "rehearsal_validation_indices": [],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "4cab88d5412718d88746b02939cb33e77cb39f212d6f162a3d54fb4908eb7354",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.442,
+      "return": 0.9491376453079283,
+      "distance_cm": 0.05732742001284292
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "06722dc5f8375507d3434dacaac8c4dbf9e3a408d41af170ee270ab2f4bdd8c4",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.444,
+      "return": 0.9460552278906107,
+      "distance_cm": 0.0545423108584867
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "7b804c179593f0e757711e6c1ff19fdd609f6fa31e1a8b7aa9c7e96de7270721",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.5680000000000001,
+      "return": 1.4076429014094174,
+      "distance_cm": 0.06614563436136549
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "227718178925b7d503391b6c2d97c826b3a013a00e941792b5d8a0d8aacb1385",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.634,
+      "return": 1.74275968875736,
+      "distance_cm": 0.07486545013835265
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00004.npz",
+        "sha256": "c40a2ada0f2c0741acb43a607486a3c486a779a5de78b25c508d4ebc6826ad44",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.642,
+      "return": 1.825850653462112,
+      "distance_cm": 0.06858619318739897
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00005.npz",
+        "sha256": "f26565761955aa9f045bf5ba4d5dcdb87fadbf80273747e782a7433da94f6b33",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.728,
+      "return": 2.0905025117099285,
+      "distance_cm": 0.07279430294769237
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00006.npz",
+        "sha256": "2a7c9770cef209e0d93d3f90940c21c783315c6f6b298fb469e3f54b2d3fa001",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.5740000000000001,
+      "return": 1.401483693625778,
+      "distance_cm": 0.06965830448766466
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00007.npz",
+        "sha256": "e9cbe3d46f53a234f5cd5b8a643dddd2b44960047e1f111078c21f7215b63685",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.462,
+      "return": 0.7922359388321638,
+      "distance_cm": 0.07685543154207676
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00008.npz",
+        "sha256": "9297c18bf6b0389d0df01c463f105f25c585e024b2db01978cfa3c7ae47a8637",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.5700000000000001,
+      "return": 1.4158462421037257,
+      "distance_cm": 0.0646892499253189
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00009.npz",
+        "sha256": "28407ff541a26584e4df8c88b249a96795398c03598099eab78de6a7c8d9a292",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.646,
+      "return": 1.802828679792583,
+      "distance_cm": 0.06700591530331715
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00010.npz",
+        "sha256": "83835564f6ec26e7bd3c9e2c39d905229717c5e5c6eeecb4ce6caceb37ce5182",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.674,
+      "return": 1.9356187619268894,
+      "distance_cm": 0.06997149528269259
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00011.npz",
+        "sha256": "72c2c81af343366907d1a5b2db6af59db00e92cfa0b9c3efd54e6a3e2ed99af6",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.328,
+      "return": 4.446009902749211,
+      "distance_cm": 0.07035380359889837
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00012.npz",
+        "sha256": "aa60f449924bb6c0bc3a5965fa7f8b7fa3872eec23905081f23296700b72585a",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.426,
+      "return": 4.836973943281919,
+      "distance_cm": 0.06924077685400316
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00013.npz",
+        "sha256": "a491b3b0151a2bfb4c394ef4e25917363258504093441aa5930a95269fd0ea68",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.732,
+      "return": 2.137197635602206,
+      "distance_cm": 0.07542073881270235
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00014.npz",
+        "sha256": "383118316c1a570edc0a0641f5163028e174519aca7862d56ac00abebaae801b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.41,
+      "return": 4.57371922256425,
+      "distance_cm": 0.18123897130058725
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00015.npz",
+        "sha256": "cc4955aea49497a9e2bf9fe589e68a6c45eb686a2d6c48aca26584a651161124",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.6,
+      "return": 1.562281250488013,
+      "distance_cm": 0.05971390150351515
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00016.npz",
+        "sha256": "96a5c2ab181e89e1005ee08fb7689f2304863101eb7b24ce441f27f2ac43cd49",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.642,
+      "return": 1.8067838768474758,
+      "distance_cm": 0.06267185737879005
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00017.npz",
+        "sha256": "42576c6f705bc1ec9fa506f8568adc61fabec28c1d59b522e95e0f4a76c96f80",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8200000000000001,
+      "return": 2.5675236601382494,
+      "distance_cm": 0.07010885646328431
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00018.npz",
+        "sha256": "98d6a8e6f1832d0b335488b4796b9fb4a19c24fcf2d118aeeb551a08517d3005",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 2.194,
+      "return": 7.2850706577301025,
+      "distance_cm": 0.4086955814301321
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00019.npz",
+        "sha256": "a6d04d5fb4546826440cda77e903bd9b91813d715977d8f2c9fbd37d0788cc6c",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.862,
+      "return": 2.755579016637057,
+      "distance_cm": 0.07051352051029032
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00020.npz",
+        "sha256": "a226e847dc6b9e56189bf7f3f9f64a510796fd88c58aa2fde095eda3f9a25c74",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.766,
+      "return": 2.3210791661404073,
+      "distance_cm": 0.07102166926666155
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00021.npz",
+        "sha256": "52a62caabd589fb3d5af04c7d08c344248832ed8d4540f2c81bfac71ed9d2b93",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.66,
+      "return": 1.785154360346496,
+      "distance_cm": 0.0777707967624461
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00022.npz",
+        "sha256": "9480299a68c75ffd375b45abb28ee3aa96d9489a5b58449c514fde614a5f7ee3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.234,
+      "return": 3.9250168837606907,
+      "distance_cm": 0.1518135178037423
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00023.npz",
+        "sha256": "67cff3b23e06918dc4ae32e64f09ff896b541112180ca5e1adc1b1c53fa68d54",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 2.0020000000000002,
+      "return": 7.196909192483872,
+      "distance_cm": 0.21727094779012457
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00024.npz",
+        "sha256": "6a818813570717574fc7d6cc0085b24c21de96751ff71093a59456dabc31ced8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.102,
+      "return": 3.8398310891352594,
+      "distance_cm": 0.05617730245137861
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00025.npz",
+        "sha256": "e9c3937b8e5dd6cef0f1d7c9a04023f5908f1571b93027421c4d395e37b3168b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.802,
+      "return": 6.407888856250793,
+      "distance_cm": 0.1755507429339263
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00026.npz",
+        "sha256": "843a1af7d86ea522f7556f6314cda52e9ce0b1a3055588169001e6de1157bd16",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.65,
+      "return": 1.3935284209437668,
+      "distance_cm": 0.13671112574599156
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00027.npz",
+        "sha256": "7f9d1a77d5c70552607c67e115a5cdab7541809c2f2614320ddc268e682ab659",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.62,
+      "return": 5.527312858961523,
+      "distance_cm": 0.18936776573597047
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00028.npz",
+        "sha256": "2781599ef687d7a17307ec9758274a9b400a525f6ac147955c87284fb36fba63",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 2.166,
+      "return": 7.74492043023929,
+      "distance_cm": 0.27611221191719904
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00029.npz",
+        "sha256": "38092471e1b7e04ebd5b254f38a70c87d8d731f073aca7e1b78f19b8a3b82836",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.604,
+      "return": 1.568591202609241,
+      "distance_cm": 0.06688031943462257
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00030.npz",
+        "sha256": "b7d4dc0d5c6ef561d18ade5cdfcdc841295821b6d556b890edce6cecf0b7d2a0",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 4.256,
+      "return": 16.748225601855665,
+      "distance_cm": 0.6975324150361748
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00031.npz",
+        "sha256": "d20ebdf3aa7e2ebf9f6d4f4f4eeb4076c6b2bbce2f273fd7d20acad17e47dffa",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.028,
+      "return": 3.034575422760099,
+      "distance_cm": 0.15234752575949548
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00032.npz",
+        "sha256": "10481de30e3baf889e2851ea318e8b15f5b620c6ab6f27562bb1bd99862fdc44",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.04,
+      "return": 3.1215414460748434,
+      "distance_cm": 0.1492744722908084
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00033.npz",
+        "sha256": "5ba2531204ba32eccfd7af26f6da45e89c89abf04c87accd49a8083d1f54ddad",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.516,
+      "return": 1.1240781266242266,
+      "distance_cm": 0.06538266267675027
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00034.npz",
+        "sha256": "3a262a49d0dfc192a27fc781e0218e5feac5499ff6cecbec525415bbce219740",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.8280000000000001,
+      "return": 2.4828350553289056,
+      "distance_cm": 0.09074141535688834
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00035.npz",
+        "sha256": "2c04a5dee3c006f119d4797efa5ed5bc58935e3225f49522d09f4e489b37f501",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 2.142,
+      "return": 7.187790839932859,
+      "distance_cm": 0.34133474226117255
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.103948972187936,
+      "distance_cm": 0.014719391763160427
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.10311335045844,
+      "distance_cm": 4.870375384803341
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.099579830653965,
+      "distance_cm": 0.015086177454091264
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.06327501684427,
+      "distance_cm": 4.904413772301686
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.10241239517927,
+      "distance_cm": 0.013708921501269742
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.12238179799169,
+      "distance_cm": 4.888077888242982
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.107441634871066,
+      "distance_cm": 0.014308372279697239
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.10655342787504,
+      "distance_cm": 4.907405610107112
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.06151531357318,
+      "distance_cm": 0.012658580976191944
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.11141949426383,
+      "distance_cm": 4.850522466316412
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.095113216899335,
+      "distance_cm": 0.014127129024133177
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.0941595165059,
+      "distance_cm": 4.887859580706305
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.10119667369872,
+      "distance_cm": 0.014336386131121226
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.099237461574376,
+      "distance_cm": 4.894079067566162
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.10182774066925,
+      "distance_cm": 0.013794513979378408
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.09592901356518,
+      "distance_cm": 4.9007219072631
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.105661747045815,
+      "distance_cm": 0.015196619563928886
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.11021010950208,
+      "distance_cm": 4.8533454257631625
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.10382859967649,
+      "distance_cm": 0.014563635382651294
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.07129851076752,
+      "distance_cm": 4.911376714304031
+    },
+    {
+      "case_id": 0,
+      "task": "stand",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 39.101880005560815,
+      "distance_cm": 0.014313832384997609
+    },
+    {
+      "case_id": 1,
+      "task": "walk",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 32.07152135670185,
+      "distance_cm": 4.839685186109501
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00058.npz",
+        "sha256": "b595b529f39d8a13dbe72b8d972c7671874feaaf8ba1135e3dceeda9ab47c359",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.846,
+      "return": 2.3131978288292885,
+      "distance_cm": 0.13236425156572004
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00059.npz",
+        "sha256": "c1b3731e7fc1753b3c29790aac21dc713a673a2ec3fdfb0824a6f279d6139fb3",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.592,
+      "return": 5.211697340011597,
+      "distance_cm": 0.2227748916243391
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00060.npz",
+        "sha256": "ffb0a662843c048de2d367ffdebdf9a697c925f9fb95c6d4b5267170680908b7",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 4.216,
+      "return": 15.48268513660878,
+      "distance_cm": 0.6722996800371116
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00061.npz",
+        "sha256": "a7318869f549d21cb7d0aa00a2a764d8b48cd60f46d7b113b5c0bc98f3f2068f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 2.35,
+      "return": 8.447818176820874,
+      "distance_cm": 0.3692398142516994
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00062.npz",
+        "sha256": "a0f5de1ec2c0760008ef8b5e4a9ff7066974ca352484470e80de057e145bee6e",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.9420000000000001,
+      "return": 2.9344219639897346,
+      "distance_cm": 0.08720145706909975
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00063.npz",
+        "sha256": "f56bf0d2de109696ce683ddfbb2d82fc9c47f2a43c1d622369a2e00cba8c1afe",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.3960000000000001,
+      "return": 4.1568701369687915,
+      "distance_cm": 0.2761771881669813
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00064.npz",
+        "sha256": "673dfd24eed46e26c5451b117b8b9ec707f0dca5b431b6f396a633971f2f6e46",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.912,
+      "return": 3.106617499142885,
+      "distance_cm": 0.045199463889538015
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00065.npz",
+        "sha256": "28343e20602ee5ba2da2e3cad7fd63c0e0c387f7dbca6a8b23af04fc0ac8a074",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.466,
+      "return": 0.8176328423433006,
+      "distance_cm": 0.07218716925877224
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00066.npz",
+        "sha256": "d109027fcad262f023539b3dd213e57a960bfda989048101148ec8605018bcd8",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.57,
+      "return": 5.132782544475049,
+      "distance_cm": 0.19527743930733404
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00067.npz",
+        "sha256": "b64bbbd58cefe15447e86b65e4372811a369fe56ff8f897dc9429481060ddb2d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.4040000000000001,
+      "return": 4.387828606180847,
+      "distance_cm": 0.22039332507975506
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00068.npz",
+        "sha256": "105f4363bdf658ff40166c0d13c1d2084bec8fd1f2a1c433c49722150586ce6d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.838,
+      "return": 2.6070698890835047,
+      "distance_cm": 0.07147187423923099
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00069.npz",
+        "sha256": "395461215cf2dd594f1c0124de9d949f3f9f45a183396777b94f127ce5458067",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.668,
+      "return": 5.944486300460994,
+      "distance_cm": 0.16975038469583836
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00070.npz",
+        "sha256": "3272db283f2551343381cd2e7bdfb9ee7ee33060da2dd8e95b594640b4ec99ea",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.026,
+      "return": 2.9956302479840815,
+      "distance_cm": 0.1460043709890309
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00071.npz",
+        "sha256": "7a7531bf6e1fd6b4cda252edb04d509f38b638f65050104110c2173df16a621f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.252,
+      "return": 4.113978170789778,
+      "distance_cm": 0.13408279763617764
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00072.npz",
+        "sha256": "83dce1c6be841dabfadcc602f1f730e5651499122a89d6afe5f94a064d06969f",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.244,
+      "return": 4.371640227735043,
+      "distance_cm": 0.0526176890105054
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00073.npz",
+        "sha256": "c4e71748000643f370c2c4174d3e2bb045cef03dfa29d71fc7880f988cc3792d",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 0.66,
+      "return": 1.5576503765769303,
+      "distance_cm": 0.12623402003228676
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00074.npz",
+        "sha256": "e4b07943d0eb8a37f736c186108dd0334953f2bac6d8459570f317930a1db759",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.986,
+      "return": 6.778248505201191,
+      "distance_cm": 0.3172225818988803
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00075.npz",
+        "sha256": "6e58046d786c3a5b74a9af445cc52ec97c72d59b4da7cabb6767328c200d98e5",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 1.026,
+      "return": 3.5138717964291573,
+      "distance_cm": 0.05283916240674892
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00076.npz",
+        "sha256": "906b2f3556f92704f627e9a6ef823c612ebfd9d7150409762ff184ea5bd68b12",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 4.724,
+      "return": 16.864192409440875,
+      "distance_cm": 1.080750491379342
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": false,
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained",
+  "critic_warmup": {
+    "requested_rollouts": 0,
+    "completed_rollouts": 0,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  }
+}

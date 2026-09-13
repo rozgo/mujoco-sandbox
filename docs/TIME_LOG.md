@@ -852,3 +852,29 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   15-second, 1x videos decoded, visually inspected and opened. A premature local
   archive hash check waited for its still-running transfer to finish, then passed
   on the completed files; no simulation or training was restarted.
+
+## Fly PPO diagnosis and camera follow-up — September 13, 2026
+
+- Observed follow-up start: 15:59:14 UTC. Results verified by 16:28:22 UTC
+  (29 minutes 8 seconds elapsed, including implementation, tests, discussion,
+  diagnostics, transfers and rendering). Final archive/commit work follows this
+  milestone; overlapping tasks must not be summed as elapsed project time.
+- Exactly two new PPO pilots, both from the preserved parent, 32 worlds each.
+  Earlier outcome01/02 training preceded this follow-up and is not included
+  in its 367.473632-second new-training total. Their reports/videos are now
+  completely archived.
+- position_outcome_03: setup 8.858195 s, training 184.976469 s, 126,976 transitions, 110 actor updates; collection 122.193720 s, optimization 62.767973 s. Evaluation setup 7.763589 s and capture 30.782435 s. Render/encode 60.811788 s.
+- position_outcome_04: setup 9.710622 s, training 182.497163 s, 131,072 transitions, 70 actor updates; collection 125.519962 s, optimization 56.964034 s. Evaluation setup 8.387481 s and capture 31.307479 s. Render/encode 59.953731 s.
+- Outcome04 warmup: 48.194531 s included in training, 64 initial critic updates,
+  zero actor updates during eight warmup rollouts. Total 70 actor/134 critic
+  updates. Native CPU MuJoCo/mjbatch physics, 16 threads; RTX 4090 neural work.
+  5 kHz physics / 500 Hz actions. Both runs peak at 18,218,412,544 CUDA bytes.
+- position_exploration_01: no training; setup 8.433948 s, evaluation/capture 125.779277 s, 67,500 physical transitions.
+- position_exploration_recorded_01: no training; setup 8.332259 s, evaluation/capture 41.809040 s, 22,500 physical transitions.
+- position_outcome_04_exploration: no training; setup 7.948480 s, evaluation/capture 127.142400 s, 67,500 physical transitions.
+- Original successful capture with damped camera: 60.582613 s render/encode;
+  no additional simulation or learning. The previously completed outcome02
+  training is rendered here in 61.013665 s, separately from new-training time.
+- Full suite: 132 passed, 33 existing dependency warnings, 98.09 s. Source lint
+  passes. All completed training videos decode to 750 frames at 1600x900,
+  50 fps, 15 seconds, 1x; all are visually inspected and opened on the Mac.

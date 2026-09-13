@@ -13,6 +13,12 @@ All commands use one checkpoint and the same `wing_position` body. This is a
 motor-learning candidate, not a complete release. [Run guide](WING_POSITION.md).
 The prior position_fullbody01 standing candidate remains preserved.
 
+Recent [paired diagnostics](runs/position_exploration_01/SUMMARY.md) show that
+this successful hover does not yet generalize to three other starting states.
+PPO-level noise also destabilizes the recorded successful start; lower noise
+preserves it in that diagnostic. The parent is preserved as a development
+checkpoint, with hover robustness still unproven.
+
 The historical torque-model development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
 It uses the same command-conditioned actor for standing, walking and hover.

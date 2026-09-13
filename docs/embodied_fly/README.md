@@ -8,13 +8,19 @@ The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same `wing_position` body in every
 task. Utility selection is temporarily disabled while these primitives are
 learned. Older presets and experiments below remain historical evidence.
-The [current development review](../../previews/embodied_fly/position_sustain_retention_01_all_tasks_v1.mp4)
+The [current development review](../../previews/embodied_fly/position_sustain_retention_01_all_tasks_v2_damped.mp4)
 passes standing, retains 4.84 cm of walking over five seconds and keeps hover
 airborne. Hover root RMSE is 6.00 mm, above the unchanged 5 mm gate; walking yaw
 also fails. One checkpoint controls all three tasks without a teacher or output
 mask. See [results and measured training times](runs/position_sustain_retention_01/SUMMARY.md).
 The next [physical-reward stage](MOTOR_PPO.md) adds all-command PPO while retaining
 the learned ground behavior; it changes neither the body nor the deployed actor.
+
+Recent [paired diagnostics](runs/position_exploration_01/SUMMARY.md) show that
+this successful hover does not yet generalize to three other starting states.
+PPO-level noise also destabilizes the recorded successful start; lower noise
+preserves it in that diagnostic. The parent is preserved as a development
+checkpoint, with hover robustness still unproven.
 
 ## Historical torque-model experiments
 

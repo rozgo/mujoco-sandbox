@@ -12,7 +12,7 @@ import torch
 
 from embodied_fly.batch import FlyBatch
 from embodied_fly.evaluate import load_actor
-from embodied_fly.motor_focus import MotorTasks, TASKS
+from embodied_fly.motor_focus import TASKS, MotorTasks
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import synchronize
@@ -160,7 +160,9 @@ def run(args):
         )
         files[path.name] = sha256(path)
         for i in range(worlds):
-            rms = lambda key: float(np.sqrt(np.mean(measured[key][:, i] ** 2)))
+            rms = lambda key, values=measured, index=i: float(
+                np.sqrt(np.mean(values[key][:, index] ** 2))
+            )
             result = {
                 "seed": seed,
                 "task": TASKS[paired[i]],
