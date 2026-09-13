@@ -137,3 +137,18 @@ The remaining gap is learned wing-position accuracy, not a missing physical
 ability: the exact-pose reference passes. An unchanged continuation or another
 larger loss weight is not yet justified by07. Preserve one body and one actor;
 do not introduce runtime output masks to turn this into a visual-only success.
+
+## Wing feedback diagnosis
+
+The inherited walking observation format already contains every wing angle
+and velocity. Dedicated continuous wing channels were added during the earlier
+aerodynamic experiments to avoid clipping. Keeping these sensor channels does
+not reintroduce aerodynamic forces: all current tasks retain `wing_motion`.
+
+[Frozen response probes](runs/motor_response_01/SUMMARY.md) show weak restoring
+responses and some wrong-sign commands. An opt-in training-only paired-response
+loss teaches how the existing actor should react to small wing measurement
+changes. [Pilot08](runs/motor_focus_08/SUMMARY.md) completes 181.01 s of training
+without changing the body, observation scaling or runtime architecture.
+Its response probe improves descriptively, but physical wing accuracy worsens.
+Keep06 preferred. A useful response loss is not itself proof of motor success.

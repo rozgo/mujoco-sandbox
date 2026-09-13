@@ -1755,3 +1755,17 @@ Declare motor_focus08: preferred06 parent,seed71008,180s,32worlds,16 CPU threads
 ground wing weight10,wing-response weight1,eight sampled ground worlds. Inputs,
 body mechanics and78-output graph actor remain unchanged. Evaluate allthree
 five-second cases at72001;preserve every failed case.
+
+Motor-focus08 finishes181.009871s/127updates/130,048physicaltransitions.
+Both ground cases remain upright with permitted support for5s, but wing RMS
+worsens to0.1463/0.0898rad and standing sag to11.27%. Hover still falls.
+All full gates fail; no numerical warnings. Keep06 preferred. All245failure
+traces and three complete captures pass hash/causality/bounded-action checks.
+
+Response02 replays08's saved actions within4.62e-7. Mean ground restoring
+angle/velocity gains are-0.03508/-0.001147, with6/48 wrong-sign responses each.
+Those are closer to the targets than response01's aggregates, but the probes
+use each checkpoint's own histories. They are descriptive, not matched causal
+estimates. Better local response does not imply better physical control:
+absolute bias, cross-axis coupling and the weak target gain remain unresolved.
+Do not promote08 or simply run it longer based on the auxiliary loss.
