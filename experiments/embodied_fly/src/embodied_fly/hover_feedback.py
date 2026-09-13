@@ -32,6 +32,10 @@ def examples(model, observation, qpos, qvel, activation, ctrl):
     body_v = np.r_[observation[282:285] * 20, observation[285:288] * 10]
     rotate = anatomical.T @ inertial
     body_v = np.r_[rotate @ body_v[:3], rotate @ body_v[3:]]
+    # The inertial sensor's origin is the COM; the reference uses the body
+    # origin. Account for rigid-body point velocity as well as frame rotation.
+    offset = anatomical.T @ (data.xipos[thorax] - data.xpos[thorax])
+    body_v[3:] -= np.cross(body_v[:3], offset)
     obs = np.repeat(observation[None], 5, axis=0)
     h = np.full(5, qpos[2])
     v = np.repeat(body_v[None], 5, axis=0)
@@ -53,6 +57,42 @@ def examples(model, observation, qpos, qvel, activation, ctrl):
         model.qpos_spring[wing_angle_indices(model)],
     )
     return obs, reference_torque_to_position(model, torque, angles, speeds, 0.002)
+
+
+def response_loss(actor, memory, env, observation, task_ids, worlds, rng):
+    """Auxiliary imitation of local height/speed response, once per chunk.
+
+    Copy actual preceding recurrent memory. Synthetic sensor pairs never replace
+    observations/actions in the physical rollout or advance its neural history.
+    """
+    ids = np.flatnonzero(task_ids == 2)
+    ids = rng.choice(ids, min(len(ids), worlds), replace=False)
+    if not len(ids):
+        raise ValueError("Hover feedback supervision requires hovering worlds")
+    inputs, targets, scales = [], [], []
+    for i in ids:
+        obs, reference = examples(
+            env.model,
+            observation[i],
+            env.fields["qpos"][i],
+            env.fields["qvel"][i],
+            env.fields["act"][i],
+            env.fields["ctrl"][i],
+        )
+        speed = bool(rng.integers(0, 2))
+        pair = [3, 4] if speed else [1, 2]
+        inputs.extend(obs[pair])
+        targets.extend(reference[pair])
+        # Typical finite-difference command magnitude, fixed before the pilot.
+        scales.append(0.01 if speed else 0.02)
+    device = memory.device
+    state = memory[:, ids].detach().repeat_interleave(2, dim=1)
+    predicted = actor(torch.as_tensor(np.asarray(inputs), device=device), state).action
+    predicted = predicted[:, wing_actuators(env.model)].reshape(len(ids), 2, 6)
+    expected = torch.as_tensor(np.asarray(targets), device=device).reshape(len(ids), 2, 6)
+    scale = torch.as_tensor(scales, device=device, dtype=predicted.dtype)[:, None]
+    error = ((predicted[:, 0] - predicted[:, 1]) - (expected[:, 0] - expected[:, 1])) / scale
+    return error.square().mean(), len(ids) * 2
 
 
 @torch.no_grad()

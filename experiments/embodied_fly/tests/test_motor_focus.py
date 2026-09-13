@@ -136,18 +136,19 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
 
 
 @pytest.mark.parametrize(
-    "task_set,retain_ground,subset",
+    "task_set,retain_ground,subset,hover_feedback",
     [
-        ("all", False, "all"),
-        ("ground", False, "all"),
-        ("all", True, "all"),
-        ("all", True, "wing-output"),
-        ("all", True, "wing-residual"),
-        ("all", True, "wing-feedback"),
+        ("all", False, "all", 0),
+        ("ground", False, "all", 0),
+        ("all", True, "all", 0),
+        ("all", True, "wing-output", 0),
+        ("all", True, "wing-residual", 0),
+        ("all", True, "wing-feedback", 0),
+        ("all", True, "all", 0.01),
     ],
 )
 def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
-    tmp_path, monkeypatch, task_set, retain_ground, subset
+    tmp_path, monkeypatch, task_set, retain_ground, subset, hover_feedback
 ):
     from embodied_fly import motor_focus
     from embodied_fly.provenance import sha256
@@ -187,7 +188,9 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
         ground_retention_weight=4.0 if retain_ground else 1.0,
         ground_posture=True,
         ground_wing_loss=10.0,
-        wing_response_loss=1.0,
+        wing_response_loss=0.0 if hover_feedback else 1.0,
+        hover_feedback_loss=hover_feedback,
+        preset="wing_position" if hover_feedback else "wing_motion",
         wing_response_worlds=2,
         episode_seconds=0.004 if retain_ground else 2.0,
         seed=7,
@@ -212,7 +215,13 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["ground_posture"]["runtime_override"] is False
     assert checkpoint["config"]["ground_posture"] is True
     assert report["wing_response_supervision"]["extra_physics_worlds"] == 0
-    assert checkpoint["wing_response_supervision"]["weight"] == 1
+    assert checkpoint["wing_response_supervision"]["weight"] == args.wing_response_loss
+    assert checkpoint["hover_feedback_supervision"]["weight"] == hover_feedback
+    if hover_feedback:
+        assert (
+            report["hover_feedback_supervision"]["synthetic_sensor_inputs"]
+            == report["updates"] * 2
+        )
     assert report["ground_wing_loss_weight"] == 10
     assert report["ground_retention"]["enabled"] == retain_ground
     assert report["parameter_subset"]["mode"] == subset

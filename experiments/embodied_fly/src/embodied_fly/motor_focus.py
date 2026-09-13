@@ -528,6 +528,19 @@ def train(args):
     if getattr(args, "preset", "wing_motion") == "wing_position" and response_weight:
         raise ValueError("Legacy torque-response loss is incompatible with position targets")
     response_rng = np.random.default_rng(args.seed + 1101)
+    hover_feedback_weight = getattr(args, "hover_feedback_loss", 0.0)
+    if not np.isfinite(hover_feedback_weight) or hover_feedback_weight < 0:
+        raise ValueError("Finite nonnegative hover feedback weight required")
+    if hover_feedback_weight and (
+        getattr(args, "preset", "wing_motion") != "wing_position"
+        or getattr(args, "task_set", "all") != "all"
+        or getattr(args, "hover_reference", "clock") != "state"
+    ):
+        raise ValueError(
+            "Hover feedback requires position body, all tasks and state reference"
+        )
+    hover_feedback_rng = np.random.default_rng(args.seed + 2203)
+    synthetic_hover_inputs = 0
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
     provenance = evidence()
@@ -612,7 +625,8 @@ def train(args):
             response_errors = []
             retention_errors = []
             per_task = [[] for _ in TASKS]
-            for _ in range(args.sequence):
+            hover_feedback_error = None
+            for sequence_step in range(args.sequence):
                 obs = env.observation()
                 observation = torch.as_tensor(obs, device=device)
                 ground_actions = (
@@ -620,6 +634,13 @@ def train(args):
                 )
                 target = torch.as_tensor(teacher.act(ground_actions), device=device)
                 memory_before = memory
+                if hover_feedback_weight and sequence_step == 0:
+                    from embodied_fly.hover_feedback import response_loss as hover_response
+
+                    hover_feedback_error, count = hover_response(
+                        actor, memory_before, env, obs, tasks.task_ids, 8, hover_feedback_rng
+                    )
+                    synthetic_hover_inputs += count
                 result = actor(observation, memory)
                 memory = result.state
                 flight = torch.as_tensor(tasks.task_ids == 2, device=device)
@@ -731,6 +752,8 @@ def train(args):
             start = time.perf_counter()
             optimizer.zero_grad(set_to_none=True)
             loss = torch.stack(losses).mean()
+            if hover_feedback_error is not None:
+                loss = loss + hover_feedback_weight * hover_feedback_error
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite motor loss")
             loss.backward()
@@ -763,6 +786,10 @@ def train(args):
                     "wing_response_loss": float(np.mean(response_errors))
                     if response_errors
                     else None,
+                    "hover_feedback_response_loss": float(hover_feedback_error.detach())
+                    if hover_feedback_error is not None
+                    else None,
+                    "synthetic_hover_inputs": synthetic_hover_inputs,
                     "ground_nonwing_retention_mse": float(np.mean(retention_errors))
                     if retention_errors
                     else None,
@@ -854,6 +881,16 @@ def train(args):
             "ground_worlds_sampled_per_action": response_worlds if response_weight else 0,
             "kind": "paired synthetic wing feedback, not extra physical transitions",
         },
+        "hover_feedback_supervision": {
+            "weight": hover_feedback_weight,
+            "synthetic_sensor_inputs": synthetic_hover_inputs,
+            "paired_worlds_per_chunk": 8 if hover_feedback_weight else 0,
+            "height_delta_cm": 0.2,
+            "vertical_speed_delta_cm_s": 2.0,
+            "difference_scales": {"height": 0.02, "vertical_speed": 0.01},
+            "runtime_module": False,
+            "extra_physical_transitions": 0,
+        },
     }
     torch.save(checkpoint, args.output / "actor.pt")
     report = {
@@ -898,6 +935,7 @@ def train(args):
         "completed_episodes": episodes,
         "teacher_present_during_collection": True,
         "ground_retention": retention,
+        "hover_feedback_supervision": checkpoint["hover_feedback_supervision"],
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
         "startup_supervision": {
             "hover_seconds": start_duration,
@@ -976,6 +1014,7 @@ if __name__ == "__main__":
     parser.add_argument("--ground-wing-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-worlds", type=int, default=8)
+    parser.add_argument("--hover-feedback-loss", type=float, default=0.0)
     parser.add_argument(
         "--ground-posture",
         action="store_true",
