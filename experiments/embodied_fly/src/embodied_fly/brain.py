@@ -87,6 +87,28 @@ class BrainOutput:
     activity: torch.Tensor
 
 
+class NonlinearWingReadout(nn.Module):
+    """Feedforward motor-cell readout, with training-set feature normalization."""
+
+    def __init__(self, features, hidden):
+        super().__init__()
+        if features <= 0 or hidden <= 0:
+            raise ValueError("Positive readout dimensions required")
+        self.register_buffer("feature_mean", torch.zeros(features))
+        self.register_buffer("feature_scale", torch.ones(features))
+        self.network = nn.Sequential(
+            nn.Linear(features, hidden), nn.Tanh(), nn.Linear(hidden, 6)
+        )
+        nn.init.zeros_(self.network[-1].weight)
+        nn.init.zeros_(self.network[-1].bias)
+
+    def forward(self, motor):
+        normalized = ((motor - self.feature_mean) / self.feature_scale.clamp_min(0.05)).clamp(
+            -10, 10
+        )
+        return self.network(normalized)
+
+
 class EmbodiedBrain(nn.Module):
     def __init__(
         self,
@@ -100,6 +122,7 @@ class EmbodiedBrain(nn.Module):
         sensor_extension_size: int = 0,
         motor_only: bool = False,
         wing_residual_enabled: bool = False,
+        wing_residual_hidden: int = 0,
     ):
         super().__init__()
         if internal_steps < 2:
@@ -153,13 +176,16 @@ class EmbodiedBrain(nn.Module):
             nn.Tanh(),
         )
         self.wing_residual = None
+        self.wing_residual_hidden = 0
+        if wing_residual_hidden < 0 or (wing_residual_hidden and not wing_residual_enabled):
+            raise ValueError("Nonlinear width requires an enabled wing readout")
         if wing_residual_enabled:
-            self.enable_wing_residual()
+            self.enable_wing_residual(wing_residual_hidden)
 
         self.set_motor_only(motor_only)
 
-    def enable_wing_residual(self):
-        """Optional linear readout of existing motor cells; no new neural memory.
+    def enable_wing_residual(self, hidden=0):
+        """Optional readout of existing motor cells; no new neural memory.
 
         Start at zero so the parent function is preserved. The six corrections
         enter existing wing logits before their bounded output nonlinearity.
@@ -168,9 +194,17 @@ class EmbodiedBrain(nn.Module):
             raise ValueError("Wing readout requires the canonical 78-actuator layout")
         if self.wing_residual is not None:
             raise ValueError("Wing readout already enabled")
-        self.wing_residual = nn.Linear(len(self.motor_ids), 6).to(self.core.bias)
-        nn.init.zeros_(self.wing_residual.weight)
-        nn.init.zeros_(self.wing_residual.bias)
+        if hidden < 0:
+            raise ValueError("Readout width cannot be negative")
+        self.wing_residual_hidden = hidden
+        if hidden:
+            self.wing_residual = NonlinearWingReadout(len(self.motor_ids), hidden).to(
+                self.core.bias
+            )
+        else:
+            self.wing_residual = nn.Linear(len(self.motor_ids), 6).to(self.core.bias)
+            nn.init.zeros_(self.wing_residual.weight)
+            nn.init.zeros_(self.wing_residual.bias)
 
     def set_motor_only(self, enabled=True):
         """A constant inherited context replaces utility arbitration for motor learning.

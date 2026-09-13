@@ -1,6 +1,7 @@
 import json
 
 import numpy as np
+import pytest
 import torch
 from scipy import sparse
 from test_motor_focus import tiny_brain
@@ -8,14 +9,15 @@ from test_motor_focus import tiny_brain
 from embodied_fly.provenance import sha256
 
 
-def test_zero_readout_preserves_parent_and_nonzero_readout_uses_only_motor_cells():
+@pytest.mark.parametrize("hidden", [0, 8])
+def test_zero_readout_preserves_parent_and_nonzero_readout_uses_only_motor_cells(hidden):
     torch.manual_seed(818)
     parent = tiny_brain().eval()
     parent.set_motor_only()
     child = tiny_brain().eval()
     child.load_state_dict(parent.state_dict())
     child.set_motor_only()
-    child.enable_wing_residual()
+    child.enable_wing_residual(hidden)
     a, b = parent.initial_state(3), child.initial_state(3)
     with torch.no_grad():
         for _ in range(8):
@@ -24,8 +26,9 @@ def test_zero_readout_preserves_parent_and_nonzero_readout_uses_only_motor_cells
             torch.testing.assert_close(old.action, new.action, atol=0, rtol=0)
             torch.testing.assert_close(old.state, new.state, atol=0, rtol=0)
             a, b = old.state, new.state
-        child.wing_residual.weight.normal_(0, 0.1)
-        child.wing_residual.bias.fill_(0.02)
+        last = child.wing_residual.network[-1] if hidden else child.wing_residual
+        last.weight.normal_(0, 0.1)
+        last.bias.fill_(0.02)
         old, new = parent(obs, a), child(obs, b)
         torch.testing.assert_close(old.state, new.state, atol=0, rtol=0)
         other = np.r_[0:14, 20:78]
@@ -41,14 +44,15 @@ def test_zero_readout_preserves_parent_and_nonzero_readout_uses_only_motor_cells
         assert (new.action.abs() <= 1).all()
 
 
-def test_standard_loader_restores_residual_checkpoint(tmp_path, monkeypatch):
+@pytest.mark.parametrize("hidden", [0, 8])
+def test_standard_loader_restores_residual_checkpoint(tmp_path, monkeypatch, hidden):
     from embodied_fly import evaluate
 
     brain = tiny_brain().eval()
     brain.set_motor_only()
-    brain.enable_wing_residual()
+    brain.enable_wing_residual(hidden)
     with torch.no_grad():
-        brain.wing_residual.weight.fill_(0.03)
+        (brain.wing_residual.network[-1] if hidden else brain.wing_residual).weight.fill_(0.03)
     (tmp_path / "weights.npz").write_bytes(b"test-graph")
     (tmp_path / "brain.npz").write_bytes(b"test-metadata")
     graph = sparse.csr_matrix(
@@ -64,6 +68,7 @@ def test_standard_loader_restores_residual_checkpoint(tmp_path, monkeypatch):
         "config": {"internal_steps": 4},
         "motor_only": True,
         "wing_residual_enabled": True,
+        "wing_residual_hidden": hidden,
         "graph_sha256": sha256(tmp_path / "weights.npz"),
         "graph_metadata_sha256": sha256(tmp_path / "brain.npz"),
     }
