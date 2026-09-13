@@ -97,12 +97,16 @@ class EmbodiedBrain(nn.Module):
         observation_size: int,
         action_size: int,
         internal_steps: int = 4,
+        sensor_extension_size: int = 0,
     ):
         super().__init__()
         if internal_steps < 2:
             raise ValueError("Need a sensory update and a utility-conditioned neural update")
         self.core = NeuralCore(adjacency)
         self.observation_size = observation_size
+        self.sensor_extension_size = sensor_extension_size
+        if not 0 <= sensor_extension_size < observation_size:
+            raise ValueError("Invalid sensory extension size")
         self.action_size = action_size
         self.internal_steps = internal_steps
         self.register_buffer("observation_mean", torch.zeros(observation_size))
@@ -121,11 +125,17 @@ class EmbodiedBrain(nn.Module):
         if np.intersect1d(sensory_ids, motor_ids).size:
             raise ValueError("Sensory and motor routing must be disjoint")
         self.sensory_encoder = nn.Sequential(
-            nn.Linear(observation_size, 128),
+            nn.Linear(observation_size - sensor_extension_size, 128),
             nn.Tanh(),
             nn.Linear(128, len(sensory_ids)),
             nn.Tanh(),
         )
+        if sensor_extension_size:
+            # New measured inputs enter the SAME sensory hidden layer. Keep the
+            # original matrix multiply unchanged; zero weights preserve the old
+            # actor exactly at migration, including its recurrent state.
+            self.sensor_extension = nn.Linear(sensor_extension_size, 128, bias=False)
+            nn.init.zeros_(self.sensor_extension.weight)
         self.utility_head = nn.Sequential(
             nn.LayerNorm(len(descending_ids)),
             nn.Linear(len(descending_ids), 128),
@@ -156,10 +166,18 @@ class EmbodiedBrain(nn.Module):
         encoded_observation = (
             (observation - self.observation_mean) / self.observation_std.clamp_min(0.05)
         ).clamp(-10, 10)
+        if self.sensor_extension_size:
+            split = self.observation_size - self.sensor_extension_size
+            sensory = self.sensory_encoder[0](encoded_observation[:, :split])
+            sensory = sensory + self.sensor_extension(encoded_observation[:, split:])
+            for layer in list(self.sensory_encoder)[1:]:
+                sensory = layer(sensory)
+        else:
+            sensory = self.sensory_encoder(encoded_observation)
         drive = torch.zeros_like(state).index_copy(
             0,
             self.sensory_ids,
-            self.sensory_encoder(encoded_observation).T,
+            sensory.T,
         )
         state = self.core(state, drive, time_scale)
         logits = self.utility_head(state[self.descending_ids].T)
@@ -183,6 +201,24 @@ class EmbodiedBrain(nn.Module):
             state = self.core(state, drive, time_scale)
         action = self.motor_decoder(state[self.motor_ids].T)
         return BrainOutput(action, state, logits, scores, activity)
+
+
+def initialize_extended_actor(brain, parent_state):
+    """Copy a legacy actor while leaving new sensor columns neutral and trainable."""
+    state = {k: v.clone() for k, v in parent_state.items()}
+    old_size = state["observation_mean"].numel()
+    if brain.observation_size == old_size:
+        brain.load_state_dict(state, strict=True)
+        return False
+    if old_size + brain.sensor_extension_size != brain.observation_size:
+        raise ValueError("Only the declared sensory extension may change at migration")
+    for name, fill in (("observation_mean", 0), ("observation_std", 1)):
+        state[name] = torch.cat(
+            [state[name], state[name].new_full((brain.sensor_extension_size,), fill)]
+        )
+    state["sensor_extension.weight"] = torch.zeros_like(brain.sensor_extension.weight)
+    brain.load_state_dict(state, strict=True)
+    return True
 
 
 def load_malecns(path: Path):

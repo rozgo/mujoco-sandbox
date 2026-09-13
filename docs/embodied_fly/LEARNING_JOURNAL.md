@@ -910,3 +910,31 @@ The new one-second inherited hover video is accurately labeled **reference
 teacher + wingbeat generator**, with no MaleCNS learner. Rendering took
 **3.843421 s**; all 50 frames decoded at 1600×900 / 50 fps / 1×, with visual checks
 at the start, middle and end. It is a reference for training, not student success.
+
+### Wing-speed observation repair and retained-student rehearsal (declared)
+
+Add six continuous wing-joint velocities scaled by 2,000 rad/s to the original
+383-input observation. Keep the original 383 values, normalization and encoder
+matrix intact. A zero-initialized 6→128 sensory contribution feeds the existing
+sensory hidden layer, then the same graph/utility/motor path. It is not a separate
+controller and has no direct motor bypass. The migrated actor initially has
+identical actions, utility and recurrent state in a 20-step small-graph test;
+new sensor weights receive finite nonzero motor-loss gradients. The old snapshots
+and runtime observation path remain reproducible.
+
+Collect eight predefined retained-student episodes at 500 Hz: hold, slow/normal/
+fast walking, left/right turns, and two continuous walk-stop-walk trials. Seed
+44001 determines headings. Keep failures and reject whole unstable/prohibited-
+support episodes from rehearsal. Labels come from the retained online01 actor's
+actual live observations and executed actions, not the inherited walking teacher.
+Command changes do not reset memory or body state.
+
+The next pilot starts again from online01, not the rejected mixed-flight weights.
+Use the new retention corpus and existing eight flight demonstrations, with equal
+clock-group sampling, 32 neural sequences, 16 burn-in + 16 supervised steps,
+25% reset-start batches, 60 seconds, seed 45001, learning rate 3e-5 and unit extra
+wing MSE on flight batches. The observation extension preserves the parent's
+initial function; Adam is explicitly initialized fresh because parameter layout
+changed. Existing normalization is retained, with mean 0/std 1 for the six new
+scaled measurements. First verify full-graph migration on CUDA, then train and
+measure physical flight and ground retention. No outcome is assumed from MSE.

@@ -11,12 +11,14 @@ import subprocess
 import time
 from pathlib import Path
 
+import mujoco
 import numpy as np
 import torch
 from torch.nn import functional as F
 
 from embodied_fly.body import CONTROL_DT
-from embodied_fly.brain import EmbodiedBrain, load_malecns
+from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
+from embodied_fly.observations import append_wing_velocity, wing_velocity_indices
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -25,7 +27,7 @@ def synchronize(device):
         torch.cuda.synchronize(device)
 
 
-def load_episodes(path):
+def load_episodes(path, wing_velocity_inputs=False):
     manifest = json.loads((path / "manifest.json").read_text())
     rejected = {
         e["episode"]
@@ -33,13 +35,25 @@ def load_episodes(path):
         if e["failure"] or e.get("physical_failure") or e["final_upright"] < 0.5
     }
     episodes = []
+    indices = (
+        wing_velocity_indices(mujoco.MjModel.from_binary_path(str(path / "model.mjb")))
+        if wing_velocity_inputs
+        else None
+    )
     for file in sorted(path.glob("episode_*.npz")):
         if int(file.stem.split("_")[-1]) in rejected:
             continue
         with np.load(file, allow_pickle=False) as data:
-            episodes.append(
-                {key: data[key].copy() for key in ("observation", "action", "activity")}
-            )
+            episode = {key: data[key].copy() for key in ("observation", "action", "activity")}
+            if wing_velocity_inputs:
+                if episode["observation"].shape[-1] != 383:
+                    raise ValueError(
+                        "Augmentation requires the declared 383-input legacy data"
+                    )
+                episode["observation"] = append_wing_velocity(
+                    episode["observation"], data["qvel"], indices
+                )
+            episodes.append(episode)
     if len(episodes) < 4:
         raise ValueError("Need at least four separate episodes for train/validation split")
     return episodes
@@ -80,7 +94,7 @@ def train(args):
     clock_groups = {}
     wing_channels = None
     for dataset in [args.data, *args.additional_data]:
-        episodes = load_episodes(dataset)
+        episodes = load_episodes(dataset, args.wing_velocity_inputs)
         manifest = json.loads((dataset / "manifest.json").read_text())
         hz = manifest.get("control_hz", manifest.get("environment", {}).get("control_hz", 500))
         time_scale = 1 / hz / CONTROL_DT
@@ -137,9 +151,11 @@ def train(args):
         observation_size,
         action_size,
         internal_steps=args.internal_steps,
+        sensor_extension_size=6 if args.wing_velocity_inputs else 0,
     ).to(device)
     all_observations = np.concatenate([e["observation"] for e in training])
     parent = None
+    sensory_migrated = False
     if args.resume:
         parent = torch.load(args.resume, map_location="cpu", weights_only=True)
         if parent["graph_sha256"] != sha256(args.graph / "weights.npz"):
@@ -153,7 +169,7 @@ def train(args):
                 raise ValueError("Resume neuron routing differs from graph metadata")
         if parent["config"]["internal_steps"] != args.internal_steps:
             raise ValueError("Resume must preserve the recurrent architecture")
-        brain.load_state_dict(parent["state_dict"], strict=True)
+        sensory_migrated = initialize_extended_actor(brain, parent["state_dict"])
     else:
         brain.observation_mean.copy_(torch.from_numpy(all_observations.mean(0)).to(device))
         brain.observation_std.copy_(
@@ -165,7 +181,9 @@ def train(args):
     optimizer = torch.optim.Adam(
         (p for p in brain.parameters() if p.requires_grad), lr=args.lr
     )
-    optimizer_resumed = parent is not None and "optimizer_state_dict" in parent
+    optimizer_resumed = (
+        parent is not None and "optimizer_state_dict" in parent and not sensory_migrated
+    )
     if optimizer_resumed:
         optimizer.load_state_dict(parent["optimizer_state_dict"])
         for group in optimizer.param_groups:
@@ -327,6 +345,7 @@ def train(args):
         "optimizer_state_dict": optimizer.state_dict(),
         "observation_size": observation_size,
         "action_size": action_size,
+        "sensor_extension_size": brain.sensor_extension_size,
         "config": config,
         "source_commit": source,
         "graph_sha256": hashlib.sha256((args.graph / "weights.npz").read_bytes()).hexdigest(),
@@ -361,6 +380,10 @@ def train(args):
         "dataset_splits": splits,
         "parent_checkpoint_sha256": checkpoint["parent_checkpoint_sha256"],
         "optimizer_resumed": optimizer_resumed,
+        "sensory_extension_migrated": sensory_migrated,
+        "optimizer_reset_reason": "new sensory parameters; preserve actor function, initialize fresh Adam"
+        if sensory_migrated
+        else None,
         "normalization": "retained from parent" if parent else "training frames only",
         "live_physics_worlds_during_imitation": 0,
         "initial_validation_motor_mse": initial_validation,
@@ -404,4 +427,5 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=18001)
     parser.add_argument("--freeze-core", action="store_true")
     parser.add_argument("--wing-loss-weight", type=float, default=0)
+    parser.add_argument("--wing-velocity-inputs", action="store_true")
     train(parser.parse_args())

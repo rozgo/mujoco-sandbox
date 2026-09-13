@@ -41,6 +41,7 @@ def load_actor(path, graph_path, device):
         checkpoint["observation_size"],
         checkpoint["action_size"],
         checkpoint["config"]["internal_steps"],
+        checkpoint.get("sensor_extension_size", 0),
     )
     brain.load_state_dict(checkpoint["state_dict"], strict=True)
     return brain.to(device).eval(), checkpoint
@@ -92,13 +93,16 @@ def evaluate(args):
         qpos, qvel, activations, controls, utilities, actions = [], [], [], [], [], []
         upright, heights, speed_errors, yaw_errors, neural_activity = [], [], [], [], []
         neural_maps = []
+        observations = []
         trace_ids = np.linspace(0, actor.core.neurons - 1, 256).astype(int)
         start_pos = environment.data.qpos[:3].copy()
         wall_start = time.perf_counter()
         numerical_failure = None
         neural_stride = max(1, round(0.02 / actor_dt))
         for step in range(round(args.seconds / actor_dt)):
-            observation = torch.as_tensor(environment.observation()[None], device=device)
+            raw_observation = environment.observation(actor.sensor_extension_size == 6)
+            observations.append(raw_observation)
+            observation = torch.as_tensor(raw_observation[None], device=device)
             result = actor(
                 observation, memory, activity_override=forced_activity, time_scale=time_scale
             )
@@ -181,6 +185,7 @@ def evaluate(args):
             activation=activations,
             ctrl=controls,
             action=actions,
+            observation=observations,
             utility=utilities,
             neural_activity=neural_activity,
             neural_ids=trace_ids,
@@ -218,6 +223,8 @@ def evaluate(args):
         "timing_transfer_is_diagnostic": actor_dt != CONTROL_DT,
         "setup_seconds": setup_seconds,
         "one_checkpoint_for_all_cases": True,
+        "observation_size": actor.observation_size,
+        "sensor_extension_size": actor.sensor_extension_size,
         "teacher_present": False,
         "training_method": checkpoint.get("method"),
         "diagnostic_activity_override": args.diagnostic_activity,

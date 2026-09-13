@@ -15,6 +15,8 @@ from dm_control import mjcf
 from dm_control.locomotion.arenas import floors
 from flybody.fruitfly.fruitfly import FruitFly
 
+from embodied_fly.observations import append_wing_velocity, wing_velocity_indices
+
 PHYSICS_DT = 0.0002
 CONTROL_DT = 0.002
 SUBSTEPS = 10
@@ -112,6 +114,7 @@ class FlyEnvironment:
         self.qvel_indices = self.model.jnt_dofadr[self.joint_ids]
         self.action_names = [self.model.actuator(i).name for i in range(self.model.nu)]
         self.joint_names = [self.model.joint(i).name for i in self.joint_ids]
+        self.wing_velocity_indices = wing_velocity_indices(self.model)
         self.low = self.model.actuator_ctrlrange[:, 0].copy()
         self.high = self.model.actuator_ctrlrange[:, 1].copy()
         self.walking_inactive = np.array(
@@ -160,7 +163,7 @@ class FlyEnvironment:
         self.mean_sensors = self.data.sensordata.copy()
         return self.observation()
 
-    def observation(self):
+    def observation(self, extended_wing_velocity=False):
         rotation = self.data.xmat[self.thorax_id].reshape(3, 3)
         # Preserve v1 checkpoint input coordinates: MuJoCo mjOBJ_BODY uses the
         # principal inertia frame, NOT the anatomical xmat axes. Six components
@@ -180,7 +183,7 @@ class FlyEnvironment:
             2 * (q - ranges[:, 0]) / np.maximum(ranges[:, 1] - ranges[:, 0], 1e-4) - 1
         )
         # Causal body feedback only. No phase, time, ghost or future trajectory.
-        return np.concatenate(
+        observation = np.concatenate(
             (
                 np.clip(normalized_q, -5, 5),
                 np.clip(self.data.qvel[self.qvel_indices] / 100, -10, 10),
@@ -193,6 +196,11 @@ class FlyEnvironment:
                 self.needs,
             )
         ).astype(np.float32)
+        return (
+            append_wing_velocity(observation, self.data.qvel, self.wing_velocity_indices)
+            if extended_wing_velocity
+            else observation
+        )
 
     def actuator_activation(self):
         """One effective input per actuator, retaining the 78-channel schema.

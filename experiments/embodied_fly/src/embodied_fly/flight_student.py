@@ -73,7 +73,7 @@ def evaluate(args):
     failure = None
     stepping_started = time.perf_counter()
     for step in range(round(args.seconds / env.control_dt)):
-        observation = env.observation()
+        observation = env.observation(actor.sensor_extension_size == 6)
         result = actor(
             torch.as_tensor(observation[None], device=device),
             memory,
@@ -128,6 +128,8 @@ def evaluate(args):
         "initial_capture_sha256": sha256(args.initial),
         "initialization": "First physical frame of declared expert capture; memory/previous actions reset; no subsequent teacher access",
         "student_present": True,
+        "observation_size": actor.observation_size,
+        "sensor_extension_size": actor.sensor_extension_size,
         "teacher_present": False,
         "scripted_gait_present": False,
         "policy_acceptance_eligible": True,

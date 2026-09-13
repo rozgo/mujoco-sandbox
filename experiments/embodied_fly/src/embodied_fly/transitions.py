@@ -121,6 +121,7 @@ def evaluate(args):
             "phase",
             "velocity",
             "position_after_action",
+            "observation",
         )
     }
     neural_maps, phase_results, boundary_events = [], [], []
@@ -145,9 +146,9 @@ def evaluate(args):
         environment.maximum_disallowed_ground_force = 0.0
         velocities, positions, upright, heights = [], [], [], []
         for _ in range(round(seconds / CONTROL_DT)):
-            result = actor(
-                torch.as_tensor(environment.observation()[None], device=device), memory
-            )
+            observation = environment.observation(actor.sensor_extension_size == 6)
+            captures["observation"].append(observation)
+            result = actor(torch.as_tensor(observation[None], device=device), memory)
             memory = result.state
             action = environment.walking_action(result.action[0].cpu().numpy())
             if teacher is not None and name == "stop":

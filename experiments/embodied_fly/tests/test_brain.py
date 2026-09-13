@@ -3,7 +3,7 @@ import pytest
 import torch
 from scipy import sparse
 
-from embodied_fly.brain import EmbodiedBrain, NeuralCore
+from embodied_fly.brain import EmbodiedBrain, NeuralCore, initialize_extended_actor
 
 
 def tiny_graph():
@@ -100,3 +100,23 @@ def test_neural_clock_preserves_held_target_relaxation_and_legacy_values():
     for invalid in (0, -1, float("nan"), float("inf")):
         with pytest.raises(ValueError, match="time scale"):
             core(state, drive, time_scale=invalid)
+
+
+def test_extra_sensors_preserve_old_actor_exactly_then_receive_gradients():
+    parent = make_brain().eval()
+    child = EmbodiedBrain(
+        tiny_graph(), [0, 1], [2, 3], [4, 5], 10, 3, sensor_extension_size=6
+    ).eval()
+    assert initialize_extended_actor(child, parent.state_dict())
+    a, b = parent.initial_state(2), child.initial_state(2)
+    for _ in range(20):
+        base = torch.randn(2, 4)
+        extended = torch.cat([base, torch.randn(2, 6)], dim=1)
+        old, new = parent(base, a), child(extended, b)
+        assert torch.equal(old.action, new.action)
+        assert torch.equal(old.state, new.state)
+        assert torch.equal(old.utility_scores, new.utility_scores)
+        a, b = old.state.detach(), new.state.detach()
+    new.action.square().sum().backward()
+    assert child.sensor_extension.weight.grad.abs().sum() > 0
+    assert torch.isfinite(child.sensor_extension.weight.grad).all()
