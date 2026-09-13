@@ -185,9 +185,13 @@ def record(source, case, output, camera_profile="damped"):
                 context = f"target {speed:.1f} cm/s / yaw {yaw:.2f} rad/s"
             if case == "hover" and "requested_height_cm" in states:
                 context = f"target altitude {states['requested_height_cm'][step]:.2f} cm"
+            case_label = case.upper()
+            if "phase" in states and evaluation.get("phase_schedule"):
+                phase = evaluation["phase_schedule"][int(states["phase"][step])][0]
+                case_label = f"{phase.upper()} / continuous commands"
             draw.text(
                 (24, 60),
-                f"{case.upper()}  |  {context}  |  1x playback",
+                f"{case_label}  |  {context}  |  1x playback",
                 font=font(19),
                 fill="#e6e1db",
             )
