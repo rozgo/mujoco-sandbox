@@ -1,9 +1,8 @@
 import numpy as np
 import torch
 
-from embodied_fly.wing_readout import replace_wing_rows
-
 from embodied_fly.wing_observability import metrics, ridge_readout
+from embodied_fly.wing_readout import replace_wing_rows
 
 
 def test_readout_uses_training_statistics_and_recovers_a_known_held_out_mapping():
