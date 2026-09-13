@@ -2032,3 +2032,22 @@ Pre-run full validation:91tests pass in59.62s (15known upstreamwarnings),
 including shared-body decoupling, both pure/hybrid motor-PPO paths and preserved
 older controller tests. Ruff and whitespace checks pass. No physics or deployed
 actor change is included in this pilot.
+
+Ground-outcome03 completes182.342745s,131,072physicaltransitions and283PPOupdates.
+Both ground cases remain upright on permitted support. Standing wing RMS falls
+to0.05704rad from06's0.113997rad;walking falls to0.05276rad from0.063092rad.
+Peak wing errors0.24198/0.24166rad still exceed0.2rad. Standing body height loss
+3.479% is worse than06's1.008%, and heading/tracking gates remain failed. Hover
+falls. No numerical warnings. This is useful ground-wing progress, not release.
+
+The first gradient audit separates physical return (core biasL2:79.4092) from
+weighted wing guidance (2.64913). Both reach the intrinsic dynamics; the report
+does not attribute the latter to pure RL. Utility/intention weights remain fixed.
+
+Declare ground_outcome04: continue03 for180s with identical reward, wing loss100,
+actorlr1e-6,32worlds,rollout/chunk/epochs,noise,episode duration and reset ranges.
+Retain03's PPO optimizer,critic and exploration state;seed81004. This allowance
+is supported by measured wing improvement in both ground commands. Do not change
+body, force law, targets or deployed architecture. Evaluate allthree complete5s
+cases at72001, retain03, and open both complete films. No successful motor
+release is claimed from the current development cases.
