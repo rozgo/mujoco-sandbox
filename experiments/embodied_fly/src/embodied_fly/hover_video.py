@@ -24,7 +24,11 @@ def record(source, output, previous=None):
     data = mujoco.MjData(model)
     reports = [report, report]
     sources = [source / "pid.npz", source / "hover.npz"]
-    names = ("PID REFERENCE", "PPO / MALECNS ACTOR")
+    imitation = report.get("actor_training_method", "").startswith("PID-supervised")
+    names = (
+        "PID REFERENCE",
+        "IMITATION / MALECNS ACTOR" if imitation else "PPO / MALECNS ACTOR",
+    )
     cases = ("pid", "hover")
     title = "HOVER / REFERENCE AND LEARNING"
     if previous is not None:
@@ -35,7 +39,7 @@ def record(source, output, previous=None):
         ):
             raise ValueError("Before/after comparison requires the same physical model")
         sources[0] = previous / "hover.npz"
-        names = ("PPO / BEFORE", "PPO / TIGHTER VERTICAL REWARD")
+        names = ("LEARNED / BEFORE", "IMITATION / AFTER" if imitation else "PPO / AFTER")
         cases = ("hover", "hover")
         title = "HOVER / LEARNING BEFORE AND AFTER"
     captures = [np.load(path) for path in sources]

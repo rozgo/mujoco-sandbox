@@ -167,6 +167,7 @@ def run(args):
         "pid_config": vars(PIDConfig()),
         "matched_nominal_initial_state": True,
         "actor_has_pid_or_oscillator": False,
+        "actor_training_method": parent.get("method", "unspecified learned actor"),
         "actor_evaluation": "deterministic mean, no exploration, no resets",
         "policy_case_offsets": {
             "hover": "none",
