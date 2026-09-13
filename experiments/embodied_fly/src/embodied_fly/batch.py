@@ -15,11 +15,15 @@ import numpy as np
 from mjbatch import Batch
 
 from embodied_fly.body import CONTROL_DT, SUBSTEPS, FlyEnvironment
+from embodied_fly.observations import append_wing_velocity
 from embodied_fly.provenance import evidence, utc_now
 
 
 class FlyBatch:
-    def __init__(self, worlds, threads=0):
+    def __init__(self, worlds, threads=0, sensor_extension_size=0):
+        if sensor_extension_size not in (0, 6):
+            raise ValueError("Unknown batched sensory extension")
+        self.sensor_extension_size = sensor_extension_size
         self.template = FlyEnvironment()
         single = self.template
         root = single.fly.mjcf_model.root_model
@@ -138,7 +142,7 @@ class FlyBatch:
         )
         foot_adr = [self.sensor_addresses[f"batch_foot_{i}"] for i in range(6)]
         foot_touch = (self.fields["sensordata"][:, foot_adr] > 0).astype(np.float32)
-        return np.concatenate(
+        observation = np.concatenate(
             (
                 np.clip(normalized_q, -5, 5),
                 np.clip(self.fields["qvel"][:, single.qvel_indices] / 100, -10, 10),
@@ -152,6 +156,13 @@ class FlyBatch:
             ),
             axis=1,
         ).astype(np.float32)
+        return (
+            append_wing_velocity(
+                observation, self.fields["qvel"], single.wing_velocity_indices
+            )
+            if self.sensor_extension_size
+            else observation
+        )
 
     def step(self, action):
         action = np.asarray(action, dtype=np.float32)

@@ -960,3 +960,22 @@ migration* check to action/utility absolute tolerance 1e-6 and recurrent-state
 alongside it. The original physical task gates are unchanged. This explicitly
 corrects the earlier overly strong exact-CUDA assertion; it is not a training
 or physical-success claim.
+
+Pilot 02 completed 60.094962 seconds of optimization with the repaired inputs and
+retained-student corpus. Flight imitation MSE fell 0.463187 → 0.052054; ground
+retention MSE rose 0.000421 → 0.002731. All six new velocity channels remain
+unclipped. Five of six fixed ground cases and the continuous transition stayed
+upright with permitted support; tracking is degraded and the slow case fell.
+Both airborne trials still fell. The first 30 ms of hover replay shows only
+0.0526 body-weight upward passive force and substantially slower wing motion
+than the expert. This checkpoint is a diagnostic, not a promoted controller.
+
+Allow one bounded **180-second continuation** from pilot 02, preserving its Adam
+state, learning rate 3e-5, dataset splits, clock mixture, 32 sequences and 16/16
+burn-in/supervision. Seed 45002. The last flight-weighted losses were still falling
+(0.270 at 31 s, 0.217 at 41 s, 0.198 at 52 s), so this tests insufficient fitting
+before changing the method. Evaluate actual wing motion, both airborne cases,
+all ground commands and continuous transitions afterward. Do not infer success
+from lower loss or silently promote this candidate. The prior reference remains
+online01; a failed continuation should motivate corrective/on-policy learning,
+not indefinite extensions of this same warm start.

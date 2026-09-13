@@ -161,7 +161,7 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
     critic = Critic(brain).to(device)
-    env = FlyBatch(args.worlds, args.threads)
+    env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     trace = deque(maxlen=128)
     reward_fn = OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
@@ -185,7 +185,7 @@ def train(args):
             group["lr"] = args.lr
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
     # Preserve the same whole-episode held-out split as the imitation experiments.
-    episodes = load_episodes(args.rehearsal)
+    episodes = load_episodes(args.rehearsal, brain.sensor_extension_size == 6)
     validation_ids = set(
         np.random.default_rng(1193).permutation(len(episodes))[: max(1, len(episodes) // 4)]
     )
@@ -492,6 +492,7 @@ def train(args):
         checkpoint = {
             "state_dict": {k: v.detach().cpu() for k, v in brain.state_dict().items()},
             "observation_size": brain.observation_size,
+            "sensor_extension_size": brain.sensor_extension_size,
             "action_size": brain.action_size,
             "config": config,
             "graph_sha256": parent["graph_sha256"],

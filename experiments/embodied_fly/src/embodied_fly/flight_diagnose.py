@@ -68,12 +68,27 @@ def diagnose(args):
                 if len(below)
                 else None,
             }
+            if checkpoint.get("sensor_extension_size") == 6:
+                extended_mean = checkpoint["state_dict"]["observation_mean"].numpy()[-6:]
+                extended_std = (
+                    checkpoint["state_dict"]["observation_std"].numpy()[-6:].clip(0.05)
+                )
+                extended = (velocity / 2000 - extended_mean) / extended_std
+                results[name]["extended_wing_velocity_encoder_clip_fraction"] = np.mean(
+                    np.abs(extended) >= 10, axis=0
+                ).tolist()
     report = {
         "provenance": evidence(),
         "checkpoint_sha256": sha256(args.checkpoint),
         "model_sha256": sha256(args.model),
         "method": "Native MuJoCo mj_forward replay at captured control boundaries; no new physics integration or substep-averaged force claim",
         "wing_joints": [model.joint(j).name for j in wing],
+        "sensor_extension_size": checkpoint.get("sensor_extension_size", 0),
+        "sensor_extension_weight_l2": float(
+            checkpoint["state_dict"]["sensor_extension.weight"].norm()
+        )
+        if checkpoint.get("sensor_extension_size")
+        else None,
         "results": results,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

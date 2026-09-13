@@ -54,7 +54,7 @@ def train(args):
     anchor.core.adjacency = actor.core.adjacency
     anchor.core.transpose = actor.core.transpose
     actor.train()
-    env = FlyBatch(args.worlds, args.threads)
+    env = FlyBatch(args.worlds, args.threads, actor.sensor_extension_size)
     teacher = BrakingTeacher(env, args.teacher, device)
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     optimizer = torch.optim.Adam(actor.parameters(), lr=args.lr)
@@ -231,6 +231,7 @@ def train(args):
             "state_dict": {k: v.detach().cpu() for k, v in actor.state_dict().items()},
             "optimizer_state_dict": optimizer.state_dict(),
             "observation_size": actor.observation_size,
+            "sensor_extension_size": actor.sensor_extension_size,
             "action_size": actor.action_size,
             "config": config,
             "graph_sha256": parent["graph_sha256"],

@@ -120,3 +120,12 @@ def test_extra_sensors_preserve_old_actor_exactly_then_receive_gradients():
     new.action.square().sum().backward()
     assert child.sensor_extension.weight.grad.abs().sum() > 0
     assert torch.isfinite(child.sensor_extension.weight.grad).all()
+
+
+def test_extra_sensors_still_require_the_connectome_path_to_motors():
+    graph = sparse.csr_matrix((6, 6), dtype=np.float32)
+    brain = EmbodiedBrain(graph, [0, 1], [2, 3], [4, 5], 10, 3, sensor_extension_size=6).eval()
+    with torch.no_grad():
+        brain.sensor_extension.weight.fill_(1)
+    output = brain(torch.randn(2, 10), brain.initial_state(2))
+    torch.testing.assert_close(output.action[0], output.action[1])
