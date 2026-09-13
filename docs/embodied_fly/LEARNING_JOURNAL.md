@@ -1535,3 +1535,24 @@ inputs, freeze utility selection/context weights and train current-state motor
 corrections. This changes the recipe deliberately; it is not a speed benchmark.
 Evaluation seed72001 uses the same saved actor across all tasks without assistance.
 Keep all failed gates and training evidence. The full survival goal remains open.
+
+Motor-focus01 (source90da9e0) completed180.624521 s,162updates,165,888 physical
+transitions /331.776 aggregate sim seconds. All160 completed assisted episodes
+reached two seconds without an envelope failure. All three unassisted cases
+failed: stand/walk/hover first leave the envelope at0.418/0.268/0.058 s. Initial
+hover sweep speeds are only4.78/10.91 rad/s averaged across100 ms, insufficient
+for support. The complete three-case video retains all failures and was opened
+for the user. Motor-only focus has not yet solved these primitives.
+
+The first review mistakenly reported prohibited support from only the final
+control interval. It still failed every case independently on posture. Preserve
+that original report/video; fix the reduction to take the full-clip maximum,
+add a regression check for an early transient contact and repeat evaluation
+under a new name. Training, physics and acceptance thresholds are unchanged.
+
+Next declared continuation: **motor_focus02**, resume01,180 s, seed71002,
+32worlds/16threads/32-stepchunks, same Adam1e-5 and task loss, but reduce
+reference assistance from80% to25%. Fresh optimizer is explicitly recorded.
+This tests current-state corrections where the student has more control; do not
+interpret assisted survival as autonomous acceptance. Evaluate all three tasks
+teacher-free at the same development seed72001. No additional physics changes.

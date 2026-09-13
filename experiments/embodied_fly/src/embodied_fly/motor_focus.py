@@ -216,6 +216,7 @@ def review(args):
                 "yaw_error": v[:, 2],
                 "root_error": np.linalg.norm(env.fields["qpos"][:, :3] - target, axis=1)
                 * 0.01,
+                "forbidden_load": env.forbidden_peak.copy() / env.body_weight,
             }
         )
     elapsed = time.perf_counter() - started
@@ -234,7 +235,7 @@ def review(args):
             0.005 if task == "hover" else 0.0006
         )
         rmse = lambda key, values=measurements: float(np.sqrt(np.mean(values[key] ** 2)))
-        support = float(env.forbidden_peak[i] / env.body_weight)
+        support = float(measurements["forbidden_load"].max())
         passed = stable and support < 0.1 and failure is None
         if task == "hover":
             passed &= rmse("root_error") < 0.005

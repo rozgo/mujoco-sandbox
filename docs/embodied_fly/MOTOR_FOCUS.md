@@ -66,3 +66,9 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_
 Use unused output names when reproducing. Exit 2 means physical gates failed;
 the complete evidence remains saved. New training videos are checked and opened
 automatically for local review.
+
+The fingerprint hashes compiled values exactly. Mac and Linux compilation differ
+by rounding (maximum observed absolute difference2.60e-14, with all physical
+arrays agreeing at1e-12). Each host's native/batched bodies match exactly; replay
+uses the captured training MJB. Cross-host live recompilation must not bypass the
+strict fingerprint check silently. This is not a different body preset.

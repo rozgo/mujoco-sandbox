@@ -158,3 +158,25 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
     loaded = mujoco.MjModel.from_binary_path(str(args.output / "model.mjb"))
     assert checkpoint["physical_contract"] == physical_contract(loaded)
     json.dumps(report)
+
+
+def test_review_retains_early_forbidden_load_in_full_clip_gate(tmp_path, monkeypatch):
+    from embodied_fly import motor_focus
+
+    class EarlyContactBatch(FlyBatch):
+        def step(self, action):
+            super().step(action)
+            self.forbidden_peak[:] = 3 * self.body_weight if self.ages[0] == 1 else 0
+
+    monkeypatch.setattr(motor_focus, "FlyBatch", EarlyContactBatch)
+    args = SimpleNamespace(
+        output=tmp_path / "reference",
+        mode="reference",
+        teacher=TEACHER,
+        device="cpu",
+        seed=71001,
+        seconds=0.004,
+    )
+    report = motor_focus.review(args)
+    assert all(r["max_forbidden_ground_force_over_weight"] == 3 for r in report["results"])
+    assert not any(r["success"] for r in report["results"])
