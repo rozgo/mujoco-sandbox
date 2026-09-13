@@ -1242,3 +1242,25 @@ Navier–Stokes field or explicit wakes. This agreement does not change the
 teacher-free student acceptance criteria. Flight remains unsolved; the next
 controller work must address autonomous feedback stability rather than treat
 offline decoder error or constrained wing travel as a success.
+
+### Declared first-wingbeat calibration pilot
+
+The readout01 cache exposes substantially larger wing errors during the first
+5 ms than after 30 ms. On the two excluded expert episodes, first-millisecond
+pitch MSE is 0.194/0.207 versus 0.0115/0.0121 after 30 ms. Actual unassisted
+trajectories already diverge strongly within the first wingbeat. These observations
+motivate startup weighting; they do not prove that it will establish flight.
+
+Run one **10-second**, seed **54001**, learning-rate **0.001** calibration from
+readout01 using its existing original frozen-feature corpus. Draw **40%** of each
+1,024-example batch from the first **25 frames / 5 ms** of training episodes;
+draw the rest uniformly from the full training histories. Divide per-axis errors
+by training-target standard deviation (floor 0.1), giving small roll commands
+attention relative to their scale. Held-out episodes remain excluded from all
+normalization and sampling. Record startup and later validation errors separately.
+Only the existing 1,542 wing-output parameters may change. No runtime startup
+sequence, clock input, neural bypass, teacher or physics change is added.
+
+Evaluate the same original-model hover/forward initial captures, then the fixed
+walking cases and continuous transition; preserve all outcomes. Do not infer
+physical flight from either improved startup error or fitted expert histories.

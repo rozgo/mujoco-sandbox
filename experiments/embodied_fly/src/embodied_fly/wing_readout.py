@@ -62,6 +62,9 @@ def load_feature_corpus(cache, cache_report, checkpoint_hash, device):
         }
         corpus = {key: torch.as_tensor(value, device=device) for key, value in arrays.items()}
         corpus["wings"] = wings
+        corpus["frames_per_episode"] = features.shape[0]
+        corpus["training_episodes"] = len(train_ids)
+        corpus["validation_episodes"] = len(test_ids)
         corpus["report"] = {
             "cache_report_sha256": sha256(cache_report),
             "cache_sha256": sha256(cache),
@@ -71,6 +74,26 @@ def load_feature_corpus(cache, cache_report, checkpoint_hash, device):
             "validation_frames": len(arrays["test_x"]),
         }
     return corpus
+
+
+def sample_indices(corpus, batch_size, startup_frames=0, startup_fraction=0.0):
+    """Oversample reset histories without mixing held-out episodes into training."""
+    if (
+        not 0 <= startup_fraction <= 1
+        or not 0 <= startup_frames <= corpus["frames_per_episode"]
+    ):
+        raise ValueError("Invalid startup sampling window or fraction")
+    if startup_fraction and not startup_frames:
+        raise ValueError("Startup sampling requires a positive frame window")
+    count = round(batch_size * startup_fraction)
+    x = corpus["x"]
+    indices = torch.randint(len(x), (batch_size,), device=x.device)
+    if count:
+        # Cache flattening is time-major, then training-episode index.
+        indices[:count] = torch.randint(
+            startup_frames * corpus["training_episodes"], (count,), device=x.device
+        )
+    return indices
 
 
 def train(args):
@@ -102,6 +125,18 @@ def train(args):
         raise ValueError("Invalid six-wing output routing")
     if any(not np.array_equal(corpus["wings"], wings) for corpus in corpora):
         raise ValueError("Motor output routing differs between corpora")
+    if (
+        not 0 <= args.startup_fraction <= 1
+        or args.startup_frames < 0
+        or (args.startup_fraction and not args.startup_frames)
+        or any(args.startup_frames > c["frames_per_episode"] for c in corpora)
+    ):
+        raise ValueError("Invalid startup sampling window or fraction")
+    axis_scale = (
+        torch.cat([c["y"] for c in corpora]).std(0, correction=0).clamp_min(0.1)
+        if args.normalize_axes
+        else torch.ones(6, device=device)
+    )
     # These temporary optimization tensors are the six existing output rows.
     # Their learned values are copied back into the same full 78-output layer.
     weights = nn.Parameter(
@@ -111,13 +146,33 @@ def train(args):
     optimizer = torch.optim.Adam([weights, bias], lr=args.lr)
 
     def loss(inputs, labels):
-        return F.mse_loss(F.linear(inputs, weights, bias).tanh(), labels)
+        return ((F.linear(inputs, weights, bias).tanh() - labels) / axis_scale).square().mean()
 
     def validation_losses():
         with torch.no_grad():
-            return [float(loss(corpus["test_x"], corpus["test_y"])) for corpus in corpora]
+            return [
+                float(F.mse_loss(F.linear(c["test_x"], weights, bias).tanh(), c["test_y"]))
+                for c in corpora
+            ]
+
+    def startup_metrics():
+        with torch.no_grad():
+            results = []
+            for c in corpora:
+                n = args.startup_frames * c["validation_episodes"]
+                error = (F.linear(c["test_x"], weights, bias).tanh() - c["test_y"]).square()
+                results.append(
+                    {
+                        "startup_per_axis_mse": error[:n].mean(0).tolist() if n else None,
+                        "later_per_axis_mse": error[n:].mean(0).tolist()
+                        if n < len(error)
+                        else None,
+                    }
+                )
+            return results
 
     initial_by_corpus = validation_losses()
+    initial_startup = startup_metrics()
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
     started_utc = utc_now()
@@ -130,7 +185,9 @@ def train(args):
         )
         corpus = corpora[choice]
         x, y = corpus["x"], corpus["y"]
-        indices = torch.randint(len(x), (args.batch_size,), device=device)
+        indices = sample_indices(
+            corpus, args.batch_size, args.startup_frames, args.startup_fraction
+        )
         value = loss(x[indices], y[indices])
         if not torch.isfinite(value):
             raise RuntimeError("Nonfinite wing calibration loss")
@@ -200,6 +257,13 @@ def train(args):
         "final_validation_wing_mse": float(np.mean(final_by_corpus)),
         "initial_validation_by_corpus": initial_by_corpus,
         "final_validation_by_corpus": final_by_corpus,
+        "startup_frames_per_episode": args.startup_frames,
+        "startup_sample_fraction": args.startup_fraction,
+        "startup_sampling": "Declared fraction drawn from initial training-episode frames; remaining samples uniform over all training frames",
+        "axis_loss_standard_deviation": axis_scale.tolist(),
+        "axis_normalization_from_training_targets_only": args.normalize_axes,
+        "initial_validation_startup_by_corpus": initial_startup,
+        "final_validation_startup_by_corpus": startup_metrics(),
         "setup_seconds": setup_seconds,
         "training_seconds": training_seconds,
         "evaluation_and_save_seconds": time.perf_counter() - evaluation_start,
@@ -227,4 +291,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch-size", type=int, default=1024)
     parser.add_argument("--seed", type=int, default=51001)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--startup-frames", type=int, default=0)
+    parser.add_argument("--startup-fraction", type=float, default=0)
+    parser.add_argument("--normalize-axes", action="store_true")
     train(parser.parse_args())

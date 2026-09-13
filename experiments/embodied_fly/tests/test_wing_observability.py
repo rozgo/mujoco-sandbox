@@ -6,7 +6,7 @@ import torch
 
 from embodied_fly.provenance import sha256
 from embodied_fly.wing_observability import metrics, ridge_readout
-from embodied_fly.wing_readout import load_feature_corpus, replace_wing_rows
+from embodied_fly.wing_readout import load_feature_corpus, replace_wing_rows, sample_indices
 
 
 def test_readout_uses_training_statistics_and_recovers_a_known_held_out_mapping():
@@ -70,6 +70,14 @@ def test_correction_corpora_keep_whole_episode_validation_out_and_verify_feature
         assert torch.all(corpus["x"] == corpus_id) and torch.all(corpus["y"] == corpus_id)
         assert torch.all(corpus["test_x"] == 99) and torch.all(corpus["test_y"] == 99)
         assert corpus["report"]["unique_training_frames"] == 9
+        indices = sample_indices(corpus, 1000, startup_frames=1, startup_fraction=0.4)
+        assert torch.all(indices[:400] < 3)
+        assert torch.any(indices[400:] >= 3)
+        assert torch.all(corpus["x"][indices] == corpus_id)  # no held-out marker
+        with pytest.raises(ValueError, match="positive frame"):
+            sample_indices(corpus, 1000, startup_fraction=0.4)
+        with pytest.raises(ValueError, match="Invalid startup"):
+            sample_indices(corpus, 1000, startup_frames=4)
         loaded.append(corpus)
         with pytest.raises(ValueError, match="do not belong"):
             load_feature_corpus(cache, report, "different_parent", "cpu")
