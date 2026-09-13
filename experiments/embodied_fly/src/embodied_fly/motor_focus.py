@@ -25,6 +25,7 @@ from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import synchronize
 from embodied_fly.wing_motion import CONFIG
+from embodied_fly.wing_response_learning import response_loss
 
 TASKS = ("stand", "walk", "hover")
 
@@ -352,6 +353,13 @@ def train(args):
         raise ValueError("Need positive training settings and at least three worlds")
     if not 0 <= args.teacher_mix <= 1:
         raise ValueError("Teacher mixture must be in [0,1]")
+    response_weight = getattr(args, "wing_response_loss", 0.0)
+    response_worlds = getattr(args, "wing_response_worlds", 8)
+    if not np.isfinite(response_weight) or response_weight < 0 or response_worlds < 1:
+        raise ValueError("Invalid wing-response learning settings")
+    if response_weight and not getattr(args, "ground_posture", False):
+        raise ValueError("Wing-response supervision requires ground posture targets")
+    response_rng = np.random.default_rng(args.seed + 1101)
     args.output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
     provenance = evidence()
@@ -393,10 +401,12 @@ def train(args):
             start = time.perf_counter()
             memory = memory.detach()
             losses = []
+            response_errors = []
             per_task = [[] for _ in TASKS]
             for _ in range(args.sequence):
                 obs = env.observation()
                 target = torch.as_tensor(teacher.act(), device=device)
+                memory_before = memory
                 result = actor(torch.as_tensor(obs, device=device), memory)
                 memory = result.state
                 flight = torch.as_tensor(tasks.task_ids == 2, device=device)
@@ -411,7 +421,21 @@ def train(args):
                     error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
                     for i in range(3)
                 ]
-                losses.append(torch.stack(group_losses).mean())
+                loss = torch.stack(group_losses).mean()
+                if response_weight:
+                    correction = response_loss(
+                        actor,
+                        memory_before,
+                        env,
+                        posture,
+                        obs,
+                        tasks.task_ids,
+                        response_worlds,
+                        response_rng,
+                    )
+                    loss = loss + response_weight * correction
+                    response_errors.append(float(correction.detach()))
+                losses.append(loss)
                 for i, value in enumerate(group_losses):
                     per_task[i].append(float(value.detach()))
                 student = result.action.detach().cpu().numpy()
@@ -490,6 +514,9 @@ def train(args):
                     "updates": updates,
                     "transitions": transitions,
                     "task_motor_loss": dict(zip(TASKS, map(np.mean, per_task))),
+                    "wing_response_loss": float(np.mean(response_errors))
+                    if response_errors
+                    else None,
                     "completed_episodes": len(episodes),
                     "failed_episodes": sum(e["failed"] for e in episodes),
                     "posture_by_task": {
@@ -523,6 +550,11 @@ def train(args):
         "parent_checkpoint_sha256": sha256(args.resume),
         "method": "motor-only online imitation on actual teacher/student-mixture physical states",
         "ground_posture": posture.report() if teacher.posture is not None else None,
+        "wing_response_supervision": {
+            "weight": response_weight,
+            "ground_worlds_sampled_per_action": response_worlds if response_weight else 0,
+            "kind": "paired synthetic wing feedback, not extra physical transitions",
+        },
     }
     torch.save(checkpoint, args.output / "actor.pt")
     report = {
@@ -567,6 +599,16 @@ def train(args):
         "loss": "equal mean of task motor MSE; hover adds 2x wing MSE; ground wing weight is explicit; no utility loss",
         "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
         "ground_posture": posture.report() if teacher.posture is not None else None,
+        "wing_response_supervision": {
+            "weight": response_weight,
+            "ground_worlds_sampled_per_action": response_worlds if response_weight else 0,
+            "angle_perturbation_rad": 0.05,
+            "speed_perturbation_rad_s": 2.0,
+            "kind": "paired synthetic wing feedback from copied actual prior neural state",
+            "normalization": "finite difference divided by the requested unsaturated response",
+            "extra_physics_worlds": 0,
+            "runtime_module": False,
+        },
         "optimizer": "fresh Adam for declared motor-only parameter subset",
         "physical_success": "Training assistance is not student acceptance; run independent review",
     }
@@ -596,6 +638,8 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--ground-wing-loss", type=float, default=0.0)
+    parser.add_argument("--wing-response-loss", type=float, default=0.0)
+    parser.add_argument("--wing-response-worlds", type=int, default=8)
     parser.add_argument(
         "--ground-posture",
         action="store_true",

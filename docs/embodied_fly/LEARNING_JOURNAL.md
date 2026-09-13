@@ -1735,3 +1735,23 @@ probe with zero physical transitions and zero learning; it is not an autonomous
 rollout or biological validation. Check original-history action replay and
 retain exact source/capture hashes. This should distinguish wrong-sign response,
 weak response and simple constant bias before changing the training recipe.
+
+The response audit completes in3.985166s plus2.563717s setup,75 parallel neural
+sequences,zero physical transitions/learning. Original-history actions match
+the saved capture within5.67e-7. Ground angle/velocity responses are weak and
+sometimes have the wrong sign; normalization is not proven to be the cause.
+
+Implement opt-in wing-response supervision: for eight ground worlds per action,
+copy the actual prior neural state and make a positive/negative perturbation of
+one sampled wing angle(±0.05rad) or speed(±2rad/s). Recompute both corresponding
+sensory paths. Compare the resulting six-wing action difference to the bounded
+reference difference, normalized by the requested unsaturated response. This
+trains local response and cross-axis independence, supplementing ordinary motor
+labels; it adds no runtime controller, physics worlds or new learned module.
+Synthetic examples are explicitly excluded from physical transition counts.
+
+Declare motor_focus08: preferred06 parent,seed71008,180s,32worlds,16 CPU threads,
+32-step chunks,fresh Adam1e-5,zero execution assistance,ground posture active,
+ground wing weight10,wing-response weight1,eight sampled ground worlds. Inputs,
+body mechanics and78-output graph actor remain unchanged. Evaluate allthree
+five-second cases at72001;preserve every failed case.

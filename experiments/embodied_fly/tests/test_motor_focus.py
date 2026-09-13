@@ -165,6 +165,8 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
         teacher_mix=1.0,
         ground_posture=True,
         ground_wing_loss=10.0,
+        wing_response_loss=1.0,
+        wing_response_worlds=2,
         episode_seconds=2.0,
         seed=7,
         resume=resume,
@@ -177,6 +179,8 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
     assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": 1}
     assert report["ground_posture"]["runtime_override"] is False
     assert checkpoint["config"]["ground_posture"] is True
+    assert report["wing_response_supervision"]["extra_physics_worlds"] == 0
+    assert checkpoint["wing_response_supervision"]["weight"] == 1
     assert report["ground_wing_loss_weight"] == 10
     assert report["transitions"] >= 6
     assert report["checkpoint_sha256"] == sha256(args.output / "actor.pt")
