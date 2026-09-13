@@ -106,3 +106,37 @@ progress in maintaining flight, with accuracy and robustness still unfinished.
 The latest sensor probe confirms that height and vertical-speed inputs change
 wing outputs. Receiving feedback is not the same as learning a stable response;
 the next bounded change should address the coupled actor/critic stop.
+
+## Independent value fitting
+
+The [critic continuation](runs/position_ppo_critic_01/PLAN.md) explicitly enables
+`--independent-critic`. The policy retains its KL early stop; the critic trains
+for every requested epoch over saved causal features and fixed GAE returns.
+At 512 actions and 128-action chunks, two epochs give eight critic updates per
+rollout. The unchanged critic is small enough to fit these features directly,
+without replaying the 166,700-neuron actor. No additional physical transitions
+or deployed controller are introduced. Historical commands without the flag
+retain the previous coupled schedule.
+
+The input features are the normalized observation and preceding descending-cell
+state actually used during collection. They and the return targets are detached;
+value fitting cannot update actor weights. Per-task before/after fit, sample
+presentations, policy stops and critic update time are recorded. In-sample value
+fit remains separate from frozen-policy physical performance.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
+  --motor-all --hover-physical --checkpoint-activations --independent-critic \
+  --preset wing_position \
+  --resume assets/embodied_fly/diagnostics/position_ppo_timing_02.pt \
+  --graph outputs/fly_survival/malecns \
+  --output outputs/embodied_fly/position_ppo_critic_01 \
+  --seconds 600 --worlds 64 --threads 16 --episode-seconds 5 \
+  --horizon 512 --sequence 128 --epochs 2 --lr .000001 \
+  --noise .003 --minimum-noise .003 --critic-warmup-rollouts 0 \
+  --target-kl .03 --entropy 0 --gamma .999 --gae-lambda .995 --seed 99703
+```
+
+Use the recorded graph-cache location and matching compiled-body platform for
+the actual run. The command above documents the parameters; Linux headless
+evaluation uses EGL, while macOS replay uses its native rendering backend.

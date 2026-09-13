@@ -22,6 +22,7 @@ from embodied_fly.body import CONTROL_DT
 from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_outcome import FlightOutcomeReward, FlightResets
 from embodied_fly.physical_contract import physical_contract
+from embodied_fly.ppo_critic import fit_critic, value_quality
 from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import load_episodes, sample, synchronize
@@ -40,10 +41,12 @@ class Critic(nn.Module):
             nn.Linear(128, 1),
         )
 
-    def forward(self, brain, observation, state):
+    def features(self, brain, observation, state):
         obs = ((observation - brain.observation_mean) / brain.observation_std).clamp(-10, 10)
-        features = torch.cat([obs, state[brain.descending_ids].T.detach()], dim=-1)
-        return self.network(features).squeeze(-1)
+        return torch.cat([obs, state[brain.descending_ids].T.detach()], dim=-1).detach()
+
+    def forward(self, brain, observation, state):
+        return self.network(self.features(brain, observation, state)).squeeze(-1)
 
 
 def motor_distribution(output, active, log_std, minimum_std=0.01):
@@ -177,6 +180,9 @@ def train(args):
     motor_mode = motor_ground or motor_all
     hover_physical = getattr(args, "hover_physical", False)
     recompute = getattr(args, "checkpoint_activations", False)
+    independent_critic = getattr(args, "independent_critic", False)
+    if independent_critic and args.epochs < 1:
+        raise ValueError("Independent critic requires at least one training epoch")
     if hover_physical and (
         not motor_all
         or getattr(args, "motor_retention_weight", 0)
@@ -226,6 +232,8 @@ def train(args):
     torch.set_num_threads(4)
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
+    # Critic shuffling must not consume the actor/physical sampling RNG streams.
+    critic_rng = np.random.default_rng(args.seed ^ 0xC8171C)
     device = torch.device(args.device)
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
@@ -388,6 +396,10 @@ def train(args):
         "rollouts": 0,
         "ppo_updates": 0,
         "critic_updates": 0,
+        "critic_sample_presentations": 0,
+        "critic_updates_after_actor_stop": 0,
+        "actor_kl_stops": 0,
+        "independent_critic_seconds": 0.0,
         "critic_warmup_rollouts": 0,
         "transitions": 0,
         "rehearsal_frames": 0,
@@ -423,13 +435,19 @@ def train(args):
             wing_target_buf = []
             retention_buf = []
             state_starts = []
+            critic_features = []
             physical_rewards = []
             term_sums = {}
             with torch.no_grad():
                 for t in range(args.horizon):
                     if t % args.sequence == 0:
                         state_starts.append(memory.clone())
-                    value = critic(brain, observation, memory)
+                    if independent_critic:
+                        features = critic.features(brain, observation, memory)
+                        critic_features.append(features)
+                        value = critic.network(features).squeeze(-1)
+                    else:
+                        value = critic(brain, observation, memory)
                     output = brain(
                         observation, memory, sample_activity=True, time_scale=time_scale
                     )
@@ -564,6 +582,9 @@ def train(args):
                 data["wing_target"] = torch.stack(wing_target_buf)
             if retainer is not None:
                 data["ground_reference_action"] = torch.stack(retention_buf)
+            if independent_critic:
+                data["critic_features"] = torch.stack(critic_features)
+                critic_features.clear()
             adv, returns = advantages(
                 data["reward"],
                 data["value"],
@@ -574,20 +595,9 @@ def train(args):
             )
             critic_quality = {}
             if motor_mode:
-                for i, name in enumerate(task_transitions):
-                    mask = torch.as_tensor(task_ids == i, device=device)
-                    if mask.any():
-                        target = returns[:, mask]
-                        residual = target - data["value"][:, mask]
-                        variance = target.var(unbiased=False)
-                        critic_quality[name] = {
-                            "return_mean": float(target.mean()),
-                            "return_std": float(variance.sqrt()),
-                            "prediction_rmse": float(residual.square().mean().sqrt()),
-                            "explained_variance": float(
-                                1 - residual.var(unbiased=False) / variance.clamp_min(1e-8)
-                            ),
-                        }
+                critic_quality = value_quality(
+                    data["value"], returns, task_ids, task_transitions
+                )
             adv = (adv - adv.mean()) / adv.std().clamp_min(1e-6)
             synchronize(device)
             counters["collection_seconds"] += time.perf_counter() - collect_start
@@ -596,14 +606,17 @@ def train(args):
             kl_values, policy_losses, value_losses, wing_losses = [], [], [], []
             retention_losses = []
             stop_epoch = False
-            for _ in range(args.epochs):
+            critic_fit = None
+            critic_after = {}
+            for _ in range(0 if independent_critic and warming_critic else args.epochs):
                 for chunk in rng.permutation(len(state_starts)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
                     state = state_starts[chunk].detach()
                     new_logps, predictions = [], []
                     entropy, wing_errors, retention_errors = [], [], []
                     for t in range(a, b):
-                        predictions.append(critic(brain, data["obs"][t], state))
+                        if not independent_critic:
+                            predictions.append(critic(brain, data["obs"][t], state))
                         # Critic warmup needs no actor graph. Later updates can
                         # recompute the identical actor to fit longer sequences.
                         with torch.set_grad_enabled(not warming_critic):
@@ -659,7 +672,11 @@ def train(args):
                     policy_loss = torch.maximum(
                         -adv[a:b] * ratio, -adv[a:b] * ratio.clamp(0.8, 1.2)
                     ).mean()
-                    value_loss = F.mse_loss(torch.stack(predictions), returns[a:b])
+                    value_loss = (
+                        torch.zeros((), device=device)
+                        if independent_critic
+                        else F.mse_loss(torch.stack(predictions), returns[a:b])
+                    )
                     physical_loss = policy_loss - args.entropy * torch.stack(entropy).mean()
                     wing_loss = torch.stack(wing_errors).mean() if wing_weight else None
                     loss = physical_loss + (wing_weight * wing_loss if wing_weight else 0)
@@ -708,12 +725,15 @@ def train(args):
                     if not warming_critic:
                         nn.utils.clip_grad_norm_(parameters, 1.0)
                         optimizer.step()
-                    value_optimizer.zero_grad(set_to_none=True)
-                    value_loss.backward()
-                    nn.utils.clip_grad_norm_(critic.parameters(), 1.0)
-                    value_optimizer.step()
+                    if not independent_critic:
+                        value_optimizer.zero_grad(set_to_none=True)
+                        value_loss.backward()
+                        nn.utils.clip_grad_norm_(critic.parameters(), 1.0)
+                        value_optimizer.step()
+                        counters["critic_updates"] += 1
+                        counters["critic_sample_presentations"] += args.sequence * args.worlds
+                        value_losses.append(float(value_loss.detach()))
                     counters["ppo_updates"] += int(not warming_critic)
-                    counters["critic_updates"] += 1
                     if wing_weight:
                         counters["wing_supervised_presentations"] += (
                             args.sequence * args.worlds
@@ -722,9 +742,34 @@ def train(args):
                     if retention_loss is not None:
                         retention_losses.append(float(retention_loss.detach()))
                     policy_losses.append(float(policy_loss.detach()))
-                    value_losses.append(float(value_loss.detach()))
                 if stop_epoch:
                     break
+            counters["actor_kl_stops"] += int(stop_epoch)
+            if independent_critic:
+                synchronize(device)
+                critic_start = time.perf_counter()
+                critic_fit = fit_critic(
+                    critic,
+                    value_optimizer,
+                    data["critic_features"],
+                    returns,
+                    args.sequence,
+                    args.epochs,
+                    critic_rng,
+                )
+                if motor_mode:
+                    critic_after = value_quality(
+                        critic_fit["predictions"], returns, task_ids, task_transitions
+                    )
+                del critic_fit["predictions"]
+                value_losses.extend(critic_fit.pop("losses"))
+                counters["critic_updates"] += critic_fit["updates"]
+                counters["critic_sample_presentations"] += critic_fit["sample_presentations"]
+                counters["critic_updates_after_actor_stop"] += (
+                    critic_fit["updates"] if stop_epoch else 0
+                )
+                synchronize(device)
+                counters["independent_critic_seconds"] += time.perf_counter() - critic_start
             synchronize(device)
             ppo_seconds = time.perf_counter() - update_start
             counters["ppo_optimization_seconds"] += ppo_seconds
@@ -780,7 +825,7 @@ def train(args):
                 "actor_updates_enabled": not warming_critic,
                 "mean_physical_reward": float(np.mean(physical_rewards)),
                 "reward_rates": term_sums,
-                "max_kl": max(kl_values),
+                "max_kl": max(kl_values, default=None),
                 "policy_loss": float(np.mean(policy_losses)) if policy_losses else None,
                 "value_loss": float(np.mean(value_losses)) if value_losses else None,
                 "wing_supervision_mse": float(np.mean(wing_losses)) if wing_losses else None,
@@ -793,6 +838,8 @@ def train(args):
                 "completed_episodes": len(episode_records),
                 "failed_episodes": sum(e["failed"] for e in episode_records),
                 "critic_by_task_before_update": critic_quality,
+                "critic_fit_on_collected_rollout": critic_fit,
+                "critic_by_task_after_update": critic_after,
                 "transitions_by_task": task_transitions.copy(),
                 "hover_reset_widening": tasks.widening if hover_physical else None,
             }
@@ -911,6 +958,20 @@ def train(args):
             "effective_gae_lambda": gae_lambda,
             "physical_timescales": timing,
             "activation_recomputation": recompute,
+            "critic_schedule": {
+                "independent_of_actor_kl": independent_critic,
+                "epochs": args.epochs,
+                "features": "normalized observation + preceding descending state",
+                "feature_source": "saved during physical collection"
+                if independent_critic
+                else "actor recurrent replay during optimization",
+                "targets": "fixed timeout-aware GAE returns from the collected rollout",
+                "updates_per_complete_rollout": args.epochs * args.horizon // args.sequence
+                if independent_critic
+                else None,
+                "actor_or_physics_replay_for_value_fit": not independent_critic,
+                "deployed_module": False,
+            },
             "transitions_by_task": task_transitions,
             "aggregate_simulated_seconds_by_task": {
                 k: v * control_dt for k, v in task_transitions.items()
@@ -971,6 +1032,7 @@ if __name__ == "__main__":
     parser.add_argument("--motor-all", action="store_true")
     parser.add_argument("--hover-physical", action="store_true")
     parser.add_argument("--checkpoint-activations", action="store_true")
+    parser.add_argument("--independent-critic", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)
     parser.add_argument("--critic-warmup-rollouts", type=int, default=0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)

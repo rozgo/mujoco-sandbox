@@ -37,19 +37,33 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
 
 
 @pytest.mark.parametrize(
-    "wing_weight,all_motor,warmup,physical",
+    "wing_weight,all_motor,warmup,physical,independent,force_kl_stop",
     [
-        (0.0, False, 0, False),
-        (100.0, False, 0, False),
-        (0.0, True, 0, False),
-        (0.0, True, 1, False),
-        (0.0, True, 0, True),
+        (0.0, False, 0, False, False, False),
+        (100.0, False, 0, False, False, False),
+        (0.0, True, 0, False, False, False),
+        (0.0, True, 1, False, False, False),
+        (0.0, True, 0, True, False, False),
+        (0.0, True, 0, True, True, False),
+        (0.0, True, 0, True, True, True),
+        (0.0, True, 1, True, True, False),
     ],
 )
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch, wing_weight, all_motor, warmup, physical
+    tmp_path, monkeypatch, wing_weight, all_motor, warmup, physical, independent, force_kl_stop
 ):
     from embodied_fly import ppo
+
+    if force_kl_stop:
+        original_logp = ppo.joint_log_probability
+
+        def shifted_update_logp(*args, **kwargs):
+            result = original_logp(*args, **kwargs)
+            # Force actor KL rejection on the first replayed chunk, while
+            # leaving all physical collection probabilities untouched.
+            return result + 2 if torch.is_grad_enabled() else result
+
+        monkeypatch.setattr(ppo, "joint_log_probability", shifted_update_logp)
 
     brain = tiny_brain()
     brain.set_motor_only()
@@ -83,6 +97,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         motor_retention_weight=4.0 if all_motor and not physical else 0.0,
         hover_physical=physical,
         checkpoint_activations=physical,
+        independent_critic=independent,
         critic_warmup_rollouts=warmup,
         wing_supervision=wing_weight,
         preset=preset,
@@ -92,7 +107,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         threads=2,
         horizon=8,
         sequence=4,
-        epochs=1,
+        epochs=2 if independent else 1,
         seconds=0.001,
         gamma=0.998,
         gae_lambda=0.99,
@@ -108,11 +123,19 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     report = ppo.train(args)
     assert report["transitions"] == worlds * 8
     assert report["critic_updates"] > 0
-    assert (report["ppo_updates"] == 0) == bool(warmup)
-    if warmup:
+    assert (report["ppo_updates"] == 0) == bool(warmup or force_kl_stop)
+    if warmup or force_kl_stop:
         assert all(torch.equal(brain.state_dict()[k], v) for k, v in initial_actor.items())
         assert report["core_gradient_audit_from_physical_reward"] is None
         assert all(v == 0 for v in report["core_changes"].values())
+    if independent:
+        assert report["critic_schedule"]["independent_of_actor_kl"]
+        assert report["critic_updates"] == 4
+        assert report["critic_sample_presentations"] == worlds * 8 * 2
+        assert not report["critic_schedule"]["actor_or_physics_replay_for_value_fit"]
+    if force_kl_stop:
+        assert report["actor_kl_stops"] == 1
+        assert report["critic_updates_after_actor_stop"] == 4
     assert report["active_motor_channels"] == 78
     assert report["rehearsal_frames"] == report["rehearsal_seconds"] == 0
     assert report["teacher_present_during_collection"] == bool(
@@ -136,9 +159,13 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     }
     assert sum(report["transitions_by_task"].values()) == report["transitions"]
     assert len(report["completed_episodes"]) == worlds * 4
-    assert warmup or all(
-        x["l2"] > 0 and x["finite"]
-        for x in report["core_gradient_audit_from_physical_reward"].values()
+    assert (
+        warmup
+        or force_kl_stop
+        or all(
+            x["l2"] > 0 and x["finite"]
+            for x in report["core_gradient_audit_from_physical_reward"].values()
+        )
     )
     checkpoint = torch.load(args.output / "actor.pt", weights_only=True)
     assert checkpoint["motor_only"] and checkpoint["config"]["ground_posture"]
@@ -155,6 +182,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         # The physical reward gradient was audited before adding the retention loss.
         assert (
             warmup
+            or force_kl_stop
             or physical
             or report["core_gradient_audit_from_ground_retention"] is not None
         )
