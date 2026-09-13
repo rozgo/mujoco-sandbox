@@ -13,7 +13,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.record import record
 
 
-def montage(source, output):
+def montage(source, output, camera_profile="damped"):
     if output.exists():
         raise FileExistsError("Preserve earlier videos; choose a new output")
     evaluation = json.loads((source / "report.json").read_text())
@@ -26,7 +26,7 @@ def montage(source, output):
         folder = Path(temporary)
         for i, case in enumerate(evaluation["results"]):
             video = folder / f"segment_{i:02d}.mp4"
-            record(source, case["case"], video)
+            record(source, case["case"], video, camera_profile)
             segments.append(json.loads(video.with_suffix(".json").read_text()))
         listing = folder / "concat.txt"
         listing.write_text(
@@ -70,6 +70,7 @@ def montage(source, output):
         "duration_seconds": frames / 50,
         "size": metadata["size"],
         "playback_multiplier": 1,
+        "camera_profile": camera_profile,
         "fully_decoded": True,
         "render_and_encode_seconds": time.perf_counter() - started,
         "video_sha256": sha256(output),
@@ -82,5 +83,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--camera-profile", choices=("locked", "damped"), default="damped")
     args = parser.parse_args()
-    montage(args.source, args.output)
+    montage(args.source, args.output, args.camera_profile)

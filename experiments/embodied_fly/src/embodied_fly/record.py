@@ -61,7 +61,9 @@ def replay_clock(states, metadata, fps=50):
     return np.clip(indices, 0, count - 1), timestamps, control_hz
 
 
-def record(source, case, output):
+def record(source, case, output, camera_profile="damped"):
+    if camera_profile not in ("locked", "damped"):
+        raise ValueError("Unknown observer camera profile")
     started = time.perf_counter()
     if output.exists():
         raise FileExistsError("Choose a new video version; preserve the existing capture")
@@ -110,7 +112,10 @@ def record(source, case, output):
     option = mujoco.MjvOption()
     option.geomgroup[3:] = 0
     camera = mujoco.MjvCamera()
-    camera.azimuth, camera.elevation, camera.distance = 135, -25, 0.95
+    camera.azimuth, camera.elevation = 135, -25
+    camera.distance = 1.3 if camera_profile == "damped" else 0.95
+    follow = None
+    camera_positions, body_positions = [], []
     output.parent.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(
         str(output),
@@ -137,7 +142,20 @@ def record(source, case, output):
             data.ctrl[:] = states["ctrl"][step]
             data.time = timestamps[step]
             mujoco.mj_forward(model, data)
-            camera.lookat[:] = data.xpos[thorax]
+            target = data.xpos[thorax].copy()
+            if camera_profile == "locked" or follow is None:
+                follow = target.copy()
+            else:
+                # Observer-only smoothing at the encoded 50 Hz clock. Vertical
+                # bobbing is visible within the frame rather than moving it.
+                tau = np.array([0.12, 0.12, 0.4])
+                follow += -np.expm1(-(1 / 50) / tau) * (target - follow)
+                # Keep a rapidly falling fly in view without snapping to its body.
+                lag_limit = np.array([0.25, 0.25, 0.3])
+                follow = np.clip(follow, target - lag_limit, target + lag_limit)
+            camera.lookat[:] = follow
+            camera_positions.append(follow.copy())
+            body_positions.append(target.copy())
             renderer.update_scene(data, camera=camera, scene_option=option)
             board = Image.new("RGB", (1600, 900), "#111519")
             board.paste(Image.fromarray(renderer.render()), (10, 100))
@@ -302,6 +320,36 @@ def record(source, case, output):
         "state_sha256": hashlib.sha256((source / f"{case}.npz").read_bytes()).hexdigest(),
         "model_sha256": hashlib.sha256((source / "model.mjb").read_bytes()).hexdigest(),
         "observer_only_floor_display": floor_display,
+        "observer_camera": {
+            "profile": camera_profile,
+            "distance_cm": camera.distance,
+            "time_constants_xyz_seconds": [0.12, 0.12, 0.4]
+            if camera_profile == "damped"
+            else [0, 0, 0],
+            "maximum_follow_lag_xyz_cm": [0.25, 0.25, 0.3]
+            if camera_profile == "damped"
+            else [0, 0, 0],
+            "measured_maximum_lag_xyz_cm": np.abs(
+                np.asarray(camera_positions) - body_positions
+            )
+            .max(axis=0)
+            .tolist(),
+            "camera_targets_sha256": hashlib.sha256(
+                np.asarray(camera_positions).tobytes()
+            ).hexdigest(),
+            "camera_vertical_frame_delta_rms_cm": float(
+                np.sqrt(np.mean(np.diff(np.asarray(camera_positions)[:, 2]) ** 2))
+            )
+            if frame_count > 1
+            else 0,
+            "body_vertical_frame_delta_rms_cm": float(
+                np.sqrt(np.mean(np.diff(np.asarray(body_positions)[:, 2]) ** 2))
+            )
+            if frame_count > 1
+            else 0,
+            "affects_physics_or_policy": False,
+            "eye_cameras": "unchanged body-mounted observer views",
+        },
         "video_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "render_seconds": time.perf_counter() - started,
     }
@@ -314,5 +362,6 @@ if __name__ == "__main__":
     parser.add_argument("source", type=Path)
     parser.add_argument("case")
     parser.add_argument("output", type=Path)
+    parser.add_argument("--camera-profile", choices=("locked", "damped"), default="damped")
     args = parser.parse_args()
-    record(args.source, args.case, args.output)
+    record(args.source, args.case, args.output, args.camera_profile)
