@@ -1194,3 +1194,14 @@ histories, then update only the existing six wing output rows in a bounded fit.
 This addresses states the student visits while preserving its current architecture.
 No teacher assistance may appear in the later acceptance rollouts. Retain the
 angle01 ground video, all rejected pilots and the original online01 reference.
+
+Corrective continuation is now fixed as seed **52001**, eight 0.3-second episodes,
+25% `motor_wing_readout_01` / 75% teacher executed controls. Keep all failed
+episodes in the collection manifest. If the accepted demonstration envelope is
+not maintained, diagnose the physical failure before using those labels. Subsequent
+readout fitting uses equal sampling of original and corrective training corpora,
+with validation episodes excluded separately for each corpus. Start from the
+same readout01 checkpoint, keep its entire upstream actor frozen, and calibrate
+the same 1,542 existing wing output parameters for **10 seconds**, Adam 0.003,
+1,024-frame minibatches, seed **53001**. This is supervised corrective training;
+neither assisted collection nor low validation error establishes student flight.

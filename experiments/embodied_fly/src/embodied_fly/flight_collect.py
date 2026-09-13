@@ -166,7 +166,12 @@ def collect(args):
         "utility_labels": "explore for this commanded flight warm start; not yet learned survival selection",
         "observations_are_causal": True,
         "future_reference_used_by_teacher_only": True,
-        "student_observation_limit": "383 existing proprioceptive inputs; no altitude target or camera pixels yet; initial wing-control curriculum",
+        "recorded_observation_size": len(env.observation()),
+        "student_observation_size": actor.observation_size if actor is not None else None,
+        "student_sensor_extension_size": actor.sensor_extension_size
+        if actor is not None
+        else None,
+        "student_observation_limit": "Legacy capture stores 383 fields; student appends its declared measured wing velocity/angle extension. No altitude target, camera pixels or teacher phase enters student input.",
         "episodes": reports,
     }
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
