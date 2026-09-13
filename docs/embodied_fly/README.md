@@ -50,6 +50,11 @@ The settled height band is 0.13 mm and peak position error 0.16 mm. This is a
 controller/plant reference, not a newly trained fly. The preceding unfiltered
 reference video is retained with the user's rejection of its jerky motion.
 
+The next [hover-first stage](HOVER_FIRST.md) dedicates every PPO world to hover
+on this accepted plant, with explicit checkpoint/feedback migration and a matched
+PID/PPO comparison. Standing and walking are deferred in the revised curriculum;
+the prior checkpoint stays preserved. One actor continues across motor stages.
+
 ## Historical torque-model experiments
 
 The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)

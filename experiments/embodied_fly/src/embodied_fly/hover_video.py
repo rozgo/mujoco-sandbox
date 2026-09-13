@@ -41,6 +41,10 @@ def record(source, output):
     camera.distance = max(1.6, float(np.linalg.norm(high - low)) * 2.8 + 1)
     option = mujoco.MjvOption()
     option.geomgroup[3:] = 0
+    detail_camera = mujoco.MjvCamera()
+    detail_camera.azimuth, detail_camera.elevation = camera.azimuth, camera.elevation
+    detail_camera.distance = 1.1
+    thorax = model.body("walker/thorax").id
     errors = [(s["qpos"][:, 2] - target[2]) * 10 for s in captures]
     chart_range = max(1, float(np.ceil(max(np.abs(e).max() for e in errors))))
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -57,7 +61,10 @@ def record(source, output):
     )
     writer.send(None)
     try:
-        with mujoco.Renderer(model, height=540, width=780) as renderer:
+        with (
+            mujoco.Renderer(model, height=540, width=780) as renderer,
+            mujoco.Renderer(model, height=180, width=260) as detail,
+        ):
             for frame, step in enumerate(indices):
                 board = Image.new("RGB", (1600, 900), "#111519")
                 draw = ImageDraw.Draw(board)
@@ -89,6 +96,12 @@ def record(source, output):
                     mujoco.mj_forward(model, data)
                     renderer.update_scene(data, camera=camera, scene_option=option)
                     board.paste(Image.fromarray(renderer.render()), (x, 140))
+                    detail_camera.lookat[:] = data.xpos[thorax]
+                    detail.update_scene(data, camera=detail_camera, scene_option=option)
+                    board.paste(Image.fromarray(detail.render()), (x + 510, 160))
+                    draw.text(
+                        (x + 518, 346), "DETAIL / follows body", font=font(13), fill="#a8b0b5"
+                    )
                     draw.text((x + 14, 100), name, font=font(23), fill=color)
                     error = float(np.linalg.norm(data.qpos[:3] - target) * 10)
                     draw.text(
@@ -157,6 +170,7 @@ def record(source, output):
             "shared": True,
             "lookat_cm": camera.lookat.tolist(),
             "distance_cm": camera.distance,
+            "detail_inset": "same fixed magnification, follows measured thorax; main overview remains fixed",
         },
         "altitude_chart_range_mm": chart_range,
         "observer_only_floor_display": floor_display,
