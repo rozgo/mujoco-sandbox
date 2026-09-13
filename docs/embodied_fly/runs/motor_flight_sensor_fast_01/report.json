@@ -1,0 +1,217 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T01:11:03.798164+00:00",
+    "source_commit": "a1d55f43be3ca2a0b4e11898cfb556a717b26003",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "f41326b09d7a2621a82ad4660aa5228421846327975517bb5436c7523727eb45",
+      "src/embodied_fly/body.py": "1280f5567338cb902b7f6bd725fe61336f766dc9c7e27c8166b2c5bcd1fc4565",
+      "src/embodied_fly/brain.py": "42c226d013c90aa32abaf421f368e17911b2eaaf25ee37110b2c7b4826f8c464",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "20de3b61a98bbed3ca560160f8c8a1335794edc578e17fe10b02c91d348da2af",
+      "src/embodied_fly/flight_collect.py": "d579bcbbd995ede03934600bd107fd0dc3c7a360ab6eb8e100df16f60e2850d5",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "6e4d2d5b5045e25398de90a065c89e02e70244fd73b1b49a5d3d078e964467b9",
+      "src/embodied_fly/flight_teacher.py": "3a6d1e5c683f17db3a24303a8e3ed47f8f7decec0d36bff65c7256181405c4cf",
+      "src/embodied_fly/migration.py": "f6cce849f465b7f117d3c6c1867d975e1d0c009d0f04ae12f13b1c0a5ad8aa70",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "9c49a616cbe6ff2c4b51d8dd1ffdd53f0f70b79a86e83ea1a908130af292e128",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/ppo.py": "a16bf4bbf038e84c7d5e8dbcbeeb60dd1770ad3d1c2c81950dade1e3c36ae5e8",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "19458e643c85966e68611ca89ce2f70a5f88a389b94a26272de00ce59cd8fc74",
+      "src/embodied_fly/transitions.py": "8e8f0fbc4a3f51bb16fdf323d6b23d4e95fa850e0141b9068f63412e46c02a66"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "optimization_started_utc": "2026-09-13T01:11:09.977060+00:00",
+  "optimization_completed_utc": "2026-09-13T01:12:10.584464+00:00",
+  "source_commit": "a1d55f43be3ca2a0b4e11898cfb556a717b26003",
+  "config": {
+    "reset_fraction": 0.25,
+    "device": "cuda",
+    "seconds": 60.0,
+    "worlds": 32,
+    "sequence": 32,
+    "burnin": 64,
+    "internal_steps": 4,
+    "lr": 3e-05,
+    "sensor_lr_multiplier": 100.0,
+    "seed": 49001,
+    "freeze_core": false,
+    "wing_loss_weight": 1.0,
+    "ground_loss_weight": 4.0,
+    "wing_velocity_inputs": true,
+    "wing_angle_inputs": true
+  },
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "neurons": 166700,
+  "connections": 25582938,
+  "trainable_parameters": 2410668,
+  "core_parameters": 500100,
+  "setup_seconds": 6.295566133223474,
+  "training_seconds": 60.607376581057906,
+  "evaluation_seconds": 1.5874309497885406,
+  "updates": 83,
+  "reset_start_updates": 22,
+  "supervised_examples": 84992,
+  "unique_training_frames": 26000,
+  "parallel_neural_sequences": 32,
+  "dataset_splits": [
+    {
+      "manifest_sha256": "9fd4903d17104a8c072d5977f9ee33099f18dcb6085c30a1a4e7c1e8a9e8f1b1",
+      "validation_indices": [
+        4,
+        6
+      ],
+      "control_hz": 500.0,
+      "neural_time_scale": 1.0,
+      "episode_file_sha256": {
+        "episode_000.npz": "a04c8363cad6ca7ae5017c1781b783395973586eaaf30abc26210c1337d1e8b1",
+        "episode_001.npz": "06e57ea6e758a9168097f4b3300247efd222da657aa65db1bb8bde91044d4ac3",
+        "episode_002.npz": "ccce6af4a782bed548090705e3d4b7dd5e3d7a723a1bdc5ad220f7c67e96f48f",
+        "episode_003.npz": "6663fe55f163401c515c534b71df2d659047d115b6c44bddbcfe8ae37f028b4c",
+        "episode_004.npz": "d9d099293b43fbf28bd7dfb049305e773eb1aafab2d8c783b1fd1d8a405967c9",
+        "episode_005.npz": "f96bf8d64f2f5765999ae871fb4b8afbc72985b0750ef7a07c7fce3ae139401b",
+        "episode_006.npz": "694718161b6d327dc44f2d42cf3ca6d24dc93f922eb1540136fe1aebd8369d9e",
+        "episode_007.npz": "8b6aa69b31a87e092577df42911bfe0c1552f96f90897be7771177cdd259feec"
+      }
+    },
+    {
+      "manifest_sha256": "561346a5171bd137a2e6276b877451a1f04fe9c38960d33e8ddd29d439a151da",
+      "validation_indices": [
+        4,
+        6
+      ],
+      "control_hz": 5000.0,
+      "neural_time_scale": 0.1,
+      "episode_file_sha256": {
+        "episode_000.npz": "dcb451707b272418795a76ad288570ef353d84c77233289f7f00ff2e499c9729",
+        "episode_001.npz": "adbc39e0be22ec795f0b1466d0141bd392f34d68b9e94d94abd6ebc3d040356e",
+        "episode_002.npz": "66a61f554bfd7667b844702e4854ae69fab46728d4e265b8fa6dc275bb693791",
+        "episode_003.npz": "ef6aa749bbb7c6ada6cd5225cffaf1f91cc4652e2879dda440291ef736157e2f",
+        "episode_004.npz": "979eff99b7275bf63b6086e894a1aa110970e579d3d739e15840c5df9dff413e",
+        "episode_005.npz": "3556ed4ad01e91239453ed3b84a47cccfc2a6fb6044c387bf1d03f1f08ddf57a",
+        "episode_006.npz": "34d4d5814611d6be84935549280311607581dfbab40ccb6eee39fdd5c4d8016a",
+        "episode_007.npz": "10053075bd2efa0ac73082053d65bd63439468fc99ea112b6460c9d0ef556178"
+      }
+    },
+    {
+      "manifest_sha256": "e95e6faf4f62f4dd6a50ab86a72fbdc1ab0ae8b4bd032b932ea0c5407b95b9d1",
+      "validation_indices": [
+        4,
+        6
+      ],
+      "control_hz": 5000.0,
+      "neural_time_scale": 0.1,
+      "episode_file_sha256": {
+        "episode_000.npz": "58d426beae051834935cfd1035504e9ec8b1008a3c067ae02b7a44d7430e6e0d",
+        "episode_001.npz": "5901d297ae692999368f1af9e30e1471d3d92ff84f05de0c358d0e60c99fb31a",
+        "episode_002.npz": "d369ef4d8dd6bf46af1e55ff86daa8f566a5b15d16e7695395769e5ad6e37857",
+        "episode_003.npz": "9ccd610105791d503b4bed38e92ee5919879db4b63875a6cd40c437b41766f97",
+        "episode_004.npz": "a87e32b350fb7abccd8ef201f592ee2ce557f94aeab9e80e6159d9a25c3cbe5d",
+        "episode_005.npz": "282fb211251e8e2178238e58aee4680315858852c9225cc7dcd021dc38f2a1cd",
+        "episode_006.npz": "ea5ea3b5fc2727599d072023e0a6d62f7f0ca7598fb916bab71e1d455f600e4b",
+        "episode_007.npz": "ad0384f69e7c4f5288eeb8c5b2ca3cb1cda8604c725601c6dc1db50ef8cd3d17"
+      }
+    }
+  ],
+  "parent_checkpoint_sha256": "f87c3ab48b871a560fceb5678ae12fc7ea32639d6806c007e4d36222fe5bc98a",
+  "optimizer_resumed": true,
+  "optimizer_sensor_grouped": true,
+  "optimizer_learning_rates": {
+    "shared_actor": 3e-05,
+    "sensory_extension": 0.003
+  },
+  "sensory_extension_migrated": false,
+  "optimizer_reset_reason": null,
+  "normalization": "retained from parent",
+  "live_physics_worlds_during_imitation": 0,
+  "initial_validation_motor_mse": 0.023880365421064198,
+  "final_validation_motor_mse": 0.018471276795025915,
+  "initial_reset_validation_motor_mse": 0.04363304516300559,
+  "final_reset_validation_motor_mse": 0.0351392530137673,
+  "peak_cuda_allocated_bytes": 9586650112,
+  "core_gradient_audit": {
+    "excitability": {
+      "finite": true,
+      "l2": 0.0071295155212283134,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "finite": true,
+      "l2": 0.0031322708819061518,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "finite": true,
+      "l2": 0.09998931735754013,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_parameter_changes": {
+    "excitability": {
+      "l2": 0.11254876106977463,
+      "changed_cells": 165351
+    },
+    "leak": {
+      "l2": 0.17106343805789948,
+      "changed_cells": 165502
+    },
+    "bias": {
+      "l2": 0.13694347441196442,
+      "changed_cells": 165503
+    }
+  },
+  "clock_updates": {
+    "1.0": 37,
+    "0.1": 46
+  },
+  "clock_sampling": "equal probability per control rate; homogeneous recurrent minibatches; one shared actor",
+  "initial_validation_by_neural_time_scale": {
+    "1.0": 0.0016842952463775873,
+    "0.1": 0.04607643559575081
+  },
+  "final_validation_by_neural_time_scale": {
+    "1.0": 0.0015274964971467853,
+    "0.1": 0.035415057092905045
+  },
+  "initial_reset_validation_by_neural_time_scale": {
+    "1.0": 0.0021237237378954887,
+    "0.1": 0.08514236658811569
+  },
+  "final_reset_validation_by_neural_time_scale": {
+    "1.0": 0.0021722123492509127,
+    "0.1": 0.06810629367828369
+  },
+  "checkpoint_sha256": "baa7cb0743f56375fc0065117687e10f83a6f3a9d3eed9102c71697dd143ff56",
+  "physical_success": "Not established by this supervised training report",
+  "completed_utc": "2026-09-13T01:12:12.495990+00:00"
+}

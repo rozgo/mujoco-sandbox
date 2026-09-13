@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 import torch
 from test_brain import make_brain
 
@@ -12,7 +13,8 @@ from embodied_fly.ppo import (
 )
 
 
-def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core():
+@pytest.mark.parametrize("time_scale", (1.0, 0.1))
+def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core(time_scale):
     brain = make_brain().train()
     active = torch.tensor([True, False, True])
     log_std = torch.full((2,), -3.0)
@@ -23,7 +25,7 @@ def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core
     done[3, 1] = True
     with torch.no_grad():
         for t in range(8):
-            result = brain(obs[t], memory, sample_activity=True)
+            result = brain(obs[t], memory, sample_activity=True, time_scale=time_scale)
             dist = motor_distribution(result, active, log_std)
             latent = dist.sample()
             probability = joint_log_probability(result, dist, latent, result.activity)
@@ -32,7 +34,7 @@ def test_recurrent_sample_replay_has_unit_ratio_and_reward_gradient_reaches_core
     memory = brain.initial_state(3)
     probabilities = []
     for t, (latent, activity, old) in enumerate(samples):
-        result = brain(obs[t], memory, activity_override=activity)
+        result = brain(obs[t], memory, activity_override=activity, time_scale=time_scale)
         dist = motor_distribution(result, active, log_std)
         new = joint_log_probability(result, dist, latent, activity)
         torch.testing.assert_close(new, old)

@@ -14,17 +14,20 @@ import mujoco
 import numpy as np
 from mjbatch import Batch
 
-from embodied_fly.body import CONTROL_DT, SUBSTEPS, FlyEnvironment
+from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.observations import append_wing_angles, append_wing_velocity
 from embodied_fly.provenance import evidence, utc_now
 
 
 class FlyBatch:
-    def __init__(self, worlds, threads=0, sensor_extension_size=0):
+    def __init__(self, worlds, threads=0, sensor_extension_size=0, *, preset="walking"):
         if sensor_extension_size not in (0, 6, 12):
             raise ValueError("Unknown batched sensory extension")
         self.sensor_extension_size = sensor_extension_size
-        self.template = FlyEnvironment()
+        self.template = FlyEnvironment(preset)
+        self.preset = preset
+        self.control_dt = self.template.control_dt
+        self.substeps = self.template.substeps
         single = self.template
         root = single.fly.mjcf_model.root_model
         xml = ET.fromstring(root.to_xml_string())
@@ -85,6 +88,7 @@ class FlyBatch:
                 "ximat",
                 "sensordata",
                 "warning",
+                "qfrc_passive",
             )
         }
         self.mean_sensors = self.fields["sensordata"].copy()
@@ -100,10 +104,30 @@ class FlyBatch:
         }
         self.reset(np.arange(worlds))
 
-    def reset(self, ids, yaw=None):
+    def reset(self, ids, yaw=None, *, state=None):
+        """Initialize selected worlds; optional captured state is reset-only.
+
+        State arrays have one row per selected world. Omitted fields retain the
+        normal reset values. Commands/needs are managed by the curriculum.
+        """
         ids = np.asarray(ids, dtype=np.int64)
+        if (
+            ids.ndim != 1
+            or len(np.unique(ids)) != len(ids)
+            or np.any((ids < 0) | (ids >= self.n))
+        ):
+            raise ValueError("Reset requires distinct valid world indices")
         if not len(ids):
             return
+        supplied = {}
+        if state is not None:
+            if yaw is not None or set(state) - {"qpos", "qvel", "act", "ctrl"}:
+                raise ValueError("Captured reset accepts only physical state, without yaw")
+            for name, value in state.items():
+                value = np.asarray(value, dtype=np.float64)
+                if value.shape != self.fields[name][ids].shape or not np.isfinite(value).all():
+                    raise ValueError(f"Invalid reset state for {name}")
+                supplied[name] = value.copy()
         # Reset copies the tested initial full anatomy, including passive wings.
         self.template.reset()
         # mjbatch copies only changed field elements. Reset first so an unchanged
@@ -116,6 +140,8 @@ class FlyBatch:
         if yaw is not None:
             self.fields["qpos"][ids, 3] = np.cos(np.asarray(yaw) / 2)
             self.fields["qpos"][ids, 6] = np.sin(np.asarray(yaw) / 2)
+        for name, value in supplied.items():
+            self.fields[name][ids] = value
         self.batch.forward(ids)
         self.mean_sensors[ids] = self.fields["sensordata"][ids]
         self.previous_action[ids] = 0
@@ -146,7 +172,7 @@ class FlyBatch:
             (
                 np.clip(normalized_q, -5, 5),
                 np.clip(self.fields["qvel"][:, single.qvel_indices] / 100, -10, 10),
-                self.fields["act"],
+                self.actuator_activation(),
                 self.velocity(False) / (20, 20, 20, 10, 10, 10),
                 self.fields["xmat"][:, single.thorax_id, 6:9],
                 foot_touch,
@@ -166,27 +192,35 @@ class FlyBatch:
             )
         return observation
 
+    def actuator_activation(self):
+        """Same 78 effective actuator inputs as the native single environment."""
+        effective = self.fields["ctrl"].copy()
+        filtered = self.model.actuator_actadr >= 0
+        effective[:, filtered] = self.fields["act"][:, self.model.actuator_actadr[filtered]]
+        return effective
+
     def step(self, action):
         action = np.asarray(action, dtype=np.float32)
         if action.shape != self.previous_action.shape or not np.isfinite(action).all():
             raise ValueError("Invalid batched actor output")
         self.previous_action[:] = np.clip(action, -1, 1)
-        inactive = self.template.walking_inactive
-        self.previous_action[:, inactive] = self.template.passive_action[inactive]
+        if self.preset == "walking":
+            inactive = self.template.walking_inactive
+            self.previous_action[:, inactive] = self.template.passive_action[inactive]
         self.fields["ctrl"][:] = self.template.low + (self.previous_action + 1) * 0.5 * (
             self.template.high - self.template.low
         )
         self.forbidden_peak[:] = 0
         addresses = [self.sensor_addresses[f"batch_forbidden_{i}"] for i in self.forbidden]
         self.mean_sensors[:] = 0
-        for _ in range(SUBSTEPS):
+        for _ in range(self.substeps):
             self.batch.step()
             self.mean_sensors += self.fields["sensordata"]
             # Sensor's force x is normal force of its maximum-norm contact.
             # This is a training proxy; native acceptance checks all contacts.
             force = np.abs(self.fields["sensordata"][:, addresses]).max(axis=1)
             np.maximum(self.forbidden_peak, force, out=self.forbidden_peak)
-        self.mean_sensors /= SUBSTEPS
+        self.mean_sensors /= self.substeps
         if np.any(self.fields["warning"]) or not np.isfinite(self.fields["qpos"]).all():
             raise RuntimeError("MuJoCo numerical failure in batch")
         self.ages += 1

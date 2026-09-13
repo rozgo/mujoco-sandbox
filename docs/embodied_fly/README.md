@@ -261,5 +261,29 @@ The [continuous-wing feedback pilot](runs/motor_flight_probe_02/SUMMARY.md) and
 their measured training costs and failed physical outcomes. Eight assisted
 correction episodes stayed airborne; unassisted student flight still failed.
 These candidates use the same 389-input graph architecture and remain diagnostic.
-Continuous wing-angle feedback is the next measured input repair; the successful
-inherited teacher and preserved student walking reference remain separately labeled.
+The subsequent angle-feedback candidate expands that same actor to **395 inputs**
+and retains stable ground support across all six development cases. Its
+[six-second walk/stop/resume review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
+shows the shared controller, actual simulated neural state and observer eyes.
+Walk/resume phase gates pass; stopping still drifts. Both flight tests still fail,
+and faster sensory learning regressed ground stability. The inherited flight
+teacher and preserved student walking reference remain separately labeled.
+
+```sh
+open previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4
+```
+
+Batched airborne PPO uses the same graph actor and complete flight physics.
+The reset corpus supplies only the first physical frame of training episodes;
+no teacher controls live rollouts. Ground rehearsal remains explicitly measured.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
+  --graph outputs/fly_survival/malecns \
+  --resume assets/embodied_fly/diagnostics/motor_flight_angle_probe_01.pt \
+  --rehearsal outputs/embodied_fly/retention_online01_01 \
+  --flight-resets outputs/embodied_fly/flight_demonstrations_01 --preset flight \
+  --output outputs/embodied_fly/motor_flight_ppo_probe_01 \
+  --worlds 32 --threads 16 --seconds 60 --horizon 128 --sequence 32 \
+  --epochs 2 --episode-seconds 0.06 --lr 0.000005 --noise 0.04 --seed 50001
+```

@@ -1094,3 +1094,47 @@ test verifies every moment before the first step and after checkpoint resume.
 No parameter is added and the measured graph stays fixed. This bounded rate
 change tests whether the new feedback can become useful quickly; it does not
 assume a flight improvement. Keep the angle pilot and online01 reference intact.
+
+### Faster sensory adaptation failed; move to physical flight reward
+
+`motor_flight_sensor_fast_01` trained for **60.607377 s**, 83 updates and 84,992
+supervised examples. Setup took 6.295566 s and validation 1.587431 s. Adam state
+was preserved. The added angle-input preactivation RMS grew from 0.000656 to
+0.036742; flight validation MSE decreased to 0.035415. Nevertheless both airborne
+tests fell, ordinary walking fell, and every continuous-transition phase became
+unstable. The checkpoint is retained as a rejected experiment. More imitation
+accuracy is insufficient evidence of physical flight.
+
+The preserved angle01 candidate was captured again with actual neural projection:
+all three six-second walk/stop/resume phases remained stable with valid support;
+walk/resume passed their phase gates and stopping failed (0.8723 mm late drift).
+This separate capture differs slightly from the earlier one because sparse CUDA
+reductions are not bitwise deterministic. Its six-second 1× film fully decodes
+to 300 frames, 1600×900 at 50 fps. Anatomy, signed latent-state colors, observer
+eyes and raw failed gates are visible; the video is a development artifact.
+
+Next use physical-outcome PPO for direct airborne control. Batched MuJoCo now
+supports the existing complete flight preset: 20 kHz physics, 5 kHz control,
+four physical substeps, all 78 motor channels and 72 filtered activation states.
+Effective activation observations match native single-body evaluation exactly.
+Driven-wing regression tests compare poses, velocities, aerodynamic passive
+loads, observations, contact parameters and repeated partial resets. Walking
+defaults remain unchanged.
+
+Declare a **60-second** PPO pilot, seed **50001**, from angle01: 32 native CPU
+worlds / 16 threads, RTX 4090 graph learning, 128-step rollouts, 32-step recurrent
+chunks, two PPO epochs, learning rate 5e-6, exploration standard deviation 0.04,
+60 ms episode timeout. Airborne resets use only frame zero of the six training
+episodes in `flight_demonstrations_01`; validation episodes 4 and 6 remain excluded.
+No teacher, oscillator, imposed wing phase or root force acts during rollouts.
+The existing graph actor receives the same 395 causal inputs and emits all 78
+commands. Its neural clock and PPO discounts scale to the 0.2 ms motor interval.
+
+Physical reward rates favor commanded horizontal velocity, small vertical speed,
+reset-height retention and reset-orientation retention, with a terminal penalty
+below 8 mm or thorax upright below 0.5. Multiply rates by actual elapsed physics
+time. Avoid an action-smoothness cost that would punish necessary wing flapping.
+One measured ground imitation batch per rollout rehearses the training split of
+`retention_online01_01` at its original 500 Hz. This is shared-actor continuation,
+not separate walking and flying policies. Physical results must still pass the
+unchanged airborne and ground evaluations; reward alone cannot promote it.

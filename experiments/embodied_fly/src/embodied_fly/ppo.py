@@ -20,6 +20,7 @@ from torch.nn import functional as F
 from embodied_fly.batch import FlyBatch
 from embodied_fly.body import CONTROL_DT
 from embodied_fly.evaluate import load_actor
+from embodied_fly.flight_outcome import FlightOutcomeReward, FlightResets
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import load_episodes, sample, synchronize
 
@@ -51,7 +52,7 @@ def motor_distribution(output, active, log_std):
 
 
 def joint_log_probability(output, distribution, latent_action, activity):
-    # Stable tanh change-of-variables; sum over actual 59 controlled channels.
+    # Stable tanh change-of-variables; sum over this stage's active channels.
     jacobian = 2 * (math.log(2) - latent_action - F.softplus(-2 * latent_action))
     motor = (distribution.log_prob(latent_action) - jacobian).sum(-1)
     utility = torch.distributions.Categorical(logits=output.utility_logits).log_prob(activity)
@@ -151,6 +152,8 @@ def train(args):
         raise ValueError(
             "Positive rollout dimensions and horizon divisible by sequence required"
         )
+    if args.preset == "flight" and args.flight_resets is None:
+        raise ValueError("Flight PPO requires declared training-split airborne resets")
     args.output.mkdir(parents=True, exist_ok=False)
     started_setup = time.perf_counter()
     run_evidence = evidence()
@@ -161,18 +164,35 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
     critic = Critic(brain).to(device)
-    env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size)
+    env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size, preset=args.preset)
+    control_dt = env.control_dt
+    time_scale = control_dt / CONTROL_DT
+    # CLI discount factors retain their original 2 ms physical horizons.
+    gamma, gae_lambda = args.gamma**time_scale, args.gae_lambda**time_scale
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     trace = deque(maxlen=128)
-    reward_fn = OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
-    active = torch.as_tensor(~env.template.walking_inactive, device=device)
+    flight_resets = (
+        FlightResets(env, args.flight_resets, rng) if args.preset == "flight" else None
+    )
+    reward_fn = (
+        FlightOutcomeReward(env)
+        if flight_resets
+        else OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
+    )
+    active = torch.as_tensor(
+        np.ones(env.model.nu, bool) if flight_resets else ~env.template.walking_inactive,
+        device=device,
+    )
     log_std = nn.Parameter(
         torch.full((int(active.sum()),), math.log(args.noise), device=device)
     )
     parameters = [*brain.parameters(), log_std]
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
     value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
-    optimizer_resumed = parent.get("method", "").startswith("recurrent physical-outcome PPO")
+    optimizer_resumed = (
+        parent.get("method", "").startswith("recurrent physical-outcome PPO")
+        and parent.get("config", {}).get("preset", "walking") == args.preset
+    )
     if optimizer_resumed:
         # Same actor/critic/exploration ordering as the preceding PPO stage.
         # Imitation checkpoints use another optimizer layout and cannot resume it.
@@ -188,6 +208,11 @@ def train(args):
     episodes = load_episodes(
         args.rehearsal, brain.sensor_extension_size >= 6, brain.sensor_extension_size == 12
     )
+    rehearsal_manifest = json.loads((args.rehearsal / "manifest.json").read_text())
+    rehearsal_hz = rehearsal_manifest.get(
+        "control_hz", rehearsal_manifest.get("environment", {}).get("control_hz", 500)
+    )
+    rehearsal_time_scale = 1 / rehearsal_hz / CONTROL_DT
     validation_ids = set(
         np.random.default_rng(1193).permutation(len(episodes))[: max(1, len(episodes) // 4)]
     )
@@ -204,9 +229,18 @@ def train(args):
         ],
         np.float32,
     )
-    task_ids = np.arange(args.worlds) % len(cases)
-    env.command[:] = cases[task_ids]
-    env.reset(np.arange(args.worlds), yaw=rng.uniform(-0.2, 0.2, args.worlds))
+    task_ids = flight_resets.task_ids if flight_resets else np.arange(args.worlds) % len(cases)
+
+    def reset_worlds(ids):
+        if flight_resets:
+            flight_resets.reset(ids)
+        else:
+            env.reset(ids, yaw=rng.uniform(-0.2, 0.2, len(ids)))
+
+    if not flight_resets:
+        env.command[:] = cases[task_ids]
+    reset_worlds(np.arange(args.worlds))
+    reward_fn.reset(np.arange(args.worlds))
     episode_return = np.zeros(args.worlds)
     episode_start = env.fields["qpos"][:, :2].copy()
     episode_records = []
@@ -249,7 +283,9 @@ def train(args):
                     if t % args.sequence == 0:
                         state_starts.append(memory.clone())
                     value = critic(brain, observation, memory)
-                    output = brain(observation, memory, sample_activity=True)
+                    output = brain(
+                        observation, memory, sample_activity=True, time_scale=time_scale
+                    )
                     distribution = motor_distribution(output, active, log_std)
                     latent = distribution.sample()
                     action = output.action.clone()
@@ -274,16 +310,14 @@ def train(args):
                             term_sums.get(key, 0.0) + float(term.mean()) / args.horizon
                         )
                     episode_return += reward
-                    timeout = env.ages >= round(args.episode_seconds / CONTROL_DT)
+                    timeout = env.ages >= round(args.episode_seconds / control_dt)
                     done = failed | timeout
                     next_tensor = torch.as_tensor(next_observation, device=device)
                     reward_tensor = torch.as_tensor(reward, device=device)
                     if np.any(timeout & ~failed):
                         final = critic(brain, next_tensor, output.state)
                         reward_tensor += (
-                            args.gamma
-                            * final
-                            * torch.as_tensor(timeout & ~failed, device=device)
+                            gamma * final * torch.as_tensor(timeout & ~failed, device=device)
                         )
                     obs_buf.append(observation)
                     latent_buf.append(latent)
@@ -311,14 +345,14 @@ def train(args):
                                 "file": failure_path.name,
                                 "sha256": sha256(failure_path),
                                 "frames": len(window),
-                                "scope": "last up to 0.256 s; post-action physical states",
+                                "scope": f"last up to {128 * control_dt:g} s; post-action physical states",
                             }
                         episode_records.append(
                             {
                                 "case_id": int(task_ids[i]),
                                 "failed": bool(failed[i]),
                                 "failure_trace": failure_trace,
-                                "simulated_seconds": float(env.ages[i] * CONTROL_DT),
+                                "simulated_seconds": float(env.ages[i] * control_dt),
                                 "return": float(episode_return[i]),
                                 "distance_cm": float(
                                     np.linalg.norm(
@@ -327,12 +361,13 @@ def train(args):
                                 ),
                             }
                         )
-                    env.reset(ids, yaw=rng.uniform(-0.2, 0.2, len(ids)))
+                    reset_worlds(ids)
                     reward_fn.reset(ids)
                     episode_return[ids] = 0
                     episode_start[ids] = env.fields["qpos"][ids, :2]
-                    task_ids[ids] = rng.integers(len(cases), size=len(ids))
-                    env.command[ids] = cases[task_ids[ids]]
+                    if not flight_resets:
+                        task_ids[ids] = rng.integers(len(cases), size=len(ids))
+                        env.command[ids] = cases[task_ids[ids]]
                     memory = brain.reset_worlds(output.state, dones[-1])
                     observation = torch.as_tensor(env.observation(), device=device)
                 final_value = critic(brain, observation, memory)
@@ -353,8 +388,8 @@ def train(args):
                 data["value"],
                 final_value,
                 data["done"],
-                args.gamma,
-                args.gae_lambda,
+                gamma,
+                gae_lambda,
             )
             adv = (adv - adv.mean()) / adv.std().clamp_min(1e-6)
             synchronize(device)
@@ -372,7 +407,10 @@ def train(args):
                     for t in range(a, b):
                         predictions.append(critic(brain, data["obs"][t], state))
                         result = brain(
-                            data["obs"][t], state, activity_override=data["activity"][t]
+                            data["obs"][t],
+                            state,
+                            activity_override=data["activity"][t],
+                            time_scale=time_scale,
                         )
                         dist = motor_distribution(result, active, log_std)
                         new_logps.append(
@@ -446,10 +484,12 @@ def train(args):
             state = brain.initial_state(args.worlds)
             with torch.no_grad():
                 for t in range(burnin):
-                    state = brain(demo["observation"][t], state).state
+                    state = brain(
+                        demo["observation"][t], state, time_scale=rehearsal_time_scale
+                    ).state
             rehearsal_losses = []
             for t in range(burnin, burnin + args.sequence):
-                result = brain(demo["observation"][t], state)
+                result = brain(demo["observation"][t], state, time_scale=rehearsal_time_scale)
                 state = result.state
                 rehearsal_losses.append(
                     F.mse_loss(result.action, demo["action"][t])
@@ -524,7 +564,14 @@ def train(args):
             if device.type == "cuda"
             else "CPU",
             "parallel_physics_worlds": args.worlds,
-            "aggregate_simulated_seconds": counters["transitions"] * CONTROL_DT,
+            "aggregate_simulated_seconds": counters["transitions"] * control_dt,
+            "physics_hz": 1 / env.model.opt.timestep,
+            "control_hz": 1 / control_dt,
+            "neural_time_scale": time_scale,
+            "effective_gamma": gamma,
+            "effective_gae_lambda": gae_lambda,
+            "airborne_resets": flight_resets.report if flight_resets else None,
+            "rehearsal_control_hz": rehearsal_hz,
             "transitions_per_training_wall_second": counters["transitions"] / elapsed,
             "actor_parameters": sum(p.numel() for p in brain.parameters()),
             "critic_parameters": sum(p.numel() for p in critic.parameters()),
@@ -560,6 +607,8 @@ if __name__ == "__main__":
     parser.add_argument("--graph", type=Path, required=True)
     parser.add_argument("--resume", type=Path, required=True)
     parser.add_argument("--rehearsal", type=Path, required=True)
+    parser.add_argument("--preset", choices=("walking", "flight"), default="walking")
+    parser.add_argument("--flight-resets", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--worlds", type=int, default=32)
