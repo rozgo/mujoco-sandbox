@@ -47,6 +47,8 @@ def diagnose(args):
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.output.exists():
         raise FileExistsError(args.output)
+    if args.cache is not None and args.cache.exists():
+        raise FileExistsError(args.cache)
     started = time.perf_counter()
     provenance = evidence()
     torch.set_num_threads(4)
@@ -68,7 +70,7 @@ def diagnose(args):
     wings = np.array([i for i in range(model.nu) if "wing_" in model.actuator(i).name])
     target = np.stack([e["action"][:length, wings] for e in episodes], axis=1)
     state = actor.initial_state(len(episodes))
-    motor, predicted = [], []
+    motor, hidden, predicted = [], [], []
     synchronize(device)
     setup_seconds = time.perf_counter() - started
     replay_start = time.perf_counter()
@@ -80,12 +82,14 @@ def diagnose(args):
         )
         state = result.state
         motor.append(state[actor.motor_ids].T.cpu().numpy().copy())
+        hidden.append(actor.motor_decoder[:3](state[actor.motor_ids].T).cpu().numpy())
         predicted.append(result.action[:, wings].cpu().numpy())
     synchronize(device)
     replay_seconds = time.perf_counter() - replay_start
     features = {
         "measured_wing_angles_and_velocities": observations[:, :, 383:395],
         "motor_cell_state": np.asarray(motor),
+        "existing_motor_hidden_layer": np.asarray(hidden),
     }
     test_target = target[:, validation].reshape(-1, 6)
     train_target = target[:, training].reshape(-1, 6)
@@ -129,6 +133,24 @@ def diagnose(args):
         "regression_and_metrics_seconds": time.perf_counter() - fit_start,
         "total_wall_seconds": time.perf_counter() - started,
     }
+    if args.cache is not None:
+        cache_start = time.perf_counter()
+        args.cache.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(
+            args.cache,
+            hidden=hidden,
+            target=target,
+            predicted=predicted,
+            wing_channels=wings,
+            training_indices=training,
+            validation_indices=validation,
+        )
+        report["frozen_feature_cache"] = {
+            "file": args.cache.name,
+            "sha256": sha256(args.cache),
+        }
+        report["cache_write_seconds"] = time.perf_counter() - cache_start
+    report["total_wall_seconds"] = time.perf_counter() - started
     args.output.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 
@@ -140,4 +162,5 @@ if __name__ == "__main__":
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--cache", type=Path)
     diagnose(parser.parse_args())

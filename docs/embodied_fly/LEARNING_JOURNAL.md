@@ -1156,3 +1156,23 @@ to the deployed actor and no body is controlled. Expert previous actions remain
 part of those recorded histories. Linear decodability can identify recoverable
 information, but cannot establish autonomous oscillation, closed-loop flight,
 or biological neural causality. Avoid drawing those broader conclusions.
+
+The frozen angle01 diagnostic took **11.054809 s** (8.466627 s graph replay),
+using eight independent neural sequences and all 12,000 expert frames. On the
+two excluded episodes, current wing-output MSE is **0.093234**. A linear probe
+of the 815 motor-cell states achieves **0.008276** after output bounding; a probe
+of measured wing state reaches **0.007726**. This shows useful information is
+linearly recoverable from the core under those histories. It neither changes
+the deployed actor nor proves closed-loop flight.
+
+Next inspect/cache the existing 256-unit motor hidden layer, then calibrate only
+the existing final layer's **six wing rows and biases (1,542 parameters)** for
+**10 seconds**, seed **51001**, Adam 0.003, minibatches of 1,024 cached training
+frames. The encoder, intrinsic core parameters, utility head, motor hidden layer
+and other 72 output rows remain bitwise unchanged. The graph continues to be the
+only runtime path from observations to motors. This stage uses no extra deployed
+module and introduces no scripted wingbeat or sensor bypass. Cache and checkpoint
+hashes must match; whole-episode validation stays excluded from updates. Verify
+all unchanged parameters and every non-wing output row, then evaluate actual
+flight and ground behavior before promotion. This is targeted output calibration,
+not another claim that offline error establishes flight.
