@@ -1176,3 +1176,21 @@ hashes must match; whole-episode validation stays excluded from updates. Verify
 all unchanged parameters and every non-wing output row, then evaluate actual
 flight and ground behavior before promotion. This is targeted output calibration,
 not another claim that offline error establishes flight.
+
+The existing hidden layer also retained linearly decodable wing information
+(bounded probe MSE 0.006600). Ten-second wing-output calibration reduced the
+actual decoder's excluded-episode MSE to **0.006163**, with exactly 1,536 weight
+elements and six biases changed. Both unassisted flight tests still fell.
+Sampled first-30-ms upward passive force increased to **0.2306 body weight**,
+but wing angles overshot the expert envelope; stable flight is not established.
+See [the complete calibration report](runs/motor_wing_readout_01/SUMMARY.md).
+
+Next collect teacher-assisted corrective trajectories using `motor_wing_readout_01`
+as the student, beginning with 25% student / 75% teacher executed actions in eight
+0.3-second episodes. Record actual executed feedback and teacher targets separately,
+preserve failed collections, and exclude whole validation episodes. Cache the
+same frozen graph's motor hidden features from both original and corrective
+histories, then update only the existing six wing output rows in a bounded fit.
+This addresses states the student visits while preserving its current architecture.
+No teacher assistance may appear in the later acceptance rollouts. Retain the
+angle01 ground video, all rejected pilots and the original online01 reference.

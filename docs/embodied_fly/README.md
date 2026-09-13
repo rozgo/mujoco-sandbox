@@ -287,3 +287,30 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
   --worlds 32 --threads 16 --seconds 60 --horizon 128 --sequence 32 \
   --epochs 2 --episode-seconds 0.06 --lr 0.000005 --noise 0.04 --seed 50001
 ```
+
+That [PPO pilot](runs/motor_flight_ppo_probe_01/SUMMARY.md) failed flight and is
+retained. A subsequent [wing-output calibration](runs/motor_wing_readout_01/SUMMARY.md)
+updates only six rows/biases in the existing motor layer. Every other actor
+parameter stays identical. It improves prediction on expert histories and
+increases measured aerodynamic force, but still fails physical flight. Neither
+candidate is an accepted flight policy.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.wing_observability \
+  --graph outputs/fly_survival/malecns \
+  --checkpoint assets/embodied_fly/diagnostics/motor_flight_angle_probe_01.pt \
+  --data outputs/embodied_fly/flight_demonstrations_01 \
+  --output outputs/embodied_fly/wing_observability_reproduction.json \
+  --cache outputs/embodied_fly/wing_hidden_reproduction.npz
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.wing_readout \
+  --resume assets/embodied_fly/diagnostics/motor_flight_angle_probe_01.pt \
+  --cache-report outputs/embodied_fly/wing_observability_reproduction.json \
+  --cache outputs/embodied_fly/wing_hidden_reproduction.npz \
+  --output outputs/embodied_fly/wing_readout_reproduction \
+  --seconds 10 --lr 0.003 --batch-size 1024 --seed 51001
+```
+
+The cached-feature fit has zero live physics worlds and introduces no extra
+deployed brain. The existing graph, utility and full motor decoder still execute
+at runtime. Its raw evaluations remain essential because low imitation error
+does not establish a stable closed-loop wingbeat.
