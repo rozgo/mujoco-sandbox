@@ -2272,3 +2272,13 @@ The optional correction-capture path relabels an actor's real pre-fall hover sta
 Five focused tests pass in 3.88 s. They include the original and extended full fitting/export path, unchanged upstream/body rows, bounded correction labels with the correct reversing sign at a real canonical wing limit, exclusion after body failure, unchanged source data, and nonoverlapping fitting masks. The full suite is pending at this checkpoint. The new pilot is declared before execution.
 
 The complete motor suite passes 108 tests in 74.52 s, with 23 known dependency warnings. Ruff and diff checks pass. Commit the declared source before executing state_readout02 on the GPU machine.
+
+### Corrected readout outcome and motor-cell feature extension — 2026-09-13 11:45:16 UTC
+
+State_readout02 completes 76.765 s total. Its fit improves, but standing posture still fails and both walking and hover fail the full unassisted test. All outcomes are preserved; retention02 remains selected. The complete film is decoded, inspected and opened. Recorded near-limit fitted outputs still have the wrong sign. This motivates a feature/readout change rather than another unchanged fit.
+
+Fixed repeated NPZ decompression in label extraction. The two real source histories now relabel in 0.104/0.194 s on Mac, with labels bitwise identical to the GPU fit. This is an I/O fix with no physical or target change. Five focused tests pass in 3.94 s. The independent ridge audit initially failed its overly tight cross-host 1e-9 tolerance on a few coefficients; differences are a few billionths. It now records the actual difference with an explicit 1e-8 tolerance and verifies saved coefficient export. No physical gate changed.
+
+Implemented an optional zero-initialized linear wing readout from the same 815 normalized motor-cell activities. It adds 4,896 decoder parameters and no recurrent state. All original actor weights stay frozen. Existing checkpoints keep the original path; the normal loader understands the optional extension. Nine focused tests pass in 5.08 s, including zero-initialization identity, same-history non-wing output preservation, original-weight preservation, learned readout fitting and standard checkpoint reload. Full suite and the declared new pilot are pending at this checkpoint.
+
+The complete suite passes 112 tests in 75.33 s, with 23 known dependency warnings. Ruff passes. The optional motor-cell readout and its declared dataset are committed before remote fitting.

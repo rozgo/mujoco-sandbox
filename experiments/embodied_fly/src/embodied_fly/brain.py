@@ -99,6 +99,7 @@ class EmbodiedBrain(nn.Module):
         internal_steps: int = 4,
         sensor_extension_size: int = 0,
         motor_only: bool = False,
+        wing_residual_enabled: bool = False,
     ):
         super().__init__()
         if internal_steps < 2:
@@ -151,8 +152,25 @@ class EmbodiedBrain(nn.Module):
             nn.Linear(256, action_size),
             nn.Tanh(),
         )
+        self.wing_residual = None
+        if wing_residual_enabled:
+            self.enable_wing_residual()
 
         self.set_motor_only(motor_only)
+
+    def enable_wing_residual(self):
+        """Optional linear readout of existing motor cells; no new neural memory.
+
+        Start at zero so the parent function is preserved. The six corrections
+        enter existing wing logits before their bounded output nonlinearity.
+        """
+        if self.action_size != 78:
+            raise ValueError("Wing readout requires the canonical 78-actuator layout")
+        if self.wing_residual is not None:
+            raise ValueError("Wing readout already enabled")
+        self.wing_residual = nn.Linear(len(self.motor_ids), 6).to(self.core.bias)
+        nn.init.zeros_(self.wing_residual.weight)
+        nn.init.zeros_(self.wing_residual.bias)
 
     def set_motor_only(self, enabled=True):
         """A constant inherited context replaces utility arbitration for motor learning.
@@ -230,7 +248,16 @@ class EmbodiedBrain(nn.Module):
         drive = drive.index_add(0, self.descending_ids, self.intention_encoder(choice).T)
         for _ in range(self.internal_steps - 1):
             state = self.core(state, drive, time_scale)
-        action = self.motor_decoder(state[self.motor_ids].T)
+        motor = state[self.motor_ids].T
+        if self.wing_residual is None:
+            action = self.motor_decoder(motor)
+        else:
+            normalized_motor = self.motor_decoder[0](motor)
+            hidden = self.motor_decoder[2](self.motor_decoder[1](normalized_motor))
+            motor_logits = self.motor_decoder[3](hidden)
+            motor_logits = motor_logits.clone()
+            motor_logits[:, 14:20] += self.wing_residual(normalized_motor)
+            action = self.motor_decoder[4](motor_logits)
         return BrainOutput(action, state, logits, scores, activity)
 
 

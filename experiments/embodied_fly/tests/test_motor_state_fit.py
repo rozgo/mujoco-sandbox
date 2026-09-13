@@ -23,8 +23,9 @@ def test_weighted_readout_recovers_known_mapping_and_regularization_limits_chang
 
 
 @pytest.mark.parametrize("with_corrections", [False, True])
+@pytest.mark.parametrize("feature_layer", ["hidden", "motor"])
 def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(
-    tmp_path, monkeypatch, with_corrections
+    tmp_path, monkeypatch, with_corrections, feature_layer
 ):
     import json
     from types import SimpleNamespace
@@ -87,6 +88,7 @@ def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(
             device="cpu",
             correction_capture=[tmp_path / "correction"] if with_corrections else [],
             startup_weight=4.0 if with_corrections else 1.0,
+            feature_layer=feature_layer,
         )
     )
     result = torch.load(output / "actor.pt", weights_only=True)["state_dict"]
@@ -97,9 +99,20 @@ def test_full_fit_keeps_upstream_and_nonwing_weights_unchanged(
         else:
             assert torch.equal(value, result[k])
     assert not actor.motor_decoder[3]._forward_hooks
-    assert not torch.equal(
-        parent["state_dict"]["motor_decoder.3.weight"], result["motor_decoder.3.weight"]
-    )
+    if feature_layer == "hidden":
+        assert not torch.equal(
+            parent["state_dict"]["motor_decoder.3.weight"], result["motor_decoder.3.weight"]
+        )
+    else:
+        assert all(torch.equal(v, result[k]) for k, v in parent["state_dict"].items())
+        assert result["wing_residual.weight"].abs().sum() > 0
+        loaded = tiny_brain().eval()
+        loaded.set_motor_only()
+        loaded.enable_wing_residual()
+        loaded.load_state_dict(result, strict=True)
+        assert torch.isfinite(
+            loaded(torch.as_tensor(observation[:1]), loaded.initial_state(1)).action
+        ).all()
     report = json.loads((output / "report.json").read_text())
     assert report["physical_transitions_collected"] == 0
     assert report["training_frames"] == (6105 if with_corrections else 6000)

@@ -88,7 +88,13 @@ def correction_capture(root, expected_contract):
         raise ValueError("Unexpected canonical wing actuator routing")
     labels = action.copy()
     retained = 0
-    with np.load(root / "hover.npz") as captured:
+    with np.load(root / "hover.npz") as archive:
+        # NPZ array access decompresses its member. Materialize each member once,
+        # rather than decompressing thousands of frames for every single frame.
+        captured = {
+            key: archive[key]
+            for key in ("qpos", "qvel", "activation", "ctrl", "requested_height_cm")
+        }
         for i in range(min(1000, len(action))):
             data.qpos[:] = captured["qpos"][i]
             data.qvel[:] = captured["qvel"][i]
@@ -145,6 +151,9 @@ def history_masks(length, counts):
 
 @torch.no_grad()
 def train(args):
+    feature_layer = getattr(args, "feature_layer", "hidden")
+    if feature_layer not in ("hidden", "motor"):
+        raise ValueError("Unknown readout feature layer")
     startup_weight = getattr(args, "startup_weight", 1.0)
     if not np.isfinite(startup_weight) or startup_weight < 1:
         raise ValueError("Startup weight must be finite and at least one")
@@ -156,6 +165,8 @@ def train(args):
     actor, parent = load_actor(args.resume, args.graph, device)
     if not actor.motor_only or actor.observation_size != 397:
         raise ValueError("Canonical motor-only actor required")
+    if actor.wing_residual is not None:
+        raise ValueError("Readout fitting requires the preserved unextended parent")
     actor.requires_grad_(False)
     ground_report = json.loads((args.ground / "report.json").read_text())
     hover_report = json.loads((args.hover / "report.json").read_text())
@@ -188,10 +199,18 @@ def train(args):
     captured = {}
 
     def capture(module, inputs, output):
-        captured["hidden"] = inputs[0].cpu().numpy().copy()
+        if feature_layer == "hidden":
+            captured["hidden"] = inputs[0].cpu().numpy().copy()
         captured["logits"] = output.cpu().numpy().copy()
 
     hook = actor.motor_decoder[3].register_forward_hook(capture)
+    motor_hook = None
+    if feature_layer == "motor":
+
+        def capture_motor(module, inputs, output):
+            captured["hidden"] = output.cpu().numpy().copy()
+
+        motor_hook = actor.motor_decoder[0].register_forward_hook(capture_motor)
     synchronize(device)
     setup_seconds = time.perf_counter() - started
     replay_start = time.perf_counter()
@@ -207,6 +226,8 @@ def train(args):
             labels.append(label[:, wings])
     finally:
         hook.remove()
+        if motor_hook is not None:
+            motor_hook.remove()
     synchronize(device)
     replay_seconds = time.perf_counter() - replay_start
     fit_start = time.perf_counter()
@@ -240,16 +261,24 @@ def train(args):
         range(len(candidates)), key=lambda i: candidates[i]["validation_selection_score"]
     )
     delta = deltas[selected]
-    weight_new = frozen_state["motor_decoder.3.weight"][wings] + torch.as_tensor(
-        delta[:-1].T, dtype=torch.float32
-    )
-    bias_new = frozen_state["motor_decoder.3.bias"][wings] + torch.as_tensor(
-        delta[-1], dtype=torch.float32
-    )
-    state = replace_wing_rows(frozen_state, weight_new, bias_new, wings)
+    if feature_layer == "hidden":
+        weight_new = frozen_state["motor_decoder.3.weight"][wings] + torch.as_tensor(
+            delta[:-1].T, dtype=torch.float32
+        )
+        bias_new = frozen_state["motor_decoder.3.bias"][wings] + torch.as_tensor(
+            delta[-1], dtype=torch.float32
+        )
+        state = replace_wing_rows(frozen_state, weight_new, bias_new, wings)
+    else:
+        state = {k: v.clone() for k, v in frozen_state.items()}
+        state["wing_residual.weight"] = torch.as_tensor(delta[:-1].T, dtype=torch.float32)
+        state["wing_residual.bias"] = torch.as_tensor(delta[-1], dtype=torch.float32)
     other = np.r_[0:14, 20:78]
     for key, value in frozen_state.items():
-        if key in ("motor_decoder.3.weight", "motor_decoder.3.bias"):
+        if feature_layer == "hidden" and key in (
+            "motor_decoder.3.weight",
+            "motor_decoder.3.bias",
+        ):
             assert torch.equal(value[other], state[key][other])
         else:
             assert torch.equal(value, state[key])
@@ -272,7 +301,13 @@ def train(args):
         parent_checkpoint_sha256=sha256(args.resume),
         method="canonical state-hover ridge readout with frozen ground outputs"
         + (" and actual actor-error corrections" if corrections else ""),
+        wing_residual_enabled=feature_layer == "motor",
+        readout_feature_layer=feature_layer,
     )
+    if feature_layer == "motor":
+        child["method"] = (
+            "linear wing readout from existing normalized motor-neuron activity; all original actor weights frozen"
+        )
     torch.save(child, args.output / "actor.pt")
     np.savez_compressed(
         args.output / "features.npz",
@@ -309,7 +344,11 @@ def train(args):
         "history_weights": history_weights.tolist(),
         "validation_split": "ground/reference first4s fit, last1s validation; actor corrections every fifth20ms block held out; temporally related, not independent episodes",
         "searched_ridge_values": 5,
-        "eligible_existing_parameters": 1542,
+        "feature_layer": feature_layer,
+        "readout_features": int(hidden.shape[-1]),
+        "eligible_existing_parameters": 1542 if feature_layer == "hidden" else 0,
+        "eligible_new_parameters": int(delta.size) if feature_layer == "motor" else 0,
+        "all_original_state_unchanged": feature_layer == "motor",
         "all_other_state_unchanged": True,
         "physical_transitions_collected": 0,
         "live_worlds": 0,
@@ -335,4 +374,5 @@ if __name__ == "__main__":
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--correction-capture", type=Path, action="append", default=[])
     parser.add_argument("--startup-weight", type=float, default=1.0)
+    parser.add_argument("--feature-layer", choices=("hidden", "motor"), default="hidden")
     train(parser.parse_args())
