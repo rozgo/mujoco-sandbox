@@ -2,6 +2,7 @@ import json
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 import torch
 
 from embodied_fly.ground_readout import (
@@ -12,6 +13,7 @@ from embodied_fly.ground_readout import (
     ridge_delta,
     split_worlds,
     variant_targets,
+    verify_frozen_features,
 )
 
 
@@ -118,3 +120,30 @@ def test_canonical_collection_and_fit_preserve_causal_capture_and_motor_contract
     assert fitted["new_deployed_parameters"] == 0
     assert fitted["checkpoint_sha256"] == sha256(args.output / "actor.pt")
     assert json.loads((args.cache / "report.json").read_text())["training_updates"] == 0
+    verify_frozen_features(new, parent)
+    changed = dict(new, state_dict={k: v.clone() for k, v in new["state_dict"].items()})
+    changed["state_dict"]["motor_decoder.1.weight"][0, 0] += 0.1
+    with pytest.raises(ValueError, match="Frozen feature state"):
+        verify_frozen_features(changed, parent)
+
+    from embodied_fly.ground_readout import pool
+
+    args.checkpoint = args.output / "actor.pt"
+    args.output = tmp_path / "pool"
+    args.additional_cache = [args.cache]
+    args.additional_checkpoint = [checkpoint]
+    # First corpus belongs to original parent; fitted checkpoint shares all features.
+    original_report = json.loads((args.cache / "report.json").read_text())
+    original_report["checkpoint_sha256"] = sha256(args.checkpoint)
+    modified = tmp_path / "same_features"
+    modified.mkdir()
+    import shutil
+
+    shutil.copy2(args.cache / "features.npz", modified / "features.npz")
+    (modified / "report.json").write_text(json.dumps(original_report))
+    args.cache = modified
+    pooled = pool(args)
+    assert pooled["physical_transitions"] == 0
+    with np.load(args.output / "features.npz") as c:
+        assert set(c["world"]) == set(range(12))
+        assert set(c["training_worlds"]).isdisjoint(c["validation_worlds"])

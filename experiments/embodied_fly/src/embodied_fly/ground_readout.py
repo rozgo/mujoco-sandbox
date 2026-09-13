@@ -237,6 +237,93 @@ def calibrated_checkpoint(parent, weights, bias, wings):
     return result
 
 
+def verify_frozen_features(current, previous):
+    for name in (
+        "motor_only",
+        "physical_contract",
+        "observation_size",
+        "sensor_extension_size",
+        "action_size",
+        "graph_sha256",
+        "graph_metadata_sha256",
+    ):
+        if current.get(name) != previous.get(name):
+            raise ValueError("Feature architecture, graph or physical identity differs")
+    if current["config"]["internal_steps"] != previous["config"]["internal_steps"]:
+        raise ValueError("Neural clock differs")
+    a, b = current["state_dict"], previous["state_dict"]
+    if a.keys() != b.keys():
+        raise ValueError("Feature parameter schema differs")
+    for name in a:
+        if name not in ("motor_decoder.3.weight", "motor_decoder.3.bias") and not torch.equal(
+            a[name], b[name]
+        ):
+            raise ValueError(f"Frozen feature state differs: {name}")
+
+
+def pool(args):
+    """Pool complete captured histories only after proving identical feature maps."""
+    if len(args.additional_cache) != len(args.additional_checkpoint):
+        raise ValueError("Each additional corpus needs its captured parent checkpoint")
+    args.output.mkdir(parents=True, exist_ok=False)
+    start = time.perf_counter()
+    provenance = evidence()
+    parent = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
+    rows, sources, offset, wings = [], [], 0, None
+    for path, reference in zip(
+        [args.cache, *args.additional_cache],
+        [args.checkpoint, *args.additional_checkpoint],
+        strict=True,
+    ):
+        other = torch.load(reference, map_location="cpu", weights_only=True)
+        verify_frozen_features(parent, other)
+        report = json.loads((path / "report.json").read_text())
+        if (
+            report["schema"] != "canonical-wing-readout-features-v1"
+            or report["checkpoint_sha256"] != sha256(reference)
+            or report["cache_sha256"] != sha256(path / "features.npz")
+            or report["physical_contract"] != parent["physical_contract"]
+        ):
+            raise ValueError("Source corpus identity mismatch")
+        with np.load(path / "features.npz") as c:
+            if wings is not None and not np.array_equal(wings, c["wing_channels"]):
+                raise ValueError("Wing output routing differs")
+            wings = c["wing_channels"].copy()
+            row = {k: c[k].copy() for k in c.files if k != "wing_channels"}
+        if set(row["training_worlds"]) & set(row["validation_worlds"]):
+            raise ValueError("Source validation worlds overlap training")
+        for k in ("world", "training_worlds", "validation_worlds"):
+            row[k] += offset
+        offset = int(row["world"].max()) + 1
+        rows.append(row)
+        sources.append(
+            {
+                "report_sha256": sha256(path / "report.json"),
+                "cache_sha256": report["cache_sha256"],
+                "captured_checkpoint_sha256": sha256(reference),
+                "rows": len(row["world"]),
+                "identical_frozen_feature_map": True,
+            }
+        )
+    packed = {k: np.concatenate([r[k] for r in rows]) for k in rows[0]}
+    np.savez_compressed(args.output / "features.npz", **packed, wing_channels=wings)
+    report = {
+        "schema": "canonical-wing-readout-features-v1",
+        "provenance": provenance,
+        "completed_utc": utc_now(),
+        "checkpoint_sha256": sha256(args.checkpoint),
+        "physical_contract": parent["physical_contract"],
+        "cache_sha256": sha256(args.output / "features.npz"),
+        "sources": sources,
+        "pooling_seconds": time.perf_counter() - start,
+        "physical_transitions": 0,
+        "training_updates": 0,
+        "scope": "Reused frozen features; per-source complete-world splits retained. Targets belong to each captured history.",
+    }
+    (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
 def fit(args):
     if not args.alphas or not np.isfinite(args.alphas).all() or min(args.alphas) <= 0:
         raise ValueError("At least one positive finite ridge penalty required")
@@ -353,10 +440,12 @@ def fit(args):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=("collect", "fit"))
+    p.add_argument("mode", choices=("collect", "fit", "pool"))
     for name in ("checkpoint", "graph", "cache", "output"):
         p.add_argument("--" + name, type=Path, required=name in ("checkpoint", "output"))
     p.add_argument("--device", default="cuda")
+    p.add_argument("--additional-cache", type=Path, action="append", default=[])
+    p.add_argument("--additional-checkpoint", type=Path, action="append", default=[])
     p.add_argument("--worlds", type=int, default=32)
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--seconds", type=float, default=2)
@@ -368,7 +457,7 @@ if __name__ == "__main__":
     args = p.parse_args()
     if args.mode == "collect" and args.graph is None:
         p.error("Collection requires --graph")
-    if args.mode == "fit" and args.cache is None:
-        p.error("Fitting requires --cache")
-    report = collect(args) if args.mode == "collect" else fit(args)
+    if args.mode in ("fit", "pool") and args.cache is None:
+        p.error("Fitting/pooling requires --cache")
+    report = {"collect": collect, "fit": fit, "pool": pool}[args.mode](args)
     print(json.dumps({k: v for k, v in report.items() if k != "provenance"}), flush=True)

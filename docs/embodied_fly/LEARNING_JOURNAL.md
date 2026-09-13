@@ -1810,3 +1810,20 @@ response after1/5/25 held-input neural updates. Frame0 has the same initial
 physical inputs and zero memory across candidates. Later histories differ.
 Report full6×6 response and spectral radius; this is a local sensory diagnostic,
 not a complete closed-loop stability proof. No physics or learning in the probe.
+
+Command probes complete in3.530120/3.515242s, setup3.776308/3.597831s.
+Ground local command-response spectral radii remain below0.26 for both actors;
+the sampled maps do not show strong self-amplification. No command-invariance
+penalty is justified from this evidence alone. Frozen single-update wing-plant
+linearization at the initial collected states also does not explain the later
+readout failure; do not present a local approximation as full-loop stability.
+
+Declare readout02 as one dataset-aggregation follow-up. Collect32worlds×2s
+with readout01 acting,seed73010,all previous collection settings unchanged.
+Pool with the original06 corpus after proving every upstream/hidden feature
+parameter, physical fingerprint, graph and observation schema identical.
+Keep complete-world validation partitions; preserve every source/capture hash.
+Fit the same six output rows with the same ridge grid/weighting, then evaluate
+allthree5s cases at72001. This tests distribution shift using the candidate's
+actual trajectories, not an unchanged continuation or an additional runtime
+controller. Keep06 selected until physical evidence supports a better result.
