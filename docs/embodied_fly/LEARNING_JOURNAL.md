@@ -1935,3 +1935,19 @@ report, trajectories and archived evidence remain intact; the scratch launch log
 was reused. The newly declared canonical-body motor-only trial is named
 **ground_outcome_01**, with exactly the parameters above. No previous experiment
 is resumed or overwritten by this naming correction.
+
+Ground-outcome01 completes182.957318s,47rollouts/47PPOupdates and192,512physical
+transitions. Physical reward gradients reach the intrinsic dynamics;utility and
+intention weights remain unchanged. Five-second evaluation:standing falls,
+walking remains upright but misses speed/yaw/wing gates,hover falls. Zero MuJoCo
+warnings. Do not promote. KL early stopping allowed only one update each rollout;
+observed post-update KL frequently exceeds0.03, so the1e-5 step size is too large
+for this narrow78-dimensional exploration distribution. This is evidence for
+reducing the optimization step before changing the reward or body.
+
+Declare **ground_outcome_02**: restart from preferred06 with fresh PPO/critic,
+all01 settings unchanged except actor Adam learning rate1e-6 (ten times smaller)
+and trainingseed81002. Still180s,32worlds,16stand/16walk,128rollout/16recurrent
+chunks,2epochs,noise0.02,gamma0.998/lambda0.99,ground reset disturbances and
+2sepisodes. Same actor/physical body/reward;evaluate allthree5s cases at72001 and
+open the complete video. No claim of improvement until that physical review.

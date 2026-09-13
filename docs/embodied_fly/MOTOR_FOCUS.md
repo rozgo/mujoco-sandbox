@@ -38,9 +38,9 @@ motion; the tested custom flight law is the only wing-to-body coupling.
 
 This is motor imitation, not PPO. The inherited walking reference and the
 wing-motion hover reference generate training commands; only the student actor
-controls acceptance evaluation. Physical reward learning can follow once these
-primitives work. The legacy utility-PPO CLI explicitly rejects motor-only
-checkpoints to prevent silently applying the wrong objective.
+controls acceptance evaluation. Later ground-outcome trials use explicit physical rewards (see below). The
+legacy utility-PPO path rejects motor-only checkpoints; the separate
+`--motor-ground` mode explicitly uses the motor objective.
 
 The two-second implementation reference review kept all three tasks upright with
 valid support and no numerical warnings. Hover root RMSE was 0.733 mm. Ground
@@ -106,8 +106,9 @@ retain their task targets. All78 outputs remain learned at runtime.
 
 Evaluation records every hinge's initial angle, separate leg/wing/body errors,
 wing speed and body sag. These measured scores supplement the existing physical
-gates. Training currently optimizes corrective imitation, not a physical PPO
-reward; passive joints are measured but not given invented actuators.
+gates. The motor_focus01–10 series optimizes corrective imitation; the later
+ground_outcome series optimizes physical rewards. Passive joints are measured
+but are not given invented actuators.
 
 The first initial-form continuation04 regressed autonomous ground control under
 25% reference assistance.05 and06 execute only student actions during collection
@@ -239,3 +240,25 @@ Body pose and height terms discourage collapse. Every reward is computed per
 world per2ms action, rate-scaled by elapsed time. Full task evaluation remains
 separate and includes hover, even when this curriculum stage only trains ground
 commands. `motor_outcome.py` records the exact weights and scales in each run.
+
+Reproduce the declared ground-outcome pilot with an unused output name. Execute
+on the same platform as the parent checkpoint's compiled physical fingerprint.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ppo \
+  --motor-ground --preset wing_motion \
+  --graph outputs/fly_survival/malecns \
+  --resume assets/embodied_fly/diagnostics/motor_focus_06.pt \
+  --output outputs/embodied_fly/ground_outcome_reproduction \
+  --device cuda --worlds 32 --threads 16 --seconds 180 \
+  --horizon 128 --sequence 16 --epochs 2 --episode-seconds 2 \
+  --gamma 0.998 --gae-lambda 0.99 --lr 0.00001 --noise 0.02 \
+  --target-kl 0.03 --entropy 0.001 \
+  --wing-angle-perturbation 0.15 --wing-speed-perturbation 2 --seed 81001
+
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_focus evaluate \
+  --graph outputs/fly_survival/malecns \
+  --resume outputs/embodied_fly/ground_outcome_reproduction/actor.pt \
+  --output outputs/embodied_fly/ground_outcome_reproduction_evaluation \
+  --device cuda --seconds 5 --seed 72001 --ground-posture --neural-view
+```
