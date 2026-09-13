@@ -1067,3 +1067,30 @@ fresh because its sensory parameter shape expands. This optimizer difference is
 explicit; the pilot is not a strict one-variable comparison. The walking reference
 remains online01. Evaluate actual unassisted wing motion, both original airborne
 cases, all fixed ground commands and continuous transitions before promotion.
+
+The 395-input migration passed both full-graph CUDA checks (maximum action
+difference 4.77e-7, within the previously declared 1e-6 tolerance). The complete
+36,000-frame corpus has zero clipping in all twelve added channels; original
+389-input values remain identical. The 60.494686-second angle pilot preserved
+stable permitted support in all six fixed ground tests and the continuous
+transition. Its walk/resume phase gates pass; stopping and all original raw
+fixed-command gates still fail. Both airborne tests fell, with only 0.0547
+body-weight sampled upward passive force in the first 30 ms. This is useful
+ground stability evidence, not learned flight or final acceptance.
+
+On 12,000 original expert observations, sensory preactivation RMS is 2.96219
+from the original encoder, 0.005632 from added velocity inputs and **0.000656**
+from the new angle inputs. Angle-column L2 is 0.02247 after training. These values
+do not establish causal motor importance, but motivate testing faster adaptation
+of the newly introduced input matrix. The angle information is available and
+unclipped; its learned input contribution remains very small.
+
+Next run **60 seconds**, seed **49001**, from `motor_flight_angle_probe_01`, using
+the same data, clocks, 32 sequences, 64/32 context, loss weights and reset mixture.
+Keep learning rate **3e-5** for the shared actor; give only the **12→128 sensory
+extension matrix** multiplier **100** (3e-3). Preserve Adam moments and step
+counts while moving that existing Parameter into its own optimizer group. A
+test verifies every moment before the first step and after checkpoint resume.
+No parameter is added and the measured graph stays fixed. This bounded rate
+change tests whether the new feedback can become useful quickly; it does not
+assume a flight improvement. Keep the angle pilot and online01 reference intact.

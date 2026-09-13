@@ -93,6 +93,41 @@ def sample(episodes, rng, length, worlds, device, reset_start=False):
     }
 
 
+def configure_optimizer(brain, args, parent, sensory_migrated):
+    """Change the sensory learning rate while preserving existing Adam moments."""
+    multiplier = args.sensor_lr_multiplier
+    if not np.isfinite(multiplier) or multiplier <= 0:
+        raise ValueError("Sensory learning-rate multiplier must be finite and positive")
+    if multiplier != 1 and not brain.sensor_extension_size:
+        raise ValueError("A sensory learning-rate multiplier requires an extension")
+    parameters = [p for p in brain.parameters() if p.requires_grad]
+    sensor = brain.sensor_extension.weight if brain.sensor_extension_size else None
+    grouped = bool(parent and parent.get("optimizer_sensor_grouped")) and not sensory_migrated
+    if grouped:
+        parameter_groups = [
+            {"params": [p for p in parameters if p is not sensor]},
+            {"params": [sensor]},
+        ]
+    else:
+        parameter_groups = parameters
+    optimizer = torch.optim.Adam(parameter_groups, lr=args.lr)
+    resumed = parent is not None and "optimizer_state_dict" in parent and not sensory_migrated
+    if resumed:
+        optimizer.load_state_dict(parent["optimizer_state_dict"])
+    if not grouped and multiplier != 1:
+        # Moving the same Parameter object between groups preserves its existing
+        # Adam step and moments. Do this after loading the original group layout.
+        optimizer.param_groups[0]["params"] = [p for p in parameters if p is not sensor]
+        optimizer.add_param_group({"params": [sensor]})
+        grouped = True
+    optimizer.param_groups[0]["lr"] = args.lr
+    optimizer.param_groups[0]["role"] = "shared_actor"
+    if grouped:
+        optimizer.param_groups[1]["lr"] = args.lr * multiplier
+        optimizer.param_groups[1]["role"] = "sensory_extension"
+    return optimizer, resumed, grouped
+
+
 def train(args):
     if not 0 <= args.reset_fraction <= 1:
         raise ValueError("Reset fraction must be between zero and one")
@@ -197,16 +232,9 @@ def train(args):
     if args.freeze_core:
         brain.core.requires_grad_(False)
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
-    optimizer = torch.optim.Adam(
-        (p for p in brain.parameters() if p.requires_grad), lr=args.lr
+    optimizer, optimizer_resumed, optimizer_sensor_grouped = configure_optimizer(
+        brain, args, parent, sensory_migrated
     )
-    optimizer_resumed = (
-        parent is not None and "optimizer_state_dict" in parent and not sensory_migrated
-    )
-    if optimizer_resumed:
-        optimizer.load_state_dict(parent["optimizer_state_dict"])
-        for group in optimizer.param_groups:
-            group["lr"] = args.lr
     fixed_validation = {
         scale: sample(
             group["validation"],
@@ -365,6 +393,7 @@ def train(args):
     checkpoint = {
         "state_dict": {k: v.detach().cpu() for k, v in brain.state_dict().items()},
         "optimizer_state_dict": optimizer.state_dict(),
+        "optimizer_sensor_grouped": optimizer_sensor_grouped,
         "observation_size": observation_size,
         "action_size": action_size,
         "sensor_extension_size": brain.sensor_extension_size,
@@ -402,6 +431,10 @@ def train(args):
         "dataset_splits": splits,
         "parent_checkpoint_sha256": checkpoint["parent_checkpoint_sha256"],
         "optimizer_resumed": optimizer_resumed,
+        "optimizer_sensor_grouped": optimizer_sensor_grouped,
+        "optimizer_learning_rates": {
+            group["role"]: group["lr"] for group in optimizer.param_groups
+        },
         "sensory_extension_migrated": sensory_migrated,
         "optimizer_reset_reason": "new sensory parameters; preserve actor function, initialize fresh Adam"
         if sensory_migrated
@@ -446,6 +479,7 @@ if __name__ == "__main__":
     parser.add_argument("--burnin", type=int, default=8)
     parser.add_argument("--internal-steps", type=int, default=4)
     parser.add_argument("--lr", type=float, default=0.0003)
+    parser.add_argument("--sensor-lr-multiplier", type=float, default=1)
     parser.add_argument("--seed", type=int, default=18001)
     parser.add_argument("--freeze-core", action="store_true")
     parser.add_argument("--wing-loss-weight", type=float, default=0)

@@ -1,0 +1,173 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T00:59:13.686025+00:00",
+    "source_commit": "d59d2b89387d72e51d4f64a39a4809806da64a0c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "f41326b09d7a2621a82ad4660aa5228421846327975517bb5436c7523727eb45",
+      "src/embodied_fly/body.py": "1280f5567338cb902b7f6bd725fe61336f766dc9c7e27c8166b2c5bcd1fc4565",
+      "src/embodied_fly/brain.py": "42c226d013c90aa32abaf421f368e17911b2eaaf25ee37110b2c7b4826f8c464",
+      "src/embodied_fly/braking.py": "cde7d93093bea629bc3bf3fac8fdcfae7094acde09ef6773b4001ba7c51cbe95",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "20de3b61a98bbed3ca560160f8c8a1335794edc578e17fe10b02c91d348da2af",
+      "src/embodied_fly/flight_collect.py": "d579bcbbd995ede03934600bd107fd0dc3c7a360ab6eb8e100df16f60e2850d5",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "6e4d2d5b5045e25398de90a065c89e02e70244fd73b1b49a5d3d078e964467b9",
+      "src/embodied_fly/flight_teacher.py": "3a6d1e5c683f17db3a24303a8e3ed47f8f7decec0d36bff65c7256181405c4cf",
+      "src/embodied_fly/migration.py": "f6cce849f465b7f117d3c6c1867d975e1d0c009d0f04ae12f13b1c0a5ad8aa70",
+      "src/embodied_fly/montage.py": "de4e330080da69b27ff7544c2739c0203c04d05404533b726b29897850fd87b2",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "9c49a616cbe6ff2c4b51d8dd1ffdd53f0f70b79a86e83ea1a908130af292e128",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/ppo.py": "a16bf4bbf038e84c7d5e8dbcbeeb60dd1770ad3d1c2c81950dade1e3c36ae5e8",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "51820ab2787a9da7fc65f297a07a9ef396c66d6d690c4937d21c74e4973f391e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "ecfb92470a3751d95b71a61f0832618ac7205b322721fdce43de70a8894fc7af",
+      "src/embodied_fly/transitions.py": "8e8f0fbc4a3f51bb16fdf323d6b23d4e95fa850e0141b9068f63412e46c02a66"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Darwin",
+      "architecture": "arm64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "measurement": "all eligible recorded frames; new channels initially have mean 0/std 1",
+  "channel_order": [
+    "velocity walker/wing_yaw_left",
+    "velocity walker/wing_roll_left",
+    "velocity walker/wing_pitch_left",
+    "velocity walker/wing_yaw_right",
+    "velocity walker/wing_roll_right",
+    "velocity walker/wing_pitch_right",
+    "angle walker/wing_yaw_left",
+    "angle walker/wing_roll_left",
+    "angle walker/wing_pitch_left",
+    "angle walker/wing_yaw_right",
+    "angle walker/wing_roll_right",
+    "angle walker/wing_pitch_right"
+  ],
+  "results": [
+    {
+      "dataset_manifest_sha256": "9fd4903d17104a8c072d5977f9ee33099f18dcb6085c30a1a4e7c1e8a9e8f1b1",
+      "episodes": 8,
+      "frames": 12000,
+      "max_absolute": [
+        0.00200365437194705,
+        0.004284767434000969,
+        0.001712945057079196,
+        0.0023439181968569756,
+        0.004070112947374582,
+        0.0016642065020278096,
+        0.477634072303772,
+        0.2554112672805786,
+        0.3218674063682556,
+        0.4777795374393463,
+        0.25619545578956604,
+        0.32204243540763855
+      ],
+      "encoder_clip_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "existing_389_inputs_identical": true
+    },
+    {
+      "dataset_manifest_sha256": "561346a5171bd137a2e6276b877451a1f04fe9c38960d33e8ddd29d439a151da",
+      "episodes": 8,
+      "frames": 12000,
+      "max_absolute": [
+        0.9723345637321472,
+        0.41669178009033203,
+        1.7749857902526855,
+        0.9789156317710876,
+        0.4861621558666229,
+        1.7749857902526855,
+        0.4992843568325043,
+        0.1470780074596405,
+        0.689044177532196,
+        0.4728073477745056,
+        0.18285617232322693,
+        0.6642155051231384
+      ],
+      "encoder_clip_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "existing_389_inputs_identical": true
+    },
+    {
+      "dataset_manifest_sha256": "e95e6faf4f62f4dd6a50ab86a72fbdc1ab0ae8b4bd032b932ea0c5407b95b9d1",
+      "episodes": 8,
+      "frames": 12000,
+      "max_absolute": [
+        0.9588271379470825,
+        0.37593644857406616,
+        1.3981292247772217,
+        0.9669795036315918,
+        0.44567587971687317,
+        1.3981292247772217,
+        0.4856029748916626,
+        0.14058910310268402,
+        0.6144071817398071,
+        0.46013757586479187,
+        0.18166394531726837,
+        0.624714195728302
+      ],
+      "encoder_clip_fraction": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "existing_389_inputs_identical": true
+    }
+  ]
+}

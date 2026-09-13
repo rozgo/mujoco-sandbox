@@ -66,6 +66,7 @@ def test_one_actor_trains_both_demonstration_clocks_and_reports_each(tmp_path):
             burnin=2,
             internal_steps=4,
             lr=1e-4,
+            sensor_lr_multiplier=1.0,
             seed=31,
             freeze_core=False,
             wing_loss_weight=1.0,

@@ -229,3 +229,46 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.train 
   --reset-fraction 0.25 --lr 0.00003 --seed 45001 \
   --wing-loss-weight 1 --wing-velocity-inputs
 ```
+
+## Continuous angle and velocity feedback
+
+The next candidate uses 395 inputs: the original 383, then six wing velocities
+divided by 2,000 rad/s, then six measured hinge angles divided by pi. Each six-value
+group is ordered left yaw/roll/pitch, right yaw/roll/pitch. No clock, desired wing
+phase or teacher action is added to student observations. The raw angles come from
+current physical joint state. All 36,000 frames in the three eligible corpora have
+zero clipping in the added channels under their initial mean 0/std 1 normalization.
+
+The expanded 12→128 matrix still feeds the existing sensory encoder. Its original
+six velocity columns are copied, and the six new angle columns start at zero.
+The original encoder, normalizer, core, utility and motor weights are retained.
+This adds another 768 trainable parameters, for 2,410,668 total, with the same
+166,700-node measured graph. Neutral migration is checked numerically before
+optimization. It does not establish learned flight.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.migration \
+  --graph outputs/fly_survival/malecns \
+  --checkpoint assets/embodied_fly/diagnostics/motor_flight_probe_02.pt \
+  --capture outputs/embodied_fly/flight_demonstrations_reproduction/episode_004.npz \
+  --output outputs/embodied_fly/angle_migration_reproduction.json \
+  --wing-angle-inputs
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.train \
+  --graph outputs/fly_survival/malecns \
+  --data outputs/embodied_fly/retention_reproduction \
+  --additional-data outputs/embodied_fly/flight_demonstrations_reproduction \
+  --additional-data outputs/embodied_fly/flight_corrections_reproduction \
+  --resume assets/embodied_fly/diagnostics/motor_flight_probe_02.pt \
+  --output outputs/embodied_fly/angle_feedback_reproduction \
+  --seconds 60 --worlds 32 --sequence 32 --burnin 64 --reset-fraction 0.25 \
+  --lr 0.00003 --seed 48001 --ground-loss-weight 4 --wing-loss-weight 1 \
+  --wing-velocity-inputs --wing-angle-inputs
+```
+
+Corrected flight data are collected with `embodied_fly.flight_collect`, adding
+`--student-checkpoint assets/embodied_fly/diagnostics/motor_flight_probe_02.pt`,
+`--graph outputs/fly_survival/malecns`, `--student-fraction 0.15` and `--seed 46001`
+to the original collection command, using the new `flight_corrections_reproduction`
+output. The inherited teacher and wing-pattern arguments still apply. The angle
+pilot starts fresh Adam for its changed sensory parameter shape; earlier 383- and
+389-input checkpoints retain their exact observation recipes.
