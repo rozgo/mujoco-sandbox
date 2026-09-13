@@ -1004,3 +1004,17 @@ A diagnostic over the 0.3-second held-out hover capture also found inherited
 wing-position normalization saturates roughly 62–84% of angle samples. The new
 velocity inputs are continuous. This identifies another information limitation;
 we have not yet established its causal contribution or changed the angle schema.
+
+If the correction collection yields at least four complete eligible episodes,
+run one **60-second corrective imitation pilot** from pilot 02, seed 47001,
+learning rate 3e-5, 32 parallel neural sequences and 25% reset-start batches.
+Rehearse retained online01 ground data, original flight data and the new corrected
+flight data. Keep equal sampling of ground/flight clocks. Increase the ground
+loss multiplier to **4** to protect its earlier behavior; this is a declared new
+retention setting, not the previous recipe. Use **64 burn-in + 32 supervised
+steps**: at 5 kHz the supervised window spans 6.4 ms, longer than a nominal
+218 Hz wingbeat, and the burn-in gives recurrent state 12.8 ms of history.
+The earlier 16-step supervised window covered only 3.2 ms. This combined pilot
+tests corrective data plus longer context and stronger retention; it cannot
+isolate which change causes any improvement. Evaluate the same teacher-free
+airborne and ground cases afterward. No extra deployed controller is added.

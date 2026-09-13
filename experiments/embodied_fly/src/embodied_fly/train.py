@@ -83,6 +83,8 @@ def sample(episodes, rng, length, worlds, device, reset_start=False):
 def train(args):
     if not 0 <= args.reset_fraction <= 1:
         raise ValueError("Reset fraction must be between zero and one")
+    if not np.isfinite(args.ground_loss_weight) or args.ground_loss_weight <= 0:
+        raise ValueError("Ground retention weight must be finite and positive")
     setup_start = time.perf_counter()
     args.output.mkdir(parents=True, exist_ok=False)
     run_evidence = evidence()
@@ -275,6 +277,8 @@ def train(args):
             motor_loss = torch.stack(motor_losses).mean()
             utility_loss = torch.stack(utility_losses).mean()
             loss = motor_loss + 0.02 * utility_loss
+            if time_scale == 1.0:
+                loss = args.ground_loss_weight * loss
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite loss")
             loss.backward()
@@ -309,6 +313,7 @@ def train(args):
                     "supervised_examples": examples,
                     "reset_start_updates": reset_updates,
                     "neural_time_scale": time_scale,
+                    "ground_loss_weight": args.ground_loss_weight,
                 }
                 print(json.dumps(record), flush=True)
                 log.write(json.dumps(record) + "\n")
@@ -427,5 +432,6 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=18001)
     parser.add_argument("--freeze-core", action="store_true")
     parser.add_argument("--wing-loss-weight", type=float, default=0)
+    parser.add_argument("--ground-loss-weight", type=float, default=1)
     parser.add_argument("--wing-velocity-inputs", action="store_true")
     train(parser.parse_args())

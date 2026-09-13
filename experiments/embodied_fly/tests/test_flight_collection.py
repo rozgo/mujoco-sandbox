@@ -6,8 +6,8 @@ import mujoco
 import numpy as np
 import torch
 
-from embodied_fly.body import FlyEnvironment
 from embodied_fly import flight_collect
+from embodied_fly.body import FlyEnvironment
 
 
 def test_corrective_capture_records_executed_physics_and_causal_previous_action(
