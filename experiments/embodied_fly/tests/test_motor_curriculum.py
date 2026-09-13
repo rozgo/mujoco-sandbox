@@ -97,7 +97,7 @@ def test_training_collects_command_changes_without_ground_teacher_actions(
     assert report["ground_retention"]["weights_unchanged"]
     assert report["utility_and_intention_weights_unchanged"]
     assert all(
-        e["teacher_mix"] == (hover_mix if e["task"] == "hover" else 0)
+        e["teacher_mix"] == (float(np.float32(hover_mix)) if e["task"] == "hover" else 0)
         for e in report["completed_episodes"]
     )
     assert (
