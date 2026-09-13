@@ -1,0 +1,313 @@
+{
+  "scope": "same initial five-second development cases; training seeds differ; not held-out generalization",
+  "next_motor_curriculum_parent": "ground_outcome_03",
+  "preserved_previous_ground_comparison": "motor_focus_06",
+  "per_command_policy_selection": false,
+  "release_accepted": false,
+  "runs": [
+    {
+      "run": "motor_focus_06",
+      "checkpoint_sha256": "138b7fc43c925cba5261922c3ab538b29152271166e5039a0aaf48a3441585f4",
+      "model_sha256": "50bf15b9dcaf88e2da2bacfbc7eedad676759bf623936b03e25a678b8e27f7f6",
+      "evaluation_seed": 72001,
+      "identical_initial_physical_state_and_observation": true,
+      "duration_per_case_seconds": 5.0,
+      "results": [
+        {
+          "case": "stand",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.0002748077833433842,
+          "speed_rmse_cm_s": 0.12947070439013608,
+          "yaw_rmse_rad_s": 0.8195053734433572,
+          "minimum_height_m": 0.0012651197636089908,
+          "minimum_upright": 0.9910835962904199,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "1778b0e13ddf19d8c2c80bf243b6c7e3d7ea5c0584213f533d644f54ddfee2c2",
+          "posture": {
+            "legs_angle_rms_rad": 0.1423342882034665,
+            "wings_angle_rms_rad": 0.113997236861812,
+            "body_angle_rms_rad": 0.05870588362505185,
+            "wing_velocity_rms_rad_s": 0.4811040104066191,
+            "wing_max_deviation_rad": 0.2702457841910457,
+            "max_body_height_loss_fraction": 0.010078432230836598,
+            "mean_initial_form_score": 0.5816724480076518
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "walk",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.008698651905061652,
+          "speed_rmse_cm_s": 0.49905306853757303,
+          "yaw_rmse_rad_s": 3.5039238355241245,
+          "minimum_height_m": 0.0012768610840330292,
+          "minimum_upright": 0.9642936295847755,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "4208fe8e43e404018fa1c22459ce16fb1518f9a2cae88c0689e17bf87a4df855",
+          "posture": {
+            "legs_angle_rms_rad": 0.1778105637964467,
+            "wings_angle_rms_rad": 0.0630923993599219,
+            "body_angle_rms_rad": 0.055558229797043855,
+            "wing_velocity_rms_rad_s": 1.6512139549857134,
+            "wing_max_deviation_rad": 0.2696284292060154,
+            "max_body_height_loss_fraction": 0.0008911705531853276,
+            "mean_initial_form_score": 0.5669325345975016
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "hover",
+          "stable": false,
+          "success": false,
+          "root_tracking_rmse_m": 0.018776097175199853,
+          "speed_rmse_cm_s": 0.23728857067377354,
+          "yaw_rmse_rad_s": 1.693984905830278,
+          "minimum_height_m": 0.00043106125300303215,
+          "minimum_upright": -0.9817224551164909,
+          "max_forbidden_ground_force_over_weight": 7.813525417469296,
+          "state_sha256": "4613e55afc6972242b102a77df61adc85fad22f66b04141452c63363ad0e2f43",
+          "posture": {
+            "legs_angle_rms_rad": 0.4171636250353367,
+            "wings_angle_rms_rad": 1.4150592516009945,
+            "body_angle_rms_rad": 0.07916633027589463,
+            "wing_velocity_rms_rad_s": 7.018040557585787,
+            "wing_max_deviation_rad": 3.0027085156701716,
+            "max_body_height_loss_fraction": 0.6627063748020092,
+            "mean_initial_form_score": 4.204286840976359e-06
+          },
+          "ground_posture_pass": null
+        }
+      ]
+    },
+    {
+      "run": "ground_outcome_02",
+      "checkpoint_sha256": "b9678ace0f782698270214b721c1fc3bbddea988c10b632f6fa1603e1fa878fe",
+      "model_sha256": "50bf15b9dcaf88e2da2bacfbc7eedad676759bf623936b03e25a678b8e27f7f6",
+      "evaluation_seed": 72001,
+      "identical_initial_physical_state_and_observation": true,
+      "duration_per_case_seconds": 5.0,
+      "results": [
+        {
+          "case": "stand",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.0004519822541132297,
+          "speed_rmse_cm_s": 0.15180222589799366,
+          "yaw_rmse_rad_s": 1.1391533250258044,
+          "minimum_height_m": 0.0011915955316707373,
+          "minimum_upright": 0.9784152080180749,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "a68801cfa9bf1be0b6ba32296accddbb20f138ea2874d2e27ae2b17e07044c54",
+          "posture": {
+            "legs_angle_rms_rad": 0.14707022563451597,
+            "wings_angle_rms_rad": 0.14862323513490722,
+            "body_angle_rms_rad": 0.05918015009421825,
+            "wing_velocity_rms_rad_s": 0.9775554616435549,
+            "wing_max_deviation_rad": 0.5786728657392316,
+            "max_body_height_loss_fraction": 0.06760913014809289,
+            "mean_initial_form_score": 0.5023930484965727
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "walk",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.003397879413880783,
+          "speed_rmse_cm_s": 0.504063797406791,
+          "yaw_rmse_rad_s": 3.5074361215937673,
+          "minimum_height_m": 0.0012769316375932033,
+          "minimum_upright": 0.9623474288985838,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "7529c0c0d98c8c3b4ea50c1db0726f3482a1c1ff462da8007db979677a8d3e45",
+          "posture": {
+            "legs_angle_rms_rad": 0.17995494994840883,
+            "wings_angle_rms_rad": 0.059658936668732676,
+            "body_angle_rms_rad": 0.0559257700159895,
+            "wing_velocity_rms_rad_s": 1.6959230555137963,
+            "wing_max_deviation_rad": 0.2526189176992165,
+            "max_body_height_loss_fraction": 0.0008359643245670068,
+            "mean_initial_form_score": 0.5637252364403459
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "hover",
+          "stable": false,
+          "success": false,
+          "root_tracking_rmse_m": 0.018742997763253746,
+          "speed_rmse_cm_s": 0.20499023610289727,
+          "yaw_rmse_rad_s": 1.6589596399469848,
+          "minimum_height_m": 0.00043213522716093004,
+          "minimum_upright": -0.9509467959659007,
+          "max_forbidden_ground_force_over_weight": 7.646989038991294,
+          "state_sha256": "980cb9bb6133ded4895718ed0135a29a0724b30ba33a46848972ed26c8334b5e",
+          "posture": {
+            "legs_angle_rms_rad": 0.4168956849337999,
+            "wings_angle_rms_rad": 1.455109257541552,
+            "body_angle_rms_rad": 0.07777335810342789,
+            "wing_velocity_rms_rad_s": 6.683096253935061,
+            "wing_max_deviation_rad": 3.0017287838736078,
+            "max_body_height_loss_fraction": 0.6618660194358921,
+            "mean_initial_form_score": 4.000098548155454e-06
+          },
+          "ground_posture_pass": null
+        }
+      ]
+    },
+    {
+      "run": "ground_outcome_03",
+      "checkpoint_sha256": "c072fa1674c838debaecbf409e411de8e9077641e78b65cdda66b7510a6690ac",
+      "model_sha256": "50bf15b9dcaf88e2da2bacfbc7eedad676759bf623936b03e25a678b8e27f7f6",
+      "evaluation_seed": 72001,
+      "identical_initial_physical_state_and_observation": true,
+      "duration_per_case_seconds": 5.0,
+      "results": [
+        {
+          "case": "stand",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.0002581185412062894,
+          "speed_rmse_cm_s": 0.25832369457122195,
+          "yaw_rmse_rad_s": 1.2845007639844355,
+          "minimum_height_m": 0.0012335354824092534,
+          "minimum_upright": 0.9788840656562778,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "77e579b54fac2339038199cb846ccc15214afa18c0d4deb4ca13c3710581170a",
+          "posture": {
+            "legs_angle_rms_rad": 0.14007670098947503,
+            "wings_angle_rms_rad": 0.05703904870885948,
+            "body_angle_rms_rad": 0.05698107443724302,
+            "wing_velocity_rms_rad_s": 0.8050094045175271,
+            "wing_max_deviation_rad": 0.24198167553480565,
+            "max_body_height_loss_fraction": 0.0347922672854043,
+            "mean_initial_form_score": 0.6759509210622189
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "walk",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.010371621503230486,
+          "speed_rmse_cm_s": 0.48875984996005695,
+          "yaw_rmse_rad_s": 3.693589420788589,
+          "minimum_height_m": 0.0012829473804732928,
+          "minimum_upright": 0.960983203877965,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "98b9285f729cfd6332e09fbe5c88224faeb41671943bc845b1ba0b714d13618d",
+          "posture": {
+            "legs_angle_rms_rad": 0.1763452396274654,
+            "wings_angle_rms_rad": 0.05275666000478509,
+            "body_angle_rms_rad": 0.05566680157456377,
+            "wing_velocity_rms_rad_s": 1.6005894562238108,
+            "wing_max_deviation_rad": 0.24166304854702308,
+            "max_body_height_loss_fraction": 0.0,
+            "mean_initial_form_score": 0.5806108747633454
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "hover",
+          "stable": false,
+          "success": false,
+          "root_tracking_rmse_m": 0.01880298639386547,
+          "speed_rmse_cm_s": 0.3204175015251093,
+          "yaw_rmse_rad_s": 2.3513890216024715,
+          "minimum_height_m": 0.00043317480300011094,
+          "minimum_upright": -0.9995279677938161,
+          "max_forbidden_ground_force_over_weight": 6.965306666437084,
+          "state_sha256": "389e2539179a02dfc8d5bcc2be1e4086931c29bf5ab1e4e05196b8c800d860be",
+          "posture": {
+            "legs_angle_rms_rad": 0.4188605126338786,
+            "wings_angle_rms_rad": 1.2533909185693604,
+            "body_angle_rms_rad": 0.07427689734173556,
+            "wing_velocity_rms_rad_s": 6.459370339975962,
+            "wing_max_deviation_rad": 2.865176341376946,
+            "max_body_height_loss_fraction": 0.6610525798121198,
+            "mean_initial_form_score": 3.665920144970959e-06
+          },
+          "ground_posture_pass": null
+        }
+      ]
+    },
+    {
+      "run": "ground_outcome_04",
+      "checkpoint_sha256": "26e37537c422aa200adc913002109ac523f480beca306083ccc81b27425e7b52",
+      "model_sha256": "50bf15b9dcaf88e2da2bacfbc7eedad676759bf623936b03e25a678b8e27f7f6",
+      "evaluation_seed": 72001,
+      "identical_initial_physical_state_and_observation": true,
+      "duration_per_case_seconds": 5.0,
+      "results": [
+        {
+          "case": "stand",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.0002762611753975051,
+          "speed_rmse_cm_s": 0.23409535456086206,
+          "yaw_rmse_rad_s": 1.3079109795863848,
+          "minimum_height_m": 0.0012138856139142433,
+          "minimum_upright": 0.9785458981742385,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "7ee4b512a5041337c621ba8fc6854d66b97628df77a7346dda6ef5b7c32c9aea",
+          "posture": {
+            "legs_angle_rms_rad": 0.14032342516636254,
+            "wings_angle_rms_rad": 0.06066553195557982,
+            "body_angle_rms_rad": 0.05664346749102361,
+            "wing_velocity_rms_rad_s": 0.8346415322366321,
+            "wing_max_deviation_rad": 0.3192030657906193,
+            "max_body_height_loss_fraction": 0.05016775124081119,
+            "mean_initial_form_score": 0.6687522666205372
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "walk",
+          "stable": true,
+          "success": false,
+          "root_tracking_rmse_m": 0.011998557974776582,
+          "speed_rmse_cm_s": 0.49591893209361393,
+          "yaw_rmse_rad_s": 3.5798678844697824,
+          "minimum_height_m": 0.0012765478117477088,
+          "minimum_upright": 0.973975834078234,
+          "max_forbidden_ground_force_over_weight": 0.0,
+          "state_sha256": "8d935fd8a90ea7203c6c6f228cf4f71c720a0029de26dc0821e6eaba9b696db2",
+          "posture": {
+            "legs_angle_rms_rad": 0.17727461362932556,
+            "wings_angle_rms_rad": 0.05305775905067701,
+            "body_angle_rms_rad": 0.055709208674935125,
+            "wing_velocity_rms_rad_s": 1.5652634306928623,
+            "wing_max_deviation_rad": 0.25945787108701124,
+            "max_body_height_loss_fraction": 0.0011362975370039496,
+            "mean_initial_form_score": 0.5775011062095429
+          },
+          "ground_posture_pass": false
+        },
+        {
+          "case": "hover",
+          "stable": false,
+          "success": false,
+          "root_tracking_rmse_m": 0.018797767904138136,
+          "speed_rmse_cm_s": 0.2616115646019586,
+          "yaw_rmse_rad_s": 1.6358781305730505,
+          "minimum_height_m": 0.0004297433608125978,
+          "minimum_upright": -0.9981267101478412,
+          "max_forbidden_ground_force_over_weight": 7.382900556999041,
+          "state_sha256": "6ce8922a90d275c064b0744c421d88b847c9322185519a84d8db13213b9c4fb0",
+          "posture": {
+            "legs_angle_rms_rad": 0.41922275565158684,
+            "wings_angle_rms_rad": 1.1528041686204953,
+            "body_angle_rms_rad": 0.07470037488185029,
+            "wing_velocity_rms_rad_s": 6.764253147244398,
+            "wing_max_deviation_rad": 3.0062160733228636,
+            "max_body_height_loss_fraction": 0.663737589348515,
+            "mean_initial_form_score": 3.5733261174071005e-06
+          },
+          "ground_posture_pass": null
+        }
+      ]
+    }
+  ]
+}

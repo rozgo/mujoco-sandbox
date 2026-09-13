@@ -2051,3 +2051,47 @@ is supported by measured wing improvement in both ground commands. Do not change
 body, force law, targets or deployed architecture. Evaluate allthree complete5s
 cases at72001, retain03, and open both complete films. No successful motor
 release is claimed from the current development cases.
+
+### Hybrid motor outcome and hover audit — 2026-09-13 09:22:48 UTC
+
+Ground-outcome04 completes185.485408s/131,072transitions/298PPOupdates with
+optimizer,critic and exploration state resumed from03. Both ground cases remain
+upright with valid support; standing wing RMS0.06067rad/max0.31920rad and5.02%
+height loss are worse than03. Walking wing RMS0.05306rad is similar but maximum
+0.25946rad is worse. Hover falls and no full task gate passes. Do not extend this
+same recipe again. Keep03 as the next motor-curriculum parent because it improves
+wing posture in both ground commands; preserve06 as the previous comparison.
+This is one development checkpoint for every command, not a per-command mixture
+or an accepted motor release. Full-body gait/heading quality remains incomplete.
+
+Both complete15s films are decoded (750frames each), visually inspected and
+opened. Every capture/model/checkpoint and failure trace is verified. Wing-label
+values are reconstructed from pre-action observations and physical actuator gains;
+executed actions remain the sampled actor controls, not the labels. Paired
+comparison confirms identical initial qpos,qvel,observation and commands across
+06,pure-PPO02,hybrid03/04. Training seeds differ; this is development evidence,
+not a generalization claim or a clean multi-seed causal estimate.
+
+Hover-clock audit01 takes3.320554s setup/0.004622s execution on CPU, with zero
+physics transitions and zero training. Holding all397 current sensor inputs and
+physical state fixed, changing the reference timer changes sweep labels from
++0.52269 to-0.62776. The recurrent actor could encode phase in history; do not
+claim the task is impossible or that this alone caused failed hover. The result
+supports testing a teaching law based on current wing angle/speed and altitude
+error, removing an extra timing burden while preserving the same actor/body.
+
+Next available action: build and physically validate that state-based hover
+reference on the canonical model, including startup from zero wing speed,
+without modifying actuation, body masses or the wing-motion force law. A bounded
+energy/phase response derived from measured wing coordinates is a candidate;
+its gains and startup behavior must be tested, not assumed. It would generate
+training labels only. After reference validation, declare a mixed ground/hover
+curriculum from03 with the same shared actor. Preserve working ground behavior
+and evaluate all commands from the resulting single checkpoint. No such new
+flight reference or training has been implemented or claimed in this turn.
+
+This turn is progress: wing-only guidance is implemented and tested, two GPU
+trials and their full films are complete, resting-wing accuracy improves, and
+an actual teacher-observability audit changes the next experiment. Hover,
+transitions, utility/needs and final multi-agent survival integration remain
+required; the full goal stays active.

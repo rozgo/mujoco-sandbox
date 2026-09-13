@@ -5,6 +5,13 @@ selection and needs-driven behavior are deferred. Takeoff, landing and transitio
 between ground and air remain later requirements; the first pilot starts each
 primitive from its declared ground or airborne state.
 
+Current development choice for the next motor curriculum is
+[ground_outcome_03](runs/ground_outcome_03/SUMMARY.md), which improves resting
+wings in both ground commands. Its unchanged continuation04 was not better.
+The same03 checkpoint drives all commands; there is no per-command policy
+selection. Previous motor_focus_06 remains preserved. Full posture/tracking
+gates and hover are still incomplete; this is not a released motor solution.
+
 Every world uses `wing_motion`: 5 kHz native MuJoCo physics and 500 Hz control.
 The checkpoint records a fingerprint of masses, inertias, joints, contacts,
 actuation, solver settings and flight-force parameters. Native and batched
@@ -270,3 +277,18 @@ No teacher commands are executed or blended into control. The scalar multiplies
 mean squared normalized-action error; it does not change a physical torque limit.
 This variant is **PPO plus corrective supervision**, with separate gradient audits
 and label-presentation counts. The auxiliary adds no deployed module or policy.
+
+## Next hover investigation
+
+The [clock audit](runs/hover_clock_audit_01/SUMMARY.md) shows that the current
+hover reference can request different wing commands from identical current
+sensor inputs. Recurrent history could supply phase, so this is not proof of
+unlearnability. Before further hover training, test a reference driven by
+measured wing position/speed and current altitude error. Its purpose is to
+provide more direct teaching targets, not to become a deployed controller.
+
+Keep the canonical body, torque limits and force law. Validate the reference
+physically before training, including startup from zero wing speed. Then train
+one continuing actor with ground rehearsal and hover examples together, using03
+as the development parent. Do not change the actor into a scripted oscillator,
+add a hidden phase input or substitute a controller during evaluation.
