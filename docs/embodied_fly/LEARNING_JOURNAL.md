@@ -1387,3 +1387,35 @@ forced utility action is introduced. This is not a matched speed benchmark or
 an attribution of outcomes to any one of these changes. Save all training falls,
 measure physical collection and optimization separately, then evaluate the same
 unassisted flights and complete ground suite before promotion.
+
+## Wing-motion flight: approved change of physical task
+
+Implementation started 2026-09-13 03:45:16 UTC after discussion. The user
+explicitly prioritizes the integrated brain, retains full wing joint commands
+and wing feedback, and approves replacing aerodynamic/inertial wing coupling
+with flight forces derived from measured wing motion. This supersedes the
+earlier no-applied-body-force condition for the new `wing_motion` preset only.
+See [mechanism and parameters](WING_MOTION.md).
+
+Before this change, nonlinear decoder01 fit for 60.000718 s but both flight
+cases failed. Its PPO02 continuation took 60.647209 s; all 750 completed
+episodes failed, mostly excessive tilt. Both are preserved with physical
+evaluations, hashes and checkpoints. No promotion or claim of flight progress.
+
+The first custom-force reference trial pitched over because the resultant
+force was applied at thorax COM. Applying at whole-fly COM, with its lever
+moment expressed at the thorax, yields a two-second reference hover: 0.733 mm
+root RMSE, minimum upright 0.99948, minimum height 17.119 mm from a 20 mm
+start, zero warnings. This is a training-only reference, not a learned brain.
+The correction is part of force-model implementation, not a reward change.
+
+First declared student pilot: evaluate preserved readout01 on this body, then
+collect eight predetermined two-second reference episodes (seed61001, phase
+and initial-heading variations, speeds 0/0/1/2 cm/s). Replay the full frozen
+graph to cache real motor-cell states; reuse the matching ground cache. Fit
+the existing 230,572-parameter nonlinear decoder for 60 seconds, seed62001,
+Adam1e-4, ground probability0.5, retention4 and startup fraction0.25 over25
+frames. Upstream actor and measured graph stay fixed during this warm start;
+no new deployed network or runtime oscillator. Run independent student hover
+and forward tests, then ground checks if there is flight traction. Preserve
+all outcomes and classify training/reference performance separately.

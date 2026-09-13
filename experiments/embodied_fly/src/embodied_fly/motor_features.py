@@ -67,7 +67,10 @@ def collect(args):
     if actor.sensor_extension_size != 12:
         raise ValueError("Expected the declared 395-input actor")
     manifest = json.loads((args.data / "manifest.json").read_text())
-    if manifest["control_hz"] != (5000 if args.role == "flight" else 500):
+    wing_motion = manifest.get("physical_preset") == "wing_motion"
+    if wing_motion and args.role != "flight":
+        raise ValueError("Wing-motion corpus is a flight task")
+    if manifest["control_hz"] != (5000 if args.role == "flight" and not wing_motion else 500):
         raise ValueError("Corpus role and physical observation clock disagree")
     if sha256(args.data / "model.mjb") != manifest["model_sha256"]:
         raise ValueError("Capture model hash mismatch")
@@ -132,6 +135,9 @@ def collect(args):
         "model_sha256": manifest["model_sha256"],
         "cache_sha256": sha256(args.output / "features.npz"),
         "control_hz": manifest["control_hz"],
+        "physical_preset": manifest.get(
+            "physical_preset", "flight" if args.role == "flight" else "walking"
+        ),
         "neural_device": str(device),
         "parallel_neural_sequences": min(args.worlds, len(episodes)),
         "episode_lengths": {str(e["id"]): len(e["action"]) for e in episodes},

@@ -12,6 +12,11 @@ produced stable unassisted flight. [Startup trials](runs/motor_wing_startup_02/S
 and the [matched neural-memory handover](runs/flight_handover_01/SUMMARY.md) explain
 the latest evidence. The inherited flight expert remains a separate reference.
 
+The subsequent [nonlinear motor-decoder stage](MOTOR_DECODER.md) preserves the
+deployed network shape and learns from actual motor-cell states. Its supervised
+fit and short physical-reward continuation still fail flight; their full ground
+and flight reports are retained. The reviewed ground film remains unchanged.
+
 The [learning journal](LEARNING_JOURNAL.md) records the hypotheses, failures,
 architecture changes, measured runs and reporting limits. Exact GPU reports and
 curves are in [`runs/`](runs/). The first five-minute graph warm start reduced
@@ -322,3 +327,8 @@ The cached-feature fit has zero live physics worlds and introduces no extra
 deployed brain. The existing graph, utility and full motor decoder still execute
 at runtime. Its raw evaluations remain essential because low imitation error
 does not establish a stable closed-loop wingbeat.
+
+The current course correction is [flight dynamics driven by wing motion](WING_MOTION.md):
+keep the same brain and six wing controls; a custom force law reads actual
+wing motion and drives the free body. This is the current flight development
+path. Earlier aerodynamic trials remain available as separate diagnostics.

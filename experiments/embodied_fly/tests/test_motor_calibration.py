@@ -6,7 +6,11 @@ import pytest
 import torch
 from torch import nn
 
-from embodied_fly.motor_calibration import decoder_from_state, load_corpus
+from embodied_fly.motor_calibration import (
+    decoder_from_state,
+    load_corpus,
+    verify_feature_parent,
+)
 from embodied_fly.motor_features import episode_split, replay_group
 from embodied_fly.provenance import sha256
 
@@ -95,3 +99,29 @@ def test_feature_identity_and_whole_episode_exclusion_are_enforced(tmp_path):
     write(np.arange(4))
     with pytest.raises(ValueError, match="overlap"):
         load_corpus(tmp_path, "parent", state, "cpu")
+
+
+def test_cache_reuse_allows_decoder_changes_but_rejects_changed_core_or_normalizer():
+    import copy
+
+    reference = {
+        "observation_size": 395,
+        "sensor_extension_size": 12,
+        "action_size": 78,
+        "graph_sha256": "graph",
+        "graph_metadata_sha256": "annotations",
+        "config": {"internal_steps": 4},
+        "state_dict": {
+            "core.leak": torch.zeros(5),
+            "observation_mean": torch.zeros(395),
+            "motor_decoder.3.bias": torch.zeros(78),
+        },
+    }
+    changed = copy.deepcopy(reference)
+    changed["state_dict"]["motor_decoder.3.bias"] += 0.1
+    verify_feature_parent(changed, reference)
+    for key in ("core.leak", "observation_mean"):
+        invalid = copy.deepcopy(changed)
+        invalid["state_dict"][key][0] += 1e-6
+        with pytest.raises(ValueError, match="upstream state"):
+            verify_feature_parent(invalid, reference)

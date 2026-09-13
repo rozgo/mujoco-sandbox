@@ -21,6 +21,7 @@ from embodied_fly.observations import (
     wing_angle_indices,
     wing_velocity_indices,
 )
+from embodied_fly.wing_motion import WingMotionForces, configure_model
 
 PHYSICS_DT = 0.0002
 CONTROL_DT = 0.002
@@ -31,7 +32,7 @@ NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
 def make_body(preset="walking", *, wing_limits="original"):
-    if preset not in ("walking", "flight"):
+    if preset not in ("walking", "flight", "wing_motion"):
         raise ValueError(f"Unknown physical preset: {preset}")
     if wing_limits not in ("original", "firm") or (
         wing_limits != "original" and preset != "flight"
@@ -49,7 +50,7 @@ def make_body(preset="walking", *, wing_limits="original"):
         joint_filter=0.01,
         adhesion_filter=0.007,
     )
-    if preset == "flight":
+    if preset in ("flight", "wing_motion"):
         # Pinned upstream Flying coefficients, with complete limbs and floor
         # contacts retained. Only wing filters are removed; terrestrial actuator
         # dynamics stay unchanged. No external body forces or wing generator.
@@ -110,6 +111,8 @@ def make_body(preset="walking", *, wing_limits="original"):
             gain = model.actuator_gainprm[i, 0]
             model.actuator_forcelimited[i] = True
             model.actuator_forcerange[i] = (lo * gain, hi * gain)
+    if preset == "wing_motion":
+        configure_model(model)
     return physics, fly
 
 
@@ -172,6 +175,8 @@ class FlyEnvironment:
             for i in range(self.model.ngeom)
             if any(part in self.model.geom(i).name for part in ("tarsus", "tarsal", "claw"))
         }
+        self.wing_forces = WingMotionForces(self.model) if preset == "wing_motion" else None
+        self._wing_applied = np.zeros(6)
         self.reset()
 
     def reset(self, yaw=0.0):
@@ -188,6 +193,9 @@ class FlyEnvironment:
         self.previous_action = np.zeros(self.model.nu, np.float32)
         self.maximum_disallowed_ground_force = 0.0
         self.maximum_wing_limit_violation = np.zeros(6)
+        if self.wing_forces is not None:
+            self.wing_forces.reset([0])
+            self._wing_applied[:] = 0
         mujoco.mj_forward(self.model, self.data)
         self.mean_sensors = self.data.sensordata.copy()
         return self.observation()
@@ -267,6 +275,24 @@ class FlyEnvironment:
         )
         sensor_total = np.zeros(self.model.nsensordata)
         for _ in range(self.substeps):
+            if self.wing_forces is not None:
+                # Current physical feedback, shared with the batch implementation.
+                mujoco.mj_forward(self.model, self.data)
+                wrench = self.wing_forces.advance(
+                    self.data.qpos[self.wing_angle_indices][None],
+                    self.data.qvel[self.wing_velocity_indices][None],
+                    self.data.xmat[self.thorax_id][None],
+                    self.anatomical_velocity()[None],
+                    self.model.opt.timestep,
+                )[0].copy()
+                # Apply the modeled flight force at whole-fly COM. xfrc_applied
+                # acts at this body's inertial COM, so include the lever moment.
+                offset = (
+                    self.data.subtree_com[self.thorax_id] - self.data.xipos[self.thorax_id]
+                )
+                wrench[3:] += np.cross(offset, wrench[:3])
+                self.data.xfrc_applied[self.thorax_id] += wrench - self._wing_applied
+                self._wing_applied[:] = wrench
             mujoco.mj_step(self.model, self.data)
             ranges = self.model.jnt_range[self.wing_joint_ids]
             angles = self.data.qpos[self.wing_angle_indices]
@@ -326,6 +352,7 @@ class FlyEnvironment:
             "actuators": model.nu,
             "observation_size": len(self.observation()),
             "physical_preset": self.preset,
+            "flight_force_model": self.wing_forces.report() if self.wing_forces else None,
             "wing_limit_profile": self.wing_limits,
             "wing_limit_solref": model.jnt_solref[self.wing_joint_ids].tolist(),
             "physics_hz": 1 / model.opt.timestep,

@@ -39,6 +39,29 @@ def decoder_from_state(state):
     return decoder
 
 
+def verify_feature_parent(resume, reference):
+    """A changed decoder can reuse features only when its full upstream map matches."""
+    for key in (
+        "observation_size",
+        "sensor_extension_size",
+        "action_size",
+        "graph_sha256",
+        "graph_metadata_sha256",
+    ):
+        if resume[key] != reference[key]:
+            raise ValueError("Feature parent architecture or graph differs")
+    if resume["config"]["internal_steps"] != reference["config"]["internal_steps"]:
+        raise ValueError("Feature parent neural clock differs")
+    a, b = resume["state_dict"], reference["state_dict"]
+    if a.keys() != b.keys():
+        raise ValueError("Feature parent state schema differs")
+    for key, value in a.items():
+        if value.shape != b[key].shape or (
+            not key.startswith("motor_decoder.") and not torch.equal(value, b[key])
+        ):
+            raise ValueError(f"Feature parent upstream state differs: {key}")
+
+
 def load_corpus(path, parent_hash, state, device):
     report = json.loads((path / "report.json").read_text())
     if (
@@ -134,7 +157,12 @@ def train(args):
     parent_hash = sha256(args.resume)
     parent = torch.load(args.resume, map_location="cpu", weights_only=True)
     original = parent["state_dict"]
-    corpora = [load_corpus(path, parent_hash, original, device) for path in args.cache]
+    feature_hash = parent_hash
+    if args.feature_parent is not None:
+        reference = torch.load(args.feature_parent, map_location="cpu", weights_only=True)
+        verify_feature_parent(parent, reference)
+        feature_hash = sha256(args.feature_parent)
+    corpora = [load_corpus(path, feature_hash, original, device) for path in args.cache]
     ground = [i for i, c in enumerate(corpora) if c["role"] == "ground"]
     flight = [i for i, c in enumerate(corpora) if c["role"] == "flight"]
     if not ground or not flight:
@@ -255,6 +283,10 @@ def train(args):
         "completed_utc": utc_now(),
         "method": checkpoint["method"],
         "parent_checkpoint_sha256": parent_hash,
+        "feature_parent_checkpoint_sha256": feature_hash,
+        "feature_parent_upstream_map_verified_identical": True,
+        "retention_target": "Outputs of the feature-parent actor on recorded histories",
+        "optimizer_initialization": "Fresh Adam for this declared motor calibration",
         "checkpoint_sha256": sha256(args.output / "actor.pt"),
         "corpora": [c["identity"] for c in corpora],
         "seed": args.seed,
@@ -295,6 +327,7 @@ if __name__ == "__main__":
     for name in ("resume", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--cache", type=Path, action="append", required=True)
+    parser.add_argument("--feature-parent", type=Path)
     parser.add_argument("--seconds", type=float, default=60)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--batch-size", type=int, default=1024)

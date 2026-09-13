@@ -81,6 +81,14 @@ def record(source, case, output):
         if teacher
         else "MALECNS STUDENT / motor-learning diagnostic"
     )
+    if evaluation.get("physical_preset") == "wing_motion":
+        title = (
+            "WING CONTROL REFERENCE / training demonstration"
+            if evaluation.get("controller") == "reference"
+            else "INACTIVE WINGS / force-model check"
+            if evaluation.get("controller") == "inactive"
+            else "MALECNS STUDENT / wing control"
+        )
     if evaluation.get("diagnostic_activity_override"):
         title = (
             "UTILITY INTERVENTION / "
@@ -145,6 +153,8 @@ def record(source, case, output):
                 draw.text((818, 427), "Measured cell locations", font=font(13), fill="#a8b0b5")
             draw.text((24, 22), title, font=font(25), fill="#ffc31f")
             context = "physical capture"
+            if evaluation.get("physical_preset") == "wing_motion":
+                context = "Wing motion drives flight forces"
             if "command" in states:
                 command = states["command"][step]
                 context = f"target {command[0]:.1f} cm/s / yaw {command[2]:.2f} rad/s"
@@ -160,7 +170,7 @@ def record(source, case, output):
             for i, side in enumerate(("left", "right")):
                 eye.update_scene(data, camera=f"walker/eye_{side}", scene_option=option)
                 board.paste(Image.fromarray(eye.render()), (1125 + i * 235, 140))
-            if "utility" in states:
+            if "utility" in states and not teacher:
                 draw.text((1125, 350), "LEARNED UTILITY SCORES", font=font(20), fill="#ffc31f")
                 scores = states["utility"][step]
                 for i, (name, score) in enumerate(zip(ACTIVITIES, scores)):

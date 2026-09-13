@@ -17,6 +17,7 @@ from mjbatch import Batch
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.observations import append_wing_angles, append_wing_velocity
 from embodied_fly.provenance import evidence, utc_now
+from embodied_fly.wing_motion import WingMotionForces, configure_model
 
 
 class FlyBatch:
@@ -75,6 +76,8 @@ class FlyBatch:
         ).compile()
         self.model.actuator_forcelimited[:] = single.model.actuator_forcelimited
         self.model.actuator_forcerange[:] = single.model.actuator_forcerange
+        if preset == "wing_motion":
+            configure_model(self.model)
         self.n = worlds
         self.batch = Batch(self.model, worlds, num_threads=threads)
         self.fields = {
@@ -89,6 +92,9 @@ class FlyBatch:
                 "sensordata",
                 "warning",
                 "qfrc_passive",
+                "xfrc_applied",
+                "xipos",
+                "subtree_com",
             )
         }
         self.mean_sensors = self.fields["sensordata"].copy()
@@ -98,6 +104,10 @@ class FlyBatch:
         self.ages = np.zeros(worlds, np.int64)
         self.forbidden_peak = np.zeros(worlds)
         self.body_weight = self.model.body_mass.sum() * 981
+        self.wing_forces = (
+            WingMotionForces(self.model, worlds) if preset == "wing_motion" else None
+        )
+        self._wing_applied = np.zeros((worlds, 6))
         self.sensor_addresses = {
             self.model.sensor(i).name: self.model.sensor_adr[i]
             for i in range(self.model.nsensor)
@@ -147,6 +157,10 @@ class FlyBatch:
         self.previous_action[ids] = 0
         self.ages[ids] = 0
         self.forbidden_peak[ids] = 0
+        if self.wing_forces is not None:
+            self.wing_forces.reset(ids)
+            self._wing_applied[ids] = 0
+            self.fields["xfrc_applied"][ids] = 0
 
     def velocity(self, anatomical=True):
         frame = "xbody" if anatomical else "body"
@@ -214,6 +228,24 @@ class FlyBatch:
         addresses = [self.sensor_addresses[f"batch_forbidden_{i}"] for i in self.forbidden]
         self.mean_sensors[:] = 0
         for _ in range(self.substeps):
+            if self.wing_forces is not None:
+                self.batch.forward()
+                wrench = self.wing_forces.advance(
+                    self.fields["qpos"][:, self.template.wing_angle_indices],
+                    self.fields["qvel"][:, self.template.wing_velocity_indices],
+                    self.fields["xmat"][:, self.template.thorax_id],
+                    self.velocity(),
+                    self.model.opt.timestep,
+                ).copy()
+                offset = (
+                    self.fields["subtree_com"][:, self.template.thorax_id]
+                    - self.fields["xipos"][:, self.template.thorax_id]
+                )
+                wrench[:, 3:] += np.cross(offset, wrench[:, :3])
+                self.fields["xfrc_applied"][:, self.template.thorax_id] += (
+                    wrench - self._wing_applied
+                )
+                self._wing_applied[:] = wrench
             self.batch.step()
             self.mean_sensors += self.fields["sensordata"]
             # Sensor's force x is normal force of its maximum-norm contact.
