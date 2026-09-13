@@ -147,3 +147,8 @@ independent fitting cost. The actor nevertheless loses nominal hover. Late value
 fits sometimes increase error, so the next hypothesis is a smaller critic step;
 the sustained timing02 actor stays the working candidate. This pilot changes
 neither the reward nor the deployed controller architecture.
+
+The subsequent [clock review](CLOCKS.md) traces 5 kHz physics to FlyBody's walking
+defaults, independently of the MaleCNS graph and 500 Hz action clock. A smaller
+critic learning rate and a larger physics timestep are separate experiments;
+neither was changed during this completed pilot.
