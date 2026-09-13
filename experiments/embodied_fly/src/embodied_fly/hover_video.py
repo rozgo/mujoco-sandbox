@@ -14,7 +14,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.record import expand_floor_display, font, replay_clock
 
 
-def record(source, output):
+def record(source, output, previous=None):
     if output.exists():
         raise FileExistsError("Preserve existing video versions")
     started, provenance = time.perf_counter(), evidence()
@@ -22,7 +22,23 @@ def record(source, output):
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
     floor_display = expand_floor_display(model)
     data = mujoco.MjData(model)
-    captures = [np.load(source / f"{n}.npz") for n in ("pid", "hover")]
+    reports = [report, report]
+    sources = [source / "pid.npz", source / "hover.npz"]
+    names = ("PID REFERENCE", "PPO / MALECNS ACTOR")
+    cases = ("pid", "hover")
+    title = "HOVER / REFERENCE AND LEARNING"
+    if previous is not None:
+        reports[0] = json.loads((previous / "report.json").read_text())
+        if (
+            reports[0]["physical_contract"] != report["physical_contract"]
+            or reports[0]["model_sha256"] != report["model_sha256"]
+        ):
+            raise ValueError("Before/after comparison requires the same physical model")
+        sources[0] = previous / "hover.npz"
+        names = ("PPO / BEFORE", "PPO / TIGHTER VERTICAL REWARD")
+        cases = ("hover", "hover")
+        title = "HOVER / LEARNING BEFORE AND AFTER"
+    captures = [np.load(path) for path in sources]
     indices, timestamps, control_hz = replay_clock(captures[0], report)
     if control_hz != 500 or report["physics_hz"] != 1000:
         raise ValueError("Comparison requires the accepted 1 kHz / 500 Hz clocks")
@@ -68,9 +84,7 @@ def record(source, output):
             for frame, step in enumerate(indices):
                 board = Image.new("RGB", (1600, 900), "#111519")
                 draw = ImageDraw.Draw(board)
-                draw.text(
-                    (24, 18), "HOVER / REFERENCE AND LEARNING", font=font(26), fill="#ffc31f"
-                )
+                draw.text((24, 18), title, font=font(26), fill="#ffc31f")
                 draw.text(
                     (24, 56),
                     "Same body / Same start / Same physics / 1x playback",
@@ -80,7 +94,7 @@ def record(source, output):
                 for i, (states, name, color) in enumerate(
                     zip(
                         captures,
-                        ("PID REFERENCE", "PPO / MALECNS ACTOR"),
+                        names,
                         ("#ffc31f", "#70a88a"),
                     )
                 ):
@@ -129,11 +143,7 @@ def record(source, output):
                     )
                     if len(points) > 1:
                         draw.line(points, fill=color, width=2)
-                    result = next(
-                        r
-                        for r in report["results"]
-                        if r["case"] == ("pid" if i == 0 else "hover")
-                    )
+                    result = next(r for r in reports[i]["results"] if r["case"] == cases[i])
                     failed_at = result["first_failure_seconds"]
                     if failed_at is not None and data.time >= failed_at:
                         draw.text(
@@ -164,7 +174,10 @@ def record(source, output):
         "source_report_sha256": sha256(source / "report.json"),
         "checkpoint_sha256": report["checkpoint_sha256"],
         "model_sha256": report["model_sha256"],
-        "state_sha256": {n: sha256(source / f"{n}.npz") for n in ("pid", "hover")},
+        "state_sha256": {name: sha256(path) for name, path in zip(names, sources)},
+        "panel_labels": names,
+        "previous_checkpoint_sha256": reports[0]["checkpoint_sha256"] if previous else None,
+        "previous_report_sha256": sha256(previous / "report.json") if previous else None,
         "camera": {
             "fixed": True,
             "shared": True,
@@ -185,5 +198,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("source", type=Path)
     p.add_argument("output", type=Path)
+    p.add_argument(
+        "--previous", type=Path, help="Prior matched hover capture for before/after"
+    )
     a = p.parse_args()
-    record(a.source, a.output)
+    record(a.source, a.output, a.previous)
