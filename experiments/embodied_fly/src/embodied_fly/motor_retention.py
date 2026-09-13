@@ -1,0 +1,39 @@
+"""Training-only frozen motor reference and explicit task mixture accounting."""
+
+import copy
+
+import numpy as np
+import torch
+
+
+class FrozenMotorReference:
+    def __init__(self, actor, worlds):
+        # Share immutable graph buffers only. Every learned parameter is copied.
+        memo = {id(x): x for x in (actor.core.adjacency, actor.core.transpose)}
+        self.actor = copy.deepcopy(actor, memo).eval().requires_grad_(False)
+        self.memory = self.actor.initial_state(worlds)
+
+    @torch.no_grad()
+    def act(self, observation):
+        result = self.actor(observation, self.memory)
+        self.memory = result.state
+        return result.action
+
+    def reset(self, done):
+        self.memory = self.actor.reset_worlds(self.memory, done)
+
+
+def task_mixtures(task_ids, teacher_mix, hover_teacher_mix=None):
+    hover_mix = teacher_mix if hover_teacher_mix is None else hover_teacher_mix
+    if not np.isfinite([teacher_mix, hover_mix]).all() or not (
+        0 <= teacher_mix <= 1 and 0 <= hover_mix <= 1
+    ):
+        raise ValueError("Teacher mixtures must be finite and in [0,1]")
+    return np.where(np.asarray(task_ids) == 2, hover_mix, teacher_mix).astype(np.float32)
+
+
+def task_loss(group_losses, ground_weight=1.0):
+    if not np.isfinite(ground_weight) or ground_weight <= 0:
+        raise ValueError("Ground retention weight must be finite and positive")
+    weights = {i: ground_weight if i != 2 else 1.0 for i in group_losses}
+    return sum(group_losses[i] * w for i, w in weights.items()) / sum(weights.values())

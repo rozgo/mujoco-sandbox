@@ -2095,3 +2095,24 @@ trials and their full films are complete, resting-wing accuracy improves, and
 an actual teacher-observability audit changes the next experiment. Hover,
 transitions, utility/needs and final multi-agent survival integration remain
 required; the full goal stays active.
+
+### State-based hover reference and retained ground motor targets — September 13
+
+The teacher timer audit led to a reference based on measured wing angle/speed,
+body velocity and current/target altitude. It starts from still wings without a
+clock. Five reference gain profiles preserve the same canonical body and force
+law. The selected profile achieves about 1.21 mm full-window root error and
+0.31 mm late vertical oscillation in three five-second airborne starts. This is
+teacher performance, not learned flight. Initial source snapshots, all profiles
+and failed soft-gain results are retained under runs/state_hover_gain_probe_01.
+
+Added an optional frozen copy of the current motor actor as a training-only
+reference for ground actions, preserving independent recurrent state and sharing
+only immutable graph buffers. Ground wing targets still correct toward the
+initial pose. Hover assistance and loss weighting are explicit per task. The
+three-minute pilot recipe is declared under runs/state_hover_retention_01; it
+has not yet run at this checkpoint. A single unassisted actor remains the
+required evaluation path. The complete embodied suite passes 97 tests in
+67.46 seconds, with 21 dependency warnings. Focused checks include unchanged
+reference weights, per-world reset, no ground assistance, clock invariance,
+physical startup and unchanged body fingerprints.

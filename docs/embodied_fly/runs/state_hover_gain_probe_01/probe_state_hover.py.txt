@@ -1,0 +1,31 @@
+import json,time
+from pathlib import Path
+import numpy as np
+from embodied_fly.batch import FlyBatch
+from embodied_fly.motor_focus import MotorTasks
+from embodied_fly.physical_contract import physical_contract
+from embodied_fly.state_hover import RECIPE,wing_commands
+from embodied_fly.provenance import evidence,utc_now
+out=Path('outputs/embodied_fly/state_hover_gain_probe_01');out.mkdir(exist_ok=False)
+start=time.perf_counter();provenance=evidence()
+e=FlyBatch(3,3,14,preset='wing_motion');tasks=MotorTasks(e,92001);tasks.task_ids[:]=2
+contract=physical_contract(e.model);channels=[e.model.actuator(e.model.joint(j).name).id for j in e.template.wing_joint_ids]
+original=RECIPE.copy();results=[]
+profiles=[('baseline',.8,.045,30),('gentle',.2,.015,30),('gentle_fast_energy',.2,.015,60),('soft',.1,.01,30),('medium_fast_energy',.4,.02,60)]
+setup=time.perf_counter()-start
+try:
+ for name,kh,kv,energy in profiles:
+  RECIPE.update(amplitude_height_gain_rad_per_cm=kh,amplitude_vertical_speed_gain=kv,energy_gain_per_s=energy)
+  tasks.rng=np.random.default_rng(92001);tasks.reset(np.arange(3));points=[];controls=[];ups=[];load=[]
+  tick=time.perf_counter()
+  for step in range(2500):
+   act=np.tile(tasks.air_action,(3,1))
+   act[:,channels]=wing_commands(e.fields['qpos'][:,e.template.wing_angle_indices],e.fields['qvel'][:,e.template.wing_velocity_indices],e.velocity(),e.fields['qpos'][:,2],e.requested_height_cm,e.model.qpos_spring[e.template.wing_angle_indices])
+   e.step(act);points.append(e.fields['qpos'][:,:3].copy());controls.append(act[:,channels]);ups.append(e.fields['xmat'][:,e.template.thorax_id,8].copy());load.append(e.forbidden_peak.copy()/e.body_weight)
+  points=np.array(points);controls=np.array(controls)
+  row={'name':name,'recipe':RECIPE.copy(),'seconds':time.perf_counter()-tick,'root_rmse_mm':(np.sqrt(((points-tasks.start)**2).sum(-1).mean(0))*10).tolist(),'min_height_mm':(points[:,:,2].min(0)*10).tolist(),'height_peak_to_peak_mm':(np.ptp(points[1000:,:,2],axis=0)*10).tolist(),'minimum_upright':np.min(ups,axis=0).tolist(),'max_forbidden_weight':np.max(load,axis=0).tolist(),'control_saturation_fraction':float((abs(controls)>.99).mean()),'warnings':int(e.fields['warning'].sum())}
+  assert physical_contract(e.model)==contract
+  np.savez_compressed(out/(name+'.npz'),position_cm=points,wing_action=controls,upright=np.array(ups),forbidden_load=np.array(load),target_cm=tasks.start)
+  results.append(row);print(json.dumps(row),flush=True)
+finally:RECIPE.clear();RECIPE.update(original)
+(out/'report.json').write_text(json.dumps({'provenance':provenance,'completed_utc':utc_now(),'setup_seconds':setup,'physics_contract':contract,'physical_transitions':2500*3*len(results),'training_updates':0,'control_hz':500,'sim_seconds_per_world':5,'worlds':3,'seed':92001,'results':results},indent=2)+'\n')

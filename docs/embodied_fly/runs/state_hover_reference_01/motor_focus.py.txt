@@ -20,11 +20,9 @@ from embodied_fly.braking import BrakingTeacher
 from embodied_fly.evaluate import load_actor
 from embodied_fly.ground_posture import GroundPosture
 from embodied_fly.motion_flight import initialize
-from embodied_fly.motor_retention import FrozenMotorReference, task_loss, task_mixtures
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
-from embodied_fly.state_hover import RECIPE as STATE_HOVER_RECIPE
 from embodied_fly.train import synchronize
 from embodied_fly.wing_motion import CONFIG
 from embodied_fly.wing_response_learning import response_loss
@@ -143,20 +141,11 @@ class MotorTeacher:
         )
 
     @torch.no_grad()
-    def act(self, ground_actions=None):
+    def act(self):
         e, t, c = self.env, self.tasks, CONFIG
-        actions = (
-            self.ground.act().cpu().numpy()
-            if ground_actions is None
-            else np.asarray(ground_actions).copy()
-        )
-        if actions.shape != (e.n, e.model.nu) or not np.isfinite(actions).all():
-            raise ValueError("Invalid ground reference actions")
-        if self.posture is not None and ground_actions is None:
+        actions = self.ground.act().cpu().numpy()
+        if self.posture is not None:
             actions = self.posture.targets(actions, t.task_ids)
-        elif self.posture is not None:
-            ids = np.flatnonzero(t.task_ids != 2)
-            actions[np.ix_(ids, self.channels)] = self.posture.wing_targets(ids)
         ids = np.flatnonzero(t.task_ids == 2)
         if not len(ids):
             return actions
@@ -386,9 +375,6 @@ def review(args):
         "motor_only": actor is not None,
         "teacher_present": reference is not None,
         "hover_reference": getattr(args, "hover_reference", "clock") if reference else None,
-        "state_hover_recipe": dict(STATE_HOVER_RECIPE)
-        if reference and reference.hover_reference == "state"
-        else None,
         "student_present": actor is not None,
         "controller": "student" if actor else "reference",
         "one_checkpoint_for_all_cases": actor is not None,
@@ -429,14 +415,6 @@ def train(args):
         raise ValueError("Need positive training settings and at least three worlds")
     if not 0 <= args.teacher_mix <= 1:
         raise ValueError("Teacher mixture must be in [0,1]")
-    retain_ground = getattr(args, "retain_ground", False)
-    ground_weight = getattr(args, "ground_retention_weight", 1.0)
-    task_loss({0: torch.tensor(0.0)}, ground_weight)
-    if ground_weight != 1.0 and not retain_ground:
-        raise ValueError("Ground retention weighting requires --retain-ground")
-    mixture_by_task = task_mixtures(
-        np.arange(3), args.teacher_mix, getattr(args, "hover_teacher_mix", None)
-    )
     response_weight = getattr(args, "wing_response_loss", 0.0)
     response_worlds = getattr(args, "wing_response_worlds", 8)
     if not np.isfinite(response_weight) or response_weight < 0 or response_worlds < 1:
@@ -478,13 +456,6 @@ def train(args):
         [p for p in actor.parameters() if p.requires_grad], lr=args.lr
     )
     memory = actor.initial_state(args.worlds)
-    retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
-    retention_initial = (
-        {k: v.detach().cpu().clone() for k, v in retainer.actor.state_dict().items()}
-        if retainer is not None
-        else None
-    )
-    mixture = mixture_by_task[tasks.task_ids]
     frozen = {
         k: v.detach().clone()
         for k, v in actor.state_dict().items()
@@ -509,13 +480,9 @@ def train(args):
             per_task = [[] for _ in TASKS]
             for _ in range(args.sequence):
                 obs = env.observation()
-                observation = torch.as_tensor(obs, device=device)
-                ground_actions = (
-                    retainer.act(observation).cpu().numpy() if retainer is not None else None
-                )
-                target = torch.as_tensor(teacher.act(ground_actions), device=device)
+                target = torch.as_tensor(teacher.act(), device=device)
                 memory_before = memory
-                result = actor(observation, memory)
+                result = actor(torch.as_tensor(obs, device=device), memory)
                 memory = result.state
                 flight = torch.as_tensor(tasks.task_ids == 2, device=device)
                 error = motor_error(
@@ -529,7 +496,7 @@ def train(args):
                     i: error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
                     for i in active_tasks
                 }
-                loss = task_loss(group_losses, ground_weight)
+                loss = torch.stack(list(group_losses.values())).mean()
                 if response_weight:
                     correction = response_loss(
                         actor,
@@ -548,7 +515,7 @@ def train(args):
                     per_task[i].append(float(value.detach()))
                 student = result.action.detach().cpu().numpy()
                 target_np = target.cpu().numpy()
-                executed = (1 - mixture[:, None]) * student + mixture[:, None] * target_np
+                executed = (1 - args.teacher_mix) * student + args.teacher_mix * target_np
                 trace.append(
                     {
                         "qpos": env.fields["qpos"].copy(),
@@ -559,7 +526,6 @@ def train(args):
                         "student_action": student.copy(),
                         "teacher_action": target_np.copy(),
                         "executed_action": executed.copy(),
-                        "teacher_mix": mixture.copy(),
                         "wing_activity": env.wing_forces.activity.copy(),
                         "wing_wrench": env.wing_forces.wrench.copy(),
                         "requested_height_cm": env.requested_height_cm.copy(),
@@ -588,14 +554,12 @@ def train(args):
                             "task": TASKS[tasks.task_ids[i]],
                             "failed": bool(failed[i]),
                             "simulated_seconds": float(env.ages[i] * env.control_dt),
-                            "teacher_mix": float(mixture[i]),
+                            "teacher_mix": args.teacher_mix,
                             "failure_trace": info,
                         }
                     )
                 tasks.reset(ids)
                 memory = actor.reset_worlds(memory, torch.as_tensor(done, device=device))
-                if retainer is not None:
-                    retainer.reset(torch.as_tensor(done, device=device))
             synchronize(device)
             collection_seconds += time.perf_counter() - start
             start = time.perf_counter()
@@ -649,29 +613,8 @@ def train(args):
     synchronize(device)
     elapsed = time.perf_counter() - started
     assert all(torch.equal(actor.state_dict()[k], v) for k, v in frozen.items())
-    if retainer is not None:
-        assert all(
-            torch.equal(v.detach().cpu(), retention_initial[k])
-            for k, v in retainer.actor.state_dict().items()
-        )
-    retention = {
-        "enabled": retain_ground,
-        "checkpoint_sha256": sha256(args.resume) if retain_ground else None,
-        "weights_unchanged": True if retain_ground else None,
-        "ground_task_loss_weight": ground_weight,
-        "independent_recurrent_state": retain_ground,
-        "runtime_module": False,
-        "ground_wing_targets": "initial-pose corrective labels"
-        if teacher.posture is not None
-        else "reference actor"
-        if retain_ground
-        else "walking teacher",
-    }
     config = {k: v for k, v in vars(args).items() if not isinstance(v, Path)}
     config["internal_steps"] = actor.internal_steps
-    config["state_hover_recipe"] = (
-        dict(STATE_HOVER_RECIPE) if teacher.hover_reference == "state" else None
-    )
     checkpoint = {
         "state_dict": {k: v.detach().cpu() for k, v in actor.state_dict().items()},
         "optimizer_state_dict": optimizer.state_dict(),
@@ -686,8 +629,6 @@ def train(args):
         "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
         "parent_checkpoint_sha256": sha256(args.resume),
         "method": "motor-only online imitation on actual teacher/student-mixture physical states",
-        "ground_retention": retention,
-        "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
         "ground_posture": posture.report() if teacher.posture is not None else None,
         "wing_response_supervision": {
             "weight": response_weight,
@@ -735,9 +676,7 @@ def train(args):
         },
         "completed_episodes": episodes,
         "teacher_present_during_collection": True,
-        "ground_retention": retention,
-        "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
-        "loss": "normalized weighted mean of active task motor MSE; hover adds 2x wing MSE; ground wing and task weights explicit; no utility loss",
+        "loss": "equal mean of active task motor MSE; hover adds 2x wing MSE when present; ground wing weight is explicit; no utility loss",
         "training_tasks": [TASKS[i] for i in active_tasks],
         "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
         "ground_posture": posture.report() if teacher.posture is not None else None,
@@ -780,9 +719,6 @@ if __name__ == "__main__":
     parser.add_argument("--sequence", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--teacher-mix", type=float, default=0.8)
-    parser.add_argument("--hover-teacher-mix", type=float)
-    parser.add_argument("--retain-ground", action="store_true")
-    parser.add_argument("--ground-retention-weight", type=float, default=1.0)
     parser.add_argument("--ground-wing-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-loss", type=float, default=0.0)
     parser.add_argument("--wing-response-worlds", type=int, default=8)

@@ -135,9 +135,11 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
         batch.step(actual)
 
 
-@pytest.mark.parametrize("task_set", ["all", "ground"])
+@pytest.mark.parametrize(
+    "task_set,retain_ground", [("all", False), ("ground", False), ("all", True)]
+)
 def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
-    tmp_path, monkeypatch, task_set
+    tmp_path, monkeypatch, task_set, retain_ground
 ):
     from embodied_fly import motor_focus
     from embodied_fly.provenance import sha256
@@ -165,12 +167,16 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
         sequence=2,
         seconds=0.01,
         lr=1e-5,
-        teacher_mix=1.0,
+        teacher_mix=0.0 if retain_ground else 1.0,
+        hover_teacher_mix=0.8 if retain_ground else None,
+        hover_reference="state" if retain_ground else "clock",
+        retain_ground=retain_ground,
+        ground_retention_weight=4.0 if retain_ground else 1.0,
         ground_posture=True,
         ground_wing_loss=10.0,
         wing_response_loss=1.0,
         wing_response_worlds=2,
-        episode_seconds=2.0,
+        episode_seconds=0.004 if retain_ground else 2.0,
         seed=7,
         resume=resume,
         graph=graph,
@@ -195,6 +201,15 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert report["wing_response_supervision"]["extra_physics_worlds"] == 0
     assert checkpoint["wing_response_supervision"]["weight"] == 1
     assert report["ground_wing_loss_weight"] == 10
+    assert report["ground_retention"]["enabled"] == retain_ground
+    if retain_ground:
+        assert report["ground_retention"]["weights_unchanged"]
+        assert report["ground_retention"]["checkpoint_sha256"] == sha256(resume)
+        assert report["ground_retention"]["runtime_module"] is False
+        assert checkpoint["config"]["state_hover_recipe"]["clock_or_external_phase"] is False
+        assert len(report["completed_episodes"]) == 3
+        for ep in report["completed_episodes"]:
+            assert ep["teacher_mix"] == pytest.approx(0.8 if ep["task"] == "hover" else 0)
     assert report["transitions"] >= 6
     assert report["checkpoint_sha256"] == sha256(args.output / "actor.pt")
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in fixed.items())
