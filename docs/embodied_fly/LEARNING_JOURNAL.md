@@ -1583,3 +1583,18 @@ reference legs+adhesion, and full reference. Fixed initial headings−0.1/+0.1 r
 one second per case,14 worlds, no learning or resets. Every substitution is a
 diagnostic and is ineligible for policy acceptance. It should distinguish
 unintended extra-body commands from inaccurate leg or adhesion control.
+
+Interventions01 completed14 one-second cases with no numerical warnings.
+Pure-student stand/walk leave the envelope at0.388/0.458 s. Replacing just
+the six wing commands with the quiet reference keeps both upright, with no
+prohibited support. Replacing foot adhesion or leg joints also stabilizes the
+body, so this is not proof that wings are the sole source of error. Walking
+speed remains poor under quiet wings (0.961 cm/s RMSE for a1 cm/s target).
+
+Next bounded correction: **motor_focus03**, resume02,180 s,seed71003,32worlds,
+16threads,32-stepchunks, fresh Adam1e-5 and25% reference assistance. Keep the
+same physical model and all78 learned outputs. Add **2× wing-channel MSE on
+ground tasks**, matching the existing hover wing weight. Previously ground
+wing error was diluted among78 outputs; only hover received the extra term.
+The runtime actor still controls its wings; no output override or force gate
+is added. Evaluate all three tasks teacher-free at development seed72001.

@@ -28,6 +28,15 @@ from embodied_fly.wing_motion import CONFIG
 TASKS = ("stand", "walk", "hover")
 
 
+def motor_error(action, target, wing_channels, hovering, ground_wing_weight=0.0):
+    """Keep all motor targets, with explicit wing accuracy in each task."""
+    if not np.isfinite(ground_wing_weight) or ground_wing_weight < 0:
+        raise ValueError("Ground wing weight must be finite and nonnegative")
+    wing = (action[:, wing_channels] - target[:, wing_channels]).square().mean(-1)
+    weight = torch.where(hovering, 2.0, ground_wing_weight)
+    return (action - target).square().mean(-1) + weight * wing
+
+
 class MotorTasks:
     def __init__(self, env, seed):
         self.env = env
@@ -345,11 +354,14 @@ def train(args):
                 target = torch.as_tensor(teacher.act(), device=device)
                 result = actor(torch.as_tensor(obs, device=device), memory)
                 memory = result.state
-                error = (result.action - target).square().mean(-1)
                 flight = torch.as_tensor(tasks.task_ids == 2, device=device)
-                error = error + 2 * flight * (
-                    result.action[:, teacher.channels] - target[:, teacher.channels]
-                ).square().mean(-1)
+                error = motor_error(
+                    result.action,
+                    target,
+                    teacher.channels,
+                    flight,
+                    getattr(args, "ground_wing_loss", 0.0),
+                )
                 group_losses = [
                     error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
                     for i in range(3)
@@ -499,7 +511,8 @@ def train(args):
         },
         "completed_episodes": episodes,
         "teacher_present_during_collection": True,
-        "loss": "equal mean of stand/walk/hover motor MSE; hover adds 2x wing MSE; no utility loss",
+        "loss": "equal mean of task motor MSE; hover adds 2x wing MSE; ground wing weight is explicit; no utility loss",
+        "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
         "optimizer": "fresh Adam for declared motor-only parameter subset",
         "physical_success": "Training assistance is not student acceptance; run independent review",
     }
@@ -528,6 +541,7 @@ if __name__ == "__main__":
     parser.add_argument("--sequence", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--teacher-mix", type=float, default=0.8)
+    parser.add_argument("--ground-wing-loss", type=float, default=0.0)
     parser.add_argument("--episode-seconds", type=float, default=2)
     parser.add_argument("--neural-view", action="store_true")
     args = parser.parse_args()

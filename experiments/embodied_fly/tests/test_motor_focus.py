@@ -20,6 +20,27 @@ from embodied_fly.teacher import TeacherOracle
 TEACHER = Path(__file__).resolve().parents[3] / "assets/embodied_fly/teachers/walking.npz"
 
 
+def test_ground_wing_accuracy_adds_gradient_without_changing_other_targets():
+    from embodied_fly.motor_focus import motor_error
+
+    x = torch.ones(3, 78, requires_grad=True)
+    target = torch.zeros_like(x)
+    flight = torch.tensor([False, False, True])
+    wings = np.arange(14, 20)
+    previous = motor_error(x, target, wings, flight)
+    corrected = motor_error(x, target, wings, flight, 2.0)
+    a = torch.autograd.grad(previous.sum(), x)[0]
+    b = torch.autograd.grad(corrected.sum(), x)[0]
+    torch.testing.assert_close(a[:, :14], b[:, :14])
+    torch.testing.assert_close(a[:, 20:], b[:, 20:])
+    torch.testing.assert_close(a[2], b[2])
+    assert torch.all(b[:2, wings] > a[:2, wings])
+    torch.testing.assert_close(motor_error(target, target, wings, flight, 2), torch.zeros(3))
+    for bad in (-1, float("nan"), float("inf")):
+        with pytest.raises(ValueError):
+            motor_error(x, target, wings, flight, bad)
+
+
 def tiny_brain():
     graph = sparse.csr_matrix(
         (np.ones(4, np.float32), ([2, 3, 4, 5], [0, 1, 2, 3])), shape=(6, 6)
