@@ -89,7 +89,26 @@ the corresponding lever moment to MuJoCo's thorax force array. The first
 failed reference is preserved. With this correction, the second reference
 passes a two-second hover; this is a mechanism check, not student learning.
 
-All five new force-model tests and the existing suite pass (59 total). Single
+All five new force-model tests and the existing suite pass (61 total). Single
 and sensor-augmented batch agreement is checked at a declared small numerical
 tolerance; it is not bitwise equality. The independent mass-matrix check gives
 exactly zero wing-to-body inertial coupling.
+
+## Measured outcome and review
+
+The [working reference](../../previews/embodied_fly/wing_motion_reference_v1.mp4) is a two-second training demonstration. The [student diagnostic](../../previews/embodied_fly/wing_motion_student_diagnostic_v1.mp4) retains the full rise and fall, actual simulated neural activity and observer cameras. Both are 1600 × 900, 50 fps, 1×; both were fully decoded and visually inspected.
+
+Three RTX 4090 learning pilots took **423.149011 seconds** combined: 60.000525 seconds of decoder fitting, 180.274561 seconds of complete-actor imitation, and 182.873925 seconds of physical-reward PPO. Setup, reference collection, replay, evaluation and rendering are separate. The best imitation candidate briefly generates lift but fails sustained flight. PPO and four sampled-policy evaluations do not resolve it. All candidates remain diagnostic; takeoff, landing and unified walking/flight have not passed.
+
+```sh
+open previews/embodied_fly/wing_motion_reference_v1.mp4
+open previews/embodied_fly/wing_motion_student_diagnostic_v1.mp4
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motion_flight \
+  --controller reference --output outputs/embodied_fly/reference_reproduction --seconds 2
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motion_flight \
+  --controller student --checkpoint assets/embodied_fly/diagnostics/wing_motion_brain_01.pt \
+  --graph outputs/fly_survival/malecns --device cpu --seconds 2 --neural-view \
+  --output outputs/embodied_fly/student_reproduction
+```
+
+CPU full-graph inference can be slow; use CUDA on the GPU host for evaluation. A failed physical gate exits with status 2 and still saves its report/capture. Output directories must be unused. Rendering a saved capture uses `python -m embodied_fly.record CAPTURE_DIR flight NEW_VIDEO.mp4`.

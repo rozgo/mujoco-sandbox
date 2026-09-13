@@ -332,3 +332,5 @@ The current course correction is [flight dynamics driven by wing motion](WING_MO
 keep the same brain and six wing controls; a custom force law reads actual
 wing motion and drives the free body. This is the current flight development
 path. Earlier aerodynamic trials remain available as separate diagnostics.
+
+The first wing-motion reference sustains two seconds of hover. The complete-actor imitation candidate produces a brief rise and fall; its physical-reward continuation still fails. See the [reference clip](../../previews/embodied_fly/wing_motion_reference_v1.mp4), [unassisted student diagnostic](../../previews/embodied_fly/wing_motion_student_diagnostic_v1.mp4) and [measured results](WING_MOTION.md#measured-outcome-and-review). These are development evidence, not accepted flight.

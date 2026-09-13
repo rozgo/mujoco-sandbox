@@ -1490,3 +1490,14 @@ stochastic PPO policy separately at predetermined seeds66001–66004, all
 two-second hover trials, without more training. Preserve mean-action tests
 and every sampled-policy outcome. Categorical activity plus the checkpoint's
 motor distribution matches training action selection; it is not a new controller.
+
+
+All four sampled-policy hover trials failed. This rules out that particular mean-versus-sampled action mismatch as a rescue for PPO01. Full failure clips, report/state/model hashes and three diagnostic checkpoints are retained. No candidate is promoted.
+
+### Next declared feedback and learning-window repair — 2026-09-13 04:36:34 UTC
+
+The prior goal turn made evidence-backed progress: the wing-driven force law works under a reference, student imitation develops transient lift, and PPO fails to extend it. No job remains live. The next change addresses observed curriculum limitations instead of extending PPO unchanged.
+
+The reference uses altitude while the student has no height measurement. Add declared current height and requested height through the existing sensory encoder, with neutral migration and causal/native-batch checks. This is ideal simulator sensing, not learned camera perception. Keep the measured graph, motor routing, force law and all 78 outputs intact. Existing checkpoints and observation schemas remain loadable.
+
+Increase supervised recurrent context to span several 12 Hz wing strokes; the prior 64 ms supervised window was shorter than a full 83 ms stroke. This is a testable hypothesis, not a proven cause. Use a bounded pilot, retain ground examples and independently evaluate actual unassisted flight before extending training. Then use corrective examples from student-visited states if the new candidate still drifts. No runtime teacher or wing oscillator is introduced.
