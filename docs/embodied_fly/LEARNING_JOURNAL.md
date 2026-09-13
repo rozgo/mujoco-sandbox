@@ -2701,3 +2701,56 @@ and optimizer comparisons establish unchanged graph/body contracts, 14 fixed
 tensors, 18 changed tensors, and exact Adam step increments. 149 tests and
 source lint pass. The complete 15-second video is decoded, visually inspected
 and opened. Timing02 remains the sustained-hover development checkpoint.
+
+
+### Hover-first PPO on the accepted PID plant — 2026-09-13
+
+The user accepts the 1 kHz PID reference and authorizes airborne hover-first
+learning. The new order is hover, straight/turning flight, stand, landing,
+walking, takeoff, continuing one actor. This round trains only hover. Utility
+and later motor stages stay deferred. The requested video now directly compares
+PID and PPO in separate worlds with the same physical model and nominal start.
+
+We explicitly transfer the old 5 kHz/filtered motor checkpoint to the accepted
+1 kHz/instantaneous plant. Two zero-initialized horizontal target-error inputs
+extend 397 observations to 399; no encoder bypass or extra brain is added.
+The measured graph and routing remain fixed. PPO updates encoder, decoder and
+existing neural excitability/leak/bias parameters through physical reward.
+The new plant/input contract requires a fresh critic and optimizers initially.
+The PID supplies no actions, labels, force targets or wing rhythm to the learner.
+
+Pilot 01 uses 64 hover worlds, 16 CPU physics threads, RTX 4090 neural work,
+500 Hz actions and 78 motor outputs. After 607.919 seconds it retains airborne
+flight on three ten-second starts, versus two before learning, but drifts almost
+6 cm. Its unchanged 602.952-second continuation fails all three. Both are kept.
+An audit exposes an incentive flaw: unbounded running costs can make early
+failure cheaper than continuing poor flight. We add an opt-in positive bounded
+tracking reward, exact -1 failure penalty and explicit critic reset. This is
+recorded as a recipe change, not silently applied to historical results.
+
+Pilot 03 rolls back to pilot 01. The bounded reward still fails all three starts
+after 306.305 seconds. The KL guard detects large divergence only after an actor
+step has already happened; stopping later steps cannot undo the first. Median
+observed maximum KL is 1.334 against .03. Pilot 04 repeats the same parent,
+seed, fresh critic, reward and five-minute budget with only the actor learning
+rate reduced tenfold. Median observed KL becomes .02749; 50 actor updates finish,
+versus 18. It stays airborne on all three starts but retains 5.57 mm vertical
+bobbing and 59.65 mm nominal peak drift. PID measures .131 mm bobbing and .197 mm
+peak error after the first second. That remaining physical gap is not success.
+
+Matching the seed does not make the warmup bitwise identical: tiny initial
+reward differences grow, and fourth-rollout episode counts differ by one.
+This is one run per setting, not proof that learning rate alone universally
+explains the failures. Pilot 04 is a development candidate with less bobbing
+than pilot 01 but slightly worse drift. Both remain available; neither replaces
+the accepted PID reference or becomes a completed learned-hover release.
+
+All four runs cost 30 min 17.722 s of training and collect 3,866,624 actions,
+128.887 aggregate simulated minutes. Setup, evaluation, video rendering and
+engineering time are separate. Pilot 04's new-stage ancestry includes 01/04
+only; these all inherit an older trained motor actor and are not from scratch.
+The full suite passes 174 tests. Four 1x PID/PPO videos preserve startup, drift
+and failures, use fixed matched overviews and labeled detail insets, and are
+fully decoded, visually inspected and opened. Raw reports, checkpoint hashes,
+source revisions, traces and the comparison limitations are archived. No fifth
+training run starts in this review round.

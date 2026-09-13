@@ -1027,3 +1027,44 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   checks 27 passed in 15.70 s. Source lint passes. No RL ran in this reference stage.
 - User accepted the PID hover video; acceptance recorded **20:25:44 UTC**.
   A separate native/batch 1 kHz trajectory check passes (one test, 2.37 s).
+
+
+## Hover-first PPO and matched PID videos — September 13, 2026
+
+- Observed work start **20:34:53 UTC**. Final comparison decoded, inspected and
+  opened **21:45:39 UTC**: **1 h 10 min 46 s** to the review milestone. Archival
+  and synchronization follow. This includes engineering, evaluation, transfer,
+  rendering and discussion; it is not training time.
+- Four PPO pilots: **607.918772 / 602.952450 / 306.305216 / 300.545269 s**.
+  Total **1,817.721708 s (30 min 17.722 s)**; separate setup **33.424205 s**.
+  Budgets finish a complete rollout. Critic warmup and optimization are included
+  in training. The first three use actor LR3e-6; the fourth uses3e-7.
+- **64 hover worlds throughout**, 16 CPU MuJoCo/mjbatch physics threads, RTX
+  4090 neural work. **1,000 Hz physics, 500 Hz actions**, two physics steps per
+  action. No standing/walking rehearsal, teacher action, PID supervision or Warp.
+- **3,866,624 physical action transitions**, **7,733.248 aggregate simulated
+  seconds (128.887 minutes)**. Actor updates **40 / 41 / 18 / 50**; critic updates
+  **352 / 328 / 176 / 88**. Sample reuse is not extra physical experience.
+- Pilot04's new-stage ancestry includes pilots01/04 only: **908.464041 s**.
+  Pilots02/03 remain in total development cost. An older trained motor actor
+  precedes this effort; these measurements are not training from scratch.
+- Explicit plant/input migration takes **3.696429 s**, with zero optimizer
+  updates. Before-training matched capture takes **36.272512 s**. Four new
+  evaluation captures take **36.493361 / 36.840725 / 36.834772 / 36.245143 s**,
+  with separate setup **7.434778 / 6.592100 / 6.956232 / 8.158320 s**.
+  Each capture runs four independent ten-second worlds: three learned starts
+  and one PID; **20,000 actions / 40 aggregate simulated seconds** per capture.
+- Four final video renders: **63.716173 / 65.331828 / 64.628436 / 63.311536 s**.
+  Each ten seconds, 500 frames, 50 fps, 1600x900, 1x. All fully decoded, sampled
+  frames visually inspected and automatically opened on macOS. A scratch renderer
+  QA and two aborted fourth-capture/render invocations are outside these completed
+  timings: a graph-path typo failed before stepping, and an incomplete MJB transfer
+  failed before rendering. Both were corrected; no extra training occurred.
+- Full current suite **174 passed**, 45 dependency warnings, **150.97 s**;
+  focused new checks **5 passed**, **10.36 s**. The preceding implementation suite
+  passed172 in145.85 s. No full-suite repetition for the final LR-only run.
+- **1,589 failed training trace windows** copied and hash-verified, plus all
+  four trained checkpoints and their graph/body/parameter invariants. Pilot04
+  retains three ten-second airborne starts, but all fail accurate-hover gates.
+  PID statistics are identical across the five matched captures. All raw results
+  and failed pilots are preserved; no fifth training run occurs this round.

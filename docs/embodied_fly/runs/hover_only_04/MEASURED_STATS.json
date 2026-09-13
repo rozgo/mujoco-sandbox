@@ -1,0 +1,168 @@
+{
+  "training_wall_seconds": 300.54526907531545,
+  "setup_seconds": 7.554640371352434,
+  "transitions": 360448,
+  "aggregate_simulated_seconds": 720.896,
+  "transitions_per_training_wall_second": 1199.3135047807828,
+  "ppo_updates": 50,
+  "critic_updates": 88,
+  "critic_warmup_rollouts": 4,
+  "worlds_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 64
+  },
+  "transitions_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 360448
+  },
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "physics_threads": 16,
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "peak_cuda_allocated_bytes": 12555753472,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "optimizer_resumed": true,
+  "critic_reset_for_new_reward": true,
+  "checkpoint_sha256": "5601efabb2815fde5e1ec38cd3fd79929bc43c959af98346ef162dd1d52fa89b",
+  "parent_checkpoint_sha256": "6d5681aa96c2b6bc154d63b21a53d0236180bb607f6b1f317b11a2543d3f21a9",
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 7.328579425811768,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 1.7003964185714722,
+      "finite": true,
+      "nonzero_cells": 165503
+    },
+    "bias": {
+      "l2": 263.1329650878906,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 4.1036499169422314e-05,
+    "leak": 3.962839036830701e-05,
+    "bias": 5.428007716545835e-05
+  },
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 1.024,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 1.9989998332499455,
+    "gae_trace_efold_seconds": 0.33261034061256733,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "teacher_present_during_collection": false,
+  "executed_teacher_actions": false,
+  "rehearsal_frames": 0,
+  "failure": null,
+  "source_commit": "964606dfff6ee3859a6c0f3042b99ca0123eb42d",
+  "evaluation": [
+    {
+      "case": "hover",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 8.386087050498542,
+          "position_peak_mm": 59.64782660148625,
+          "position_rms_mm": 33.75909401538071,
+          "altitude_rms_mm": 2.712844186827313,
+          "vertical_speed_rms_mm_s": 57.73095302105852
+        },
+        "after_first_second": {
+          "height_span_mm": 5.569117935242147,
+          "position_peak_mm": 59.64782660148625,
+          "position_rms_mm": 35.57512682056334,
+          "altitude_rms_mm": 2.7679494518470897,
+          "vertical_speed_rms_mm_s": 58.42346944847796
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992497631136974,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lower_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 8.700505672207612,
+          "position_peak_mm": 59.41858464811781,
+          "position_rms_mm": 33.56813870218833,
+          "altitude_rms_mm": 2.738497380730217,
+          "vertical_speed_rms_mm_s": 57.72914198881402
+        },
+        "after_first_second": {
+          "height_span_mm": 5.702503166763872,
+          "position_peak_mm": 59.41858464811781,
+          "position_rms_mm": 35.37249746211571,
+          "altitude_rms_mm": 2.772405922344156,
+          "vertical_speed_rms_mm_s": 58.42671085090618
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992470103793472,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lateral_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 9.137021540247865,
+          "position_peak_mm": 58.54496785025031,
+          "position_rms_mm": 32.83711571387691,
+          "altitude_rms_mm": 2.7802037388218896,
+          "vertical_speed_rms_mm_s": 57.66709731767868
+        },
+        "after_first_second": {
+          "height_span_mm": 5.795489679427552,
+          "position_peak_mm": 58.54496785025031,
+          "position_rms_mm": 34.600562922329324,
+          "altitude_rms_mm": 2.7891060352311525,
+          "vertical_speed_rms_mm_s": 58.453864893790055
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992419348973715,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "pid",
+      "controller": "PID reference",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 0.650600822383891,
+          "position_peak_mm": 0.5967519349006433,
+          "position_rms_mm": 0.1382488755863109,
+          "altitude_rms_mm": 0.0700649495233811,
+          "vertical_speed_rms_mm_s": 13.574424658775344
+        },
+        "after_first_second": {
+          "height_span_mm": 0.13141957847028207,
+          "position_peak_mm": 0.19731874879519967,
+          "position_rms_mm": 0.12414975142866937,
+          "altitude_rms_mm": 0.036477511893450144,
+          "vertical_speed_rms_mm_s": 13.537338026529358
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": true,
+      "minimum_upright": 0.9956752639479366,
+      "maximum_forbidden_load_bodyweights": 0.0
+    }
+  ]
+}

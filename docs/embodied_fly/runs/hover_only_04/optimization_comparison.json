@@ -1,0 +1,157 @@
+{
+  "same_declared_parent_seed_and_configuration_except_actor_lr": true,
+  "bitwise_identical_warmup": false,
+  "warmup": [
+    {
+      "rollout": 1,
+      "mean_reward_difference": -1.5005662135081366e-07,
+      "complete_episodes_03_04": [
+        1,
+        1
+      ],
+      "failed_episodes_03_04": [
+        1,
+        1
+      ],
+      "actor_updates_03_04": [
+        0,
+        0
+      ]
+    },
+    {
+      "rollout": 2,
+      "mean_reward_difference": 2.8669819585047662e-06,
+      "complete_episodes_03_04": [
+        17,
+        17
+      ],
+      "failed_episodes_03_04": [
+        17,
+        17
+      ],
+      "actor_updates_03_04": [
+        0,
+        0
+      ]
+    },
+    {
+      "rollout": 3,
+      "mean_reward_difference": 2.815353946061805e-05,
+      "complete_episodes_03_04": [
+        22,
+        22
+      ],
+      "failed_episodes_03_04": [
+        22,
+        22
+      ],
+      "actor_updates_03_04": [
+        0,
+        0
+      ]
+    },
+    {
+      "rollout": 4,
+      "mean_reward_difference": -2.100413439620752e-06,
+      "complete_episodes_03_04": [
+        22,
+        23
+      ],
+      "failed_episodes_03_04": [
+        22,
+        23
+      ],
+      "actor_updates_03_04": [
+        0,
+        0
+      ]
+    }
+  ],
+  "caveat": "Matched recipe, not bitwise replay. Tiny initial reward differences grow before actor updates; warmup episode counts differ by one at rollout four. One run per setting does not establish general causation.",
+  "pilots": [
+    {
+      "pilot": 1,
+      "training_seconds": 607.9187721996568,
+      "setup_seconds": 8.817755448166281,
+      "transitions": 1441792,
+      "aggregate_simulated_seconds": 2883.584,
+      "actor_updates": 40,
+      "critic_updates": 352,
+      "median_observed_max_kl": 1.2874995470046997,
+      "maximum_observed_kl": 18.876903533935547,
+      "airborne_starts_of_three": 3,
+      "reference_quality_starts_of_three": 0,
+      "nominal_after_first_second": {
+        "height_span_mm": 6.055263262607166,
+        "position_peak_mm": 58.461836282530314,
+        "position_rms_mm": 34.89625248194307,
+        "altitude_rms_mm": 3.2731954129720497,
+        "vertical_speed_rms_mm_s": 59.04053663346076
+      },
+      "verified_failure_windows": 390
+    },
+    {
+      "pilot": 2,
+      "training_seconds": 602.952450376004,
+      "setup_seconds": 8.712927381042391,
+      "transitions": 1343488,
+      "aggregate_simulated_seconds": 2686.976,
+      "actor_updates": 41,
+      "critic_updates": 328,
+      "median_observed_max_kl": 1.057196855545044,
+      "maximum_observed_kl": 1.7961487770080566,
+      "airborne_starts_of_three": 0,
+      "reference_quality_starts_of_three": 0,
+      "nominal_after_first_second": {
+        "height_span_mm": 6.8361919134759885,
+        "position_peak_mm": 21.170239665830533,
+        "position_rms_mm": 20.37942574598094,
+        "altitude_rms_mm": 18.16315067791943,
+        "vertical_speed_rms_mm_s": 14.397022899715278
+      },
+      "verified_failure_windows": 659
+    },
+    {
+      "pilot": 3,
+      "training_seconds": 306.3052158989012,
+      "setup_seconds": 8.338881333824247,
+      "transitions": 720896,
+      "aggregate_simulated_seconds": 1441.792,
+      "actor_updates": 18,
+      "critic_updates": 176,
+      "median_observed_max_kl": 1.334345281124115,
+      "maximum_observed_kl": 2.5159192085266113,
+      "airborne_starts_of_three": 0,
+      "reference_quality_starts_of_three": 0,
+      "nominal_after_first_second": {
+        "height_span_mm": 42.22322031389719,
+        "position_peak_mm": 42.18998308340309,
+        "position_rms_mm": 31.954306837888268,
+        "altitude_rms_mm": 16.970798057487553,
+        "vertical_speed_rms_mm_s": 59.283123622165625
+      },
+      "verified_failure_windows": 493
+    },
+    {
+      "pilot": 4,
+      "training_seconds": 300.54526907531545,
+      "setup_seconds": 7.554640371352434,
+      "transitions": 360448,
+      "aggregate_simulated_seconds": 720.896,
+      "actor_updates": 50,
+      "critic_updates": 88,
+      "median_observed_max_kl": 0.027489041909575462,
+      "maximum_observed_kl": 0.03491884469985962,
+      "airborne_starts_of_three": 3,
+      "reference_quality_starts_of_three": 0,
+      "nominal_after_first_second": {
+        "height_span_mm": 5.569117935242147,
+        "position_peak_mm": 59.64782660148625,
+        "position_rms_mm": 35.57512682056334,
+        "altitude_rms_mm": 2.7679494518470897,
+        "vertical_speed_rms_mm_s": 58.42346944847796
+      },
+      "verified_failure_windows": 47
+    }
+  ]
+}

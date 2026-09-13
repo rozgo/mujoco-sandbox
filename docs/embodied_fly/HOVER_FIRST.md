@@ -68,3 +68,45 @@ pair. Reference-quality gates, failure times and full-window errors are separate
 
 See the [predeclared first pilot](runs/hover_only_01/PLAN.md). Training return is
 a progress signal; only the independent capture establishes physical performance.
+
+## Reward correction after the first pilots
+
+The first pilot remained airborne on three sampled starts but did not hold
+position. Its unchanged continuation fell. Auditing episode returns exposed an
+incentive problem: unbounded running tracking costs could make early termination
+cheaper than continuing a poor flight. The older runs remain recorded with their
+original equations, videos and failures.
+
+The opt-in `--bounded-hover-reward` uses positive, bounded physical tracking
+scores and an alive term. A valid airborne state earns at least .498/s; ideal
+tracking earns at most 6.1/s. A failed step earns exactly -1. Position/velocity
+scales, physics and actor remain unchanged. It supplies no PID action, wing
+rhythm or force target. Returning to a poor hold is still worse than accurate
+hover, but ending the episode no longer avoids a stream of negative costs.
+
+An explicit `--reset-critic` is required when changing the hover reward. This
+starts fresh value fitting while retaining the actor and actor optimizer. The
+new reward's numeric returns are not comparable to the old objective. See the
+[correction pilot](runs/hover_only_03/PLAN.md). These are development diagnostics;
+the accepted PID remains the smooth-hover reference.
+
+## Completed comparison round
+
+Four bounded pilots and their PID/PPO videos are preserved. The
+[latest comparison](../../previews/embodied_fly/hover_only_pid_comparison_v4.mp4)
+keeps PPO airborne on all three sampled starts, but nominal drift remains
+59.65 mm and the height span after startup is 5.57 mm. PID measures 0.197 mm
+peak position error and a 0.131 mm height span in that same time window.
+Accurate learned hover is still open; the next motor stage has not started.
+
+The final pilot lowers only the actor learning rate relative to the failed
+bounded-reward pilot. Observed update divergence drops from median 1.334 to
+0.0275, and 50 actor updates fit into 300.545 seconds. Its airborne parent has
+slightly less positional drift, so both remain development artifacts. See the
+[complete results, limitations and training costs](runs/hover_only_04/SUMMARY.md).
+
+Open the newest comparison on macOS:
+
+```sh
+open previews/embodied_fly/hover_only_pid_comparison_v4.mp4
+```

@@ -50,10 +50,16 @@ The settled height band is 0.13 mm and peak position error 0.16 mm. This is a
 controller/plant reference, not a newly trained fly. The preceding unfiltered
 reference video is retained with the user's rejection of its jerky motion.
 
-The next [hover-first stage](HOVER_FIRST.md) dedicates every PPO world to hover
-on this accepted plant, with explicit checkpoint/feedback migration and a matched
-PID/PPO comparison. Standing and walking are deferred in the revised curriculum;
-the prior checkpoint stays preserved. One actor continues across motor stages.
+The [hover-first stage](HOVER_FIRST.md) now dedicates all 64 PPO worlds to hover
+on this accepted plant, with explicit checkpoint/feedback migration. The
+[latest PID/PPO comparison](../../previews/embodied_fly/hover_only_pid_comparison_v4.mp4)
+shows the remaining gap: PPO stays airborne for all three sampled ten-second
+starts, but still bobs 5.57 mm and drifts nearly 6 cm. PID holds closely. Four
+bounded pilots take 30 min 17.722 s of training in total; the final actor inherits
+only the first and fourth. See the [measured results](runs/hover_only_04/SUMMARY.md).
+Standing and walking are deferred in this revised curriculum; the prior checkpoint
+stays preserved. One actor continues across motor stages. Accurate hover remains
+open, and no later stage or utility learning occurred in this comparison round.
 
 ## Historical torque-model experiments
 

@@ -1,0 +1,274 @@
+{
+  "training_wall_seconds": 607.9187721996568,
+  "setup_seconds": 8.817755448166281,
+  "transitions": 1441792,
+  "aggregate_simulated_seconds": 2883.584,
+  "transitions_per_training_wall_second": 2371.6852743058193,
+  "ppo_updates": 40,
+  "critic_updates": 352,
+  "critic_warmup_rollouts": 4,
+  "worlds_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 64
+  },
+  "transitions_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 1441792
+  },
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "physics_threads": 16,
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "peak_cuda_allocated_bytes": 12553766912,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "optimizer_resumed": false,
+  "checkpoint_sha256": "6d5681aa96c2b6bc154d63b21a53d0236180bb607f6b1f317b11a2543d3f21a9",
+  "parent_checkpoint_sha256": "4b1b3a8499a1212c202c6f7fce1071aa28dab0dbf33fce05f066af5e126051bb",
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 2.144533395767212,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.1385764628648758,
+      "finite": true,
+      "nonzero_cells": 165478
+    },
+    "bias": {
+      "l2": 64.1491470336914,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_changes": {
+    "excitability": 0.0013096238253638148,
+    "leak": 0.00045677649904973805,
+    "bias": 0.002842673799023032
+  },
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 1.024,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 1.9989998332499455,
+    "gae_trace_efold_seconds": 0.33261034061256733,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "teacher_present_during_collection": false,
+  "executed_teacher_actions": false,
+  "rehearsal_frames": 0,
+  "failure": null,
+  "source_commit": "23eecbedb7e20a12599857d6c194075c836be852",
+  "evaluation_before": [
+    {
+      "case": "hover",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 5.835134641419688,
+          "position_peak_mm": 61.34588595612672,
+          "position_rms_mm": 34.88050155700335,
+          "altitude_rms_mm": 2.8148459231713554,
+          "vertical_speed_rms_mm_s": 56.5173330353454
+        },
+        "after_first_second": {
+          "height_span_mm": 5.8016114906922915,
+          "position_peak_mm": 61.34588595612672,
+          "position_rms_mm": 36.76079800167541,
+          "altitude_rms_mm": 2.9378219974377706,
+          "vertical_speed_rms_mm_s": 56.932170291854106
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992924776205884,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lower_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 20.687422582616275,
+          "position_peak_mm": 43.154573873778396,
+          "position_rms_mm": 30.70657790234725,
+          "altitude_rms_mm": 17.434773197380615,
+          "vertical_speed_rms_mm_s": 44.69738658611466
+        },
+        "after_first_second": {
+          "height_span_mm": 4.32521351100002,
+          "position_peak_mm": 43.154573873778396,
+          "position_rms_mm": 31.841166112526942,
+          "altitude_rms_mm": 18.121863949799398,
+          "vertical_speed_rms_mm_s": 17.864660073121485
+        }
+      },
+      "stable": false,
+      "first_failure_seconds": 0.47400000000000003,
+      "reference_quality_gate": false,
+      "minimum_upright": -0.9998777655092205,
+      "maximum_forbidden_load_bodyweights": 35.895960528827715
+    },
+    {
+      "case": "lateral_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 8.876157204442606,
+          "position_peak_mm": 60.08938477021183,
+          "position_rms_mm": 33.909813567403404,
+          "altitude_rms_mm": 3.0188021865958268,
+          "vertical_speed_rms_mm_s": 56.58158223822089
+        },
+        "after_first_second": {
+          "height_span_mm": 5.352146327100209,
+          "position_peak_mm": 60.08938477021183,
+          "position_rms_mm": 35.73809604597561,
+          "altitude_rms_mm": 3.1349560462951302,
+          "vertical_speed_rms_mm_s": 57.03763383894148
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.999309792971693,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "pid",
+      "controller": "PID reference",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 0.650600822383891,
+          "position_peak_mm": 0.5967519349006433,
+          "position_rms_mm": 0.1382488755863109,
+          "altitude_rms_mm": 0.0700649495233811,
+          "vertical_speed_rms_mm_s": 13.574424658775344
+        },
+        "after_first_second": {
+          "height_span_mm": 0.13141957847028207,
+          "position_peak_mm": 0.19731874879519967,
+          "position_rms_mm": 0.12414975142866937,
+          "altitude_rms_mm": 0.036477511893450144,
+          "vertical_speed_rms_mm_s": 13.537338026529358
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": true,
+      "minimum_upright": 0.9956752639479366,
+      "maximum_forbidden_load_bodyweights": 0.0
+    }
+  ],
+  "evaluation_after": [
+    {
+      "case": "hover",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 8.9287452472445,
+          "position_peak_mm": 58.461836282530314,
+          "position_rms_mm": 33.11499446195518,
+          "altitude_rms_mm": 3.1774133152149946,
+          "vertical_speed_rms_mm_s": 58.29271912014078
+        },
+        "after_first_second": {
+          "height_span_mm": 6.055263262607166,
+          "position_peak_mm": 58.461836282530314,
+          "position_rms_mm": 34.89625248194307,
+          "altitude_rms_mm": 3.2731954129720497,
+          "vertical_speed_rms_mm_s": 59.04053663346076
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992420177661673,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lower_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 9.248980942183081,
+          "position_peak_mm": 58.17872710225195,
+          "position_rms_mm": 32.890398403483374,
+          "altitude_rms_mm": 3.2133338559617908,
+          "vertical_speed_rms_mm_s": 58.32471001728902
+        },
+        "after_first_second": {
+          "height_span_mm": 6.200126758501357,
+          "position_peak_mm": 58.17872710225195,
+          "position_rms_mm": 34.6581595840644,
+          "altitude_rms_mm": 3.292613139585491,
+          "vertical_speed_rms_mm_s": 59.08077644371586
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992382626714563,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lateral_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 9.57002020168732,
+          "position_peak_mm": 57.32867586518836,
+          "position_rms_mm": 32.18207446048085,
+          "altitude_rms_mm": 3.236945147664112,
+          "vertical_speed_rms_mm_s": 58.254858280090446
+        },
+        "after_first_second": {
+          "height_span_mm": 6.154658270159747,
+          "position_peak_mm": 57.32867586518836,
+          "position_rms_mm": 33.910171046192495,
+          "altitude_rms_mm": 3.294519386742143,
+          "vertical_speed_rms_mm_s": 59.09740543394569
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9992315270249857,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "pid",
+      "controller": "PID reference",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 0.650600822383891,
+          "position_peak_mm": 0.5967519349006433,
+          "position_rms_mm": 0.1382488755863109,
+          "altitude_rms_mm": 0.0700649495233811,
+          "vertical_speed_rms_mm_s": 13.574424658775344
+        },
+        "after_first_second": {
+          "height_span_mm": 0.13141957847028207,
+          "position_peak_mm": 0.19731874879519967,
+          "position_rms_mm": 0.12414975142866937,
+          "altitude_rms_mm": 0.036477511893450144,
+          "vertical_speed_rms_mm_s": 13.537338026529358
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": true,
+      "minimum_upright": 0.9956752639479366,
+      "maximum_forbidden_load_bodyweights": 0.0
+    }
+  ],
+  "matched_pid_statistics_identical": true,
+  "modeled_neurons": 166700,
+  "neural_internal_steps_per_action": 4,
+  "rollout_neuron_state_updates": 961386905600,
+  "neuron_update_count_scope": "Arithmetic count during rollout collection only; excludes training replays and activation recomputation, not a biological-realism claim"
+}
