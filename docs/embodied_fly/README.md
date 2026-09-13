@@ -4,6 +4,15 @@ Work in progress on `feature/fly-brain`. This is the approved successor to the
 utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
+Latest review: [hover pilot06](runs/hover_only_06/SUMMARY.md) confirms that the
+actor responds to disturbances at the 500 Hz control rate, but wing-generated
+corrections can initially go the wrong way. A 10 min 9 s tighter-reward continuation
+keeps three ten-second starts airborne and slightly improves altitude tracking;
+the repeated 2.80 mm bobbing remains. Watch [before/after](../../previews/embodied_fly/hover_only_before_after_v6.mp4)
+or [PPO beside PID](../../previews/embodied_fly/hover_only_pid_comparison_v6.mp4).
+Hover-first motor learning is the current stage; earlier multi-command reviews
+below retain their historical physical models and results. Utility remains deferred.
+
 The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same `wing_position` body in every
 task. Utility selection is temporarily disabled while these primitives are

@@ -1,0 +1,2181 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T22:55:03.447965+00:00",
+    "source_commit": "408ff2aac9fe74e1613da02a48db4c2187b848ae",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "16fbd2236f63c5ef2c998307885c20afd113ea05ce727bf2877ddf1a00cce555",
+      "src/embodied_fly/body.py": "954974b59b488fc5c3a5834c6afc6b7788d0293b5505798ba2670339efc29ba1",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "5292352055adff82048d7d519da645a1f4bc4414cc168bf7303b00f89c85912a",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "02dcae4bdfdb0cc70fa9d544cd25499919fbfc97575319fb0b3c943d065bff2d",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "c05f4e45d008762ce8d8d0da533eba57a0deb50194b90549a1d3c59ccf681c46",
+      "src/embodied_fly/pid_hover.py": "dced3c776113fbcf8d470873788f676e906ee3f778b678a540139195a9c874b9",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "8b71fdf863526eaeaed15a694186060bc302cbb12b608f6ed9f30a0a0f7fe8e3",
+      "src/embodied_fly/ppo_critic.py": "016a719515c20f08a2987489572b4d1a499006fa13047cc9cb5737357e12ccf2",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "939199d2f00847ee7269f97d706744377b685d6f6d4e666327227b7bc34f2f54",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "rehearsal": null,
+    "motor_ground": false,
+    "motor_all": true,
+    "hover_physical": true,
+    "hover_only": true,
+    "bounded_hover_reward": true,
+    "hover_vertical_speed_scale": 2.0,
+    "reset_critic": true,
+    "reset_exploration": false,
+    "critic_lr": 0.0001,
+    "checkpoint_activations": true,
+    "independent_critic": true,
+    "motor_retention_weight": 0.0,
+    "critic_warmup_rollouts": 4,
+    "wing_supervision": 0.0,
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "preset": "wing_position",
+    "flight_resets": null,
+    "device": "cuda",
+    "worlds": 64,
+    "threads": 16,
+    "seconds": 600.0,
+    "horizon": 512,
+    "sequence": 128,
+    "epochs": 2,
+    "episode_seconds": 5.0,
+    "gamma": 0.999,
+    "gae_lambda": 0.995,
+    "lr": 1e-07,
+    "noise": 0.001,
+    "minimum_noise": 0.001,
+    "target_kl": 0.03,
+    "entropy": 0.0,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 0.0,
+    "stationary_turn_cost": 0.0,
+    "seed": 120306,
+    "internal_steps": 4,
+    "ground_posture": true
+  },
+  "reward_recipe": {
+    "version": "hover_bounded_scores_v2",
+    "alive_rate": 0.5,
+    "height_scale_cm": 0.1,
+    "vertical_speed_scale_cm_s": 2.0,
+    "horizontal_speed_scale_cm_s": 0.5,
+    "angular_speed_scale_rad_s": 1.0,
+    "failure_height_below_cm": 0.5,
+    "failure_upright_below": 0.5,
+    "failure_penalty_once": 1,
+    "height_target": "requested altitude, independent of reset altitude",
+    "reward_timing": "rate * actual control_dt; failure penalty once before reset",
+    "wing_motion_or_action_imitation": false,
+    "reference_controller_or_force_target": false,
+    "horizontal_position_scale_cm": 0.1,
+    "action_difference_or_wing_stillness_penalty": false,
+    "position_feedback": "two anatomical target-error inputs, ideal simulator sensing",
+    "score_formula": "1 / sqrt(1 + normalized_error**2)",
+    "maximum_reward_rate": 6.1,
+    "minimum_valid_airborne_rate": 0.498,
+    "tracking_score_weights": {
+      "height": 2,
+      "horizontal_position": 1,
+      "vertical_velocity": 1,
+      "horizontal_velocity": 1,
+      "upright": 0.5,
+      "angular_velocity": 0.1
+    },
+    "failure_forbidden_support_above_bodyweights": 0.1,
+    "termination_incentive": "Valid airborne rate stays positive; failed step gets exactly -1"
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "training_tasks": [
+    "hover"
+  ],
+  "worlds_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 64
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "active_motor_channels": 78,
+  "teacher_present_during_collection": false,
+  "executed_teacher_actions": false,
+  "wing_supervision": {
+    "weight": 0.0,
+    "channels": [],
+    "target": "bounded corrective torque from pre-action measured wing q/qvel",
+    "kp": null,
+    "kd": null,
+    "loss": "mean squared normalized action error over six wing channels only",
+    "included_in_ppo_optimization_seconds": true,
+    "deployed_module": false
+  },
+  "motor_retention": {
+    "weight": 0.0,
+    "parent_checkpoint_sha256": null,
+    "weights_unchanged": false,
+    "scope": "all 78 mean motor outputs, ground worlds only",
+    "runtime_module": false,
+    "extra_physics_transitions": 0
+  },
+  "core_gradient_audit_from_ground_retention": null,
+  "training_started_utc": "2026-09-13T22:55:11.280071+00:00",
+  "completed_utc": "2026-09-13T23:05:20.311253+00:00",
+  "setup_seconds": 7.851417263969779,
+  "training_wall_seconds": 608.9328463608399,
+  "rollouts": 18,
+  "ppo_updates": 112,
+  "critic_updates": 144,
+  "critic_sample_presentations": 1179648,
+  "critic_updates_after_actor_stop": 0,
+  "actor_kl_stops": 0,
+  "independent_critic_seconds": 0.38418433675542474,
+  "critic_warmup_rollouts": 4,
+  "transitions": 589824,
+  "rehearsal_frames": 0,
+  "wing_supervised_presentations": 0,
+  "collection_seconds": 152.2464748318307,
+  "optimization_seconds": 456.66674081608653,
+  "ppo_optimization_seconds": 456.66674081608653,
+  "rehearsal_seconds": 0.0,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 64,
+  "aggregate_simulated_seconds": 1179.6480000000001,
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "neural_time_scale": 1.0,
+  "effective_gamma": 0.999,
+  "effective_gae_lambda": 0.995,
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 1.024,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 1.9989998332499455,
+    "gae_trace_efold_seconds": 0.33261034061256733,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "activation_recomputation": true,
+  "critic_schedule": {
+    "learning_rate": 0.0001,
+    "independent_of_actor_kl": true,
+    "epochs": 2,
+    "features": "normalized observation + preceding descending state",
+    "feature_source": "saved during physical collection",
+    "targets": "fixed timeout-aware GAE returns from the collected rollout",
+    "updates_per_complete_rollout": 8,
+    "actor_or_physics_replay_for_value_fit": false,
+    "deployed_module": false
+  },
+  "transitions_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 589824
+  },
+  "aggregate_simulated_seconds_by_task": {
+    "stand": 0.0,
+    "walk": 0.0,
+    "hover": 1179.6480000000001
+  },
+  "hover_reset_curriculum": {
+    "world_proportions": {
+      "stand": 0,
+      "walk": 0,
+      "hover": 1
+    },
+    "initial_height_cm": 1.86651647,
+    "widening": 0.0,
+    "curriculum_updates": 0,
+    "progress_gate": "64 complete episodes >=5 s, none failed, mean reward rate >5.5; then widen by 0.1",
+    "maximum_height_offset_cm": 0.02,
+    "maximum_initial_linear_speed_cm_s_per_axis": 1,
+    "perturbed_fraction": 0.5,
+    "cold_stationary_wings": true,
+    "changes_only_at_episode_resets": true,
+    "teacher_actions": false
+  },
+  "airborne_resets": null,
+  "rehearsal_control_hz": null,
+  "transitions_per_training_wall_second": 968.6191236438633,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 13.197860717773438,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.5778802037239075,
+      "finite": true,
+      "nonzero_cells": 165478
+    },
+    "bias": {
+      "l2": 358.9132080078125,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_gradient_audit_from_weighted_wing_supervision": null,
+  "core_changes": {
+    "excitability": 1.6941430658334866e-05,
+    "leak": 1.5079363038239535e-05,
+    "bias": 2.431307984807063e-05
+  },
+  "peak_cuda_allocated_bytes": 7506160128,
+  "parent_checkpoint_sha256": "f43af45f6cac1ca8ea1cbf72caf40d4b3457c8c27ffccd1f01c210ba8f537aae",
+  "checkpoint_sha256": "6ee2941b22266cc506e812f74418e8b71a4913ede64c032fa64000d205875395",
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899",
+  "flight_force_model": {
+    "name": "Flight dynamics driven by measured wing motion",
+    "config": {
+      "version": "wing_motion_instant_v2",
+      "angular_armature": 2e-06,
+      "joint_damping": 0.0002,
+      "joint_stiffness": 0.001,
+      "joint_torque_limit": 0.03,
+      "activity_filter_seconds": 0.0,
+      "reference_sweep_speed": 50.0,
+      "maximum_activity": 1.4,
+      "lift_weight_multiplier": 1.6,
+      "horizontal_drag_seconds": 0.12,
+      "vertical_drag_seconds": 0.08,
+      "angular_drag_seconds": 0.025,
+      "attitude_stiffness": 100.0,
+      "steering_acceleration": 60.0,
+      "maximum_angular_acceleration": 250.0,
+      "inertia_radius_cm": 0.06,
+      "forward_force_fraction": 0.25
+    },
+    "inputs": "six actual wing angles and speeds; measured body orientation/velocity",
+    "body_mass_kg": 9.686214691323194e-07,
+    "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
+    "aerodynamic_force_model": false,
+    "causal_activity_state_shape": [
+      64,
+      2
+    ],
+    "wing_response": "instant",
+    "force_update": "current wing/body measurements before every MuJoCo physics step",
+    "temporal_wing_average": false,
+    "attitude_assistance": "activity-dependent angular damping and restoring torque",
+    "translation": "bounded wing-motion lift/thrust and drag; no target-position servo"
+  },
+  "rehearsal_manifest_sha256": null,
+  "rehearsal_episode_sha256": {},
+  "rehearsal_validation_indices": [],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.274131163954735,
+      "distance_cm": 2.8043460564345026
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.73684169910848,
+      "distance_cm": 2.8057355129718675
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.05069575132802,
+      "distance_cm": 2.789858885427974
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.81576048536226,
+      "distance_cm": 2.816271037219165
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.41511370614171,
+      "distance_cm": 2.787954827624645
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.08446142403409,
+      "distance_cm": 2.797851877235893
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.639574158005416,
+      "distance_cm": 2.819301380283149
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.01787120802328,
+      "distance_cm": 2.8063404545426542
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.26662541832775,
+      "distance_cm": 2.8102542989607753
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.55345368431881,
+      "distance_cm": 2.813327868498309
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.93810187233612,
+      "distance_cm": 2.8243480966840755
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.330722259823233,
+      "distance_cm": 2.79945165742762
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.267388560343534,
+      "distance_cm": 2.791976860521463
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.934566974639893,
+      "distance_cm": 2.810204654547788
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 15.91760167479515,
+      "distance_cm": 2.7802246440644134
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.28665952477604,
+      "distance_cm": 2.8120141085471895
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.683902581688017,
+      "distance_cm": 2.798828404238625
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.560354735236615,
+      "distance_cm": 2.814290732952413
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.83198729623109,
+      "distance_cm": 2.804971003974676
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.963219347875565,
+      "distance_cm": 2.8125405521886155
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.8903271779418,
+      "distance_cm": 2.801697237870419
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.706740222405642,
+      "distance_cm": 2.788734971801498
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.969796536955982,
+      "distance_cm": 2.8224870901701884
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.036127438303083,
+      "distance_cm": 2.8080952357691538
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.712503714486957,
+      "distance_cm": 2.8065660012571607
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.632305865641683,
+      "distance_cm": 2.8041449863206274
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.991131343878806,
+      "distance_cm": 2.812437817320776
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.872055701445788,
+      "distance_cm": 2.8158318250283876
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.882957180961967,
+      "distance_cm": 2.8076249226534817
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.97125869151205,
+      "distance_cm": 2.8052315187746344
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.637176572345197,
+      "distance_cm": 2.8141577289089637
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.01844244590029,
+      "distance_cm": 2.795884708082958
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.050572593230754,
+      "distance_cm": 2.81521645837097
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.442768626846373,
+      "distance_cm": 2.7905386188156327
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.59011803381145,
+      "distance_cm": 2.7850023999979365
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.75377921340987,
+      "distance_cm": 2.807393508739055
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.518584734760225,
+      "distance_cm": 2.809429804187121
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.427324407733977,
+      "distance_cm": 2.8106773140648262
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.115994944237173,
+      "distance_cm": 2.7996469408028104
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.932468705344945,
+      "distance_cm": 2.803730572003587
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.556164509616792,
+      "distance_cm": 2.8108433433385915
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.892774652689695,
+      "distance_cm": 2.82122429451988
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.80437315115705,
+      "distance_cm": 2.81576127829208
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.656017248518765,
+      "distance_cm": 2.782976483972421
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.68430647905916,
+      "distance_cm": 2.7959990652243785
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.592411485966295,
+      "distance_cm": 2.793451574691805
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.481489137280732,
+      "distance_cm": 2.786038634310433
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.06480778614059,
+      "distance_cm": 2.7982964850595144
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.657911824062467,
+      "distance_cm": 2.803961319345441
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.80220515280962,
+      "distance_cm": 2.8024873281697134
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.858634412288666,
+      "distance_cm": 2.8114729557395512
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.78231099108234,
+      "distance_cm": 2.810035941357289
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.548144618980587,
+      "distance_cm": 2.8070780636683357
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.087101767305285,
+      "distance_cm": 2.800505348627606
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.917889384552836,
+      "distance_cm": 2.785198779931274
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.575121281668544,
+      "distance_cm": 2.802795574080337
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.739736730698496,
+      "distance_cm": 2.817575930485618
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.504829563666135,
+      "distance_cm": 2.8024916900423142
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.40174218825996,
+      "distance_cm": 2.800781455456493
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.841109679080546,
+      "distance_cm": 2.79372452631803
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.73120209109038,
+      "distance_cm": 2.812879535356743
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.612686372362077,
+      "distance_cm": 2.804676040753973
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.320043061394244,
+      "distance_cm": 2.7936699252767023
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.987295075319707,
+      "distance_cm": 2.8199882158892766
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.228934620972723,
+      "distance_cm": 2.799412925711472
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.934438279364258,
+      "distance_cm": 2.8162011453644182
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.676575311925262,
+      "distance_cm": 2.790060642266379
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.054762214422226,
+      "distance_cm": 2.813367476705319
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.525007793679833,
+      "distance_cm": 2.796019293935102
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.007286368403584,
+      "distance_cm": 2.8028655519721153
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.78845284320414,
+      "distance_cm": 2.8178001377125095
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.2250188998878,
+      "distance_cm": 2.8386334756156617
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.089601152110845,
+      "distance_cm": 2.8126385831362
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.776524827815592,
+      "distance_cm": 2.7969690264098177
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.299924571998417,
+      "distance_cm": 2.8087481306800206
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.68000702885911,
+      "distance_cm": 2.8080967232561784
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.711092286743224,
+      "distance_cm": 2.800443321584242
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.082240704912692,
+      "distance_cm": 2.8114441365676117
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.396454254165292,
+      "distance_cm": 2.7909480237897655
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.368364105001092,
+      "distance_cm": 2.803447862193415
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.624432045966387,
+      "distance_cm": 2.795722358539698
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.15381185244769,
+      "distance_cm": 2.808511909888874
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.957993568852544,
+      "distance_cm": 2.7985294320914695
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.677384603768587,
+      "distance_cm": 2.8021003657884638
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.034022386651486,
+      "distance_cm": 2.812697466346159
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.08242449723184,
+      "distance_cm": 2.8181280472071673
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.315048278775066,
+      "distance_cm": 2.7964481190463846
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.954462623689324,
+      "distance_cm": 2.808986488895968
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.793631344567984,
+      "distance_cm": 2.80696560006447
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.25344326486811,
+      "distance_cm": 2.8275707125028444
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.699480428360403,
+      "distance_cm": 2.809349618315379
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.566797867882997,
+      "distance_cm": 2.8163484659186326
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.024498359300196,
+      "distance_cm": 2.793197244700965
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.524812671821564,
+      "distance_cm": 2.7996211668582913
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.269722716882825,
+      "distance_cm": 2.799309792301935
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.72265061829239,
+      "distance_cm": 2.816005624094194
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.05169231723994,
+      "distance_cm": 2.7866772825504054
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.767029632348567,
+      "distance_cm": 2.7890087130992063
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.698284244164824,
+      "distance_cm": 2.822193523296471
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.491197152994573,
+      "distance_cm": 2.8004780191864005
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.647137634456158,
+      "distance_cm": 2.8179971631887155
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.596809803508222,
+      "distance_cm": 2.808395745837299
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.04353536432609,
+      "distance_cm": 2.8083644274040545
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.160398045089096,
+      "distance_cm": 2.807072654964622
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.12577507412061,
+      "distance_cm": 2.811285095572716
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.598087610676885,
+      "distance_cm": 2.816575088044953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.205033988691866,
+      "distance_cm": 2.795019599217023
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.952613927423954,
+      "distance_cm": 2.787590693225959
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.973047350067645,
+      "distance_cm": 2.8033280411763664
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.566109901759773,
+      "distance_cm": 2.8038846201131356
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.429220627527684,
+      "distance_cm": 2.8034073614625097
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.290654998272657,
+      "distance_cm": 2.8127934391793485
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.014589552767575,
+      "distance_cm": 2.821770701536989
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.254157069139183,
+      "distance_cm": 2.8015446488306286
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.80522191664204,
+      "distance_cm": 2.8141309321242822
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.995260470546782,
+      "distance_cm": 2.8172348152905626
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.466416648123413,
+      "distance_cm": 2.798746582708242
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.20067514711991,
+      "distance_cm": 2.800093604059327
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.996989044826478,
+      "distance_cm": 2.801645432038033
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.070008231326938,
+      "distance_cm": 2.8237046928370364
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.280594404786825,
+      "distance_cm": 2.800268176375421
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.866470938082784,
+      "distance_cm": 2.8033266416948384
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.515698727685958,
+      "distance_cm": 2.805576086892683
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.10310684517026,
+      "distance_cm": 2.7962718933290653
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.09428769769147,
+      "distance_cm": 2.8184768703114993
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.839730403386056,
+      "distance_cm": 2.8078226916404945
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.79865512996912,
+      "distance_cm": 2.8023329116635574
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.77862881636247,
+      "distance_cm": 2.788944562520221
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.42192915547639,
+      "distance_cm": 2.8146157518596997
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.42215911950916,
+      "distance_cm": 2.7895401331134297
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.887282772455364,
+      "distance_cm": 2.8220875110813033
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.394232250750065,
+      "distance_cm": 2.803498653192418
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.77455764496699,
+      "distance_cm": 2.8137641496820223
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.884454873390496,
+      "distance_cm": 2.812926325081913
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.957987865433097,
+      "distance_cm": 2.815025496841432
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.958212790545076,
+      "distance_cm": 2.801781194042952
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.882620342075825,
+      "distance_cm": 2.821720011709131
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.33632496651262,
+      "distance_cm": 2.7946625148456956
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.690070209559053,
+      "distance_cm": 2.792900130595613
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.239665295463055,
+      "distance_cm": 2.8191702632693656
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.577015642542392,
+      "distance_cm": 2.809524562161012
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.13288963166997,
+      "distance_cm": 2.810883159973255
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.259833255782723,
+      "distance_cm": 2.8210829201533607
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.014509208500385,
+      "distance_cm": 2.8235261863160552
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.96376653946936,
+      "distance_cm": 2.8170600349687254
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.87119132699445,
+      "distance_cm": 2.8151343014845893
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.016441931948066,
+      "distance_cm": 2.799430565880729
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.44883614545688,
+      "distance_cm": 2.7986843084336614
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.389734555967152,
+      "distance_cm": 2.786995690172774
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.820736420806497,
+      "distance_cm": 2.806693363359037
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.169361833948642,
+      "distance_cm": 2.8080535537908564
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.01546379784122,
+      "distance_cm": 2.803790744029536
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.6333337421529,
+      "distance_cm": 2.8073083995953896
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.74165814742446,
+      "distance_cm": 2.810376996035757
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.559765411540866,
+      "distance_cm": 2.816702268438559
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.201375676784664,
+      "distance_cm": 2.807362560373249
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.805418740492314,
+      "distance_cm": 2.7957270748237506
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.0119557143189,
+      "distance_cm": 2.7950603237802323
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.12797030294314,
+      "distance_cm": 2.8051129244325237
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.84162355773151,
+      "distance_cm": 2.7959592198242573
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.335005004424602,
+      "distance_cm": 2.8115071301729757
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.053829525131732,
+      "distance_cm": 2.8065112662566554
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.87903666542843,
+      "distance_cm": 2.8173003092144735
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.434374042320997,
+      "distance_cm": 2.7785757215855647
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.883924948051572,
+      "distance_cm": 2.8210231000763915
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.850256849080324,
+      "distance_cm": 2.807362425641428
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.116121602710336,
+      "distance_cm": 2.7940908612550848
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.751526742707938,
+      "distance_cm": 2.795872356798661
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.67143257614225,
+      "distance_cm": 2.8058352043737647
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.825344941578805,
+      "distance_cm": 2.8076836297949086
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.481580606661737,
+      "distance_cm": 2.8069192291498446
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.126215402502567,
+      "distance_cm": 2.8036853127264827
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.07756548980251,
+      "distance_cm": 2.8279633068313865
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.23952122963965,
+      "distance_cm": 2.8087752469525116
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.75096695870161,
+      "distance_cm": 2.8118884445822734
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.682530347723514,
+      "distance_cm": 2.8168299974522233
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.946713757701218,
+      "distance_cm": 2.800997573540561
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.02121533965692,
+      "distance_cm": 2.810640021648154
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.848063473124057,
+      "distance_cm": 2.8019861243766733
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.31446817982942,
+      "distance_cm": 2.804654350224814
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.778406863100827,
+      "distance_cm": 2.796758349025372
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.993160530459136,
+      "distance_cm": 2.780334990058349
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.644517072476447,
+      "distance_cm": 2.7865030681846297
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.14218991715461,
+      "distance_cm": 2.8169711213743556
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.147500089369714,
+      "distance_cm": 2.799656488044136
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.5959122790955,
+      "distance_cm": 2.8059295095676435
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.606498388573527,
+      "distance_cm": 2.790079713897704
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.576062590349466,
+      "distance_cm": 2.7966650625257863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.29652121430263,
+      "distance_cm": 2.8097092091832767
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.53697045100853,
+      "distance_cm": 2.8089246025776946
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 16.697018042672426,
+      "distance_cm": 2.814640029089268
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 5.0,
+      "return": 17.09647147450596,
+      "distance_cm": 2.813007890921549
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": true,
+  "exploration_reset_explicitly": false,
+  "initial_exploration_std": [
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295
+  ],
+  "critic_reset_for_new_reward": true,
+  "optimizer_initialization": "retained actor Adam/exploration; new critic and critic Adam",
+  "critic_warmup": {
+    "requested_rollouts": 4,
+    "completed_rollouts": 4,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  }
+}

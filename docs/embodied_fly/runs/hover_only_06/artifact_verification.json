@@ -1,0 +1,60 @@
+{
+  "checkpoint_sha256": "6ee2941b22266cc506e812f74418e8b71a4913ede64c032fa64000d205875395",
+  "physical_graph_contracts_preserved": true,
+  "all_actor_tensors_finite": true,
+  "fixed_tensors": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed_tensors": [
+    "core.excitability",
+    "core.leak",
+    "core.bias",
+    "sensory_encoder.0.weight",
+    "sensory_encoder.0.bias",
+    "sensory_encoder.2.weight",
+    "sensory_encoder.2.bias",
+    "sensor_extension.weight",
+    "motor_decoder.0.weight",
+    "motor_decoder.0.bias",
+    "motor_decoder.1.weight",
+    "motor_decoder.1.bias",
+    "motor_decoder.3.weight",
+    "motor_decoder.3.bias",
+    "wing_residual.network.0.weight",
+    "wing_residual.network.0.bias",
+    "wing_residual.network.2.weight",
+    "wing_residual.network.2.bias"
+  ],
+  "optimizer_history": {
+    "optimizer_state_dict": {
+      "parameters_with_history": 19,
+      "step_increment": 112,
+      "fresh_for_changed_reward": false
+    },
+    "value_optimizer_state_dict": {
+      "parameters_with_history": 6,
+      "step_increment": 144,
+      "fresh_for_changed_reward": true
+    }
+  },
+  "reward_recipe_changes": {
+    "vertical_speed_scale_cm_s": {
+      "before": 5.0,
+      "after": 2.0
+    }
+  },
+  "verified_failure_windows": 0
+}

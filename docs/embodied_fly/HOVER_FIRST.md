@@ -1,5 +1,13 @@
 # Hover first, with a PID comparison
 
+Latest completed result: [pilot06](runs/hover_only_06/SUMMARY.md). A phase-matched
+probe finds prompt command changes but weak, phase-dependent lift correction.
+One tighter vertical-speed PPO continuation improves mean altitude error slightly
+and preserves three airborne starts; settled ripple stays 2.80 mm at 9.25 Hz.
+Accurate hover remains open. See [PID comparison](../../previews/embodied_fly/hover_only_pid_comparison_v6.mp4)
+and [before/after](../../previews/embodied_fly/hover_only_before_after_v6.mp4).
+No further training or next motor stage has started in this review round.
+
 The accepted PID proves nominal hover is controllable in the declared flight
 model. The next stage trains the same MaleCNS actor through physical PPO rewards,
 starting airborne. The PID does not execute in the learner's world or generate

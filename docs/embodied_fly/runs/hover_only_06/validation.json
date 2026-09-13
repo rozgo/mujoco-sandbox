@@ -1,0 +1,19 @@
+{
+  "full_suite": {
+    "passed": 176,
+    "warnings": 45,
+    "seconds": 148.93,
+    "log_sha256": "ab475072c36a220c643c6837e6f5032a7765badafefca4d8fe8d6cac7411b802"
+  },
+  "focused_suite": {
+    "passed": 12,
+    "warnings": 1,
+    "seconds": 5.73
+  },
+  "scope": "Reward parameterization, physics, actor/critic continuation and existing motor suite; render changes verified separately on encoded frames",
+  "training_source_commit": "408ff2a",
+  "physics_change": false,
+  "actor_architecture_change": false,
+  "reward_change": "Vertical speed scale50 ->20 mm/s; weight and all other terms retained",
+  "critic_change": "Explicit separate critic/Adam reset and4 frozen-actor warmup rollouts because return objective changed"
+}

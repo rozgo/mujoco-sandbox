@@ -1077,3 +1077,26 @@ goal milestone, not a completion time; final archiving/synchronization follows.
 - Pilot05 review capture 36.782516 s; final render 63.556083 s. Video ten seconds, 500 frames, 50 fps, 1600x900, 1x; full decode and sampled-frame inspection passed.
 - Pilot05 full suite: 175 passed in 152.17 s; 45 dependency warnings.
 - Current user-approved phase-response and tighter-reward effort observed start **2026-09-13 22:45:53 UTC**. Training/evaluation/render timings will be measured separately.
+
+### Phase-response/hover06 measured completion
+
+- Start22:45:53 UTC; both reviewed videos opened23:10:28 UTC on September13:
+  **24 min35 s** to the review milestone. Final archival/Git synchronization follows.
+- Frozen phase probe:6.473675 s setup,9.860920 s warmup (3,047 actions),
+  1.276143 s capture (20 worlds x.3 s =3,000 actions), zero optimizer updates.
+- Training starts22:55:11.280 UTC, report completed23:05:20.311 UTC.
+  **608.932846 s training**,7.851417 s setup;64 worlds,16 CPU physics threads,
+  RTX4090 neural work,1,000 Hz physics/500 Hz action.589,824 actions;
+  1,179.648 aggregate simulated seconds.112 actor/144 critic updates.
+- Four critic-only fitting rollouts consume34.429893 s within the training budget;
+  actor and exploration remain fixed during these. No hidden pretraining time.
+- Frozen evaluation36.691565 s, four ten-second worlds and20,000 actions.
+- Final PID/actor video render64.980980 s; before/after render71.280736 s.
+  Renders run concurrently, so their sum is not elapsed rendering time.
+  Both ten seconds,500 frames,50 fps,1600x900,1x; full decode/inspection/open passed.
+- Full suite176 passed in148.93 s with45 dependency warnings; focused12 passed
+  in5.73 s. Git LFS integrity passed. A first local artifact check ran before the
+  evaluation transfer finished and correctly rejected the incomplete MJB hash;
+  waiting for transfer completion resolved it. No extra simulation or training.
+- New-plant ancestry01/04/05/06:2,131.976371 s; all six pilots3,041.234037 s.
+  Earlier motor learning predates these figures; not a from-scratch training claim.

@@ -2758,3 +2758,30 @@ training run starts in this review round.
 ## September 13 — smaller exploration and wingbeat diagnosis
 
 Frozen .003/.001 exploration probes and pilot05 are archived with their raw reports. All 192 completed pilot05 episodes survive; mean altitude error improves modestly, height span and nearly 6 cm drift remain. Actor/critic updates are now uninterrupted, but steady accurate hover is not learned. The settled waveform diagnosis distinguishes 500 Hz control from 9.25 Hz learned wing cycles. PID has a programmed 30 Hz rhythm; the actor must generate its own. Low-amplitude disturbances at four wing phases will test response timing before one reward continuation. See hover_only_05 and hover_response_01 run evidence.
+
+## September 13 — phase response and one tighter vertical reward
+
+The user approved a frozen phase-response probe and one PPO continuation after
+clarifying that PID and actor both act at 500 Hz. The 30/9.25 Hz values describe
+wing motion. Twenty matched branches at four wing phases expose prompt small
+command changes (0–4 ms) and lift changes (4–14 ms), but initial correction can
+have the wrong sign. All16 disturbances have corrective mean lift by200 ms.
+No clock, physics or architecture change was justified by that local probe.
+
+Pilot06 changes only the physical reward's vertical-speed scale50 ->20 mm/s.
+The actor/actor Adam/exploration continue; a fresh separate critic receives four
+actor-frozen fitting rollouts included in the measured608.933 s. It collects
+589,824 transitions on64 hover worlds, with112 actor and144 critic updates.
+All192 completed training episodes and three ten-second evaluation starts stay
+airborne. Altitude RMS improves2.349 ->2.203 mm, but settled ripple remains2.797 mm,
+wingbeat9.25 Hz, vertical-speed RMS about58 mm/s and peak drift about59 mm.
+The targeted reward term barely improves. This does not solve accurate hover.
+
+Both new1x videos were fully decoded, sampled frames inspected, and opened on
+macOS at23:10:28 UTC. The unchanged settled rhythm is visibly retained. The
+original05 checkpoint and all historical results remain. No extra training or
+new motor task follows in this review. A better way to learn steadier wing forces,
+possibly disclosed exact-plant PID initialization followed by actor-only PPO,
+is a discussion option; no runtime helper or imitation was added to this run.
+See hover_response_01 and hover_only_06 for raw measurements, timing, hashes,
+recipe changes, source code and the critic's remaining weak temporal fit.
