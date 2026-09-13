@@ -1,0 +1,15 @@
+{
+  "selection_type": "development checkpoint selection before PPO",
+  "rule": "Prefer more complete airborne starts; then nominal failure time if neither survives, or nominal position RMS among survivors.",
+  "selected": "outputs/embodied_fly/pid_imitation_01/teacher_stage.pt",
+  "selected_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "selected_complete_airborne_starts": 3,
+  "selected_accurate_hover_passes": 0,
+  "selected_nominal_position_rms_mm": 60.44225746067754,
+  "rejected": "outputs/embodied_fly/pid_imitation_01/actor.pt",
+  "rejected_sha256": "8bdf264d482d0d478aa8a287216f30eb839ca4190402bb8f449c19ae0e32f37a",
+  "rejected_complete_airborne_starts": 0,
+  "rejected_first_failure_seconds": [0.09, 0.092, 0.09],
+  "evaluation_source_commit": "89f02ac",
+  "reason": "End-of-full-teaching actor survives independently but drifts. Later teacher-removal training collapses independent flight. Select the earlier actor under the predeclared rule; this does not establish improved accurate hover."
+}
