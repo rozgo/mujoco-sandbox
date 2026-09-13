@@ -13,8 +13,15 @@ passes standing, retains 4.84 cm of walking over five seconds and keeps hover
 airborne. Hover root RMSE is 6.00 mm, above the unchanged 5 mm gate; walking yaw
 also fails. One checkpoint controls all three tasks without a teacher or output
 mask. See [results and measured training times](runs/position_sustain_retention_01/SUMMARY.md).
-The next [physical-reward stage](MOTOR_PPO.md) adds all-command PPO while retaining
-the learned ground behavior; it changes neither the body nor the deployed actor.
+The bounded [physical-reward stage](PPO_FOLLOWUP.md) tested all-command PPO but
+did not establish robust hover. The current [continuous-command effort](MOTOR_SEQUENCE.md)
+trains switching without body or neural resets; the original parent fails to
+start walking after standing. The body and deployed actor architecture remain unchanged.
+The [first command-training candidate](runs/position_commands_01/SUMMARY.md) now
+starts, stops and resumes in three continuous worlds, but still turns too much
+and loses hover. Its recovery continuation also fails unassisted flight. These
+results are retained as progress toward a combined controller, not a finished
+motor release or a replacement for the development review linked above.
 
 Recent [paired diagnostics](runs/position_exploration_01/SUMMARY.md) show that
 this successful hover does not yet generalize to three other starting states.

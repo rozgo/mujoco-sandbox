@@ -1,0 +1,1531 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T17:26:25.511800+00:00",
+    "source_commit": "f3adb0b67bd36db22908b68f3357c69efc814855",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "51af15245cf445dedcf11a1b57cd7b3117a184b9e70ad1adb25d0fd635b15995",
+      "src/embodied_fly/body.py": "45d6da6a68e5b0e600a7c183214d440b20cee52c0eefa6036a1f5689c6757765",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f0818b436ab8470abf5676de799c92e75e322bde7c72b53dacdebc832b46cdce",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "b9ec3b8b96df4dc4c0f6cdeb674d157847c088fa27dd2c72b6834e20457b8414",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "83e036ac378aef32c052a9a7a7d54789fc9bcf20adfcb7795071d63cc9a0b9fd",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "5c58a0361948ef50e4d59a96e43de98dab37a3a1e4e35de605acab8acb9fca7c",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "6ff96dbc1d936930434131d9ac5e79d4f85835296a0c448f19f187844df45c97",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "220ae00c5c4367f325fc7f1fd38c4e04dcc3216e738bae1fcf7f8ba804ec2799",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "d27d896cef957e178303a6be3a748bfd5ea2f682e17855fd945b48779403aeab",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "851c0d60e501273dce24bbe497864402197151610e6eecb9831c364e96474108",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "started_utc": "2026-09-13T17:26:37.380437+00:00",
+  "completed_utc": "2026-09-13T17:29:38.088998+00:00",
+  "config": {
+    "mode": "train",
+    "preset": "wing_position",
+    "hover_reference": "state",
+    "walking_reference": "receding",
+    "device": "cuda",
+    "seconds": 180.0,
+    "seed": 99403,
+    "worlds": 32,
+    "threads": 16,
+    "sequence": 32,
+    "lr": 1e-05,
+    "trainable_subset": "all",
+    "teacher_mix": 0.0,
+    "hover_teacher_mix": 0.8,
+    "walk_teacher_mix": 0.0,
+    "hover_start_seconds": 0.05,
+    "hover_start_weight": 1,
+    "retain_ground": true,
+    "stand_initial_form": true,
+    "ground_retention_weight": 4.0,
+    "nonwing_retention_weight": 4.0,
+    "feedback_lr": 0.003,
+    "ground_wing_loss": 10.0,
+    "wing_response_loss": 0.0,
+    "wing_response_worlds": 8,
+    "hover_feedback_loss": 0.0,
+    "ground_switch_seconds": 1.0,
+    "transition_worlds": 12,
+    "ground_posture": true,
+    "episode_seconds": 5.0,
+    "task_set": "all",
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "neural_view": false,
+    "internal_steps": 4,
+    "state_hover_recipe": {
+      "frequency_hz": 12.0,
+      "energy_gain_per_s": 60.0,
+      "energy_floor_rad": 0.05,
+      "startup_radius_fraction": 0.1,
+      "startup_velocity_time_s": 0.01,
+      "amplitude_height_gain_rad_per_cm": 0.4,
+      "amplitude_vertical_speed_gain": 0.02,
+      "clock_or_external_phase": false,
+      "deployed_module": false
+    }
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "222eb2326e6ba8d0429ad31c55fd189b98921bfceec9f66d7af528828b3645fa",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded"
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "parent_checkpoint_sha256": "306f8924ee84a906b58e802d984f1125cbbba141f9b462410053e0fbe93a8b98",
+  "checkpoint_sha256": "d0812d2bb290290408c6577197bc862250b20e43b8a1f0b235d8f5e2674758f7",
+  "model_sha256": "672a5c0144d97d56dbb5372d50095cc3a347e9410c4897f71b2d5598774542ba",
+  "setup_seconds": 11.88659486407414,
+  "training_seconds": 180.59742935281247,
+  "collection_forward_seconds": 143.178561354056,
+  "backward_optimization_seconds": 37.405664743389934,
+  "updates": 143,
+  "transitions": 146432,
+  "aggregate_simulated_seconds": 292.86400000000003,
+  "parallel_physics_worlds": 32,
+  "worlds_by_task": {
+    "stand": 11,
+    "walk": 11,
+    "hover": 10
+  },
+  "physics_backend": "native CPU MuJoCo/mjbatch",
+  "brain_device": "cuda",
+  "physics_hz": 5000,
+  "control_hz": 500,
+  "neurons": 166700,
+  "connections": 25582938,
+  "actor_parameters": 2516146,
+  "trainable_parameters": 2336540,
+  "peak_cuda_allocated_bytes": 9451158528,
+  "core_gradient_audit": {
+    "excitability": {
+      "l2": 0.013182793743908405,
+      "finite": true
+    },
+    "leak": {
+      "l2": 0.0027884359005838633,
+      "finite": true
+    },
+    "bias": {
+      "l2": 0.4656294286251068,
+      "finite": true
+    }
+  },
+  "parameter_subset": {
+    "mode": "all"
+  },
+  "subset_gradient_audit": null,
+  "core_parameter_changes": {
+    "excitability": 0.03581348434090614,
+    "leak": 0.04253600910305977,
+    "bias": 0.031405672430992126
+  },
+  "completed_episodes": [
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": true,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "hover",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.800000011920929,
+      "failure_trace": null
+    },
+    {
+      "task": "stand",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    },
+    {
+      "task": "walk",
+      "command_transition_world": false,
+      "failed": false,
+      "simulated_seconds": 5.0,
+      "teacher_mix": 0.0,
+      "failure_trace": null
+    }
+  ],
+  "teacher_present_during_collection": true,
+  "ground_retention": {
+    "enabled": true,
+    "checkpoint_sha256": "306f8924ee84a906b58e802d984f1125cbbba141f9b462410053e0fbe93a8b98",
+    "weights_unchanged": true,
+    "ground_task_loss_weight": 4.0,
+    "additional_nonwing_mse_weight": 4.0,
+    "independent_recurrent_state": true,
+    "runtime_module": false,
+    "transition_world_label_override": true,
+    "ground_wing_targets": "initial-pose corrective labels"
+  },
+  "command_curriculum": {
+    "enabled": true,
+    "transition_world_ids": [
+      0,
+      3,
+      6,
+      9,
+      12,
+      15,
+      1,
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "transition_worlds": 12,
+    "phase_seconds": 1.0,
+    "fixed_rehearsal_worlds": {
+      "stand": 5,
+      "walk": 5,
+      "hover": 10
+    },
+    "initial_worlds_by_task": [
+      11,
+      11,
+      10
+    ],
+    "command_events": [
+      {
+        "world": 0,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.47459411621094,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.47467041015625,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.47447967529297,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.4744873046875,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.4744873046875,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.47465515136719,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.41022491455078,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.47451782226562,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.4101333618164,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.47444152832031,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.42030334472656,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 87.96907043457031,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.96021270751953,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.31929779052734,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 88.0208511352539,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.19715881347656,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.1971664428711,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 83.69694519042969,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.39178466796875,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.42811584472656,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.40071105957031,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.4206314086914,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.5204849243164,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.56967163085938,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.84136962890625,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.79907989501953,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.71755981445312,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.81526947021484,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.81532287597656,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.61945343017578,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.25677490234375,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.29402160644531,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.47370147705078,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 91.09215545654297,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 88.1897201538086,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 87.55441284179688,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 84.51820373535156,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.02348327636719,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.16104888916016,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.60297393798828,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 85.70325469970703,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 82.64547729492188,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.56462097167969,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.52539825439453,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.66627502441406,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.64179992675781,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.45661926269531,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.45101165771484,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.60342407226562,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.60342407226562,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.60343933105469,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.60342407226562,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.60343933105469,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.6031265258789,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 79.0008316040039,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.80860900878906,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 83.5174331665039,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 84.64859771728516,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 79.4183349609375,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 500,
+        "episode_seconds": 1.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 84.0660629272461,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 88.07234191894531,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 87.99500274658203,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.81233215332031,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.59014129638672,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 88.06977081298828,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 85.8909683227539,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.26412963867188,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.74303436279297,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.39903259277344,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.70541381835938,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.45285034179688,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 1000,
+        "episode_seconds": 2.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.46392059326172,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.3954849243164,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.46834564208984,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.36328125,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.59354400634766,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.71305847167969,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.69942474365234,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.96715545654297,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 89.4609375,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 87.54126739501953,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 85.62748718261719,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 90.09410095214844,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 1500,
+        "episode_seconds": 3.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 85.71309661865234,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 0,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 87.87195587158203,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 3,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.67779541015625,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 6,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.05744171142578,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 9,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.66740417480469,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 12,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 86.97241973876953,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 15,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 1,
+        "to_command_cm_s": 0,
+        "neural_state_l2_at_boundary": 85.38152313232422,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 1,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.25679779052734,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 4,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.52285766601562,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 7,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.5597152709961,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 10,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.26546478271484,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 13,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.5131607055664,
+        "physical_or_neural_reset": false
+      },
+      {
+        "world": 16,
+        "episode_action": 2000,
+        "episode_seconds": 4.0,
+        "from_command_cm_s": 0,
+        "to_command_cm_s": 1,
+        "neural_state_l2_at_boundary": 93.51959228515625,
+        "physical_or_neural_reset": false
+      }
+    ],
+    "neural_resets_at_commands": 0,
+    "physical_resets_at_commands": 0,
+    "transition_labels": "current-state inherited walking reference; full initial-form stand",
+    "fixed_ground_labels": "frozen parent plus initial-form/resting-wing targets",
+    "hover_labels": "unchanged measured-state hover reference",
+    "runtime_module": false
+  },
+  "hover_feedback_supervision": {
+    "weight": 0.0,
+    "synthetic_sensor_inputs": 0,
+    "paired_worlds_per_chunk": 0,
+    "height_delta_cm": 0.2,
+    "vertical_speed_delta_cm_s": 2.0,
+    "difference_scales": {
+      "height": 0.02,
+      "vertical_speed": 0.01
+    },
+    "runtime_module": false,
+    "extra_physical_transitions": 0
+  },
+  "teacher_mix_by_task": {
+    "stand": 0.0,
+    "walk": 0.0,
+    "hover": 0.800000011920929
+  },
+  "startup_supervision": {
+    "hover_seconds": 0.05,
+    "weight": 1,
+    "weighted_presentations": 0,
+    "extra_physics_transitions": 0,
+    "runtime_module": false
+  },
+  "loss": "normalized weighted mean of active task motor MSE; hover adds 2x wing MSE; ground wing and task weights explicit; no utility loss",
+  "training_tasks": [
+    "stand",
+    "walk",
+    "hover"
+  ],
+  "ground_wing_loss_weight": 10.0,
+  "ground_posture": {
+    "target": "canonical initial hinge pose; zero wing angular velocity on stand and walk",
+    "initial_hinge_angles_rad": {
+      "walker/head_abduct": 0.0,
+      "walker/head_twist": 0.0,
+      "walker/head": 0.0,
+      "walker/rostrum": 0.0,
+      "walker/haustellum_abduct": 0.0,
+      "walker/haustellum": 0.0,
+      "walker/labrum_left": 0.0,
+      "walker/labrum_right": 0.0,
+      "walker/antenna_abduct_left": 0.0,
+      "walker/antenna_twist_left": 0.0,
+      "walker/antenna_left": 0.0,
+      "walker/antenna_abduct_right": 0.0,
+      "walker/antenna_twist_right": 0.0,
+      "walker/antenna_right": 0.0,
+      "walker/wing_yaw_left": 1.5,
+      "walker/wing_roll_left": 0.7,
+      "walker/wing_pitch_left": -1.0,
+      "walker/wing_yaw_right": 1.5,
+      "walker/wing_roll_right": 0.7,
+      "walker/wing_pitch_right": -1.0,
+      "walker/abdomen_abduct": 0.0,
+      "walker/abdomen": 0.0,
+      "walker/abdomen_abduct_2": 0.0,
+      "walker/abdomen_2": 0.0,
+      "walker/abdomen_abduct_3": 0.0,
+      "walker/abdomen_3": 0.0,
+      "walker/abdomen_abduct_4": 0.0,
+      "walker/abdomen_4": 0.0,
+      "walker/abdomen_abduct_5": 0.0,
+      "walker/abdomen_5": 0.0,
+      "walker/abdomen_abduct_6": 0.0,
+      "walker/abdomen_6": 0.0,
+      "walker/abdomen_abduct_7": 0.0,
+      "walker/abdomen_7": 0.0,
+      "walker/haltere_left": 0.0,
+      "walker/haltere_right": 0.0,
+      "walker/coxa_abduct_T1_left": 0.0,
+      "walker/coxa_twist_T1_left": 0.0,
+      "walker/coxa_T1_left": 0.0,
+      "walker/femur_twist_T1_left": 0.0,
+      "walker/femur_T1_left": 0.0,
+      "walker/tibia_T1_left": 0.0,
+      "walker/tarsus_T1_left": 0.0,
+      "walker/tarsus2_T1_left": 0.0,
+      "walker/tarsus3_T1_left": 0.0,
+      "walker/tarsus4_T1_left": 0.0,
+      "walker/tarsus5_T1_left": 0.0,
+      "walker/coxa_abduct_T1_right": 0.0,
+      "walker/coxa_twist_T1_right": 0.0,
+      "walker/coxa_T1_right": 0.0,
+      "walker/femur_twist_T1_right": 0.0,
+      "walker/femur_T1_right": 0.0,
+      "walker/tibia_T1_right": 0.0,
+      "walker/tarsus_T1_right": 0.0,
+      "walker/tarsus2_T1_right": 0.0,
+      "walker/tarsus3_T1_right": 0.0,
+      "walker/tarsus4_T1_right": 0.0,
+      "walker/tarsus5_T1_right": 0.0,
+      "walker/coxa_abduct_T2_left": 0.0,
+      "walker/coxa_twist_T2_left": 0.0,
+      "walker/coxa_T2_left": 0.0,
+      "walker/femur_twist_T2_left": 0.0,
+      "walker/femur_T2_left": 0.0,
+      "walker/tibia_T2_left": 0.0,
+      "walker/tarsus_T2_left": 0.0,
+      "walker/tarsus2_T2_left": 0.0,
+      "walker/tarsus3_T2_left": 0.0,
+      "walker/tarsus4_T2_left": 0.0,
+      "walker/tarsus5_T2_left": 0.0,
+      "walker/coxa_abduct_T2_right": 0.0,
+      "walker/coxa_twist_T2_right": 0.0,
+      "walker/coxa_T2_right": 0.0,
+      "walker/femur_twist_T2_right": 0.0,
+      "walker/femur_T2_right": 0.0,
+      "walker/tibia_T2_right": 0.0,
+      "walker/tarsus_T2_right": 0.0,
+      "walker/tarsus2_T2_right": 0.0,
+      "walker/tarsus3_T2_right": 0.0,
+      "walker/tarsus4_T2_right": 0.0,
+      "walker/tarsus5_T2_right": 0.0,
+      "walker/coxa_abduct_T3_left": 0.0,
+      "walker/coxa_twist_T3_left": 0.0,
+      "walker/coxa_T3_left": 0.0,
+      "walker/femur_twist_T3_left": 0.0,
+      "walker/femur_T3_left": 0.0,
+      "walker/tibia_T3_left": 0.0,
+      "walker/tarsus_T3_left": 0.0,
+      "walker/tarsus2_T3_left": 0.0,
+      "walker/tarsus3_T3_left": 0.0,
+      "walker/tarsus4_T3_left": 0.0,
+      "walker/tarsus5_T3_left": 0.0,
+      "walker/coxa_abduct_T3_right": 0.0,
+      "walker/coxa_twist_T3_right": 0.0,
+      "walker/coxa_T3_right": 0.0,
+      "walker/femur_twist_T3_right": 0.0,
+      "walker/femur_T3_right": 0.0,
+      "walker/tibia_T3_right": 0.0,
+      "walker/tarsus_T3_right": 0.0,
+      "walker/tarsus2_T3_right": 0.0,
+      "walker/tarsus3_T3_right": 0.0,
+      "walker/tarsus4_T3_right": 0.0,
+      "walker/tarsus5_T3_right": 0.0
+    },
+    "initial_root_height_cm": 0.1278,
+    "wing_kp": 0.02,
+    "wing_kd": 0.00015,
+    "stand_foot_adhesion": 0.0,
+    "method": "bounded corrective imitation labels; measured posture scores are not PPO rewards",
+    "passive_joints": "included in posture measurement; only existing actuators receive targets",
+    "runtime_override": false,
+    "wing_label_semantics": "constant resting position",
+    "gates": {
+      "ground_wing_max_deviation_rad": 0.2,
+      "ground_wing_velocity_rms_rad_s": 2.0,
+      "stand_group_angle_rms_rad": 0.15,
+      "stand_max_height_loss_fraction": 0.1
+    }
+  },
+  "wing_response_supervision": {
+    "weight": 0.0,
+    "ground_worlds_sampled_per_action": 0,
+    "angle_perturbation_rad": 0.05,
+    "speed_perturbation_rad_s": 2.0,
+    "kind": "paired synthetic wing feedback from copied actual prior neural state",
+    "normalization": "finite difference divided by the requested unsaturated response",
+    "extra_physics_worlds": 0,
+    "runtime_module": false
+  },
+  "optimizer": "fresh Adam for declared motor-only parameter subset",
+  "physical_success": "Training assistance is not student acceptance; run independent review"
+}

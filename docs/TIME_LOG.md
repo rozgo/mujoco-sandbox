@@ -904,3 +904,35 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   59.370403 s, 750 frames, 15 s at 50 fps / 1x. Hover fails; baseline retained.
 - Full suite: 135 passed, 37 dependency warnings, 107.49 s. Source lint passes.
   Both videos are decoded end-to-end, visually inspected and opened locally.
+
+## Fly within-episode command curriculum — September 13, 2026
+
+- Observed start 17:08:57 UTC; all video/capture reviews verified at 17:40:37 UTC,
+  31 minutes 40 seconds elapsed. Final archival/synchronization follows that
+  milestone. Code, tests, transfers, discussion and rendering are separate from
+  training time; overlapping tasks must not be summed as elapsed time.
+- Exactly two new imitation pilots, no PPO. Total measured training
+  **361.889425 s** (6 minutes 1.889 seconds), **289,792** physical world/action
+  transitions and **579.584** aggregate simulated seconds.
+- position_commands01: setup 11.449804 s; training 181.291996 s; collection/forward
+  144.621090 s; optimization 36.658112 s. 143,360 transitions, 140 updates,
+  84 within-episode command changes. All physical actions are student actions.
+- position_commands_recovery01: setup 11.886595 s; training 180.597429 s;
+  collection/forward 143.178561 s; optimization 37.405665 s. 146,432 transitions,
+  143 updates, 96 within-episode command changes. Only training hover blends
+  80% reference / 20% student; evaluation is unassisted in every case.
+- Both use 32 worlds: 12 changing ground commands, five fixed stand, five fixed
+  walk, ten hover. 16 native CPU MuJoCo/mjbatch threads, RTX 4090 neural work,
+  5 kHz physics and 500 Hz actions. Peak CUDA allocation 9,451,158,528 bytes each.
+- First pilot's continuous review: setup 8.859238 s, capture 49.772863 s;
+  primitive review: setup 6.967827 s, capture 30.739661 s. Recovery continuous:
+  setup 8.603532 s, capture 50.579070 s; primitives: setup 8.079782 s,
+  capture 31.541476 s. Each continuous review has 12,000 transitions and each
+  primitive review 7,500; 39,000 total evaluation transitions / 78 aggregate s.
+- First pilot video renders: continuous 115.950287 s; primitives 59.758829 s.
+  Recovery renders: continuous 115.300316 s; primitives 60.938229 s. Continuous
+  films are 24 s/1,200 frames; primitive films 15 s/750 frames. All 1600x900,
+  50 fps, 1x, fully decoded, visually inspected and opened.
+- First full suite: 137 passed in 111.67 s. After enabling explicitly labeled
+  hover guidance with ground switching: 138 passed in 115.99 s, 43 dependency
+  warnings. Focused command-state/label/mixture checks and source lint pass.

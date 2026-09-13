@@ -2568,3 +2568,43 @@ The next practical motor effort should teach command changes inside episodes,
 retain fixed-command rehearsal, and preserve the separate hover limitation.
 Takeoff/landing, learned utility, and the embodied multi-agent survival task
 remain unfinished; this round does not replace those requirements.
+
+### Learning continuous commands — 2026-09-13 17:40:37 UTC
+
+The previous turn produced new evidence and executable diagnostics. This round
+implements within-episode command training on the same body and graph actor.
+Twelve worlds switch stand/walk each second; five stand, five walk and ten hover
+rehearse fixed commands. Switching worlds learn from the current-state inherited
+walking reference or initial-form stand targets. Copying the frozen parent on
+these worlds would reinforce its failure to start walking. Fixed ground worlds
+retain the parent; no new deployed controller or raw-sensor bypass is introduced.
+
+Position_commands01 uses 181.291996 s of unassisted imitation and 143,360 physical
+transitions. Its 84 within-episode command changes preserve physical/neural state.
+The frozen evaluation now starts walking, stops and resumes in all three worlds,
+with approximately 1.9 cm per two-second walking phase. Standing/stopping pass;
+moving mean yaw remains above the 0.35 rad/s gate. Fresh-start walking curves and
+hover is lost. This is a useful practical gain, not the combined motor solution.
+
+One bounded recovery continuation lowers Adam LR to 1e-5 and blends 80% measured-
+state hover reference / 20% student during airborne training. Ground remains
+fully student-driven, with the same switching curriculum. Training takes
+180.597429 s and 146,432 transitions, with 96 command changes and zero episode
+failures. That training success includes assistance: the student still fails
+hover when evaluated alone. Ground switching is retained but slightly slower.
+Do not select this checkpoint or present assisted survival as learned flight.
+
+Every video uses one checkpoint across all its cases. No successful ground case
+is stitched to another actor's hover. Position_commands01 is the useful ground-
+transition candidate; position_sustain_retention01 remains the combined reference.
+The recovery candidate is preserved as failed. Yaw tracking, robust hover,
+takeoff/landing, utility learning and multi-agent survival remain unfinished.
+
+138 tests pass with 43 dependency warnings; source lint passes. Both training
+checkpoints, all 366 failed trace windows from the unassisted run, six complete
+primitive captures and six complete continuous captures are verified. The guided
+run emits no failure windows, so its mixture is evidenced by executed source,
+configuration and episode logs; its unassisted evaluation is fully captured.
+All four videos are decoded, visually inspected (including fall onsets), and
+opened locally. Body/graph identities, frozen normalization/utility parameters,
+bounded actions, observed commands and causal prior-action feedback are checked.

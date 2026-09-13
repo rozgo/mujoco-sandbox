@@ -1,0 +1,135 @@
+{
+  "checkpoint_sha256": "306f8924ee84a906b58e802d984f1125cbbba141f9b462410053e0fbe93a8b98",
+  "parent_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+  "graph_and_physical_contracts_match": true,
+  "frozen_tensors_verified": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed": [
+    {
+      "tensor": "core.excitability",
+      "delta_l2": 0.2202884554862976,
+      "changed_scalars": 165351
+    },
+    {
+      "tensor": "core.leak",
+      "delta_l2": 0.23544815182685852,
+      "changed_scalars": 165503
+    },
+    {
+      "tensor": "core.bias",
+      "delta_l2": 0.22350604832172394,
+      "changed_scalars": 165503
+    },
+    {
+      "tensor": "sensory_encoder.0.weight",
+      "delta_l2": 0.3029525578022003,
+      "changed_scalars": 48256
+    },
+    {
+      "tensor": "sensory_encoder.0.bias",
+      "delta_l2": 0.006993679329752922,
+      "changed_scalars": 128
+    },
+    {
+      "tensor": "sensory_encoder.2.weight",
+      "delta_l2": 1.2165696620941162,
+      "changed_scalars": 1416446
+    },
+    {
+      "tensor": "sensory_encoder.2.bias",
+      "delta_l2": 0.0648837611079216,
+      "changed_scalars": 11066
+    },
+    {
+      "tensor": "sensor_extension.weight",
+      "delta_l2": 0.06317038089036942,
+      "changed_scalars": 1789
+    },
+    {
+      "tensor": "motor_decoder.0.weight",
+      "delta_l2": 0.026641186326742172,
+      "changed_scalars": 815
+    },
+    {
+      "tensor": "motor_decoder.0.bias",
+      "delta_l2": 0.010693789459764957,
+      "changed_scalars": 815
+    },
+    {
+      "tensor": "motor_decoder.1.weight",
+      "delta_l2": 0.4705236554145813,
+      "changed_scalars": 208640
+    },
+    {
+      "tensor": "motor_decoder.1.bias",
+      "delta_l2": 0.007522319909185171,
+      "changed_scalars": 256
+    },
+    {
+      "tensor": "motor_decoder.3.weight",
+      "delta_l2": 0.15702463686466217,
+      "changed_scalars": 19456
+    },
+    {
+      "tensor": "motor_decoder.3.bias",
+      "delta_l2": 0.004797047004103661,
+      "changed_scalars": 76
+    },
+    {
+      "tensor": "wing_residual.network.0.weight",
+      "delta_l2": 0.39184966683387756,
+      "changed_scalars": 104320
+    },
+    {
+      "tensor": "wing_residual.network.0.bias",
+      "delta_l2": 0.007189486641436815,
+      "changed_scalars": 128
+    },
+    {
+      "tensor": "wing_residual.network.2.weight",
+      "delta_l2": 0.006565868854522705,
+      "changed_scalars": 512
+    },
+    {
+      "tensor": "wing_residual.network.2.bias",
+      "delta_l2": 0.0001668361364863813,
+      "changed_scalars": 4
+    }
+  ],
+  "core_gradient_audit": {
+    "excitability": {
+      "l2": 0.011986310593783855,
+      "finite": true
+    },
+    "leak": {
+      "l2": 0.005412922706454992,
+      "finite": true
+    },
+    "bias": {
+      "l2": 0.5251758694648743,
+      "finite": true
+    }
+  },
+  "trainable_parameters": 2336540,
+  "startup_supervision": {
+    "hover_seconds": 0.05,
+    "weight": 1,
+    "weighted_presentations": 0,
+    "extra_physics_transitions": 0,
+    "runtime_module": false
+  }
+}

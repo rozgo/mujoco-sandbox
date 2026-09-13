@@ -30,17 +30,38 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.montag
 ```
 
 The legacy transitions module's metrics are reused, but its legacy walking body
-and 59-action mask are not used. This check establishes a necessary motor
+and 59-action mask are not used. This check tests a necessary motor
 capability for later needs-driven behavior; it does not test utility, flight
 transitions or the survival arena.
 
 ## First result
 
 [position_sequence_01](runs/position_sequence_01/SUMMARY.md) is stable but fails
-walk/resume in all three worlds. A future curriculum should include changing
-ground commands while retaining physical state and recurrent memory. On those
-worlds, use current-state walking-reference labels: the frozen parent itself
+walk/resume in all three worlds. The opt-in training curriculum now changes
+ground commands while retaining physical state and recurrent memory. Switching
+worlds use current-state walking-reference labels: the frozen parent itself
 does not start walking after standing, so copying its output would reinforce
-the observed failure. Keep separate fixed-command rehearsal worlds and hover
-supervision in the same actor. This curriculum is proposed, not implemented by
-the evaluation module above.
+the observed failure. Fixed-command rehearsal worlds and hover supervision use
+the same actor. This is training exposure, not evidence that switching is learned.
+
+## Training
+
+[Declared first pilot](runs/position_commands_01/PLAN.md). The new options are
+`--ground-switch-seconds 1 --transition-worlds 12` on the existing motor_focus
+train CLI. They require the position body, all tasks, initial-form posture,
+ground retention, all parameters trainable and zero ground teacher action blending.
+The existing hover-mixture option may provide training-only airborne guidance;
+report it separately and always evaluate the student without it.
+Default zero switch interval preserves earlier recipes. At true episode
+failure/timeouts, restore the original command before the normal episode reset.
+
+Report both command-transition results and the unchanged fresh-start motor
+review. Each evaluation uses one checkpoint, all 78 actuators and no teachers.
+The command sequence is an externally requested task schedule; it is not a
+scripted gait or learned utility selection.
+
+[position_commands01](runs/position_commands_01/SUMMARY.md) learns start, stop
+and resume in all three worlds, with moving speed 0.973-0.981 cm/s. Full gates
+still fail on mean yaw. Hover also regresses, so this is a useful command-learning
+result rather than the completed motor release. The recovery pilot retains
+switching but also fails hover; both all-command reviews remain available.

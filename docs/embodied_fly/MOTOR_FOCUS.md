@@ -24,8 +24,12 @@ another boundary: after standing, this checkpoint fails to start walking or
 resume, despite staying upright. The commands and persistent neural/physical
 state are verified. The subsequent [height-response imitation pilot](runs/position_hover_response_01/PLAN.md)
 retains ground primitives but loses hover, so it does not replace the baseline.
-Practical command switching needs explicit within-episode training; separate
-fresh-start videos do not establish it.
+The subsequent [command curriculum](runs/position_commands_01/SUMMARY.md) now
+starts, stops and resumes in all three continuous worlds. Speed is close to
+the requested 1 cm/s, but yaw tracking and hover remain failed. A
+[guided recovery attempt](runs/position_commands_recovery_01/SUMMARY.md) preserves
+switching without restoring autonomous hover. These are separate developmental
+candidates, each a single actor; they do not replace the combined baseline.
 
 The historical torque-model development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
