@@ -15,6 +15,7 @@ import mujoco
 import numpy as np
 
 from embodied_fly.body import FlyEnvironment
+from embodied_fly.brain import ACTIVITIES
 from embodied_fly.observations import actor_observation
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.wing_motion import CONFIG
@@ -92,6 +93,9 @@ def run(args):
     env.command[:] = (args.speed, 0, 0)
     env.requested_height_cm = args.height
     oracle = WingReference(env, base, height=args.height, speed=args.speed, phase=args.phase)
+    forced_activity = getattr(args, "diagnostic_activity", None)
+    if forced_activity is not None and args.controller != "student":
+        raise ValueError("Activity intervention requires a student")
     actor = checkpoint = memory = projection = None
     if args.controller == "student":
         import torch
@@ -146,6 +150,11 @@ def run(args):
                     torch.as_tensor(actor_observation(env, actor)[None], device=args.device),
                     memory,
                     sample_activity=args.sampling == "policy",
+                    activity_override=torch.tensor(
+                        [ACTIVITIES.index(forced_activity)], device=args.device
+                    )
+                    if forced_activity is not None
+                    else None,
                 )
             memory = result.state
             if args.sampling == "policy":
@@ -214,7 +223,8 @@ def run(args):
         "student_present": actor is not None,
         "teacher_present": args.controller == "reference",
         "scripted_gait_present": False,
-        "policy_acceptance_eligible": actor is not None,
+        "policy_acceptance_eligible": actor is not None and forced_activity is None,
+        "diagnostic_activity_override": forced_activity,
         "reference_description": "training-only sinusoidal wing joint trajectory with height/speed feedback"
         if args.controller == "reference"
         else None,
@@ -355,6 +365,7 @@ if __name__ == "__main__":
     parser.add_argument("--heading", type=float, default=0)
     parser.add_argument("--phase", type=float, default=0)
     parser.add_argument("--neural-view", action="store_true")
+    parser.add_argument("--diagnostic-activity", choices=ACTIVITIES)
     parser.add_argument("--episodes", type=int, default=0)
     parser.add_argument("--seed", type=int, default=61001)
     parser.add_argument("--cold-start-phase", type=float)

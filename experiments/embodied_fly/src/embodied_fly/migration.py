@@ -19,7 +19,6 @@ from embodied_fly.observations import (
 )
 from embodied_fly.provenance import evidence, sha256, utc_now
 
-
 ABSOLUTE_TOLERANCE = {"action": 1e-6, "state": 1e-4, "utility_scores": 1e-6}
 ABSOLUTE_CEILING = {"action": 1e-5, "state": 1e-4, "utility_scores": 1e-6}
 

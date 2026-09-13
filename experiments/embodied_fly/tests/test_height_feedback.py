@@ -107,3 +107,52 @@ def test_migration_roundoff_rule_is_bounded_and_retains_signal():
     assert compatible_with_repetition(delta, repeat)
     assert not compatible_with_repetition(delta | {"action": 6e-6}, repeat)
     assert not compatible_with_repetition(delta | {"action": 1e-3}, repeat | {"action": 1e-3})
+
+
+def test_activity_intervention_is_captured_and_ineligible_for_policy_acceptance(
+    tmp_path, monkeypatch
+):
+    from embodied_fly import evaluate, motion_flight
+
+    class Actor:
+        sensor_extension_size = 14
+
+        def initial_state(self, worlds):
+            return torch.zeros(1, worlds)
+
+        def __call__(self, obs, state, sample_activity, activity_override):
+            assert obs.shape == (1, 397)
+            assert obs[0, -1] == 1
+            assert activity_override.item() == 1
+            return SimpleNamespace(
+                action=torch.zeros(1, 78),
+                state=state + 1,
+                utility_scores=torch.tensor([[1.0, 0, 0, 0, 0, 0]]),
+                activity=activity_override,
+            )
+
+    monkeypatch.setattr(evaluate, "load_actor", lambda *a: (Actor(), {"graph_sha256": "test"}))
+    checkpoint = tmp_path / "actor.pt"
+    checkpoint.write_bytes(b"test-only identity")
+    args = SimpleNamespace(
+        output=tmp_path / "capture",
+        controller="student",
+        checkpoint=checkpoint,
+        graph=tmp_path,
+        device="cpu",
+        seconds=0.004,
+        height=2,
+        speed=0,
+        heading=0,
+        phase=0,
+        sampling="mean",
+        seed=1,
+        neural_view=False,
+        diagnostic_activity="explore",
+    )
+    report = motion_flight.run(args)
+    assert report["diagnostic_activity_override"] == "explore"
+    assert not report["policy_acceptance_eligible"] and not report["teacher_present"]
+    with np.load(args.output / "flight.npz") as data:
+        np.testing.assert_array_equal(data["activity"], 1)
+        np.testing.assert_array_equal(data["requested_height_cm"], 2)
