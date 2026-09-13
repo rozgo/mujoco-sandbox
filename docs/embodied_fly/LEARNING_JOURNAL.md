@@ -1796,3 +1796,17 @@ Evaluate the fitted checkpoint on allthree full5s cases at developmentseed72001,
 with no teacher and no resets. A better offline fit does not establish physical
 success. This diagnostic fit tests whether the existing motor features can
 decode the required wing feedback before spending another end-to-end pilot.
+
+Readout01 collects32,000physicaltransitions in31.150358s, then fits in0.170996s.
+Selectedalpha0.001 lowers held-out command MSE72.9%, but physical standing falls,
+walking wing RMS worsens0.0631→0.2298rad and hover still fails. Preserve allresults;
+no promotion. Parent06's standing inputs show zero clipping in all ground wing
+angle/speed/previous-command channels, including both sensory paths.
+
+Declare previous-command response probes on06 and readout01, each with its own
+captured history and exact checkpoint verification. Perturb each previous wing
+command by±0.02, preserving every joint measurement and other input. Compare
+response after1/5/25 held-input neural updates. Frame0 has the same initial
+physical inputs and zero memory across candidates. Later histories differ.
+Report full6×6 response and spectral radius; this is a local sensory diagnostic,
+not a complete closed-loop stability proof. No physics or learning in the probe.

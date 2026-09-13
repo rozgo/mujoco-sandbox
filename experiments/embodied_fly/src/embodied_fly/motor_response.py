@@ -43,6 +43,17 @@ def perturb_feedback(model, observation, qpos, qvel, angle_delta=0.05, speed_del
     return result
 
 
+def perturb_commands(observation, wings, delta=0.02):
+    """Change previous executed wing commands only; preserve measured wing state."""
+    result = np.repeat(np.asarray(observation)[:, None], 13, axis=1)
+    for i, channel in enumerate(wings):
+        result[:, 1 + 2 * i, 297 + channel] += delta
+        result[:, 2 + 2 * i, 297 + channel] -= delta
+    if np.abs(result[:, :, 297:375]).max() > 1:
+        raise ValueError("Command probe would exceed normalized actuator bounds")
+    return result
+
+
 @torch.no_grad()
 def diagnose(args):
     args.output.mkdir(parents=True, exist_ok=False)
@@ -78,17 +89,23 @@ def diagnose(args):
     start = time.perf_counter()
     snapshots = []
     replay_error = 0.0
+    command_probe = getattr(args, "input_kind", "wing") == "previous-action"
     for step in range(max(args.frames) + 1):
         obs = np.stack([d["observation"][step] for d in captures])
         if step in args.frames:
-            variants = perturb_feedback(
-                model,
-                obs,
-                np.stack([d["qpos"][step] for d in captures]),
-                np.stack([d["qvel"][step] for d in captures]),
+            variants = (
+                perturb_commands(obs, wings)
+                if command_probe
+                else perturb_feedback(
+                    model,
+                    obs,
+                    np.stack([d["qpos"][step] for d in captures]),
+                    np.stack([d["qvel"][step] for d in captures]),
+                )
             )
             inputs = torch.as_tensor(variants.reshape(-1, 397), device=device)
-            state = memory.repeat_interleave(25, dim=1)
+            variant_count = variants.shape[1]
+            state = memory.repeat_interleave(variant_count, dim=1)
             normalized = (inputs - actor.observation_mean) / actor.observation_std.clamp_min(
                 0.05
             )
@@ -97,7 +114,28 @@ def diagnose(args):
                 state = output.state
                 if held_step not in (0, 4, 24):
                     continue
-                action = output.action.cpu().numpy().reshape(len(cases), 25, 78)[:, :, wings]
+                action = (
+                    output.action.cpu()
+                    .numpy()
+                    .reshape(len(cases), variant_count, 78)[:, :, wings]
+                )
+                if command_probe:
+                    response = ((action[:, 1::2] - action[:, 2::2]) / 0.04).transpose(0, 2, 1)
+                    for i, case in enumerate(cases):
+                        snapshots.append(
+                            {
+                                "case": case,
+                                "captured_time_seconds": step / 500,
+                                "held_input_updates": held_step + 1,
+                                "baseline_action": action[i, 0].tolist(),
+                                "previous_action_response": response[i].tolist(),
+                                "diagonals": np.diag(response[i]).tolist(),
+                                "spectral_radius": float(
+                                    np.abs(np.linalg.eigvals(response[i])).max()
+                                ),
+                            }
+                        )
+                    continue
                 angle_response = ((action[:, 1:13:2] - action[:, 2:13:2]) / 0.1).transpose(
                     0, 2, 1
                 )
@@ -142,7 +180,8 @@ def diagnose(args):
         "diagnostic_seconds": time.perf_counter() - start,
         "physical_transitions": 0,
         "training_updates": 0,
-        "parallel_neural_sequences": len(cases) * 25,
+        "parallel_neural_sequences": len(cases) * variant_count,
+        "input_kind": "previous-action" if command_probe else "wing",
         "replay_max_action_error": replay_error,
         "wing_channels": wings.tolist(),
         "expected_ground_angle_diagonal": -0.02 / 0.03,
@@ -154,7 +193,7 @@ def diagnose(args):
         .tolist(),
         "last_probe_encoder_clipped_fraction": float((normalized.abs() >= 10).float().mean()),
         "snapshots": snapshots,
-        "limitations": "Counterfactual held sensory inputs with copied captured-history neural state. No physical rollout, feedback correction, training or policy acceptance.",
+        "limitations": "Counterfactual held sensory inputs with copied captured-history neural state. No physical rollout, feedback correction, training or policy acceptance. A command-response spectral radius is not a complete closed-loop stability analysis.",
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(
@@ -174,4 +213,5 @@ if __name__ == "__main__":
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--frames", type=int, nargs="+", default=[0, 50, 250, 500])
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--input-kind", choices=("wing", "previous-action"), default="wing")
     diagnose(parser.parse_args())

@@ -1,7 +1,22 @@
 import numpy as np
 
 from embodied_fly.batch import FlyBatch
-from embodied_fly.motor_response import perturb_feedback
+from embodied_fly.motor_response import perturb_commands, perturb_feedback
+
+
+def test_previous_command_probe_keeps_all_measured_sensors_and_other_actions_unchanged():
+    obs = np.zeros((3, 397), np.float32)
+    obs[:, :297] = np.arange(297)
+    wings = np.arange(14, 20)
+    result = perturb_commands(obs, wings)
+    np.testing.assert_array_equal(
+        result[:, :, :297], np.repeat(obs[:, None, :297], 13, axis=1)
+    )
+    np.testing.assert_array_equal(result[:, :, 375:], 0)
+    for i, channel in enumerate(wings):
+        assert np.count_nonzero(result[:, 1 + 2 * i, 297:375]) == 3
+        np.testing.assert_allclose(result[:, 1 + 2 * i, 297 + channel], 0.02)
+        np.testing.assert_allclose(result[:, 2 + 2 * i, 297 + channel], -0.02)
 
 
 def test_counterfactual_wing_feedback_matches_native_observation_recomputation():
