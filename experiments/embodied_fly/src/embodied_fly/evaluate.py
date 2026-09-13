@@ -14,6 +14,7 @@ from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.brain import ACTIVITIES, EmbodiedBrain, load_malecns
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.observations import actor_observation
+from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -43,6 +44,7 @@ def load_actor(path, graph_path, device):
         checkpoint["action_size"],
         checkpoint["config"]["internal_steps"],
         checkpoint.get("sensor_extension_size", 0),
+        motor_only=checkpoint.get("motor_only", False),
     )
     brain.load_state_dict(checkpoint["state_dict"], strict=True)
     return brain.to(device).eval(), checkpoint
@@ -64,6 +66,10 @@ def evaluate(args):
         else None
     )
     environment = FlyEnvironment(args.physical_preset)
+    if actor.motor_only and checkpoint.get("physical_contract") != physical_contract(
+        environment.model
+    ):
+        raise ValueError("Motor checkpoint requires its recorded canonical physical fly")
     actor_dt = args.actor_interval
     if actor_dt < environment.control_dt or not np.isclose(
         actor_dt / environment.control_dt, round(actor_dt / environment.control_dt), atol=1e-10
@@ -227,6 +233,7 @@ def evaluate(args):
         "observation_size": actor.observation_size,
         "sensor_extension_size": actor.sensor_extension_size,
         "teacher_present": False,
+        "motor_only": actor.motor_only,
         "training_method": checkpoint.get("method"),
         "diagnostic_activity_override": args.diagnostic_activity,
         "policy_acceptance_eligible": forced_activity is None,

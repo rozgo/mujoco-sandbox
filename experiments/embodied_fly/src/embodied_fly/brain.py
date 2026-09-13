@@ -98,6 +98,7 @@ class EmbodiedBrain(nn.Module):
         action_size: int,
         internal_steps: int = 4,
         sensor_extension_size: int = 0,
+        motor_only: bool = False,
     ):
         super().__init__()
         if internal_steps < 2:
@@ -151,6 +152,18 @@ class EmbodiedBrain(nn.Module):
             nn.Tanh(),
         )
 
+        self.set_motor_only(motor_only)
+
+    def set_motor_only(self, enabled=True):
+        """A constant inherited context replaces utility arbitration for motor learning.
+
+        Preserve parameter layout and graph routing. No utility loss or choice can
+        interrupt movement. The inactive heads remain available for a later stage.
+        """
+        self.motor_only = bool(enabled)
+        self.utility_head.requires_grad_(not self.motor_only)
+        self.intention_encoder.requires_grad_(not self.motor_only)
+
     def initial_state(self, worlds: int):
         return self.core.bias.new_zeros((self.core.neurons, worlds))
 
@@ -182,9 +195,22 @@ class EmbodiedBrain(nn.Module):
             sensory.T,
         )
         state = self.core(state, drive, time_scale)
-        logits = self.utility_head(state[self.descending_ids].T)
-        scores = logits.softmax(dim=-1)
-        if activity_override is not None:
+        if self.motor_only:
+            if activity_override is not None and not bool((activity_override == 1).all()):
+                raise ValueError(
+                    "Motor-only checkpoint has a fixed context; utilities are disabled"
+                )
+            # Zero scores deliberately mean no active utility selector. Context 1
+            # reuses the inherited projection, without claiming an explore decision.
+            logits = observation.new_zeros((len(observation), len(ACTIVITIES)))
+            scores = torch.zeros_like(logits)
+            activity = torch.ones(len(observation), dtype=torch.long, device=state.device)
+        else:
+            logits = self.utility_head(state[self.descending_ids].T)
+            scores = logits.softmax(dim=-1)
+        if self.motor_only:
+            pass
+        elif activity_override is not None:
             activity = activity_override
         elif sample_activity:
             activity = torch.distributions.Categorical(logits=logits).sample()
@@ -195,7 +221,10 @@ class EmbodiedBrain(nn.Module):
         # RL may supply a sampled activity and use its categorical log probability.
         choice = (
             hard + scores - scores.detach()
-            if self.training and activity_override is None and not sample_activity
+            if self.training
+            and not self.motor_only
+            and activity_override is None
+            and not sample_activity
             else hard
         )
         drive = drive.index_add(0, self.descending_ids, self.intention_encoder(choice).T)

@@ -89,6 +89,10 @@ def record(source, case, output):
             if evaluation.get("controller") == "inactive"
             else "MALECNS STUDENT / wing control"
         )
+    if evaluation.get("motor_only"):
+        title = "MALECNS MOTOR CONTROLLER / utility selection disabled"
+    elif evaluation.get("mode") == "reference":
+        title = "MOTOR REFERENCE / training demonstration"
     if evaluation.get("diagnostic_activity_override"):
         title = (
             "UTILITY INTERVENTION / "
@@ -158,6 +162,8 @@ def record(source, case, output):
             if "command" in states:
                 command = states["command"][step]
                 context = f"target {command[0]:.1f} cm/s / yaw {command[2]:.2f} rad/s"
+            if case == "hover" and "requested_height_cm" in states:
+                context = f"target altitude {states['requested_height_cm'][step]:.2f} cm"
             draw.text(
                 (24, 60),
                 f"{case.upper()}  |  {context}  |  1x playback",
@@ -170,7 +176,7 @@ def record(source, case, output):
             for i, side in enumerate(("left", "right")):
                 eye.update_scene(data, camera=f"walker/eye_{side}", scene_option=option)
                 board.paste(Image.fromarray(eye.render()), (1125 + i * 235, 140))
-            if "utility" in states and not teacher:
+            if "utility" in states and not teacher and not evaluation.get("motor_only"):
                 draw.text((1125, 350), "LEARNED UTILITY SCORES", font=font(20), fill="#ffc31f")
                 scores = states["utility"][step]
                 for i, (name, score) in enumerate(zip(ACTIVITIES, scores)):
@@ -203,6 +209,39 @@ def record(source, case, output):
                         case_result.get("gate_label", "Raw tracking gate")
                         + ": "
                         + ("PASS" if case_result["success"] else "FAIL"),
+                        font=font(18),
+                        fill="#70a88a" if case_result["success"] else "#ce6654",
+                    )
+            elif evaluation.get("motor_only"):
+                draw.text((1125, 355), "ONE SHARED MOTOR BRAIN", font=font(20), fill="#ffc31f")
+                for y, label in zip(
+                    (400, 435, 470, 505, 540),
+                    (
+                        "Stand / walk / hover commands",
+                        "Same fly body in all three tasks",
+                        "All 78 actuator channels active",
+                        "No teacher during this evaluation",
+                        "Wing motion drives flight forces",
+                    ),
+                ):
+                    draw.text((1125, y), label, font=font(16), fill="#a8b0b5")
+                draw.text(
+                    (1125, 600),
+                    f"Altitude: {data.qpos[2]:.2f} cm",
+                    font=font(18),
+                    fill="#e6e1db",
+                )
+                if case_result:
+                    draw.text(
+                        (1125, 670),
+                        "Full-clip posture: "
+                        + ("STABLE" if case_result["stable"] else "UNSTABLE"),
+                        font=font(18),
+                        fill="#a8b0b5",
+                    )
+                    draw.text(
+                        (1125, 705),
+                        "Raw tracking gate: " + ("PASS" if case_result["success"] else "FAIL"),
                         font=font(18),
                         fill="#70a88a" if case_result["success"] else "#ce6654",
                     )

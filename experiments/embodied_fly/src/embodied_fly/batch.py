@@ -16,6 +16,7 @@ from mjbatch import Batch
 
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.observations import append_height, append_wing_angles, append_wing_velocity
+from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, utc_now
 from embodied_fly.wing_motion import WingMotionForces, configure_model
 
@@ -78,6 +79,8 @@ class FlyBatch:
         self.model.actuator_forcerange[:] = single.model.actuator_forcerange
         if preset == "wing_motion":
             configure_model(self.model)
+            if physical_contract(self.model) != physical_contract(single.model):
+                raise ValueError("Sensor augmentation changed the canonical fly physics")
         self.n = worlds
         self.batch = Batch(self.model, worlds, num_threads=threads)
         self.fields = {

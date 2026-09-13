@@ -1513,3 +1513,25 @@ The first CUDA height migration check (`a87078e`) stopped before training. Maxim
 For numerical compatibility only, retain the original fixed-tolerance result and additionally compare against twice the measured unchanged-parent variability, capped at absolute 1e-5 action / 1e-4 neural state / 1e-6 utility. This explicitly calibrated roundoff rule is unit-tested against larger mismatches and cannot change physical gates. Rerun under a new report name before the declared pilot; weights, data, task and optimizer recipe remain unchanged.
 
 A read-only analysis of brain01's retained hover shows appreciable wing motion through the rise and fall: mean absolute left/right sweep speeds are about 45/29 rad/s at 0.15–0.30 s. Rest selection occupies 35.5% of that window, while the wings become unequal. Correlation does not identify the cause. If the height-context pilot still fails, use one paired `explore` utility intervention on the same checkpoint and initial state to test whether activity selection is disrupting motor flight. It is explicitly ineligible for policy acceptance and introduces no teacher or body force changes.
+
+### Height outcome and motor-only course correction — 2026-09-13 05:04:49 UTC
+
+Height01 trained for 181.722557 s (106 updates / 108,544 reused examples), reducing
+validation motor MSE from 0.0207893 to 0.0179357. Both two-second flights failed,
+as did all six original ground cases. The paired fixed-explore intervention also
+failed hover (21.249 mm root RMSE versus 18.818 mm without intervention). No
+candidate was promoted. Activity selection alone did not rescue this checkpoint.
+
+The user requested motor learning first: stand idle, walk, hover; defer utility
+and survival intentions. They also required the same physical body everywhere.
+The new [motor pilot](MOTOR_FOCUS.md) uses the canonical wing-motion body for all
+three tasks, with a checkpoint-enforced physics fingerprint. No aerodynamic
+body or legacy walking preset is used in the new training/evaluation loop.
+
+Before optimization, declare 32 worlds (11 stand / 11 walk / 10 hover), 180 s,
+seed71001, fresh Adam1e-5, 32-step recurrent chunks and constant80% reference
+assistance. Resume the preserved angle01 walking diagnostic, add neutral height
+inputs, freeze utility selection/context weights and train current-state motor
+corrections. This changes the recipe deliberately; it is not a speed benchmark.
+Evaluation seed72001 uses the same saved actor across all tasks without assistance.
+Keep all failed gates and training evidence. The full survival goal remains open.

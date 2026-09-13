@@ -4,6 +4,11 @@ Work in progress on `feature/fly-brain`. This is the approved successor to the
 utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
+The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
+one command-conditioned actor and exactly the same wing-motion body in every
+task. Utility selection is temporarily disabled while these primitives are
+learned. Older presets and experiments below remain historical evidence.
+
 The current [ground review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
 shows one graph actor walking, attempting to stop and resuming, with synchronized
 simulated neural activity and observer eyes. Its stop gate still fails. Later

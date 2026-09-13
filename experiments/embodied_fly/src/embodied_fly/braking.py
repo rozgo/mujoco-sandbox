@@ -11,7 +11,8 @@ from embodied_fly.teacher import TeacherOracle
 
 
 class BrakingTeacher:
-    def __init__(self, environment, path, device="cpu"):
+    def __init__(self, environment, path, device="cpu", *, track_command=False):
+        self.track_command = track_command
         self.env = environment
         self.oracle = TeacherOracle(environment.template, path)
         self.policy = self.oracle.policy.to(device).eval()
@@ -48,6 +49,15 @@ class BrakingTeacher:
             "walker/" + k: env.mean_sensors[:, indices]
             for k, indices in oracle.sensors.items()
         }
+        displacement = np.repeat(local_delta[:, None], 65, axis=1)
+        if self.track_command:
+            if np.any(env.command[:, 1:] != 0):
+                raise ValueError("This motor stage supports straight walking commands only")
+            time = np.arange(65) * env.control_dt
+            future = np.zeros((env.n, 65, 3))
+            future[:, :, 0] = np.cos(heading)[:, None] * env.command[:, 0, None] * time
+            future[:, :, 1] = np.sin(heading)[:, None] * env.command[:, 0, None] * time
+            displacement += np.einsum("nki,nij->nkj", future, rotation)
         observation.update(
             {
                 "walker/actuator_activation": env.fields["act"][:, oracle.activation_ids],
@@ -59,7 +69,7 @@ class BrakingTeacher:
                 ],
                 "walker/joints_vel": env.fields["qvel"][:, model.jnt_dofadr[oracle.joint_ids]],
                 "walker/world_zaxis": rotation[:, 2],
-                "walker/ref_displacement": np.repeat(local_delta[:, None], 65, axis=1),
+                "walker/ref_displacement": displacement,
                 "walker/ref_root_quat": np.repeat(relative[:, None], 65, axis=1),
             }
         )

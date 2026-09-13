@@ -1,0 +1,535 @@
+"""Motor-first curriculum: stand, walk, hover in one body with one graph actor.
+
+References label bounded joint commands only during training. Evaluation runs the
+same motor-only checkpoint with no utility selector, teacher or wing oscillator.
+"""
+
+import argparse
+import json
+import time
+from collections import deque
+from pathlib import Path
+
+import mujoco
+import numpy as np
+import torch
+
+from embodied_fly.batch import FlyBatch
+from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
+from embodied_fly.braking import BrakingTeacher
+from embodied_fly.evaluate import load_actor
+from embodied_fly.motion_flight import initialize
+from embodied_fly.neural_view import NeuralProjection
+from embodied_fly.physical_contract import physical_contract
+from embodied_fly.provenance import evidence, sha256, utc_now
+from embodied_fly.train import synchronize
+from embodied_fly.wing_motion import CONFIG
+
+TASKS = ("stand", "walk", "hover")
+
+
+class MotorTasks:
+    def __init__(self, env, seed):
+        self.env = env
+        self.rng = np.random.default_rng(seed)
+        self.task_ids = np.arange(env.n) % 3
+        self.ground = {
+            k: getattr(env.template.data, k).copy() for k in ("qpos", "qvel", "act", "ctrl")
+        }
+        self.air_action = initialize(env.template)
+        self.air = {k: getattr(env.template.data, k).copy() for k in self.ground}
+        env.template.reset()
+        self.start = np.zeros((env.n, 3))
+        self.heading = np.zeros(env.n)
+        self.reset(np.arange(env.n))
+
+    def reset(self, ids):
+        ids = np.asarray(ids, np.int64)
+        if not len(ids):
+            return
+        hovering = self.task_ids[ids] == 2
+        state = {
+            k: np.stack([(self.air if h else self.ground)[k] for h in hovering])
+            for k in self.ground
+        }
+        heading = self.rng.uniform(-0.15, 0.15, len(ids))
+        state["qpos"][:, 3:7] = 0
+        state["qpos"][:, 3] = np.cos(heading / 2)
+        state["qpos"][:, 6] = np.sin(heading / 2)
+        state["qpos"][hovering, 2] = self.rng.uniform(1.8, 2.2, int(hovering.sum()))
+        self.env.reset(ids, state=state)
+        self.env.command[ids] = 0
+        self.env.command[ids, 0] = (self.task_ids[ids] == 1).astype(float)
+        self.env.requested_height_cm[ids] = np.where(hovering, state["qpos"][:, 2], 0)
+        self.env.needs[ids] = 0
+        self.start[ids] = state["qpos"][:, :3]
+        self.heading[ids] = heading
+
+    def failed(self):
+        height = self.env.fields["qpos"][:, 2]
+        upright = self.env.fields["xmat"][:, self.env.template.thorax_id, 8]
+        return (upright < 0.5) | (height < np.where(self.task_ids == 2, 0.5, 0.06))
+
+
+class MotorTeacher:
+    """Batched current-state corrections; this object never controls evaluation."""
+
+    def __init__(self, tasks, teacher_path, device):
+        self.tasks, self.env = tasks, tasks.env
+        self.ground = BrakingTeacher(self.env, teacher_path, device, track_command=True)
+        self.channels = np.array(
+            [
+                self.env.model.actuator(self.env.model.joint(j).name).id
+                for j in self.env.template.wing_joint_ids
+            ]
+        )
+
+    @torch.no_grad()
+    def act(self):
+        e, t, c = self.env, self.tasks, CONFIG
+        actions = self.ground.act().cpu().numpy()
+        ids = np.flatnonzero(t.task_ids == 2)
+        if not len(ids):
+            return actions
+        angle = e.fields["qpos"][ids][:, e.template.wing_angle_indices]
+        velocity = e.fields["qvel"][ids][:, e.template.wing_velocity_indices]
+        body_velocity = e.velocity()[ids]
+        omega = 2 * np.pi * 12
+        phase = omega * e.ages[ids] * e.control_dt
+        amplitude = np.clip(
+            c.reference_sweep_speed / (c.lift_weight_multiplier * 48)
+            + 0.8 * (e.requested_height_cm[ids] - e.fields["qpos"][ids, 2])
+            - 0.045 * body_velocity[:, 5],
+            0.12,
+            1.15,
+        )
+        stroke = 0.7 + np.clip(-0.1 * body_velocity[:, 3], -0.6, 0.6)
+        desired = np.column_stack((amplitude * np.sin(phase), stroke, -np.ones(len(ids))))
+        speed = np.column_stack((amplitude * omega * np.cos(phase), np.zeros((len(ids), 2))))
+        acceleration = np.column_stack(
+            (-amplitude * omega**2 * np.sin(phase), np.zeros((len(ids), 2)))
+        )
+        desired, speed, acceleration = (
+            np.tile(a, (1, 2)) for a in (desired, speed, acceleration)
+        )
+        spring = e.model.qpos_spring[e.template.wing_angle_indices]
+        torque = (
+            c.angular_armature * acceleration
+            + c.joint_damping * speed
+            + c.joint_stiffness * (desired - spring)
+            + 0.02 * (desired - angle)
+            + 0.00015 * (speed - velocity)
+        )
+        actions[ids] = t.air_action
+        actions[np.ix_(ids, self.channels)] = np.clip(torque / c.joint_torque_limit, -1, 1)
+        return actions
+
+
+def load_motor_actor(path, graph_path, device):
+    old, parent = load_actor(path, graph_path, device)
+    if old.observation_size == 397:
+        actor = old
+    else:
+        graph, sensory, descending, motor = load_malecns(graph_path)
+        actor = EmbodiedBrain(
+            graph, sensory, descending, motor, 397, 78, old.internal_steps, 14
+        )
+        initialize_extended_actor(actor, parent["state_dict"])
+        actor.core.adjacency, actor.core.transpose = old.core.adjacency, old.core.transpose
+        actor = actor.to(device)
+    actor.set_motor_only()
+    return actor, parent
+
+
+def review(args):
+    """Matched three-task physical reference or autonomous student evaluation."""
+    args.output.mkdir(parents=True, exist_ok=False)
+    started = time.perf_counter()
+    provenance = evidence()
+    torch.set_num_threads(4)
+    device = torch.device(args.device)
+    env = FlyBatch(3, 3, 14, preset="wing_motion")
+    tasks = MotorTasks(env, args.seed)
+    actor = reference = memory = projection = None
+    if args.mode == "reference":
+        reference = MotorTeacher(tasks, args.teacher, device)
+    else:
+        actor, checkpoint = load_actor(args.resume, args.graph, device)
+        if checkpoint["physical_contract"] != physical_contract(env.model):
+            raise ValueError("Evaluation must use the checkpoint's exact physical fly")
+        if not actor.motor_only or actor.observation_size != 397:
+            raise ValueError(
+                "Motor review requires an explicit motor-only 397-input checkpoint"
+            )
+        actor.eval()
+        memory = actor.initial_state(3)
+        if args.neural_view:
+            projection = NeuralProjection.from_graph(args.graph, device)
+    mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
+    setup = time.perf_counter() - started
+    rows = []
+    maps = []
+    metrics = []
+    started = time.perf_counter()
+    failure = None
+    for step in range(round(args.seconds / env.control_dt)):
+        obs = env.observation()
+        with torch.no_grad():
+            if actor is not None:
+                result = actor(torch.as_tensor(obs, device=device), memory)
+                memory = result.state
+                action = result.action.cpu().numpy()
+                if projection is not None and step % 10 == 0:
+                    maps.append(projection.project(memory).astype(np.float16))
+            else:
+                action = reference.act()
+        rows.append(
+            {
+                "qpos": env.fields["qpos"].copy(),
+                "qvel": env.fields["qvel"].copy(),
+                "activation": env.fields["act"].copy(),
+                "ctrl": env.fields["ctrl"].copy(),
+                "observation": obs.copy(),
+                "action": action.copy(),
+                "time": np.full(3, step * env.control_dt),
+                "command": env.command.copy(),
+                "requested_height_cm": env.requested_height_cm.copy(),
+                "wing_activity": env.wing_forces.activity.copy(),
+                "wing_wrench": env.wing_forces.wrench.copy(),
+            }
+        )
+        try:
+            env.step(action)
+        except RuntimeError as error:
+            failure = str(error)
+            break
+        target = tasks.start.copy()
+        distance = (step + 1) * env.control_dt * env.command[:, 0]
+        target[:, 0] += distance * np.cos(tasks.heading)
+        target[:, 1] += distance * np.sin(tasks.heading)
+        v = env.velocity()
+        metrics.append(
+            {
+                "height": env.fields["qpos"][:, 2].copy() * 0.01,
+                "upright": env.fields["xmat"][:, env.template.thorax_id, 8].copy(),
+                "speed_error": v[:, 3] - env.command[:, 0],
+                "yaw_error": v[:, 2],
+                "root_error": np.linalg.norm(env.fields["qpos"][:, :3] - target, axis=1)
+                * 0.01,
+            }
+        )
+    elapsed = time.perf_counter() - started
+    results = []
+    for i, task in enumerate(TASKS):
+        arrays = {k: np.stack([r[k][i] for r in rows]) for k in rows[0]}
+        if projection is not None:
+            arrays.update(
+                neural_map=np.stack([m[i] for m in maps]),
+                neural_occupancy=projection.occupancy,
+                neural_map_stride=10,
+            )
+        np.savez_compressed(args.output / f"{task}.npz", **arrays)
+        measurements = {k: np.array([m[k][i] for m in metrics]) for k in metrics[0]}
+        stable = measurements["upright"].min() > 0.5 and measurements["height"].min() > (
+            0.005 if task == "hover" else 0.0006
+        )
+        rmse = lambda key, values=measurements: float(np.sqrt(np.mean(values[key] ** 2)))
+        support = float(env.forbidden_peak[i] / env.body_weight)
+        passed = stable and support < 0.1 and failure is None
+        if task == "hover":
+            passed &= rmse("root_error") < 0.005
+        else:
+            passed &= rmse("speed_error") < 0.5 and rmse("yaw_error") < 0.5
+        results.append(
+            {
+                "case": task,
+                "stable": bool(stable),
+                "success": bool(passed),
+                "root_tracking_rmse_m": rmse("root_error"),
+                "speed_rmse_cm_s": rmse("speed_error"),
+                "yaw_rmse_rad_s": rmse("yaw_error"),
+                "minimum_height_m": float(measurements["height"].min()),
+                "minimum_upright": float(measurements["upright"].min()),
+                "max_forbidden_ground_force_over_weight": support,
+                "state_sha256": sha256(args.output / f"{task}.npz"),
+            }
+        )
+    report = {
+        "provenance": provenance,
+        "completed_utc": utc_now(),
+        "mode": args.mode,
+        "motor_only": actor is not None,
+        "teacher_present": reference is not None,
+        "student_present": actor is not None,
+        "controller": "student" if actor else "reference",
+        "one_checkpoint_for_all_cases": actor is not None,
+        "policy_acceptance_eligible": actor is not None,
+        "physical_preset": "wing_motion",
+        "physical_contract": physical_contract(env.model),
+        "physics_hz": 5000,
+        "control_hz": 500,
+        "environment": env.template.report(),
+        "model_sha256": sha256(args.output / "model.mjb"),
+        "setup_seconds": setup,
+        "stepping_and_capture_seconds": elapsed,
+        "simulated_seconds_per_world": len(metrics) * env.control_dt,
+        "parallel_physics_worlds": 3,
+        "seed": args.seed,
+        "checkpoint_sha256": sha256(args.resume) if actor else None,
+        "teacher_sha256": sha256(args.teacher) if reference else None,
+        "neural_view": projection.report() if projection is not None else None,
+        "warning_count": int(env.fields["warning"].sum()),
+        "numerical_failure": failure,
+        "results": results,
+        "scope": "motor primitives from declared initial states; no takeoff, landing or learned utility",
+    }
+    (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    print(
+        json.dumps(
+            {k: v for k, v in report.items() if k not in ("environment", "provenance")}
+        ),
+        flush=True,
+    )
+    return report
+
+
+def train(args):
+    if args.worlds < 3 or min(args.seconds, args.sequence, args.lr) <= 0:
+        raise ValueError("Need positive training settings and at least three worlds")
+    if not 0 <= args.teacher_mix <= 1:
+        raise ValueError("Teacher mixture must be in [0,1]")
+    args.output.mkdir(parents=True, exist_ok=False)
+    started = time.perf_counter()
+    provenance = evidence()
+    torch.set_num_threads(4)
+    torch.manual_seed(args.seed)
+    device = torch.device(args.device)
+    actor, parent = load_motor_actor(args.resume, args.graph, device)
+    actor.train()
+    env = FlyBatch(args.worlds, args.threads, 14, preset="wing_motion")
+    tasks = MotorTasks(env, args.seed)
+    teacher = MotorTeacher(tasks, args.teacher, device)
+    mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
+    optimizer = torch.optim.Adam(
+        [p for p in actor.parameters() if p.requires_grad], lr=args.lr
+    )
+    memory = actor.initial_state(args.worlds)
+    frozen = {
+        k: v.detach().clone()
+        for k, v in actor.state_dict().items()
+        if k.startswith(("utility_head.", "intention_encoder."))
+    }
+    initial_core = {k: v.detach().clone() for k, v in actor.core.named_parameters()}
+    transitions = updates = 0
+    episodes = []
+    trace = deque(maxlen=64)
+    gradient_audit = None
+    collection_seconds = optimization_seconds = 0.0
+    synchronize(device)
+    setup = time.perf_counter() - started
+    started_utc = utc_now()
+    started = time.perf_counter()
+    with (args.output / "progress.jsonl").open("x") as log:
+        while time.perf_counter() - started < args.seconds:
+            start = time.perf_counter()
+            memory = memory.detach()
+            losses = []
+            per_task = [[] for _ in TASKS]
+            for _ in range(args.sequence):
+                obs = env.observation()
+                target = torch.as_tensor(teacher.act(), device=device)
+                result = actor(torch.as_tensor(obs, device=device), memory)
+                memory = result.state
+                error = (result.action - target).square().mean(-1)
+                flight = torch.as_tensor(tasks.task_ids == 2, device=device)
+                error = error + 2 * flight * (
+                    result.action[:, teacher.channels] - target[:, teacher.channels]
+                ).square().mean(-1)
+                group_losses = [
+                    error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
+                    for i in range(3)
+                ]
+                losses.append(torch.stack(group_losses).mean())
+                for i, value in enumerate(group_losses):
+                    per_task[i].append(float(value.detach()))
+                student = result.action.detach().cpu().numpy()
+                target_np = target.cpu().numpy()
+                executed = (1 - args.teacher_mix) * student + args.teacher_mix * target_np
+                trace.append(
+                    {
+                        "qpos": env.fields["qpos"].copy(),
+                        "qvel": env.fields["qvel"].copy(),
+                        "activation": env.fields["act"].copy(),
+                        "ctrl": env.fields["ctrl"].copy(),
+                        "observation": obs.copy(),
+                        "student_action": student.copy(),
+                        "teacher_action": target_np.copy(),
+                        "executed_action": executed.copy(),
+                        "wing_activity": env.wing_forces.activity.copy(),
+                        "wing_wrench": env.wing_forces.wrench.copy(),
+                        "requested_height_cm": env.requested_height_cm.copy(),
+                    }
+                )
+                env.step(executed)
+                transitions += args.worlds
+                failed = tasks.failed()
+                done = failed | (env.ages >= round(args.episode_seconds / env.control_dt))
+                ids = np.flatnonzero(done)
+                for i in ids:
+                    info = None
+                    if failed[i]:
+                        window = list(trace)[-min(int(env.ages[i]), len(trace)) :]
+                        file = args.output / f"failure_{len(episodes):05d}.npz"
+                        np.savez_compressed(
+                            file, **{k: np.stack([r[k][i] for r in window]) for k in window[0]}
+                        )
+                        info = {
+                            "file": file.name,
+                            "sha256": sha256(file),
+                            "frames": len(window),
+                        }
+                    episodes.append(
+                        {
+                            "task": TASKS[tasks.task_ids[i]],
+                            "failed": bool(failed[i]),
+                            "simulated_seconds": float(env.ages[i] * env.control_dt),
+                            "teacher_mix": args.teacher_mix,
+                            "failure_trace": info,
+                        }
+                    )
+                tasks.reset(ids)
+                memory = actor.reset_worlds(memory, torch.as_tensor(done, device=device))
+            synchronize(device)
+            collection_seconds += time.perf_counter() - start
+            start = time.perf_counter()
+            optimizer.zero_grad(set_to_none=True)
+            loss = torch.stack(losses).mean()
+            if not torch.isfinite(loss):
+                raise RuntimeError("Nonfinite motor loss")
+            loss.backward()
+            if gradient_audit is None:
+                gradient_audit = {
+                    n: {
+                        "l2": float(p.grad.norm()),
+                        "finite": bool(torch.isfinite(p.grad).all()),
+                    }
+                    for n, p in actor.core.named_parameters()
+                }
+                if not all(x["finite"] and x["l2"] > 0 for x in gradient_audit.values()):
+                    raise RuntimeError("Core must receive motor gradients")
+            torch.nn.utils.clip_grad_norm_(actor.parameters(), 1)
+            optimizer.step()
+            synchronize(device)
+            optimization_seconds += time.perf_counter() - start
+            updates += 1
+            if updates == 1 or updates % 10 == 0:
+                row = {
+                    "seconds": time.perf_counter() - started,
+                    "updates": updates,
+                    "transitions": transitions,
+                    "task_motor_loss": dict(zip(TASKS, map(np.mean, per_task))),
+                    "completed_episodes": len(episodes),
+                    "failed_episodes": sum(e["failed"] for e in episodes),
+                }
+                log.write(json.dumps(row) + "\n")
+                log.flush()
+                print(json.dumps(row), flush=True)
+    synchronize(device)
+    elapsed = time.perf_counter() - started
+    assert all(torch.equal(actor.state_dict()[k], v) for k, v in frozen.items())
+    config = {k: v for k, v in vars(args).items() if not isinstance(v, Path)}
+    config["internal_steps"] = actor.internal_steps
+    checkpoint = {
+        "state_dict": {k: v.detach().cpu() for k, v in actor.state_dict().items()},
+        "optimizer_state_dict": optimizer.state_dict(),
+        "motor_only": True,
+        "physical_contract": physical_contract(env.model),
+        "observation_size": 397,
+        "sensor_extension_size": 14,
+        "action_size": 78,
+        "config": config,
+        "source_commit": provenance["source_commit"],
+        "graph_sha256": parent["graph_sha256"],
+        "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
+        "parent_checkpoint_sha256": sha256(args.resume),
+        "method": "motor-only online imitation on actual teacher/student-mixture physical states",
+    }
+    torch.save(checkpoint, args.output / "actor.pt")
+    report = {
+        "provenance": provenance,
+        "started_utc": started_utc,
+        "completed_utc": utc_now(),
+        "config": config,
+        "motor_only": True,
+        "physical_contract": physical_contract(env.model),
+        "utility_and_intention_weights_unchanged": True,
+        "graph_sha256": parent["graph_sha256"],
+        "parent_checkpoint_sha256": sha256(args.resume),
+        "checkpoint_sha256": sha256(args.output / "actor.pt"),
+        "model_sha256": sha256(args.output / "model.mjb"),
+        "setup_seconds": setup,
+        "training_seconds": elapsed,
+        "collection_forward_seconds": collection_seconds,
+        "backward_optimization_seconds": optimization_seconds,
+        "updates": updates,
+        "transitions": transitions,
+        "aggregate_simulated_seconds": transitions * env.control_dt,
+        "parallel_physics_worlds": args.worlds,
+        "worlds_by_task": dict(zip(TASKS, np.bincount(tasks.task_ids, minlength=3).tolist())),
+        "physics_backend": "native CPU MuJoCo/mjbatch",
+        "brain_device": str(device),
+        "physics_hz": 5000,
+        "control_hz": 500,
+        "neurons": actor.core.neurons,
+        "connections": actor.core.connections,
+        "actor_parameters": sum(p.numel() for p in actor.parameters()),
+        "trainable_parameters": sum(p.numel() for p in actor.parameters() if p.requires_grad),
+        "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(device)
+        if device.type == "cuda"
+        else 0,
+        "core_gradient_audit": gradient_audit,
+        "core_parameter_changes": {
+            k: float((v.detach() - initial_core[k]).norm())
+            for k, v in actor.core.named_parameters()
+        },
+        "completed_episodes": episodes,
+        "teacher_present_during_collection": True,
+        "loss": "equal mean of stand/walk/hover motor MSE; hover adds 2x wing MSE; no utility loss",
+        "optimizer": "fresh Adam for declared motor-only parameter subset",
+        "physical_success": "Training assistance is not student acceptance; run independent review",
+    }
+    (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    print(
+        json.dumps(
+            {k: v for k, v in report.items() if k not in ("provenance", "completed_episodes")}
+        ),
+        flush=True,
+    )
+    return report
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mode", choices=("reference", "train", "evaluate"))
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--teacher", type=Path)
+    parser.add_argument("--resume", type=Path)
+    parser.add_argument("--graph", type=Path)
+    parser.add_argument("--device", default="cuda")
+    parser.add_argument("--seconds", type=float, default=2)
+    parser.add_argument("--seed", type=int, default=71001)
+    parser.add_argument("--worlds", type=int, default=32)
+    parser.add_argument("--threads", type=int, default=16)
+    parser.add_argument("--sequence", type=int, default=32)
+    parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--teacher-mix", type=float, default=0.8)
+    parser.add_argument("--episode-seconds", type=float, default=2)
+    parser.add_argument("--neural-view", action="store_true")
+    args = parser.parse_args()
+    if args.mode in ("train", "reference") and args.teacher is None:
+        parser.error("Reference and training require --teacher")
+    if args.mode in ("train", "evaluate") and (args.resume is None or args.graph is None):
+        parser.error("Student requires --resume and --graph")
+    result = train(args) if args.mode == "train" else review(args)
+    if args.mode != "train" and not all(r["success"] for r in result["results"]):
+        raise SystemExit(2)

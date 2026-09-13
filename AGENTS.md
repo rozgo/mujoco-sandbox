@@ -100,6 +100,8 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 
 ## Cameras and videos are part of the deliverable
 
+- User preference: automatically open each completed training video on the local Mac after checking the encoded file, using `open` with its absolute path. Do not wait for another request to show it.
+
 - Provide an overview, a useful following/detail view and task-relevant mounted cameras: head/wrists for manipulation, front views for rovers, and aircraft/payload views for delivery. Render each camera and check framing and occlusion during the task.
 - State whether camera pixels are controller inputs or observer output. A visible camera feed does not imply computer vision or autonomy.
 - Record timestamps, poses, velocities, controls, measured forces and task events before producing the final video. Include seeds, configuration and scene/checkpoint hashes in run provenance. Re-render a validated run for camera or layout changes; store changing cable/attachment/release state needed to reconstruct it.
@@ -123,3 +125,12 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 - Update run instructions, assumptions, provenance and measured results with the implementation. Preserve third-party attribution. Cite original papers or official documentation for external technical claims; separate those results from this repo's measurements.
 - Keep public explanations concise and accurate: distinguish learned prediction from programmed control, sensor rendering from perception, physical simulation from replay, and elapsed development time from training time. Do not infer the acting model's version from a user's draft wording.
 - Review `git diff --check` and the staged changes, then commit completed work when requested or already authorized. Keep checkpoints understandable and the working tree clean without discarding user changes. Publishing or messaging others requires its own authorization.
+
+
+## Canonical fly body for motor learning
+
+User requirement, September 13, 2026: use the **same physical FlyBody for standing, walking, hovering, training and evaluation**. New motor work uses the `wing_motion` preset and `physical_contract.py`; do not silently use the old walking or aerodynamic preset for any part of that curriculum. Checkpoints record a physical fingerprint and evaluation must match it. Old experiments remain preserved as historical evidence.
+
+Wing bodies have **zero mass and spatial inertia**, no collisions and no aerodynamic terms. Their six actuated coordinates retain only independent diagonal armature for angular response. Wing movement must not create mechanical reaction on the body; the declared flight model is the only wing-to-body force path. Keep and run the decoupled-mass and disabled-force-law tests when changing this configuration. Observer cameras and added sensors may differ; robot mechanics and the force law must match.
+
+The current requested stage is motor learning only: stand idle, walk and hover from airborne starts. Utility selection and needs-driven survival behavior are deferred. Deploy one command-conditioned checkpoint; preserve fixed motor context at load/evaluation and do not label it learned intention selection.

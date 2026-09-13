@@ -164,6 +164,10 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
     critic = Critic(brain).to(device)
+    if brain.motor_only:
+        raise ValueError(
+            "Use the motor curriculum trainer; utility PPO is not a motor-only objective"
+        )
     env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size, preset=args.preset)
     control_dt = env.control_dt
     time_scale = control_dt / CONTROL_DT

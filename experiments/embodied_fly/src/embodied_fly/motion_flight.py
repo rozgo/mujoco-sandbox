@@ -17,6 +17,7 @@ import numpy as np
 from embodied_fly.body import FlyEnvironment
 from embodied_fly.brain import ACTIVITIES
 from embodied_fly.observations import actor_observation
+from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.wing_motion import CONFIG
 
@@ -104,6 +105,10 @@ def run(args):
 
         torch.set_num_threads(4)
         actor, checkpoint = load_actor(args.checkpoint, args.graph, torch.device(args.device))
+        if getattr(actor, "motor_only", False) and checkpoint.get(
+            "physical_contract"
+        ) != physical_contract(env.model):
+            raise ValueError("Motor checkpoint requires its recorded canonical physical fly")
         torch.manual_seed(args.seed)
         if args.sampling == "policy" and (
             "log_std" not in checkpoint
@@ -222,6 +227,7 @@ def run(args):
         "sampling_seed": args.seed if actor is not None else None,
         "student_present": actor is not None,
         "teacher_present": args.controller == "reference",
+        "motor_only": getattr(actor, "motor_only", False),
         "scripted_gait_present": False,
         "policy_acceptance_eligible": actor is not None and forced_activity is None,
         "diagnostic_activity_override": forced_activity,
