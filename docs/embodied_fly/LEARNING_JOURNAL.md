@@ -1660,3 +1660,54 @@ Declare motor_focus04: resume03, seed71004,180 seconds,32 worlds(11/11/10),
 ground posture targets and increase ground wing imitation weight2→10. Everything
 else, including the one actor and canonical body, stays the same. Evaluate all
 three cases teacher-free for5 seconds at seed72001, retaining all failures.
+
+Motor-focus04 completed180.182772s/161updates/164,864transitions. Despite
+assisted improvement, all unassisted5-second cases fail. Stand/walk leave the
+envelope at0.344/0.338s. The initial stand wing action reaches−0.155 normalized
+when its correct rest target is0. At100ms all six stand wing commands push in
+the direction of displacement instead of restoring it. Reference assistance
+kept training states near rest; that accuracy did not transfer to autonomous
+error states. Preserve the complete failed evaluation and film.
+
+Declare motor_focus05: resume04,180s,seed71005,same32worlds/body/network/targets/
+loss/Adam settings. Change only **teacher mixture25%→0%**: execute student
+commands exclusively, while obtaining corrective imitation labels from the
+actual states the student visits. This remains supervised online learning,
+not PPO, and keeps one actor for all commands. Evaluate the same5-second cases
+at development seed72001. Do not modify wing mass, contacts or runtime outputs.
+
+Motor-focus05 executes only student actions during learning. After181.025272s,
+153updates/156,672transitions, both ground cases remain upright with valid
+support for5s. Standing height loss is3.48%;max wing deviation0.298rad. Walking
+max wing deviation0.250rad andwing velocity RMS1.686rad/s. Both strict posture
+and tracking gates still fail;hover falls. This is clear recovery from04,with
+remaining posture error.
+
+Declare motor_focus06: same recipe as05, resume05,seed71006,**120seconds**.
+Keepzero execution assistance,32worlds,allthree tasks,samebrain/body/targets/
+weights. The justified extra allowance targets the remaining posture error
+after autonomous ground survival recovered. Evaluate allthree5-second cases
+at seed72001;retain05 and open its review while06 trains.
+
+Motor-focus06 preserves five-second ground stability. Stand height loss drops
+3.48%→1.01%, leg RMS0.178→0.142rad and remaining-body RMS0.0767→0.0587rad.
+Ground wing errors remain too large visually:stand/walk maxima0.270/0.270rad.
+The wing velocity checks pass, but angle checks fail. Hover remains failed.
+
+Declare motor_focus07: resume06,seed71007,120s,zero execution assistance,32worlds
+and unchanged targets/body/actor. Increase only ground wing loss10→100 to give
+rest-wing accuracy priority over small errors across the other72 outputs. This
+is a bounded targeted accuracy check, not evidence the issue is already fixed.
+Keep every prior checkpoint/video; evaluate allthree5-second cases at72001.
+
+Motor-focus07 completed120.509577s/105updates/107,520transitions. Both ground
+cases stay upright for5s,but wing RMS worsens to0.1443/0.0830rad(stand/walk)
+from06's0.1140/0.0631. Stand sag improves slightly to0.751%. Keep06 as the
+preferred ground checkpoint;neither passes full posture/tracking gates,and
+hover remains failed. Do not escalate weights again without a new diagnosis.
+
+Across04–07:one physical body/oneactor ancestry;four bounded pilots with all
+outputs learned,all failures retained. Addedinitial-formtargets,direct wing
+angle/velocity correction labels,and physical pose measurements. Body collapse
+is substantially improved,but rest-wing accuracy still needs work. No claim
+of recovered biological behavior or completedflight is supported.

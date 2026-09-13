@@ -163,6 +163,8 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
         seconds=0.01,
         lr=1e-5,
         teacher_mix=1.0,
+        ground_posture=True,
+        ground_wing_loss=10.0,
         episode_seconds=2.0,
         seed=7,
         resume=resume,
@@ -173,6 +175,9 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
     checkpoint = torch.load(args.output / "actor.pt", weights_only=True)
     assert checkpoint["motor_only"] and report["utility_and_intention_weights_unchanged"]
     assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": 1}
+    assert report["ground_posture"]["runtime_override"] is False
+    assert checkpoint["config"]["ground_posture"] is True
+    assert report["ground_wing_loss_weight"] == 10
     assert report["transitions"] >= 6
     assert report["checkpoint_sha256"] == sha256(args.output / "actor.pt")
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in fixed.items())

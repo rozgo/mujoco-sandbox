@@ -1,0 +1,138 @@
+{
+  "recorded_utc": "2026-09-13T06:52:38.961926+00:00",
+  "scope": "initial-form correction04-07 only; earlier ancestry and experiments excluded from these totals",
+  "runs": [
+    {
+      "config": {
+        "mode": "train",
+        "device": "cuda",
+        "seconds": 180.0,
+        "seed": 71004,
+        "worlds": 32,
+        "threads": 16,
+        "sequence": 32,
+        "lr": 1e-05,
+        "teacher_mix": 0.25,
+        "ground_wing_loss": 10.0,
+        "ground_posture": true,
+        "episode_seconds": 2.0,
+        "neural_view": false,
+        "internal_steps": 4
+      },
+      "training_seconds": 180.18277223361656,
+      "setup_seconds": 7.528581325896084,
+      "transitions": 164864,
+      "aggregate_simulated_seconds": 329.728,
+      "collection_forward_seconds": 140.22513495665044,
+      "backward_optimization_seconds": 39.9408567128703,
+      "checkpoint_sha256": "2f669d51fb14114b8d11bced1706d5e2b3799a02537c854edb5cc8517ba1bb4f"
+    },
+    {
+      "config": {
+        "mode": "train",
+        "device": "cuda",
+        "seconds": 180.0,
+        "seed": 71005,
+        "worlds": 32,
+        "threads": 16,
+        "sequence": 32,
+        "lr": 1e-05,
+        "teacher_mix": 0.0,
+        "ground_wing_loss": 10.0,
+        "ground_posture": true,
+        "episode_seconds": 2.0,
+        "neural_view": false,
+        "internal_steps": 4
+      },
+      "training_seconds": 181.0252718650736,
+      "setup_seconds": 7.638945338781923,
+      "transitions": 156672,
+      "aggregate_simulated_seconds": 313.344,
+      "collection_forward_seconds": 143.03565743751824,
+      "backward_optimization_seconds": 37.97270530182868,
+      "checkpoint_sha256": "d3c318e675133cb49681244c261a8fe6231b2313fdf2a5d57481c1304ddf0f59"
+    },
+    {
+      "config": {
+        "mode": "train",
+        "device": "cuda",
+        "seconds": 120.0,
+        "seed": 71006,
+        "worlds": 32,
+        "threads": 16,
+        "sequence": 32,
+        "lr": 1e-05,
+        "teacher_mix": 0.0,
+        "ground_wing_loss": 10.0,
+        "ground_posture": true,
+        "episode_seconds": 2.0,
+        "neural_view": false,
+        "internal_steps": 4
+      },
+      "training_seconds": 120.11307141417637,
+      "setup_seconds": 8.004374749958515,
+      "transitions": 107520,
+      "aggregate_simulated_seconds": 215.04,
+      "collection_forward_seconds": 93.94795487681404,
+      "backward_optimization_seconds": 26.15543780475855,
+      "checkpoint_sha256": "138b7fc43c925cba5261922c3ab538b29152271166e5039a0aaf48a3441585f4"
+    },
+    {
+      "config": {
+        "mode": "train",
+        "device": "cuda",
+        "seconds": 120.0,
+        "seed": 71007,
+        "worlds": 32,
+        "threads": 16,
+        "sequence": 32,
+        "lr": 1e-05,
+        "teacher_mix": 0.0,
+        "ground_wing_loss": 100.0,
+        "ground_posture": true,
+        "episode_seconds": 2.0,
+        "neural_view": false,
+        "internal_steps": 4
+      },
+      "training_seconds": 120.50957725802436,
+      "setup_seconds": 8.126440327614546,
+      "transitions": 107520,
+      "aggregate_simulated_seconds": 215.04,
+      "collection_forward_seconds": 94.30811342177913,
+      "backward_optimization_seconds": 26.191176720894873,
+      "checkpoint_sha256": "4f327c1d0a1e6443d6952b444338d020bf6d37660d1ed0879e902eca1980dfac"
+    }
+  ],
+  "total_training_seconds": 601.8306927708909,
+  "total_transitions": 536576,
+  "total_aggregate_simulated_seconds": 1073.152,
+  "preferred_development_checkpoint": "motor_focus_06",
+  "accepted": false,
+  "reason": "reduced sag and retained5s ground stability; rest-wing and tracking gates still fail,hover falls",
+  "videos": [
+    {
+      "run": "motor_focus_04",
+      "seconds": 59.501658665947616,
+      "sha256": "61e86c4bf4f43231e5704202e79a85f2d9ceaad8ee11179a65721de7beb12867",
+      "frames": 750
+    },
+    {
+      "run": "motor_focus_05",
+      "seconds": 61.33585558400955,
+      "sha256": "e7ea1122edf08ee4d27e4d321ad0fa65135a70484172c64c0eb4aba916b6b509",
+      "frames": 750
+    },
+    {
+      "run": "motor_focus_06",
+      "seconds": 60.05413983296603,
+      "sha256": "4f58c268dd6f83c7fc2ec848a92719f2b0a8f97d039423c093fe3f29e53c18a9",
+      "frames": 750
+    },
+    {
+      "run": "motor_focus_07",
+      "seconds": 59.753756124991924,
+      "sha256": "9c93486469cb4be7057d68b562d8669315d4007e804f2233014076ad46978e2b",
+      "frames": 750
+    }
+  ]
+}

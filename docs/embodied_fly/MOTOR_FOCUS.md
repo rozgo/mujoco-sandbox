@@ -108,3 +108,32 @@ Evaluation records every hinge's initial angle, separate leg/wing/body errors,
 wing speed and body sag. These measured scores supplement the existing physical
 gates. Training currently optimizes corrective imitation, not a physical PPO
 reward; passive joints are measured but not given invented actuators.
+
+The first initial-form continuation04 regressed autonomous ground control under
+25% reference assistance.05 and06 execute only student actions during collection
+while fitting corrective labels. Both ground commands then remain upright for
+five seconds;06 reduces standing sag to1.01% and initial leg/body RMS to
+0.142/0.0587rad. Six wing joints still miss the stricter rest-angle gate.
+Increasing ground wing weight10→100 in07 slightly improves body shape but worsens
+wing-angle accuracy. Keep06 as the preferred development review; no promotion.
+
+[Watch the current review](../../previews/embodied_fly/motor_focus_06_all_tasks_v1.mp4).
+
+Reproduce its final continuation on the GPU host, after synchronizing the same
+source and artifacts (use an unused output folder):
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_focus train \
+  --graph outputs/fly_survival/malecns \
+  --resume assets/embodied_fly/diagnostics/motor_focus_05.pt \
+  --teacher assets/embodied_fly/teachers/walking.npz \
+  --output outputs/embodied_fly/motor_focus_06_reproduction \
+  --device cuda --seconds 120 --worlds 32 --threads 16 --sequence 32 \
+  --teacher-mix 0 --ground-posture --ground-wing-loss 10 \
+  --episode-seconds 2 --lr 0.00001 --seed 71006
+```
+
+The remaining gap is learned wing-position accuracy, not a missing physical
+ability: the exact-pose reference passes. An unchanged continuation or another
+larger loss weight is not yet justified by07. Preserve one body and one actor;
+do not introduce runtime output masks to turn this into a visual-only success.
