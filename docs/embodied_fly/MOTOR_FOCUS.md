@@ -152,3 +152,45 @@ changes. [Pilot08](runs/motor_focus_08/SUMMARY.md) completes 181.01 s of trainin
 without changing the body, observation scaling or runtime architecture.
 Its response probe improves descriptively, but physical wing accuracy worsens.
 Keep06 preferred. A useful response loss is not itself proof of motor success.
+
+## Frozen decoder calibration
+
+`ground_readout` tests whether existing MaleCNS motor features can decode the
+required wing feedback. Collection executes the frozen parent actor on the
+canonical body. Counterfactual angle/speed observations copy its actual prior
+memory and do not advance physics. Only six existing output rows are fitted;
+the graph, sensory encoding, hidden decoder, other output rows and physical
+model stay fixed. Whole worlds, including all their variants, are held out.
+
+The [first fit](runs/ground_readout_01/SUMMARY.md) lowers held-out command MSE
+72.9% but regresses physical standing/walking. It is a diagnostic candidate,
+not a new preferred policy. Previous-command sensitivity probes do not show
+strong local self-amplification. A [follow-up fit](runs/ground_readout_02/SUMMARY.md)
+pools the candidate's own physical histories with the original examples. It
+recovers upright standing but loses walking stability; all full gates fail.
+Keep06 preferred and stop output-row-only calibration. Future motor learning
+must address the full sensory-to-motor representation and physical outcomes.
+
+Reproduce the first fit on the GPU host with synchronized assets and unused
+output directories; these are supervised collection/fitting commands, not PPO:
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ground_readout collect \
+  --checkpoint assets/embodied_fly/diagnostics/motor_focus_06.pt \
+  --graph outputs/fly_survival/malecns --device cuda \
+  --worlds 32 --threads 16 --seconds 2 --seed 73009 \
+  --output outputs/embodied_fly/readout_reproduction_corpus
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.ground_readout fit \
+  --checkpoint assets/embodied_fly/diagnostics/motor_focus_06.pt \
+  --cache outputs/embodied_fly/readout_reproduction_corpus --device cuda \
+  --output outputs/embodied_fly/readout_reproduction
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_focus evaluate \
+  --resume outputs/embodied_fly/readout_reproduction/actor.pt \
+  --graph outputs/fly_survival/malecns --device cuda --seconds 5 --seed 72001 \
+  --neural-view --output outputs/embodied_fly/readout_reproduction_evaluation
+```
+
+`ground_readout pool` accepts another cache with its original checkpoint only
+after verifying that the complete upstream feature map is identical. It keeps
+the source hashes and original training/validation world partitions. Pooling
+reuses examples and collects no additional physical experience.

@@ -1827,3 +1827,17 @@ Fit the same six output rows with the same ridge grid/weighting, then evaluate
 allthree5s cases at72001. This tests distribution shift using the candidate's
 actual trajectories, not an unchanged continuation or an additional runtime
 controller. Keep06 selected until physical evidence supports a better result.
+
+Readout02 collects another32,000physicaltransitions in31.473841s, pools112,000
+examples in9.079576s and fits in0.212640s. Alpha0.1 is selected. Standing remains
+upright but its wing RMS is0.4342rad;walking falls;hover loses altitude. All
+complete gates fail. New-corpus validation MSE0.05639→0.02840 is not comparable
+to01's different validation corpus. Keep06 preferred. Stop six-output-row
+calibration: it improves static label fit without producing a better controller.
+
+Next motor work should update the sensory-to-motor representation from actual
+ground trajectories, with initial-form and wing feedback supervision, before
+resuming the harder flight curriculum. Preserve one canonical body and one
+command-conditioned actor. No new actuation model, input bypass or runtime
+wing override has been introduced. Full survival integration remains deferred
+by the user's motor-first instruction.
