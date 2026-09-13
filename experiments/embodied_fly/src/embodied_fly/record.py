@@ -237,7 +237,8 @@ def record(source, case, output):
                 if case_result:
                     draw.text(
                         (1125, 670),
-                        "Upright for full clip: " + ("YES" if case_result["stable"] else "NO"),
+                        ("Airborne + upright: " if case == "hover" else "Ground stability: ")
+                        + ("YES" if case_result["stable"] else "NO"),
                         font=font(18),
                         fill="#a8b0b5",
                     )
