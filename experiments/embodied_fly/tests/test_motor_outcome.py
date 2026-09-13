@@ -131,6 +131,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         hover_physical=physical,
         hover_only=hover_only,
         bounded_hover_reward=bounded,
+        hover_vertical_speed_scale=2.0 if bounded else 5.0,
         reset_critic=bounded,
         critic_lr=1e-4,
         checkpoint_activations=physical,

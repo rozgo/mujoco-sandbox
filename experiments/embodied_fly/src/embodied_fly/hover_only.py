@@ -116,8 +116,11 @@ class HoverBalancedReward(HoverOnlyReward):
     -1 and terminates. Preserve the old cost recipe for its recorded runs.
     """
 
-    def __init__(self, env):
+    def __init__(self, env, vertical_speed_scale_cm_s=5.0):
         super().__init__(env)
+        if not np.isfinite(vertical_speed_scale_cm_s) or vertical_speed_scale_cm_s <= 0:
+            raise ValueError("Hover vertical-speed scale must be finite and positive")
+        self.vertical_speed_scale_cm_s = float(vertical_speed_scale_cm_s)
         self.recipe = {
             k: v
             for k, v in self.recipe.items()
@@ -125,6 +128,7 @@ class HoverBalancedReward(HoverOnlyReward):
         }
         self.recipe.update(
             version="hover_bounded_scores_v2",
+            vertical_speed_scale_cm_s=self.vertical_speed_scale_cm_s,
             score_formula="1 / sqrt(1 + normalized_error**2)",
             alive_rate=0.5,
             maximum_reward_rate=6.1,
@@ -156,7 +160,7 @@ class HoverBalancedReward(HoverOnlyReward):
             "horizontal_position": score(
                 np.linalg.norm(q[:, :2] - e.requested_xy_cm, axis=1) / 0.1
             ),
-            "vertical_velocity": score(v[:, 2] / 5),
+            "vertical_velocity": score(v[:, 2] / self.vertical_speed_scale_cm_s),
             "horizontal_velocity": score(np.linalg.norm(v[:, :2], axis=1) / 0.5),
             "upright": 0.5 * np.clip(up, 0, 1),
             "angular_velocity": 0.1 * score(np.linalg.norm(e.velocity()[:, :3], axis=1)),

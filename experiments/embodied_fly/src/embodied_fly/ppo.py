@@ -196,6 +196,11 @@ def train(args):
     bounded_hover = getattr(args, "bounded_hover_reward", False)
     reset_critic = getattr(args, "reset_critic", False)
     reset_exploration = getattr(args, "reset_exploration", False)
+    hover_speed_scale = getattr(args, "hover_vertical_speed_scale", 5.0)
+    if not np.isfinite(hover_speed_scale) or hover_speed_scale <= 0:
+        raise ValueError("Hover vertical-speed scale must be finite and positive")
+    if hover_speed_scale != 5.0 and not bounded_hover:
+        raise ValueError("Custom hover speed scale requires bounded hover reward")
     if bounded_hover and not hover_only:
         raise ValueError("Bounded hover reward requires hover-only training")
     if hover_only and (not hover_physical or args.preset != "wing_position"):
@@ -262,7 +267,11 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     if (
         hover_only
-        and parent.get("config", {}).get("bounded_hover_reward", False) != bounded_hover
+        and (
+            parent.get("config", {}).get("bounded_hover_reward", False) != bounded_hover
+            or parent.get("config", {}).get("hover_vertical_speed_scale", 5.0)
+            != hover_speed_scale
+        )
         and not reset_critic
     ):
         raise ValueError("Changed hover reward requires an explicit fresh critic")
@@ -355,7 +364,7 @@ def train(args):
                 if bounded_hover:
                     from embodied_fly.hover_only import HoverBalancedReward
 
-                    reward_fn = HoverBalancedReward(env)
+                    reward_fn = HoverBalancedReward(env, hover_speed_scale)
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
         if flight_resets or motor_mode
@@ -1121,6 +1130,12 @@ if __name__ == "__main__":
     parser.add_argument("--hover-physical", action="store_true")
     parser.add_argument("--hover-only", action="store_true")
     parser.add_argument("--bounded-hover-reward", action="store_true")
+    parser.add_argument(
+        "--hover-vertical-speed-scale",
+        type=float,
+        default=5.0,
+        help="Bounded hover reward vertical-speed scale in cm/s; changed reward requires --reset-critic",
+    )
     parser.add_argument("--reset-critic", action="store_true")
     parser.add_argument("--reset-exploration", action="store_true")
     parser.add_argument("--critic-lr", type=float, default=3e-4)

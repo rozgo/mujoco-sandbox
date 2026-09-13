@@ -61,6 +61,8 @@ Standing and walking are deferred in this revised curriculum; the prior checkpoi
 stays preserved. One actor continues across motor stages. Accurate hover remains
 open, and no later stage or utility learning occurred in this comparison round.
 
+The latest completed [pilot05](runs/hover_only_05/SUMMARY.md) removes training falls in 192 completed episodes but leaves learned hover visibly oscillatory. [Video v5](../../previews/embodied_fly/hover_only_pid_comparison_v5.mp4) remains a development comparison. Phase-response diagnosis and one tighter vertical-motion reward continuation are next; both controllers already act at 500 Hz.
+
 ## Historical torque-model experiments
 
 The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)

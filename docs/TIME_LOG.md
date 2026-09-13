@@ -1068,3 +1068,12 @@ goal milestone, not a completion time; final archiving/synchronization follows.
   retains three ten-second airborne starts, but all fail accurate-hover gates.
   PID statistics are identical across the five matched captures. All raw results
   and failed pilots are preserved; no fifth training run occurs this round.
+
+## September 13 — hover pilot05 and subsequent phase-response effort
+
+- Prior round observed start 21:49:24 UTC; video v5 opened 22:14:51 UTC: 25 min 27 s to the review milestone. Archival completed in the following effort.
+- Pilot05 actual training 614.579483 s, setup 7.411084 s; 491,520 transitions, 983.040 aggregate simulated seconds, 64 worlds, 16 CPU physics threads, RTX4090 neural work.
+- Two frozen audits: capture 22.267412 / 21.843646 s, setup 6.721828 / 7.050627 s, replay .817538 / .826064 s; each 40,000 physical transitions, zero optimization.
+- Pilot05 review capture 36.782516 s; final render 63.556083 s. Video ten seconds, 500 frames, 50 fps, 1600x900, 1x; full decode and sampled-frame inspection passed.
+- Pilot05 full suite: 175 passed in 152.17 s; 45 dependency warnings.
+- Current user-approved phase-response and tighter-reward effort observed start **2026-09-13 22:45:53 UTC**. Training/evaluation/render timings will be measured separately.

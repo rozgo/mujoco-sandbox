@@ -110,3 +110,32 @@ Open the newest comparison on macOS:
 ```sh
 open previews/embodied_fly/hover_only_pid_comparison_v4.mp4
 ```
+
+## Exploration check and next continuation
+
+Two frozen, five-second probes compare replicated deterministic controls with
+eight independent noise trajectories from the same nominal start. At the saved
+.003 latent standard deviation, three sampled worlds fail; at .001, all eight
+remain airborne. The latter are closer to deterministic height variation and
+produce approximately the same mean lift. These are nominal development probes,
+not evidence of generalization. Both retain all failed paths.
+
+Full-graph likelihood replay without any parameter update has mean approximate
+KL1.09e-5 and2.61e-6 in those probes, respectively. It is not bitwise exact, but
+these values are far below the .03 update threshold. This check concerns forward
+values; it does not validate long-horizon gradient quality.
+
+`--reset-exploration` explicitly changes only the saved exploration parameter and
+its Adam moments. It preserves actor weights, actor Adam history and (unless
+separately requested) critic weights/Adam. Merely supplying `--noise` on an
+ordinary resume intentionally retains the parent's learned distribution. The
+initial effective standard deviations are now recorded in the training report.
+
+The [next continuation](runs/hover_only_05/PLAN.md) uses .001 noise/floor and
+1e-7 actor LR while keeping the rest of pilot04's physical PPO recipe. Reduced
+exploration can also make it harder to escape a poor motion pattern, so success
+still requires an independent physical review rather than fewer training falls.
+
+## Fifth pilot and the next feedback check
+
+Pilot05 completes 192 training episodes without failure after 614.579 s, but three ten-second evaluation starts still fail accurate-hover gates. The [v5 comparison](../../previews/embodied_fly/hover_only_pid_comparison_v5.mp4) is the latest completed hover video. See [results](runs/hover_only_05/SUMMARY.md). Slower wingbeats are learned motion, not a slower action clock: both controllers issue commands every 2 ms. The user approved phase-matched response diagnostics followed by one tighter vertical-motion PPO pilot. No new physical model, wing oscillator, direct body control or next motor stage is authorized by that change.

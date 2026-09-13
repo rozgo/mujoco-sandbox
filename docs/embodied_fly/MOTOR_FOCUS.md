@@ -1,11 +1,13 @@
 # Motor learning: stand, walk and hover
 
-Current scope: one MaleCNS actor, one physical fly, three motor commands. Utility
-selection and needs-driven behavior are deferred. Takeoff, landing and transitions
-between ground and air remain later requirements; the first pilot starts each
-primitive from its declared ground or airborne state.
+Current scope is the [hover-first curriculum](HOVER_FIRST.md), following user
+acceptance of the1kHz instantaneous-wing-force PID reference. All64 current
+training worlds hover; utility and ground tasks are deferred until this primitive
+is usable. One actor will continue through flight/turning, stand, landing, walking
+and takeoff on that same body. The experiments below used earlier physical
+contracts and remain historical evidence, not current-plant acceptance.
 
-The latest [motor candidate](runs/position_sustain_retention_01/SUMMARY.md) passes
+The earlier [motor candidate](runs/position_sustain_retention_01/SUMMARY.md) passes
 standing, retains forward walking and remains airborne/upright for its complete
 five-second review. Hover root RMSE is 6.00 mm, still above the 5 mm gate;
 walking yaw also fails. The earlier position_motion01 candidate is preserved.

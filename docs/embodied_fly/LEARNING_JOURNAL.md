@@ -2754,3 +2754,7 @@ and failures, use fixed matched overviews and labeled detail insets, and are
 fully decoded, visually inspected and opened. Raw reports, checkpoint hashes,
 source revisions, traces and the comparison limitations are archived. No fifth
 training run starts in this review round.
+
+## September 13 — smaller exploration and wingbeat diagnosis
+
+Frozen .003/.001 exploration probes and pilot05 are archived with their raw reports. All 192 completed pilot05 episodes survive; mean altitude error improves modestly, height span and nearly 6 cm drift remain. Actor/critic updates are now uninterrupted, but steady accurate hover is not learned. The settled waveform diagnosis distinguishes 500 Hz control from 9.25 Hz learned wing cycles. PID has a programmed 30 Hz rhythm; the actor must generate its own. Low-amplitude disturbances at four wing phases will test response timing before one reward continuation. See hover_only_05 and hover_response_01 run evidence.

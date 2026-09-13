@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import mujoco
 import numpy as np
+import pytest
 import torch
 from scipy import sparse
 from test_motor_focus import tiny_brain
@@ -118,3 +119,22 @@ def test_bounded_hover_scores_never_make_valid_airborne_failure_cheaper():
     reward, failed, _ = new(env.previous_action)
     assert failed[:2].all()
     np.testing.assert_array_equal(reward[:2], -1)
+
+
+def test_tighter_hover_speed_reward_changes_only_vertical_motion_score():
+    env = FlyBatch(2, 1, 16, preset="wing_position", wing_response="instant", physics_hz=1000)
+    HoverOnlyTasks(env, 903)
+    old, new = HoverBalancedReward(env), HoverBalancedReward(env, 2)
+    env.fields["qvel"][:, 2] = [-5, 5]
+    _, _, before = old(env.previous_action)
+    rewards, failed, after = new(env.previous_action)
+    assert np.all(after["vertical_velocity"] < before["vertical_velocity"])
+    for key in before:
+        if key != "vertical_velocity":
+            np.testing.assert_array_equal(before[key], after[key])
+    np.testing.assert_array_equal(rewards[:1], rewards[1:])
+    assert not failed.any() and np.all(rewards >= 0.498 * env.control_dt)
+    assert new.recipe["vertical_speed_scale_cm_s"] == 2
+    for scale in (0, -1, float("nan"), float("inf")):
+        with pytest.raises(ValueError, match="finite and positive"):
+            HoverBalancedReward(env, scale)
