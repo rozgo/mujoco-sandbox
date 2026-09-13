@@ -12,15 +12,14 @@ Ground support remains stable, but strict posture/tracking gates and hover are
 incomplete. It is a development checkpoint, not a released motor solution.
 Earlier ground_outcome03 and motor_focus06 remain preserved.
 
-The latest [nonlinear readout trial](runs/nonlinear_motor_readout_01/SUMMARY.md)
-improves predictions on recorded histories but fails live walking and hover.
-It adds a feedforward wing decoder from existing motor-neuron activity, with all
-original actor weights and the body unchanged. Its full failure video is retained;
-it does not replace retention02. The subsequent
-[online trial](runs/nonlinear_online_01/SUMMARY.md) keeps standing and walking
-upright in its full review, but wing posture and hover still fail. It learns
-corrections on its own physical states, with the same body and one actor. See the learning journal
-and immutable per-run evidence for outcomes and timing.
+The latest sequence trains the existing wing-sensor encoder and nonlinear motor
+readout through the fixed graph, then freezes that encoder for a decoder-only
+follow-up. The [encoder trial](runs/wing_feedback_01/SUMMARY.md) fails standing
+and hover in its complete review. The [staged follow-up](runs/feedback_readout_01/SUMMARY.md)
+keeps standing and walking upright, but resting-wing posture and hover still fail.
+Both are diagnostics; neither replaces retention02. Each checkpoint controls
+all three commands with the same physical body. Full videos, failure traces,
+parameter-boundary checks and measured timings are archived in the run reports.
 
 Every world uses `wing_motion`: 5 kHz native MuJoCo physics and 500 Hz control.
 The checkpoint records a fingerprint of masses, inertias, joints, contacts,

@@ -2342,3 +2342,11 @@ Wing_feedback01 completes180.484524s after10.227206s setup,148,480transitions/29
 Full seed72013review:standing/hoverfall,walkingstaysupright butposturefails,allstrictgatesfail,zero numericalwarnings. Setup6.308202s,capture32.135790s. The complete15s film isdecoded,inspectedandopened. A second frozen probe takes4.439183ssetup+1.858781sdiagnostic;replay5.07e-7;immediate ground feedback isstillweak.
 
 The next declared pilot freezes the learned sensory representation andrefinesonlyitsdecoderusingthealreadytestedonlinepath. This testsstagedadaptationwithoutintroducinganotherinput,brain,forcehelperorbodychange. No causal explanation isclaimedfromtheseprobes. Retention02remainsselectedandthefullgoalremainsactive.
+
+### Staged refinement archived — 2026-09-13 13:07:16 UTC
+
+Feedback_readout01 completes180.911450s after10.294863ssetup,178,176transitions/356.352aggregate seconds,174updates. Collection174.575517s;optimization6.324239s;peakCUDA897,061,376bytes. Only105,222readout parameters change. The newly learned sensor encoding, every other parent state entry and the body/graph remainfixed. Non-wing outputs match on178,176identical histories within8.05e-7.
+
+Training has14two-secondhover timeouts among105hover episodes;these areloose-envelope completions,nothoveracceptance. All109failure traces areverified. The unassisted5secondreviewkeepsstanding/walking upright withvalidsupport, butwingpostureandhoverfail;zeronumericalwarnings. Setup5.984868s,capture32.375438s. The complete15s/750frame film isdecoded,inspectedandopened;render59.647187s. Retention02remainsselected.
+
+This continuation made progress through two measured frozen-feedback probes, implemented/tested encoder-and-decoder training with explicit parameter limits and ground distillation, two real GPU pilots, two full physical evaluations and reviewed films. No body, force law, output override or acceptance threshold changed. It did not yield anaccepted motor controller;the broader utility/multi-fly goal staysactive. There is noexternal blocker. Further work must resolve weak immediate motorfeedback andphysicalstability ratherthanrepeatunchangedreadoutfits orclaimsuccessfromtrainingtimeouts.
