@@ -22,10 +22,13 @@ def diagnose(args):
     data = mujoco.MjData(model)
     wing = np.array([j for j in range(model.njnt) if "wing_" in (model.joint(j).name or "")])
     hinges = np.flatnonzero(model.jnt_type == mujoco.mjtJoint.mjJNT_HINGE)
-    velocity_inputs = len(hinges) + np.array([np.flatnonzero(hinges == j)[0] for j in wing])
+    angle_inputs = np.array([np.flatnonzero(hinges == j)[0] for j in wing])
+    velocity_inputs = len(hinges) + angle_inputs
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
     mean = checkpoint["state_dict"]["observation_mean"].numpy()[velocity_inputs]
     std = checkpoint["state_dict"]["observation_std"].numpy()[velocity_inputs].clip(0.05)
+    angle_mean = checkpoint["state_dict"]["observation_mean"].numpy()[angle_inputs]
+    angle_std = checkpoint["state_dict"]["observation_std"].numpy()[angle_inputs].clip(0.05)
     results = {}
     initial = None
     for name, path in (("teacher", args.teacher_capture), ("student", args.student_capture)):
@@ -47,6 +50,9 @@ def diagnose(args):
                 forces.append(data.qfrc_passive[2] / (981 * model.body_mass.sum()))
             velocity = capture["qvel"][:count, model.jnt_dofadr[wing]]
             encoded_velocity = (capture["observation"][:count, velocity_inputs] - mean) / std
+            encoded_angle = (
+                capture["observation"][:count, angle_inputs] - angle_mean
+            ) / angle_std
             below = np.flatnonzero(capture["qpos"][:, 2] < 0.8)
             results[name] = {
                 "state_sha256": sha256(path),
@@ -62,6 +68,9 @@ def diagnose(args):
                 ).tolist(),
                 "wing_velocity_encoder_clip_fraction": np.mean(
                     np.abs(encoded_velocity) >= 10, axis=0
+                ).tolist(),
+                "wing_angle_encoder_clip_fraction": np.mean(
+                    np.abs(encoded_angle) >= 10, axis=0
                 ).tolist(),
                 "root_height_after_window_m": float(capture["qpos"][count, 2] * 0.01),
                 "first_below_8mm_seconds": float(capture["time"][below[0]])

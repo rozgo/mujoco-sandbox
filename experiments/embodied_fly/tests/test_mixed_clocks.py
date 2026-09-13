@@ -69,6 +69,7 @@ def test_one_actor_trains_both_demonstration_clocks_and_reports_each(tmp_path):
             seed=31,
             freeze_core=False,
             wing_loss_weight=1.0,
+            ground_loss_weight=4.0,
             wing_velocity_inputs=False,
         )
     )
