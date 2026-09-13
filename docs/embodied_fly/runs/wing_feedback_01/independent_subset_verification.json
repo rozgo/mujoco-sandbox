@@ -1,0 +1,47 @@
+{
+  "checkpoint_sha256": "6c687bdcaac301ae4490c0f0edf9e909a1f7f3e59e1ac6dc6206970a23549989",
+  "parent_sha256": "e3248b4db2adf40a26e94960674fbf2568d67fbfc7fdcd2aa0c2a4348761861c",
+  "eligible_parameters": 107014,
+  "learned_existing_sensor_extension": true,
+  "same_history_nonwing_drift_scope": "all tasks; ground distillation MSE is recorded separately",
+  "frozen_state_scalars_including_buffers": 2424923,
+  "all_unselected_state_bitwise_unchanged": true,
+  "graph_and_physical_contracts_match": true,
+  "wing_actuator_names": [
+    "walker/wing_yaw_left",
+    "walker/wing_roll_left",
+    "walker/wing_pitch_left",
+    "walker/wing_yaw_right",
+    "walker/wing_roll_right",
+    "walker/wing_pitch_right"
+  ],
+  "changed": [
+    {
+      "tensor": "sensor_extension.weight",
+      "changed_selected_scalars": 1792,
+      "selected_delta_l2": 4.000338077545166
+    },
+    {
+      "tensor": "wing_residual.network.0.weight",
+      "changed_selected_scalars": 104320,
+      "selected_delta_l2": 1.0309280157089233
+    },
+    {
+      "tensor": "wing_residual.network.0.bias",
+      "changed_selected_scalars": 128,
+      "selected_delta_l2": 0.033726535737514496
+    },
+    {
+      "tensor": "wing_residual.network.2.weight",
+      "changed_selected_scalars": 768,
+      "selected_delta_l2": 0.04439540579915047
+    },
+    {
+      "tensor": "wing_residual.network.2.bias",
+      "changed_selected_scalars": 6,
+      "selected_delta_l2": 0.0022122643422335386
+    }
+  ],
+  "same_history_nonwing_action_max_delta": 1.6705141067504883,
+  "same_history_world_actions_checked": 148480
+}

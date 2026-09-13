@@ -2334,3 +2334,11 @@ Implemented an explicit wing-feedback parameter subset:train the existing1792sen
 Eighteen focused tests pass in25.13s. They include actual canonical-world training/export withnonzero sensor-extension gradients/changes, unchanged core parameters andcorrect checkpoint metadata, plus retention-loss gradients confined toground non-wing outputs. Fullsuite isrunning. The180s/32world pilot isdeclared beforeexecution inruns/wing_feedback_01/PLAN.md.
 
 The complete suite passes118tests in79.25s with27known dependency warnings;Ruff/diff checks pass. Source, the frozen feedback diagnostic and the declared learning pilot are committed before GPUexecution.
+
+### Sensor feedback pilot outcome and staged follow-up — 2026-09-13 12:58 UTC
+
+Wing_feedback01 completes180.484524s after10.227206s setup,148,480transitions/296.96aggregate seconds,145updates. Collection146.945133s;backward33.526860s;peakCUDA3,825,026,560bytes. The existing1792sensorweights and105222readout parameters learn; allunselected state andthebody/graph remainfixed. Training has12hover timeouts at2seconds, which are not hover acceptance. All144failure traces areverified.
+
+Full seed72013review:standing/hoverfall,walkingstaysupright butposturefails,allstrictgatesfail,zero numericalwarnings. Setup6.308202s,capture32.135790s. The complete15s film isdecoded,inspectedandopened. A second frozen probe takes4.439183ssetup+1.858781sdiagnostic;replay5.07e-7;immediate ground feedback isstillweak.
+
+The next declared pilot freezes the learned sensory representation andrefinesonlyitsdecoderusingthealreadytestedonlinepath. This testsstagedadaptationwithoutintroducinganotherinput,brain,forcehelperorbodychange. No causal explanation isclaimedfromtheseprobes. Retention02remainsselectedandthefullgoalremainsactive.
