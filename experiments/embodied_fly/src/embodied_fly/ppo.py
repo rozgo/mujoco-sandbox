@@ -179,6 +179,12 @@ def train(args):
     motor_all = getattr(args, "motor_all", False)
     motor_mode = motor_ground or motor_all
     hover_physical = getattr(args, "hover_physical", False)
+    hover_only = getattr(args, "hover_only", False)
+    if hover_only and (not hover_physical or args.preset != "wing_position"):
+        raise ValueError("Hover-only requires the physical hover motor curriculum")
+    critic_lr = getattr(args, "critic_lr", 3e-4)
+    if not np.isfinite(critic_lr) or critic_lr <= 0:
+        raise ValueError("Critic learning rate must be finite and positive")
     recompute = getattr(args, "checkpoint_activations", False)
     independent_critic = getattr(args, "independent_critic", False)
     if independent_critic and args.epochs < 1:
@@ -254,6 +260,14 @@ def train(args):
     contract = physical_contract(env.model) if motor_mode else None
     if motor_mode and parent.get("physical_contract") != contract:
         raise ValueError("Motor PPO must match the parent physical fly")
+    if hover_only and (
+        contract.get("wing_response") != "instant"
+        or contract["physics_hz"] != 1000
+        or brain.sensor_extension_size != 16
+    ):
+        raise ValueError(
+            "Hover-only requires explicit 1 kHz plant and horizontal-feedback migration"
+        )
     frozen = (
         {
             k: v.detach().clone()
@@ -279,6 +293,10 @@ def train(args):
             from embodied_fly.hover_ppo import HoverPPOTasks
 
             tasks = HoverPPOTasks(env, args.seed)
+            if hover_only:
+                from embodied_fly.hover_only import HoverOnlyTasks
+
+                tasks = HoverOnlyTasks(env, args.seed)
     control_dt = env.control_dt
     time_scale = control_dt / CONTROL_DT
     # CLI discount factors retain their original 2 ms physical horizons.
@@ -304,6 +322,10 @@ def train(args):
             reward_fn.flight = HoverPPOReward(env)
             reward_fn.recipe["version"] = "stand_walk_hover_physical_v2"
             reward_fn.recipe["hover"] = reward_fn.flight.recipe
+            if hover_only:
+                from embodied_fly.hover_only import HoverOnlyReward
+
+                reward_fn = HoverOnlyReward(env)
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
         if flight_resets or motor_mode
@@ -315,7 +337,7 @@ def train(args):
     )
     parameters = [p for p in brain.parameters() if p.requires_grad] + [log_std]
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
-    value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
+    value_optimizer = torch.optim.Adam(critic.parameters(), lr=critic_lr, eps=1e-5)
     optimizer_resumed = (
         parent.get("method", "").startswith("recurrent physical-outcome PPO")
         and parent.get("config", {}).get("preset", "walking") == args.preset
@@ -331,6 +353,8 @@ def train(args):
             log_std.copy_(parent["log_std"].to(device))
         for group in optimizer.param_groups:
             group["lr"] = args.lr
+        for group in value_optimizer.param_groups:
+            group["lr"] = critic_lr
     from embodied_fly.motor_retention import FrozenMotorReference
 
     retainer = FrozenMotorReference(brain, args.worlds) if retention_weight else None
@@ -425,7 +449,9 @@ def train(args):
     task_transitions = {name: 0 for name in ("stand", "walk", "hover")}
     try:
         while time.perf_counter() - start < args.seconds:
-            if hover_physical:
+            if hover_only:
+                tasks.advance_curriculum()
+            elif hover_physical:
                 tasks.widening = min(
                     1.0, counters["transitions"] * control_dt / args.worlds / 10.0
                 )
@@ -562,6 +588,8 @@ def train(args):
                                 ),
                             }
                         )
+                        if hover_only:
+                            tasks.observe_episode(episode_records[-1])
                     reset_worlds(ids)
                     reward_fn.reset(ids)
                     episode_return[ids] = 0
@@ -884,7 +912,9 @@ def train(args):
             "source_commit": run_evidence["source_commit"],
             "parent_checkpoint_sha256": sha256(args.resume),
             "method": (
-                "recurrent physical-outcome PPO plus corrective wing supervision"
+                "recurrent physical-outcome PPO, motor-only hover-first curriculum"
+                if hover_only
+                else "recurrent physical-outcome PPO plus corrective wing supervision"
                 if wing_weight
                 else "recurrent physical-outcome PPO, motor-only all-command curriculum"
                 if motor_all
@@ -906,7 +936,9 @@ def train(args):
             "reward_recipe": reward_fn.recipe,
             "motor_only": motor_mode,
             "physical_contract": contract,
-            "training_tasks": ["stand", "walk", "hover"]
+            "training_tasks": ["hover"]
+            if hover_only
+            else ["stand", "walk", "hover"]
             if motor_all
             else ["stand", "walk"]
             if motor_ground
@@ -967,6 +999,7 @@ def train(args):
             "physical_timescales": timing,
             "activation_recomputation": recompute,
             "critic_schedule": {
+                "learning_rate": critic_lr,
                 "independent_of_actor_kl": independent_critic,
                 "epochs": args.epochs,
                 "features": "normalized observation + preceding descending state",
@@ -1039,6 +1072,8 @@ if __name__ == "__main__":
     parser.add_argument("--motor-ground", action="store_true")
     parser.add_argument("--motor-all", action="store_true")
     parser.add_argument("--hover-physical", action="store_true")
+    parser.add_argument("--hover-only", action="store_true")
+    parser.add_argument("--critic-lr", type=float, default=3e-4)
     parser.add_argument("--checkpoint-activations", action="store_true")
     parser.add_argument("--independent-critic", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)

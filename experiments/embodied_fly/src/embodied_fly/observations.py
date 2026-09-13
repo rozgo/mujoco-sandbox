@@ -55,8 +55,26 @@ def append_height(observation, qpos, requested_height_cm):
 def actor_observation(env, actor):
     """Load each preserved schema explicitly; extensions always keep the old prefix."""
     extension = actor.sensor_extension_size
-    if extension not in (0, 6, 12, 14):
+    if extension not in (0, 6, 12, 14, 16):
         raise ValueError("Unsupported live actor observation schema")
     return env.observation(
-        extension >= 6, wing_angles=extension >= 12, height_inputs=extension == 14
+        extension >= 6,
+        wing_angles=extension >= 12,
+        height_inputs=extension >= 14,
+        horizontal_inputs=extension == 16,
     )
+
+
+def append_horizontal_error(observation, qpos, rotation, target_xy, enabled):
+    """Ideal current target displacement in anatomical axes / 1 cm; no controller.
+
+    Only airborne position commands enable these channels. Ground velocity
+    commands retain zero error inputs. No time, phase or future reference enters.
+    """
+    offset = np.zeros_like(np.asarray(qpos)[..., :3])
+    offset[..., :2] = np.asarray(target_xy) - np.asarray(qpos)[..., :2]
+    local = np.einsum("...ji,...j->...i", np.asarray(rotation), offset)[..., :2]
+    local = local * np.asarray(enabled)[..., None]
+    if not np.isfinite(local).all():
+        raise ValueError("Nonfinite horizontal target error")
+    return np.concatenate((observation, local), axis=-1).astype(np.float32)

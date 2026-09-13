@@ -220,6 +220,7 @@ class FlyEnvironment:
                 self.data.qpos[address] = self.model.qpos_spring[address]
         self.command = np.zeros(3, np.float32)  # forward cm/s, lateral cm/s, yaw rad/s
         self.requested_height_cm = 0.0  # explicit ground-task command
+        self.requested_xy_cm = np.zeros(2, np.float32)
         self.needs = np.zeros(len(NEED_NAMES), np.float32)
         self.previous_action = np.zeros(self.model.nu, np.float32)
         self.maximum_disallowed_ground_force = 0.0
@@ -232,8 +233,15 @@ class FlyEnvironment:
         return self.observation()
 
     def observation(
-        self, extended_wing_velocity=False, *, wing_angles=False, height_inputs=False
+        self,
+        extended_wing_velocity=False,
+        *,
+        wing_angles=False,
+        height_inputs=False,
+        horizontal_inputs=False,
     ):
+        if horizontal_inputs and not height_inputs:
+            raise ValueError("Horizontal feedback requires the complete altitude prefix")
         if height_inputs and not wing_angles:
             raise ValueError("Height inputs require the complete wing observation prefix")
         if wing_angles and not extended_wing_velocity:
@@ -280,6 +288,16 @@ class FlyEnvironment:
             )
         if height_inputs:
             observation = append_height(observation, self.data.qpos, self.requested_height_cm)
+        if horizontal_inputs:
+            from embodied_fly.observations import append_horizontal_error
+
+            observation = append_horizontal_error(
+                observation,
+                self.data.qpos,
+                rotation,
+                self.requested_xy_cm,
+                self.requested_height_cm > 0,
+            )
         return observation
 
     def actuator_activation(self):

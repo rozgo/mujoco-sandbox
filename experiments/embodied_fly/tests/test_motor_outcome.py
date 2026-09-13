@@ -48,6 +48,7 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
         (0.0, True, 0, True, True, True, "filtered"),
         (0.0, True, 1, True, True, False, "filtered"),
         (0.0, True, 0, True, True, False, "instant"),
+        (0.0, True, 1, True, True, False, "hover-only"),
     ],
 )
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
@@ -63,6 +64,10 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
 ):
     from embodied_fly import ppo
 
+    hover_only = response == "hover-only"
+    if hover_only:
+        response = "instant"
+
     if force_kl_stop:
         original_logp = ppo.joint_log_probability
 
@@ -75,6 +80,16 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         monkeypatch.setattr(ppo, "joint_log_probability", shifted_update_logp)
 
     brain = tiny_brain()
+    if hover_only:
+        from embodied_fly.brain import initialize_extended_actor
+
+        state = brain.state_dict()
+        brain.observation_size = 399
+        brain.sensor_extension_size = 16
+        brain.sensor_extension = torch.nn.Linear(16, 128, bias=False)
+        brain.observation_mean = torch.zeros(399)
+        brain.observation_std = torch.ones(399)
+        initialize_extended_actor(brain, state)
     brain.set_motor_only()
     if all_motor:
         brain.enable_wing_residual(8)
@@ -88,7 +103,14 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     if physical:
         worlds = 4
     preset = "wing_position" if all_motor else "wing_motion"
-    env = FlyBatch(worlds, 2, 14, preset=preset, wing_response=response)
+    env = FlyBatch(
+        worlds,
+        2,
+        brain.sensor_extension_size,
+        preset=preset,
+        wing_response=response,
+        physics_hz=1000 if hover_only else None,
+    )
     parent = {"graph_sha256": "test", "physical_contract": physical_contract(env.model)}
     monkeypatch.setattr(ppo, "load_actor", lambda *args: (brain, parent))
     resume = tmp_path / "parent.pt"
@@ -105,6 +127,8 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         motor_all=all_motor,
         motor_retention_weight=4.0 if all_motor and not physical else 0.0,
         hover_physical=physical,
+        hover_only=hover_only,
+        critic_lr=1e-4,
         checkpoint_activations=physical,
         independent_critic=independent,
         critic_warmup_rollouts=warmup,
@@ -161,11 +185,15 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
             for x in report["core_gradient_audit_from_weighted_wing_supervision"].values()
         )
     assert report["utility_and_intention_weights_unchanged"]
-    assert report["worlds_by_task"] == {
-        "stand": 1,
-        "walk": 1,
-        "hover": 2 if physical else int(all_motor),
-    }
+    assert report["worlds_by_task"] == (
+        {"stand": 0, "walk": 0, "hover": 4}
+        if hover_only
+        else {
+            "stand": 1,
+            "walk": 1,
+            "hover": 2 if physical else int(all_motor),
+        }
+    )
     assert sum(report["transitions_by_task"].values()) == report["transitions"]
     assert len(report["completed_episodes"]) == worlds * 4
     assert (
@@ -186,6 +214,12 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         assert report["motor_retention"]["weights_unchanged"] == (not physical)
         assert not report["motor_retention"]["runtime_module"]
         restored = tiny_brain()
+        if hover_only:
+            restored.observation_size = 399
+            restored.sensor_extension_size = 16
+            restored.sensor_extension = torch.nn.Linear(16, 128, bias=False)
+            restored.observation_mean = torch.zeros(399)
+            restored.observation_std = torch.ones(399)
         restored.enable_wing_residual(checkpoint["wing_residual_hidden"])
         restored.load_state_dict(checkpoint["state_dict"], strict=True)
         # The physical reward gradient was audited before adding the retention loss.

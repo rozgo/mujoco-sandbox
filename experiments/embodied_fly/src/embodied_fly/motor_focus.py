@@ -123,6 +123,7 @@ class MotorTasks:
         self.env.command[ids] = 0
         self.env.command[ids, 0] = (self.task_ids[ids] == 1).astype(float)
         self.env.requested_height_cm[ids] = np.where(hovering, state["qpos"][:, 2], 0)
+        self.env.requested_xy_cm[ids] = state["qpos"][:, :2]
         self.env.needs[ids] = 0
         self.start[ids] = state["qpos"][:, :3]
         self.heading[ids] = heading
@@ -295,7 +296,7 @@ def review(args):
     env = FlyBatch(
         3,
         3,
-        14,
+        actor.sensor_extension_size if actor is not None else 14,
         preset=getattr(args, "preset", "wing_motion"),
         wing_response=response or "filtered",
         physics_hz=checkpoint["physical_contract"]["physics_hz"] if checkpoint else None,
@@ -318,9 +319,9 @@ def review(args):
         posture_enabled |= checkpoint.get("config", {}).get("ground_posture", False)
         if checkpoint["physical_contract"] != physical_contract(env.model):
             raise ValueError("Evaluation must use the checkpoint's exact physical fly")
-        if not actor.motor_only or actor.observation_size != 397:
+        if not actor.motor_only or actor.observation_size not in (397, 399):
             raise ValueError(
-                "Motor review requires an explicit motor-only 397-input checkpoint"
+                "Motor review requires an explicit motor-only 397/399-input checkpoint"
             )
         actor.eval()
         memory = actor.initial_state(3)

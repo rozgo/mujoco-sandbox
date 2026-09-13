@@ -154,3 +154,10 @@ great." Preserve this PID configuration/video as the hover plant reference.
 The review gate is closed. Subsequent motor learning must explicitly adopt this
 same 1,000 Hz, instantaneous-wing-force physical contract for all motor commands;
 the PID controller is reference machinery, not evidence of a learned actor.
+
+User approved hover-first motor learning: hover -> straight/turning flight ->
+stand -> land -> walk -> takeoff. Current hover-first PPO uses all hover worlds;
+ground rehearsal is deferred until another stage is introduced. Continue one
+actor/checkpoint across stages, preserve the prior motor baseline, and document
+explicit physics/observation/optimizer transfers. Compare learned hover against
+the accepted PID in a side-by-side 1x video with matching starts and error scales.
