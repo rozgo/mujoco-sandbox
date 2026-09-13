@@ -878,3 +878,29 @@ goal milestone, not a completion time; final archiving/synchronization follows.
 - Full suite: 132 passed, 33 existing dependency warnings, 98.09 s. Source lint
   passes. All completed training videos decode to 750 frames at 1600x900,
   50 fps, 15 seconds, 1x; all are visually inspected and opened on the Mac.
+
+## Fly continuous commands and feedback pilot — September 13, 2026
+
+- Initial work observed at 16:34:27 UTC; resumed goal continuation at 16:45:45 UTC
+  after the status discussion. Training starts 16:58:30.563 UTC and its report
+  completes at 17:01:31.407 UTC. Both video reviews finish by 17:06:35 UTC,
+  32 minutes 8 seconds after initial work began. Archive/push work follows this
+  milestone. Wall time includes discussion, code, tests, transfers and rendering.
+- Exactly one new imitation pilot; no new PPO run. Setup 12.371462 s, training
+  180.734316 s, collection/forward 143.127583 s, optimization 37.592718 s.
+  144,384 physical world/action transitions, 288.768 aggregate simulated seconds,
+  141 updates. 2,256 synthetic sensor inputs add no physical experience.
+- 32 worlds: 11 stand, 11 walk, 10 hover. 16 CPU MuJoCo/mjbatch threads,
+  RTX 4090 neural work, 5 kHz physics, 500 Hz actions. Peak CUDA allocation
+  9,591,054,848 bytes. Same physical and neural interfaces as the parent.
+- Continuous-command check: setup 7.410579 s, capture 48.559113 s,
+  12,000 physical transitions / 24 aggregate seconds. Three eight-second worlds.
+  Video render/encode 111.835978 s, 1,200 frames, 24 s at 50 fps / 1x.
+- Frozen hover-response probe: setup 6.372643 s, diagnosis 11.665725 s,
+  no physical transitions or optimization. Existing reference motion is
+  analyzed from saved data, with no new reference simulation.
+- New checkpoint review: setup 6.987461 s, capture 32.119717 s,
+  7,500 physical transitions / 15 aggregate seconds. Video render/encode
+  59.370403 s, 750 frames, 15 s at 50 fps / 1x. Hover fails; baseline retained.
+- Full suite: 135 passed, 37 dependency warnings, 107.49 s. Source lint passes.
+  Both videos are decoded end-to-end, visually inspected and opened locally.

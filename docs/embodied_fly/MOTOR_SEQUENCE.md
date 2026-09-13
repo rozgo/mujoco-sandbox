@@ -33,3 +33,14 @@ The legacy transitions module's metrics are reused, but its legacy walking body
 and 59-action mask are not used. This check establishes a necessary motor
 capability for later needs-driven behavior; it does not test utility, flight
 transitions or the survival arena.
+
+## First result
+
+[position_sequence_01](runs/position_sequence_01/SUMMARY.md) is stable but fails
+walk/resume in all three worlds. A future curriculum should include changing
+ground commands while retaining physical state and recurrent memory. On those
+worlds, use current-state walking-reference labels: the frozen parent itself
+does not start walking after standing, so copying its output would reinforce
+the observed failure. Keep separate fixed-command rehearsal worlds and hover
+supervision in the same actor. This curriculum is proposed, not implemented by
+the evaluation module above.

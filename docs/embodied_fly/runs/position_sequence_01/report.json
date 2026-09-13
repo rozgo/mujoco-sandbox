@@ -1,0 +1,644 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-13T16:48:26.905271+00:00",
+    "source_commit": "28b32f7defac32c34af68fe091c6885bfa43d346",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "51af15245cf445dedcf11a1b57cd7b3117a184b9e70ad1adb25d0fd635b15995",
+      "src/embodied_fly/body.py": "45d6da6a68e5b0e600a7c183214d440b20cee52c0eefa6036a1f5689c6757765",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "f0818b436ab8470abf5676de799c92e75e322bde7c72b53dacdebc832b46cdce",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "f240ef6d779e2ad32708abe90f86964e771151e8cbb19b7cd7936e0d65b4d865",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "83e036ac378aef32c052a9a7a7d54789fc9bcf20adfcb7795071d63cc9a0b9fd",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "5c58a0361948ef50e4d59a96e43de98dab37a3a1e4e35de605acab8acb9fca7c",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "6ff96dbc1d936930434131d9ac5e79d4f85835296a0c448f19f187844df45c97",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "220ae00c5c4367f325fc7f1fd38c4e04dcc3216e738bae1fcf7f8ba804ec2799",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "d27d896cef957e178303a6be3a748bfd5ea2f682e17855fd945b48779403aeab",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "851c0d60e501273dce24bbe497864402197151610e6eecb9831c364e96474108",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-13T16:49:29.147726+00:00",
+  "checkpoint_sha256": "80175c618d2e214700fa16b39d4ffe27442d1fb04daae044d4939d9fb499bc71",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "222eb2326e6ba8d0429ad31c55fd189b98921bfceec9f66d7af528828b3645fa",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 5000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded"
+  },
+  "model_sha256": "672a5c0144d97d56dbb5372d50095cc3a347e9410c4897f71b2d5598774542ba",
+  "physical_preset": "wing_position",
+  "motor_only": true,
+  "teacher_present": false,
+  "student_present": true,
+  "controller": "student",
+  "one_checkpoint_for_all_cases": true,
+  "policy_acceptance_eligible": true,
+  "walking_action_mask": false,
+  "active_actuators": 78,
+  "live_resets": 0,
+  "neural_resets_at_commands": 0,
+  "phase_schedule": [
+    [
+      "stand",
+      0.0
+    ],
+    [
+      "walk",
+      1.0
+    ],
+    [
+      "stop",
+      0.0
+    ],
+    [
+      "resume",
+      1.0
+    ]
+  ],
+  "phase_seconds": 2,
+  "boundary_events": [
+    {
+      "phase": "stand",
+      "time_seconds": 0.0,
+      "physical_state_unchanged_at_boundary": true,
+      "neural_memory_unchanged_at_boundary": true,
+      "preceding_memory_l2": 0.0
+    },
+    {
+      "phase": "walk",
+      "time_seconds": 2.0,
+      "physical_state_unchanged_at_boundary": true,
+      "neural_memory_unchanged_at_boundary": true,
+      "preceding_memory_l2": 164.06289672851562
+    },
+    {
+      "phase": "stop",
+      "time_seconds": 4.0,
+      "physical_state_unchanged_at_boundary": true,
+      "neural_memory_unchanged_at_boundary": true,
+      "preceding_memory_l2": 158.6917266845703
+    },
+    {
+      "phase": "resume",
+      "time_seconds": 6.0,
+      "physical_state_unchanged_at_boundary": true,
+      "neural_memory_unchanged_at_boundary": true,
+      "preceding_memory_l2": 164.21531677246094
+    }
+  ],
+  "seed": 99103,
+  "gates": {
+    "settle_seconds": 0.25,
+    "minimum_upright": 0.5,
+    "minimum_height_m": 0.0006,
+    "max_forbidden_load_over_weight": 0.1,
+    "moving_mean_forward_error_cm_s": 0.25,
+    "moving_mean_lateral_error_cm_s": 0.25,
+    "moving_mean_yaw_error_rad_s": 0.35,
+    "stop_late_planar_speed_rms_cm_s": 0.1,
+    "stop_block_yaw_rms_rad_s": 0.3,
+    "stop_late_drift_m": 0.001,
+    "stop_total_drift_m": 0.002
+  },
+  "posture_gates": {
+    "ground_wing_max_deviation_rad": 0.2,
+    "ground_wing_velocity_rms_rad_s": 2.0,
+    "stand_group_angle_rms_rad": 0.15,
+    "stand_max_height_loss_fraction": 0.1
+  },
+  "numerical_failure": null,
+  "setup_seconds": 7.410579198040068,
+  "stepping_and_capture_seconds": 48.55911322310567,
+  "parallel_worlds": 3,
+  "transitions": 12000,
+  "simulated_seconds_per_world": 8.0,
+  "physics_hz": 5000,
+  "control_hz": 500,
+  "warning_count": 0,
+  "neural_view": {
+    "neurons": 166700,
+    "located_neurons": 140638,
+    "neurons_without_locations": 26062,
+    "projection_axes": "MaleCNS measured X/Z coordinates",
+    "map_size": [
+      128,
+      128
+    ],
+    "channels": [
+      "mean signed latent state",
+      "mean absolute latent state"
+    ],
+    "controller_input": false,
+    "physiological_spikes": false
+  },
+  "results": [
+    {
+      "case": "sequence_0",
+      "success": false,
+      "stable": true,
+      "gate_label": "Continuous command gates",
+      "phases": [
+        {
+          "phase": "stand",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.0008489222950380679,
+            0.0007613266080700564,
+            -0.005639268002168974
+          ],
+          "late_planar_speed_rms_cm_s": 0.01566427375225713,
+          "late_block_yaw_rms_rad_s": 0.011106340270720124,
+          "total_planar_displacement_m": 0.0001491745778117354,
+          "late_planar_displacement_m": 1.8205927831074405e-05,
+          "minimum_upright": 0.9972952789311265,
+          "minimum_height_m": 0.001284495081012558,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 0,
+          "wing_max_deviation_rad": 0.0021994868176308247,
+          "wing_speed_rms_rad_s": 0.020870233133627982,
+          "leg_pose_rms_rad": 0.03539181200909467,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.03548327993794498,
+            "wings": 0.00035256774815332204,
+            "body": 0.046989071325044346
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.0
+        },
+        {
+          "phase": "walk",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -9.93413020216918e-05,
+            -3.410485574163264e-05,
+            0.0003580368264136954
+          ],
+          "late_planar_speed_rms_cm_s": 0.00021384419029372165,
+          "late_block_yaw_rms_rad_s": 0.0008309897652466201,
+          "total_planar_displacement_m": 3.894388611508162e-05,
+          "late_planar_displacement_m": 1.8656499093725665e-06,
+          "minimum_upright": 0.9984802116807188,
+          "minimum_height_m": 0.001277021944803968,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 0,
+          "wing_max_deviation_rad": 0.0005688222245161523,
+          "wing_speed_rms_rad_s": 0.0031085294975802765,
+          "leg_pose_rms_rad": 0.04169436884103478,
+          "resting_wings_pass": true
+        },
+        {
+          "phase": "stop",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.000718729499998937,
+            -0.0002005606265153455,
+            -0.0037704346698037715
+          ],
+          "late_planar_speed_rms_cm_s": 0.016955251308602096,
+          "late_block_yaw_rms_rad_s": 0.013826339122509893,
+          "total_planar_displacement_m": 4.185843256601366e-05,
+          "late_planar_displacement_m": 1.025552576887721e-05,
+          "minimum_upright": 0.9984936244531457,
+          "minimum_height_m": 0.0012745446592585432,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 0,
+          "wing_max_deviation_rad": 0.0007064167381400921,
+          "wing_speed_rms_rad_s": 0.011741010084994626,
+          "leg_pose_rms_rad": 0.03470696002769546,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.03472474535736498,
+            "wings": 0.00035511872058554525,
+            "body": 0.04737498953015897
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.0027037095003573652
+        },
+        {
+          "phase": "resume",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            5.353740090793607e-06,
+            -3.592787678679177e-05,
+            -0.0008215570008696296
+          ],
+          "late_planar_speed_rms_cm_s": 0.026023314301712678,
+          "late_block_yaw_rms_rad_s": 0.009386507954971682,
+          "total_planar_displacement_m": 6.36992201233876e-05,
+          "late_planar_displacement_m": 4.772197380587691e-07,
+          "minimum_upright": 0.9987239775571626,
+          "minimum_height_m": 0.001259968713906645,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 0,
+          "wing_max_deviation_rad": 0.000579409489314342,
+          "wing_speed_rms_rad_s": 0.02215210083024047,
+          "leg_pose_rms_rad": 0.04122854872296081,
+          "resting_wings_pass": true
+        }
+      ],
+      "state_sha256": "6b199b35445c269a8870f93e637eb79b93937837a2fc13ab149bb7666fb525b7"
+    },
+    {
+      "case": "sequence_1",
+      "success": false,
+      "stable": true,
+      "gate_label": "Continuous command gates",
+      "phases": [
+        {
+          "phase": "stand",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.0008489718530631592,
+            0.0007612877670837208,
+            -0.005639418400056764
+          ],
+          "late_planar_speed_rms_cm_s": 0.01566442030326839,
+          "late_block_yaw_rms_rad_s": 0.011106454929389244,
+          "total_planar_displacement_m": 0.00014917522946385464,
+          "late_planar_displacement_m": 1.8206009603122972e-05,
+          "minimum_upright": 0.9972952799668008,
+          "minimum_height_m": 0.0012844953011938369,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 1,
+          "wing_max_deviation_rad": 0.0021994868176308247,
+          "wing_speed_rms_rad_s": 0.02087019732337337,
+          "leg_pose_rms_rad": 0.035391829749174535,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.035483300128909386,
+            "wings": 0.00035256822237492283,
+            "body": 0.04698908043413325
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.0
+        },
+        {
+          "phase": "walk",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -9.934444299907639e-05,
+            -3.411236917954026e-05,
+            0.00035797561737486544
+          ],
+          "late_planar_speed_rms_cm_s": 0.0002138685643181548,
+          "late_block_yaw_rms_rad_s": 0.0008306621599774983,
+          "total_planar_displacement_m": 3.894424955443134e-05,
+          "late_planar_displacement_m": 1.8657516326721766e-06,
+          "minimum_upright": 0.99848019867519,
+          "minimum_height_m": 0.0012770222755904956,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 1,
+          "wing_max_deviation_rad": 0.0005688222245161523,
+          "wing_speed_rms_rad_s": 0.003108529100180857,
+          "leg_pose_rms_rad": 0.041694373971217835,
+          "resting_wings_pass": true
+        },
+        {
+          "phase": "stop",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.0007187309596574377,
+            -0.0002005630031388044,
+            -0.0037704309802474418
+          ],
+          "late_planar_speed_rms_cm_s": 0.01695523828773667,
+          "late_block_yaw_rms_rad_s": 0.013826347538490822,
+          "total_planar_displacement_m": 4.1858311656919596e-05,
+          "late_planar_displacement_m": 1.0255528747456447e-05,
+          "minimum_upright": 0.9984936171066247,
+          "minimum_height_m": 0.0012745447043502954,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 1,
+          "wing_max_deviation_rad": 0.0007064163228165388,
+          "wing_speed_rms_rad_s": 0.011741009298728877,
+          "leg_pose_rms_rad": 0.03470695674815295,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.034724742198652396,
+            "wings": 0.00035511872489977017,
+            "body": 0.04737499089169228
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.002703674217296337
+        },
+        {
+          "phase": "resume",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            5.347925501342562e-06,
+            -3.5932506054193864e-05,
+            -0.0008234779168114119
+          ],
+          "late_planar_speed_rms_cm_s": 0.026023548948304154,
+          "late_block_yaw_rms_rad_s": 0.009385118472877384,
+          "total_planar_displacement_m": 6.369912598695596e-05,
+          "late_planar_displacement_m": 4.797105137695242e-07,
+          "minimum_upright": 0.9987239757978673,
+          "minimum_height_m": 0.0012599687319435,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 1,
+          "wing_max_deviation_rad": 0.000579409489314342,
+          "wing_speed_rms_rad_s": 0.02215241857763654,
+          "leg_pose_rms_rad": 0.0412285258342611,
+          "resting_wings_pass": true
+        }
+      ],
+      "state_sha256": "719e95a36ab06db8b0546a68b2c7f81467fe809a7066c35acd6900c8d418aae0"
+    },
+    {
+      "case": "sequence_2",
+      "success": false,
+      "stable": true,
+      "gate_label": "Continuous command gates",
+      "phases": [
+        {
+          "phase": "stand",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.0008769372746193374,
+            0.000766654777833608,
+            -0.005692153814750972
+          ],
+          "late_planar_speed_rms_cm_s": 0.01564240999884664,
+          "late_block_yaw_rms_rad_s": 0.01112061703054524,
+          "total_planar_displacement_m": 0.00014950314607628518,
+          "late_planar_displacement_m": 1.846692867244979e-05,
+          "minimum_upright": 0.9972952762259798,
+          "minimum_height_m": 0.001284541045089706,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 2,
+          "wing_max_deviation_rad": 0.0021994868176308247,
+          "wing_speed_rms_rad_s": 0.020870769799123928,
+          "leg_pose_rms_rad": 0.035391898108971545,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.035483379665649635,
+            "wings": 0.00035260716380407854,
+            "body": 0.04698917872131471
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.0
+        },
+        {
+          "phase": "walk",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.00010122500892109449,
+            -3.762672607602504e-05,
+            0.0004025450582264048
+          ],
+          "late_planar_speed_rms_cm_s": 0.0002210236841515925,
+          "late_block_yaw_rms_rad_s": 0.0009536000016244083,
+          "total_planar_displacement_m": 3.630763509144286e-05,
+          "late_planar_displacement_m": 1.9149777499317824e-06,
+          "minimum_upright": 0.9984243463972262,
+          "minimum_height_m": 0.0012758325127768,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 2,
+          "wing_max_deviation_rad": 0.0005636126537227337,
+          "wing_speed_rms_rad_s": 0.0031713130609071338,
+          "leg_pose_rms_rad": 0.04183939416468287,
+          "resting_wings_pass": true
+        },
+        {
+          "phase": "stop",
+          "command_cm_s_rad_s": [
+            0.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": true,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            -0.00046748068635105313,
+            -0.00016149152350832815,
+            -0.0013598490389294393
+          ],
+          "late_planar_speed_rms_cm_s": 0.017579979184274598,
+          "late_block_yaw_rms_rad_s": 0.014906439159663198,
+          "total_planar_displacement_m": 3.534431837034471e-05,
+          "late_planar_displacement_m": 8.666249793954459e-06,
+          "minimum_upright": 0.9984376732011035,
+          "minimum_height_m": 0.00127375689666988,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 2,
+          "wing_max_deviation_rad": 0.000705457536878118,
+          "wing_speed_rms_rad_s": 0.012196467284014696,
+          "leg_pose_rms_rad": 0.0350375631523875,
+          "resting_wings_pass": true,
+          "late_hold_form_rms_rad": {
+            "legs": 0.035060737207643015,
+            "wings": 0.0003558512162113424,
+            "body": 0.04734292623174726
+          },
+          "hold_form_pass": true,
+          "maximum_height_loss_fraction": 0.0033201121518935395
+        },
+        {
+          "phase": "resume",
+          "command_cm_s_rad_s": [
+            1.0,
+            0,
+            0
+          ],
+          "frames": 1000,
+          "post_settle_frames": 875,
+          "stable": true,
+          "support_valid": true,
+          "success": false,
+          "complete": true,
+          "mean_velocity_after_settle_cm_s_rad_s": [
+            9.77489364475571e-05,
+            -3.4622193380614475e-05,
+            0.0005154359571428006
+          ],
+          "late_planar_speed_rms_cm_s": 0.028789703007663897,
+          "late_block_yaw_rms_rad_s": 0.007904440098229985,
+          "total_planar_displacement_m": 6.917025332038156e-05,
+          "late_planar_displacement_m": 2.3746598866508646e-06,
+          "minimum_upright": 0.9989445922286271,
+          "minimum_height_m": 0.0012608105502983774,
+          "max_disallowed_ground_force_over_weight": 0.0,
+          "world": 2,
+          "wing_max_deviation_rad": 0.00064933215777363,
+          "wing_speed_rms_rad_s": 0.024645545598684877,
+          "leg_pose_rms_rad": 0.04139058299137607,
+          "resting_wings_pass": true
+        }
+      ],
+      "state_sha256": "1de6fde7485b30496d84e346a6a2a0580ed97bce54c1db725375aff4cddb855d"
+    }
+  ],
+  "scope": "Continuous commanded ground motors; no utility selection, turns or flight transitions"
+}

@@ -19,6 +19,14 @@ PPO-level noise also destabilizes the recorded successful start; lower noise
 preserves it in that diagnostic. The parent is preserved as a development
 checkpoint, with hover robustness still unproven.
 
+The [continuous-command check](runs/position_sequence_01/SUMMARY.md) now shows
+another boundary: after standing, this checkpoint fails to start walking or
+resume, despite staying upright. The commands and persistent neural/physical
+state are verified. The subsequent [height-response imitation pilot](runs/position_hover_response_01/PLAN.md)
+retains ground primitives but loses hover, so it does not replace the baseline.
+Practical command switching needs explicit within-episode training; separate
+fresh-start videos do not establish it.
+
 The historical torque-model development checkpoint is
 [state_hover_retention_02](runs/state_hover_retention_02/SUMMARY.md).
 It uses the same command-conditioned actor for standing, walking and hover.

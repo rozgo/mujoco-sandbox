@@ -2532,3 +2532,39 @@ videos are fully decoded, visually inspected and opened. No third PPO pilot
 is launched. See PPO_FOLLOWUP.md for evidence and limitations. Further work
 must target consistent, quieter hover; practical motor transitions and learned
 needs/utility remain unfinished.
+
+### Continuous commands and local hover feedback — 2026-09-13 17:06:35 UTC
+
+Read-only analysis of the existing reference shows a 0.361 mm final-second
+height span, compared with 7.282 mm in the preserved learned capture. Its
+wing sweep is near 11 Hz versus 10.5 Hz for the learner, whose body oscillates
+near 5.25 Hz. Different starts/native hosts prevent a paired performance claim,
+but this supports retaining the physical recipe while investigating learning.
+
+The canonical-body continuous test runs stand/walk/stop/resume, two seconds
+each, in three worlds without physical or neural resets. All remain upright;
+standing/stopping pass, but no world starts walking or resumes. Recorded actor
+inputs confirm the correct commands. This exposes the difference between
+fresh-start primitives and practical command control. Do not train the transition
+worlds solely by copying the frozen parent, which exhibits this failure itself.
+
+Frozen-history hover probes reproduce saved actions within 5.22e-7 and find weak
+height sensitivity and some wrong-sign vertical-speed responses. An equivalence
+test catches a missing inertial-COM to anatomical-origin velocity correction;
+that conversion is fixed before the new teaching loss is used. Probe reports
+are preserved with their original source hashes and limitations.
+
+Position_hover_response01 adds local paired-response imitation to the preserved
+unassisted recipe, with no body, graph, actor architecture or runtime helper
+change. It takes 180.734316 s, 141 updates and 144,384 physical transitions;
+2,256 synthetic sensory inputs are counted separately. Standing/walking remain
+stable, but the independent hover crosses its height floor at 0.58 s and falls.
+All 382 failed training trace windows and all three full captures are verified.
+The candidate is not promoted; no extra-start run is needed after this failure.
+
+135 tests pass, with 37 known dependency warnings. Both completed videos are
+fully decoded, inspected and opened. The original baseline remains available.
+The next practical motor effort should teach command changes inside episodes,
+retain fixed-command rehearsal, and preserve the separate hover limitation.
+Takeoff/landing, learned utility, and the embodied multi-agent survival task
+remain unfinished; this round does not replace those requirements.
