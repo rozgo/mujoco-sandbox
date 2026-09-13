@@ -20,6 +20,7 @@ from embodied_fly.braking import BrakingTeacher
 from embodied_fly.evaluate import load_actor
 from embodied_fly.ground_posture import GroundPosture
 from embodied_fly.motion_flight import initialize
+from embodied_fly.motor_parameter_subset import WingOutputSubset
 from embodied_fly.motor_retention import FrozenMotorReference, task_loss, task_mixtures
 from embodied_fly.neural_view import NeuralProjection
 from embodied_fly.physical_contract import physical_contract
@@ -429,6 +430,9 @@ def train(args):
         raise ValueError("Need positive training settings and at least three worlds")
     if not 0 <= args.teacher_mix <= 1:
         raise ValueError("Teacher mixture must be in [0,1]")
+    subset_mode = getattr(args, "trainable_subset", "all")
+    if subset_mode not in ("all", "wing-output"):
+        raise ValueError("Unknown motor training parameter subset")
     retain_ground = getattr(args, "retain_ground", False)
     ground_weight = getattr(args, "ground_retention_weight", 1.0)
     task_loss({0: torch.tensor(0.0)}, ground_weight)
@@ -474,17 +478,22 @@ def train(args):
     )
     posture = GroundPosture(env, tasks.ground["qpos"])
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
+    memory = actor.initial_state(args.worlds)
+    retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
+    subset = (
+        WingOutputSubset(actor, teacher.channels) if subset_mode == "wing-output" else None
+    )
     optimizer = torch.optim.Adam(
         [p for p in actor.parameters() if p.requires_grad], lr=args.lr
     )
-    memory = actor.initial_state(args.worlds)
-    retainer = FrozenMotorReference(actor, args.worlds) if retain_ground else None
     retention_initial = (
         {k: v.detach().cpu().clone() for k, v in retainer.actor.state_dict().items()}
         if retainer is not None
         else None
     )
     mixture = mixture_by_task[tasks.task_ids]
+    nonwing_channels = np.setdiff1d(np.arange(env.model.nu), teacher.channels)
+    same_history_body_delta = 0.0 if subset is not None and retainer is not None else None
     frozen = {
         k: v.detach().clone()
         for k, v in actor.state_dict().items()
@@ -495,6 +504,7 @@ def train(args):
     episodes = []
     trace = deque(maxlen=64)
     gradient_audit = None
+    subset_gradient_audit = None
     collection_seconds = optimization_seconds = 0.0
     synchronize(device)
     setup = time.perf_counter() - started
@@ -547,6 +557,16 @@ def train(args):
                 for i, value in group_losses.items():
                     per_task[i].append(float(value.detach()))
                 student = result.action.detach().cpu().numpy()
+                if same_history_body_delta is not None:
+                    same_history_body_delta = max(
+                        same_history_body_delta,
+                        float(
+                            np.abs(
+                                student[:, nonwing_channels]
+                                - ground_actions[:, nonwing_channels]
+                            ).max()
+                        ),
+                    )
                 target_np = target.cpu().numpy()
                 executed = (1 - mixture[:, None]) * student + mixture[:, None] * target_np
                 trace.append(
@@ -604,7 +624,9 @@ def train(args):
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite motor loss")
             loss.backward()
-            if gradient_audit is None:
+            if subset is not None and subset_gradient_audit is None:
+                subset_gradient_audit = subset.gradient_audit()
+            if subset is None and gradient_audit is None:
                 gradient_audit = {
                     n: {
                         "l2": float(p.grad.norm()),
@@ -648,6 +670,16 @@ def train(args):
                 print(json.dumps(row), flush=True)
     synchronize(device)
     elapsed = time.perf_counter() - started
+    subset_report = subset.verify_and_report() if subset is not None else {"mode": "all"}
+    if subset is not None:
+        subset_report["same_history_nonwing_action_max_delta"] = same_history_body_delta
+        subset_report["same_history_world_actions_checked"] = (
+            transitions if same_history_body_delta is not None else 0
+        )
+        if same_history_body_delta is not None and same_history_body_delta > 1e-4:
+            raise RuntimeError(
+                "Non-wing outputs diverged from the frozen parent on identical histories"
+            )
     assert all(torch.equal(actor.state_dict()[k], v) for k, v in frozen.items())
     if retainer is not None:
         assert all(
@@ -686,6 +718,7 @@ def train(args):
         "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
         "parent_checkpoint_sha256": sha256(args.resume),
         "method": "motor-only online imitation on actual teacher/student-mixture physical states",
+        "parameter_subset": subset_report,
         "ground_retention": retention,
         "teacher_mix_by_task": dict(zip(TASKS, mixture_by_task.tolist())),
         "ground_posture": posture.report() if teacher.posture is not None else None,
@@ -729,6 +762,8 @@ def train(args):
         if device.type == "cuda"
         else 0,
         "core_gradient_audit": gradient_audit,
+        "parameter_subset": subset_report,
+        "subset_gradient_audit": subset_gradient_audit,
         "core_parameter_changes": {
             k: float((v.detach() - initial_core[k]).norm())
             for k, v in actor.core.named_parameters()
@@ -779,6 +814,7 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=16)
     parser.add_argument("--sequence", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--trainable-subset", choices=("all", "wing-output"), default="all")
     parser.add_argument("--teacher-mix", type=float, default=0.8)
     parser.add_argument("--hover-teacher-mix", type=float)
     parser.add_argument("--retain-ground", action="store_true")

@@ -2209,3 +2209,28 @@ mismatch; a controlled learning-rate repeat restored ground behavior; an actor-
 only continuation exposed continued cross-task interference while passing the
 standing posture gate. The full motor/utility/survival goal remains active and
 unfulfilled. There is no external blocker.
+
+### Selective existing wing-output learning: implementation
+
+Previous goal turn made progress: a matched reset audit, two complete GPU
+pilots, full evaluations and two reviewed/opened films changed the next action.
+Run02is the combined development parent;03passes standing posture but regresses
+walking and still fails hover. No training process remained live at the start
+of this turn and no external blocker is present.
+
+Implemented an optional wing-output training subset in the existing motor
+curriculum. Only the six final motor linear rows and biases may update (1,542
+eligible parameters). All upstream state and72other output rows are checked
+bitwise unchanged. Training hooks affect gradients only; checkpoints retain the
+same397inputs/78outputs and ordinary runtime architecture. Existing full-actor
+training remains the default. The frozen parent sees the same actual sensor
+histories, allowing direct non-wing output comparisons throughout training.
+
+The initial focused test failed in its fixture because generic deepcopy cannot
+copy PyTorch sparse-CSR storage. Rebuilding the tiny actor and loading its state
+fixes that fixture; the production frozen reference already shares immutable
+graph buffers correctly. The second focused run passes12tests in19.21seconds.
+It includes an actual training/save integration, changed wing weights, frozen
+upstream/body rows, and identical-history non-wing inference. The full suite passes100tests in69.80seconds, with23dependency warnings.
+The wing_output01pilot is declared but has not started. This stage is output-decoder imitation, with deliberately frozen
+internal cell parameters, not a claim of end-to-end brain learning in this run.

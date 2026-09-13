@@ -136,10 +136,16 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
 
 
 @pytest.mark.parametrize(
-    "task_set,retain_ground", [("all", False), ("ground", False), ("all", True)]
+    "task_set,retain_ground,subset",
+    [
+        ("all", False, "all"),
+        ("ground", False, "all"),
+        ("all", True, "all"),
+        ("all", True, "wing-output"),
+    ],
 )
 def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
-    tmp_path, monkeypatch, task_set, retain_ground
+    tmp_path, monkeypatch, task_set, retain_ground, subset
 ):
     from embodied_fly import motor_focus
     from embodied_fly.provenance import sha256
@@ -167,6 +173,7 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
         sequence=2,
         seconds=0.01,
         lr=1e-5,
+        trainable_subset=subset,
         teacher_mix=0.0 if retain_ground else 1.0,
         hover_teacher_mix=0.8 if retain_ground else None,
         hover_reference="state" if retain_ground else "clock",
@@ -202,6 +209,18 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
     assert checkpoint["wing_response_supervision"]["weight"] == 1
     assert report["ground_wing_loss_weight"] == 10
     assert report["ground_retention"]["enabled"] == retain_ground
+    assert report["parameter_subset"]["mode"] == subset
+    if subset == "wing-output":
+        assert report["core_gradient_audit"] is None
+        assert report["subset_gradient_audit"]
+        assert report["parameter_subset"]["upstream_parameters_and_buffers_unchanged"]
+        assert report["parameter_subset"]["nonwing_output_rows_unchanged"]
+        assert report["parameter_subset"]["same_history_nonwing_action_max_delta"] < 1e-5
+        assert (
+            report["parameter_subset"]["same_history_world_actions_checked"]
+            == report["transitions"]
+        )
+        assert not any(report["core_parameter_changes"].values())
     if retain_ground:
         assert report["ground_retention"]["weights_unchanged"]
         assert report["ground_retention"]["checkpoint_sha256"] == sha256(resume)
