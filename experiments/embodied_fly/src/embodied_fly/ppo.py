@@ -170,6 +170,21 @@ def train(args):
             "Positive rollout dimensions and horizon divisible by sequence required"
         )
     motor_ground = getattr(args, "motor_ground", False)
+    motor_all = getattr(args, "motor_all", False)
+    motor_mode = motor_ground or motor_all
+    retention_weight = getattr(args, "motor_retention_weight", 0.0)
+    if motor_ground and motor_all:
+        raise ValueError("Choose one motor curriculum")
+    if motor_all and (
+        args.preset != "wing_position" or args.rehearsal is not None or args.worlds < 3
+    ):
+        raise ValueError("All-motor PPO requires wing_position and no legacy corpus")
+    if (
+        not np.isfinite(retention_weight)
+        or retention_weight < 0
+        or (retention_weight and not motor_all)
+    ):
+        raise ValueError("Finite nonnegative retention requires all-motor PPO")
     wing_weight = getattr(args, "wing_supervision", 0.0)
     if not np.isfinite(wing_weight) or wing_weight < 0 or (wing_weight and not motor_ground):
         raise ValueError("Wing supervision requires a finite nonnegative motor-ground weight")
@@ -177,10 +192,10 @@ def train(args):
         raise ValueError(
             "Motor ground PPO requires wing_motion and no legacy rehearsal corpus"
         )
-    if not motor_ground and args.rehearsal is None:
+    if not motor_mode and args.rehearsal is None:
         raise ValueError("Utility PPO requires its declared rehearsal corpus")
     if (
-        not motor_ground
+        not motor_mode
         and args.preset in ("flight", "wing_motion")
         and args.flight_resets is None
     ):
@@ -195,13 +210,13 @@ def train(args):
     brain, parent = load_actor(args.resume, args.graph, device)
     brain.train()
     critic = Critic(brain).to(device)
-    if brain.motor_only != motor_ground:
+    if brain.motor_only != motor_mode:
         raise ValueError(
-            "Motor-only actors require --motor-ground; utility actors require the utility PPO path"
+            "Motor-only actors require a motor curriculum; utility actors require utility PPO"
         )
     env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size, preset=args.preset)
-    contract = physical_contract(env.model) if motor_ground else None
-    if motor_ground and parent.get("physical_contract") != contract:
+    contract = physical_contract(env.model) if motor_mode else None
+    if motor_mode and parent.get("physical_contract") != contract:
         raise ValueError("Motor PPO must match the parent physical fly")
     frozen = (
         {
@@ -209,18 +224,18 @@ def train(args):
             for k, v in brain.state_dict().items()
             if k.startswith(("utility_head.", "intention_encoder."))
         }
-        if motor_ground
+        if motor_mode
         else {}
     )
     tasks = None
-    if motor_ground:
+    if motor_mode:
         from embodied_fly.motor_focus import MotorTasks
-        from embodied_fly.motor_outcome import GroundMotorReward
+        from embodied_fly.motor_outcome import AllMotorReward, GroundMotorReward
 
         tasks = MotorTasks(
             env,
             args.seed,
-            "ground",
+            "all" if motor_all else "ground",
             getattr(args, "wing_angle_perturbation", 0.0),
             getattr(args, "wing_speed_perturbation", 0.0),
         )
@@ -232,7 +247,7 @@ def train(args):
     trace = deque(maxlen=128)
     flight_resets = (
         FlightResets(env, args.flight_resets, rng)
-        if not motor_ground and args.preset in ("flight", "wing_motion")
+        if not motor_mode and args.preset in ("flight", "wing_motion")
         else None
     )
     reward_fn = (
@@ -241,10 +256,10 @@ def train(args):
         else OutcomeReward(env, args.stationary_cost, args.stationary_turn_cost)
     )
     if tasks is not None:
-        reward_fn = GroundMotorReward(tasks)
+        reward_fn = AllMotorReward(tasks) if motor_all else GroundMotorReward(tasks)
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
-        if flight_resets or motor_ground
+        if flight_resets or motor_mode
         else ~env.template.walking_inactive,
         device=device,
     )
@@ -257,7 +272,7 @@ def train(args):
     optimizer_resumed = (
         parent.get("method", "").startswith("recurrent physical-outcome PPO")
         and parent.get("config", {}).get("preset", "walking") == args.preset
-        and parent.get("motor_only", False) == motor_ground
+        and parent.get("motor_only", False) == motor_mode
     )
     if optimizer_resumed:
         # Same actor/critic/exploration ordering as the preceding PPO stage.
@@ -269,6 +284,14 @@ def train(args):
             log_std.copy_(parent["log_std"].to(device))
         for group in optimizer.param_groups:
             group["lr"] = args.lr
+    from embodied_fly.motor_retention import FrozenMotorReference
+
+    retainer = FrozenMotorReference(brain, args.worlds) if retention_weight else None
+    retained_state = (
+        {k: v.detach().cpu().clone() for k, v in retainer.actor.state_dict().items()}
+        if retainer is not None
+        else None
+    )
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
     rehearsal_hz = None
     validation_ids = set()
@@ -343,7 +366,7 @@ def train(args):
     }
     training_started_utc = utc_now()
     start = time.perf_counter()
-    gradient_audit = wing_gradient_audit = None
+    gradient_audit = wing_gradient_audit = retention_gradient_audit = None
     failure = None
     progress = []
     try:
@@ -359,6 +382,7 @@ def train(args):
                 [],
             )
             wing_target_buf = []
+            retention_buf = []
             state_starts = []
             physical_rewards = []
             term_sums = {}
@@ -375,11 +399,13 @@ def train(args):
                     action = output.action.clone()
                     action[:, active] = latent.tanh()
                     logp = joint_log_probability(
-                        output, distribution, latent, output.activity, motor_only=motor_ground
+                        output, distribution, latent, output.activity, motor_only=motor_mode
                     )
                     if wing_weight:
                         wing_target = reward_fn.posture.wing_targets()
                         wing_target_buf.append(torch.as_tensor(wing_target, device=device))
+                    if retainer is not None:
+                        retention_buf.append(retainer.act(observation).detach())
                     previous = env.previous_action.copy()
                     next_observation = env.step(action.cpu().numpy())
                     trace.append(
@@ -393,12 +419,21 @@ def train(args):
                             "utility": output.utility_scores.cpu().numpy(),
                         }
                     )
+                    if retainer is not None:
+                        trace[-1]["ground_reference_action"] = (
+                            retention_buf[-1].cpu().numpy().copy()
+                        )
                     if wing_weight:
                         trace[-1]["wing_target"] = wing_target.copy()
                     if env.wing_forces is not None:
                         trace[-1]["wing_activity"] = env.wing_forces.activity.copy()
                         trace[-1]["wing_wrench"] = env._wing_applied.copy()
                     reward, failed, terms = reward_fn(previous)
+                    trace[-1]["physical_reward"] = reward.copy()
+                    trace[-1]["failed"] = failed.copy()
+                    trace[-1]["reward_rates"] = np.stack(list(terms.values()), axis=1)
+                    trace[-1]["task_id"] = task_ids.copy()
+                    trace[-1]["requested_height_cm"] = env.requested_height_cm.copy()
                     physical_rewards.append(float(reward.mean()))
                     for key, term in terms.items():
                         term_sums[key] = (
@@ -445,8 +480,8 @@ def train(args):
                         episode_records.append(
                             {
                                 "case_id": int(task_ids[i]),
-                                "task": ("stand", "walk")[task_ids[i]]
-                                if motor_ground
+                                "task": ("stand", "walk", "hover")[task_ids[i]]
+                                if motor_mode
                                 else None,
                                 "failed": bool(failed[i]),
                                 "failure_trace": failure_trace,
@@ -467,6 +502,8 @@ def train(args):
                         task_ids[ids] = rng.integers(len(cases), size=len(ids))
                         env.command[ids] = cases[task_ids[ids]]
                     memory = brain.reset_worlds(output.state, dones[-1])
+                    if retainer is not None:
+                        retainer.reset(dones[-1])
                     observation = torch.as_tensor(env.observation(), device=device)
                 final_value = critic(brain, observation, memory)
             data = {
@@ -483,6 +520,8 @@ def train(args):
             }
             if wing_weight:
                 data["wing_target"] = torch.stack(wing_target_buf)
+            if retainer is not None:
+                data["ground_reference_action"] = torch.stack(retention_buf)
             adv, returns = advantages(
                 data["reward"],
                 data["value"],
@@ -497,13 +536,14 @@ def train(args):
             counters["transitions"] += args.horizon * args.worlds
             update_start = time.perf_counter()
             kl_values, policy_losses, value_losses, wing_losses = [], [], [], []
+            retention_losses = []
             stop_epoch = False
             for _ in range(args.epochs):
                 for chunk in rng.permutation(len(state_starts)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
                     state = state_starts[chunk].detach()
                     new_logps, predictions = [], []
-                    entropy, wing_errors = [], []
+                    entropy, wing_errors, retention_errors = [], [], []
                     for t in range(a, b):
                         predictions.append(critic(brain, data["obs"][t], state))
                         result = brain(
@@ -519,12 +559,12 @@ def train(args):
                                 dist,
                                 data["latent"][t],
                                 data["activity"][t],
-                                motor_only=motor_ground,
+                                motor_only=motor_mode,
                             )
                         )
                         entropy.append(
                             dist.entropy().mean()
-                            if motor_ground
+                            if motor_mode
                             else torch.distributions.Categorical(logits=result.utility_logits)
                             .entropy()
                             .mean()
@@ -534,6 +574,14 @@ def train(args):
                                 F.mse_loss(
                                     result.action[:, reward_fn.posture.wings],
                                     data["wing_target"][t],
+                                )
+                            )
+                        if retainer is not None:
+                            ground = torch.as_tensor(task_ids != 2, device=device)
+                            retention_errors.append(
+                                F.mse_loss(
+                                    result.action[ground],
+                                    data["ground_reference_action"][t, ground],
                                 )
                             )
                         state = brain.reset_worlds(result.state, data["done"][t])
@@ -552,14 +600,24 @@ def train(args):
                     physical_loss = policy_loss - args.entropy * torch.stack(entropy).mean()
                     wing_loss = torch.stack(wing_errors).mean() if wing_weight else None
                     loss = physical_loss + (wing_weight * wing_loss if wing_weight else 0)
+                    retention_loss = (
+                        torch.stack(retention_errors).mean() if retainer is not None else None
+                    )
+                    if retention_loss is not None:
+                        loss = loss + retention_weight * retention_loss
                     if not torch.isfinite(loss + value_loss):
                         raise RuntimeError("Nonfinite PPO loss")
                     optimizer.zero_grad(set_to_none=True)
-                    if gradient_audit is None and wing_weight:
+                    if gradient_audit is None and (wing_weight or retention_weight):
                         gradient_audit = core_gradient_stats(brain, physical_loss)
-                        wing_gradient_audit = core_gradient_stats(
-                            brain, wing_weight * wing_loss
-                        )
+                        if wing_weight:
+                            wing_gradient_audit = core_gradient_stats(
+                                brain, wing_weight * wing_loss
+                            )
+                        if retention_weight:
+                            retention_gradient_audit = core_gradient_stats(
+                                brain, retention_weight * retention_loss
+                            )
                         if not all(
                             x["finite"] and x["l2"] > 0 for x in gradient_audit.values()
                         ):
@@ -591,6 +649,8 @@ def train(args):
                             args.sequence * args.worlds
                         )
                         wing_losses.append(float(wing_loss.detach()))
+                    if retention_loss is not None:
+                        retention_losses.append(float(retention_loss.detach()))
                     policy_losses.append(float(policy_loss.detach()))
                     value_losses.append(float(value_loss.detach()))
                 if stop_epoch:
@@ -652,6 +712,9 @@ def train(args):
                 "policy_loss": float(np.mean(policy_losses)) if policy_losses else None,
                 "value_loss": float(np.mean(value_losses)) if value_losses else None,
                 "wing_supervision_mse": float(np.mean(wing_losses)) if wing_losses else None,
+                "motor_retention_mse": float(np.mean(retention_losses))
+                if retention_losses
+                else None,
                 "rehearsal_loss": float(rehearsal_loss.detach())
                 if rehearsal_loss is not None
                 else None,
@@ -671,9 +734,16 @@ def train(args):
         elapsed = time.perf_counter() - start
         config = {k: v for k, v in vars(args).items() if not isinstance(v, Path)}
         config["internal_steps"] = brain.internal_steps
-        if motor_ground:
+        if motor_mode:
             config["ground_posture"] = True
+        if retainer is not None:
+            assert all(
+                torch.equal(v.cpu(), retained_state[k])
+                for k, v in retainer.actor.state_dict().items()
+            )
         checkpoint = {
+            "wing_residual_enabled": brain.wing_residual is not None,
+            "wing_residual_hidden": brain.wing_residual_hidden,
             "state_dict": {k: v.detach().cpu() for k, v in brain.state_dict().items()},
             "observation_size": brain.observation_size,
             "sensor_extension_size": brain.sensor_extension_size,
@@ -686,11 +756,13 @@ def train(args):
             "method": (
                 "recurrent physical-outcome PPO plus corrective wing supervision"
                 if wing_weight
+                else "recurrent physical-outcome PPO, motor-only all-command curriculum"
+                if motor_all
                 else "recurrent physical-outcome PPO, motor-only ground curriculum"
             )
-            if motor_ground
+            if motor_mode
             else "recurrent physical-outcome PPO plus explicit imitation rehearsal",
-            "motor_only": motor_ground,
+            "motor_only": motor_mode,
             "physical_contract": contract,
             "critic_state_dict": critic.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
@@ -702,22 +774,26 @@ def train(args):
             "provenance": run_evidence,
             "config": config,
             "reward_recipe": reward_fn.recipe,
-            "motor_only": motor_ground,
+            "motor_only": motor_mode,
             "physical_contract": contract,
-            "training_tasks": ["stand", "walk"] if motor_ground else None,
+            "training_tasks": ["stand", "walk", "hover"]
+            if motor_all
+            else ["stand", "walk"]
+            if motor_ground
+            else None,
             "worlds_by_task": {
                 name: int((task_ids == i).sum())
                 for i, name in enumerate(("stand", "walk", "hover"))
             }
-            if motor_ground
+            if motor_mode
             else None,
             "utility_and_intention_weights_unchanged": all(
                 torch.equal(brain.state_dict()[k], v) for k, v in frozen.items()
             )
-            if motor_ground
+            if motor_mode
             else None,
             "active_motor_channels": int(active.sum()),
-            "teacher_present_during_collection": bool(wing_weight),
+            "teacher_present_during_collection": bool(wing_weight or retention_weight),
             "executed_teacher_actions": False,
             "wing_supervision": {
                 "weight": wing_weight,
@@ -729,6 +805,17 @@ def train(args):
                 "included_in_ppo_optimization_seconds": True,
                 "deployed_module": False,
             },
+            "motor_retention": {
+                "weight": retention_weight,
+                "parent_checkpoint_sha256": sha256(args.resume)
+                if retainer is not None
+                else None,
+                "weights_unchanged": retainer is not None,
+                "scope": "all 78 mean motor outputs, ground worlds only",
+                "runtime_module": False,
+                "extra_physics_transitions": 0,
+            },
+            "core_gradient_audit_from_ground_retention": retention_gradient_audit,
             "training_started_utc": training_started_utc,
             "completed_utc": utc_now(),
             "setup_seconds": setup_seconds,
@@ -792,11 +879,15 @@ if __name__ == "__main__":
     parser.add_argument("--resume", type=Path, required=True)
     parser.add_argument("--rehearsal", type=Path)
     parser.add_argument("--motor-ground", action="store_true")
+    parser.add_argument("--motor-all", action="store_true")
+    parser.add_argument("--motor-retention-weight", type=float, default=0.0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)
     parser.add_argument("--wing-angle-perturbation", type=float, default=0.0)
     parser.add_argument("--wing-speed-perturbation", type=float, default=0.0)
     parser.add_argument(
-        "--preset", choices=("walking", "flight", "wing_motion"), default="walking"
+        "--preset",
+        choices=("walking", "flight", "wing_motion", "wing_position"),
+        default="walking",
     )
     parser.add_argument("--flight-resets", type=Path)
     parser.add_argument("--output", type=Path, required=True)

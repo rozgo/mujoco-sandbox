@@ -5,10 +5,20 @@ utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
 The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
-one command-conditioned actor and exactly the same wing-motion body in every
+one command-conditioned actor and exactly the same `wing_position` body in every
 task. Utility selection is temporarily disabled while these primitives are
 learned. Older presets and experiments below remain historical evidence.
-The current [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)
+The [current development review](../../previews/embodied_fly/position_sustain_retention_01_all_tasks_v1.mp4)
+passes standing, retains 4.84 cm of walking over five seconds and keeps hover
+airborne. Hover root RMSE is 6.00 mm, above the unchanged 5 mm gate; walking yaw
+also fails. One checkpoint controls all three tasks without a teacher or output
+mask. See [results and measured training times](runs/position_sustain_retention_01/SUMMARY.md).
+The next [physical-reward stage](MOTOR_PPO.md) adds all-command PPO while retaining
+the learned ground behavior; it changes neither the body nor the deployed actor.
+
+## Historical torque-model experiments
+
+The [ground motor review](../../previews/embodied_fly/ground_outcome_03_all_tasks_v1.mp4)
 keeps standing and walking upright for five seconds with permitted support.
 Physical-reward PPO plus training-only wing corrections halves standing wing-angle
 RMS relative to the earlier run06 (0.114 to 0.057 rad). Walking wing RMS is
@@ -36,7 +46,8 @@ The original walking sensor layout is retained as the first 383 inputs, all
 read live from the current body. Fourteen added inputs expose wing speeds,
 wing angles and measured/requested altitude more clearly. This does not load
 an older physical body or restore aerodynamic forces. Current motor learning
-always uses the same canonical `wing_motion` mechanics for every command.
+uses `wing_position` for every command. The earlier torque-control trials below
+retain their original `wing_motion` body and recorded physical fingerprints.
 
 The earlier [ground review](../../previews/embodied_fly/student_angle01_walk_stop_walk_v1.mp4)
 shows one graph actor walking, attempting to stop and resuming, with synchronized

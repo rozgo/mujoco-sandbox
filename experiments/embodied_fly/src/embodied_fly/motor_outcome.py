@@ -53,3 +53,40 @@ class GroundMotorReward:
         }
         reward += (sum(extra.values()) * self.env.control_dt).astype(np.float32)
         return reward, failed, terms | extra
+
+
+class AllMotorReward:
+    """Each world receives its command's physical reward exactly once per action."""
+
+    def __init__(self, tasks):
+        from embodied_fly.flight_outcome import FlightOutcomeReward
+
+        self.env, self.tasks = tasks.env, tasks
+        self.ground = GroundMotorReward(tasks)
+        self.flight = FlightOutcomeReward(self.env, horizontal_width=0.5, failure_height=0.5)
+        self.recipe = {
+            "version": "stand_walk_hover_outcome_v1",
+            "ground": self.ground.recipe,
+            "hover": self.flight.recipe,
+            "selection": "task 0/1: ground reward; task 2: hover reward, never their sum",
+            "failure_penalty": "one selected -1 penalty on failure; world resets immediately",
+            "runtime_controller": False,
+        }
+
+    def reset(self, ids):
+        self.ground.reset(ids)
+        self.flight.reset(ids)
+
+    def __call__(self, previous_action):
+        ground, ground_failed, ground_terms = self.ground(previous_action)
+        flight, flight_failed, flight_terms = self.flight(previous_action)
+        hovering = self.tasks.task_ids == 2
+        terms = {
+            **{f"ground/{k}": np.where(hovering, 0, v) for k, v in ground_terms.items()},
+            **{f"hover/{k}": np.where(hovering, v, 0) for k, v in flight_terms.items()},
+        }
+        return (
+            np.where(hovering, flight, ground),
+            np.where(hovering, flight_failed, ground_failed),
+            terms,
+        )

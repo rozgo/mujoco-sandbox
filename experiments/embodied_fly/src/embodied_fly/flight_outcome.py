@@ -90,13 +90,20 @@ class FlightResets:
 
 
 class FlightOutcomeReward:
-    def __init__(self, env):
+    def __init__(self, env, *, horizontal_width=5.0, failure_height=0.8):
+        if (
+            not np.isfinite([horizontal_width, failure_height]).all()
+            or min(horizontal_width, failure_height) <= 0
+        ):
+            raise ValueError("Positive finite flight reward scales required")
         self.env = env
+        self.horizontal_width = horizontal_width
+        self.failure_height = failure_height
         self.height = np.zeros(env.n)
         self.quaternion = np.zeros((env.n, 4))
         self.recipe = {
             "forward_and_lateral_velocity_tracking_rate": 2.0,
-            "horizontal_width_cm_s": 5.0,
+            "horizontal_width_cm_s": horizontal_width,
             "vertical_velocity_tracking_rate": 2.0,
             "vertical_width_cm_s": 5.0,
             "height_tracking_rate": 1.0,
@@ -105,7 +112,7 @@ class FlightOutcomeReward:
             "orientation_error": "1 - squared dot of unit root quaternions; exp(-error / 0.1)",
             "airborne_alive_rate": 0.5,
             "forbidden_support_cost_rate": 2.0,
-            "failure_height_below_cm": 0.8,
+            "failure_height_below_cm": failure_height,
             "failure_upright_below": 0.5,
             "physical_failure_penalty_once": 1.0,
             "units": f"CGS state; rates times actual {env.control_dt:g} s action interval; terminal penalty once",
@@ -120,13 +127,14 @@ class FlightOutcomeReward:
         env = self.env
         qpos, velocity = env.fields["qpos"], env.fields["qvel"][:, :3]
         upright = env.fields["xmat"][:, env.template.thorax_id, 8]
-        failed = (qpos[:, 2] < 0.8) | (upright < 0.5)
+        failed = (qpos[:, 2] < self.failure_height) | (upright < 0.5)
         horizontal = velocity[:, :2] - env.command[:, :2]
         orientation_error = np.clip(
             1 - np.sum(qpos[:, 3:7] * self.quaternion, axis=1) ** 2, 0, 1
         )
         terms = {
-            "horizontal_velocity": 2 * np.exp(-np.sum(horizontal**2, axis=1) / 25),
+            "horizontal_velocity": 2
+            * np.exp(-np.sum(horizontal**2, axis=1) / self.horizontal_width**2),
             "vertical_velocity": 2 * np.exp(-((velocity[:, 2] / 5) ** 2)),
             "height": np.exp(-(((qpos[:, 2] - self.height) / 0.3) ** 2)),
             "orientation": np.exp(-orientation_error / 0.1),

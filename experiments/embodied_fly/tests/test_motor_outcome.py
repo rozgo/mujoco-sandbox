@@ -36,20 +36,24 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
     )
 
 
-@pytest.mark.parametrize("wing_weight", [0.0, 100.0])
+@pytest.mark.parametrize("wing_weight,all_motor", [(0.0, False), (100.0, False), (0.0, True)])
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch, wing_weight
+    tmp_path, monkeypatch, wing_weight, all_motor
 ):
     from embodied_fly import ppo
 
     brain = tiny_brain()
     brain.set_motor_only()
+    if all_motor:
+        brain.enable_wing_residual(8)
     frozen = {
         k: v.clone()
         for k, v in brain.state_dict().items()
         if k.startswith(("utility_head.", "intention_encoder."))
     }
-    env = FlyBatch(2, 2, 14, preset="wing_motion")
+    worlds = 3 if all_motor else 2
+    preset = "wing_position" if all_motor else "wing_motion"
+    env = FlyBatch(worlds, 2, 14, preset=preset)
     parent = {"graph_sha256": "test", "physical_contract": physical_contract(env.model)}
     monkeypatch.setattr(ppo, "load_actor", lambda *args: (brain, parent))
     resume = tmp_path / "parent.pt"
@@ -62,12 +66,14 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         graph=graph,
         output=tmp_path / "run",
         device="cpu",
-        motor_ground=True,
+        motor_ground=not all_motor,
+        motor_all=all_motor,
+        motor_retention_weight=4.0 if all_motor else 0.0,
         wing_supervision=wing_weight,
-        preset="wing_motion",
+        preset=preset,
         rehearsal=None,
         flight_resets=None,
-        worlds=2,
+        worlds=worlds,
         threads=2,
         horizon=8,
         sequence=4,
@@ -85,10 +91,10 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         seed=81001,
     )
     report = ppo.train(args)
-    assert report["transitions"] == 16 and report["ppo_updates"] > 0
+    assert report["transitions"] == worlds * 8 and report["ppo_updates"] > 0
     assert report["active_motor_channels"] == 78
     assert report["rehearsal_frames"] == report["rehearsal_seconds"] == 0
-    assert report["teacher_present_during_collection"] == bool(wing_weight)
+    assert report["teacher_present_during_collection"] == bool(wing_weight or all_motor)
     assert not report["executed_teacher_actions"]
     assert report["wing_supervision"]["weight"] == wing_weight
     assert report["wing_supervised_presentations"] == (
@@ -100,8 +106,8 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
             for x in report["core_gradient_audit_from_weighted_wing_supervision"].values()
         )
     assert report["utility_and_intention_weights_unchanged"]
-    assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": 0}
-    assert len(report["completed_episodes"]) == 8
+    assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": int(all_motor)}
+    assert len(report["completed_episodes"]) == worlds * 4
     assert all(
         x["l2"] > 0 and x["finite"]
         for x in report["core_gradient_audit_from_physical_reward"].values()
@@ -111,6 +117,15 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in frozen.items())
     model = mujoco.MjModel.from_binary_path(str(args.output / "model.mjb"))
     assert checkpoint["physical_contract"] == physical_contract(model)
+    if all_motor:
+        assert checkpoint["wing_residual_enabled"] and checkpoint["wing_residual_hidden"] == 8
+        assert report["motor_retention"]["weights_unchanged"]
+        assert not report["motor_retention"]["runtime_module"]
+        restored = tiny_brain()
+        restored.enable_wing_residual(checkpoint["wing_residual_hidden"])
+        restored.load_state_dict(checkpoint["state_dict"], strict=True)
+        # The physical reward gradient was audited before adding the retention loss.
+        assert report["core_gradient_audit_from_ground_retention"] is not None
     json.dumps(report, allow_nan=False)
     # The second run must consume the optimizer and critic from the first, while
     # retaining exactly the same physical identity and inactive utility weights.
@@ -119,6 +134,31 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     continued = ppo.train(args)
     assert continued["optimizer_resumed"]
     assert continued["utility_and_intention_weights_unchanged"]
+
+
+def test_all_motor_rewards_select_task_once_and_do_not_move_physics():
+    from embodied_fly.motor_outcome import AllMotorReward
+
+    env = FlyBatch(3, 3, 14, preset="wing_position")
+    tasks = MotorTasks(env, 98001)
+    reward = AllMotorReward(tasks)
+    reward.reset(np.arange(3))
+    before = {k: v.copy() for k, v in env.fields.items()}
+    original, failed, terms = reward(env.previous_action)
+    for key, value in before.items():
+        np.testing.assert_array_equal(env.fields[key], value)
+    np.testing.assert_allclose(original, sum(terms.values()) * env.control_dt - failed)
+    assert all(value[2] == 0 for key, value in terms.items() if key.startswith("ground/"))
+    assert all(not value[:2].any() for key, value in terms.items() if key.startswith("hover/"))
+    # A moving hover is worse than a stationary hover at the same height.
+    env.fields["qvel"][2, 0] = 0.5
+    drifting, _, _ = reward(env.previous_action)
+    assert drifting[2] < original[2]
+    # Hover failure uses the declared 0.5 cm floor and incurs one -1 penalty.
+    env.fields["qpos"][2, 2] = 0.4
+    total, failed, terms = reward(env.previous_action)
+    assert failed.tolist() == [False, False, True]
+    np.testing.assert_allclose(total, sum(terms.values()) * env.control_dt - failed, rtol=1e-6)
 
 
 def test_wing_corrective_labels_restore_angle_brake_speed_and_do_not_move_body():
