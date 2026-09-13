@@ -1,0 +1,15 @@
+# Motor-cell readout 01: improved fitting, no accepted motor controller
+
+Source `91fcd28`, parent `state_hover_retention_02`. This pilot adds a zero-initialized linear readout from the existing normalized 815 motor-neuron activities to six wing-logit corrections (4,896 parameters). It adds no recurrent state or raw-sensor bypass. All original actor weights, the connectome, body and flight force law remain unchanged. One checkpoint still controls all 78 actuators for every command. The normal loader handles the optional extension; old checkpoints retain their original path.
+
+Fitting uses exactly the same five recorded histories, masks, startup weight and ridge grid as state_readout02: 6,758 training frames, 1,680 temporally related validation frames. Zero new integrated physical transitions. Setup 5.491297 s, frozen GPU replay 13.887785 s, fit/packing/save 5.385649 s; total 24.764732 s. Peak allocated CUDA memory 664,091,648 bytes. The cached trajectory arrays preserve labels while removing repeated decompression overhead.
+
+Selected regularization is 1e-5. Validation action MSE across stand/walk/reference-hover/two correction histories is 0.00004417 / 0.0004417 / 0.00004936 / 0.02283 / 0.007801. On the same recorded near-limit example, the new readout predicts positive sweep commands 0.186/0.199, replacing the previous fit's wrong negative sign; the corrective target is 0.471/0.479. Fit improvement is real, but remaining correction errors are substantial.
+
+The unassisted five-second-per-command test uses seed 72007: setup 6.921002 s and capture 31.379153 s. Standing remains upright but its wing peak (0.2705 rad) fails the posture gate. The first recorded stability-envelope failures are 1.488 s for walk and 0.404 s for hover. All strict task gates fail, with zero numerical warnings. This candidate is **not promoted**; retention02 remains selected.
+
+The [complete video](../../../../previews/embodied_fly/motor_cell_readout_01_all_tasks_v1.mp4) retains all failures: 15 s, 750 frames, 1600×900, 50 fps, 1×. Rendering/encoding took 59.486772 s. It was fully decoded, visually inspected and automatically opened.
+
+Verification checks every original weight unchanged, exact new weight export from saved coefficients, masks and causal bounded actions, and matching graph/physical/capture hashes. The independent cross-host coefficient solve differs by at most 3.68e-8; the saved coefficients satisfy the recomputed normal equation to 1.41e-8 relative residual. Both lie within the float32 source-input precision (1.19e-7). The initial tighter helper tolerance rejected two coefficients; no physical gate or evaluated checkpoint was changed.
+
+Next: test a nonlinear readout of the same motor-cell activity while preserving the original actor, using the cached features for fast fitting and requiring fresh unassisted evaluation. That extension is not yet implemented or trained. This result does not establish learned hover, general recovery, learned utility or the completed multi-fly survival goal.
