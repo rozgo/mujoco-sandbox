@@ -1040,3 +1040,30 @@ zero-initialized extra columns, verify full-graph numerical migration, and verif
 single/batched physics observation agreement before a bounded learning pilot.
 This is an input-information repair, not evidence that flight will then succeed.
 Avoid further identical-data extensions without a new physical result.
+
+### Continuous wing-angle repair (declared before learning)
+
+Extend the six existing wing-speed inputs with six measured hinge angles / pi,
+for **395 inputs**. Keep the original 383 observations, their normalization,
+the existing velocity measurements, and their learned encoder columns unchanged.
+Expand the same sensory-input matrix from 6→128 to 12→128, copying its trained
+first six columns and initializing the added columns to zero. No new recurrent
+controller, motor bypass, oscillator or privileged phase input is introduced.
+Native batched learning, individual evaluation, corrective collection and dataset
+augmentation must all use the same schema; legacy checkpoints stay reproducible.
+
+Verify a 20-step small-graph migration, gradients into the new columns, blocked
+sensor-to-motor influence when graph edges are removed, single/batch physical
+agreement, captured-data input agreement, and full-graph CUDA migration at both
+clocks. Retain the previously declared numerical tolerances and record unchanged-
+parent repeat differences. Check all new velocity/angle channels for clipping.
+
+The bounded angle-input pilot starts from **motor_flight_probe_02**, the last
+flight warm start that retained a stable continuous ground transition. Use the
+same three corpora as corrective pilot 01, 32 sequences, 64 burn-in / 32 supervised
+steps, ground multiplier 4, wing multiplier 1, equal clock-group sampling, 25%
+reset starts, learning rate 3e-5, **60 seconds**, seed **48001**. Adam initializes
+fresh because its sensory parameter shape expands. This optimizer difference is
+explicit; the pilot is not a strict one-variable comparison. The walking reference
+remains online01. Evaluate actual unassisted wing motion, both original airborne
+cases, all fixed ground commands and continuous transitions before promotion.

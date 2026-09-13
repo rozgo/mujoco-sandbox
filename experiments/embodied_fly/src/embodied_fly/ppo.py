@@ -185,7 +185,9 @@ def train(args):
             group["lr"] = args.lr
     core_initial = {n: p.detach().clone() for n, p in brain.core.named_parameters()}
     # Preserve the same whole-episode held-out split as the imitation experiments.
-    episodes = load_episodes(args.rehearsal, brain.sensor_extension_size == 6)
+    episodes = load_episodes(
+        args.rehearsal, brain.sensor_extension_size >= 6, brain.sensor_extension_size == 12
+    )
     validation_ids = set(
         np.random.default_rng(1193).permutation(len(episodes))[: max(1, len(episodes) // 4)]
     )

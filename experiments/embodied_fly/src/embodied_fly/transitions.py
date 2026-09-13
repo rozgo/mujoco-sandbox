@@ -146,7 +146,9 @@ def evaluate(args):
         environment.maximum_disallowed_ground_force = 0.0
         velocities, positions, upright, heights = [], [], [], []
         for _ in range(round(seconds / CONTROL_DT)):
-            observation = environment.observation(actor.sensor_extension_size == 6)
+            observation = environment.observation(
+                actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
+            )
             captures["observation"].append(observation)
             result = actor(torch.as_tensor(observation[None], device=device), memory)
             memory = result.state

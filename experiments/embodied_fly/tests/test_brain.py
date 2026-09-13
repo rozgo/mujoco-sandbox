@@ -122,10 +122,51 @@ def test_extra_sensors_preserve_old_actor_exactly_then_receive_gradients():
     assert torch.isfinite(child.sensor_extension.weight.grad).all()
 
 
-def test_extra_sensors_still_require_the_connectome_path_to_motors():
+@pytest.mark.parametrize("extension", (6, 12))
+def test_extra_sensors_still_require_the_connectome_path_to_motors(extension):
     graph = sparse.csr_matrix((6, 6), dtype=np.float32)
-    brain = EmbodiedBrain(graph, [0, 1], [2, 3], [4, 5], 10, 3, sensor_extension_size=6).eval()
+    brain = EmbodiedBrain(
+        graph, [0, 1], [2, 3], [4, 5], 4 + extension, 3, sensor_extension_size=extension
+    ).eval()
     with torch.no_grad():
         brain.sensor_extension.weight.fill_(1)
-    output = brain(torch.randn(2, 10), brain.initial_state(2))
+    output = brain(torch.randn(2, 4 + extension), brain.initial_state(2))
     torch.testing.assert_close(output.action[0], output.action[1])
+
+
+def test_expanding_existing_sensor_matrix_preserves_trained_columns_and_memory():
+    parent = (
+        EmbodiedBrain(tiny_graph(), [0, 1], [2, 3], [4, 5], 10, 3, sensor_extension_size=6)
+        .double()
+        .eval()
+    )
+    with torch.no_grad():
+        parent.sensor_extension.weight.normal_(0, 0.1)
+        parent.observation_mean.normal_()
+        parent.observation_std.uniform_(0.5, 2)
+    child = (
+        EmbodiedBrain(tiny_graph(), [0, 1], [2, 3], [4, 5], 16, 3, sensor_extension_size=12)
+        .double()
+        .eval()
+    )
+    assert initialize_extended_actor(child, parent.state_dict())
+    torch.testing.assert_close(
+        child.sensor_extension.weight[:, :6], parent.sensor_extension.weight
+    )
+    assert not child.sensor_extension.weight[:, 6:].any()
+    torch.testing.assert_close(child.observation_mean[:10], parent.observation_mean)
+    torch.testing.assert_close(child.observation_std[:10], parent.observation_std)
+    a, b = parent.initial_state(2), child.initial_state(2)
+    for _ in range(20):
+        original = torch.randn(2, 10, dtype=torch.float64)
+        extended = torch.cat((original, torch.randn(2, 6, dtype=torch.float64)), dim=1)
+        old, new = parent(original, a), child(extended, b)
+        torch.testing.assert_close(old.action, new.action, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(old.state, new.state, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(
+            old.utility_scores, new.utility_scores, rtol=1e-12, atol=1e-12
+        )
+        a, b = old.state.detach(), new.state.detach()
+    new.action.square().sum().backward()
+    gradient = child.sensor_extension.weight.grad[:, 6:]
+    assert torch.isfinite(gradient).all() and gradient.abs().sum() > 0

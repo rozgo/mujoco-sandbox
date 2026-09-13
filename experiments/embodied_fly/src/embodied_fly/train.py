@@ -18,7 +18,12 @@ from torch.nn import functional as F
 
 from embodied_fly.body import CONTROL_DT
 from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
-from embodied_fly.observations import append_wing_velocity, wing_velocity_indices
+from embodied_fly.observations import (
+    append_wing_angles,
+    append_wing_velocity,
+    wing_angle_indices,
+    wing_velocity_indices,
+)
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -27,7 +32,9 @@ def synchronize(device):
         torch.cuda.synchronize(device)
 
 
-def load_episodes(path, wing_velocity_inputs=False):
+def load_episodes(path, wing_velocity_inputs=False, wing_angle_inputs=False):
+    if wing_angle_inputs and not wing_velocity_inputs:
+        raise ValueError("Wing angles require velocity extension in the observation schema")
     manifest = json.loads((path / "manifest.json").read_text())
     rejected = {
         e["episode"]
@@ -35,11 +42,13 @@ def load_episodes(path, wing_velocity_inputs=False):
         if e["failure"] or e.get("physical_failure") or e["final_upright"] < 0.5
     }
     episodes = []
-    indices = (
-        wing_velocity_indices(mujoco.MjModel.from_binary_path(str(path / "model.mjb")))
+    model = (
+        mujoco.MjModel.from_binary_path(str(path / "model.mjb"))
         if wing_velocity_inputs
         else None
     )
+    indices = wing_velocity_indices(model) if model is not None else None
+    angle_indices = wing_angle_indices(model) if wing_angle_inputs else None
     for file in sorted(path.glob("episode_*.npz")):
         if int(file.stem.split("_")[-1]) in rejected:
             continue
@@ -52,6 +61,10 @@ def load_episodes(path, wing_velocity_inputs=False):
                     )
                 episode["observation"] = append_wing_velocity(
                     episode["observation"], data["qvel"], indices
+                )
+            if wing_angle_inputs:
+                episode["observation"] = append_wing_angles(
+                    episode["observation"], data["qpos"], angle_indices
                 )
             episodes.append(episode)
     if len(episodes) < 4:
@@ -96,7 +109,7 @@ def train(args):
     clock_groups = {}
     wing_channels = None
     for dataset in [args.data, *args.additional_data]:
-        episodes = load_episodes(dataset, args.wing_velocity_inputs)
+        episodes = load_episodes(dataset, args.wing_velocity_inputs, args.wing_angle_inputs)
         manifest = json.loads((dataset / "manifest.json").read_text())
         hz = manifest.get("control_hz", manifest.get("environment", {}).get("control_hz", 500))
         time_scale = 1 / hz / CONTROL_DT
@@ -153,7 +166,11 @@ def train(args):
         observation_size,
         action_size,
         internal_steps=args.internal_steps,
-        sensor_extension_size=6 if args.wing_velocity_inputs else 0,
+        sensor_extension_size=12
+        if args.wing_angle_inputs
+        else 6
+        if args.wing_velocity_inputs
+        else 0,
     ).to(device)
     all_observations = np.concatenate([e["observation"] for e in training])
     parent = None
@@ -434,4 +451,5 @@ if __name__ == "__main__":
     parser.add_argument("--wing-loss-weight", type=float, default=0)
     parser.add_argument("--ground-loss-weight", type=float, default=1)
     parser.add_argument("--wing-velocity-inputs", action="store_true")
+    parser.add_argument("--wing-angle-inputs", action="store_true")
     train(parser.parse_args())

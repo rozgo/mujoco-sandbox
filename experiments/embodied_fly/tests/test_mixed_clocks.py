@@ -71,6 +71,7 @@ def test_one_actor_trains_both_demonstration_clocks_and_reports_each(tmp_path):
             wing_loss_weight=1.0,
             ground_loss_weight=4.0,
             wing_velocity_inputs=False,
+            wing_angle_inputs=False,
         )
     )
     report = json.loads((output / "report.json").read_text())

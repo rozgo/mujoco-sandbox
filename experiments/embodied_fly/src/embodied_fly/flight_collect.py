@@ -16,7 +16,7 @@ import torch
 from embodied_fly.body import CONTROL_DT, FlyEnvironment
 from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_teacher import FlightTeacherOracle
-from embodied_fly.observations import append_wing_velocity
+from embodied_fly.observations import append_wing_angles, append_wing_velocity
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -66,9 +66,13 @@ def collect(args):
             if actor is not None:
                 actor_observation = (
                     append_wing_velocity(observation, env.data.qvel, env.wing_velocity_indices)
-                    if actor.sensor_extension_size == 6
+                    if actor.sensor_extension_size >= 6
                     else observation
                 )
+                if actor.sensor_extension_size == 12:
+                    actor_observation = append_wing_angles(
+                        actor_observation, env.data.qpos, env.wing_angle_indices
+                    )
                 result = actor(
                     torch.as_tensor(actor_observation[None], device=device),
                     memory,

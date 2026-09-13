@@ -77,14 +77,26 @@ def diagnose(args):
                 if len(below)
                 else None,
             }
-            if checkpoint.get("sensor_extension_size") == 6:
-                extended_mean = checkpoint["state_dict"]["observation_mean"].numpy()[-6:]
+            if checkpoint.get("sensor_extension_size", 0) >= 6:
+                extended_mean = checkpoint["state_dict"]["observation_mean"].numpy()[383:389]
                 extended_std = (
-                    checkpoint["state_dict"]["observation_std"].numpy()[-6:].clip(0.05)
+                    checkpoint["state_dict"]["observation_std"].numpy()[383:389].clip(0.05)
                 )
                 extended = (velocity / 2000 - extended_mean) / extended_std
                 results[name]["extended_wing_velocity_encoder_clip_fraction"] = np.mean(
                     np.abs(extended) >= 10, axis=0
+                ).tolist()
+            if checkpoint.get("sensor_extension_size") == 12:
+                angle_extension_mean = checkpoint["state_dict"]["observation_mean"].numpy()[
+                    389:395
+                ]
+                angle_extension_std = (
+                    checkpoint["state_dict"]["observation_std"].numpy()[389:395].clip(0.05)
+                )
+                raw_angle = capture["qpos"][:count, model.jnt_qposadr[wing]] / np.pi
+                results[name]["extended_wing_angle_encoder_clip_fraction"] = np.mean(
+                    np.abs((raw_angle - angle_extension_mean) / angle_extension_std) >= 10,
+                    axis=0,
                 ).tolist()
     report = {
         "provenance": evidence(),

@@ -10,7 +10,12 @@ import torch
 
 from embodied_fly.brain import EmbodiedBrain, initialize_extended_actor, load_malecns
 from embodied_fly.evaluate import load_actor
-from embodied_fly.observations import append_wing_velocity, wing_velocity_indices
+from embodied_fly.observations import (
+    append_wing_angles,
+    append_wing_velocity,
+    wing_angle_indices,
+    wing_velocity_indices,
+)
 from embodied_fly.provenance import evidence, sha256, utc_now
 
 
@@ -21,11 +26,25 @@ def verify(args):
     torch.set_num_threads(4)
     device = torch.device(args.device)
     parent, checkpoint = load_actor(args.checkpoint, args.graph, device)
-    if parent.observation_size != 383:
-        raise ValueError("Expected the preserved 383-input actor")
+    extension = 12 if args.wing_angle_inputs else 6
+    observation_size = 383 + extension
+    if (
+        parent.observation_size not in (383, 389)
+        or parent.observation_size >= observation_size
+    ):
+        raise ValueError("Expected a smaller preserved actor with the 383-input base schema")
     graph, sensory, descending, motor = load_malecns(args.graph)
     child = (
-        EmbodiedBrain(graph, sensory, descending, motor, 389, 78, parent.internal_steps, 6)
+        EmbodiedBrain(
+            graph,
+            sensory,
+            descending,
+            motor,
+            observation_size,
+            78,
+            parent.internal_steps,
+            extension,
+        )
         .to(device)
         .eval()
     )
@@ -33,9 +52,16 @@ def verify(args):
     model = mujoco.MjModel.from_binary_path(str(args.capture.parent / "model.mjb"))
     with np.load(args.capture) as data:
         observations = data["observation"].copy()
+        if observations.shape[-1] != 383:
+            raise ValueError(
+                "Migration requires a capture with original 383-input observations"
+            )
         augmented = append_wing_velocity(
             observations, data["qvel"], wing_velocity_indices(model)
         )
+        if args.wing_angle_inputs:
+            augmented = append_wing_angles(augmented, data["qpos"], wing_angle_indices(model))
+        observations = augmented[:, : parent.observation_size].copy()
     offsets = np.arange(args.sequences) * args.steps
     if offsets[-1] + args.steps > len(observations):
         raise ValueError("Capture shorter than requested independent sequences")
@@ -94,9 +120,18 @@ def verify(args):
         "device": str(device),
         "parallel_neural_sequences": args.sequences,
         "steps_per_sequence": args.steps,
-        "old_observation_size": 383,
-        "new_observation_size": 389,
-        "added_trainable_parameters": child.sensor_extension.weight.numel(),
+        "old_observation_size": parent.observation_size,
+        "new_observation_size": child.observation_size,
+        "added_trainable_parameters": sum(p.numel() for p in child.parameters())
+        - sum(p.numel() for p in parent.parameters()),
+        "extended_channel_encoder_clip_fraction": np.mean(
+            np.abs(
+                (augmented[:, 383:] - child.observation_mean[383:].cpu().numpy())
+                / child.observation_std[383:].cpu().numpy().clip(0.05)
+            )
+            >= 10,
+            axis=0,
+        ).tolist(),
         "live_physics_worlds": 0,
         "optimization_performed": False,
         "absolute_tolerance": tolerances,
@@ -117,4 +152,5 @@ if __name__ == "__main__":
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--steps", type=int, default=64)
     parser.add_argument("--sequences", type=int, default=8)
+    parser.add_argument("--wing-angle-inputs", action="store_true")
     verify(parser.parse_args())

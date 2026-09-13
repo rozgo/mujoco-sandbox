@@ -100,7 +100,9 @@ def evaluate(args):
         numerical_failure = None
         neural_stride = max(1, round(0.02 / actor_dt))
         for step in range(round(args.seconds / actor_dt)):
-            raw_observation = environment.observation(actor.sensor_extension_size == 6)
+            raw_observation = environment.observation(
+                actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
+            )
             observations.append(raw_observation)
             observation = torch.as_tensor(raw_observation[None], device=device)
             result = actor(

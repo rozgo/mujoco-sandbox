@@ -4,25 +4,28 @@ from types import SimpleNamespace
 
 import mujoco
 import numpy as np
+import pytest
 import torch
 
 from embodied_fly import flight_collect
 from embodied_fly.body import FlyEnvironment
+from embodied_fly.train import load_episodes
 
 
+@pytest.mark.parametrize("extension_size", (6, 12))
 def test_corrective_capture_records_executed_physics_and_causal_previous_action(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, extension_size
 ):
     """A small deterministic test actor checks collection, not learned behavior."""
 
     class Actor:
-        sensor_extension_size = 6
+        sensor_extension_size = extension_size
 
         def initial_state(self, worlds):
             return torch.zeros(1, worlds)
 
         def __call__(self, obs, state, time_scale):
-            assert obs.shape == (1, 389) and time_scale == 0.1
+            assert obs.shape == (1, 383 + extension_size) and time_scale == 0.1
             # Continuously varying actions also expose memory resets inside episodes.
             action = (state.T * 0.01).expand(1, 78).clone()
             return SimpleNamespace(action=action, state=state + 1)
@@ -69,3 +72,15 @@ def test_corrective_capture_records_executed_physics_and_causal_previous_action(
                 env.step(action)
                 np.testing.assert_allclose(env.data.qpos, capture["qpos"][i + 1], atol=1e-12)
                 assert not env.data.xfrc_applied.any() and not env.data.qfrc_applied.any()
+    augmented = load_episodes(args.output, True, True)
+    assert len(augmented) == 4
+    for i, episode in enumerate(augmented):
+        with np.load(args.output / f"episode_{i:03d}.npz") as capture:
+            np.testing.assert_array_equal(
+                episode["observation"][:, :383], capture["observation"]
+            )
+            np.testing.assert_allclose(
+                episode["observation"][:, 389:395],
+                capture["qpos"][:, env.wing_angle_indices] / np.pi,
+                rtol=1e-7,
+            )

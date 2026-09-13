@@ -73,7 +73,9 @@ def evaluate(args):
     failure = None
     stepping_started = time.perf_counter()
     for step in range(round(args.seconds / env.control_dt)):
-        observation = env.observation(actor.sensor_extension_size == 6)
+        observation = env.observation(
+            actor.sensor_extension_size >= 6, wing_angles=actor.sensor_extension_size == 12
+        )
         result = actor(
             torch.as_tensor(observation[None], device=device),
             memory,

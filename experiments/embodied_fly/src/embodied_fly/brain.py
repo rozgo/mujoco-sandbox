@@ -133,7 +133,7 @@ class EmbodiedBrain(nn.Module):
         if sensor_extension_size:
             # New measured inputs enter the SAME sensory hidden layer. Keep the
             # original matrix multiply unchanged; zero weights preserve the old
-            # actor exactly at migration, including its recurrent state.
+            # actor function. CUDA execution can still differ by reduction roundoff.
             self.sensor_extension = nn.Linear(sensor_extension_size, 128, bias=False)
             nn.init.zeros_(self.sensor_extension.weight)
         self.utility_head = nn.Sequential(
@@ -212,13 +212,28 @@ def initialize_extended_actor(brain, parent_state):
     if brain.observation_size == old_size:
         brain.load_state_dict(state, strict=True)
         return False
-    if old_size + brain.sensor_extension_size != brain.observation_size:
-        raise ValueError("Only the declared sensory extension may change at migration")
+    original_inputs = state["sensory_encoder.0.weight"].shape[1]
+    old_extension = old_size - original_inputs
+    added = brain.observation_size - old_size
+    if (
+        added <= 0
+        or brain.observation_size - brain.sensor_extension_size != original_inputs
+        or old_extension < 0
+    ):
+        raise ValueError("Only additional sensory columns may change at migration")
     for name, fill in (("observation_mean", 0), ("observation_std", 1)):
-        state[name] = torch.cat(
-            [state[name], state[name].new_full((brain.sensor_extension_size,), fill)]
-        )
-    state["sensor_extension.weight"] = torch.zeros_like(brain.sensor_extension.weight)
+        state[name] = torch.cat([state[name], state[name].new_full((added,), fill)])
+    extended_weight = state["sensory_encoder.0.weight"].new_zeros(
+        brain.sensor_extension.weight.shape
+    )
+    if old_extension:
+        old_weight = state["sensor_extension.weight"]
+        if old_weight.shape != (extended_weight.shape[0], old_extension):
+            raise ValueError(
+                "Parent sensory extension shape differs from its observation schema"
+            )
+        extended_weight[:, :old_extension] = old_weight
+    state["sensor_extension.weight"] = extended_weight
     brain.load_state_dict(state, strict=True)
     return True
 
