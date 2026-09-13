@@ -40,12 +40,15 @@ def verify(args):
     if offsets[-1] + args.steps > len(observations):
         raise ValueError("Capture shorter than requested independent sequences")
     reports = []
+    tolerances = {"action": 1e-6, "state": 1e-4, "utility_scores": 1e-6}
     for scale in (1.0, 0.1):
         old_memory, new_memory = (
             parent.initial_state(args.sequences),
             child.initial_state(args.sequences),
         )
         maximum = {"action": 0.0, "state": 0.0, "utility_scores": 0.0}
+        repeated_memory = parent.initial_state(args.sequences)
+        repetition = maximum.copy()
         for t in range(args.steps):
             old = parent(
                 torch.as_tensor(observations[t + offsets], device=device),
@@ -57,15 +60,29 @@ def verify(args):
                 new_memory,
                 time_scale=scale,
             )
+            repeated = parent(
+                torch.as_tensor(observations[t + offsets], device=device),
+                repeated_memory,
+                time_scale=scale,
+            )
             for field, previous in maximum.items():
                 error = float((getattr(old, field) - getattr(new, field)).abs().max())
                 maximum[field] = max(previous, error)
+                repetition[field] = max(
+                    repetition[field],
+                    float((getattr(old, field) - getattr(repeated, field)).abs().max()),
+                )
             old_memory, new_memory = old.state, new.state
+            repeated_memory = repeated.state
         reports.append(
             {
                 "neural_time_scale": scale,
                 "maximum_absolute_difference": maximum,
                 "exactly_equal": not any(maximum.values()),
+                "unchanged_parent_repeat_maximum_difference": repetition,
+                "within_declared_numerical_tolerance": all(
+                    maximum[k] <= tolerances[k] for k in maximum
+                ),
             }
         )
     report = {
@@ -82,13 +99,15 @@ def verify(args):
         "added_trainable_parameters": child.sensor_extension.weight.numel(),
         "live_physics_worlds": 0,
         "optimization_performed": False,
+        "absolute_tolerance": tolerances,
+        "tolerance_reason": "CUDA sparse reductions vary even for repeated execution of the unchanged parent; this is numerical compatibility, not physical behavior acceptance",
         "results": reports,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report), flush=True)
-    if not all(r["exactly_equal"] for r in reports):
-        raise RuntimeError("Migrated actor differs before learning; inspect retained report")
+    if not all(r["within_declared_numerical_tolerance"] for r in reports):
+        raise RuntimeError("Migration exceeds numerical tolerance; inspect retained report")
 
 
 if __name__ == "__main__":

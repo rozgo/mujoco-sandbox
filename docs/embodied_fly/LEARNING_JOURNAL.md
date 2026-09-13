@@ -948,3 +948,15 @@ next check. Do not silently weaken the exact-migration assertion. Separately,
 all 12,000 flight frames have zero encoder clipping in the six new channels
 (maximum scaled absolute speed 1.775 versus the safety bound 10), with identical
 legacy observation values. This verifies information preservation, not flight.
+
+The contiguous-layout check still found ~4.2e-7 maximum action differences. A
+component probe found identical raw inputs, normalized inputs and first-layer
+outputs, but **the unchanged parent repeated on identical inputs also differed
+by 2.38e-7 in actions**. CUDA sparse execution is not bit reproducible here; the
+zero adapter preserves the function, not a universal bit-level CUDA guarantee.
+Retain both failed strict reports. Before retrying, revise this *numerical
+migration* check to action/utility absolute tolerance 1e-6 and recurrent-state
+1e-4 over 64 steps, and report the unchanged parent's own repeat-run variation
+alongside it. The original physical task gates are unchanged. This explicitly
+corrects the earlier overly strong exact-CUDA assertion; it is not a training
+or physical-success claim.
