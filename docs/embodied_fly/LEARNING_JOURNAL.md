@@ -2785,3 +2785,45 @@ possibly disclosed exact-plant PID initialization followed by actor-only PPO,
 is a discussion option; no runtime helper or imitation was added to this run.
 See hover_response_01 and hover_only_06 for raw measurements, timing, hashes,
 recipe changes, source code and the critic's remaining weak temporal fit.
+
+## September 13 — exact-plant PID teaching learns a useful wing rhythm
+
+The user approved imitation from the accepted PID followed by PPO. The new
+training-only batch teacher reads each current physical state and supplies all
+78 joint targets. A 302.066-second, 32-world imitation run uses weight 1 for
+wing MSE and .1 for the other posture targets. The PID's explicit phase clock
+and integral stay outside the deployed actor. Same graph, body and 500 Hz
+actions; all 112 training batches retain target, student and executed commands.
+
+The saved end-of-full-teaching actor independently sustains all three ten-second
+starts. It learns approximately 29.75 Hz, 30-degree sweeps instead of 9.25 Hz,
+96-degree sweeps. Its settled repeated height ripple is .095 mm, close to the
+PID's .101 mm, but mean altitude is about9.86 mm too low and peak position error
+is109 mm. The user calls the video promising and likes the smoother motion,
+while recognizing the remaining drift and altitude loss. Preserve this exact
+checkpoint/video. This is evidence for learning the rhythm, not accurate hover.
+
+The subsequent imitation handoff regresses severely: the final actor falls in
+.090/.092/.090 seconds. It is retained with its video and all failed traces.
+Low assisted imitation error did not predict independent physical stability.
+Under the predeclared selection rule, the surviving earlier actor seeds PPO.
+This is development selection, not a held-out comparison. Possible hidden-phase
+and state-distribution issues remain hypotheses to test.
+
+One312.290-second PPO continuation uses64 hover worlds,16 CPU MuJoCo/mjbatch
+threads and RTX4090 neural work; no runtime PID or imitation labels. Fresh PPO
+and critic Adam, four critic-only fitting rollouts within the budget, same
+bounded reward, physics, observations and actor. It collects458,752 actions,
+46actor/112critic updates and128complete five-second episodes with no falls.
+Three frozen ten-second starts survive, but altitude RMS8.724 ->8.695 mm and
+peak position error108.999 ->109.575 mm show no meaningful improvement.
+The new wing rhythm is retained. No further training is started this round.
+
+The timing question now has stronger evidence: this actor can generate nearly
+30 Hz motion at its existing500 Hz action rate. That does not prove adequate
+feedback bandwidth or validate the modeled neural time constants. The next
+investigation should isolate corrective gain/direction around its own wing
+phase before changing clocks or adding more of the same PPO. All179package
+tests pass; both imitation videos and both final PPO comparisons were fully
+decoded, visually inspected and opened. See pid_imitation_01 and
+pid_imitation_ppo_01 for full metrics, hashes, source, clocks and ancestry.

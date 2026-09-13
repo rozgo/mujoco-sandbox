@@ -1,0 +1,15 @@
+{
+  "status": "preferred development parent; accurate hover not accepted",
+  "checkpoint": "assets/embodied_fly/diagnostics/pid_imitation_01_teacher_stage.pt",
+  "checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "video": "previews/embodied_fly/pid_imitation_teacher_pid_comparison_v1.mp4",
+  "video_sha256": "1b74df87cec639e1d00b1cd568628e99e166d704970c1a083944cd037719b2a4",
+  "reason": "User finds this wing motion promising. The later PPO actor has essentially the same rhythm and no meaningful improvement in hover, with slightly more peak drift. Retain the earlier actor as the starting point for a revised PPO study.",
+  "independent_airborne_starts": 3,
+  "independent_accurate_hover_passes": 0,
+  "action_hz": 500,
+  "physics_hz": 1000,
+  "settled_sweep_frequency_hz": 29.75,
+  "next_method_recommendation": "PPO focused on position/altitude correction while retaining the learned wing rhythm; investigate longer rollout and reward-credit timescales for slow drift before another bounded run. Keep deployed architecture, body and clocks fixed.",
+  "next_training_started": false
+}

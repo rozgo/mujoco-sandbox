@@ -1107,3 +1107,37 @@ User-approved work observed start **2026-09-13 23:20:04 UTC**. Teach the existin
 motor actor on the accepted instantaneous1 kHz plant, then independently evaluate
 and continue PPO. Record teaching/handoff, PPO, evaluation and rendering separately.
 The PID clock/integral remain training-only. Previous checkpoints remain intact.
+
+### PID teaching/PPO measured completion
+
+- Observed effort start23:20:04 UTC, first two reviewed imitation videos opened
+  23:48:57 UTC; final two PPO comparison videos opened23:57:19 UTC on September13.
+  **37 min15 s** elapsed to the final review milestone; final Git archival follows.
+- Imitation trains23:32:27.253–23:37:29.372 UTC, **302.065709 s** measured training
+  plus7.871340 s setup.32worlds,16CPU physics threads,RTX4090 neural training;
+  112updates,229,376actions,458.752aggregate simulated seconds.45,056actions use
+  zero executed teacher share; teacher labels still make this imitation.
+- Imitation collection148.191582 s, optimization95.683078 s, trace-write/loop
+  overhead58.191049 s. All are included in302.065709 s. The selected earlier
+  teacher-stage checkpoint contains58updates/118,784actions; its last completed
+  row records151.923703 s. The remaining failed handoff updates do not enter PPO.
+- PPO **312.290448 s** plus7.834813 s setup;64hover worlds,16CPU MuJoCo/mjbatch
+  physics threads,RTX4090 neural work.458,752actions,917.504aggregate simulated
+  seconds,46actor/112critic updates. Four critic-only fitting rollouts use34.214803 s
+  inside the training budget. Collection118.908227 s; optimization193.373634 s.
+- Combined actual training this round **614.356157 s (10 min14.356 s)** and
+  688,128actions/1,376.256aggregate simulated seconds. These are continued
+  pretrained actors, not from-scratch times. Both imitation and PPO use1,000 Hz
+  physics,500 Hz actions; this fly run does not useMuJoCo Warp.
+- Three frozen comparisons (handoff, teacher-stage, PPO) take36.628757,
+  37.133666 and36.642864 s capture, each four ten-second worlds/20,000actions.
+  The first two setups take6.686792/6.338231 s; exact final setup is in its report.
+- Imitation teacher/handoff renders66.435482/64.868006 s concurrently. Final
+  PID/PPO and before/after renders67.043972/73.778929 s concurrently. All four
+  videos ten seconds,500frames,50fps,1600x900,1x; full decode and sampled-frame
+  inspection passed, then automatically opened on the Mac.
+- Full179tests passed in157.91 s; focused10passed in8.37 s. No extra test suite
+  repetition for the source-identical PPO continuation.112imitation traces,
+  both imitation checkpoints, PPO checkpoint and physical/graph invariants verified.
+  Git LFS integrity passed. All failures remain archived; preferred result is the
+  user-reviewed end-of-teaching actor, with accurate hover still open.

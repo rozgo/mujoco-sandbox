@@ -1,0 +1,55 @@
+{
+  "checkpoint_sha256": "721cc7e574075f36497eba2c9bd7c4c3d91ffee99a6d6293d31bfdc7996ea560",
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "physical_graph_contracts_preserved": true,
+  "all_actor_tensors_finite": true,
+  "fixed_tensors": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed_tensors": [
+    "core.excitability",
+    "core.leak",
+    "core.bias",
+    "sensory_encoder.0.weight",
+    "sensory_encoder.0.bias",
+    "sensory_encoder.2.weight",
+    "sensory_encoder.2.bias",
+    "sensor_extension.weight",
+    "motor_decoder.0.weight",
+    "motor_decoder.0.bias",
+    "motor_decoder.1.weight",
+    "motor_decoder.1.bias",
+    "motor_decoder.3.weight",
+    "motor_decoder.3.bias",
+    "wing_residual.network.0.weight",
+    "wing_residual.network.0.bias",
+    "wing_residual.network.2.weight",
+    "wing_residual.network.2.bias"
+  ],
+  "optimizer_history": {
+    "optimizer_state_dict": {
+      "parameters_with_history": 19,
+      "fresh_adam_steps": 46
+    },
+    "value_optimizer_state_dict": {
+      "parameters_with_history": 6,
+      "fresh_adam_steps": 112
+    }
+  },
+  "reward_recipe_unchanged_from_hover_only_06": true,
+  "verified_failure_windows": 0,
+  "teacher_or_rehearsal_during_ppo": false
+}

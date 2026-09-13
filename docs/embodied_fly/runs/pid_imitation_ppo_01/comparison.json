@@ -1,0 +1,332 @@
+{
+  "method": "Saved 500 Hz physical captures; t=[6,10)s for cycle statistics, detrend/Hann FFT, 0.25 Hz bins. Same analysis as prior pilot06. All trajectories survive; original full-window gates preserved.",
+  "before_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "after_checkpoint_sha256": "721cc7e574075f36497eba2c9bd7c4c3d91ffee99a6d6293d31bfdc7996ea560",
+  "before": {
+    "source_sha256": "692f2cc16752e54ef5b8335678767a41b8f386b1c883819a1eaf9a52a370b5c1",
+    "window_seconds": [
+      6,
+      10
+    ],
+    "height_mean_error_mm": -9.860582241545261,
+    "height_total_span_mm": 0.5315421671643268,
+    "height_dominant_hz": 59.5,
+    "height_ripple_mean_peak_to_trough_mm": 0.09486986452441955,
+    "height_cycles_measured": 237,
+    "sweep_dominant_hz": [
+      29.75,
+      29.75
+    ],
+    "mean_absolute_sweep_velocity_rad_s": [
+      31.20005533578515,
+      31.006026053633555
+    ],
+    "sweep_angle_span_rad": [
+      0.5283487264362783,
+      0.5250653743086713
+    ],
+    "mean_stroke_orientation_rad": [
+      0.716488810827889,
+      0.7165022662835768
+    ],
+    "horizontal_world_velocity_mean_mm_s": [
+      -10.8386985407045,
+      4.906317404873053
+    ],
+    "offline_reward_terms_after_one_second": {
+      "height": 0.27938966076485416,
+      "horizontal_position": 0.03640441330129164,
+      "horizontal_velocity": 0.38962756895605344
+    },
+    "vertical_speed_scores_by_scale_mm_s": {
+      "50": 0.9694397224043745,
+      "20": 0.8566810720300275
+    }
+  },
+  "after": {
+    "source_sha256": "bb5ecd93b6f453682e71acd9c8d4845f0aa485d01dff7dede26c7696975f84e2",
+    "window_seconds": [
+      6,
+      10
+    ],
+    "height_mean_error_mm": -9.850287843800961,
+    "height_total_span_mm": 0.5450769585421593,
+    "height_dominant_hz": 59.5,
+    "height_ripple_mean_peak_to_trough_mm": 0.09487620269665024,
+    "height_cycles_measured": 237,
+    "sweep_dominant_hz": [
+      29.75,
+      29.75
+    ],
+    "mean_absolute_sweep_velocity_rad_s": [
+      31.199555595628315,
+      31.008849121204463
+    ],
+    "sweep_angle_span_rad": [
+      0.5283492923428188,
+      0.5251221388474748
+    ],
+    "mean_stroke_orientation_rad": [
+      0.7163748307219746,
+      0.7164534551230156
+    ],
+    "horizontal_world_velocity_mean_mm_s": [
+      -10.897891973138973,
+      4.93132225242237
+    ],
+    "offline_reward_terms_after_one_second": {
+      "height": 0.28053344927774504,
+      "horizontal_position": 0.03611784562245355,
+      "horizontal_velocity": 0.3879724927620721
+    },
+    "vertical_speed_scores_by_scale_mm_s": {
+      "50": 0.9694449114726784,
+      "20": 0.8566897439415511
+    }
+  },
+  "pid": {
+    "source_sha256": "409604378e77192ea5d4371fcbf1714667d94f8c9ee30e3d891ed7b82fba991d",
+    "window_seconds": [
+      6,
+      10
+    ],
+    "height_mean_error_mm": 3.6152065369665645e-07,
+    "height_total_span_mm": 0.10370378357398291,
+    "height_dominant_hz": 60.0,
+    "height_ripple_mean_peak_to_trough_mm": 0.10073752189805112,
+    "height_cycles_measured": 239,
+    "sweep_dominant_hz": [
+      30.0,
+      30.0
+    ],
+    "mean_absolute_sweep_velocity_rad_s": [
+      31.140981454620547,
+      30.94531708919497
+    ],
+    "sweep_angle_span_rad": [
+      0.5223423949121893,
+      0.5186587512092597
+    ],
+    "mean_stroke_orientation_rad": [
+      0.7359787002783182,
+      0.7359787002783182
+    ],
+    "horizontal_world_velocity_mean_mm_s": [
+      -0.006711206521621231,
+      0.011899294734786552
+    ],
+    "offline_reward_terms_after_one_second": {
+      "height": 1.9986706622007773,
+      "horizontal_position": 0.9930822049032775,
+      "horizontal_velocity": 0.9994770061134853
+    },
+    "vertical_speed_scores_by_scale_mm_s": {
+      "50": 0.9660446381166904,
+      "20": 0.8434828643666161
+    }
+  },
+  "evaluation_before": [
+    {
+      "case": "hover",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.622527679417622,
+          "position_peak_mm": 108.99918794904211,
+          "position_rms_mm": 60.44225746067754,
+          "altitude_rms_mm": 8.285469551628548,
+          "vertical_speed_rms_mm_s": 14.053593028932019
+        },
+        "after_first_second": {
+          "height_span_mm": 9.534713724182083,
+          "position_peak_mm": 108.99918794904211,
+          "position_rms_mm": 63.707840874545624,
+          "altitude_rms_mm": 8.723522248552127,
+          "vertical_speed_rms_mm_s": 12.817004607634608
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.996287744146768,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lower_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.321468345681275,
+          "position_peak_mm": 112.5524474876843,
+          "position_rms_mm": 63.37501181630807,
+          "altitude_rms_mm": 9.02178894858203,
+          "vertical_speed_rms_mm_s": 14.35778307319292
+        },
+        "after_first_second": {
+          "height_span_mm": 8.928915269642095,
+          "position_peak_mm": 112.5524474876843,
+          "position_rms_mm": 66.79873606229049,
+          "altitude_rms_mm": 9.496190465272814,
+          "vertical_speed_rms_mm_s": 12.886769926178234
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9954707192387331,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lateral_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.272876973351739,
+          "position_peak_mm": 107.96418605686466,
+          "position_rms_mm": 59.59717555419687,
+          "altitude_rms_mm": 8.304535601522879,
+          "vertical_speed_rms_mm_s": 14.186446132422823
+        },
+        "after_first_second": {
+          "height_span_mm": 9.26438310701968,
+          "position_peak_mm": 107.96418605686466,
+          "position_rms_mm": 62.81490217909469,
+          "altitude_rms_mm": 8.741604123938977,
+          "vertical_speed_rms_mm_s": 12.803258287604041
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.996295953781957,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "pid",
+      "controller": "PID reference",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 0.650600822383891,
+          "position_peak_mm": 0.5967519349006433,
+          "position_rms_mm": 0.1382488755863109,
+          "altitude_rms_mm": 0.0700649495233811,
+          "vertical_speed_rms_mm_s": 13.574424658775344
+        },
+        "after_first_second": {
+          "height_span_mm": 0.13141957847028207,
+          "position_peak_mm": 0.19731874879519967,
+          "position_rms_mm": 0.12414975142866937,
+          "altitude_rms_mm": 0.036477511893450144,
+          "vertical_speed_rms_mm_s": 13.537338026529358
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": true,
+      "minimum_upright": 0.9956752639479366,
+      "maximum_forbidden_load_bodyweights": 0.0
+    }
+  ],
+  "evaluation_after": [
+    {
+      "case": "hover",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.603505471757337,
+          "position_peak_mm": 109.57542668099248,
+          "position_rms_mm": 60.761770797048584,
+          "altitude_rms_mm": 8.258365713299135,
+          "vertical_speed_rms_mm_s": 14.058142148839192
+        },
+        "after_first_second": {
+          "height_span_mm": 9.517728608409579,
+          "position_peak_mm": 109.57542668099248,
+          "position_rms_mm": 64.04466110301622,
+          "altitude_rms_mm": 8.694842170635273,
+          "vertical_speed_rms_mm_s": 12.815649382267406
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9962912667423258,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lower_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.15880799089216,
+          "position_peak_mm": 109.25589094140109,
+          "position_rms_mm": 60.500273443519994,
+          "altitude_rms_mm": 8.27572932647262,
+          "vertical_speed_rms_mm_s": 14.276897679304756
+        },
+        "after_first_second": {
+          "height_span_mm": 9.123620291431003,
+          "position_peak_mm": 109.25589094140109,
+          "position_rms_mm": 63.768333807772905,
+          "altitude_rms_mm": 8.708750599673621,
+          "vertical_speed_rms_mm_s": 12.800518960616166
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9962921024853306,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "lateral_start",
+      "controller": "learned MaleCNS actor",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 11.18995423524391,
+          "position_peak_mm": 110.25044287087036,
+          "position_rms_mm": 61.295119466385216,
+          "altitude_rms_mm": 8.564597646589533,
+          "vertical_speed_rms_mm_s": 14.240235509548798
+        },
+        "after_first_second": {
+          "height_span_mm": 8.81357744940474,
+          "position_peak_mm": 110.25044287087036,
+          "position_rms_mm": 64.60488588018525,
+          "altitude_rms_mm": 9.015957800923385,
+          "vertical_speed_rms_mm_s": 12.84378067432568
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": false,
+      "minimum_upright": 0.9957316400154784,
+      "maximum_forbidden_load_bodyweights": 0.0
+    },
+    {
+      "case": "pid",
+      "controller": "PID reference",
+      "windows": {
+        "whole_capture": {
+          "height_span_mm": 0.650600822383891,
+          "position_peak_mm": 0.5967519349006433,
+          "position_rms_mm": 0.1382488755863109,
+          "altitude_rms_mm": 0.0700649495233811,
+          "vertical_speed_rms_mm_s": 13.574424658775344
+        },
+        "after_first_second": {
+          "height_span_mm": 0.13141957847028207,
+          "position_peak_mm": 0.19731874879519967,
+          "position_rms_mm": 0.12414975142866937,
+          "altitude_rms_mm": 0.036477511893450144,
+          "vertical_speed_rms_mm_s": 13.537338026529358
+        }
+      },
+      "stable": true,
+      "first_failure_seconds": null,
+      "reference_quality_gate": true,
+      "minimum_upright": 0.9956752639479366,
+      "maximum_forbidden_load_bodyweights": 0.0
+    }
+  ]
+}

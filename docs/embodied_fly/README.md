@@ -4,14 +4,18 @@ Work in progress on `feature/fly-brain`. This is the approved successor to the
 utility-over-supplied-gait prototype. Full learned walking, flight, survival and
 multi-agent behavior have not yet passed acceptance.
 
-Latest review: [hover pilot06](runs/hover_only_06/SUMMARY.md) confirms that the
-actor responds to disturbances at the 500 Hz control rate, but wing-generated
-corrections can initially go the wrong way. A 10 min 9 s tighter-reward continuation
-keeps three ten-second starts airborne and slightly improves altitude tracking;
-the repeated 2.80 mm bobbing remains. Watch [before/after](../../previews/embodied_fly/hover_only_before_after_v6.mp4)
-or [PPO beside PID](../../previews/embodied_fly/hover_only_pid_comparison_v6.mp4).
-Hover-first motor learning is the current stage; earlier multi-command reviews
-below retain their historical physical models and results. Utility remains deferred.
+Latest review: [PID teaching](runs/pid_imitation_01/SUMMARY.md) gives the same
+actor independent 29.75 Hz, 30-degree wing strokes, close to the reference PID.
+The user found this [imitation video](../../previews/embodied_fly/pid_imitation_teacher_pid_comparison_v1.mp4)
+promising. Three ten-second starts stay airborne, but altitude loss and drift
+remain. Later imitation handoff fails; a five-minute physical PPO continuation
+from the earlier checkpoint preserves its motion without meaningfully improving
+position holding. Watch the [before/after](../../previews/embodied_fly/pid_imitation_ppo_before_after_v1.mp4)
+and read the [PPO results](runs/pid_imitation_ppo_01/SUMMARY.md).
+Keep the earlier imitation checkpoint as this round's
+[preferred development reference](runs/pid_imitation_ppo_01/preferred_reference.json).
+Accurate hover remains open. Earlier multi-command reviews below
+retain their historical physical models; utility remains deferred.
 
 The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same `wing_position` body in every

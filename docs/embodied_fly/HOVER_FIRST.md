@@ -1,23 +1,24 @@
 # Hover first, with a PID comparison
 
-Current approved work: [PID imitation followed by PPO](runs/pid_imitation_01/PLAN.md).
-The existing PID may now teach the same actor and supply an explicitly recorded
-share of training actions. Its phase clock and integral stay outside the actor.
-Independent evaluation uses only learned commands. The earlier PPO-only recipe
-below remains historical evidence; its no-imitation statements describe those runs.
+Latest completed work: [PID imitation](runs/pid_imitation_01/SUMMARY.md) followed
+by [physical PPO](runs/pid_imitation_ppo_01/SUMMARY.md). Teaching produces a
+promising independent 29.75 Hz wing rhythm with three airborne starts, but loses
+altitude and drifts. The later imitation handoff collapses, so PPO starts from
+the saved end-of-teaching actor. Its 312.290-second continuation retains motion
+without meaningfully improving position holding. Preserve the earlier
+[imitation video](../../previews/embodied_fly/pid_imitation_teacher_pid_comparison_v1.mp4)
+and compare [before/after PPO](../../previews/embodied_fly/pid_imitation_ppo_before_after_v1.mp4).
+Accurate hover remains open; no next motor stage starts in this review round.
 
-Latest completed result: [pilot06](runs/hover_only_06/SUMMARY.md). A phase-matched
-probe finds prompt command changes but weak, phase-dependent lift correction.
-One tighter vertical-speed PPO continuation improves mean altitude error slightly
-and preserves three airborne starts; settled ripple stays 2.80 mm at 9.25 Hz.
-Accurate hover remains open. See [PID comparison](../../previews/embodied_fly/hover_only_pid_comparison_v6.mp4)
-and [before/after](../../previews/embodied_fly/hover_only_before_after_v6.mp4).
-No further training or next motor stage has started in this review round.
+The PID supplies labels and explicitly recorded actions only during imitation.
+Its phase clock/integral remain outside the actor. PPO and frozen review use
+only learned commands. The original PPO-only recipe below is historical evidence;
+its no-imitation statements describe those earlier runs.
 
 The accepted PID proves nominal hover is controllable in the declared flight
-model. The next stage trains the same MaleCNS actor through physical PPO rewards,
-starting airborne. The PID does not execute in the learner's world or generate
-training labels. Utility/needs training remains deferred.
+model. The original PPO-only stage trains the same MaleCNS actor through physical
+rewards, starting airborne. In those earlier runs the PID neither executes in the
+learner's world nor generates labels. Utility/needs training remains deferred.
 
 Curriculum: hover -> straight flight/turning -> stand -> landing -> walking ->
 takeoff. These stages continue one actor. Hover-only learning intentionally
