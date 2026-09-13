@@ -2147,3 +2147,19 @@ command-conditioned actor, no restored aerodynamic preset, no runtime teacher.
 The original walking sensor prefix carries current measurements; its historical
 name refers to the input layout. Full motor acceptance and the broader learned
 utility, flight transitions and multi-agent survival goal remain unfinished.
+
+### Fresh-reset audit declaration
+
+Previous goal turn made progress: a state-based hover teacher was validated,
+new ground-retention training was implemented/tested, one complete GPU pilot
+and its full failure-inclusive video were archived. The candidate is rejected;
+its standing/hover failures determine the next action. No process was left
+running and no external blocker is present.
+
+Before more learning, motor_reset_audit compares the final checkpoint's training
+and evaluation inference modes, exact initial observations before/after teacher
+construction, and first actions for batch sizes3and32. It then physically rolls
+out the same saved evaluation starts replicated into32worlds for one second,
+using the frozen actor alone. This is a bounded diagnostic with zero learning;
+no teacher action, physical parameter or acceptance threshold changes. It tests
+setup/batch discrepancies and retains the current failure as evidence.
