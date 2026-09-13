@@ -1711,3 +1711,27 @@ outputs learned,all failures retained. Addedinitial-formtargets,direct wing
 angle/velocity correction labels,and physical pose measurements. Body collapse
 is substantially improved,but rest-wing accuracy still needs work. No claim
 of recovered biological behavior or completedflight is supported.
+
+### Wing-response audit — 2026-09-13 06:56:54 UTC
+
+The previous goal turn is **progress**: committed initial-form learning, four
+measured pilots and reviewed films, better five-second ground stability, and
+evidence that a larger wing-loss weight does not fix rest-angle accuracy.
+Mac and GPU are at8be7554; no training process remains live.
+
+“Older walking inputs” refers only to the inherited383-feature observation
+prefix. It already includes all hinge angles and velocities, including wings.
+The additional continuous wing channels were introduced during aerodynamic
+experiments to avoid saturation: six velocities/2000rad/s, six angles/pi, then
+two altitude inputs/2cm. All current tasks still use the same non-aerodynamic
+wing-motion physical body. No old physics model is being reintroduced.
+
+Before another training change, declare a frozen neural-response diagnostic on
+preferred06's actual saved histories. At0,0.1,0.5 and1s, perturb each wing angle
+by±0.05rad or velocity by±2rad/s in both corresponding sensory paths. Compare
+action responses after1,5 and25 held-input neural updates. Hold every other
+input and copied prior neural state fixed. This is a counterfactual sensory
+probe with zero physical transitions and zero learning; it is not an autonomous
+rollout or biological validation. Check original-history action replay and
+retain exact source/capture hashes. This should distinguish wrong-sign response,
+weak response and simple constant bias before changing the training recipe.
