@@ -47,6 +47,11 @@ def audit(args):
     active = torch.ones(actor.action_size, dtype=torch.bool, device=device)
     log_std = parent["log_std"].to(device)
     floor = parent["config"]["minimum_noise"]
+    if args.noise is not None:
+        if not 0 < args.noise <= 0.15:
+            raise ValueError("Noise override must be positive and at most .15")
+        log_std = torch.full_like(log_std, np.log(args.noise))
+        floor = args.noise
     sampled = np.arange(args.worlds) % 2 == 1
     first_failure = np.full(args.worlds, np.nan)
     returns = np.zeros(args.worlds)
@@ -144,6 +149,7 @@ def audit(args):
             "seed": args.seed,
             "seconds": args.seconds,
             "noise_floor": floor,
+            "noise_override": args.noise,
         },
         "physical_contract": physical_contract(env.model),
         "setup_seconds": setup_seconds,
@@ -176,4 +182,5 @@ if __name__ == "__main__":
     parser.add_argument("--seconds", type=float, default=5)
     parser.add_argument("--seed", type=int, default=120201)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--noise", type=float, help="Explicit frozen diagnostic override")
     audit(parser.parse_args())
