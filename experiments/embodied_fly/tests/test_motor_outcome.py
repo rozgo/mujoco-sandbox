@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 import mujoco
 import numpy as np
+import pytest
 import torch
 from test_motor_focus import tiny_brain
 
@@ -35,8 +36,9 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
     )
 
 
+@pytest.mark.parametrize("wing_weight", [0.0, 100.0])
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, wing_weight
 ):
     from embodied_fly import ppo
 
@@ -61,6 +63,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         output=tmp_path / "run",
         device="cpu",
         motor_ground=True,
+        wing_supervision=wing_weight,
         preset="wing_motion",
         rehearsal=None,
         flight_resets=None,
@@ -85,7 +88,17 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     assert report["transitions"] == 16 and report["ppo_updates"] > 0
     assert report["active_motor_channels"] == 78
     assert report["rehearsal_frames"] == report["rehearsal_seconds"] == 0
-    assert report["teacher_present_during_collection"] is False
+    assert report["teacher_present_during_collection"] == bool(wing_weight)
+    assert not report["executed_teacher_actions"]
+    assert report["wing_supervision"]["weight"] == wing_weight
+    assert report["wing_supervised_presentations"] == (
+        report["ppo_updates"] * 8 if wing_weight else 0
+    )
+    if wing_weight:
+        assert all(
+            x["finite"] and x["l2"] > 0
+            for x in report["core_gradient_audit_from_weighted_wing_supervision"].values()
+        )
     assert report["utility_and_intention_weights_unchanged"]
     assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": 0}
     assert len(report["completed_episodes"]) == 8
@@ -94,7 +107,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
         for x in report["core_gradient_audit_from_physical_reward"].values()
     )
     checkpoint = torch.load(args.output / "actor.pt", weights_only=True)
-    assert checkpoint["motor_only"]
+    assert checkpoint["motor_only"] and checkpoint["config"]["ground_posture"]
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in frozen.items())
     model = mujoco.MjModel.from_binary_path(str(args.output / "model.mjb"))
     assert checkpoint["physical_contract"] == physical_contract(model)
@@ -106,3 +119,21 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     continued = ppo.train(args)
     assert continued["optimizer_resumed"]
     assert continued["utility_and_intention_weights_unchanged"]
+
+
+def test_wing_corrective_labels_restore_angle_brake_speed_and_do_not_move_body():
+    env = FlyBatch(2, 2, 14, preset="wing_motion")
+    tasks = MotorTasks(env, 19, "ground")
+    posture = GroundMotorReward(tasks).posture
+    np.testing.assert_allclose(posture.wing_targets(), 0, atol=1e-12)
+    env.fields["qpos"][0, env.template.wing_angle_indices] += 0.1
+    env.fields["qvel"][1, env.template.wing_velocity_indices] += 2
+    state = {k: v.copy() for k, v in env.fields.items()}
+    target = posture.wing_targets()
+    np.testing.assert_allclose(target[0], -0.02 * 0.1 / 0.03, rtol=1e-6)
+    np.testing.assert_allclose(target[1], -0.00015 * 2 / 0.03, rtol=1e-6)
+    for k, v in state.items():
+        np.testing.assert_array_equal(env.fields[k], v)
+    np.testing.assert_array_equal(posture.wing_targets([1]), target[1:])
+    env.fields["qvel"][:, env.template.wing_velocity_indices] = -1000
+    assert (posture.wing_targets() == 1).all()

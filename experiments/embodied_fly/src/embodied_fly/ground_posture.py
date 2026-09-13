@@ -37,20 +37,26 @@ class GroundPosture:
         wings = np.isin(t.joint_ids, t.wing_joint_ids)
         self.groups = {"legs": legs, "wings": wings, "body": ~(legs | wings)}
 
+    def wing_targets(self, ids=None):
+        """Training labels from current measured state, never executed here."""
+        e, t = self.env, self.env.template
+        if ids is None:
+            ids = np.arange(e.n)
+        q = e.fields["qpos"][ids][:, t.wing_angle_indices]
+        v = e.fields["qvel"][ids][:, t.wing_velocity_indices]
+        torque = self.wing_kp * (self.qref[t.wing_angle_indices] - q) - self.wing_kd * v
+        return np.clip(torque / CONFIG.joint_torque_limit, -1, 1).astype(np.float32)
+
     def targets(self, actions, task_ids):
         """Stand: all initial position targets. Walk: preserve leg teacher.
 
         Both ground tasks get feedback torques toward initial wing angles with
         zero angular velocity. Hover labels pass through unchanged. No pose writes.
         """
-        e, t = self.env, self.env.template
         result = actions.copy()
         result[task_ids == 0] = self.rest_action
         ids = np.flatnonzero(task_ids != 2)
-        q = e.fields["qpos"][ids][:, t.wing_angle_indices]
-        v = e.fields["qvel"][ids][:, t.wing_velocity_indices]
-        torque = self.wing_kp * (self.qref[t.wing_angle_indices] - q) - self.wing_kd * v
-        result[np.ix_(ids, self.wings)] = np.clip(torque / CONFIG.joint_torque_limit, -1, 1)
+        result[np.ix_(ids, self.wings)] = self.wing_targets(ids)
         return result
 
     def measure(self):

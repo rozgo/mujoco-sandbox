@@ -150,12 +150,29 @@ class OutcomeReward:
         return reward.astype(np.float32), failed, terms
 
 
+def core_gradient_stats(brain, loss):
+    """Audit one objective before mixing gradients; do not mislabel supervision as RL."""
+    named = list(brain.core.named_parameters())
+    gradients = torch.autograd.grad(loss, [p for _, p in named], retain_graph=True)
+    return {
+        name: {
+            "l2": float(g.norm()),
+            "finite": bool(torch.isfinite(g).all()),
+            "nonzero_cells": int((g != 0).sum()),
+        }
+        for (name, _), g in zip(named, gradients)
+    }
+
+
 def train(args):
     if args.horizon % args.sequence or min(args.worlds, args.horizon, args.sequence) < 1:
         raise ValueError(
             "Positive rollout dimensions and horizon divisible by sequence required"
         )
     motor_ground = getattr(args, "motor_ground", False)
+    wing_weight = getattr(args, "wing_supervision", 0.0)
+    if not np.isfinite(wing_weight) or wing_weight < 0 or (wing_weight and not motor_ground):
+        raise ValueError("Wing supervision requires a finite nonnegative motor-ground weight")
     if motor_ground and (args.preset != "wing_motion" or args.rehearsal is not None):
         raise ValueError(
             "Motor ground PPO requires wing_motion and no legacy rehearsal corpus"
@@ -318,6 +335,7 @@ def train(args):
         "ppo_updates": 0,
         "transitions": 0,
         "rehearsal_frames": 0,
+        "wing_supervised_presentations": 0,
         "collection_seconds": 0.0,
         "optimization_seconds": 0.0,
         "ppo_optimization_seconds": 0.0,
@@ -325,7 +343,7 @@ def train(args):
     }
     training_started_utc = utc_now()
     start = time.perf_counter()
-    gradient_audit = None
+    gradient_audit = wing_gradient_audit = None
     failure = None
     progress = []
     try:
@@ -340,6 +358,7 @@ def train(args):
                 [],
                 [],
             )
+            wing_target_buf = []
             state_starts = []
             physical_rewards = []
             term_sums = {}
@@ -358,6 +377,9 @@ def train(args):
                     logp = joint_log_probability(
                         output, distribution, latent, output.activity, motor_only=motor_ground
                     )
+                    if wing_weight:
+                        wing_target = reward_fn.posture.wing_targets()
+                        wing_target_buf.append(torch.as_tensor(wing_target, device=device))
                     previous = env.previous_action.copy()
                     next_observation = env.step(action.cpu().numpy())
                     trace.append(
@@ -371,6 +393,8 @@ def train(args):
                             "utility": output.utility_scores.cpu().numpy(),
                         }
                     )
+                    if wing_weight:
+                        trace[-1]["wing_target"] = wing_target.copy()
                     if env.wing_forces is not None:
                         trace[-1]["wing_activity"] = env.wing_forces.activity.copy()
                         trace[-1]["wing_wrench"] = env._wing_applied.copy()
@@ -457,6 +481,8 @@ def train(args):
                     ("done", dones),
                 )
             }
+            if wing_weight:
+                data["wing_target"] = torch.stack(wing_target_buf)
             adv, returns = advantages(
                 data["reward"],
                 data["value"],
@@ -470,14 +496,14 @@ def train(args):
             counters["collection_seconds"] += time.perf_counter() - collect_start
             counters["transitions"] += args.horizon * args.worlds
             update_start = time.perf_counter()
-            kl_values, policy_losses, value_losses = [], [], []
+            kl_values, policy_losses, value_losses, wing_losses = [], [], [], []
             stop_epoch = False
             for _ in range(args.epochs):
                 for chunk in rng.permutation(len(state_starts)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
                     state = state_starts[chunk].detach()
                     new_logps, predictions = [], []
-                    entropy = []
+                    entropy, wing_errors = [], []
                     for t in range(a, b):
                         predictions.append(critic(brain, data["obs"][t], state))
                         result = brain(
@@ -503,6 +529,13 @@ def train(args):
                             .entropy()
                             .mean()
                         )
+                        if wing_weight:
+                            wing_errors.append(
+                                F.mse_loss(
+                                    result.action[:, reward_fn.posture.wings],
+                                    data["wing_target"][t],
+                                )
+                            )
                         state = brain.reset_worlds(result.state, data["done"][t])
                     new_logp = torch.stack(new_logps)
                     log_ratio = new_logp - data["logp"][a:b]
@@ -516,10 +549,21 @@ def train(args):
                         -adv[a:b] * ratio, -adv[a:b] * ratio.clamp(0.8, 1.2)
                     ).mean()
                     value_loss = F.mse_loss(torch.stack(predictions), returns[a:b])
-                    loss = policy_loss - args.entropy * torch.stack(entropy).mean()
+                    physical_loss = policy_loss - args.entropy * torch.stack(entropy).mean()
+                    wing_loss = torch.stack(wing_errors).mean() if wing_weight else None
+                    loss = physical_loss + (wing_weight * wing_loss if wing_weight else 0)
                     if not torch.isfinite(loss + value_loss):
                         raise RuntimeError("Nonfinite PPO loss")
                     optimizer.zero_grad(set_to_none=True)
+                    if gradient_audit is None and wing_weight:
+                        gradient_audit = core_gradient_stats(brain, physical_loss)
+                        wing_gradient_audit = core_gradient_stats(
+                            brain, wing_weight * wing_loss
+                        )
+                        if not all(
+                            x["finite"] and x["l2"] > 0 for x in gradient_audit.values()
+                        ):
+                            raise RuntimeError("Physical reward did not reach neural core")
                     loss.backward()
                     if gradient_audit is None:
                         gradient_audit = {
@@ -542,6 +586,11 @@ def train(args):
                     nn.utils.clip_grad_norm_(critic.parameters(), 1.0)
                     value_optimizer.step()
                     counters["ppo_updates"] += 1
+                    if wing_weight:
+                        counters["wing_supervised_presentations"] += (
+                            args.sequence * args.worlds
+                        )
+                        wing_losses.append(float(wing_loss.detach()))
                     policy_losses.append(float(policy_loss.detach()))
                     value_losses.append(float(value_loss.detach()))
                 if stop_epoch:
@@ -602,6 +651,7 @@ def train(args):
                 "max_kl": max(kl_values),
                 "policy_loss": float(np.mean(policy_losses)) if policy_losses else None,
                 "value_loss": float(np.mean(value_losses)) if value_losses else None,
+                "wing_supervision_mse": float(np.mean(wing_losses)) if wing_losses else None,
                 "rehearsal_loss": float(rehearsal_loss.detach())
                 if rehearsal_loss is not None
                 else None,
@@ -621,6 +671,8 @@ def train(args):
         elapsed = time.perf_counter() - start
         config = {k: v for k, v in vars(args).items() if not isinstance(v, Path)}
         config["internal_steps"] = brain.internal_steps
+        if motor_ground:
+            config["ground_posture"] = True
         checkpoint = {
             "state_dict": {k: v.detach().cpu() for k, v in brain.state_dict().items()},
             "observation_size": brain.observation_size,
@@ -631,7 +683,11 @@ def train(args):
             "graph_metadata_sha256": sha256(args.graph / "brain.npz"),
             "source_commit": run_evidence["source_commit"],
             "parent_checkpoint_sha256": sha256(args.resume),
-            "method": "recurrent physical-outcome PPO, motor-only ground curriculum"
+            "method": (
+                "recurrent physical-outcome PPO plus corrective wing supervision"
+                if wing_weight
+                else "recurrent physical-outcome PPO, motor-only ground curriculum"
+            )
             if motor_ground
             else "recurrent physical-outcome PPO plus explicit imitation rehearsal",
             "motor_only": motor_ground,
@@ -661,7 +717,18 @@ def train(args):
             if motor_ground
             else None,
             "active_motor_channels": int(active.sum()),
-            "teacher_present_during_collection": False,
+            "teacher_present_during_collection": bool(wing_weight),
+            "executed_teacher_actions": False,
+            "wing_supervision": {
+                "weight": wing_weight,
+                "channels": reward_fn.posture.wings.tolist() if wing_weight else [],
+                "target": "bounded corrective torque from pre-action measured wing q/qvel",
+                "kp": reward_fn.posture.wing_kp if wing_weight else None,
+                "kd": reward_fn.posture.wing_kd if wing_weight else None,
+                "loss": "mean squared normalized action error over six wing channels only",
+                "included_in_ppo_optimization_seconds": True,
+                "deployed_module": False,
+            },
             "training_started_utc": training_started_utc,
             "completed_utc": utc_now(),
             "setup_seconds": setup_seconds,
@@ -686,6 +753,7 @@ def train(args):
             "actor_parameters": sum(p.numel() for p in brain.parameters()),
             "critic_parameters": sum(p.numel() for p in critic.parameters()),
             "core_gradient_audit_from_physical_reward": gradient_audit,
+            "core_gradient_audit_from_weighted_wing_supervision": wing_gradient_audit,
             "core_changes": {
                 n: float((p.detach() - core_initial[n]).norm())
                 for n, p in brain.core.named_parameters()
@@ -724,6 +792,7 @@ if __name__ == "__main__":
     parser.add_argument("--resume", type=Path, required=True)
     parser.add_argument("--rehearsal", type=Path)
     parser.add_argument("--motor-ground", action="store_true")
+    parser.add_argument("--wing-supervision", type=float, default=0.0)
     parser.add_argument("--wing-angle-perturbation", type=float, default=0.0)
     parser.add_argument("--wing-speed-perturbation", type=float, default=0.0)
     parser.add_argument(

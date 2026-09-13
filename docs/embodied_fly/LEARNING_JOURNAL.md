@@ -1987,3 +1987,48 @@ as a training-only auxiliary to physical rewards; no runtime helper or new
 brain is authorized or needed. Declare any such changed objective before its
 pilot. Hover, motor transitions and later needs/utility/survival integration
 remain required and incomplete; the full goal stays active.
+
+### Wing correction within physical PPO — 2026-09-13 08:59:12 UTC
+
+Previous goal turn is progress: implemented canonical motor-only PPO, completed
+and reviewed two bounded trials, verified their physical comparison, and kept
+preferred06 after both failed the complete task. Mac and GPU are synchronized at
+fd5eeeb; authoritative process check shows no live embodied-fly training job.
+
+The smaller PPO step fixes the update bottleneck but leaves sustained standing
+wing bias. Add an opt-in training-only corrective wing loss to PPO. Labels use
+current pre-action measured wing angles/speeds and the existing initial-pose
+reference: clip((0.02*(q_rest-q)-0.00015*qvel)/0.03,-1,1). This reuses the
+established correction without changing the force law, initial body, joints,
+limits, actor, input scaling or deployed control. Only the six wing commands
+receive supervised labels; body and walking-leg actions are learned from the
+physical reward. All78 channels still execute the sampled actor distribution.
+No reference commands are mixed into physical control, and no legacy walking
+corpus or utility loss is introduced.
+
+PPO and wing-supervision gradients are audited separately before their sum.
+The report must not attribute supervised gradients to physical return. Count
+replayed wing-label presentations separately from new physical transitions;
+auxiliary compute is included in measured PPO optimization time. Failure
+traces retain pre-action labels alongside the actually executed actions.
+Motor checkpoints now enable posture gates by default in their saved config.
+
+Declare ground_outcome03: restart preferred06, fresh actor/critic Adam,180s,
+32worlds(16stand/16walk),16CPUthreads,128-actionrollouts,16-actionchunks,2epochs,
+actorlr1e-6,noise0.02,targetKL0.03,entropy0.001,gamma0.998/lambda0.99. Keep2s
+training episodes and the same wing reset disturbances (±0.15rad,±2rad/s).
+Add100 times mean squared error over the six normalized wing commands to the
+PPO objective. Seed81003. This is PPO with corrective wing supervision, not
+pure physical-reward learning. Evaluate allthree complete5s cases at72001 from
+one checkpoint, without teacher/reset/perturbation;retain and open the full
+film. Compare against06 and pure-PPO02. Do not promote on supervised loss alone.
+
+Focused checks:20tests pass in23.34s,11known warnings. These include physical
+collection, preserved utility weights, both optimizer continuation paths,
+separate reward/supervision gradient audits, exact shared-body fingerprint,
+and restoring/braking wing-label direction without physical state writes.
+
+Pre-run full validation:91tests pass in59.62s (15known upstreamwarnings),
+including shared-body decoupling, both pure/hybrid motor-PPO paths and preserved
+older controller tests. Ruff and whitespace checks pass. No physics or deployed
+actor change is included in this pilot.

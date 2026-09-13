@@ -262,3 +262,11 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.motor_
   --output outputs/embodied_fly/ground_outcome_reproduction_evaluation \
   --device cuda --seconds 5 --seed 72001 --ground-posture --neural-view
 ```
+
+`--wing-supervision 100` adds an explicit auxiliary to motor-ground PPO: only
+six wing commands are fitted to bounded angle/speed corrections from the current
+physical state. Walking-leg and body commands still learn from physical rewards.
+No teacher commands are executed or blended into control. The scalar multiplies
+mean squared normalized-action error; it does not change a physical torque limit.
+This variant is **PPO plus corrective supervision**, with separate gradient audits
+and label-presentation counts. The auxiliary adds no deployed module or policy.
