@@ -40,10 +40,27 @@ def motor_error(action, target, wing_channels, hovering, ground_wing_weight=0.0)
 
 
 class MotorTasks:
-    def __init__(self, env, seed):
+    def __init__(
+        self,
+        env,
+        seed,
+        task_set="all",
+        wing_angle_perturbation=0.0,
+        wing_speed_perturbation=0.0,
+    ):
+        if task_set not in ("all", "ground"):
+            raise ValueError("Unknown motor curriculum task set")
+        if (
+            not np.isfinite([wing_angle_perturbation, wing_speed_perturbation]).all()
+            or min(wing_angle_perturbation, wing_speed_perturbation) < 0
+        ):
+            raise ValueError("Wing reset perturbations must be finite and nonnegative")
         self.env = env
         self.rng = np.random.default_rng(seed)
-        self.task_ids = np.arange(env.n) % 3
+        self.perturb_rng = np.random.default_rng(seed + 1973)
+        self.wing_angle_perturbation = wing_angle_perturbation
+        self.wing_speed_perturbation = wing_speed_perturbation
+        self.task_ids = np.arange(env.n) % (3 if task_set == "all" else 2)
         self.ground = {
             k: getattr(env.template.data, k).copy() for k in ("qpos", "qvel", "act", "ctrl")
         }
@@ -68,6 +85,26 @@ class MotorTasks:
         state["qpos"][:, 3] = np.cos(heading / 2)
         state["qpos"][:, 6] = np.sin(heading / 2)
         state["qpos"][hovering, 2] = self.rng.uniform(1.8, 2.2, int(hovering.sum()))
+        # Training initialization only. The corrective target stays the original
+        # canonical resting pose; neither live state nor evaluation is overwritten.
+        ground = np.flatnonzero(~hovering)
+        t, m = self.env.template, self.env.model
+        if self.wing_angle_perturbation and len(ground):
+            key = np.ix_(ground, t.wing_angle_indices)
+            angles = state["qpos"][key] + self.perturb_rng.uniform(
+                -self.wing_angle_perturbation, self.wing_angle_perturbation, (len(ground), 6)
+            )
+            limited = m.jnt_limited[t.wing_joint_ids].astype(bool)
+            limits = m.jnt_range[t.wing_joint_ids]
+            state["qpos"][key] = np.clip(
+                angles,
+                np.where(limited, limits[:, 0], -np.inf),
+                np.where(limited, limits[:, 1], np.inf),
+            )
+        if self.wing_speed_perturbation and len(ground):
+            state["qvel"][np.ix_(ground, t.wing_velocity_indices)] += self.perturb_rng.uniform(
+                -self.wing_speed_perturbation, self.wing_speed_perturbation, (len(ground), 6)
+            )
         self.env.reset(ids, state=state)
         self.env.command[ids] = 0
         self.env.command[ids, 0] = (self.task_ids[ids] == 1).astype(float)
@@ -373,7 +410,14 @@ def train(args):
         env.model
     ):
         raise ValueError("Motor continuation must use the parent's exact physical fly")
-    tasks = MotorTasks(env, args.seed)
+    tasks = MotorTasks(
+        env,
+        args.seed,
+        getattr(args, "task_set", "all"),
+        getattr(args, "wing_angle_perturbation", 0.0),
+        getattr(args, "wing_speed_perturbation", 0.0),
+    )
+    active_tasks = np.unique(tasks.task_ids)
     teacher = MotorTeacher(tasks, args.teacher, device, getattr(args, "ground_posture", False))
     posture = GroundPosture(env, tasks.ground["qpos"])
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
@@ -417,11 +461,11 @@ def train(args):
                     flight,
                     getattr(args, "ground_wing_loss", 0.0),
                 )
-                group_losses = [
-                    error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
-                    for i in range(3)
-                ]
-                loss = torch.stack(group_losses).mean()
+                group_losses = {
+                    i: error[torch.as_tensor(tasks.task_ids == i, device=device)].mean()
+                    for i in active_tasks
+                }
+                loss = torch.stack(list(group_losses.values())).mean()
                 if response_weight:
                     correction = response_loss(
                         actor,
@@ -436,7 +480,7 @@ def train(args):
                     loss = loss + response_weight * correction
                     response_errors.append(float(correction.detach()))
                 losses.append(loss)
-                for i, value in enumerate(group_losses):
+                for i, value in group_losses.items():
                     per_task[i].append(float(value.detach()))
                 student = result.action.detach().cpu().numpy()
                 target_np = target.cpu().numpy()
@@ -513,7 +557,10 @@ def train(args):
                     "seconds": time.perf_counter() - started,
                     "updates": updates,
                     "transitions": transitions,
-                    "task_motor_loss": dict(zip(TASKS, map(np.mean, per_task))),
+                    "task_motor_loss": {
+                        task: float(np.mean(values)) if values else None
+                        for task, values in zip(TASKS, per_task)
+                    },
                     "wing_response_loss": float(np.mean(response_errors))
                     if response_errors
                     else None,
@@ -524,6 +571,8 @@ def train(args):
                             key: float(value[tasks.task_ids == i].mean())
                             for key, value in posture.measure().items()
                         }
+                        if i in active_tasks
+                        else None
                         for i, task in enumerate(TASKS)
                     },
                 }
@@ -596,7 +645,8 @@ def train(args):
         },
         "completed_episodes": episodes,
         "teacher_present_during_collection": True,
-        "loss": "equal mean of task motor MSE; hover adds 2x wing MSE; ground wing weight is explicit; no utility loss",
+        "loss": "equal mean of active task motor MSE; hover adds 2x wing MSE when present; ground wing weight is explicit; no utility loss",
+        "training_tasks": [TASKS[i] for i in active_tasks],
         "ground_wing_loss_weight": getattr(args, "ground_wing_loss", 0.0),
         "ground_posture": posture.report() if teacher.posture is not None else None,
         "wing_response_supervision": {
@@ -646,6 +696,24 @@ if __name__ == "__main__":
         help="Teach initial-form standing and restoring wing torques on both ground tasks",
     )
     parser.add_argument("--episode-seconds", type=float, default=2)
+    parser.add_argument(
+        "--task-set",
+        choices=("all", "ground"),
+        default="all",
+        help="Training curriculum only; review always evaluates all three commands",
+    )
+    parser.add_argument(
+        "--wing-angle-perturbation",
+        type=float,
+        default=0.0,
+        help="Ground training reset disturbance in radians; clipped to joint limits",
+    )
+    parser.add_argument(
+        "--wing-speed-perturbation",
+        type=float,
+        default=0.0,
+        help="Ground training reset disturbance in radians/second",
+    )
     parser.add_argument("--neural-view", action="store_true")
     args = parser.parse_args()
     if args.mode in ("train", "reference") and args.teacher is None:

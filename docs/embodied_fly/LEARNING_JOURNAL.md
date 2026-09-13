@@ -1841,3 +1841,31 @@ resuming the harder flight curriculum. Preserve one canonical body and one
 command-conditioned actor. No new actuation model, input bypass or runtime
 wing override has been introduced. Full survival integration remains deferred
 by the user's motor-first instruction.
+
+### Ground motor curriculum — 2026-09-13 08:04:36 UTC
+
+Previous turn is progress: two decoder-only candidates and command-response
+probes were implemented, measured, archived and reviewed. They did not improve
+physical control, so06 remains preferred. Mac/GPU synchronized at12186ff;
+no GPU training process is live at this continuation start.
+
+Declare motor_focus09: resume preferred06, full sensory encoder/intrinsic cell
+dynamics/motor decoder trainable, fixed graph and frozen inactive utility heads.
+32worlds are16standing/16walking for this curriculum stage. Hover is not trained
+in this stage; it remains a required task and is still evaluated with the same
+checkpoint. This stages motor learning, not a separate deployed policy.
+
+Use180s,freshAdam1e-5,32actionchunks,16CPUphysics threads,teacher execution
+mixture0,ground-posturetargets,ground-wingweight10,paired-responseweight1 with
+eight ground worlds. At training resets only, perturb wing angles by±0.15rad
+(clipped to physical joint limits) and speeds by±2rad/s using a separate RNG.
+The nominal full initial-pose target is unchanged. Other physical reset state
+and all body/force parameters remain unchanged. Trainingseed71009,2sepisodes;
+evaluation uses allthree complete5s cases atdevelopmentseed72001 with no
+disturbance,teacher or reset. Save failed cases and open the complete film.
+
+Why this change: cached output fits could not deliver stable wing feedback.
+The new stage trains the complete existing representation on actual ground
+disturbances, without simultaneous hover imitation gradients. It is corrective
+online imitation, not PPO. No runtime wing mask, controller bypass, actuator
+change or observation-normalization change is introduced.

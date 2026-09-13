@@ -135,7 +135,10 @@ def test_motor_references_match_single_world_teachers_without_pose_writes():
         batch.step(actual)
 
 
-def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path, monkeypatch):
+@pytest.mark.parametrize("task_set", ["all", "ground"])
+def test_motor_training_freezes_intentions_and_saves_the_shared_physics(
+    tmp_path, monkeypatch, task_set
+):
     from embodied_fly import motor_focus
     from embodied_fly.provenance import sha256
 
@@ -172,11 +175,21 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
         resume=resume,
         graph=graph,
         teacher=TEACHER,
+        task_set=task_set,
+        wing_angle_perturbation=0.15 if task_set == "ground" else 0.0,
+        wing_speed_perturbation=2.0 if task_set == "ground" else 0.0,
     )
     report = motor_focus.train(args)
     checkpoint = torch.load(args.output / "actor.pt", weights_only=True)
     assert checkpoint["motor_only"] and report["utility_and_intention_weights_unchanged"]
-    assert report["worlds_by_task"] == {"stand": 1, "walk": 1, "hover": 1}
+    assert report["worlds_by_task"] == (
+        {"stand": 1, "walk": 1, "hover": 1}
+        if task_set == "all"
+        else {"stand": 2, "walk": 1, "hover": 0}
+    )
+    assert report["training_tasks"] == (
+        ["stand", "walk", "hover"] if task_set == "all" else ["stand", "walk"]
+    )
     assert report["ground_posture"]["runtime_override"] is False
     assert checkpoint["config"]["ground_posture"] is True
     assert report["wing_response_supervision"]["extra_physics_worlds"] == 0
@@ -187,7 +200,40 @@ def test_motor_training_freezes_intentions_and_saves_the_shared_physics(tmp_path
     assert all(torch.equal(checkpoint["state_dict"][k], v) for k, v in fixed.items())
     loaded = mujoco.MjModel.from_binary_path(str(args.output / "model.mjb"))
     assert checkpoint["physical_contract"] == physical_contract(loaded)
-    json.dumps(report)
+    json.dumps(report, allow_nan=False)
+    for line in (args.output / "progress.jsonl").read_text().splitlines():
+        row = json.loads(line)
+        json.dumps(row, allow_nan=False)
+        if task_set == "ground":
+            assert row["task_motor_loss"]["hover"] is None
+            assert row["posture_by_task"]["hover"] is None
+
+
+def test_ground_reset_disturbances_change_only_wings_and_preserve_nominal_target_and_body():
+    a, b = (FlyBatch(6, 2, 14, preset="wing_motion") for _ in range(2))
+    reference = MotorTasks(a, 72009, "ground")
+    disturbed = MotorTasks(b, 72009, "ground", 0.15, 2)
+    assert np.array_equal(disturbed.task_ids, [0, 1, 0, 1, 0, 1])
+    assert physical_contract(a.model) == physical_contract(b.model)
+    np.testing.assert_array_equal(reference.ground["qpos"], disturbed.ground["qpos"])
+    t = b.template
+    other = np.setdiff1d(np.arange(b.model.nq), t.wing_angle_indices)
+    np.testing.assert_array_equal(a.fields["qpos"][:, other], b.fields["qpos"][:, other])
+    difference = (
+        b.fields["qpos"][:, t.wing_angle_indices] - a.fields["qpos"][:, t.wing_angle_indices]
+    )
+    assert np.abs(difference).max() <= 0.150001 and np.abs(difference).max() > 0.05
+    assert np.abs(b.fields["qvel"][:, t.wing_velocity_indices]).max() <= 2
+    for column, joint in enumerate(t.wing_joint_ids):
+        if b.model.jnt_limited[joint]:
+            q = b.fields["qpos"][:, t.wing_angle_indices[column]]
+            assert (q >= b.model.jnt_range[joint, 0]).all() and (
+                q <= b.model.jnt_range[joint, 1]
+            ).all()
+    retained = b.fields["qpos"][2:].copy()
+    disturbed.reset([0, 1])
+    np.testing.assert_array_equal(b.fields["qpos"][2:], retained)
+    np.testing.assert_array_equal(disturbed.ground["qpos"], reference.ground["qpos"])
 
 
 def test_review_retains_early_forbidden_load_in_full_clip_gate(tmp_path, monkeypatch):
