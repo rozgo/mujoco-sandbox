@@ -95,6 +95,8 @@ def record(source, case, output, camera_profile="damped"):
         title = "MALECNS MOTOR CONTROLLER / utility selection disabled"
     elif evaluation.get("mode") == "reference":
         title = "MOTOR REFERENCE / training demonstration"
+        if evaluation.get("physical_contract", {}).get("wing_response") == "instant":
+            title = "PHYSICS REFERENCE / per-tick wing forces / no RL controller"
     if evaluation.get("diagnostic_activity_override"):
         title = (
             "UTILITY INTERVENTION / "
@@ -287,6 +289,66 @@ def record(source, case, output, camera_profile="damped"):
                             font=font(16),
                             fill="#a8b0b5",
                         )
+            elif (
+                evaluation.get("mode") == "reference"
+                and evaluation.get("physical_contract", {}).get("wing_response") == "instant"
+                and case == "hover"
+            ):
+                draw.text(
+                    (1125, 355), "REFERENCE HOVER CONTROLLER", font=font(19), fill="#ffc31f"
+                )
+                for y, label in zip(
+                    (400, 435, 470, 505),
+                    (
+                        "Measured wings -> flight forces",
+                        "No wing-activity averaging",
+                        "Free body / bounded actuators",
+                        "No learned actor in this clip",
+                    ),
+                ):
+                    draw.text((1125, y), label, font=font(16), fill="#a8b0b5")
+                altitude = float(data.qpos[2] * 10)
+                target_height = float(states["requested_height_cm"][step] * 10)
+                target = states["qpos"][0, :3].copy()
+                target[2] = states["requested_height_cm"][step]
+                position_error = float(np.linalg.norm(data.qpos[:3] - target) * 10)
+                draw.text(
+                    (1125, 555),
+                    f"Altitude: {altitude:.2f} / {target_height:.2f} mm",
+                    font=font(18),
+                    fill="#e6e1db",
+                )
+                draw.text(
+                    (1125, 585),
+                    f"Position error: {position_error:.2f} mm",
+                    font=font(18),
+                    fill="#e6e1db",
+                )
+                draw.text(
+                    (1125, 625), "ALTITUDE ERROR / +/-5 mm", font=font(15), fill="#a8b0b5"
+                )
+                draw.rectangle((1125, 655, 1565, 755), fill="#1b2025", outline="#33383c")
+                draw.line((1125, 705, 1565, 705), fill="#646c73", width=1)
+                history = frame_indices[frame_indices <= step]
+                errors = (
+                    states["qpos"][history, 2] - states["requested_height_cm"][history]
+                ) * 10
+                points = list(
+                    zip(
+                        1125 + 440 * history / max(len(states["qpos"]) - 1, 1),
+                        705 - 10 * np.clip(errors, -5, 5),
+                    )
+                )
+                if len(points) > 1:
+                    draw.line(points, fill="#ffc31f", width=2)
+                if case_result:
+                    draw.text(
+                        (1125, 790),
+                        f"{len(states['qpos']) / control_hz:g} s hover gate: "
+                        + ("PASS" if case_result["success"] else "FAIL"),
+                        font=font(18),
+                        fill="#70a88a" if case_result["success"] else "#ce6654",
+                    )
             else:
                 draw.text(
                     (1125, 380), "Demonstration for imitation", font=font(19), fill="#ffc31f"

@@ -67,7 +67,10 @@ def evaluate(args):
         if args.diagnostic_activity
         else None
     )
-    environment = FlyEnvironment(args.physical_preset)
+    environment = FlyEnvironment(
+        args.physical_preset,
+        wing_response=checkpoint.get("physical_contract", {}).get("wing_response", "filtered"),
+    )
     if actor.motor_only and checkpoint.get("physical_contract") != physical_contract(
         environment.model
     ):

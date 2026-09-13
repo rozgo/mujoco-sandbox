@@ -242,7 +242,14 @@ def train(args):
         raise ValueError(
             "Motor-only actors require a motor curriculum; utility actors require utility PPO"
         )
-    env = FlyBatch(args.worlds, args.threads, brain.sensor_extension_size, preset=args.preset)
+    wing_response = parent.get("physical_contract", {}).get("wing_response", "filtered")
+    env = FlyBatch(
+        args.worlds,
+        args.threads,
+        brain.sensor_extension_size,
+        preset=args.preset,
+        wing_response=wing_response,
+    )
     contract = physical_contract(env.model) if motor_mode else None
     if motor_mode and parent.get("physical_contract") != contract:
         raise ValueError("Motor PPO must match the parent physical fly")

@@ -146,10 +146,10 @@ class MotorTeacher:
         stand_initial_form=False,
         walking_reference="receding",
     ):
-        if hover_reference not in ("clock", "state"):
+        if hover_reference not in ("clock", "state", "state-position"):
             raise ValueError("Unknown hover reference")
         if tasks.env.preset == "wing_position" and (
-            not ground_posture or hover_reference != "state"
+            not ground_posture or hover_reference not in ("state", "state-position")
         ):
             raise ValueError(
                 "Position pilot requires ground posture and measured-state hover reference"
@@ -199,10 +199,16 @@ class MotorTeacher:
         ids = np.flatnonzero(t.task_ids == 2)
         if not len(ids):
             return actions
-        if self.hover_reference == "state":
+        if self.hover_reference in ("state", "state-position"):
             from embodied_fly.state_hover import wing_commands
 
             actions[ids] = t.air_action
+            forward_error = None
+            if self.hover_reference == "state-position":
+                displacement = e.fields["qpos"][ids, :3] - t.start[ids]
+                displacement[:, 2] = 0
+                rotation = e.fields["xmat"][ids, e.template.thorax_id].reshape(-1, 3, 3)
+                forward_error = np.einsum("ni,ni->n", displacement, rotation[:, :, 0])
             actions[np.ix_(ids, self.channels)] = wing_commands(
                 e.fields["qpos"][ids][:, e.template.wing_angle_indices],
                 e.fields["qvel"][ids][:, e.template.wing_velocity_indices],
@@ -210,6 +216,7 @@ class MotorTeacher:
                 e.fields["qpos"][ids, 2],
                 e.requested_height_cm[ids],
                 e.model.qpos_spring[e.template.wing_angle_indices],
+                forward_position_error=forward_error,
             )
             if e.preset == "wing_position":
                 actions[np.ix_(ids, self.channels)] = reference_torque_to_position(
@@ -277,11 +284,25 @@ def review(args):
     provenance = evidence()
     torch.set_num_threads(4)
     device = torch.device(args.device)
-    env = FlyBatch(3, 3, 14, preset=getattr(args, "preset", "wing_motion"))
+    actor = checkpoint = None
+    response = getattr(args, "wing_response", None)
+    if args.mode != "reference":
+        actor, checkpoint = load_actor(args.resume, args.graph, device)
+        recorded = checkpoint["physical_contract"].get("wing_response", "filtered")
+        if response is not None and response != recorded:
+            raise ValueError("Wing response must match the checkpoint's recorded physics")
+        response = recorded
+    env = FlyBatch(
+        3,
+        3,
+        14,
+        preset=getattr(args, "preset", "wing_motion"),
+        wing_response=response or "filtered",
+    )
     tasks = MotorTasks(env, args.seed)
     posture = GroundPosture(env, tasks.ground["qpos"])
     posture_enabled = getattr(args, "ground_posture", False)
-    actor = reference = memory = projection = None
+    reference = memory = projection = None
     if args.mode == "reference":
         reference = MotorTeacher(
             tasks,
@@ -293,7 +314,6 @@ def review(args):
             getattr(args, "walking_reference", "receding"),
         )
     else:
-        actor, checkpoint = load_actor(args.resume, args.graph, device)
         posture_enabled |= checkpoint.get("config", {}).get("ground_posture", False)
         if checkpoint["physical_contract"] != physical_contract(env.model):
             raise ValueError("Evaluation must use the checkpoint's exact physical fly")
@@ -445,8 +465,15 @@ def review(args):
         "teacher_present": reference is not None,
         "hover_reference": getattr(args, "hover_reference", "clock") if reference else None,
         "state_hover_recipe": dict(STATE_HOVER_RECIPE)
-        if reference and reference.hover_reference == "state"
+        if reference and reference.hover_reference in ("state", "state-position")
         else None,
+        "reference_forward_position_hold": {
+            "enabled": reference is not None and reference.hover_reference == "state-position",
+            "stroke_speed_gain_rad_per_cm_s": 0.6,
+            "stroke_position_gain_rad_per_cm": 0.3,
+            "body_force_or_pose_override": False,
+            "scope": "fore-aft wing-stroke correction; no lateral position servo",
+        },
         "student_present": actor is not None,
         "controller": "student" if actor else "reference",
         "one_checkpoint_for_all_cases": actor is not None,
@@ -564,8 +591,15 @@ def train(args):
     device = torch.device(args.device)
     actor, parent = load_motor_actor(args.resume, args.graph, device)
     actor.train()
+    response = parent.get("physical_contract", {}).get("wing_response", "filtered")
+    if getattr(args, "wing_response", None) not in (None, response):
+        raise ValueError("Wing response must match the checkpoint's recorded physics")
     env = FlyBatch(
-        args.worlds, args.threads, 14, preset=getattr(args, "preset", "wing_motion")
+        args.worlds,
+        args.threads,
+        14,
+        preset=getattr(args, "preset", "wing_motion"),
+        wing_response=response,
     )
     if parent.get("motor_only") and parent.get("physical_contract") != physical_contract(
         env.model
@@ -1013,7 +1047,10 @@ if __name__ == "__main__":
         "--preset", choices=("wing_motion", "wing_position"), default="wing_motion"
     )
     parser.add_argument("--teacher", type=Path)
-    parser.add_argument("--hover-reference", choices=("clock", "state"), default="clock")
+    parser.add_argument("--wing-response", choices=("filtered", "instant"))
+    parser.add_argument(
+        "--hover-reference", choices=("clock", "state", "state-position"), default="clock"
+    )
     parser.add_argument(
         "--walking-reference", choices=("receding", "anchored"), default="receding"
     )

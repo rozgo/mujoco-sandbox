@@ -7,6 +7,25 @@ from embodied_fly.physical_contract import physical_contract
 from embodied_fly.state_hover import wing_commands
 
 
+def test_position_reference_corrects_drift_with_wing_targets_without_touching_physics():
+    env = FlyBatch(3, 3, 14, preset="wing_position", wing_response="instant")
+    tasks = MotorTasks(env, 97013)
+    teacher = MotorTeacher(tasks, TEACHER, "cpu", True, "state-position", True, "anchored")
+    supplied = np.tile(tasks.air_action, (3, 1))
+    neutral = teacher.act(supplied)
+    # Rotate the declared target by using the actual body's forward direction.
+    rotation = env.fields["xmat"][2, env.template.thorax_id].reshape(3, 3)
+    tasks.start[2, :2] -= rotation[:2, 0] * 0.2
+    before = {k: env.fields[k].copy() for k in ("qpos", "qvel", "act", "ctrl")}
+    corrected = teacher.act(supplied)
+    roll_channels = teacher.channels[[1, 4]]
+    assert np.all(corrected[2, roll_channels] < neutral[2, roll_channels])
+    other = np.setdiff1d(np.arange(78), roll_channels)
+    np.testing.assert_array_equal(corrected[2, other], neutral[2, other])
+    for key, value in before.items():
+        np.testing.assert_array_equal(env.fields[key], value)
+
+
 def test_measured_state_teacher_ignores_timer_and_responds_to_wing_and_height():
     env = FlyBatch(3, 3, 14, preset="wing_motion")
     tasks = MotorTasks(env, 92001)

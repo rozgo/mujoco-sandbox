@@ -21,7 +21,16 @@ RECIPE = {
 }
 
 
-def wing_commands(angles, velocities, body_velocity, altitude, requested_altitude, spring):
+def wing_commands(
+    angles,
+    velocities,
+    body_velocity,
+    altitude,
+    requested_altitude,
+    spring,
+    *,
+    forward_position_error=None,
+):
     """All inputs are current observations, except fixed mechanical constants."""
     c = CONFIG
     q = np.asarray(angles).reshape(-1, 2, 3)
@@ -47,7 +56,12 @@ def wing_commands(angles, velocities, body_velocity, altitude, requested_altitud
     )
     desired = np.zeros_like(q)
     desired[:, :, 0] = sweep
-    desired[:, :, 1] = (0.7 + np.clip(-0.1 * body_velocity[:, 3], -0.6, 0.6))[:, None]
+    stroke = -0.1 * body_velocity[:, 3]
+    if forward_position_error is not None:
+        # Explicit reference-controller variant, not part of the force law.
+        # Tilt the stroke through wing joints to oppose drift from the start.
+        stroke = -0.6 * body_velocity[:, 3] - 0.3 * np.asarray(forward_position_error)
+    desired[:, :, 1] = (0.7 + np.clip(stroke, -0.6, 0.6))[:, None]
     desired[:, :, 2] = -1
     spring = np.asarray(spring).reshape(1, 2, 3)
     torque = 0.02 * (desired - q) - 0.00015 * v

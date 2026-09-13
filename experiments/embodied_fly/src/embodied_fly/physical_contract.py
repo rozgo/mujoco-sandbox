@@ -6,7 +6,7 @@ from dataclasses import asdict
 
 import numpy as np
 
-from embodied_fly.wing_motion import CONFIG
+from embodied_fly.wing_motion import config_for_model
 from embodied_fly.wing_position import POSITION, is_position
 
 ARRAYS = [
@@ -120,11 +120,12 @@ def physical_contract(model):
         digest.update(array.tobytes())
     options = {n: np.asarray(getattr(model.opt, n)).tolist() for n in OPTIONS}
     digest.update(json.dumps(options, sort_keys=True).encode())
-    digest.update(json.dumps(asdict(CONFIG), sort_keys=True).encode())
+    force_config = config_for_model(model)
+    digest.update(json.dumps(asdict(force_config), sort_keys=True).encode())
     position = is_position(model)
     if position:
         digest.update(json.dumps(asdict(POSITION), sort_keys=True).encode())
-    return {
+    contract = {
         "schema": "fly-motor-physical-contract-v1",
         "sha256": digest.hexdigest(),
         "preset": "wing_position" if position else "wing_motion",
@@ -134,3 +135,6 @@ def physical_contract(model):
         "physics_hz": 1 / model.opt.timestep,
         "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
     }
+    if force_config.activity_filter_seconds == 0:
+        contract["wing_response"] = "instant"
+    return contract

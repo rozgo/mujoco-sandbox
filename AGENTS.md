@@ -134,3 +134,11 @@ User requirement, September 13, 2026: use the **same physical FlyBody for standi
 Wing bodies have **zero mass and spatial inertia**, no collisions and no aerodynamic terms. Their six actuated coordinates retain only independent diagonal armature for angular response. Wing movement must not create mechanical reaction on the body; the declared flight model is the only wing-to-body force path. Keep and run the decoupled-mass and disabled-force-law tests when changing this configuration. Observer cameras and added sensors may differ; robot mechanics and the force law must match.
 
 The current requested stage is motor learning only: stand idle, walk and hover from airborne starts. Utility selection and needs-driven survival behavior are deferred. Deploy one command-conditioned checkpoint; preserve fixed motor context at load/evaluation and do not label it learned intention selection.
+
+User correction, September 13: new wing-force work uses `wing_response="instant"`,
+with measured wing angles/speeds evaluated every physics tick and no extra
+wing-activity average. Preserve old filtered checkpoints with their recorded
+physics. Use `instant_migrate` for an explicit frozen-weight physical transfer;
+do not silently relabel a checkpoint. Keep native and batched physics identical.
+The hover plant video must show bounded wing commands supporting the free body,
+clearly labeled as a reference controller rather than learned MaleCNS behavior.

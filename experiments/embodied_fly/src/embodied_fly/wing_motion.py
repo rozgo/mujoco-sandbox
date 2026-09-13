@@ -6,7 +6,7 @@ removes inertial coupling to the thorax. A causal force law is the only coupling
 No time, command, target, policy action or externally supplied phase enters it.
 """
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 
 import mujoco
 import numpy as np
@@ -34,6 +34,24 @@ class WingMotionConfig:
 
 
 CONFIG = WingMotionConfig()
+INSTANT_CONFIG = replace(CONFIG, version="wing_motion_instant_v2", activity_filter_seconds=0.0)
+RESPONSE_NUMERIC = "wing_force_response"
+
+
+def config_for_model(model):
+    """The compiled model carries its force-law version, including MJB replays.
+
+    Absence preserves historical filtered models and checkpoint fingerprints.
+    The explicit marker is part of new XML/MJB artifacts; never infer it from
+    the latest code version or silently reinterpret an old checkpoint.
+    """
+    index = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_NUMERIC, RESPONSE_NUMERIC)
+    if index < 0:
+        return CONFIG
+    address = model.numeric_adr[index]
+    if model.numeric_size[index] != 1 or model.numeric_data[address] != 1:
+        raise ValueError("Unknown recorded wing force response")
+    return INSTANT_CONFIG
 
 
 def configure_model(model):
@@ -79,7 +97,7 @@ class WingMotionForces:
     """One independent causal activity state per world; no cross-world mixing."""
 
     def __init__(self, model, worlds=1):
-        self.config = CONFIG
+        self.config = config_for_model(model)
         self.mass = float(model.body_mass.sum())
         self.weight = self.mass * abs(float(model.opt.gravity[2]))
         self.inertia = self.mass * CONFIG.inertia_radius_cm**2
@@ -110,8 +128,15 @@ class WingMotionForces:
             0,
             c.maximum_activity,
         )
-        alpha = -np.expm1(-dt / c.activity_filter_seconds)
-        self.activity += alpha * (sweep - self.activity)
+        if c.activity_filter_seconds == 0:
+            # Current measured sweep speed, evaluated at every physics tick.
+            # No previous force/activity enters this response. MuJoCo integrates
+            # the resulting wrench and the bounded wing actuators themselves.
+            self.activity[:] = sweep
+        else:
+            # Historical v1 reproduction only.
+            alpha = -np.expm1(-dt / c.activity_filter_seconds)
+            self.activity += alpha * (sweep - self.activity)
         # Pitch changes stroke effectiveness; sweep must move to produce lift.
         efficiency = 0.8 + 0.2 * np.cos(angles[:, :, 2] + 1.0)
         effort = self.activity * efficiency
@@ -165,6 +190,11 @@ class WingMotionForces:
             "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
             "aerodynamic_force_model": False,
             "causal_activity_state_shape": list(self.activity.shape),
+            "wing_response": "instant"
+            if self.config.activity_filter_seconds == 0
+            else "filtered",
+            "force_update": "current wing/body measurements before every MuJoCo physics step",
+            "temporal_wing_average": self.config.activity_filter_seconds != 0,
             "attitude_assistance": "activity-dependent angular damping and restoring torque",
             "translation": "bounded wing-motion lift/thrust and drag; no target-position servo",
         }

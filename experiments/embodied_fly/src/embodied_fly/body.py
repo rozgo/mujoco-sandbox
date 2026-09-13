@@ -22,7 +22,7 @@ from embodied_fly.observations import (
     wing_angle_indices,
     wing_velocity_indices,
 )
-from embodied_fly.wing_motion import WingMotionForces, configure_model
+from embodied_fly.wing_motion import RESPONSE_NUMERIC, WingMotionForces, configure_model
 from embodied_fly.wing_position import configure_position
 
 PHYSICS_DT = 0.0002
@@ -33,9 +33,13 @@ FLIGHT_CONTROL_DT = 0.0002
 NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
-def make_body(preset="walking", *, wing_limits="original"):
+def make_body(preset="walking", *, wing_limits="original", wing_response="filtered"):
     if preset not in ("walking", "flight", "wing_motion", "wing_position"):
         raise ValueError(f"Unknown physical preset: {preset}")
+    if wing_response not in ("filtered", "instant") or (
+        wing_response == "instant" and preset not in ("wing_motion", "wing_position")
+    ):
+        raise ValueError("Instant response requires the measured wing-motion force model")
     if wing_limits not in ("original", "firm") or (
         wing_limits != "original" and preset != "flight"
     ):
@@ -75,6 +79,8 @@ def make_body(preset="walking", *, wing_limits="original"):
                 actuator.dynprm = (1,)
     arena = floors.Floor(size=(3, 3), reflectance=0.08)
     root = arena.mjcf_model
+    if wing_response == "instant":
+        root.custom.add("numeric", name=RESPONSE_NUMERIC, data=[1])
     root.compiler.boundmass = 0
     root.compiler.boundinertia = 0
     spawn = root.worldbody.add("site", pos=(0, 0, 0.1278))
@@ -119,11 +125,13 @@ def make_body(preset="walking", *, wing_limits="original"):
 
 
 class FlyEnvironment:
-    def __init__(self, preset="walking", *, wing_limits="original"):
+    def __init__(self, preset="walking", *, wing_limits="original", wing_response="filtered"):
         self.preset = preset
         self.wing_limits = wing_limits
         self.control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
-        self.physics, self.fly = make_body(preset, wing_limits=wing_limits)
+        self.physics, self.fly = make_body(
+            preset, wing_limits=wing_limits, wing_response=wing_response
+        )
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr
         self.substeps = round(self.control_dt / self.model.opt.timestep)

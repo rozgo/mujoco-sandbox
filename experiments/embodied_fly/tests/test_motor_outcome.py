@@ -37,20 +37,29 @@ def test_rewards_measure_live_pose_without_fixing_walking_legs_or_writing_state(
 
 
 @pytest.mark.parametrize(
-    "wing_weight,all_motor,warmup,physical,independent,force_kl_stop",
+    "wing_weight,all_motor,warmup,physical,independent,force_kl_stop,response",
     [
-        (0.0, False, 0, False, False, False),
-        (100.0, False, 0, False, False, False),
-        (0.0, True, 0, False, False, False),
-        (0.0, True, 1, False, False, False),
-        (0.0, True, 0, True, False, False),
-        (0.0, True, 0, True, True, False),
-        (0.0, True, 0, True, True, True),
-        (0.0, True, 1, True, True, False),
+        (0.0, False, 0, False, False, False, "filtered"),
+        (100.0, False, 0, False, False, False, "filtered"),
+        (0.0, True, 0, False, False, False, "filtered"),
+        (0.0, True, 1, False, False, False, "filtered"),
+        (0.0, True, 0, True, False, False, "filtered"),
+        (0.0, True, 0, True, True, False, "filtered"),
+        (0.0, True, 0, True, True, True, "filtered"),
+        (0.0, True, 1, True, True, False, "filtered"),
+        (0.0, True, 0, True, True, False, "instant"),
     ],
 )
 def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_actor(
-    tmp_path, monkeypatch, wing_weight, all_motor, warmup, physical, independent, force_kl_stop
+    tmp_path,
+    monkeypatch,
+    wing_weight,
+    all_motor,
+    warmup,
+    physical,
+    independent,
+    force_kl_stop,
+    response,
 ):
     from embodied_fly import ppo
 
@@ -79,7 +88,7 @@ def test_motor_ppo_runs_physics_freezes_utility_and_saves_resumable_canonical_ac
     if physical:
         worlds = 4
     preset = "wing_position" if all_motor else "wing_motion"
-    env = FlyBatch(worlds, 2, 14, preset=preset)
+    env = FlyBatch(worlds, 2, 14, preset=preset, wing_response=response)
     parent = {"graph_sha256": "test", "physical_contract": physical_contract(env.model)}
     monkeypatch.setattr(ppo, "load_actor", lambda *args: (brain, parent))
     resume = tmp_path / "parent.pt"

@@ -8,8 +8,10 @@ from embodied_fly.motion_flight import WingReference, initialize
 from embodied_fly.wing_motion import CONFIG, WingMotionForces
 
 
-@pytest.fixture(scope="module", params=("wing_motion", "wing_position"))
+@pytest.fixture(scope="module", params=("wing_motion", "wing_position", "instant"))
 def env(request):
+    if request.param == "instant":
+        return FlyEnvironment("wing_position", wing_response="instant")
     return FlyEnvironment(request.param)
 
 
@@ -41,9 +43,12 @@ def test_wing_model_keeps_interface_with_exactly_decoupled_inertia(env, tmp_path
     assert np.isfinite(data.qacc).all()
 
 
-@pytest.mark.parametrize("preset", ("wing_motion", "wing_position"))
-def test_wing_motion_has_no_mechanical_body_reaction_when_force_law_disabled(preset):
-    a, b = FlyEnvironment(preset), FlyEnvironment(preset)
+@pytest.mark.parametrize(
+    "preset,response",
+    (("wing_motion", "filtered"), ("wing_position", "filtered"), ("wing_position", "instant")),
+)
+def test_wing_motion_has_no_mechanical_body_reaction_when_force_law_disabled(preset, response):
+    a, b = [FlyEnvironment(preset, wing_response=response) for _ in range(2)]
     for e in (a, b):
         e.wing_forces = None  # diagnostic only: cut the declared coupling
         e.data.qpos[2] = 5
@@ -88,8 +93,11 @@ def test_causal_wing_lift_mirroring_decay_and_damping(env):
     np.testing.assert_array_equal(force.activity, 0)
 
 
-def test_native_batch_force_law_feedback_and_selective_reset():
-    batch = FlyBatch(2, 2, 12, preset="wing_motion")
+@pytest.mark.parametrize(
+    "preset,response", (("wing_motion", "filtered"), ("wing_position", "instant"))
+)
+def test_native_batch_force_law_feedback_and_selective_reset(preset, response):
+    batch = FlyBatch(2, 2, 12, preset=preset, wing_response=response)
     e = batch.template
     state = {name: getattr(e.data, name).copy() for name in ("qpos", "qvel", "act", "ctrl")}
     state["qpos"][2] = 3
@@ -116,10 +124,11 @@ def test_native_batch_force_law_feedback_and_selective_reset():
     np.testing.assert_array_equal(batch.wing_forces.activity[0], 0)
     np.testing.assert_array_equal(batch.wing_forces.activity[1], before)
     np.testing.assert_array_equal(batch.fields["xfrc_applied"][0], 0)
-    assert (
-        batch.model.actuator_gainprm[batch.model.actuator("walker/wing_yaw_left").id, 0]
-        == CONFIG.joint_torque_limit
-    )
+    if preset == "wing_motion":
+        assert (
+            batch.model.actuator_gainprm[batch.model.actuator("walker/wing_yaw_left").id, 0]
+            == CONFIG.joint_torque_limit
+        )
 
 
 def test_reference_wings_support_free_body_without_direct_body_controller():

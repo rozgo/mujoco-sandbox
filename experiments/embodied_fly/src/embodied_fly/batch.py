@@ -23,11 +23,19 @@ from embodied_fly.wing_position import configure_position
 
 
 class FlyBatch:
-    def __init__(self, worlds, threads=0, sensor_extension_size=0, *, preset="walking"):
+    def __init__(
+        self,
+        worlds,
+        threads=0,
+        sensor_extension_size=0,
+        *,
+        preset="walking",
+        wing_response="filtered",
+    ):
         if sensor_extension_size not in (0, 6, 12, 14):
             raise ValueError("Unknown batched sensory extension")
         self.sensor_extension_size = sensor_extension_size
-        self.template = FlyEnvironment(preset)
+        self.template = FlyEnvironment(preset, wing_response=wing_response)
         self.preset = preset
         self.control_dt = self.template.control_dt
         self.substeps = self.template.substeps
