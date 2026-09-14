@@ -14,7 +14,7 @@ from embodied_fly.recovery_starts import RecoveryStarts, restore
 from embodied_fly.train import synchronize
 from embodied_fly.velocity_demonstrations import environment, post_row, pre_row
 from embodied_fly.velocity_exercise import rolling_velocity
-from embodied_fly.velocity_hover import HoverReward, failures, metrics
+from embodied_fly.velocity_hover import failures, metrics, reward_from_recipe
 from embodied_fly.velocity_motor import observation
 
 
@@ -41,8 +41,8 @@ def evaluate(args):
     actor, checkpoint = load_actor(args.checkpoint, args.graph, device)
     actor.eval()
     env = environment(6, 6)
-    reward = HoverReward(env, 2)
     bank_report = json.loads((args.bank / "report.json").read_text())
+    reward = reward_from_recipe(env, bank_report["reward_recipe"])
     if checkpoint["physical_contract"] != bank_report["physical_contract"]:
         raise ValueError("Evaluation physical contract differs")
     bank = RecoveryStarts(

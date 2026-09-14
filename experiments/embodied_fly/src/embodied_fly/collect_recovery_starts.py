@@ -14,7 +14,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.recovery_starts import capture, restore
 from embodied_fly.train import synchronize
 from embodied_fly.velocity_demonstrations import environment
-from embodied_fly.velocity_hover import HoverReward, start_states
+from embodied_fly.velocity_hover import HoverReward, reward_from_recipe, start_states
 from embodied_fly.velocity_motor import observation
 
 
@@ -30,7 +30,14 @@ def collect(args):
     if physical_contract(env.model) != parent["physical_contract"]:
         raise ValueError("Recovery collection physical contract differs")
     env.reset(np.arange(10), state=start_states(args.dataset, range(10)))
-    reward = HoverReward(env, 2)
+    parent_reward = parent["ppo_recipe"]["reward"]
+    reward = reward_from_recipe(env, parent_reward)
+    if args.velocity_objective is not None:
+        if args.velocity_scale is None:
+            raise ValueError("Declare the new velocity scale with its objective")
+        reward = HoverReward(env, args.velocity_scale, 2.0, args.velocity_objective)
+    elif args.velocity_scale is not None:
+        raise ValueError("Velocity scale requires an explicit objective")
     commands = np.zeros((10, 4), np.float32)
     memory = actor.initial_state(10)
     anchors = (1000, 2000, 3000)
@@ -159,6 +166,8 @@ def collect(args):
         "physical_contract": parent["physical_contract"],
         "fixed_graph_sha256": parent["graph_sha256"],
         "reward_recipe": reward.recipe,
+        "parent_reward_recipe": parent_reward,
+        "reward_changed_for_scoring_only": reward.recipe != parent_reward,
         "states_sha256": sha256(args.output / "states.npz"),
         "records": records,
         "training_records": 24,
@@ -198,4 +207,6 @@ if __name__ == "__main__":
     p.add_argument("--dataset", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--device", default="cuda")
+    p.add_argument("--velocity-objective", choices=("separate", "vector"))
+    p.add_argument("--velocity-scale", type=float)
     collect(p.parse_args())

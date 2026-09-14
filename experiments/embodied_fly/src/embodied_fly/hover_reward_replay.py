@@ -10,10 +10,10 @@ import numpy as np
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.velocity_demonstrations import environment
-from embodied_fly.velocity_hover import HoverReward
+from embodied_fly.velocity_hover import reward_from_recipe, reward_rates
 
 
-def audit(run, labels):
+def audit(run, labels, *, candidate_scale=None):
     started = time.perf_counter()
     training = json.loads((run / "report.json").read_text())
     results = {}
@@ -42,11 +42,11 @@ def audit(run, labels):
             },
         )
         recipe = training["recipe"]["reward"]
-        score = HoverReward(
-            env, recipe["horizontal_velocity_scale_cm_s"], recipe["vertical_tracking_rate"]
-        )
+        score = reward_from_recipe(env, recipe)
         totals = {}
         returns = np.zeros(env.n)
+        candidate_returns = np.zeros(env.n)
+        candidate_totals = {}
         position_error = 0.0
         for step in range(len(captures[0]["action"])):
             env.batch.forward()  # Same pre-action refresh as the saved evaluations.
@@ -57,6 +57,20 @@ def audit(run, labels):
             returns += reward
             for name, value in terms.items():
                 totals[name] = totals.get(name, np.zeros(env.n)) + value * env.control_dt
+            if candidate_scale is not None:
+                mean = score.mean()
+                candidate_terms = reward_rates(
+                    mean[:, :3],
+                    mean[:, 3:],
+                    env.fields["xmat"][:, env.template.thorax_id, 8],
+                    horizontal_scale=candidate_scale,
+                    velocity_objective="vector",
+                )
+                candidate_returns += sum(candidate_terms.values()) * env.control_dt
+                for name, value in candidate_terms.items():
+                    candidate_totals[name] = (
+                        candidate_totals.get(name, np.zeros(env.n)) + value * env.control_dt
+                    )
             position_error = max(
                 position_error,
                 float(
@@ -75,6 +89,13 @@ def audit(run, labels):
             "maximum_body_position_replay_error_cm": position_error,
             "passed": position_error <= 1e-9,
         }
+        if candidate_scale is not None:
+            results[label]["candidate"] = {
+                "velocity_scale_cm_s": candidate_scale,
+                "mean_return": float(candidate_returns.mean()),
+                "per_case_return": candidate_returns.tolist(),
+                "mean_term_totals": {k: float(v.mean()) for k, v in candidate_totals.items()},
+            }
     return {
         "provenance": evidence(),
         "completed_utc": utc_now(),

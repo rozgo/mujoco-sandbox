@@ -159,6 +159,16 @@ class HoverReward:
         return reward.astype(np.float32), failed, terms
 
 
+def reward_from_recipe(env, recipe):
+    """Restore the recorded scorer, including historical vector objectives."""
+    return HoverReward(
+        env,
+        recipe.get("horizontal_velocity_scale_cm_s", recipe["velocity_scale_cm_s"]),
+        recipe.get("vertical_tracking_rate", 2.0),
+        recipe.get("velocity_objective", "separate"),
+    )
+
+
 def start_states(dataset, episodes):
     records = []
     for episode in episodes:

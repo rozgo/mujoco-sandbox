@@ -239,8 +239,11 @@ def train(args):
     if args.resume_ppo and (
         not args.wing_readout_only
         or not parent.get("ppo_recipe", {}).get("wing_readout_only")
-        or old_reward.get("horizontal_velocity_scale_cm_s", old_reward["velocity_scale_cm_s"])
-        != args.horizontal_reward_scale
+        or (
+            old_reward.get("horizontal_velocity_scale_cm_s", old_reward["velocity_scale_cm_s"])
+            != args.horizontal_reward_scale
+            and not changing_objective
+        )
     ):
         raise ValueError("Continuation requires the same recorded wing-readout PPO recipe")
     actor.train()
