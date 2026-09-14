@@ -108,6 +108,16 @@ explicit extension of the force law; old v3/v4 models remain reproducible.
 The faster teacher adds causal command-acceleration and drag feedforward,
 through the existing bounded wing targets. It uses current/previous commands
 and measured heading, without future commands or root-pose changes. Feedback
-gains are Kp [40,40,50], Ki [200,200,900], roll Kp 600/Kd 40 and yaw Kp 30/Ki 100.
+gains are Kp [40,40,50], Ki [200,200,900], roll Kp 600/Kd 40 and yaw Kp 60/Ki 30.
 Its desired yaw acceleration cap is 60 rad/s²; actual actuator torque limits
 are unchanged. The slow teacher retains its original feedback settings.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.velocity_exercise \
+  --contract-report docs/embodied_fly/runs/pid_movement_imitation_01/final_evaluation.json \
+  --speed-scale 10 --fast-flight --lateral-control \
+  --output outputs/embodied_fly/pid_velocity_fast_review
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.velocity_video \
+  --source outputs/embodied_fly/pid_velocity_fast_review \
+  --output previews/embodied_fly/pid_velocity_fast_review.mp4
+```

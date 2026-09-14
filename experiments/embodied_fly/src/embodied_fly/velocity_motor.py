@@ -89,8 +89,8 @@ class VelocityPID:
             self.ki[:2] = 200.0
         self.previous_requested_world = np.zeros(3)
         self.previous_yaw_command = 0.0
-        self.yaw_kp = 30.0 if motion_feedforward else 20.0
-        self.yaw_ki = 100.0 if motion_feedforward else 30.0
+        self.yaw_kp = 60.0 if motion_feedforward else 20.0
+        self.yaw_ki = 30.0
 
     def reset(self):
         self.integral[:] = 0
