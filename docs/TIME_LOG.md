@@ -1570,3 +1570,20 @@ reference-only physical validation follows the user's directional curriculum.
   to the subsequent path-typo startup abort: it stopped before data collection.
 - Reward-change focused tests: 11 passed in 1.48 s. Full fly suite: 231 passed,
   45 upstream warnings, 165.98 s. These checks are separate from training.
+
+- Run 07 discarded transition smoke: **17.009556 s training**, **49,152 transitions**, four actor updates; first rollout critic-only, retained calibration, replay and frozen upstream checks pass. Start 2026-09-14T15:14:08.274831+00:00, report 2026-09-14T15:14:28.729586+00:00. Smoke weights are excluded from selected ancestry.
+
+- Run 07: **603.681157 s training**, **32 worlds**,
+  **1,769,472 transitions**. Started **2026-09-14T15:16:25.988950+00:00**,
+  report **2026-09-14T15:28:03.229708+00:00**. Collection 597.045209 s,
+  actor optimization 2.369302 s (includes 0.142231 s imitation),
+  critic 4.240253 s. Setup 15.205988 s,
+  audit 3.379245 s, writes 0.070140 s,
+  physical evaluation 90.071512 s measured separately.
+- Run 07 video render **70.045065 s**, full decode **4.147516 s**,
+  opened **15:32:55 UTC**, **40m50s** after this follow-up goal started.
+  Archival and synchronization after opening are additional wall time.
+- Two full follow-up trials total **1,207.672089 s (20m08s)** measured training and
+  **3,538,944 transitions**; the 17.009556-second discarded smoke is separate.
+  All seven full PPO trials total **4,225.993082 s (70m26s)** and **9,568,256
+  transitions**. Run 05 remains preferred, with unchanged selected ancestry.

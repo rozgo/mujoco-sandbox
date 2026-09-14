@@ -3291,3 +3291,28 @@ verifies that transition, later actor updates, cached/full recurrent replay and
 unchanged upstream parameters. Full fly suite: 231 passed in 165.98 seconds.
 A launch-path typo aborted before graph loading completed or any training;
 the aborted output is preserved separately and the path corrected.
+
+
+### September 14 — the vertical reward works, but trades away sideways control
+
+Run 07 final completes all four flights and lowers net climb 105.99 -> 67.41 mm
+and vertical RMS 11.67 -> 7.43 mm/s (both approximately 36%). Horizontal RMS
+worsens 9.30 -> 14.07 mm/s (51%); total RMS worsens 14.92 -> 15.91 mm/s and peak
+displacement 117.10 -> 126.85 mm. The midpoint trades the other way: horizontal
+RMS 7.21 mm/s but climb 119.30 mm. Neither snapshot passes the joint criterion.
+Do not promote an axis-specific gain as better overall hover. Keep run 05 as the
+preferred overall checkpoint, and preserve the new vertical-control candidate.
+
+The recorded recipe differs only in the vertical rate, derived maximum/version,
+and explicitly declared critic adaptation. First-rollout actor updates are zero;
+critic calibration is retained; all 413 accepted actor updates meet KL .02.
+Full and cached replay pass, and all upstream parameters remain identical.
+The 43-second comparison was fully decoded, inspected and opened at 15:32:55 UTC.
+The next issue is simultaneous vertical/horizontal regulation; stationary hover,
+commanded flight and later utility behavior remain unfinished.
+
+Public architecture clarification: sensory input and motor readout use annotated
+MaleCNS cell classes, without a raw observation-to-action bypass. The learned
+motor decoder is not constrained to a verified per-muscle innervation map.
+Fixed graph routing alone does not establish that specific biological circuits
+are necessary; that would require targeted ablations, not just a performance video.

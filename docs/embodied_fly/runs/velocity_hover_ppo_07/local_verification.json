@@ -1,0 +1,29 @@
+{
+  "focused_tests": {
+    "passed": 11,
+    "wall_seconds": 1.48
+  },
+  "full_fly_suite": {
+    "passed": 231,
+    "warnings": 45,
+    "wall_seconds": 165.98
+  },
+  "ruff": "passed",
+  "diff_check": "passed",
+  "startup_abort": {
+    "cause": "Incorrect graph directory spelling in launch command",
+    "phase": "graph loading, before physics collection or optimizer updates",
+    "fixed": "Use original checked graph path; preserve aborted output separately",
+    "training_transitions": 0,
+    "actor_updates": 0
+  },
+  "gpu_transition_smoke": {
+    "passed": true,
+    "first_rollout_actor_updates": 0,
+    "critic_recalibrated": false,
+    "later_actor_updates": 4,
+    "upstream_unchanged": true,
+    "replay_including_resets_passed": true,
+    "weights_discarded": true
+  }
+}

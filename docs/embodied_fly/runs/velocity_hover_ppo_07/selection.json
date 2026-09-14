@@ -1,0 +1,41 @@
+{
+  "planned_final_evaluation": true,
+  "four_ten_second_flights": true,
+  "every_case_climb_at_most_50_mm": false,
+  "every_case_horizontal_rms_at_most_10_mm_s": false,
+  "combined_goal_passed": false,
+  "retained_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_05.pt",
+  "retained_checkpoint_sha256": "3106cb363aa75dab78322181ad9f46c229a8a29ca8f1f0599bc18e8d59763a32",
+  "reason": "Vertical improvement trades away horizontal control; total RMS and peak displacement worsen. Preserve trial without promoting over run 05.",
+  "means_over_four_fixed_starts": {
+    "parent": {
+      "velocity_rms_mm_s": 14.92194871065723,
+      "vertical_velocity_rms_mm_s": 11.670642504012783,
+      "horizontal_velocity_rms_mm_s": 9.298422277986337,
+      "first_two_seconds_velocity_rms_mm_s": 15.592019607768412,
+      "peak_displacement_mm": 117.0993188137855,
+      "net_climb_mm": 105.99033978641394
+    },
+    "midpoint": {
+      "velocity_rms_mm_s": 14.980896485722454,
+      "vertical_velocity_rms_mm_s": 13.131873817675379,
+      "horizontal_velocity_rms_mm_s": 7.209795388594992,
+      "first_two_seconds_velocity_rms_mm_s": 16.56541975050349,
+      "peak_displacement_mm": 120.05448351476215,
+      "net_climb_mm": 119.3012273743847
+    },
+    "final": {
+      "velocity_rms_mm_s": 15.911101457970988,
+      "vertical_velocity_rms_mm_s": 7.429172048977825,
+      "horizontal_velocity_rms_mm_s": 14.070192179207574,
+      "first_two_seconds_velocity_rms_mm_s": 13.191860007765097,
+      "peak_displacement_mm": 126.84680073411309,
+      "net_climb_mm": 67.41324247358176
+    }
+  },
+  "frozen_upstream_verified": true,
+  "replay_passed": true,
+  "critic_adaptation_verified": true,
+  "accepted_actor_updates": 413,
+  "maximum_accepted_kl": 0.019954132646526
+}
