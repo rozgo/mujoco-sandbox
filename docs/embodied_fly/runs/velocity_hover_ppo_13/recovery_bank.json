@@ -1,0 +1,1593 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T20:10:02.693459+00:00",
+    "source_commit": "750f5d6f75d2612216083b5062a1a291c94217a3",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "1c605531bfa5d73a5a93a4d8b92fc1ce0473649191641f2731b4386c40f478ad",
+      "src/embodied_fly/body.py": "110877f4ff1e87721e31c9fcc0bf9b4339d7d4c7d0a3ac77541e25ecc31eb0c5",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/collect_recovery_starts.py": "9283735dcf2e834514065bfe1c079109e2dd3e5194c2ac09f3cfc37838a3c443",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/evaluate_recovery.py": "8155eb1634bc5eb4b7a6b6b4d8bdb29ec5d162ee0f1877052a09e84454f57145",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/fresh_velocity_actor.py": "3fd8ca2c26a87b4b61dfea020f6f5577674d9771944ac5ed69df516594b4c293",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_exploration_audit.py": "bd403cbb9bd46ce4bb50a7a019fffe6d0b3a8e98255c4b344d928f02036845ac",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_gusts.py": "12d000335f03abac519ad7b80fc7a86f663bc976c905ccb6e5f805ac80903d46",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_motion_audit.py": "40b1cfc54f512a942c7da4316709f257d04201fe7be9a5707b7d238aef9fe0ae",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_outcome_audit.py": "0886e61fffc85caaf5bd198b115989879a5be7180517a14be7a14cdae52ec35e",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/imitation_gradient_audit.py": "587174c5a530607130956eebeb29817436ca52ac667c24ad6d458efcfe882876",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "a89d557e18f61a8b00d29d435ac2b3ab3392050a2e38db490d71515480157c3c",
+      "src/embodied_fly/pid_hover.py": "2a25d6a196e172bc6b60a294418e145f2a80d1a45288af03d2fdf4cdb2239081",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_step.py": "1f3f17037920908bef0efc01867d507c36e3353537632279ee4911510277b7d2",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/random_velocity_commands.py": "79d7f2d82e5c433661349ddc7b2aa4d6f2c960f470d0c8011457da8d2cebc6c8",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/recovery_starts.py": "e5cc72c2fdc7348e163e95ca5961a6859b55d662d7b1e69c2384d9c93c988eaf",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/velocity_comparison.py": "1407943477ee73117b0cb9898d0bd1711aed446b54a0bc174b36e8edd1d92314",
+      "src/embodied_fly/velocity_demonstrations.py": "8ad0770fd18d40b8886171d12df2596ca6903b4cd8cf7804fc32889fba23d9a1",
+      "src/embodied_fly/velocity_exercise.py": "3aa2d83183de4ec822aeab121f2f469faa3567cb3a33b8358078a9eed6b2a89b",
+      "src/embodied_fly/velocity_feedback_audit.py": "1a092ca01f4d39d41aca2c31ae0939511c92bdb88a57ad3db1796195c2c5abff",
+      "src/embodied_fly/velocity_hover.py": "578475c3b4ddff7ba228dda1af721d1014208d05e607827cea7d2826ecdc1207",
+      "src/embodied_fly/velocity_hover_ppo.py": "7a3b3ebd7fce9443c32b8a17fb001f3568de0ea3cce013c7507150b06564fdff",
+      "src/embodied_fly/velocity_hover_video.py": "6027ad6b9335923a8c434fbde00f275056d91d397bd96a23e856ac1fbb4ddb4a",
+      "src/embodied_fly/velocity_imitation.py": "88bd6b437d42637b10f133cbbf71022fd98e34ea635a2cbfbb1c294ba0641e99",
+      "src/embodied_fly/velocity_map.py": "514e90c087c9ed17ce9224579b300947dd92c25c121cc0c592a9cb65a361ed23",
+      "src/embodied_fly/velocity_motor.py": "e438c6cc15773f89a42d1d14f1fa864b58c9e0384ff8851684c1ebf572362133",
+      "src/embodied_fly/velocity_recovery.py": "17a6efb36ea74d95295d8f583fecfcd0f03bbb26787d8ec4ade5b53c166d7385",
+      "src/embodied_fly/velocity_student.py": "39dbe8368003958baeb9b106a28e95c50e4732029b0ae9cd1a30a3df45f2d607",
+      "src/embodied_fly/velocity_timing_audit.py": "787ee3415d0c060d2fb08fb03e4b87b30dd97834a89746a9300a9a3889187dde",
+      "src/embodied_fly/velocity_video.py": "7bfd47c653fb873f2df62282461975a904f722f4a68c146b52377d2466031893",
+      "src/embodied_fly/wing_motion.py": "d10adeee6a10ce028d351125c0b615dd98e07841ea623c1ba5ba5ba05abd333a",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_readout_ppo.py": "100ad24c381957b81812aa0da48eef7b7b303c5355faeca8a82e052c3a8c1236",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "started_utc": "2026-09-14T20:09:26.147622+00:00",
+  "completed_utc": "2026-09-14T20:10:02.693818+00:00",
+  "parent_checkpoint_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant",
+    "independent_heading_control": true
+  },
+  "fixed_graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "reward_recipe": {
+    "version": "velocity_hover_v1",
+    "control_dt": 0.002,
+    "velocity_window_seconds": 0.1,
+    "alive_rate": 1.0,
+    "vertical_tracking_rate": 2.0,
+    "horizontal_tracking_rate": 1.0,
+    "angular_tracking_rate": 0.5,
+    "upright_rate": 0.5,
+    "velocity_scale_cm_s": 0.5,
+    "angular_scale_rad_s": 0.5,
+    "tracking_shape": "1 / (1 + squared normalized error)",
+    "failure_penalty_once": 2.0,
+    "failure_height_below_cm": 0.5,
+    "failure_upright_below": 0.85,
+    "failure_forbidden_body_weights_above": 0.1,
+    "timing": "sum of reward rates times dt, then one failure penalty at termination",
+    "height_or_position_target": false,
+    "wing_speed_or_action_change_penalty": false,
+    "minimum_live_rate": 1.0,
+    "maximum_live_rate": 5.0,
+    "horizontal_velocity_scale_cm_s": 2
+  },
+  "states_sha256": "11ee5c15d9b572fa609da9d415bc849fa49e226d3fbc342b371c7bc4d4ee672f",
+  "records": [
+    {
+      "episode": 0,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 1,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 2,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 3,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 4,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 5,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 6,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 7,
+      "parent_flight_seconds": 2.0,
+      "split": "training"
+    },
+    {
+      "episode": 8,
+      "parent_flight_seconds": 2.0,
+      "split": "validation"
+    },
+    {
+      "episode": 9,
+      "parent_flight_seconds": 2.0,
+      "split": "validation"
+    },
+    {
+      "episode": 0,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 1,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 2,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 3,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 4,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 5,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 6,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 7,
+      "parent_flight_seconds": 4.0,
+      "split": "training"
+    },
+    {
+      "episode": 8,
+      "parent_flight_seconds": 4.0,
+      "split": "validation"
+    },
+    {
+      "episode": 9,
+      "parent_flight_seconds": 4.0,
+      "split": "validation"
+    },
+    {
+      "episode": 0,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 1,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 2,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 3,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 4,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 5,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 6,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 7,
+      "parent_flight_seconds": 6.0,
+      "split": "training"
+    },
+    {
+      "episode": 8,
+      "parent_flight_seconds": 6.0,
+      "split": "validation"
+    },
+    {
+      "episode": 9,
+      "parent_flight_seconds": 6.0,
+      "split": "validation"
+    }
+  ],
+  "training_records": 24,
+  "validation_records": 6,
+  "collection_worlds": 10,
+  "collection_transitions": 30640,
+  "audit_transitions": 1920,
+  "setup_seconds": 10.23125517135486,
+  "collection_seconds": 23.32444806722924,
+  "restoration_audit_seconds": 1.8686155378818512,
+  "restoration_errors": {
+    "observation": 0.0012822151184082031,
+    "action": 9.751878678798676e-06,
+    "qpos": 7.518947613105453e-05,
+    "reward": 1.4132820069789886e-06
+  },
+  "restoration_details": [
+    {
+      "parent_step": 1000,
+      "initial_restore_errors": {
+        "integration": 0.0,
+        "aux_previous_action": 0.0,
+        "aux_mean_sensors": 0.0,
+        "aux_command": 0.0,
+        "aux_needs": 0.0,
+        "aux_requested_height_cm": 0.0,
+        "aux_requested_xy_cm": 0.0,
+        "aux_forbidden_peak": 0.0,
+        "aux__wing_applied": 0.0,
+        "derived_sensordata": 0.0,
+        "derived_xmat": 0.0,
+        "derived_ximat": 0.0,
+        "wing_activity": 0.0,
+        "wing_wrench": 0.0,
+        "wing_lift": 0.0,
+        "memory": 0.0,
+        "reward_history": 0.0,
+        "reward_total": 0.0,
+        "reward_count": 0.0
+      },
+      "step_errors": [
+        {
+          "observation": 0.0,
+          "action": 1.7881393432617188e-07,
+          "qpos": 4.50655448791526e-08,
+          "reward": 0.0
+        },
+        {
+          "observation": 4.76837158203125e-07,
+          "action": 1.7881393432617188e-07,
+          "qpos": 1.036380146424154e-07,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 1.6689300537109375e-06,
+          "action": 2.384185791015625e-07,
+          "qpos": 1.5857895213958716e-06,
+          "reward": 0.0
+        },
+        {
+          "observation": 1.816480653360486e-05,
+          "action": 3.2782554626464844e-07,
+          "qpos": 3.417176964907688e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 3.9142920286394656e-05,
+          "action": 7.748603820800781e-07,
+          "qpos": 3.262673616453733e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 3.737312363227829e-05,
+          "action": 1.4379620552062988e-06,
+          "qpos": 3.7541429388095127e-06,
+          "reward": 9.313225746154785e-10
+        },
+        {
+          "observation": 4.300277942093089e-05,
+          "action": 1.4081597328186035e-06,
+          "qpos": 3.4466741707144804e-06,
+          "reward": 1.3969838619232178e-09
+        },
+        {
+          "observation": 3.9480801206082106e-05,
+          "action": 1.7881393432617188e-06,
+          "qpos": 4.4911678420653955e-06,
+          "reward": 2.7939677238464355e-09
+        },
+        {
+          "observation": 5.1445269491523504e-05,
+          "action": 2.0563602447509766e-06,
+          "qpos": 4.4997827825533074e-06,
+          "reward": 4.6566128730773926e-09
+        },
+        {
+          "observation": 5.154393147677183e-05,
+          "action": 2.16066837310791e-06,
+          "qpos": 4.176904284478809e-06,
+          "reward": 6.51925802230835e-09
+        },
+        {
+          "observation": 5.1021575927734375e-05,
+          "action": 2.771615982055664e-06,
+          "qpos": 4.541299469453246e-06,
+          "reward": 8.847564458847046e-09
+        },
+        {
+          "observation": 6.699562072753906e-05,
+          "action": 2.987682819366455e-06,
+          "qpos": 3.8363306960739404e-06,
+          "reward": 1.1175870895385742e-08
+        },
+        {
+          "observation": 7.545948028564453e-05,
+          "action": 3.2372772693634033e-06,
+          "qpos": 3.947047859109709e-06,
+          "reward": 1.4435499906539917e-08
+        },
+        {
+          "observation": 7.414817810058594e-05,
+          "action": 2.868473529815674e-06,
+          "qpos": 5.114904410226254e-06,
+          "reward": 1.816079020500183e-08
+        },
+        {
+          "observation": 8.153915405273438e-05,
+          "action": 2.175569534301758e-06,
+          "qpos": 4.9890749580505656e-06,
+          "reward": 2.2817403078079224e-08
+        },
+        {
+          "observation": 9.715557098388672e-05,
+          "action": 2.562999725341797e-06,
+          "qpos": 4.752730725129939e-06,
+          "reward": 2.8405338525772095e-08
+        },
+        {
+          "observation": 0.00012087821960449219,
+          "action": 2.853572368621826e-06,
+          "qpos": 4.483129384412829e-06,
+          "reward": 3.5390257835388184e-08
+        },
+        {
+          "observation": 0.00015151500701904297,
+          "action": 2.779066562652588e-06,
+          "qpos": 3.8096384279984186e-06,
+          "reward": 4.330649971961975e-08
+        },
+        {
+          "observation": 0.00018525123596191406,
+          "action": 2.421438694000244e-06,
+          "qpos": 4.343808343382216e-06,
+          "reward": 5.3085386753082275e-08
+        },
+        {
+          "observation": 0.0002143383026123047,
+          "action": 2.3692846298217773e-06,
+          "qpos": 4.6684403058327995e-06,
+          "reward": 6.332993507385254e-08
+        },
+        {
+          "observation": 0.00023186206817626953,
+          "action": 2.5760382413864136e-06,
+          "qpos": 4.567732382249057e-06,
+          "reward": 7.404014468193054e-08
+        },
+        {
+          "observation": 0.00023370981216430664,
+          "action": 2.6579946279525757e-06,
+          "qpos": 4.0745262418762085e-06,
+          "reward": 8.475035429000854e-08
+        },
+        {
+          "observation": 0.00023597478866577148,
+          "action": 2.384185791015625e-06,
+          "qpos": 5.013838900690722e-06,
+          "reward": 9.592622518539429e-08
+        },
+        {
+          "observation": 0.00025147199630737305,
+          "action": 1.8924474716186523e-06,
+          "qpos": 4.751501740368758e-06,
+          "reward": 1.0849907994270325e-07
+        },
+        {
+          "observation": 0.0002798996865749359,
+          "action": 2.3990869522094727e-06,
+          "qpos": 5.27173012776494e-06,
+          "reward": 1.2246891856193542e-07
+        },
+        {
+          "observation": 0.00031769275665283203,
+          "action": 2.473592758178711e-06,
+          "qpos": 5.967235395143433e-06,
+          "reward": 1.3830140233039856e-07
+        },
+        {
+          "observation": 0.00035762786865234375,
+          "action": 2.3990869522094727e-06,
+          "qpos": 6.73407910301016e-06,
+          "reward": 1.555308699607849e-07
+        },
+        {
+          "observation": 0.0003910064697265625,
+          "action": 2.4884939193725586e-06,
+          "qpos": 7.5486512287614715e-06,
+          "reward": 1.7415732145309448e-07
+        },
+        {
+          "observation": 0.0004112720489501953,
+          "action": 2.808868885040283e-06,
+          "qpos": 8.387562126621617e-06,
+          "reward": 1.932494342327118e-07
+        },
+        {
+          "observation": 0.00042107701301574707,
+          "action": 2.9206275939941406e-06,
+          "qpos": 9.230258138925862e-06,
+          "reward": 2.1187588572502136e-07
+        },
+        {
+          "observation": 0.0004222393035888672,
+          "action": 3.037974238395691e-06,
+          "qpos": 1.0087559933369405e-05,
+          "reward": 2.3096799850463867e-07
+        },
+        {
+          "observation": 0.0004315376281738281,
+          "action": 3.0025839805603027e-06,
+          "qpos": 1.09725652781556e-05,
+          "reward": 2.5099143385887146e-07
+        },
+        {
+          "observation": 0.0004465430974960327,
+          "action": 2.4959444999694824e-06,
+          "qpos": 1.1889534699438542e-05,
+          "reward": 2.7101486921310425e-07
+        },
+        {
+          "observation": 0.0004627704620361328,
+          "action": 2.332031726837158e-06,
+          "qpos": 1.2840985141870931e-05,
+          "reward": 2.915039658546448e-07
+        },
+        {
+          "observation": 0.0004800558090209961,
+          "action": 2.5704503059387207e-06,
+          "qpos": 1.3821347790932137e-05,
+          "reward": 3.129243850708008e-07
+        },
+        {
+          "observation": 0.0004935264587402344,
+          "action": 2.3618340492248535e-06,
+          "qpos": 1.4821896241024035e-05,
+          "reward": 3.3527612686157227e-07
+        },
+        {
+          "observation": 0.0005023479461669922,
+          "action": 2.7194619178771973e-06,
+          "qpos": 1.5840945454703714e-05,
+          "reward": 3.580935299396515e-07
+        },
+        {
+          "observation": 0.0005124807357788086,
+          "action": 2.8386712074279785e-06,
+          "qpos": 1.6841726484750907e-05,
+          "reward": 3.7997961044311523e-07
+        },
+        {
+          "observation": 0.000495612621307373,
+          "action": 3.2670795917510986e-06,
+          "qpos": 1.7798752187214717e-05,
+          "reward": 4.00003045797348e-07
+        },
+        {
+          "observation": 0.0004730224609375,
+          "action": 2.9802322387695312e-06,
+          "qpos": 1.8714256394325446e-05,
+          "reward": 4.1956081986427307e-07
+        },
+        {
+          "observation": 0.0004960298538208008,
+          "action": 2.3990869522094727e-06,
+          "qpos": 1.9604655194793708e-05,
+          "reward": 4.3818727135658264e-07
+        },
+        {
+          "observation": 0.0005224943161010742,
+          "action": 2.3096799850463867e-06,
+          "qpos": 2.0484726954261845e-05,
+          "reward": 4.5634806156158447e-07
+        },
+        {
+          "observation": 0.000548243522644043,
+          "action": 1.9222497940063477e-06,
+          "qpos": 2.1364940599566395e-05,
+          "reward": 4.745088517665863e-07
+        },
+        {
+          "observation": 0.0005671977996826172,
+          "action": 1.9073486328125e-06,
+          "qpos": 2.224483409829503e-05,
+          "reward": 4.931353032588959e-07
+        },
+        {
+          "observation": 0.0005705356597900391,
+          "action": 2.5779008865356445e-06,
+          "qpos": 2.3114140609292733e-05,
+          "reward": 5.117617547512054e-07
+        },
+        {
+          "observation": 0.000555872917175293,
+          "action": 3.2708048820495605e-06,
+          "qpos": 2.3975508567142256e-05,
+          "reward": 5.30388206243515e-07
+        },
+        {
+          "observation": 0.000559195876121521,
+          "action": 3.3972319215536118e-06,
+          "qpos": 2.4841726662172547e-05,
+          "reward": 5.485489964485168e-07
+        },
+        {
+          "observation": 0.0005903840065002441,
+          "action": 3.2335519790649414e-06,
+          "qpos": 2.570812874091999e-05,
+          "reward": 5.662441253662109e-07
+        },
+        {
+          "observation": 0.0006220340728759766,
+          "action": 2.8386712074279785e-06,
+          "qpos": 2.6568846605679042e-05,
+          "reward": 5.834735929965973e-07
+        },
+        {
+          "observation": 0.00064869225025177,
+          "action": 2.898275852203369e-06,
+          "qpos": 2.7409577791237538e-05,
+          "reward": 6.002373993396759e-07
+        },
+        {
+          "observation": 0.0006629228591918945,
+          "action": 2.8312206268310547e-06,
+          "qpos": 2.8210849629894952e-05,
+          "reward": 6.156042218208313e-07
+        },
+        {
+          "observation": 0.0006604194641113281,
+          "action": 2.9206275939941406e-06,
+          "qpos": 2.904793522739979e-05,
+          "reward": 6.356276571750641e-07
+        },
+        {
+          "observation": 0.000640869140625,
+          "action": 2.4959444999694824e-06,
+          "qpos": 3.0279288933954263e-05,
+          "reward": 6.617046892642975e-07
+        },
+        {
+          "observation": 0.0006067752838134766,
+          "action": 3.2223761081695557e-06,
+          "qpos": 3.143725983112411e-05,
+          "reward": 6.868503987789154e-07
+        },
+        {
+          "observation": 0.000569462776184082,
+          "action": 3.948807716369629e-06,
+          "qpos": 3.2636581113409946e-05,
+          "reward": 7.133930921554565e-07
+        },
+        {
+          "observation": 0.000609278678894043,
+          "action": 4.0121376514434814e-06,
+          "qpos": 3.390569644001751e-05,
+          "reward": 7.399357855319977e-07
+        },
+        {
+          "observation": 0.0006425380706787109,
+          "action": 3.591179847717285e-06,
+          "qpos": 3.523325555732093e-05,
+          "reward": 7.669441401958466e-07
+        },
+        {
+          "observation": 0.0006701648235321045,
+          "action": 2.86102294921875e-06,
+          "qpos": 3.660035338759471e-05,
+          "reward": 7.939524948596954e-07
+        },
+        {
+          "observation": 0.0006870031356811523,
+          "action": 2.2649765014648438e-06,
+          "qpos": 3.797730282140144e-05,
+          "reward": 8.204951882362366e-07
+        },
+        {
+          "observation": 0.0006873607635498047,
+          "action": 2.3096799850463867e-06,
+          "qpos": 3.932571075471181e-05,
+          "reward": 8.461065590381622e-07
+        },
+        {
+          "observation": 0.000667572021484375,
+          "action": 2.7567148208618164e-06,
+          "qpos": 4.05981451399029e-05,
+          "reward": 8.698552846908569e-07
+        },
+        {
+          "observation": 0.0006232261657714844,
+          "action": 4.2691826820373535e-06,
+          "qpos": 4.175991498778231e-05,
+          "reward": 8.917413651943207e-07
+        },
+        {
+          "observation": 0.0005730390548706055,
+          "action": 5.401670932769775e-06,
+          "qpos": 4.299188667333809e-05,
+          "reward": 9.154900908470154e-07
+        },
+        {
+          "observation": 0.0006323456764221191,
+          "action": 5.8105215430259705e-06,
+          "qpos": 4.4343934519908146e-05,
+          "reward": 9.415671229362488e-07
+        }
+      ]
+    },
+    {
+      "parent_step": 2000,
+      "initial_restore_errors": {
+        "integration": 0.0,
+        "aux_previous_action": 0.0,
+        "aux_mean_sensors": 0.0,
+        "aux_command": 0.0,
+        "aux_needs": 0.0,
+        "aux_requested_height_cm": 0.0,
+        "aux_requested_xy_cm": 0.0,
+        "aux_forbidden_peak": 0.0,
+        "aux__wing_applied": 0.0,
+        "derived_sensordata": 0.0,
+        "derived_xmat": 0.0,
+        "derived_ximat": 0.0,
+        "wing_activity": 0.0,
+        "wing_wrench": 0.0,
+        "wing_lift": 0.0,
+        "memory": 0.0,
+        "reward_history": 0.0,
+        "reward_total": 0.0,
+        "reward_count": 0.0
+      },
+      "step_errors": [
+        {
+          "observation": 0.0,
+          "action": 1.7881393432617188e-07,
+          "qpos": 4.50655448791526e-08,
+          "reward": 0.0
+        },
+        {
+          "observation": 3.5762786865234375e-07,
+          "action": 2.384185791015625e-07,
+          "qpos": 9.161238433102976e-07,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 1.0493968147784472e-05,
+          "action": 2.980232238769531e-07,
+          "qpos": 2.674718587264069e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 3.063830081373453e-05,
+          "action": 6.854534149169922e-07,
+          "qpos": 3.494479738298475e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 4.0028360672295094e-05,
+          "action": 1.130625605583191e-06,
+          "qpos": 2.981653254121035e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 3.415404353290796e-05,
+          "action": 1.5869736671447754e-06,
+          "qpos": 2.509325420033747e-06,
+          "reward": 9.313225746154785e-10
+        },
+        {
+          "observation": 2.8743757866322994e-05,
+          "action": 1.6167759895324707e-06,
+          "qpos": 2.0951008751074474e-06,
+          "reward": 2.3283064365386963e-09
+        },
+        {
+          "observation": 3.199279308319092e-05,
+          "action": 1.519918441772461e-06,
+          "qpos": 1.975461885711516e-06,
+          "reward": 3.725290298461914e-09
+        },
+        {
+          "observation": 4.744529724121094e-05,
+          "action": 1.3560056686401367e-06,
+          "qpos": 2.658035860165854e-06,
+          "reward": 6.51925802230835e-09
+        },
+        {
+          "observation": 5.984306335449219e-05,
+          "action": 1.1473894119262695e-06,
+          "qpos": 3.0548750260594787e-06,
+          "reward": 8.847564458847046e-09
+        },
+        {
+          "observation": 6.651878356933594e-05,
+          "action": 1.2665987014770508e-06,
+          "qpos": 2.484207908475672e-06,
+          "reward": 1.1641532182693481e-08
+        },
+        {
+          "observation": 6.604194641113281e-05,
+          "action": 1.8849968910217285e-06,
+          "qpos": 3.8990011812295775e-06,
+          "reward": 1.4435499906539917e-08
+        },
+        {
+          "observation": 6.80088996887207e-05,
+          "action": 2.4428591132164e-06,
+          "qpos": 4.296588487201529e-06,
+          "reward": 1.7695128917694092e-08
+        },
+        {
+          "observation": 8.469820022583008e-05,
+          "action": 3.0882656574249268e-06,
+          "qpos": 3.908811289553472e-06,
+          "reward": 2.1420419216156006e-08
+        },
+        {
+          "observation": 0.00012129545211791992,
+          "action": 3.0100345611572266e-06,
+          "qpos": 4.596746586764668e-06,
+          "reward": 2.60770320892334e-08
+        },
+        {
+          "observation": 0.0001573413610458374,
+          "action": 2.942979335784912e-06,
+          "qpos": 4.43424028429007e-06,
+          "reward": 3.213062882423401e-08
+        },
+        {
+          "observation": 0.00018894672393798828,
+          "action": 2.8014183044433594e-06,
+          "qpos": 5.039454092886642e-06,
+          "reward": 4.0046870708465576e-08
+        },
+        {
+          "observation": 0.000209808349609375,
+          "action": 2.130866050720215e-06,
+          "qpos": 5.104865305749495e-06,
+          "reward": 4.842877388000488e-08
+        },
+        {
+          "observation": 0.00021696090698242188,
+          "action": 2.6971101760864258e-06,
+          "qpos": 4.542143245356289e-06,
+          "reward": 5.634501576423645e-08
+        },
+        {
+          "observation": 0.00020551681518554688,
+          "action": 2.7008354663848877e-06,
+          "qpos": 5.537319682809397e-06,
+          "reward": 6.379559636116028e-08
+        },
+        {
+          "observation": 0.00018221139907836914,
+          "action": 2.6226043701171875e-06,
+          "qpos": 5.048201926511871e-06,
+          "reward": 7.217749953269958e-08
+        },
+        {
+          "observation": 0.0002231597900390625,
+          "action": 3.0584633350372314e-06,
+          "qpos": 4.952768137029911e-06,
+          "reward": 8.288770914077759e-08
+        },
+        {
+          "observation": 0.0002785921096801758,
+          "action": 3.643333911895752e-06,
+          "qpos": 4.914320903666921e-06,
+          "reward": 9.639188647270203e-08
+        },
+        {
+          "observation": 0.00033783912658691406,
+          "action": 4.1425228118896484e-06,
+          "qpos": 5.528703458601569e-06,
+          "reward": 1.1082738637924194e-07
+        },
+        {
+          "observation": 0.00038933753967285156,
+          "action": 4.187226295471191e-06,
+          "qpos": 6.362821547423181e-06,
+          "reward": 1.2712553143501282e-07
+        },
+        {
+          "observation": 0.00042426586151123047,
+          "action": 3.680586814880371e-06,
+          "qpos": 7.230741636110594e-06,
+          "reward": 1.4435499906539917e-07
+        },
+        {
+          "observation": 0.00043463706970214844,
+          "action": 2.5779008865356445e-06,
+          "qpos": 8.072282908333506e-06,
+          "reward": 1.5972182154655457e-07
+        },
+        {
+          "observation": 0.0004391670227050781,
+          "action": 2.8014183044433594e-06,
+          "qpos": 8.828642168001721e-06,
+          "reward": 1.7369166016578674e-07
+        },
+        {
+          "observation": 0.00043654441833496094,
+          "action": 4.41819429397583e-06,
+          "qpos": 9.532143976365148e-06,
+          "reward": 1.885928213596344e-07
+        },
+        {
+          "observation": 0.000444561243057251,
+          "action": 5.647074431180954e-06,
+          "qpos": 1.0402066025871903e-05,
+          "reward": 2.062879502773285e-07
+        },
+        {
+          "observation": 0.0004952549934387207,
+          "action": 6.336718797683716e-06,
+          "qpos": 1.1442002205708235e-05,
+          "reward": 2.2724270820617676e-07
+        },
+        {
+          "observation": 0.0005638003349304199,
+          "action": 6.2659382820129395e-06,
+          "qpos": 1.2637693971306874e-05,
+          "reward": 2.505257725715637e-07
+        },
+        {
+          "observation": 0.0006370246410369873,
+          "action": 5.640089511871338e-06,
+          "qpos": 1.3948378110306692e-05,
+          "reward": 2.7567148208618164e-07
+        },
+        {
+          "observation": 0.0007002353668212891,
+          "action": 4.231929779052734e-06,
+          "qpos": 1.5311697745712394e-05,
+          "reward": 3.012828528881073e-07
+        },
+        {
+          "observation": 0.0007429122924804688,
+          "action": 3.7550926208496094e-06,
+          "qpos": 1.6650595328737694e-05,
+          "reward": 3.264285624027252e-07
+        },
+        {
+          "observation": 0.0007622241973876953,
+          "action": 3.0472874641418457e-06,
+          "qpos": 1.7888821440159575e-05,
+          "reward": 3.511086106300354e-07
+        },
+        {
+          "observation": 0.0007593631744384766,
+          "action": 2.5779008865356445e-06,
+          "qpos": 1.9387456275055115e-05,
+          "reward": 3.8137659430503845e-07
+        },
+        {
+          "observation": 0.0007634758949279785,
+          "action": 3.5762786865234375e-06,
+          "qpos": 2.095064717089201e-05,
+          "reward": 4.1117891669273376e-07
+        },
+        {
+          "observation": 0.0007885098457336426,
+          "action": 4.928559064865112e-06,
+          "qpos": 2.258078282668663e-05,
+          "reward": 4.4284388422966003e-07
+        },
+        {
+          "observation": 0.0008257627487182617,
+          "action": 5.245208740234375e-06,
+          "qpos": 2.430754339854957e-05,
+          "reward": 4.759058356285095e-07
+        },
+        {
+          "observation": 0.0008895695209503174,
+          "action": 4.336237907409668e-06,
+          "qpos": 2.613968068043704e-05,
+          "reward": 5.098991096019745e-07
+        },
+        {
+          "observation": 0.0009560585021972656,
+          "action": 3.3676624298095703e-06,
+          "qpos": 2.8054462424709214e-05,
+          "reward": 5.457550287246704e-07
+        },
+        {
+          "observation": 0.0009828805923461914,
+          "action": 3.3080577850341797e-06,
+          "qpos": 2.9996858172065544e-05,
+          "reward": 5.820766091346741e-07
+        },
+        {
+          "observation": 0.0009701251983642578,
+          "action": 4.6193599700927734e-06,
+          "qpos": 3.1893525630266595e-05,
+          "reward": 6.1793252825737e-07
+        },
+        {
+          "observation": 0.0009379386901855469,
+          "action": 7.37607479095459e-06,
+          "qpos": 3.3689170639394916e-05,
+          "reward": 6.51925802230835e-07
+        },
+        {
+          "observation": 0.0008832216262817383,
+          "action": 8.806586265563965e-06,
+          "qpos": 3.5552725503151805e-05,
+          "reward": 6.882473826408386e-07
+        },
+        {
+          "observation": 0.0009477734565734863,
+          "action": 9.337440133094788e-06,
+          "qpos": 3.7532966123521305e-05,
+          "reward": 7.255002856254578e-07
+        },
+        {
+          "observation": 0.001041412353515625,
+          "action": 8.478760719299316e-06,
+          "qpos": 3.960446600093093e-05,
+          "reward": 7.641501724720001e-07
+        },
+        {
+          "observation": 0.0011529326438903809,
+          "action": 6.787478923797607e-06,
+          "qpos": 4.1723912382884976e-05,
+          "reward": 8.032657206058502e-07
+        },
+        {
+          "observation": 0.0012192130088806152,
+          "action": 4.5746564865112305e-06,
+          "qpos": 4.383293581877723e-05,
+          "reward": 8.409842848777771e-07
+        },
+        {
+          "observation": 0.0012267827987670898,
+          "action": 4.932284355163574e-06,
+          "qpos": 4.615364947024858e-05,
+          "reward": 8.842907845973969e-07
+        },
+        {
+          "observation": 0.0011718273162841797,
+          "action": 4.678964614868164e-06,
+          "qpos": 4.8337833376432826e-05,
+          "reward": 9.238719940185547e-07
+        },
+        {
+          "observation": 0.0010609626770019531,
+          "action": 4.127621650695801e-06,
+          "qpos": 5.025693790727814e-05,
+          "reward": 9.597279131412506e-07
+        },
+        {
+          "observation": 0.000924229621887207,
+          "action": 4.883855581283569e-06,
+          "qpos": 5.203919826479719e-05,
+          "reward": 9.960494935512543e-07
+        },
+        {
+          "observation": 0.0009298771619796753,
+          "action": 6.1336904764175415e-06,
+          "qpos": 5.410605117628364e-05,
+          "reward": 1.0360963642597198e-06
+        },
+        {
+          "observation": 0.0010659098625183105,
+          "action": 6.8694353103637695e-06,
+          "qpos": 5.640816538399207e-05,
+          "reward": 1.0794028639793396e-06
+        },
+        {
+          "observation": 0.0011773109436035156,
+          "action": 5.81890344619751e-06,
+          "qpos": 5.8883973955925484e-05,
+          "reward": 1.1245720088481903e-06
+        },
+        {
+          "observation": 0.001254349946975708,
+          "action": 4.112720489501953e-06,
+          "qpos": 6.144203677482807e-05,
+          "reward": 1.1692754924297333e-06
+        },
+        {
+          "observation": 0.0012822151184082031,
+          "action": 4.127621650695801e-06,
+          "qpos": 6.396622705207022e-05,
+          "reward": 1.2135133147239685e-06
+        },
+        {
+          "observation": 0.001249074935913086,
+          "action": 4.1425228118896484e-06,
+          "qpos": 6.632767862457811e-05,
+          "reward": 1.2540258467197418e-06
+        },
+        {
+          "observation": 0.0011518001556396484,
+          "action": 6.936490535736084e-06,
+          "qpos": 6.841539235447058e-05,
+          "reward": 1.2917444109916687e-06
+        },
+        {
+          "observation": 0.001005411148071289,
+          "action": 9.045004844665527e-06,
+          "qpos": 7.035385978193531e-05,
+          "reward": 1.3289973139762878e-06
+        },
+        {
+          "observation": 0.0010139644145965576,
+          "action": 9.751878678798676e-06,
+          "qpos": 7.263183622985281e-05,
+          "reward": 1.369975507259369e-06
+        },
+        {
+          "observation": 0.0011786818504333496,
+          "action": 9.43988561630249e-06,
+          "qpos": 7.518947613105453e-05,
+          "reward": 1.4132820069789886e-06
+        }
+      ]
+    },
+    {
+      "parent_step": 3000,
+      "initial_restore_errors": {
+        "integration": 0.0,
+        "aux_previous_action": 0.0,
+        "aux_mean_sensors": 0.0,
+        "aux_command": 0.0,
+        "aux_needs": 0.0,
+        "aux_requested_height_cm": 0.0,
+        "aux_requested_xy_cm": 0.0,
+        "aux_forbidden_peak": 0.0,
+        "aux__wing_applied": 0.0,
+        "derived_sensordata": 0.0,
+        "derived_xmat": 0.0,
+        "derived_ximat": 0.0,
+        "wing_activity": 0.0,
+        "wing_wrench": 0.0,
+        "wing_lift": 0.0,
+        "memory": 0.0,
+        "reward_history": 0.0,
+        "reward_total": 0.0,
+        "reward_count": 0.0
+      },
+      "step_errors": [
+        {
+          "observation": 0.0,
+          "action": 1.7881393432617188e-07,
+          "qpos": 3.755462074650495e-08,
+          "reward": 0.0
+        },
+        {
+          "observation": 2.980232238769531e-07,
+          "action": 1.7881393432617188e-07,
+          "qpos": 2.523317521423152e-07,
+          "reward": 0.0
+        },
+        {
+          "observation": 2.3507745936512947e-06,
+          "action": 2.384185791015625e-07,
+          "qpos": 1.8288849971272143e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 2.0949402824044228e-05,
+          "action": 2.682209014892578e-07,
+          "qpos": 2.173389601096645e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 2.4895649403333664e-05,
+          "action": 8.381903171539307e-07,
+          "qpos": 3.374172223278443e-06,
+          "reward": 4.656612873077393e-10
+        },
+        {
+          "observation": 3.8650352507829666e-05,
+          "action": 1.1399388313293457e-06,
+          "qpos": 3.021197609635236e-06,
+          "reward": 9.313225746154785e-10
+        },
+        {
+          "observation": 3.4607015550136566e-05,
+          "action": 1.6689300537109375e-06,
+          "qpos": 3.4260968073087148e-06,
+          "reward": 1.862645149230957e-09
+        },
+        {
+          "observation": 3.924506017938256e-05,
+          "action": 1.8924474716186523e-06,
+          "qpos": 3.196406519340056e-06,
+          "reward": 2.7939677238464355e-09
+        },
+        {
+          "observation": 3.6835670471191406e-05,
+          "action": 2.205371856689453e-06,
+          "qpos": 3.115158308254909e-06,
+          "reward": 5.122274160385132e-09
+        },
+        {
+          "observation": 5.555152893066406e-05,
+          "action": 2.2202730178833008e-06,
+          "qpos": 3.682330762885705e-06,
+          "reward": 7.450580596923828e-09
+        },
+        {
+          "observation": 7.390975952148438e-05,
+          "action": 2.0712614059448242e-06,
+          "qpos": 4.209980427682223e-06,
+          "reward": 1.1175870895385742e-08
+        },
+        {
+          "observation": 8.869171142578125e-05,
+          "action": 2.0265579223632812e-06,
+          "qpos": 5.130217312385643e-06,
+          "reward": 1.4901161193847656e-08
+        },
+        {
+          "observation": 8.887052536010742e-05,
+          "action": 2.234242856502533e-06,
+          "qpos": 4.516596563906031e-06,
+          "reward": 1.816079020500183e-08
+        },
+        {
+          "observation": 8.243322372436523e-05,
+          "action": 2.1383166313171387e-06,
+          "qpos": 4.2283784563636065e-06,
+          "reward": 2.1420419216156006e-08
+        },
+        {
+          "observation": 7.933378219604492e-05,
+          "action": 2.0936131477355957e-06,
+          "qpos": 3.7446917349982713e-06,
+          "reward": 2.468004822731018e-08
+        },
+        {
+          "observation": 8.034706115722656e-05,
+          "action": 2.0042061805725098e-06,
+          "qpos": 4.471045103900498e-06,
+          "reward": 2.7939677238464355e-08
+        },
+        {
+          "observation": 8.916854858398438e-05,
+          "action": 2.3990869522094727e-06,
+          "qpos": 3.902079487338228e-06,
+          "reward": 3.166496753692627e-08
+        },
+        {
+          "observation": 9.655952453613281e-05,
+          "action": 2.4884939193725586e-06,
+          "qpos": 3.40862461178799e-06,
+          "reward": 3.585591912269592e-08
+        },
+        {
+          "observation": 0.00010275840759277344,
+          "action": 2.3543834686279297e-06,
+          "qpos": 3.4635435915975066e-06,
+          "reward": 4.0512531995773315e-08
+        },
+        {
+          "observation": 0.00011467933654785156,
+          "action": 2.0079314708709717e-06,
+          "qpos": 4.373131756798702e-06,
+          "reward": 4.516914486885071e-08
+        },
+        {
+          "observation": 0.00011391192674636841,
+          "action": 2.332031726837158e-06,
+          "qpos": 5.561431467418471e-06,
+          "reward": 4.889443516731262e-08
+        },
+        {
+          "observation": 0.00010639429092407227,
+          "action": 2.4512410163879395e-06,
+          "qpos": 4.27689158805909e-06,
+          "reward": 5.168840289115906e-08
+        },
+        {
+          "observation": 0.00012892484664916992,
+          "action": 2.4512410163879395e-06,
+          "qpos": 3.614243577056836e-06,
+          "reward": 5.494803190231323e-08
+        },
+        {
+          "observation": 0.00015110522508621216,
+          "action": 2.2202730178833008e-06,
+          "qpos": 3.880592138891248e-06,
+          "reward": 5.8673322200775146e-08
+        },
+        {
+          "observation": 0.0001709461212158203,
+          "action": 1.9222497940063477e-06,
+          "qpos": 4.164282005059139e-06,
+          "reward": 6.472691893577576e-08
+        },
+        {
+          "observation": 0.00020265579223632812,
+          "action": 2.1010637283325195e-06,
+          "qpos": 3.949077720999394e-06,
+          "reward": 7.264316082000732e-08
+        },
+        {
+          "observation": 0.00024175643920898438,
+          "action": 1.646578311920166e-06,
+          "qpos": 5.270543608573583e-06,
+          "reward": 8.102506399154663e-08
+        },
+        {
+          "observation": 0.0002722740173339844,
+          "action": 1.1548399925231934e-06,
+          "qpos": 4.8656951283682255e-06,
+          "reward": 8.800998330116272e-08
+        },
+        {
+          "observation": 0.0002917051315307617,
+          "action": 2.2239983081817627e-06,
+          "qpos": 4.608189316357425e-06,
+          "reward": 9.825453162193298e-08
+        },
+        {
+          "observation": 0.00028455257415771484,
+          "action": 2.8517097234725952e-06,
+          "qpos": 5.1883147573761335e-06,
+          "reward": 1.0989606380462646e-07
+        },
+        {
+          "observation": 0.0002937912940979004,
+          "action": 3.419816493988037e-06,
+          "qpos": 5.813740216353835e-06,
+          "reward": 1.2293457984924316e-07
+        },
+        {
+          "observation": 0.0003205537796020508,
+          "action": 3.375113010406494e-06,
+          "qpos": 6.515732208001168e-06,
+          "reward": 1.3737007975578308e-07
+        },
+        {
+          "observation": 0.0003624558448791504,
+          "action": 3.978610038757324e-06,
+          "qpos": 7.313334201342059e-06,
+          "reward": 1.541338860988617e-07
+        },
+        {
+          "observation": 0.0004115104675292969,
+          "action": 4.26173210144043e-06,
+          "qpos": 8.209952295779033e-06,
+          "reward": 1.7229467630386353e-07
+        },
+        {
+          "observation": 0.0004603862762451172,
+          "action": 4.470348358154297e-06,
+          "qpos": 9.192663135593193e-06,
+          "reward": 1.9231811165809631e-07
+        },
+        {
+          "observation": 0.0005002021789550781,
+          "action": 4.2691826820373535e-06,
+          "qpos": 1.023318248805083e-05,
+          "reward": 2.1373853087425232e-07
+        },
+        {
+          "observation": 0.0005259513854980469,
+          "action": 3.5222619771957397e-06,
+          "qpos": 1.1297544698862794e-05,
+          "reward": 2.3562461137771606e-07
+        },
+        {
+          "observation": 0.0005295276641845703,
+          "action": 2.8908252716064453e-06,
+          "qpos": 1.235774439045656e-05,
+          "reward": 2.5704503059387207e-07
+        },
+        {
+          "observation": 0.0005318522453308105,
+          "action": 2.823770046234131e-06,
+          "qpos": 1.3455644839233116e-05,
+          "reward": 2.7939677238464355e-07
+        },
+        {
+          "observation": 0.0005570054054260254,
+          "action": 2.6971101760864258e-06,
+          "qpos": 1.4634987819839296e-05,
+          "reward": 3.03611159324646e-07
+        },
+        {
+          "observation": 0.0006019771099090576,
+          "action": 2.86102294921875e-06,
+          "qpos": 1.5919141040043883e-05,
+          "reward": 3.2922253012657166e-07
+        },
+        {
+          "observation": 0.0006552934646606445,
+          "action": 3.382563591003418e-06,
+          "qpos": 1.7301806280123344e-05,
+          "reward": 3.5762786865234375e-07
+        },
+        {
+          "observation": 0.0007021427154541016,
+          "action": 3.337860107421875e-06,
+          "qpos": 1.875012425855971e-05,
+          "reward": 3.869645297527313e-07
+        },
+        {
+          "observation": 0.0007293224334716797,
+          "action": 2.8312206268310547e-06,
+          "qpos": 2.0217097389085836e-05,
+          "reward": 4.163011908531189e-07
+        },
+        {
+          "observation": 0.0007333755493164062,
+          "action": 3.8780272006988525e-06,
+          "qpos": 2.1684472748084715e-05,
+          "reward": 4.4656917452812195e-07
+        },
+        {
+          "observation": 0.0007372722029685974,
+          "action": 4.827510565519333e-06,
+          "qpos": 2.318853659133424e-05,
+          "reward": 4.773028194904327e-07
+        },
+        {
+          "observation": 0.0007575750350952148,
+          "action": 5.591660737991333e-06,
+          "qpos": 2.474426659571094e-05,
+          "reward": 5.08967787027359e-07
+        },
+        {
+          "observation": 0.0007857084274291992,
+          "action": 5.684792995452881e-06,
+          "qpos": 2.6365751597090537e-05,
+          "reward": 5.406327545642853e-07
+        },
+        {
+          "observation": 0.0008192975074052811,
+          "action": 5.088746547698975e-06,
+          "qpos": 2.8051978542720235e-05,
+          "reward": 5.741603672504425e-07
+        },
+        {
+          "observation": 0.0008502006530761719,
+          "action": 4.231929779052734e-06,
+          "qpos": 2.9784740443794533e-05,
+          "reward": 6.086193025112152e-07
+        },
+        {
+          "observation": 0.0008702278137207031,
+          "action": 3.1888484954833984e-06,
+          "qpos": 3.1530047629679814e-05,
+          "reward": 6.430782377719879e-07
+        },
+        {
+          "observation": 0.0008716583251953125,
+          "action": 3.4496188163757324e-06,
+          "qpos": 3.325106920737397e-05,
+          "reward": 6.775371730327606e-07
+        },
+        {
+          "observation": 0.0008556842803955078,
+          "action": 3.680586814880371e-06,
+          "qpos": 3.493126046372197e-05,
+          "reward": 7.119961082935333e-07
+        },
+        {
+          "observation": 0.0008349418640136719,
+          "action": 3.643333911895752e-06,
+          "qpos": 3.663364523820434e-05,
+          "reward": 7.469207048416138e-07
+        },
+        {
+          "observation": 0.0008561611175537109,
+          "action": 2.9802322387695312e-06,
+          "qpos": 3.8374471252211606e-05,
+          "reward": 7.813796401023865e-07
+        },
+        {
+          "observation": 0.0008757710456848145,
+          "action": 3.1441450119018555e-06,
+          "qpos": 4.016389639804885e-05,
+          "reward": 8.167698979377747e-07
+        },
+        {
+          "observation": 0.000901639461517334,
+          "action": 3.039836883544922e-06,
+          "qpos": 4.200860378489324e-05,
+          "reward": 8.526258170604706e-07
+        },
+        {
+          "observation": 0.0009292960166931152,
+          "action": 3.1441450119018555e-06,
+          "qpos": 4.390023718769953e-05,
+          "reward": 8.89413058757782e-07
+        },
+        {
+          "observation": 0.0009503364562988281,
+          "action": 3.039836883544922e-06,
+          "qpos": 4.5812340679241004e-05,
+          "reward": 9.266659617424011e-07
+        },
+        {
+          "observation": 0.0009562969207763672,
+          "action": 3.1441450119018555e-06,
+          "qpos": 4.770451164493039e-05,
+          "reward": 9.64384526014328e-07
+        },
+        {
+          "observation": 0.0009400844573974609,
+          "action": 3.1739473342895508e-06,
+          "qpos": 4.9538711040852945e-05,
+          "reward": 1.0011717677116394e-06
+        },
+        {
+          "observation": 0.0009084939956665039,
+          "action": 3.7886202335357666e-06,
+          "qpos": 5.133967217485491e-05,
+          "reward": 1.0388903319835663e-06
+        },
+        {
+          "observation": 0.0009116828441619873,
+          "action": 4.0978193283081055e-06,
+          "qpos": 5.3226320440913355e-05,
+          "reward": 1.0775402188301086e-06
+        },
+        {
+          "observation": 0.0009533166885375977,
+          "action": 4.336237907409668e-06,
+          "qpos": 5.5190151998729675e-05,
+          "reward": 1.1166557669639587e-06
+        }
+      ]
+    }
+  ],
+  "restoration_tolerances": {
+    "observation": 0.01,
+    "action": 0.0001,
+    "qpos": 0.0005,
+    "reward": 1e-05
+  },
+  "exact_initialization": true,
+  "first_action_error": 1.7881393432617188e-07,
+  "recorded_action_replay_errors": {
+    "observation": 0.0,
+    "qpos": 0.0,
+    "reward": 0.0
+  },
+  "recorded_action_replay_tolerances": {
+    "observation": 2e-06,
+    "qpos": 1e-10,
+    "reward": 2e-07
+  },
+  "closed_loop_body_position_error_cm": 7.518947613105453e-05,
+  "closed_loop_body_position_tolerance_cm": 0.0001,
+  "parent_failures": 0,
+  "restored_continuation_seconds_per_state": 0.128,
+  "passed": true,
+  "scope": "Frozen parent collection and reset verification only; no optimization or new force"
+}
