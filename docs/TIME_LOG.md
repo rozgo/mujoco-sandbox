@@ -1476,3 +1476,23 @@ reference-only physical validation follows the user's directional curriculum.
   Generator is not part of this run's dataset. It was prepared locally while
   the GPU checkout and training settings stayed frozen. Archival follows the
   video milestone and is not included in learning time.
+
+## Velocity hover PPO, September 14
+
+- Goal/implementation first observed **08:10:47 UTC**. Run 01 learning began
+  **08:26:26.079497 UTC**, completed evaluation/report **08:36:57.799459 UTC**.
+  **604.367622 s training**, 32 worlds, 16 CPU physics threads, CUDA neural learning.
+  Collection **363.480228 s**, actor optimization **210.366183 s** (includes
+  **92.726517 s imitation**), critic **2.645510 s**, memory refresh **27.851794 s**.
+- Separate setup **12.076329 s**, numerical replay audit **3.387631 s**, checkpoints
+  **0.149848 s**, midpoint/final physical evaluations **23.802115 s**. Pre-update
+  PID/parent captures **24.238560/43.944631 s**, reused after an audit-only stop.
+  The aborted first collection/audit timer was not retained; it made zero updates.
+  An earlier LFS-placeholder start also made no updates.
+- Video full decode **4.319251 s**, 43 s / 2,150 frames / 50 fps / 1920x1080 / 1x;
+  opened **08:43:53 UTC** after inspection, **33m06s** observed implementation-to-video.
+  Render timing is retained in the video's JSON sidecar. The first full fly suite
+  passed **223 tests in 167.71 s**; focused rollback/replay tests later passed
+  **7 tests in 1.33 s**. Development/verification time is separate from training.
+- User subsequently authorized continued improvement. Run 02 is a separately
+  measured pilot with post-step KL enforcement; do not fold its time into run 01.

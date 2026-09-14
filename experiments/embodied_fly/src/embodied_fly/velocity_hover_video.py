@@ -47,7 +47,10 @@ def record(args):
     )
     writer.send(None)
     frames, sections = 0, []
-    with mujoco.Renderer(model, height=460, width=612) as renderer:
+    with (
+        mujoco.Renderer(model, height=460, width=612) as renderer,
+        mujoco.Renderer(model, height=150, width=220) as detail,
+    ):
         try:
             for case_index, episode in enumerate(EVALUATION_EPISODES):
                 captures, cases = [], []
@@ -110,6 +113,18 @@ def record(args):
                             camera.lookat[2] = max(0.9, tracked[col][2] - 0.8)
                             renderer.update_scene(data, camera=camera, scene_option=option)
                             board.paste(Image.fromarray(renderer.render()), (x, 200))
+                            if args.detail:
+                                close = mujoco.MjvCamera()
+                                close.azimuth, close.elevation, close.distance = 135, -24, 1.0
+                                close.lookat[:] = capture["qpos"][step, :3]
+                                detail.update_scene(data, camera=close, scene_option=option)
+                                board.paste(Image.fromarray(detail.render()), (x + 388, 205))
+                                draw.text(
+                                    (x + 394, 210),
+                                    "WING DETAIL",
+                                    font=font(14),
+                                    fill="#e6e1db",
+                                )
                         else:
                             draw.text(
                                 (x + 28, 320), "EPISODE ENDED", font=font(32), fill="#db705d"
@@ -229,6 +244,7 @@ def record(args):
         "duration_seconds": frames / fps,
         "dimensions": list(size),
         "playback_speed": 1,
+        "wing_detail_inset": args.detail,
         "render_wall_seconds": time.perf_counter() - begin,
         "checkpoint_sha256": training["checkpoint_sha256"],
         "sections": sections,
@@ -243,4 +259,5 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--run", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
+    p.add_argument("--detail", action="store_true")
     record(p.parse_args())

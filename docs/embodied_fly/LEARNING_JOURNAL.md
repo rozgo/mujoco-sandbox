@@ -3177,3 +3177,29 @@ quintic transitions, bounded commands, isolated/combined requests and zero holds
 It is not included in this block. A future physical collector must bound altitude
 and validate its teacher trajectories before using that additional data source.
 See runs/velocity_recovery_imitation_01/SUMMARY.md and RANDOM_COMMANDS.md.
+
+## Velocity hover PPO pilot and update overshoot
+
+The user approved a ten-minute PPO pilot from the first 30-minute imitation
+parent. Keep the same 391-input actor and agile flight plant, use 32 hover worlds,
+new velocity/rotation/support rewards, a fresh critic and light PID hover replay.
+The actual GPU recurrent audit passes after accounting for float32 error summed
+across 78 low-variance action channels; no weights updated during the initial
+overly tight audit stop. PID and parent were evaluated once on uninterrupted
+ten-second hover. Parent survival is 10/6.772/10/4.190 s, distinct from the prior
+mixed-exercise result. PID holds all four, with settled error below 0.063 mm/s.
+
+Run 01 completes 604.367622 s, 1,081,344 transitions, 65 actor updates and 2,112
+critic updates. The midpoint falls at 2.434 s; final falls at 0.470 s in all
+four cases. Temporarily longer noisy training episodes and accurate fitted
+critic targets do not establish improved deterministic control. The KL monitor
+stops after one actor minibatch per rollout but retains the oversized step
+already taken. Do not call this a successful policy or conclude PPO cannot work.
+Final/midpoint weights and the 1x three-way video are preserved. Video opened at
+08:43:53 UTC after full decode and visual inspection.
+
+User steering authorizes continued improvement if this pilot fails. Run 02
+returns to the original parent and uses smaller initial LR plus analytic
+post-step KL acceptance, exact parameter/Adam rollback and backtracking. Rewards,
+body, observations, commands, worlds, teacher anchor and critic are unchanged.
+See runs/velocity_hover_ppo_01/SUMMARY.md and runs/velocity_hover_ppo_02/PLAN.md.

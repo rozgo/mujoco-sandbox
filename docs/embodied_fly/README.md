@@ -2,7 +2,16 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Latest learning: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
+Latest completed trial: [velocity hover PPO](runs/velocity_hover_ppo_01/SUMMARY.md)
+and [PID / parent / PPO comparison](../../previews/embodied_fly/velocity_hover_ppo_01_comparison_v1.mp4).
+The ten-minute pilot collected 1.08 million physical transitions but regressed:
+the final actor falls at 0.47 s in all four starts. The recurrent replay check
+passes; the actor update monitor allowed a step to overshoot before stopping
+later minibatches. A [second pilot](runs/velocity_hover_ppo_02/PLAN.md) returns to
+the original parent and enforces post-step KL checks with weight/Adam rollback.
+No improved hover controller has yet passed the physical milestone.
+
+Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).
 The new complete teacher exercises pass all 1,000 combined stage checks. Another
 30 min 4 s of imitation improves held-out prediction error but **regresses
