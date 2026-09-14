@@ -2,15 +2,15 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Latest completed trial: [focused hover PPO](runs/velocity_hover_ppo_04/SUMMARY.md)
-and [PID / original / learned video](../../previews/embodied_fly/velocity_hover_ppo_04_comparison_v1.mp4).
-All four starts now complete ten seconds airborne. Common early velocity error
-falls 22%; sideways speed and rotation improve. Upward drift increases, so this
-is progress in flight control, not solved hover. PPO trains the existing wing
-readout while the upstream neural parameters stay fixed; the full connectome
-still controls all 78 outputs. [Run 05](runs/velocity_hover_ppo_05/PLAN.md) continues
-this checkpoint with the same settings and restored optimizer/critic. All failed
-pilots and their separate measured timings remain preserved.
+Latest result: [PPO learning progress and measured costs](HOVER_PPO_PROGRESS.md)
+and [PID / original imitation / final PPO video](../../previews/embodied_fly/velocity_hover_ppo_progress_v1.mp4).
+All four starts complete ten seconds airborne. On the two comparable complete
+flights, velocity RMS decreases about 53% and horizontal RMS about 70%. It still
+climbs approximately 106 mm in ten seconds: sustained flight and reduced drift
+are demonstrated; stationary hover remains unfinished. The same full MaleCNS
+actor controls all 78 outputs. The productive PPO stages train its existing
+wing readout while upstream parameters stay fixed. [Final run details](runs/velocity_hover_ppo_05/SUMMARY.md)
+record the continuation, preserved optimizer/critic, limitations and timing.
 
 Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).

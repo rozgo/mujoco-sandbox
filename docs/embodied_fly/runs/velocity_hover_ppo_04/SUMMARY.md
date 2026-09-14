@@ -9,7 +9,7 @@ milestone. This is not yet satisfactory hover: upward drift increases.
 
 | Start 0 metric | Original parent | Run 04 final |
 |---|---:|---:|
-| Full ten-second velocity RMS | 31.77 mm/s | 24.40 mm/s |
+| Velocity RMS (0.2–10 s) | 31.77 mm/s | 24.40 mm/s |
 | Horizontal velocity RMS | 30.68 mm/s | 18.83 mm/s |
 | Vertical velocity RMS | 8.23 mm/s | 15.51 mm/s |
 | Net climb | 44.68 mm | 152.00 mm |

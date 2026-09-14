@@ -1534,3 +1534,23 @@ reference-only physical validation follows the user's directional curriculum.
   .283788 s (includes .004842 s imitation), critic .157571 s. Recorded replay
   checks and optimizer/critic restoration pass. Run 05 then starts separately
   from run 04's final checkpoint; no smoke time is added to its ancestry.
+
+
+### Final continuation and progress video, September 14
+
+- Run 05: **604.488490 s training**, **1,769,472 transitions**, 32 worlds. Began
+  **09:34:02.834884 UTC**, final report **09:45:41.528016 UTC**. Collection
+  597.629097 s, actor optimization 2.649631 s (includes .145154 s imitation),
+  critic 4.181981 s. Separate setup 15.339663 s, audit 3.379324 s, writes
+  .071080 s, physical evaluation 90.723251 s.
+- Continuation video: render **69.774867 s**, decode **4.347518 s**, opened
+  **09:51:28 UTC**. Original-to-final video: render **68.475034 s**, decode
+  **4.303401 s**, opened **09:52:15 UTC**. Each is 43 s / 2,150 frames / 50 fps /
+  1920x1080 / 1x and was visually inspected. The renderer verifies identical
+  initial qpos/qvel across all three methods for each case.
+- Five PPO trials total **3,018.320992 s** (50m18s) and **6,029,312 transitions**.
+  Selected final ancestry **3,072.803470 s** (51m13s) includes the original
+  1,866.149465 s imitation plus only the two productive PPO stages (20m07s).
+  Smoke updates and failed pilots are separate; unknown startup timing is not
+  estimated. Final progress video opened **1h41m28s** after the initial observed
+  goal/implementation time **08:10:47 UTC**. Subsequent archival is additional.

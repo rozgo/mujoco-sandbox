@@ -3246,3 +3246,28 @@ The readout cache is training-only: full graph processing occurs in every live
 physical actor step. The speed gain is from reducing trainable scope and avoiding
 repeated full-graph backprop, not from moving physics to GPU or bypassing the
 connectome. Same deployed architecture throughout.
+
+
+### September 14 — continued PPO improves full flight; altitude remains open
+
+Run 05 preserves all four ten-second completions and reduces velocity RMS from
+24.4 to 14.92 mm/s, horizontal RMS 18.83 -> 9.30 and vertical RMS 15.51 -> 11.67.
+Net climb decreases 152 -> 106 mm and peak displacement 217 -> 117 mm. Against
+the original parent on the two matched complete flights, total velocity RMS is
+53% lower, horizontal RMS 70% lower and peak displacement 21% lower. Vertical
+regulation remains worse than that original parent's approximately 45 mm climb.
+The initial sustained-flight/reduced-error pilot milestone is met; do not label
+this stationary hover or a broad robustness result. RMS windows are specified
+in HOVER_PPO_PROGRESS.md.
+
+The final state is selected by the planned end-of-budget evaluation, not by
+searching the video for the best moment. Both midpoint and final weights and
+trajectories are preserved. No reward, physical model, policy architecture or
+trainable scope changed during this continuation; actor Adam and critic/Adam
+were restored. All upstream actor weights remain unchanged in the two productive
+PPO stages, while the full graph remains in the live control path.
+
+Both the continuation and the direct original-to-final comparison were decoded
+fully, inspected and opened. The final checkpoint is a useful starting point
+for vertical regulation, not a completed release of all fly motor skills or
+utility learning. Total trial cost and selected ancestry are kept separate.
