@@ -17,6 +17,7 @@ import torch
 from torch import nn
 
 from embodied_fly.evaluate import load_actor
+from embodied_fly.hover_gusts import HoverGusts
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.ppo import advantages, joint_log_probability, motor_distribution
 from embodied_fly.ppo_critic import StandardizedValueNetwork, fit_critic
@@ -116,6 +117,8 @@ def replay_audit(actor, data, states, sequence, active, log_std):
 
 
 def train(args):
+    if not np.isfinite(args.training_gust_speed) or not 0 <= args.training_gust_speed <= 3:
+        raise ValueError("Training gust speed must be finite and in [0, 3] cm/s")
     if args.horizon % args.sequence or args.worlds % 8 or min(args.seconds, args.lr) <= 0:
         raise ValueError(
             "Positive budget/LR, eight-way world split and complete sequences required"
@@ -193,10 +196,17 @@ def train(args):
     reward_fn = HoverReward(
         env, args.horizontal_reward_scale, args.vertical_reward_weight, args.velocity_objective
     )
+    gusts = (
+        HoverGusts(env, args.training_gust_speed, args.seed ^ 0x6057)
+        if args.training_gust_speed
+        else None
+    )
 
     def reset(ids):
         env.reset(ids, state={k: v[world_episode[ids]] for k, v in starts.items()})
         reward_fn.reset(ids)
+        if gusts is not None:
+            gusts.reset(ids)
 
     reset(np.arange(args.worlds))
     critic = HoverCritic(actor).to(device)
@@ -295,6 +305,8 @@ def train(args):
                 "other_reward_terms_changed": False,
                 "critic_adaptation": "one new-reward rollout, critic updates only; retain critic weights/Adam/calibration",
             }
+    if gusts is not None:
+        recipe["training_disturbances"] = gusts.recipe
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
@@ -430,6 +442,8 @@ def train(args):
                     logp = joint_log_probability(
                         output, distribution, latent, output.activity, motor_only=True
                     )
+                    if gusts is not None:
+                        gusts.before_step()
                     env.step(latent.tanh().cpu().numpy())
                     reward, failed, terms = reward_fn()
                     episode_returns += reward
@@ -780,6 +794,8 @@ def train(args):
         "smoke_only": args.smoke,
         "training_complete": True,
     }
+    if gusts is not None:
+        report["training_gust_events"] = gusts.events
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(
         json.dumps(
@@ -818,4 +834,5 @@ if __name__ == "__main__":
     p.add_argument("--adapt-vertical-reward", action="store_true")
     p.add_argument("--velocity-objective", choices=("separate", "vector"), default="separate")
     p.add_argument("--adapt-velocity-objective", action="store_true")
+    p.add_argument("--training-gust-speed", type=float, default=0.0)
     train(p.parse_args())
