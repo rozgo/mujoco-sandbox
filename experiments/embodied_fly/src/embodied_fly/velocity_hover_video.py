@@ -123,6 +123,12 @@ def record(args):
             + f"  |  Tighter updates / KL {training['recipe']['target_kl']:g}"
             + "  |  32 worlds  |  1 kHz physics / 500 Hz brain  |  1x"
         )
+    if training.get("recipe", {}).get("recovery_initialization"):
+        subtitle = (
+            f"{selected_seconds / 60:.1f} min PPO + light imitation"
+            + "  |  16 normal + 16 recovery starts"
+            + "  |  Same brain and physics  |  1x"
+        )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
