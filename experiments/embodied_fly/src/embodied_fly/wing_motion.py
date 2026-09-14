@@ -59,6 +59,15 @@ class FastHeadingWingMotionConfig(HeadingWingMotionConfig):
 FAST_HEADING_CONFIG = FastHeadingWingMotionConfig()
 
 
+@dataclass(frozen=True)
+class AgileWingMotionConfig(FastHeadingWingMotionConfig):
+    version: str = "wing_motion_agile_v5"
+    lateral_force_fraction: float = 0.25
+
+
+AGILE_CONFIG = AgileWingMotionConfig()
+
+
 def config_for_model(model):
     """The compiled model carries its force-law version, including MJB replays.
 
@@ -74,16 +83,13 @@ def config_for_model(model):
         raise ValueError("Unknown recorded wing force response")
     heading = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_NUMERIC, HEADING_NUMERIC)
     if heading >= 0:
-        if (
-            model.numeric_size[heading] != 1
-            or model.numeric_data[model.numeric_adr[heading]] not in (1, 2)
-        ):
+        if model.numeric_size[heading] != 1 or model.numeric_data[
+            model.numeric_adr[heading]
+        ] not in (1, 2, 3):
             raise ValueError("Unknown recorded wing heading model")
-        return (
-            FAST_HEADING_CONFIG
-            if model.numeric_data[model.numeric_adr[heading]] == 2
-            else HEADING_CONFIG
-        )
+        return {1: HEADING_CONFIG, 2: FAST_HEADING_CONFIG, 3: AGILE_CONFIG}[
+            model.numeric_data[model.numeric_adr[heading]]
+        ]
     return INSTANT_CONFIG
 
 
@@ -182,6 +188,9 @@ class WingMotionForces:
         forward = np.tanh((angles[:, :, 1].mean(axis=1) - 0.7) * 2)
         force_local = np.zeros((len(angles), 3))
         force_local[:, 0] = self.lift * c.forward_force_fraction * forward
+        if isinstance(c, AgileWingMotionConfig):
+            lateral = np.tanh(2 * (angles[:, 1, 1] - angles[:, 0, 1]))
+            force_local[:, 1] = self.lift * c.lateral_force_fraction * lateral
         # Upright-biased thrust and a damped restoring torque are declared body
         # response choices. They provide no translational target or hover servo.
         force_world = np.einsum("nij,nj->ni", rotation, force_local)

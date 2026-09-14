@@ -89,6 +89,8 @@ class VelocityPID:
             self.ki[:2] = 200.0
         self.previous_requested_world = np.zeros(3)
         self.previous_yaw_command = 0.0
+        self.yaw_kp = 30.0 if motion_feedforward else 20.0
+        self.yaw_ki = 100.0 if motion_feedforward else 30.0
 
     def reset(self):
         self.integral[:] = 0
@@ -135,7 +137,9 @@ class VelocityPID:
         )
         yaw_cap = 60 if self.motion_feedforward else 30
         yaw_acceleration = np.clip(
-            yaw_feedforward + 20 * yaw_error + 30 * self.yaw_integral, -yaw_cap, yaw_cap
+            yaw_feedforward + self.yaw_kp * yaw_error + self.yaw_ki * self.yaw_integral,
+            -yaw_cap,
+            yaw_cap,
         )
         return self.wings.action_for_acceleration(acceleration, yaw_acceleration)
 

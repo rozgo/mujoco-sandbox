@@ -96,3 +96,18 @@ vector speed); yaw-rate error below max(0.12 rad/s, 10% of requested yaw rate).
 Braking and hover retain the original absolute tolerances. Physical upright,
 altitude and contact gates are unchanged. Retain all failed development runs.
 The faster body's controller must be validated before fresh student training.
+
+The v4 development runs remain stable but miss tight sideways turns. The
+additional `--lateral-control` flag selects `wing_motion_agile_v5`: measured
+right-minus-left wing stroke orientation produces lateral thrust, bounded by
+25% of instantaneous lift through a tanh response. Mean stroke orientation
+still controls forward thrust; pitch difference controls yaw; sweep motion
+provides lift. All forces remain zero without wing activity. This is an
+explicit extension of the force law; old v3/v4 models remain reproducible.
+
+The faster teacher adds causal command-acceleration and drag feedforward,
+through the existing bounded wing targets. It uses current/previous commands
+and measured heading, without future commands or root-pose changes. Feedback
+gains are Kp [40,40,50], Ki [200,200,900], roll Kp 600/Kd 40 and yaw Kp 30/Ki 100.
+Its desired yaw acceleration cap is 60 rad/s²; actual actuator torque limits
+are unchanged. The slow teacher retains its original feedback settings.

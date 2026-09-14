@@ -181,6 +181,7 @@ def run(args):
         physics_hz=1000,
         heading_control=True,
         fast_flight=args.fast_flight,
+        lateral_control=args.lateral_control,
     )
     expected = json.loads(args.contract_report.read_text())["physical_contract"]
     base = FlyBatch(1, 1, 12, preset="wing_position", wing_response="instant", physics_hz=1000)
@@ -253,18 +254,23 @@ def run(args):
         "all_movements_in_one_continuous_episode": True,
         "physical_command_speed_scale": args.speed_scale,
         "fast_flight": args.fast_flight,
+        "lateral_control": args.lateral_control,
         "command_speed_mm_s": COMMAND_CM_S * 10 * args.speed_scale,
         "command_ramp_seconds": RAMP_SECONDS,
         "controller_kp": controller.kp.tolist(),
         "controller_ki": controller.ki.tolist(),
         "causal_motion_feedforward": controller.motion_feedforward,
+        "yaw_kp": controller.yaw_kp,
+        "yaw_ki": controller.yaw_ki,
         "wing_controller": asdict(controller.wings.config),
         "position_target": False,
         "heading_target": False,
         "yaw_command_rad_s": YAW_RAD_S * args.speed_scale,
         "body_mechanics_match_previous_plant": True,
         "force_law_change": (
-            "Versioned v4: v3 measured-wing heading authority with yaw damping time constant 0.25 s instead of 0.025 s; roll/pitch damping unchanged"
+            "Versioned v5: v4 yaw response plus independent sideways thrust from measured wing-stroke angle difference; old models retained"
+            if args.lateral_control
+            else "Versioned v4: v3 measured-wing heading authority with yaw damping time constant 0.25 s instead of 0.025 s; roll/pitch damping unchanged"
             if args.fast_flight
             else "Versioned v3: independent yaw authority from measured left/right wing pitch asymmetry; previous v2 preserved"
         ),
@@ -291,4 +297,5 @@ if __name__ == "__main__":
     p.add_argument("--contract-report", type=Path, required=True)
     p.add_argument("--speed-scale", type=float, default=1.0)
     p.add_argument("--fast-flight", action="store_true")
+    p.add_argument("--lateral-control", action="store_true")
     run(p.parse_args())

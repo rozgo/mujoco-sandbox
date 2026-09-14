@@ -90,8 +90,8 @@ class HoverPID:
         rotation = e.data.xmat[e.thorax_id].reshape(3, 3)
         angular = e.anatomical_velocity()[:3]
         gravity = abs(e.model.opt.gravity[2])
-        # Weight feedforward. Keep the plant's own drag as passive resistance;
-        # the PID does not cancel it with additional thrust.
+        # Weight feedforward. The plant retains its passive drag; velocity
+        # callers may request wing thrust to overcome that resistance.
         vertical = gravity + acceleration[2]
         collective = np.clip(
             vertical / (gravity * law.lift_weight_multiplier * (0.8 + 0.2 * rotation[2, 2])),
@@ -109,11 +109,20 @@ class HoverPID:
         stroke = 0.7 + 0.5 * np.arctanh(
             np.clip(forward / law.forward_force_fraction, -0.8, 0.8)
         )
-        # Lateral correction uses the available roll/steer coupling. It does not
-        # pretend this force law offers an independent yaw actuator.
+        # Earlier plants use roll for lateral force. The agile plant additionally
+        # allows direct side thrust through differential stroke orientation.
         roll_target = np.clip(
             -np.dot(desired_horizontal, side_axis) / (0.2 * lift_acceleration), -0.2, 0.2
         )
+        stroke_offset = 0.0
+        if getattr(law, "lateral_force_fraction", 0):
+            side = np.dot(
+                desired_horizontal / lift_acceleration - 0.2 * rotation[:2, 2], side_axis
+            ) / max(np.dot(side_axis, side_axis), 0.5)
+            stroke_offset = 0.25 * np.arctanh(
+                np.clip(side / law.lateral_force_fraction, -0.8, 0.8)
+            )
+            roll_target = 0.0
         roll = np.arctan2(rotation[2, 1], rotation[2, 2])
         desired_roll_acc = c.roll_kp * (roll_target - roll) - c.roll_kd * angular[0]
         restoring_world = law.attitude_stiffness * np.cross(rotation[:, 2], (0, 0, 1))
@@ -130,6 +139,7 @@ class HoverPID:
         omega = 2 * np.pi * c.frequency_hz
         phase = omega * (e.data.time + dt / 2)
         desired = np.column_stack((amplitude * np.sin(phase), np.full(2, stroke), -np.ones(2)))
+        desired[:, 1] += (-stroke_offset, stroke_offset)
         if yaw_acceleration is not None:
             authority = getattr(law, "yaw_pitch_acceleration", 0)
             if not authority or not np.isfinite(yaw_acceleration):

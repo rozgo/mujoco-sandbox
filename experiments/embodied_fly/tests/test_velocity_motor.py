@@ -10,7 +10,7 @@ from embodied_fly.hover_only import HoverOnlyTasks
 from embodied_fly.physical_contract import ARRAYS, physical_contract
 from embodied_fly.velocity_exercise import DURATION, STAGES, command_at
 from embodied_fly.velocity_motor import VelocityPID, heading_rotation, observation
-from embodied_fly.wing_motion import FAST_HEADING_CONFIG, WingMotionForces
+from embodied_fly.wing_motion import AGILE_CONFIG, FAST_HEADING_CONFIG, WingMotionForces
 
 
 def test_velocity_frame_rotates_heading_without_tilting_world_vertical():
@@ -83,18 +83,25 @@ def test_fast_commands_change_physical_targets_without_changing_exercise_clock()
         np.testing.assert_allclose(fast, slow * 10, atol=1e-12)
 
 
-def test_fast_flight_changes_only_yaw_damping_and_preserves_model_version(tmp_path):
+@pytest.mark.parametrize("lateral_control", (False, True))
+def test_fast_flight_changes_only_yaw_damping_and_preserves_model_version(
+    tmp_path, lateral_control
+):
     kwargs = {
         "preset": "wing_position",
         "wing_response": "instant",
         "physics_hz": 1000,
         "heading_control": True,
     }
-    old, new = FlyBatch(1, 1, 12, **kwargs), FlyBatch(1, 1, 12, fast_flight=True, **kwargs)
+    old, new = (
+        FlyBatch(1, 1, 12, **kwargs),
+        FlyBatch(1, 1, 12, fast_flight=True, lateral_control=lateral_control, **kwargs),
+    )
     for key in ARRAYS:
         np.testing.assert_array_equal(getattr(old.model, key), getattr(new.model, key))
     before, after = WingMotionForces(old.model, 1), WingMotionForces(new.model, 1)
-    assert after.config == FAST_HEADING_CONFIG
+    expected_config = AGILE_CONFIG if lateral_control else FAST_HEADING_CONFIG
+    assert after.config == expected_config
     # Nonzero wing activity and pure yaw: translation and roll/pitch unaffected.
     angles = np.array([[0, 0.7, -1, 0, 0.7, -1]])
     speeds = np.array([[40, 0, 0, 40, 0, 0]])
@@ -110,10 +117,24 @@ def test_fast_flight_changes_only_yaw_damping_and_preserves_model_version(tmp_pa
     path = tmp_path / "fast.mjb"
     mujoco.mj_saveModel(new.model, str(path))
     assert (
-        WingMotionForces(mujoco.MjModel.from_binary_path(str(path))).config
-        == FAST_HEADING_CONFIG
+        WingMotionForces(mujoco.MjModel.from_binary_path(str(path))).config == expected_config
     )
     assert physical_contract(old.model) != physical_contract(new.model)
+    if lateral_control:
+        # Opposite stroke orientations produce opposite side forces, while
+        # keeping forward/lift/torque equal, solely from measured joint state.
+        body_velocity[:] = 0
+        left, right = angles.copy(), angles.copy()
+        left[:, [1, 4]] += (-0.05, 0.05)
+        right[:, [1, 4]] += (0.05, -0.05)
+        wl = after.advance(left, speeds, rotation, body_velocity, 0.001).copy()
+        wr = after.advance(right, speeds, rotation, body_velocity, 0.001).copy()
+        assert wl[0, 1] > 0 > wr[0, 1]
+        np.testing.assert_allclose(wl[:, [0, 2, 3, 4, 5]], wr[:, [0, 2, 3, 4, 5]], atol=1e-15)
+        np.testing.assert_allclose(wl[:, 1], -wr[:, 1])
+        np.testing.assert_array_equal(
+            after.advance(left, speeds * 0, rotation, body_velocity, 0.001), 0
+        )
 
 
 def test_zero_velocity_commands_keep_wings_active_to_support_weight():
