@@ -41,8 +41,9 @@ def initialize_worlds(env, headings):
     return tasks.air_action
 
 
-def pre_row(env, commands, seconds, stage):
-    env.batch.forward()
+def pre_row(env, commands, seconds, stage, *, refresh=True):
+    if refresh:
+        env.batch.forward()
     rows = {k: env.fields[k].copy() for k in ("qpos", "qvel", "act", "ctrl")}
     rows.update(
         time=np.full(env.n, seconds),

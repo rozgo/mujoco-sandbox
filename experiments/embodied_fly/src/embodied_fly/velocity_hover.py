@@ -197,7 +197,16 @@ def metrics(arrays, failure_seconds, seconds):
 
 
 @torch.no_grad()
-def evaluate_hover(actor, parent, dataset, output, device, seconds=10, teacher=False):
+def evaluate_hover(
+    actor,
+    parent,
+    dataset,
+    output,
+    device,
+    seconds=10,
+    teacher=False,
+    refresh_observations=True,
+):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
@@ -224,7 +233,7 @@ def evaluate_hover(actor, parent, dataset, output, device, seconds=10, teacher=F
     synchronize(device)
     begin = time.perf_counter()
     for step in range(round(seconds * 500)):
-        row = pre_row(env, commands, step * 0.002, 0)
+        row = pre_row(env, commands, step * 0.002, 0, refresh=refresh_observations)
         row["angular_velocity"] = env.velocity()[:, :3].copy()
         obs = observation(env, commands)
         if teacher:
@@ -272,6 +281,9 @@ def evaluate_hover(actor, parent, dataset, output, device, seconds=10, teacher=F
         "completed_utc": utc_now(),
         "seconds_requested": seconds,
         "controller": "PID reference" if teacher else "MaleCNS actor alone",
+        "observation_timing": "refresh before actor"
+        if refresh_observations
+        else "physics-step return, matching PPO collection",
         "command": [0, 0, 0, 0],
         "physical_contract": parent["physical_contract"],
         "model_sha256": sha256(output / "model.mjb"),
