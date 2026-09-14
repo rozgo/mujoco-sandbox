@@ -131,11 +131,18 @@ def train(args):
     actor, parent = load_actor(args.checkpoint, args.graph, device)
     if parent.get("observation_schema") != SCHEMA or not actor.motor_only:
         raise ValueError("Requires the preserved velocity-command motor actor")
-    if (
+    if not args.resume_ppo and (
         sha256(args.checkpoint)
         != "c4a87e93a9fffb4679c84a6bca42716bc2e89365d48be97d9ec37780df2779e4"
     ):
         raise ValueError("This first pilot must start from the approved 5.6-second checkpoint")
+    if args.resume_ppo and (
+        not args.wing_readout_only
+        or not parent.get("ppo_recipe", {}).get("wing_readout_only")
+        or parent["ppo_recipe"]["reward"]["horizontal_velocity_scale_cm_s"]
+        != args.horizontal_reward_scale
+    ):
+        raise ValueError("Continuation requires the same recorded wing-readout PPO recipe")
     actor.train()
     if args.wing_readout_only:
         freeze_upstream(actor)
@@ -184,6 +191,16 @@ def train(args):
     # This is an explicit imitation->PPO optimizer transition, no old Adam moments.
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
     value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
+    if args.resume_ppo:
+        critic.load_state_dict(parent["critic_state_dict"], strict=True)
+        optimizer.load_state_dict(parent["optimizer_state_dict"])
+        value_optimizer.load_state_dict(parent["value_optimizer_state_dict"])
+        with torch.no_grad():
+            log_std.copy_(parent["log_std"].to(device))
+        rng.bit_generator.state = json.loads(parent["sampler_state_json"])
+        torch.set_rng_state(parent["torch_rng_state"].cpu())
+        if device.type == "cuda":
+            torch.cuda.set_rng_state(parent["cuda_rng_state"].cpu(), device)
     gamma, gae_lambda = math.exp(-0.002 / 2), math.exp(-0.002 / 0.25)
     recipe = {
         "wing_readout_only": args.wing_readout_only,
@@ -191,6 +208,7 @@ def train(args):
             p.numel() for p in actor.parameters() if p.requires_grad
         ),
         "fixed_exploration": args.wing_readout_only,
+        "resumed_ppo_optimizer_and_critic": args.resume_ppo,
         "worlds": args.worlds,
         "physics_threads": args.threads,
         "physics_backend": "CPU MuJoCo/mjbatch",
@@ -235,6 +253,11 @@ def train(args):
             recurrent_carry="exact: upstream weights frozen; retain actual live neural state",
             optimizer_transition="fresh PPO Adam for existing wing readout only; fresh critic; fixed exploration",
         )
+    if args.resume_ppo:
+        recipe.update(
+            optimizer_transition="restore actor Adam, critic weights/Adam, fixed exploration and actor sampling RNG; reset physical episodes; critic sample shuffle restarts from declared seed",
+            critic_warmup_rollouts=0,
+        )
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
@@ -244,6 +267,16 @@ def train(args):
         for label, teacher in (("pid", True), ("parent", False)):
             if args.baseline_dir:
                 source = args.baseline_dir / label
+                baseline_training = json.loads((args.baseline_dir / "report.json").read_text())
+                if label == "parent":
+                    if baseline_training["checkpoint_sha256"] == sha256(args.checkpoint):
+                        source = args.baseline_dir / "final"
+                    elif baseline_training["parent_checkpoint_sha256"] != sha256(
+                        args.checkpoint
+                    ):
+                        raise ValueError(
+                            "Cached parent does not correspond to this training parent"
+                        )
                 report = json.loads((source / "report.json").read_text())
                 if report["physical_contract"] != parent["physical_contract"]:
                     raise ValueError("Cached pre-update evaluation physical contract differs")
@@ -456,7 +489,7 @@ def train(args):
                 for group in optimizer.param_groups:
                     group["lr"] = args.lr
             # Let the new critic see one rollout before it drives actor updates.
-            for _ in range(0 if counters["rollouts"] == 0 else 2):
+            for _ in range(0 if counters["rollouts"] == 0 and not args.resume_ppo else 2):
                 for chunk in rng.permutation(len(states)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
                     if args.wing_readout_only:
@@ -740,5 +773,6 @@ if __name__ == "__main__":
     p.add_argument("--baseline-dir", type=Path)
     p.add_argument("--bounded-updates", action="store_true")
     p.add_argument("--wing-readout-only", action="store_true")
+    p.add_argument("--resume-ppo", action="store_true")
     p.add_argument("--horizontal-reward-scale", type=float, default=0.5)
     train(p.parse_args())
