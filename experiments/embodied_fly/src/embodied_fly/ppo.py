@@ -22,7 +22,7 @@ from embodied_fly.body import CONTROL_DT
 from embodied_fly.evaluate import load_actor
 from embodied_fly.flight_outcome import FlightOutcomeReward, FlightResets
 from embodied_fly.physical_contract import physical_contract
-from embodied_fly.ppo_critic import fit_critic, value_quality
+from embodied_fly.ppo_critic import StandardizedValueNetwork, fit_critic, value_quality
 from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import load_episodes, sample, synchronize
@@ -31,9 +31,10 @@ from embodied_fly.train import load_episodes, sample, synchronize
 class Critic(nn.Module):
     """Training-only value of causal observation plus preceding descending state."""
 
-    def __init__(self, brain):
+    def __init__(self, brain, standardize_inputs=False):
         super().__init__()
-        self.network = nn.Sequential(
+        network_type = StandardizedValueNetwork if standardize_inputs else nn.Sequential
+        self.network = network_type(
             nn.Linear(brain.observation_size + len(brain.descending_ids), 128),
             nn.Tanh(),
             nn.Linear(128, 128),
@@ -210,6 +211,13 @@ def train(args):
         raise ValueError("Critic learning rate must be finite and positive")
     recompute = getattr(args, "checkpoint_activations", False)
     independent_critic = getattr(args, "independent_critic", False)
+    critic_epochs = getattr(args, "critic_epochs", None)
+    critic_epochs = args.epochs if critic_epochs is None else critic_epochs
+    standardize_critic = getattr(args, "critic_standardize_inputs", False)
+    if critic_epochs < 1 or (
+        (standardize_critic or critic_epochs != args.epochs) and not independent_critic
+    ):
+        raise ValueError("Separate critic epochs/input calibration require independent critic")
     if independent_critic and args.epochs < 1:
         raise ValueError("Independent critic requires at least one training epoch")
     if hover_physical and (
@@ -276,7 +284,13 @@ def train(args):
     ):
         raise ValueError("Changed hover reward requires an explicit fresh critic")
     brain.train()
-    critic = Critic(brain).to(device)
+    if (
+        parent.get("config", {}).get("critic_standardize_inputs", False) != standardize_critic
+        and "critic_state_dict" in parent
+        and not reset_critic
+    ):
+        raise ValueError("Changed critic input calibration requires --reset-critic")
+    critic = Critic(brain, standardize_critic).to(device)
     if brain.motor_only != motor_mode:
         raise ValueError(
             "Motor-only actors require a motor curriculum; utility actors require utility PPO"
@@ -836,7 +850,7 @@ def train(args):
                     data["critic_features"],
                     returns,
                     args.sequence,
-                    args.epochs,
+                    critic_epochs,
                     critic_rng,
                 )
                 if motor_mode:
@@ -1047,13 +1061,16 @@ def train(args):
             "critic_schedule": {
                 "learning_rate": critic_lr,
                 "independent_of_actor_kl": independent_critic,
-                "epochs": args.epochs,
+                "epochs": critic_epochs,
+                "input_standardization": "first training rollout mean/std, frozen thereafter; floor .05 and clip +/-10"
+                if standardize_critic
+                else "none beyond actor observation statistics",
                 "features": "normalized observation + preceding descending state",
                 "feature_source": "saved during physical collection"
                 if independent_critic
                 else "actor recurrent replay during optimization",
                 "targets": "fixed timeout-aware GAE returns from the collected rollout",
-                "updates_per_complete_rollout": args.epochs * args.horizon // args.sequence
+                "updates_per_complete_rollout": critic_epochs * args.horizon // args.sequence
                 if independent_critic
                 else None,
                 "actor_or_physics_replay_for_value_fit": not independent_critic,
@@ -1141,6 +1158,8 @@ if __name__ == "__main__":
     parser.add_argument("--critic-lr", type=float, default=3e-4)
     parser.add_argument("--checkpoint-activations", action="store_true")
     parser.add_argument("--independent-critic", action="store_true")
+    parser.add_argument("--critic-epochs", type=int)
+    parser.add_argument("--critic-standardize-inputs", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)
     parser.add_argument("--critic-warmup-rollouts", type=int, default=0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)

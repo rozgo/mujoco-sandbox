@@ -135,8 +135,10 @@ def run(args):
     assert physical_contract(env.model) == parent["physical_contract"]
     tasks = HoverOnlyTasks(env, args.seed)
     reward_fn = HoverBalancedReward(env, parent["config"]["hover_vertical_speed_scale"])
-    critic = Critic(actor).to(device)
     old = torch.load(args.critic, map_location=device, weights_only=False)
+    critic = Critic(actor, old.get("config", {}).get("critic_standardize_inputs", False)).to(
+        device
+    )
     assert old["physical_contract"] == parent["physical_contract"]
     assert old["graph_sha256"] == parent["graph_sha256"]
     critic.load_state_dict(old["critic_state_dict"])
@@ -239,6 +241,10 @@ def run(args):
     old_rank = quality(old_predictions[test], y[test].cpu())["pearson"]
     with torch.no_grad():
         hidden = x[test]
+        if hasattr(critic.network, "input_mean"):
+            hidden = ((hidden - critic.network.input_mean) / critic.network.input_scale).clamp(
+                -10, 10
+            )
         saturation = []
         for layer in critic.network:
             hidden = layer(hidden)

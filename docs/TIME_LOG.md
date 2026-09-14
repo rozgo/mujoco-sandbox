@@ -1179,3 +1179,7 @@ action-noise sweep from the preferred imitation actor, then fixed-data critic
 capacity checks. Actor training remains zero in this diagnostic; physical
 collection and critic-only fitting will be timed separately. Preserve the same
 body, clocks, graph and full motor output interface.
+
+Exploration diagnostic completed2026-09-14 00:40:48.791UTC:99.209063s wall,
+76.343576s physical collection, zero actor updates.184-test critic calibration
+suite launched00:49UTC; next bounded PPO recipe recorded before execution.

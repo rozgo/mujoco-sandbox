@@ -5,6 +5,37 @@ from torch import nn
 from torch.nn import functional as F
 
 
+class StandardizedValueNetwork(nn.Sequential):
+    """Same value MLP with fixed input statistics from its first training rollout.
+
+    Calibration happens only before the first value fit, with a fresh critic.
+    It changes the random initial value function; no trained value is transferred.
+    Statistics are checkpointed and never adapted on subsequent rollouts/evaluation.
+    """
+
+    def __init__(self, *layers):
+        super().__init__(*layers)
+        self.register_buffer("input_mean", torch.zeros(self[0].in_features))
+        self.register_buffer("input_scale", torch.ones(self[0].in_features))
+        self.register_buffer("input_calibrated", torch.tensor(False))
+
+    @torch.no_grad()
+    def calibrate(self, features):
+        if bool(self.input_calibrated):
+            return False
+        samples = features.detach().flatten(0, -2)
+        if not torch.isfinite(samples).all():
+            raise ValueError("Nonfinite critic calibration features")
+        self.input_mean.copy_(samples.mean(0))
+        self.input_scale.copy_(samples.std(0, unbiased=False).clamp_min(0.05))
+        self.input_calibrated.fill_(True)
+        return True
+
+    def forward(self, features):
+        features = ((features - self.input_mean) / self.input_scale).clamp(-10, 10)
+        return super().forward(features)
+
+
 def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
     """Each epoch visits every rollout sample once; no actor/physics invocation.
 
@@ -18,6 +49,11 @@ def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
     if features.shape[:2] != returns.shape:
         raise ValueError("Critic features/returns must share time and world dimensions")
     chunks = len(features) // sequence
+    calibrated_now = (
+        critic.network.calibrate(features)
+        if isinstance(critic.network, StandardizedValueNetwork)
+        else False
+    )
 
     @torch.no_grad()
     def predict():
@@ -46,6 +82,7 @@ def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
         "losses": losses,
         "updates": len(losses),
         "sample_presentations": returns.numel() * epochs,
+        "input_calibrated_this_fit": calibrated_now,
         "fit_mse_before": float(F.mse_loss(before, returns)),
         "fit_mse_after": float(F.mse_loss(after, returns)),
         "predictions": after,
