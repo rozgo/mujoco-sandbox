@@ -1,0 +1,2107 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T01:53:26.088572+00:00",
+    "source_commit": "ca990fc8ee17605de562496c7d1463e145797cdd",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "16fbd2236f63c5ef2c998307885c20afd113ea05ce727bf2877ddf1a00cce555",
+      "src/embodied_fly/body.py": "954974b59b488fc5c3a5834c6afc6b7788d0293b5505798ba2670339efc29ba1",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "c05f4e45d008762ce8d8d0da533eba57a0deb50194b90549a1d3c59ccf681c46",
+      "src/embodied_fly/pid_hover.py": "dced3c776113fbcf8d470873788f676e906ee3f778b678a540139195a9c874b9",
+      "src/embodied_fly/pid_imitation.py": "6484dae7b199d4c277cc466a608a45783650e730a62ce77dbf1957b7369b1788",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "b908f70069730aaab463f0ac9681a468f034c1203694a36610381e1294ff74b3",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "864f3aea835393a394018e0315f6b5f468ee2e8bf9f68fe63f7bad64a74923d9",
+      "src/embodied_fly/round_trip_video.py": "4a6f889a9e834a62b4bed7703b638fa89874d2fd2481bb62dd7cf9c2b522aac6",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "939199d2f00847ee7269f97d706744377b685d6f6d4e666327227b7bc34f2f54",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "rehearsal": null,
+    "motor_ground": false,
+    "motor_all": true,
+    "hover_physical": true,
+    "hover_only": true,
+    "round_trip": true,
+    "bounded_hover_reward": true,
+    "hover_vertical_speed_scale": 2.0,
+    "reset_critic": true,
+    "reset_exploration": false,
+    "critic_lr": 0.0001,
+    "checkpoint_activations": true,
+    "independent_critic": true,
+    "critic_epochs": 16,
+    "critic_standardize_inputs": false,
+    "critic_shuffle_transitions": true,
+    "motor_retention_weight": 0.0,
+    "critic_warmup_rollouts": 2,
+    "wing_supervision": 0.0,
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "preset": "wing_position",
+    "flight_resets": null,
+    "device": "cuda",
+    "worlds": 64,
+    "threads": 16,
+    "seconds": 300.0,
+    "horizon": 2048,
+    "sequence": 128,
+    "epochs": 2,
+    "episode_seconds": 12.0,
+    "gamma": 0.9996000799893344,
+    "gae_lambda": 0.9994001799640054,
+    "lr": 1e-07,
+    "noise": 0.003,
+    "minimum_noise": 0.003,
+    "target_kl": 0.03,
+    "entropy": 0.0,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 0.0,
+    "stationary_turn_cost": 0.0,
+    "seed": 120901,
+    "internal_steps": 4,
+    "ground_posture": true
+  },
+  "reward_recipe": {
+    "version": "hover_bounded_scores_v2",
+    "alive_rate": 0.5,
+    "height_scale_cm": 0.1,
+    "vertical_speed_scale_cm_s": 2.0,
+    "horizontal_speed_scale_cm_s": 0.5,
+    "angular_speed_scale_rad_s": 1.0,
+    "failure_height_below_cm": 0.5,
+    "failure_upright_below": 0.5,
+    "failure_penalty_once": 1,
+    "height_target": "requested altitude, independent of reset altitude",
+    "reward_timing": "rate * actual control_dt; failure penalty once before reset",
+    "wing_motion_or_action_imitation": false,
+    "reference_controller_or_force_target": false,
+    "horizontal_position_scale_cm": 0.1,
+    "action_difference_or_wing_stillness_penalty": false,
+    "position_feedback": "two anatomical target-error inputs, ideal simulator sensing",
+    "score_formula": "1 / sqrt(1 + normalized_error**2)",
+    "maximum_reward_rate": 6.1,
+    "minimum_valid_airborne_rate": 0.498,
+    "tracking_score_weights": {
+      "height": 2,
+      "horizontal_position": 1,
+      "vertical_velocity": 1,
+      "horizontal_velocity": 1,
+      "upright": 0.5,
+      "angular_velocity": 0.1
+    },
+    "failure_forbidden_support_above_bodyweights": 0.1,
+    "termination_incentive": "Valid airborne rate stays positive; failed step gets exactly -1"
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "training_tasks": [
+    "left_right",
+    "right_left",
+    "forward_backward",
+    "backward_forward",
+    "up_down",
+    "down_up",
+    "hover"
+  ],
+  "worlds_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 64
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "active_motor_channels": 78,
+  "teacher_present_during_collection": false,
+  "executed_teacher_actions": false,
+  "wing_supervision": {
+    "weight": 0.0,
+    "channels": [],
+    "target": "bounded corrective torque from pre-action measured wing q/qvel",
+    "kp": null,
+    "kd": null,
+    "loss": "mean squared normalized action error over six wing channels only",
+    "included_in_ppo_optimization_seconds": true,
+    "deployed_module": false
+  },
+  "motor_retention": {
+    "weight": 0.0,
+    "parent_checkpoint_sha256": null,
+    "weights_unchanged": false,
+    "scope": "all 78 mean motor outputs, ground worlds only",
+    "runtime_module": false,
+    "extra_physics_transitions": 0
+  },
+  "core_gradient_audit_from_ground_retention": null,
+  "training_started_utc": "2026-09-14T01:53:33.542090+00:00",
+  "completed_utc": "2026-09-14T02:00:14.545632+00:00",
+  "setup_seconds": 7.473045866005123,
+  "training_wall_seconds": 400.91182272089645,
+  "rollouts": 4,
+  "ppo_updates": 64,
+  "critic_updates": 1024,
+  "critic_sample_presentations": 8388608,
+  "critic_updates_after_actor_stop": 0,
+  "actor_kl_stops": 0,
+  "independent_critic_seconds": 1.436279569286853,
+  "critic_warmup_rollouts": 2,
+  "transitions": 524288,
+  "rehearsal_frames": 0,
+  "wing_supervised_presentations": 0,
+  "collection_seconds": 139.60783277451992,
+  "optimization_seconds": 261.30230138171464,
+  "ppo_optimization_seconds": 261.30230138171464,
+  "rehearsal_seconds": 0.0,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 64,
+  "aggregate_simulated_seconds": 1048.576,
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "neural_time_scale": 1.0,
+  "effective_gamma": 0.9996000799893344,
+  "effective_gae_lambda": 0.9994001799640054,
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 4.096,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 5.0000000000002816,
+    "gae_trace_efold_seconds": 2.000000000000061,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "activation_recomputation": true,
+  "critic_schedule": {
+    "learning_rate": 0.0001,
+    "independent_of_actor_kl": true,
+    "epochs": 16,
+    "sample_order": "shuffled time/world transitions",
+    "input_standardization": "none beyond actor observation statistics",
+    "features": "normalized observation + preceding descending state",
+    "feature_source": "saved during physical collection",
+    "targets": "fixed timeout-aware GAE returns from the collected rollout",
+    "updates_per_complete_rollout": 256,
+    "actor_or_physics_replay_for_value_fit": false,
+    "deployed_module": false
+  },
+  "transitions_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 524288
+  },
+  "aggregate_simulated_seconds_by_task": {
+    "stand": 0.0,
+    "walk": 0.0,
+    "hover": 1048.576
+  },
+  "hover_reset_curriculum": {
+    "curriculum": "closed target trips plus stationary hover",
+    "stationary_worlds": 32,
+    "round_trip_worlds": 32,
+    "route_ids_are_observer_only": true,
+    "future_waypoints_in_observation": false,
+    "amplitude_mm_range": [
+      1.2,
+      1.8
+    ],
+    "time_scale_range": [
+      0.85,
+      1.15
+    ],
+    "initial_reset_widening": 0.0,
+    "transitions_by_target_sequence": {
+      "left_right": 47233,
+      "right_left": 46960,
+      "forward_backward": 49152,
+      "backward_forward": 43152,
+      "up_down": 37318,
+      "down_up": 38329,
+      "hover": 262144
+    },
+    "reward": "unchanged bounded physical scores, relative to current requested position",
+    "target_timing": "post-step command advance before reward and timeout bootstrap; next actor reads that same target",
+    "measurement_only_drift_seconds": 0.1,
+    "original_raw_speed_gate": "preserved in reference report; this task measures sustained drift from positions",
+    "teacher_actions": false,
+    "body_pose_assignment": "initialization and episode resets only"
+  },
+  "airborne_resets": null,
+  "rehearsal_control_hz": null,
+  "transitions_per_training_wall_second": 1307.7389348155855,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 4.286957263946533,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.23084892332553864,
+      "finite": true,
+      "nonzero_cells": 165475
+    },
+    "bias": {
+      "l2": 118.22496795654297,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_gradient_audit_from_weighted_wing_supervision": null,
+  "core_changes": {
+    "excitability": 1.2450874237401877e-05,
+    "leak": 1.3145474440534599e-05,
+    "bias": 1.7954766008188017e-05
+  },
+  "peak_cuda_allocated_bytes": 9073805312,
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "checkpoint_sha256": "bad3bd82c8cd700c9f44b3701e5eb3bd93a9650b42604b5d33ac615e6f80e848",
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899",
+  "flight_force_model": {
+    "name": "Flight dynamics driven by measured wing motion",
+    "config": {
+      "version": "wing_motion_instant_v2",
+      "angular_armature": 2e-06,
+      "joint_damping": 0.0002,
+      "joint_stiffness": 0.001,
+      "joint_torque_limit": 0.03,
+      "activity_filter_seconds": 0.0,
+      "reference_sweep_speed": 50.0,
+      "maximum_activity": 1.4,
+      "lift_weight_multiplier": 1.6,
+      "horizontal_drag_seconds": 0.12,
+      "vertical_drag_seconds": 0.08,
+      "angular_drag_seconds": 0.025,
+      "attitude_stiffness": 100.0,
+      "steering_acceleration": 60.0,
+      "maximum_angular_acceleration": 250.0,
+      "inertia_radius_cm": 0.06,
+      "forward_force_fraction": 0.25
+    },
+    "inputs": "six actual wing angles and speeds; measured body orientation/velocity",
+    "body_mass_kg": 9.686214691323194e-07,
+    "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
+    "aerodynamic_force_model": false,
+    "causal_activity_state_shape": [
+      64,
+      2
+    ],
+    "wing_response": "instant",
+    "force_update": "current wing/body measurements before every MuJoCo physics step",
+    "temporal_wing_average": false,
+    "attitude_assistance": "activity-dependent angular damping and restoring torque",
+    "translation": "bounded wing-motion lift/thrust and drag; no target-position servo"
+  },
+  "rehearsal_manifest_sha256": null,
+  "rehearsal_episode_sha256": {},
+  "rehearsal_validation_indices": [],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00000.npz",
+        "sha256": "6e3d1f86fefe04483141c3229dedf9ab37e172bedb8ec02d09c299bdf2358cb2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 4.716,
+      "return": 13.378614161163568,
+      "distance_cm": 4.979487651571453,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.3593103630818182,
+      "target_time_scale": 1.1247713414806162,
+      "waypoint_window_samples": [
+        281,
+        0,
+        0
+      ],
+      "waypoint_window_peak_errors_mm": [
+        49.19888198174068,
+        0.0,
+        0.0
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 51.638713918868355
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00001.npz",
+        "sha256": "1e2baf2916b81fc478ccfa92e8345429128e0548d23d4487684b2a821bbecda2",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 7.25,
+      "return": 19.978042600210756,
+      "distance_cm": 8.097424098515903,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.7138482411653457,
+      "target_time_scale": 1.0286864734791947,
+      "waypoint_window_samples": [
+        257,
+        257,
+        0
+      ],
+      "waypoint_window_peak_errors_mm": [
+        41.27515626544373,
+        81.69662074054483,
+        0.0
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 82.12768535318733
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00002.npz",
+        "sha256": "5933480d31b0a300b5b0f4cafe6703c20be7538758768cf37415cb69425f9727",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 7.6080000000000005,
+      "return": 21.220374969765544,
+      "distance_cm": 8.522415135153306,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.7928301067906791,
+      "target_time_scale": 1.0715817810118666,
+      "waypoint_window_samples": [
+        268,
+        268,
+        0
+      ],
+      "waypoint_window_peak_errors_mm": [
+        43.81610957054899,
+        85.11243832842212,
+        0.0
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 86.31600902730447
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": true,
+      "failure_trace": {
+        "file": "failure_00003.npz",
+        "sha256": "c28801b372fe981e96c9ef6b7a3071c51d7f090612dcf6a0504815bc5f29f00b",
+        "frames": 128,
+        "scope": "last up to 0.256 s; post-action physical states"
+      },
+      "simulated_seconds": 8.596,
+      "return": 23.53466168185696,
+      "distance_cm": 9.748802653199558,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.3988714618284335,
+      "target_time_scale": 1.0773208832860866,
+      "waypoint_window_samples": [
+        269,
+        269,
+        0
+      ],
+      "waypoint_window_peak_errors_mm": [
+        43.18379582462397,
+        85.25595474865895,
+        0.0
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 98.44856862506013
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.85920851537958,
+      "distance_cm": 13.876486015468249,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.501780791255437,
+      "target_time_scale": 1.136131864521973,
+      "waypoint_window_samples": [
+        284,
+        284,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.69302915256215,
+        89.54132228085672,
+        139.1880016762916
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.540250906185346,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.1880016762916
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.65075139189139,
+      "distance_cm": 14.02263387410802,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.7579355116057456,
+      "target_time_scale": 0.9612288656486804,
+      "waypoint_window_samples": [
+        240,
+        241,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        38.51496047099745,
+        74.98357626002377,
+        140.82203527830154
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.082789797552442,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.82203527830154
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.890705643221736,
+      "distance_cm": 14.068307571406455,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5380081134028374,
+      "target_time_scale": 0.8610908262262305,
+      "waypoint_window_samples": [
+        216,
+        215,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        32.95118738587084,
+        66.54079351761015,
+        141.13005576578092
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.581627982195142,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.13005576578092
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.969393386505544,
+      "distance_cm": 14.009454942543043,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5325519245507886,
+      "target_time_scale": 1.0680801078020683,
+      "waypoint_window_samples": [
+        267,
+        267,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        44.31661059462839,
+        84.0606845491363,
+        140.498859677643
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 12.673497329533687,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.498859677643
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.54487662483007,
+      "distance_cm": 14.129257971962618,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.349797890658665,
+      "target_time_scale": 0.9900558904796755,
+      "waypoint_window_samples": [
+        248,
+        248,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        40.729291971262484,
+        77.8013685222806,
+        141.7254195232778
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.069655115714049,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.7254195232778
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.619550234638155,
+      "distance_cm": 14.123715581810814,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5530582011170173,
+      "target_time_scale": 1.0669997527268589,
+      "waypoint_window_samples": [
+        266,
+        267,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        44.224929290309845,
+        84.3250529276279,
+        141.69715516476123
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.71740762982017,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.69715516476123
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.4818290672265,
+      "distance_cm": 14.253648284703383,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4205245705466747,
+      "target_time_scale": 1.0639120041176566,
+      "waypoint_window_samples": [
+        266,
+        266,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        44.53199056647659,
+        84.93023679617784,
+        143.1016799931304
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.60556990708499,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 143.1016799931304
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.88182077649981,
+      "distance_cm": 13.936574590071952,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6260462548192467,
+      "target_time_scale": 1.082871759219436,
+      "waypoint_window_samples": [
+        270,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        45.053427114916516,
+        85.22550181832656,
+        139.8076398763001
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.120012046508563,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.8076398763001
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.66809350345284,
+      "distance_cm": 13.862405139086057,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6208211323334443,
+      "target_time_scale": 1.0336599764427705,
+      "waypoint_window_samples": [
+        259,
+        258,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.35094601319019,
+        80.12911981693563,
+        139.0669045385227
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.400818943785687,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.0669045385227
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.66957580577582,
+      "distance_cm": 13.994825672365105,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.77264845893988,
+      "target_time_scale": 1.1226415952295314,
+      "waypoint_window_samples": [
+        281,
+        281,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.45622703017054,
+        87.63525975859537,
+        140.46968384454513
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.699402771214052,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.46968384454513
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.7757889572531,
+      "distance_cm": 13.91322100864836,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5739042011287983,
+      "target_time_scale": 1.1066965964889957,
+      "waypoint_window_samples": [
+        277,
+        277,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        45.32627778726231,
+        87.41651090088507,
+        139.50455647602843
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.11068186836156,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.50455647602843
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.863572772126645,
+      "distance_cm": 13.924447257038747,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5027557341871158,
+      "target_time_scale": 0.8838428815552204,
+      "waypoint_window_samples": [
+        221,
+        221,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        33.923617679560465,
+        67.47368853190139,
+        139.73732676477726
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.622577521779169,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.73732676477726
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.576155566610396,
+      "distance_cm": 14.09716476865807,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5030431907230735,
+      "target_time_scale": 0.9191082629238511,
+      "waypoint_window_samples": [
+        230,
+        229,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        36.88824597513183,
+        72.0566761482275,
+        141.4935036203056
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.677979795335853,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.4935036203056
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.70380656281486,
+      "distance_cm": 13.983472197111615,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.7284942547253923,
+      "target_time_scale": 0.8973795058473538,
+      "waypoint_window_samples": [
+        224,
+        224,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        34.65898129874083,
+        67.13396999562893,
+        140.36220074871233
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.139278768145168,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.36220074871233
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.69680658960715,
+      "distance_cm": 13.811082005351116,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4713396700635386,
+      "target_time_scale": 1.0312990640487332,
+      "waypoint_window_samples": [
+        258,
+        258,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        41.45453398367351,
+        79.26428698541952,
+        138.53178301636447
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.375236333857195,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 138.53178301636447
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.779590426012874,
+      "distance_cm": 13.92977382294967,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4707632187162476,
+      "target_time_scale": 0.9086625771140115,
+      "waypoint_window_samples": [
+        227,
+        227,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        36.744776492551914,
+        70.76450105461336,
+        139.74285690049516
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.19316999868245,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.74285690049516
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.64579248800874,
+      "distance_cm": 14.005951032964832,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.477286964809308,
+      "target_time_scale": 0.854361858062336,
+      "waypoint_window_samples": [
+        213,
+        214,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        33.95182242153548,
+        65.79664709557916,
+        140.43384736966718
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 12.753839935347946,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.43384736966718
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.75662336824462,
+      "distance_cm": 13.962902671032154,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3982040954263228,
+      "target_time_scale": 1.0739322923088157,
+      "waypoint_window_samples": [
+        268,
+        268,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        43.69006613501378,
+        83.55200164218732,
+        140.12522625767724
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.032814061723405,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.12522625767724
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.79754498274997,
+      "distance_cm": 14.032719681050617,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.275585516348158,
+      "target_time_scale": 1.092407564772799,
+      "waypoint_window_samples": [
+        273,
+        273,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        45.24519765957781,
+        85.5325708865515,
+        140.82445386159108
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.263729843380966,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.82445386159108
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.79609417868778,
+      "distance_cm": 14.020480613667761,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4537605728258305,
+      "target_time_scale": 0.9801535387695665,
+      "waypoint_window_samples": [
+        245,
+        245,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        40.12478069983193,
+        76.14649817725292,
+        140.6986260771559
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.329550110309292,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.6986260771559
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.664876060094684,
+      "distance_cm": 14.150032992857454,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6482956072258363,
+      "target_time_scale": 0.9623381466464012,
+      "waypoint_window_samples": [
+        240,
+        241,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        39.206636246806504,
+        75.12859855132291,
+        142.10724442219257
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.813369027893097,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 142.10724442219257
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.87316042697057,
+      "distance_cm": 13.754594232119151,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6839819724486382,
+      "target_time_scale": 1.0604717548912306,
+      "waypoint_window_samples": [
+        265,
+        265,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.347208464010876,
+        81.00859022316362,
+        138.01071590176417
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.920469489869456,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 138.01071590176417
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.738445817958564,
+      "distance_cm": 13.921616208898246,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5998098261233515,
+      "target_time_scale": 1.1212134391268294,
+      "waypoint_window_samples": [
+        280,
+        281,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.62263503581382,
+        87.94280672400288,
+        139.70666499998393
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.19361222643405,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.70666499998393
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.612717133481055,
+      "distance_cm": 14.065380913284175,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2434884084785587,
+      "target_time_scale": 0.9499036744667165,
+      "waypoint_window_samples": [
+        237,
+        237,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        38.22776726873994,
+        73.70136385025826,
+        141.2673797128592
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.921218112426748,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.2673797128592
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.942015453241765,
+      "distance_cm": 13.954969213984366,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6768188571241587,
+      "target_time_scale": 1.0439899639339811,
+      "waypoint_window_samples": [
+        261,
+        261,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.179605377861094,
+        81.32852548190128,
+        139.9222473489352
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.321186806296952,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.9222473489352
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.65465860441327,
+      "distance_cm": 14.005788667303868,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2138368577233218,
+      "target_time_scale": 1.1154556129334252,
+      "waypoint_window_samples": [
+        278,
+        279,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.43382146268249,
+        87.82838558827287,
+        140.4774932227866
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.040288875683421,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.4774932227866
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.84192032413557,
+      "distance_cm": 13.946876217988192,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4380855508763803,
+      "target_time_scale": 1.0859341504263305,
+      "waypoint_window_samples": [
+        271,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        44.841440016001634,
+        84.6953667468543,
+        140.03302322347272
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.520810572755785,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.03302322347272
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.79283212730661,
+      "distance_cm": 13.887914100497365,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3234159596948556,
+      "target_time_scale": 0.9967641494134576,
+      "waypoint_window_samples": [
+        249,
+        249,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        40.1823666981811,
+        77.3031611789638,
+        139.33888987282788
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.445170178323764,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.33888987282788
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.81956470105797,
+      "distance_cm": 13.997235030311556,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4177783147730545,
+      "target_time_scale": 1.137808025376019,
+      "waypoint_window_samples": [
+        284,
+        285,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.555384882755206,
+        89.03028732177022,
+        140.51596397573164
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.374805602099856,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.51596397573164
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.856507109012455,
+      "distance_cm": 13.996775932903917,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4557812372482706,
+      "target_time_scale": 0.8920889737175027,
+      "waypoint_window_samples": [
+        223,
+        223,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        34.620924600040034,
+        67.80377261216647,
+        140.35783096338935
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.395280994868394,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.35783096338935
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.735155364032835,
+      "distance_cm": 14.004506869358043,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.658224681792303,
+      "target_time_scale": 0.9851790573371907,
+      "waypoint_window_samples": [
+        246,
+        247,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        39.310286370346546,
+        76.20703785884221,
+        140.54652408000413
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.462016376368892,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.54652408000413
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.768917464185506,
+      "distance_cm": 14.142792635869034,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2361056399974109,
+      "target_time_scale": 0.9050539513092456,
+      "waypoint_window_samples": [
+        227,
+        226,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        36.460180270844475,
+        69.93333693706288,
+        141.92367719196437
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.713339913726621,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.92367719196437
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.746553521603346,
+      "distance_cm": 13.988473531418661,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.5962952644567534,
+      "target_time_scale": 1.0065025522823061,
+      "waypoint_window_samples": [
+        252,
+        251,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        41.032489842740596,
+        77.56416559828023,
+        140.36845115161566
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.159259345514256,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.36845115161566
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.616069299634546,
+      "distance_cm": 13.978359987100063,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.6146873416945033,
+      "target_time_scale": 1.1224765348804713,
+      "waypoint_window_samples": [
+        280,
+        280,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        48.43630819671289,
+        86.82881228523193,
+        140.28046731907313
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.407180608494306,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.28046731907313
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.620364892762154,
+      "distance_cm": 13.986405011371465,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.7725100433836847,
+      "target_time_scale": 1.0644546601859226,
+      "waypoint_window_samples": [
+        266,
+        266,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        41.76766623544546,
+        85.27316435014258,
+        140.33575809652385
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.044074495263676,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.33575809652385
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.76702907634899,
+      "distance_cm": 14.01127320555965,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.3940662393909522,
+      "target_time_scale": 0.9450059347565991,
+      "waypoint_window_samples": [
+        237,
+        236,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        38.26950671448509,
+        72.89091328902173,
+        140.5518103155232
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 12.496686799023427,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.5518103155232
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.5908604352735,
+      "distance_cm": 14.151584671412378,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.3821692826494625,
+      "target_time_scale": 1.1193284298004211,
+      "waypoint_window_samples": [
+        280,
+        280,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        47.56656345927627,
+        91.31385394150081,
+        141.95070745761612
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.279225955595987,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.95070745761612
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.747217897325754,
+      "distance_cm": 14.01112721928686,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.4503894347652324,
+      "target_time_scale": 0.9785314677508377,
+      "waypoint_window_samples": [
+        245,
+        244,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        39.36939785873636,
+        74.45993982720412,
+        140.6881819814692
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.638748244362326,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.6881819814692
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.90780619997531,
+      "distance_cm": 13.920626466865874,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.4498975442807485,
+      "target_time_scale": 0.8743478805850231,
+      "waypoint_window_samples": [
+        218,
+        219,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        35.18766894410354,
+        65.38555056051874,
+        139.599976540448
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 12.76394178950448,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.599976540448
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.52982490090653,
+      "distance_cm": 14.054898075678913,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.4892028612969275,
+      "target_time_scale": 0.8773280715771071,
+      "waypoint_window_samples": [
+        219,
+        219,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        34.12716734911082,
+        69.04210806534584,
+        141.08107720242504
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.699435251698132,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.08107720242504
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.66819333285093,
+      "distance_cm": 13.921589154361053,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.321872710780486,
+      "target_time_scale": 0.9266674094270178,
+      "waypoint_window_samples": [
+        232,
+        232,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        38.36434322952401,
+        71.2073128828074,
+        139.71477372281987
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.18483468368115,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.71477372281987
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.70217202603817,
+      "distance_cm": 14.016849021497157,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.2307934478801401,
+      "target_time_scale": 1.1285110153183024,
+      "waypoint_window_samples": [
+        283,
+        282,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        47.08214816000908,
+        90.11408452905088,
+        140.67202151249353
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.564814745003954,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.67202151249353
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.741733443923295,
+      "distance_cm": 13.989980967550075,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.7539961377929698,
+      "target_time_scale": 0.9626696857564772,
+      "waypoint_window_samples": [
+        241,
+        241,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        38.10856299240414,
+        75.79152938466079,
+        140.35120978774142
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.484914500952687,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.35120978774142
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.92127301776782,
+      "distance_cm": 13.898559586278763,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.551961188563567,
+      "target_time_scale": 1.0622647041368487,
+      "waypoint_window_samples": [
+        266,
+        265,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        43.65731944382087,
+        82.29896768539008,
+        139.48858138022172
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.266688329711394,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.48858138022172
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.59722494520247,
+      "distance_cm": 14.017288904423852,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.653096713002209,
+      "target_time_scale": 0.9401258492927065,
+      "waypoint_window_samples": [
+        235,
+        235,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        39.360215889865344,
+        71.6786631479479,
+        140.6645549530215
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.503248171128712,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.6645549530215
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.64535723766312,
+      "distance_cm": 13.953474412101285,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.3631463310153726,
+      "target_time_scale": 0.8589860400921338,
+      "waypoint_window_samples": [
+        214,
+        215,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        32.028219904557005,
+        66.09551038102309,
+        139.98243435854724
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.950897100987913,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.98243435854724
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.73598075658083,
+      "distance_cm": 13.994899235575586,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.472857851623464,
+      "target_time_scale": 0.8684504138229469,
+      "waypoint_window_samples": [
+        217,
+        217,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        33.95786071735643,
+        65.68183110132165,
+        140.38171732004082
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.299009995169833,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.38171732004082
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.910450496245176,
+      "distance_cm": 13.983920971887972,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.2047444077659872,
+      "target_time_scale": 0.8898833116572064,
+      "waypoint_window_samples": [
+        222,
+        222,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        34.18580540312276,
+        68.29129860224643,
+        140.38347412945612
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.284467243904968,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.38347412945612
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.76983552938327,
+      "distance_cm": 14.12917746418225,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.479196684880857,
+      "target_time_scale": 1.097719660972389,
+      "waypoint_window_samples": [
+        274,
+        275,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        46.73285735068602,
+        87.20535476772707,
+        141.81334859392922
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.66129065148986,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.81334859392922
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.847521224524826,
+      "distance_cm": 13.952875958898298,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.4296101559536805,
+      "target_time_scale": 1.0295629908998492,
+      "waypoint_window_samples": [
+        258,
+        257,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.8453448849686,
+        78.77805586385632,
+        139.98710876110798
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.54814249364834,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.98710876110798
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.89064671937376,
+      "distance_cm": 14.013970953792525,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.624006371963152,
+      "target_time_scale": 0.8587513371187857,
+      "waypoint_window_samples": [
+        215,
+        215,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        31.671307748845926,
+        66.65010723936587,
+        140.57014019017444
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.411064973415314,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.57014019017444
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.75834543118253,
+      "distance_cm": 14.052034073144377,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.4022706816088346,
+      "target_time_scale": 1.0281652579576728,
+      "waypoint_window_samples": [
+        257,
+        257,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.61509992283351,
+        80.21685752395766,
+        141.05553276848465
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 14.034271325815414,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.05553276848465
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.881673438008875,
+      "distance_cm": 14.026433998822167,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.4272758284544333,
+      "target_time_scale": 0.8681452832110503,
+      "waypoint_window_samples": [
+        217,
+        217,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        33.524782695482045,
+        67.09438089637098,
+        140.72998705238098
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.476914174097244,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.72998705238098
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 33.01158709824085,
+      "distance_cm": 13.852989703174769,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.798064620343205,
+      "target_time_scale": 1.1351434097755724,
+      "waypoint_window_samples": [
+        284,
+        284,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        45.57068502352816,
+        89.2112437478508,
+        138.99002780916112
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.79487255519852,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 138.99002780916112
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.90843605482951,
+      "distance_cm": 13.995692047702173,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.4570454754902133,
+      "target_time_scale": 1.0050112597319734,
+      "waypoint_window_samples": [
+        252,
+        251,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        40.70894328634899,
+        77.9142522791805,
+        140.40218859023162
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.069392115588613,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.40218859023162
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.52841672161594,
+      "distance_cm": 13.894935582368328,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.2979222455109454,
+      "target_time_scale": 1.006401260828614,
+      "waypoint_window_samples": [
+        251,
+        252,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        42.28671180436187,
+        76.7602742533512,
+        139.33792094714116
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 12.771155874477603,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.33792094714116
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.609025119338185,
+      "distance_cm": 14.20830284883664,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.3104067956810512,
+      "target_time_scale": 0.8512547392911216,
+      "waypoint_window_samples": [
+        213,
+        213,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        32.613601777279506,
+        66.70736419065062,
+        142.59668197505036
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.885273384272478,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 142.59668197505036
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.57395209139213,
+      "distance_cm": 13.950924295168003,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.2769975734943906,
+      "target_time_scale": 0.903554803235502,
+      "waypoint_window_samples": [
+        226,
+        226,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        35.414235366168725,
+        69.50041460957821,
+        139.9787565719529
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.52198537365703,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 139.9787565719529
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.83569514006376,
+      "distance_cm": 13.990384899252888,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.4380674164600498,
+      "target_time_scale": 1.1390659977020412,
+      "waypoint_window_samples": [
+        285,
+        285,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        48.69362489651767,
+        89.60027020146836,
+        140.35633535004246
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.733603025282907,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 140.35633535004246
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 12.0,
+      "return": 32.6769217774272,
+      "distance_cm": 14.101047388642385,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.3755598764160268,
+      "target_time_scale": 0.9711358655507034,
+      "waypoint_window_samples": [
+        243,
+        242,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        40.22146636688581,
+        74.66328288091843,
+        141.56494233875054
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 13.387216064979155,
+      "complete_target_sequence_tracking": false,
+      "final_origin_error_mm": 141.56494233875054
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": false,
+  "exploration_reset_explicitly": false,
+  "initial_exploration_std": [
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884,
+    0.0029999997932463884
+  ],
+  "critic_reset_for_new_reward": true,
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained",
+  "critic_warmup": {
+    "requested_rollouts": 2,
+    "completed_rollouts": 2,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  }
+}

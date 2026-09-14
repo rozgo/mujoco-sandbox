@@ -1,15 +1,19 @@
 # Embodied fly: learned utility and direct body control
 
-The user-proposed next curriculum is [closed flight paths](CLOSED_FLIGHT_CURRICULUM.md):
+The new curriculum is [closed flight paths](CLOSED_FLIGHT_CURRICULUM.md):
 move, reverse, return to the starting point, then hold. The unchanged plant's
 [PID reference video](../../previews/embodied_fly/round_trip_reference_v1.mp4)
 shows all six directional orders plus stationary hover. All positions return
 within 0.08 mm; the original raw-speed gate and its wingbeat-vibration issue are
 preserved in the [report](runs/round_trip_reference_01/SUMMARY.md). This reference
-contains no learned actor; learned round-trip training has not started.
+contains no learned actor. The first [learned PPO trial](runs/round_trip_ppo_01/SUMMARY.md)
+has now completed: 64 worlds, 6 min 41 s training. All seven frozen cases remain
+airborne, but none follows the complete route; position error worsens 2.38%.
+Critic training fit improves substantially without an improved actor. Keep the
+preferred checkpoint. [Watch all seven learned cases plus PID hover](../../previews/embodied_fly/round_trip_ppo_v1.mp4).
 
 
-Latest [exploration and critic trial](runs/hover_explore_01/SUMMARY.md) completes
+Preceding [exploration and critic trial](runs/hover_explore_01/SUMMARY.md) completes
 64 actor updates in 6 min 37 s, but does not meaningfully improve hover. All three
 starts stay airborne; drift and altitude loss remain. The preferred imitation
 checkpoint is unchanged. Watch [before/after](../../previews/embodied_fly/hover_explore_before_after_v1.mp4)

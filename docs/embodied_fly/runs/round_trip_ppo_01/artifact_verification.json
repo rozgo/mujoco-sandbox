@@ -1,0 +1,67 @@
+{
+  "checkpoint_sha256": "bad3bd82c8cd700c9f44b3701e5eb3bd93a9650b42604b5d33ac615e6f80e848",
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "physical_graph_contracts_preserved": true,
+  "all_actor_tensors_finite": true,
+  "fixed_tensors": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed_tensors": [
+    "core.excitability",
+    "core.leak",
+    "core.bias",
+    "sensory_encoder.0.weight",
+    "sensory_encoder.0.bias",
+    "sensory_encoder.2.weight",
+    "sensory_encoder.2.bias",
+    "sensor_extension.weight",
+    "motor_decoder.0.weight",
+    "motor_decoder.0.bias",
+    "motor_decoder.1.weight",
+    "motor_decoder.1.bias",
+    "motor_decoder.3.weight",
+    "motor_decoder.3.bias",
+    "wing_residual.network.0.weight",
+    "wing_residual.network.0.bias",
+    "wing_residual.network.2.weight",
+    "wing_residual.network.2.bias"
+  ],
+  "optimizer_history": {
+    "optimizer_state_dict": {
+      "parameters_with_history": 19,
+      "fresh_adam_steps": 64
+    },
+    "value_optimizer_state_dict": {
+      "parameters_with_history": 6,
+      "fresh_adam_steps": 1024
+    }
+  },
+  "reward_recipe_unchanged_from_hover_explore_01": true,
+  "verified_failure_windows": 4,
+  "teacher_or_rehearsal_during_ppo": false,
+  "route_transition_counts_verified": {
+    "left_right": 47233,
+    "right_left": 46960,
+    "forward_backward": 49152,
+    "backward_forward": 43152,
+    "up_down": 37318,
+    "down_up": 38329,
+    "hover": 262144
+  },
+  "complete_training_episodes": 64,
+  "failed_training_episodes": 4,
+  "complete_training_trips_tracking": 0
+}

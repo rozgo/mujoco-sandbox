@@ -1237,3 +1237,23 @@ reference-only physical validation follows the user's directional curriculum.
 - Six focused critic tests pass in 1.30 s; full critic-change package has 185 tests
   passing in 155.06 s. Two new target-path tests pass in 0.80 s; the seven-world
   capture validates their physical reference use. No learned round-trip run yet.
+
+### Learned round trips plus stationary hover — first PPO pilot
+
+- Observed follow-up start: 2026-09-14 01:39:52 UTC. Reviewed video opened
+  02:07:35 UTC: 27 min 43 s to the video milestone, including implementation,
+  tests, training, evaluation, transfer, rendering and review. Archival follows.
+- 191 tests pass in 156.42 s. Focused initial checks: nine pass in 7.52 s.
+- Training starts 01:53:33.542090 UTC. Actual training 400.911823 s; setup
+  7.473046 s. The requested 300 s completes its current full update cycle.
+- 64 CPU MuJoCo worlds, 16 physics threads, RTX 4090 neural training; 500 Hz
+  actions / 1,000 Hz physics. 524,288 transitions = 1,048.576 aggregate seconds.
+  Collection 139.607833 s; optimization 261.302301 s, including critic warmup.
+- Frozen parent capture 45.586476 s, setup 7.191927 s, total with export
+  62.052239 s. Child capture 45.743458 s, setup 7.472256 s, total 62.424454 s.
+  Each is seven worlds x12 s with 42,000 transitions; evaluation is not training.
+- Video render 70.101679 s. 600 frames / 50 fps / 1600x1000 /
+  12 s at 1x. Full decode/checksum and sampled visual review pass. Automatically
+  opened after inspection; physical task gates still fail 0/7.
+- Child is diagnostic only; preferred parent unchanged. No training workers
+  remain active after this trial and its frozen captures.

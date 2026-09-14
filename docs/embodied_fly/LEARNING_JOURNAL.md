@@ -2898,3 +2898,24 @@ return with under 0.08 mm final-hold error; worst 100ms displacement speed is
 because of small 60Hz wingbeat vibration. Keep that failure; no force or body
 filtering was added. This is plant authority, not learned motor behavior.
 The same-brain curriculum proposal is in CLOSED_FLIGHT_CURRICULUM.md.
+
+## Closed-flight PPO pilot — September 14 UTC
+
+Implemented the user’s ordered directional trips: origin, one side, opposite
+side, origin, hold. Half of 64 worlds remain on stationary hover. Target timing
+and distance vary; no future route or clock is passed to the actor. Physics,
+graph, action interface and reward weights are unchanged. The critic uses
+original inputs and shuffled time/world transitions.
+
+The 400.911823-second run makes 64 actor updates and 1,024 critic updates from
+524,288 transitions. Critic in-sample explained variance ends at 0.963, yet the
+frozen actor remains unable to follow the paths: 0/7 complete gates, 7/7 airborne,
+2.38% worse route RMS than the preferred parent. This isolates a real distinction:
+better value fitting does not demonstrate useful target-conditioned correction.
+The parent stays preferred; the child and failures are preserved. Full tests:
+191 pass. Video shows all seven learned cases plus the separate PID hover.
+
+Next: measure causal target-to-wing response, then consider short PID examples
+of correction/braking before more PPO. Do not simply extend the failed trial
+or change several reward/physics settings together. Utility remains deferred;
+the overall shared-brain survival goal is still active and incomplete.

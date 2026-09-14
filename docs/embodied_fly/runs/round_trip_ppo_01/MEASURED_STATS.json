@@ -1,0 +1,85 @@
+{
+  "training_started_utc": "2026-09-14T01:53:33.542090+00:00",
+  "setup_seconds": 7.473045866005123,
+  "training_wall_seconds": 400.91182272089645,
+  "parallel_physics_worlds": 64,
+  "physics_threads": 16,
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "transitions": 524288,
+  "aggregate_simulated_seconds": 1048.576,
+  "transitions_per_training_wall_second": 1307.7389348155855,
+  "rollouts": 4,
+  "ppo_updates": 64,
+  "critic_updates": 1024,
+  "actor_kl_stops": 0,
+  "collection_seconds": 139.60783277451992,
+  "optimization_seconds": 261.30230138171464,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "peak_cuda_allocated_bytes": 9073805312,
+  "critic_warmup": {
+    "requested_rollouts": 2,
+    "completed_rollouts": 2,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  },
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 4.096,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 5.0000000000002816,
+    "gae_trace_efold_seconds": 2.000000000000061,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "hover_reset_curriculum": {
+    "curriculum": "closed target trips plus stationary hover",
+    "stationary_worlds": 32,
+    "round_trip_worlds": 32,
+    "route_ids_are_observer_only": true,
+    "future_waypoints_in_observation": false,
+    "amplitude_mm_range": [
+      1.2,
+      1.8
+    ],
+    "time_scale_range": [
+      0.85,
+      1.15
+    ],
+    "initial_reset_widening": 0.0,
+    "transitions_by_target_sequence": {
+      "left_right": 47233,
+      "right_left": 46960,
+      "forward_backward": 49152,
+      "backward_forward": 43152,
+      "up_down": 37318,
+      "down_up": 38329,
+      "hover": 262144
+    },
+    "reward": "unchanged bounded physical scores, relative to current requested position",
+    "target_timing": "post-step command advance before reward and timeout bootstrap; next actor reads that same target",
+    "measurement_only_drift_seconds": 0.1,
+    "original_raw_speed_gate": "preserved in reference report; this task measures sustained drift from positions",
+    "teacher_actions": false,
+    "body_pose_assignment": "initialization and episode resets only"
+  },
+  "source_commit": "ca990fc8ee17605de562496c7d1463e145797cdd",
+  "checkpoint_sha256": "bad3bd82c8cd700c9f44b3701e5eb3bd93a9650b42604b5d33ac615e6f80e848",
+  "completed_training_episodes": 64,
+  "failed_training_episodes": 4,
+  "tracked_training_trips": 0,
+  "critic_explained_variance_after_each_fit": [
+    0.9051966667175293,
+    0.8736528158187866,
+    0.7217751145362854,
+    0.9629313349723816
+  ],
+  "maximum_actor_kl": 0.017312385141849518,
+  "evaluation_capture_seconds": 45.743458330165595,
+  "evaluation_setup_seconds": 7.472256166860461,
+  "evaluation_passed_cases": 0,
+  "evaluation_airborne_cases": 7
+}

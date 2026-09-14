@@ -19,7 +19,7 @@ sustained-drift analysis. No physics or live force filtering was changed.
   encoder, decoder, trainable cell dynamics and canonical wing-driven body.
   One actor/checkpoint handles every target sequence and stationary hover.
 - Keep 64 worlds and 16 CPU physics threads, RTX 4090 neural computation,
-  1,000 Hz physics / 500 Hz actions. Initial proposal: 32 stationary hover worlds
+  1,000 Hz physics / 500 Hz actions. Implemented: 32 stationary hover worlds
   and 32 split across all six ordered paths. Do not silently replace the existing
   hover-only recipe; use an explicit curriculum option and separate artifacts.
 - Targets start at the original position, move to one side, reverse to the other,
@@ -45,5 +45,10 @@ sustained-drift analysis. No physics or live force filtering was changed.
   Compare to the reference and earlier actor, render and automatically open
   each completed training video. Do not promote a child based on survival alone.
 
-No learned round-trip trial has run yet. The reference video establishes physical
-control authority only; successful learned correction remains to be demonstrated.
+The first [learned trial](runs/round_trip_ppo_01/SUMMARY.md) has now run for
+400.911823 seconds with 64 worlds and 524,288 transitions. All seven frozen
+cases stay airborne; none passes the complete tracking task, and mean route
+error worsens 2.38%. Critic training fit improves, but the actor does not yet
+correct position. Preserve the preferred imitation actor. Next check target-to-wing
+response before another training change; a short PID corrective-movement teaching
+stage followed by PPO is the proposed fallback. Same plant and shared actor.
