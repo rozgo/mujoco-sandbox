@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "training_source": "750f5d6f75d2612216083b5062a1a291c94217a3",
+  "compared_recipe_keys": [
+    "reward",
+    "worlds",
+    "physics_threads",
+    "physics_backend",
+    "learning_device",
+    "physics_hz",
+    "control_hz",
+    "horizon",
+    "sequence",
+    "actor_epochs",
+    "critic_epochs",
+    "actor_lr",
+    "critic_lr",
+    "gamma",
+    "gae_lambda",
+    "clip",
+    "gradient_norm_cap",
+    "imitation_weight",
+    "imitation_frequency",
+    "episode_seconds",
+    "recurrent_carry",
+    "teacher_control_share",
+    "command",
+    "wing_readout_only",
+    "trainable_actor_parameters",
+    "target_kl",
+    "pre_update_analytic_kl_limit",
+    "initial_tanh_latent_std"
+  ],
+  "maximum_accepted_kl": 0.004991265723437187,
+  "accepted_updates": 216,
+  "summary": {
+    "parent": {
+      "velocity_rms_mm_s": 12.75771810264544,
+      "vertical_velocity_rms_mm_s": 8.852625014041331,
+      "horizontal_velocity_rms_mm_s": 9.186411873780358,
+      "first_two_seconds_velocity_rms_mm_s": 16.78831489089629,
+      "peak_displacement_mm": 75.75905867806011,
+      "climb_mm": 60.72603719807915,
+      "survived": 4
+    },
+    "midpoint": {
+      "velocity_rms_mm_s": 14.872912611924168,
+      "vertical_velocity_rms_mm_s": 5.516186253125621,
+      "horizontal_velocity_rms_mm_s": 13.812139177080748,
+      "first_two_seconds_velocity_rms_mm_s": 15.961281612186065,
+      "peak_displacement_mm": 94.69748160805482,
+      "climb_mm": 13.971262216672688,
+      "survived": 4
+    },
+    "final": {
+      "velocity_rms_mm_s": 15.531219112387788,
+      "vertical_velocity_rms_mm_s": 4.0275919781644856,
+      "horizontal_velocity_rms_mm_s": 14.999908582678216,
+      "first_two_seconds_velocity_rms_mm_s": 13.918080290894395,
+      "peak_displacement_mm": 99.8942667150204,
+      "climb_mm": 13.802112490873773,
+      "survived": 4
+    }
+  },
+  "training_wall_seconds": 604.0807033521123,
+  "counters": {
+    "rollouts": 108,
+    "actor_updates": 216,
+    "critic_updates": 3456,
+    "transitions": 1769472,
+    "imitation_presentations": 55296,
+    "collection_seconds": 597.6998572782613,
+    "optimization_seconds": 2.247471329756081,
+    "imitation_seconds": 0.1424098494462669,
+    "critic_seconds": 4.107126330956817,
+    "memory_refresh_seconds": 0.0008301683701574802
+  },
+  "snapshots": [
+    {
+      "file": "midpoint_actor.pt",
+      "sha256": "59f5e6a6ee0bf6f2477d61a39bea3108dec923248e87d1e9a66e78a588d86ccd",
+      "training_seconds": 302.42814744636416
+    },
+    {
+      "file": "final_actor.pt",
+      "sha256": "2d65d1ad151d055f255dec195171b71c46773b15d750fc812437635719f38962",
+      "training_seconds": 604.0807033521123
+    }
+  ],
+  "training_episode_groups": {
+    "normal": {
+      "completed_episodes": 344,
+      "failed": 197,
+      "mean_episode_seconds": 4.9229244186046515
+    },
+    "recovery": {
+      "completed_episodes": 176,
+      "failed": 11,
+      "mean_episode_seconds": 9.794215909090909
+    }
+  },
+  "initialization_events": 192
+}

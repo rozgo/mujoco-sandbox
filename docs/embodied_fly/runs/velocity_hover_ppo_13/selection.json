@@ -1,0 +1,13 @@
+{
+  "promoted": false,
+  "retained_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_11_midpoint.pt",
+  "retained_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+  "video_snapshot": "final",
+  "video_selection_basis": "Best new vertical regulation and startup; explicitly a trial, not the lowest total velocity error or promoted policy",
+  "experimental_vertical_candidate": "assets/embodied_fly/diagnostics/velocity_hover_ppo_13.pt",
+  "experimental_vertical_candidate_sha256": "2d65d1ad151d055f255dec195171b71c46773b15d750fc812437635719f38962",
+  "reason": "Both new checkpoints regress horizontal and total RMS; midpoint also has a deeper startup dip. Final substantially improves startup and vertical recovery but misses combined hover gate.",
+  "next_action": "Validate a coordinated 3D-velocity reward on saved flights, then one bounded PPO trial from the final vertical-control candidate; keep official parent until combined hover improves",
+  "next_plan": "NEXT_REWARD_PLAN.md",
+  "further_training_started": false
+}

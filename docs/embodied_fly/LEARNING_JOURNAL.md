@@ -3474,3 +3474,52 @@ joint velocity improvement. If this does not improve physical flight, pause
 further PPO extensions for phase-conditioned control/interface diagnostics.
 See runs/velocity_hover_ppo_12/NEXT_RECOVERY_PLAN.md; this next experiment has
 not been implemented or run in this report. No training is currently running.
+
+
+### Recovery histories improve vertical control; reward audit identifies the tradeoff
+
+User approved recovery-start PPO at19:56:14UTC, September14. The bank contains
+30 parent-reached histories at2/4/6seconds:24 from training starts0–7 and six
+withheld from8/9. Full MuJoCo integration state, previous actions, sensor/wing
+bookkeeping,166,700-cell memory and causal reward history restore together.
+Normal/recovery groups each use16 worlds. PPO replay now records actual nonzero
+reset memories within sequences. Tests reject the old zero-memory substitution.
+
+Two preparation attempts stopped before training on strict closed-loop checks.
+All initialized values were exact; divergence began with~2e-7 CUDA actor output
+differences. The third audit separates exact recorded-action physics from
+closed-loop numerical accumulation: zero observation/position/reward error for
+identical actions;0.752micrometre maximum body-position difference after128ms
+with the neural actor. Physics and neural arithmetic are unchanged. Preserve
+both stopped reports and the accepted bank through Git LFS; see RESTORATION.md.
+
+Run13 trains604.080703s,1,769,472transitions,216actor updates,3,456critic minibatches.
+Same graph/physical model/reward/std.0015/KL.005/optimizer and wing-readout-only
+scope as run12; only initialization changes. All ordinary evaluations4/4 pass
+survival. Midpoint/final climb13.97/13.80mm versus60.73mm, but horizontal RMS
+13.81/15.00 versus9.19mm/s; total14.87/15.53 versus12.76. Final has better startup
+(minimum12.69 versus8.53mm) and later climb1.71 versus8.08mm/s. Midpoint dips a
+little farther,7.85mm. Keep run11 preferred; preserve final as a vertical candidate.
+
+All six withheld three-second recoveries complete for each policy. Final's mean
+upward speed drops5.45->1.37mm/s between first/last seconds, versus8.21->7.99 in
+parent. Horizontal RMS instead rises11.93->15.86, versus7.75->8.46. This confirms
+useful vertical recovery and its sideways regression, not coordinated hover.
+Training records197 failures/344 normal episodes and11/176 recovery episodes.
+Full suite259passed, plus two recovery-scoring tests; GPU restoration3passed.
+
+As planned, no further PPO block started. An exact-action physical reward replay
+then scores parent33.8093,midpoint40.6615,final41.4673, with zero body-position
+replay error. Final gains9.9248 vertical reward and loses only1.8552 horizontal
+reward. The current scorer therefore prefers the tradeoff rejected by the
+combined-hover gate. This is a specific objective mismatch, not proof that the
+brain cannot learn; other control limitations remain possible.
+
+Next recommendation changes on that evidence: audit coordinated3D velocity
+scoring before any further training or interface change. Preserve5mm/s vertical
+precision (earlier vector run08 used20mm/s), then only train if saved-flight and
+failure/recovery counterexamples rank correctly. Start that proposed bounded
+trial from final's improved vertical controller, retaining the same32-world mix.
+If a properly ordered objective still fails, proceed to phase-conditioned
+control/representation diagnostics. No proposed reward has been deployed yet.
+Video final/PID/retained comparison is decoded, inspected and opened20:30:20UTC.

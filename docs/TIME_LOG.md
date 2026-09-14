@@ -1699,3 +1699,41 @@ reference-only physical validation follows the user's directional curriculum.
 - Next proposed work: one bounded recovery-start PPO block with matching
   body/brain histories and normal-start retention. If physical outcome still
   plateaus, pause further training for phase-conditioned control diagnostics.
+
+
+### Recovery-start hover PPO, September 14
+
+- Effort started **2026-09-14 19:56:14 UTC**. User approved16 normal+16 recovery
+  starts, preserving the current controller/reward/physics and ten-minute budget.
+- Prepared physical/neural bank and replay support. Attempts01/02 stopped before
+  training on closed-loop numerical tolerances. Setup11.038257/10.976462s,
+  collection23.496098/23.344863s,audit1.492761/1.493379s. Both retained.
+- Accepted bank03:setup10.231255s,collection23.324448s,audit1.868616s.
+  Exact initial state and recorded-action physics; closed-loop body-position
+  difference0.752micrometres after128ms. Preparation totals91,920 collection
+  transitions plus7,680 audit transitions across the three attempts. These are
+  not PPO training. The immutable03 audit count excludes its1,920 recorded-action
+  transitions; the corrected breakdown is documented separately.
+- Run13 began **20:10:49.296215 UTC**, report completed **20:22:27.702591 UTC**.
+  **604.080703s training**,108rollouts,1,769,472transitions; midpoint302.428147s.
+  32worlds/16CPU MuJoCo-mjbatch threads/RTX4090 neural work,1kHz physics/500Hz
+  actor. Collection597.699857s,actor optimization2.247471s (imitation.142410s
+  included),critic4.107126s. Separate setup16.340686s,replay3.380689s,
+  checkpointIO.066760s,ordinary evaluation90.848644s. No Warp physics.
+- Additional withheld recovery evaluation:33.342988s capture+13.093565s setup,
+  across parent/midpoint/final, excluding file output. All6/6 complete for each.
+- Final climb13.80mm versus60.73mm, but horizontal RMS15.00 versus9.19mm/s;
+  total15.53 versus12.76mm/s. Keep run11 overall; preserve run13 vertical candidate.
+- Exact-action physical reward audit on the original machine:31.379470s,
+  zero body-position error. Reward33.8093->41.4673 despite worse combined hover.
+  No learning. A local Mac attempt stopped at fingerprint preflight before replay.
+- Full suite259passed/45warnings/169.46s; two recovery-window tests passed in.80s;
+  GPU restoration tests3passed/5.14s. Training replay, frozen upstream, .005KL,
+  bank split and all asset hashes verified.
+- Video render69.772786s; full decode4.370024s;43s/2,150frames/50fps/1920x1080/1x.
+  Inspected and opened **20:30:20 UTC**, **34min6s** after effort began.
+  Archival/Git synchronization follow separately. No further training running.
+- Next: audit a coordinated velocity reward against saved flights before more
+  PPO. The current reward favors the observed tradeoff. Only after an objective
+  audit passes should another bounded block run; otherwise investigate control
+  authority through the existing brain interfaces.

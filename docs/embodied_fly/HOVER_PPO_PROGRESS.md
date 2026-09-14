@@ -35,6 +35,15 @@ and total RMS to13.61mm/s. Startup dips less and later climb is slower, so the
 vertical gain is real; sideways drift prevents promotion. Run11 remains
 selected. [Results and trial video](runs/velocity_hover_ppo_12/SUMMARY.md).
 
+Run13 uses16 ordinary starts plus16 parent-generated recovery starts, restoring
+full physical/neural/reward histories. Final climb is13.80mm and vertical RMS
+4.03mm/s, but horizontal RMS rises to15.00mm/s and total RMS to15.53mm/s.
+All four normal flights and six withheld recovery flights complete. New startup
+and vertical recovery are better; keep final as a candidate while run11 remains
+preferred overall. [Full results and video](runs/velocity_hover_ppo_13/SUMMARY.md).
+Exact-action reward replay scores final41.47 versus parent33.81, revealing that
+the current reward favors the vertical/sideways tradeoff rejected by evaluation.
+
 Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
 probe confirms all three measured velocity signals reach the motor features.
 The completed imitation ablation retains the original run-05/06 reward and
@@ -59,6 +68,7 @@ Stationary hover remains unfinished.
 | 10 | Imitation gradient off; rhythm retained, climb regresses | 603.871 | 1,769,472 | 4/4 | 16.36 mm/s |
 | 11 | Half exploration; retain midpoint over final | 606.861 | 1,769,472 | 4/4 | Midpoint 16.79 / final 14.88 mm/s |
 | 12 | Tighter KL limit; vertical gain, sideways regression | 604.080 | 1,769,472 | 4/4 | Midpoint 15.45 / final 14.57 mm/s |
+| 13 | Half recovery starts; much less climb, more sideways drift | 604.081 | 1,769,472 | 4/4 | Midpoint 15.96 / final 13.92 mm/s |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
 Early RMS uses 0–2 s across all four starts. The earlier run-05 improvement over
@@ -84,8 +94,8 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Twelve completed PPO trials: **7,250.304584 s = 120 min 50 s**, **18,399,232 transitions**,
-  **36,798,464 physics steps**, **10.222 hours of aggregate simulated experience**.
+- Thirteen completed PPO trials: **7,854.385287 s = 130 min 54 s**, **20,168,704 transitions**,
+  **40,337,408 physics steps**, **11.205 hours of aggregate simulated experience**.
 - Productive checkpoint lineage: **25 min 8 s PPO**, following **31 min 6 s
   imitation**, for **56 min 14 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.
@@ -99,8 +109,9 @@ are separately measured; lower training loss alone is never used as success.
 - Setup, replay checks, evaluation, rendering, transfer, tests and discarded
   smoke runs are measured separately in the per-run reports and TIME_LOG.
   An early audit-only aborted collection has no retained compute timer.
-- Full fly suite after the tighter-update implementation: **256 passed**.
-  The refinement also passes **33 focused sampling/replay/optimizer tests**.
+- Full fly suite after recovery initialization/replay: **259 passed**.
+  Two additional recovery-scoring tests pass separately. GPU restoration tests
+  and exact recorded-action physical replay pass.
   GPU replay, frozen-parameter and matched recipe checks pass. Comparison videos
   are fully decoded, inspected and opened locally.
 
@@ -109,13 +120,14 @@ the selected run-11 midpoint, its run-05 parent and the later final checkpoint;
 the latest update is not automatically the best controller. Survival alone is
 not stationary hover.
 
-Next: a single roughly ten-minute recovery-start PPO block, with16 normal-start
-worlds and16 initialized from the policy's own valid climbing/drifting states.
-Restore physical state and full neural/reward histories together; retain the
-same actor, reward, physics and evaluation. Promote only on joint improvement
-of vertical and horizontal control without worse startup. If it fails, pause
-further extensions for phase-conditioned control/interface diagnostics.
-[Concrete implementation and gate](runs/velocity_hover_ppo_12/NEXT_RECOVERY_PLAN.md).
+That recovery-start block is complete. Further training is paused. Next, audit
+a coordinated3D-velocity reward on saved flights: the current objective scores
+the new sideways regression as an overall gain. Preserve vertical precision,
+alive/orientation terms and phase-independent body-motion scoring. Only after
+the candidate objective ranks the intended behavior correctly should one
+bounded PPO trial resume from run13's vertical candidate. If that still fails,
+diagnose phase-conditioned sensing/control authority before changing interfaces.
+[Concrete proposed plan](runs/velocity_hover_ppo_13/NEXT_REWARD_PLAN.md).
 
 [Retained run details](runs/velocity_hover_ppo_11/SUMMARY.md) and
 [checkpoint manifest](PREFERRED_HOVER.json).
