@@ -1,6 +1,14 @@
 # Embodied fly: learned utility and direct body control
 
-Latest: [continuous velocity and heading PID reference](runs/pid_velocity_teacher_03/SUMMARY.md)
+Latest: [faster physical flight reference](runs/pid_velocity_fast_04/SUMMARY.md)
+and [71.2-second video at 1x playback](../../previews/embodied_fly/pid_velocity_fast_exercise_v3.mp4).
+Commands are ten times faster: 15 mm/s per translation axis and 4.5 rad/s yaw.
+The complete exercise passes all 50 stage checks, including tight sideways
+turns and braking. The versioned wing-driven model adds independent lateral
+thrust and faster yaw response; body mechanics and torque limits remain fixed.
+This is PID/plant validation. No fresh student training has started.
+
+Preserved slow reference: [continuous velocity and heading PID reference](runs/pid_velocity_teacher_03/SUMMARY.md)
 and [complete 71.2-second teacher video](../../previews/embodied_fly/pid_velocity_full_exercise_v1.mp4).
 One physical episode contains translation, independent turns, combinations,
 braking and hover, without resets. All 50 declared stage checks pass after

@@ -1351,3 +1351,34 @@ reference-only physical validation follows the user's directional curriculum.
   16.50 s, final velocity checks 6 passed in 4.95 s. No physical gate loosened.
 - Fresh student initialization is prepared, but the full checkpoint has not
   been initialized or trained. Teacher review remains the next user milestone.
+
+### Ten-times-faster physical flight, still 1x playback
+
+- First observed follow-up clock 2026-09-14 04:34:02 UTC. First fast video
+  opened 04:59:57 UTC. Final map-panel version opened 05:03:41 UTC: 29 min 39 s
+  to this milestone, including discussion, implementation, tests, four captures,
+  transfers, rendering, review and user interruptions. Archival follows.
+- Four single-world, single-thread CPU MuJoCo/mjbatch captures, each 71.2
+  simulated seconds, 35,600 actions and 71,200 physics steps. Total experience
+  284.8 seconds and 142,400 actions. Zero neural training or optimizer updates.
+- First capture completed before its JSON report writer failed; compute timing
+  was not persisted and remains unknown. Its report was recovered from the
+  saved trajectory without changing or repeating physics. Serialization fixed.
+- Run02 capture 64.595432 s, setup 3.618746 s, total 74.508286 s.
+  Run03 capture 64.777492 s, setup 3.562144 s, total 74.555488 s.
+  Run04 capture 65.779003 s, setup 3.638934 s, total 75.703225 s.
+  Known capture time for 02–04 totals 195.151927 s, not all-attempt compute time.
+- Stage checks improve 14/50 -> 25/50 -> 34/50 -> 50/50. Explicit v4 changes
+  yaw resistance; v5 adds measured-wing lateral thrust. Final two runs share
+  the same v5 model; final correction changes yaw feedback only. Physics and
+  action clocks remain 1,000/500 Hz, with unchanged body/actuator mechanics.
+- Initial focused tests 28 passed in 18.10 s; added fast native/batch parity
+  1 passed in 2.45 s. Motion-feedforward checks 8 passed in 6.42 s; explicit
+  no-position-input checks 2 passed in 3.11 s. V5 velocity/PID/wing checks
+  32 passed in 22.16 s. Final physical capture passes all declared stage gates.
+- Base video render 158.470587 s; map-panel re-encode 15.791305 s using the
+  same frames and recording. Both 3,560 frames, 50 fps, 1600x1000, 71.2 seconds
+  at 1x. Each fully decoded/hash-checked and sampled at ten times; full-size
+  frames also reviewed. Both automatically opened. No new physics for the map.
+- The fresh student remains uninitialized/untrained. Faster teacher review
+  is the next user milestone; previous accepted slow footage remains preserved.

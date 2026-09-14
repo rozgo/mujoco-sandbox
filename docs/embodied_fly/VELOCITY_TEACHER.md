@@ -121,3 +121,14 @@ uv run --project experiments/embodied_fly --locked python -m embodied_fly.veloci
   --source outputs/embodied_fly/pid_velocity_fast_review \
   --output previews/embodied_fly/pid_velocity_fast_review.mp4
 ```
+
+For the wider fast-flight trajectory, add a legible fixed-scale XY map without
+rerunning physics. It uses actual past positions and current heading from the
+same capture; video timestamps remain unchanged.
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.velocity_map \
+  --source outputs/embodied_fly/pid_velocity_fast_review \
+  --video previews/embodied_fly/pid_velocity_fast_review.mp4 \
+  --output previews/embodied_fly/pid_velocity_fast_map_review.mp4
+```

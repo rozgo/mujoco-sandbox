@@ -3051,3 +3051,47 @@ The user reviewed the completed video: "the video looks great," then requested
 approximately ten times faster physical flight, explicitly keeping real-time
 playback. Preserve this slow reference and develop a separate faster capture;
 the next work is still the PID/plant, not student training.
+
+## Ten-times-faster physical flight — September 14 UTC
+
+The user explicitly wants faster dynamics, not accelerated footage. Command
+translation increases from 1.5 to 15 mm/s per axis and yaw from 0.45 to 4.5 rad/s.
+The same 71.2-second continuous exercise, 1,000 Hz physics, 500 Hz controls and
+1x video clock remain. Every physical command is sent through bounded wing joints.
+
+The original heading model's angular resistance prevents the requested fast yaw.
+Explicit v4 keeps roll/pitch damping and changes only body-axis yaw resistance
+from a 0.025-second to a 0.25-second time constant. Body mechanics and force gains
+are unchanged. The first fast capture remains stable but passes 14/50 stages.
+Causal command-acceleration/drag feedforward and stronger PI feedback increase
+this to 25/50; tight sideways turns still fail. More feedback alone is insufficient.
+
+Explicit v5 adds lateral thrust from measured wing-stroke angle difference,
+bounded at 25% of instantaneous lift. This gives independent side thrust while
+turning instead of relying entirely on banked lift. No commands, goals or PID
+state enter the force model. No wing activity means zero flight wrench. The
+v5 capture passes every translation check, with 34/50 combined stage checks;
+remaining failures are small yaw overshoots after stopping. Increasing yaw
+proportional gain to 60 and reducing integral gain to 30 yields 50/50 on the
+identical v5 compiled model. All unsuccessful development captures are retained.
+
+The final reference measures 15.000 mm/s in isolated translations and about
+259.5 degrees/s in isolated turns. Worst settled vector-speed error is 0.5643 mm/s
+and yaw-rate error 0.0591 rad/s. Faster-motion limits were declared before these
+captures; stop/hover limits remain the original 0.5 mm/s and 0.12 rad/s. The
+same upright, altitude and contact gates pass. These are development checks on
+one prescribed episode, not a claim of broad robustness.
+
+Four complete captures collect 142,400 actions and 284.8 simulated seconds,
+with zero neural training. The first report writer failed after saving its
+trajectory due to a NumPy boolean serialization error. The bug was fixed and
+the report recovered from saved states; its lost compute timer is marked unknown.
+The other three captures total 195.151927 seconds; final capture 65.779003 seconds.
+See runs/pid_velocity_fast_01 through _04 and VELOCITY_TEACHER.md.
+
+The first faster render was decoded, sampled and opened, then its distant
+overview was replaced by a fixed-scale XY map using the same recorded frames.
+The map shows actual past motion and current heading, with a 5 mm grid and a
+clearly labeled position marker. Final v3 remains 71.2 seconds at 1x, fully
+decoded and visually reviewed, opened 2026-09-14 05:03:41 UTC. No new physics
+or learning was run for this presentation fix. The previous videos are preserved.

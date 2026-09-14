@@ -186,3 +186,9 @@ User review: the continuous velocity PID video looks great, but flight must be
 approximately ten times faster physically, with playback still 1x. Preserve the
 slow reference and measure actual speeds/turn rates in a new capture. Do not
 substitute video acceleration or start student training during this plant work.
+
+The faster teacher uses the explicit `wing_motion_agile_v5` contract: v4 yaw
+resistance and measured differential-stroke lateral thrust. Its full 10x-speed
+exercise passes 50/50 checks in `pid_velocity_fast_04`. Preserve earlier model
+versions and videos. Future student work must explicitly adopt the reviewed
+physical contract for every task, rather than silently loading the v3 default.
