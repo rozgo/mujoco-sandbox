@@ -32,9 +32,10 @@ plant. The model reads actual wing angles/speeds every physical tick; it cannot
 read desired velocities, heading, target positions or PID state. There are no
 live root-pose writes, translational support servos or prescribed body paths.
 
-The velocity PID uses PI feedback: translational Kp [5,5,50] s⁻¹ and
+The velocity PID uses PI feedback: translational Kp [20,20,50] s⁻¹ and
 Ki [15,15,900] s⁻², with anti-windup and ±300 cm/s² acceleration limits.
 Yaw Kp 20 s⁻¹, Ki 30 s⁻², acceleration limited to ±30 rad/s².
+The roll loop uses Kp 300 s⁻² and Kd 35 s⁻¹ to reject turn/braking transients.
 Its acceleration-to-wing mapping retains the accepted 30 Hz stroke reference,
 joint feedback, force limits and physics-tick force integration. The yaw mapping
 cancels the roll channel's yaw contribution while supplying requested turning.

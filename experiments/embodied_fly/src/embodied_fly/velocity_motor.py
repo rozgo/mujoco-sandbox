@@ -7,7 +7,7 @@ forward/left and world-up; the same convention applies to command and feedback.
 
 import numpy as np
 
-from embodied_fly.pid_hover import HoverPID
+from embodied_fly.pid_hover import HoverPID, PIDConfig
 
 SCHEMA = "flight_velocity_motor_v1"
 OBSERVATION_SIZE = 391
@@ -69,12 +69,14 @@ class VelocityPID:
 
     def __init__(self, env, base_action):
         self.env = env
-        self.wings = HoverPID(env, base_action, np.zeros(3))
+        self.wings = HoverPID(
+            env, base_action, np.zeros(3), PIDConfig(roll_kp=300.0, roll_kd=35.0)
+        )
         self.integral = np.zeros(3)
         self.yaw_integral = 0.0
-        # Same velocity damping / integrated-position gains as the accepted
-        # position PID, without its additional position-error integral.
-        self.kp = np.array([5.0, 5.0, 50.0])
+        # Stronger horizontal velocity damping and faster roll correction handle
+        # braking after yaw motion; vertical gains retain the accepted response.
+        self.kp = np.array([20.0, 20.0, 50.0])
         self.ki = np.array([15.0, 15.0, 900.0])
 
     def reset(self):

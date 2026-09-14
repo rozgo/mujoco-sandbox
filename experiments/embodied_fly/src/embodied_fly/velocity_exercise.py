@@ -3,6 +3,7 @@
 import argparse
 import json
 import time
+from dataclasses import asdict
 from pathlib import Path
 
 import mujoco
@@ -234,6 +235,7 @@ def run(args):
         "command_ramp_seconds": RAMP_SECONDS,
         "controller_kp": controller.kp.tolist(),
         "controller_ki": controller.ki.tolist(),
+        "wing_controller": asdict(controller.wings.config),
         "position_target": False,
         "heading_target": False,
         "yaw_command_rad_s": YAW_RAD_S,
