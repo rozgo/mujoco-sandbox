@@ -11,11 +11,13 @@ five-minute midpoint beats the ten-minute final checkpoint and is explicitly
 selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
-Newest experiment: [JEPA-style dynamics prediction pilot](world_model/PILOT_01.md).
-The model trains in 13.3 seconds on the RTX 4090, but fails physical prediction
-and corrective-action tests. An analytical predictor accurately estimates the
-tested corrections, supporting a bounded analytical-guidance experiment next.
-No fly policy was updated. [Comparison chart](../../previews/embodied_fly/world_model_01_comparison.png).
+Newest experiment: [physics-integrated JEPA residuals](world_model/RESIDUAL_02.md).
+After 120 seconds of GPU optimization, the predictor passes the held-out gates.
+Learned acceleration corrections reduce 200 ms velocity error on 504 controlled
+command changes by 59.8% versus the analytical model; ordinary-flight prediction
+improves only 1.6% averaged across horizons. No fly policy was updated. Next is
+a bounded model-guided decoder trial. [Comparison chart](../../previews/embodied_fly/world_residual_02_comparison.png).
+The [first direct-state probe](world_model/PILOT_01.md) remains preserved.
 
 Previous experiment: [coordinated hover reward](runs/velocity_hover_ppo_14/SUMMARY.md)
 passes its objective audit, but does not improve the overall controller. The

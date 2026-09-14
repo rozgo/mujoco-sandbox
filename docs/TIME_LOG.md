@@ -1785,3 +1785,34 @@ reference-only physical validation follows the user's directional curriculum.
 - Evidence archived **22:00:49 UTC**, **26 min 20 s** after implementation start;
   documentation and Git synchronization follow. Plot visually inspected.
   [Full result and next experiment](embodied_fly/world_model/PILOT_01.md).
+
+## September 14: physics-integrated fly residual predictor
+
+- Follow-up started **23:21:16 UTC**, implementing the user's requested
+  acceleration-residual probe and two-minute GPU training trial. Same live fly
+  physics and retained MaleCNS policy; no actor or PPO updates.
+- New controlled intervention collection **43.430597 s**. Retained 69 training
+  groups (220.8 simulated seconds) and 29 validation groups (92.8 seconds).
+  Two groups with one failed branch each were excluded and recorded. Existing
+  training recordings add 376 simulated seconds: **596.8 s** available in total.
+- Latent optimizer **60.003606 s**, 14,006 updates; integrated-residual probe
+  optimizer **60.045289 s**, 1,128 updates. Batch 128; **120.048895 s** combined
+  actual optimization. Best checkpoints at latent update 10,484 and probe 282;
+  later updates remain included in the time and saved evidence.
+- First probe setup failed CUDA graph capture before any probe update. Reused
+  the preserved latent checkpoint after matching warmup/capture streams. First
+  invocation's validation/setup times were not persisted and are not guessed.
+  Resumed invocation **75.058128 s** including setup **2.970562 s**, bank
+  preparation **1.173154 s**, graph setup/gradient checks **3.349809 s** and
+  probe validation/IO. Graph replay equals eager loss/gradients; setup changes
+  no weights. Peak allocated CUDA memory **1,761,008,128 bytes**.
+- Evaluation **31.818259 s**: setup 0.287277, ordinary forecasts 7.636313,
+  physical interventions/capture/scoring 23.871867. All four original gates pass.
+  200 ms changed-command forecast error improves 59.8% versus analytical;
+  mean ordinary-flight velocity error improves a modest 1.6% across horizons.
+- Full suite **283 passed**, 45 upstream warnings, **174.87 s**. Focused 10/10
+  tests pass; GPU physical/gradient tests 3/3 pass. Mac/CUDA predictions agree
+  on archived cold/warm cases. Figure visually inspected.
+- Artifact/hash verification completed **23:42:53 UTC**, **21 min 37 s** after
+  effort start; documentation and Git synchronization follow. Preferred actor
+  and manifest hashes are unchanged. [Results and next step](embodied_fly/world_model/RESIDUAL_02.md).

@@ -1,5 +1,9 @@
 # A tested dynamics predictor, but no JEPA policy-guidance approval
 
+Historical first pilot. The subsequent [physics-integrated residual trial](RESIDUAL_02.md)
+uses a different prober, adds training interventions and passes the same gates.
+The results below are preserved for the original direct-state architecture.
+
 The prediction-only pilot is complete. **Do not train the fly policy against
 this JEPA checkpoint.** Its physical forecasts lose to both comparison models,
 and its responses to corrective commands are too small or incorrectly directed.
