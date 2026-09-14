@@ -194,7 +194,7 @@ def run(args):
         np.testing.assert_array_equal(getattr(e.model.opt, key), getattr(base.model.opt, key))
     del base
     tasks = HoverOnlyTasks(e, 121102)
-    controller = VelocityPID(e.template, tasks.air_action)
+    controller = VelocityPID(e.template, tasks.air_action, motion_feedforward=args.fast_flight)
     mujoco.mj_saveModel(e.model, str(args.output / "model.mjb"))
     setup = time.perf_counter() - started
     begin = time.perf_counter()
@@ -257,6 +257,7 @@ def run(args):
         "command_ramp_seconds": RAMP_SECONDS,
         "controller_kp": controller.kp.tolist(),
         "controller_ki": controller.ki.tolist(),
+        "causal_motion_feedforward": controller.motion_feedforward,
         "wing_controller": asdict(controller.wings.config),
         "position_target": False,
         "heading_target": False,

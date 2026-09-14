@@ -1,5 +1,6 @@
 import mujoco
 import numpy as np
+import pytest
 import torch
 from scipy import sparse
 
@@ -32,7 +33,8 @@ def test_fresh_brain_reproducible_without_policy_baggage():
     torch.testing.assert_close(a.core.adjacency.to_dense(), c.core.adjacency.to_dense())
 
 
-def test_no_position_or_needs_leak_into_velocity_commands_and_teacher():
+@pytest.mark.parametrize("motion_feedforward", (False, True))
+def test_no_position_or_needs_leak_into_velocity_commands_and_teacher(motion_feedforward):
     env = FlyBatch(
         1,
         1,
@@ -53,8 +55,8 @@ def test_no_position_or_needs_leak_into_velocity_commands_and_teacher():
     np.testing.assert_allclose(before[:, 375:379], command)
     env.template.data.time = 0.1
     left, right = (
-        VelocityPID(env.template, tasks.air_action),
-        VelocityPID(env.template, tasks.air_action),
+        VelocityPID(env.template, tasks.air_action, motion_feedforward=motion_feedforward),
+        VelocityPID(env.template, tasks.air_action, motion_feedforward=motion_feedforward),
     )
     action = left.act(command[0])
     env.template.data.qpos[:3] += [100, -200, 50]
