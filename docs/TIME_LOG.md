@@ -1737,3 +1737,29 @@ reference-only physical validation follows the user's directional curriculum.
   PPO. The current reward favors the observed tradeoff. Only after an objective
   audit passes should another bounded block run; otherwise investigate control
   authority through the existing brain interfaces.
+
+
+### Coordinated hover objective and support diagnosis, September 14
+
+- Effort start **2026-09-14 20:40:58 UTC**. Continuing learning goal remains active.
+- Exact-action objective audit **50.042555 s**, no learning, all checks pass.
+- Recovery bank setup **9.850156 s**, collection **23.272318 s**, restoration
+  audit **1.956507 s**. 30,640 collection + 3,840 audit transitions, separate
+  from training. Exact initialized/recorded-action states; unchanged tolerances.
+- Run 14 started **20:48:55.846420 UTC**, report completed **20:59:57.192225 UTC**.
+  **603.458466 s training**, 108 rollouts, 1,769,472 transitions, 32 worlds.
+  16 CPU MuJoCo/mjbatch physics threads; RTX 4090 neural work; no Warp.
+  Collection 596.875102 s, actor optimization 2.191637 s (including imitation
+  0.150712 s), critic 4.365754 s. Midpoint at 301.100546 training seconds.
+- Separate setup 15.135393 s, replay 3.378252 s, evaluation 54.431851 s,
+  checkpoint IO 0.066014 s. Withheld recovery setup/capture/output 51.325488 s.
+- Full suite **266 passed**, 45 warnings, 171.60 s; focused 23 passed in 4.01 s.
+  Later force observer passed exact physical replay; force audit **37.781572 s**.
+- Midpoint completes 4/4 but trades climb for sideways control; final completes
+  0/4 cold starts, failing at 0.796 s. All three policies complete 6/6 warm
+  recoveries. Final has a measured cold-start support deficit. Not promoted.
+- Four-way video render **80.914830 s**, decode **5.907844 s**, 43 s / 2,150
+  frames / 50 fps / 2560x1080 / 1x. Inspected and opened **21:08:51 UTC**,
+  **27 min 53 s** after effort start. Archival/synchronization follow separately.
+- Next: bounded phase-dependent decoder-authority diagnosis, then an evidence-led
+  learning change. No additional unchanged PPO continuation is running.

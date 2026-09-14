@@ -3523,3 +3523,32 @@ trial from final's improved vertical controller, retaining the same32-world mix.
 If a properly ordered objective still fails, proceed to phase-conditioned
 control/representation diagnostics. No proposed reward has been deployed yet.
 Video final/PID/retained comparison is decoded, inspected and opened20:30:20UTC.
+
+
+## Coordinated reward and startup support — run 14, September 14
+
+The continuing goal authorized the proposed reward audit and bounded PPO block.
+The audit passed: exact recorded-action replay ranks run 11 above the sideways
+regressions under the coordinated 5 mm/s velocity objective, and synthetic
+recovery beats failure. This corrects scoring but did not solve the learning
+problem. The midpoint improves sideways RMS from 15.00 to 9.29 mm/s while climb
+rises from 13.80 to 63.62 mm. The final fails all four cold starts at 0.796 s.
+
+All six withheld warm recoveries still complete. Final warm horizontal RMS
+falls to 6.94 mm/s, while vertical RMS rises to 8.30 mm/s. A read-only force
+observer at every 1 kHz tick reproduces all six cold/recovery groups exactly.
+The final's startup raw lift drops to 94.2% of weight just before failure;
+its established recovery lift is 100.8%. Wings keep moving. A uniform lift
+increase would address one state and worsen the other.
+
+The run used 603.458466 s, 32 worlds and 1,769,472 transitions, with one critic-only
+rollout for the new reward. All 212 accepted updates satisfy KL 0.005. Upstream
+actor parameters, graph, physics and exploration remain unchanged. Normal
+training episodes failed 502/638, recovery episodes 10/177; global learning
+metrics do not establish reliable cold-start performance.
+
+Keep run 11 preferred overall and preserve run 13 as the vertical candidate.
+The opened four-way video includes the failed final checkpoint. Next, measure
+phase-dependent control authority through small existing decoder-parameter
+changes; only then choose a learning change that preserves startup and regulates
+established flight. [Complete evidence and plan](runs/velocity_hover_ppo_14/SUMMARY.md).

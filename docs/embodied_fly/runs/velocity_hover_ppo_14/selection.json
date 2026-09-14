@@ -1,0 +1,16 @@
+{
+  "promoted": false,
+  "retained_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_11_midpoint.pt",
+  "retained_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+  "vertical_candidate": "assets/embodied_fly/diagnostics/velocity_hover_ppo_13.pt",
+  "reason": "Midpoint trades vertical precision for sideways control; final fails all cold starts at 0.796 s. Warm recoveries still complete. Neither passes combined gate.",
+  "video_includes": [
+    "pid",
+    "parent",
+    "midpoint",
+    "final"
+  ],
+  "next_action": "Measure phase-conditioned authority through the existing wing decoder before changing learning",
+  "next_plan": "NEXT_CONTROL_PLAN.md",
+  "additional_training_started": false
+}

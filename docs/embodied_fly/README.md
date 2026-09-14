@@ -11,14 +11,22 @@ five-minute midpoint beats the ten-minute final checkpoint and is explicitly
 selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
-Newest experiment: [recovery-start PPO](runs/velocity_hover_ppo_13/SUMMARY.md)
+Newest experiment: [coordinated hover reward](runs/velocity_hover_ppo_14/SUMMARY.md)
+passes its objective audit, but does not improve the overall controller. The
+midpoint reduces sideways error while increasing climb; the final fails all
+cold starts at 0.796 s, despite completing six warmed-up recovery flights.
+Exact per-tick force replay identifies a startup lift deficit. Run 11 remains
+preferred overall. [Watch all four methods](../../previews/embodied_fly/velocity_hover_ppo_14_comparison_v1.mp4).
+The [next diagnostic](runs/velocity_hover_ppo_14/NEXT_CONTROL_PLAN.md) measures
+phase-dependent control authority through the existing wing decoder.
+
+Previous experiment: [recovery-start PPO](runs/velocity_hover_ppo_13/SUMMARY.md)
 cuts climb from60.7 to13.8mm and improves withheld vertical recovery, but raises
 horizontal error from9.19 to15.00mm/s. Run11 remains preferred overall; run13
 final is preserved as a vertical-control candidate.
 [Watch PID / retained policy / new candidate](../../previews/embodied_fly/velocity_hover_ppo_13_comparison_v1.mp4).
-Exact-action replay shows the current reward prefers this tradeoff, so the
-[next plan](runs/velocity_hover_ppo_13/NEXT_REWARD_PLAN.md) audits coordinated
-velocity scoring before more PPO. No further training is running.
+Its proposed coordinated-velocity audit and continuation are completed in run 14
+above. No additional unchanged PPO continuation is running.
 
 Previous follow-up: [smaller PPO updates](runs/velocity_hover_ppo_12/SUMMARY.md)
 reduce climb to44mm but worsen horizontal RMS to11.76mm/s. All four flights

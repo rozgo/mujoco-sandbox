@@ -1,0 +1,995 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T21:09:33.655121+00:00",
+    "source_commit": "fa759b3232f51f56a241757677c027be1ff1d152",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "1c605531bfa5d73a5a93a4d8b92fc1ce0473649191641f2731b4386c40f478ad",
+      "src/embodied_fly/body.py": "110877f4ff1e87721e31c9fcc0bf9b4339d7d4c7d0a3ac77541e25ecc31eb0c5",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/collect_recovery_starts.py": "bbb24054ceb7044047edf002ff3e65560c8542b49946fcb5d5c2cb76659f535d",
+      "src/embodied_fly/coordinated_hover_audit.py": "5edad18cd1adc488c037eb48c407065599565824f52ffd90f5a6a315135e689b",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/evaluate_recovery.py": "c5fb87693c0e4ca358b6806e6cbcad9bc0f7d11add42abcb6da268a4333d5d08",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/fresh_velocity_actor.py": "3fd8ca2c26a87b4b61dfea020f6f5577674d9771944ac5ed69df516594b4c293",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_exploration_audit.py": "bd403cbb9bd46ce4bb50a7a019fffe6d0b3a8e98255c4b344d928f02036845ac",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_force_audit.py": "3f9417f3aa501f1ea458c5e9a30e3498cec44e5c08146504d241870689806ebd",
+      "src/embodied_fly/hover_gusts.py": "12d000335f03abac519ad7b80fc7a86f663bc976c905ccb6e5f805ac80903d46",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_motion_audit.py": "40b1cfc54f512a942c7da4316709f257d04201fe7be9a5707b7d238aef9fe0ae",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_outcome_audit.py": "0886e61fffc85caaf5bd198b115989879a5be7180517a14be7a14cdae52ec35e",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_reward_replay.py": "9ecf07307c256a84da3c248e2f7002d99c5b4395b3dd9682aa88be5d9fb1ac9a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/imitation_gradient_audit.py": "587174c5a530607130956eebeb29817436ca52ac667c24ad6d458efcfe882876",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "a89d557e18f61a8b00d29d435ac2b3ab3392050a2e38db490d71515480157c3c",
+      "src/embodied_fly/pid_hover.py": "2a25d6a196e172bc6b60a294418e145f2a80d1a45288af03d2fdf4cdb2239081",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_step.py": "1f3f17037920908bef0efc01867d507c36e3353537632279ee4911510277b7d2",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/random_velocity_commands.py": "79d7f2d82e5c433661349ddc7b2aa4d6f2c960f470d0c8011457da8d2cebc6c8",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/recovery_starts.py": "e5cc72c2fdc7348e163e95ca5961a6859b55d662d7b1e69c2384d9c93c988eaf",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/velocity_comparison.py": "1407943477ee73117b0cb9898d0bd1711aed446b54a0bc174b36e8edd1d92314",
+      "src/embodied_fly/velocity_demonstrations.py": "8ad0770fd18d40b8886171d12df2596ca6903b4cd8cf7804fc32889fba23d9a1",
+      "src/embodied_fly/velocity_exercise.py": "3aa2d83183de4ec822aeab121f2f469faa3567cb3a33b8358078a9eed6b2a89b",
+      "src/embodied_fly/velocity_feedback_audit.py": "1a092ca01f4d39d41aca2c31ae0939511c92bdb88a57ad3db1796195c2c5abff",
+      "src/embodied_fly/velocity_hover.py": "e3673d1ab133d5ca4b542f1c2cf88c1c37ab74e20dcfd8f517368afeac212f67",
+      "src/embodied_fly/velocity_hover_ppo.py": "6b718c016235f5c8d408dcc50be2fdd7eb72a1d3dd7579139885ab4646bb4b7f",
+      "src/embodied_fly/velocity_hover_video.py": "e3ee4b06c8cd7a1fff5e94d95ed4124d2addb512acc7ae5a1651b5f5c27075e2",
+      "src/embodied_fly/velocity_imitation.py": "88bd6b437d42637b10f133cbbf71022fd98e34ea635a2cbfbb1c294ba0641e99",
+      "src/embodied_fly/velocity_map.py": "514e90c087c9ed17ce9224579b300947dd92c25c121cc0c592a9cb65a361ed23",
+      "src/embodied_fly/velocity_motor.py": "e438c6cc15773f89a42d1d14f1fa864b58c9e0384ff8851684c1ebf572362133",
+      "src/embodied_fly/velocity_recovery.py": "17a6efb36ea74d95295d8f583fecfcd0f03bbb26787d8ec4ade5b53c166d7385",
+      "src/embodied_fly/velocity_student.py": "39dbe8368003958baeb9b106a28e95c50e4732029b0ae9cd1a30a3df45f2d607",
+      "src/embodied_fly/velocity_timing_audit.py": "787ee3415d0c060d2fb08fb03e4b87b30dd97834a89746a9300a9a3889187dde",
+      "src/embodied_fly/velocity_video.py": "7bfd47c653fb873f2df62282461975a904f722f4a68c146b52377d2466031893",
+      "src/embodied_fly/wing_motion.py": "d10adeee6a10ce028d351125c0b615dd98e07841ea623c1ba5ba5ba05abd333a",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_readout_ppo.py": "100ad24c381957b81812aa0da48eef7b7b303c5355faeca8a82e052c3a8c1236",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-14T21:09:33.655534+00:00",
+  "wall_seconds": 37.7815718553029,
+  "captures": {
+    "cold_parent": {
+      "capture_report_sha256": "4579553e75f3b56ea409254aafffc144e5870fa3e5ba62fd95be5de5d4659c68",
+      "common_interval_seconds": 10.0,
+      "physics_ticks_per_world": 10000,
+      "worlds": 4,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.0085397436522185,
+          "mean_upward_wrench_body_weights": 1.0061803760421313,
+          "mean_absolute_sweep_speed_rad_s": 31.517551470462124,
+          "per_case": [
+            [
+              1.0085418181235495,
+              1.0061801877728733,
+              31.517616316738913
+            ],
+            [
+              1.008539629492576,
+              1.006180004502613,
+              31.51754790123258
+            ],
+            [
+              1.00853948972505,
+              1.0061806350447404,
+              31.517543529988735
+            ],
+            [
+              1.0085380372676989,
+              1.006180676848298,
+              31.517498133888274
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 0.9798386652943541,
+          "mean_upward_wrench_body_weights": 0.9940657706732551,
+          "mean_absolute_sweep_speed_rad_s": 30.620314015727676,
+          "per_case": [
+            [
+              0.9798378214898826,
+              0.9940650263653875,
+              30.620287644218738
+            ],
+            [
+              0.9798414251649212,
+              0.9940674203779034,
+              30.620400243857343
+            ],
+            [
+              0.9798431051600877,
+              0.9940662093692174,
+              30.62045269597763
+            ],
+            [
+              0.9798323093625251,
+              0.9940644265805116,
+              30.620115478856988
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.9857689125309271,
+          "mean_upward_wrench_body_weights": 0.9964187484313048,
+          "mean_absolute_sweep_speed_rad_s": 30.805601778572495,
+          "per_case": [
+            [
+              0.9857605060575177,
+              0.9964166815557617,
+              30.80533915239266
+            ],
+            [
+              0.9857715286339026,
+              0.9964168011845396,
+              30.80568346473078
+            ],
+            [
+              0.9857631876117932,
+              0.9964152399967166,
+              30.805422885412572
+            ],
+            [
+              0.9857804278204951,
+              0.9964262709882016,
+              30.805961611753972
+            ]
+          ]
+        },
+        "2_3_seconds": {
+          "mean_lift_body_weights": 1.0028781697926927,
+          "mean_upward_wrench_body_weights": 0.9997588116443652,
+          "mean_absolute_sweep_speed_rad_s": 31.34028148892461,
+          "per_case": [
+            [
+              1.002879127085154,
+              0.9997587966809321,
+              31.340311401180063
+            ],
+            [
+              1.0028789082714196,
+              0.9997594701966559,
+              31.340304565033865
+            ],
+            [
+              1.0028784634994095,
+              0.9997589860012952,
+              31.34029066611808
+            ],
+            [
+              1.0028761803147879,
+              0.9997579936985772,
+              31.340219323366433
+            ]
+          ]
+        },
+        "2_10_seconds": {
+          "mean_lift_body_weights": 1.001029805751621,
+          "mean_upward_wrench_body_weights": 0.9999200010884454,
+          "mean_absolute_sweep_speed_rad_s": 31.28253943058199,
+          "per_case": [
+            [
+              1.0010013390082597,
+              0.9999159372572339,
+              31.281649956942545
+            ],
+            [
+              1.0010670436100926,
+              0.99992199010096,
+              31.283702998835302
+            ],
+            [
+              1.0010462789441146,
+              0.9999171124389913,
+              31.283054176444747
+            ],
+            [
+              1.0010045614440168,
+              0.9999249645565963,
+              31.281750590105375
+            ]
+          ]
+        }
+      },
+      "passed": true
+    },
+    "recovery_parent": {
+      "capture_report_sha256": "449cf2a1f5b5204800cb84652d2cb32f1b97dcf32c53f61d1bfa094a9a55d06b",
+      "common_interval_seconds": 3.0,
+      "physics_ticks_per_world": 3000,
+      "worlds": 6,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.001496984740817,
+          "mean_upward_wrench_body_weights": 0.9997702078043536,
+          "mean_absolute_sweep_speed_rad_s": 31.29713094969239,
+          "per_case": [
+            [
+              1.003759499612616,
+              0.9996385087386901,
+              31.36780947305637
+            ],
+            [
+              1.0037516034570928,
+              0.9996356026470598,
+              31.367562719263685
+            ],
+            [
+              1.0006642067432125,
+              0.9999067788555372,
+              31.271117690451277
+            ],
+            [
+              1.000665332558646,
+              0.9998996049120632,
+              31.271152826785883
+            ],
+            [
+              0.9995171832467985,
+              0.99963174153612,
+              31.235279535482167
+            ],
+            [
+              1.0006240828265363,
+              0.9999090101366516,
+              31.269863453114972
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 1.0011574281514732,
+          "mean_upward_wrench_body_weights": 0.9998773384961267,
+          "mean_absolute_sweep_speed_rad_s": 31.28652416711221,
+          "per_case": [
+            [
+              1.0029850502539004,
+              0.9997484930249614,
+              31.34361931963641
+            ],
+            [
+              1.0029854580676345,
+              0.9997480958634661,
+              31.343632057533814
+            ],
+            [
+              1.000551405884961,
+              0.9999122236294083,
+              31.267593505309474
+            ],
+            [
+              0.9998583571959857,
+              0.9998016273776806,
+              31.245938655502574
+            ],
+            [
+              0.9997277718886589,
+              1.000060578962496,
+              31.241860512165236
+            ],
+            [
+              1.0008365256177003,
+              0.9999930121187478,
+              31.276500952525733
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.9913564509025785,
+          "mean_upward_wrench_body_weights": 0.9899166553609221,
+          "mean_absolute_sweep_speed_rad_s": 30.98023854129902,
+          "per_case": [
+            [
+              0.9921592148478225,
+              0.9894980882055953,
+              31.005313685471616
+            ],
+            [
+              0.992156037019601,
+              0.9894976536092512,
+              31.005214382750804
+            ],
+            [
+              0.9906130812924862,
+              0.9898137480421175,
+              30.957014268143666
+            ],
+            [
+              0.9899946550318836,
+              0.9895734542408137,
+              30.93769102911337
+            ],
+            [
+              0.9916654327798022,
+              0.9907940432426969,
+              30.989899787539347
+            ],
+            [
+              0.9915502844438757,
+              0.990322944825058,
+              30.986298094775336
+            ]
+          ]
+        },
+        "2_3_seconds": {
+          "mean_lift_body_weights": 1.0005719145009102,
+          "mean_upward_wrench_body_weights": 0.9999173742247315,
+          "mean_absolute_sweep_speed_rad_s": 31.268232975041986,
+          "per_case": [
+            [
+              1.00055684241871,
+              0.9999158826514755,
+              31.267763402724885
+            ],
+            [
+              0.9998964362834023,
+              0.9998015865815147,
+              31.24712879197691
+            ],
+            [
+              1.0002678703963528,
+              0.999980783015871,
+              31.258735025906567
+            ],
+            [
+              1.000867362313183,
+              0.9999733904755613,
+              31.277464078276036
+            ],
+            [
+              1.0011222973115899,
+              0.9999401219176901,
+              31.28542792313693
+            ],
+            [
+              1.000720678282223,
+              0.9998924807062753,
+              31.272878628230586
+            ]
+          ]
+        }
+      },
+      "passed": true
+    },
+    "cold_midpoint": {
+      "capture_report_sha256": "5b1501d53476b5cc596deb3fa05266fe7749cf9ad892581bf2320e0d8e504a90",
+      "common_interval_seconds": 10.0,
+      "physics_ticks_per_world": 10000,
+      "worlds": 4,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.010109124971897,
+          "mean_upward_wrench_body_weights": 1.0064453246170844,
+          "mean_absolute_sweep_speed_rad_s": 31.56657893870829,
+          "per_case": [
+            [
+              1.0101080660809323,
+              1.006444997773759,
+              31.566545839509217
+            ],
+            [
+              1.0101096495395148,
+              1.006445385119056,
+              31.56659533122079
+            ],
+            [
+              1.0101081183349114,
+              1.0064442324840754,
+              31.566547489906906
+            ],
+            [
+              1.0101106659322296,
+              1.0064466830914467,
+              31.566627094196242
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 0.9752360882275872,
+          "mean_upward_wrench_body_weights": 0.992345722520743,
+          "mean_absolute_sweep_speed_rad_s": 30.4764732042927,
+          "per_case": [
+            [
+              0.975221873679158,
+              0.9923400243915065,
+              30.476029150804735
+            ],
+            [
+              0.9752497545763904,
+              0.9923512498939074,
+              30.47690013521693
+            ],
+            [
+              0.9752335417737027,
+              0.9923461017725324,
+              30.476393661630567
+            ],
+            [
+              0.9752391828810978,
+              0.9923455140250259,
+              30.476569869518574
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.9757419841302697,
+          "mean_upward_wrench_body_weights": 0.995346063297395,
+          "mean_absolute_sweep_speed_rad_s": 30.492333037502178,
+          "per_case": [
+            [
+              0.9757194702166716,
+              0.9953462006094772,
+              30.491629907325464
+            ],
+            [
+              0.9757609021298653,
+              0.9953434139055066,
+              30.492923808945033
+            ],
+            [
+              0.9757410707357684,
+              0.9953465053891747,
+              30.49230451796971
+            ],
+            [
+              0.9757464934387733,
+              0.995348133285421,
+              30.4924739157685
+            ]
+          ]
+        },
+        "2_3_seconds": {
+          "mean_lift_body_weights": 1.0082290372114993,
+          "mean_upward_wrench_body_weights": 1.0003128970083695,
+          "mean_absolute_sweep_speed_rad_s": 31.50742010427117,
+          "per_case": [
+            [
+              1.0082291356800217,
+              1.0003131985374218,
+              31.507423181831467
+            ],
+            [
+              1.0082292107024171,
+              1.0003126124692578,
+              31.507425526874975
+            ],
+            [
+              1.0082294670594085,
+              1.000312759687027,
+              31.507433538335476
+            ],
+            [
+              1.0082283354041495,
+              1.0003130173397705,
+              31.507398170042766
+            ]
+          ]
+        },
+        "2_10_seconds": {
+          "mean_lift_body_weights": 1.0079349629522043,
+          "mean_upward_wrench_body_weights": 1.0001279450643354,
+          "mean_absolute_sweep_speed_rad_s": 31.498238755240628,
+          "per_case": [
+            [
+              1.007893760113477,
+              1.0001240818363029,
+              31.496951135428134
+            ],
+            [
+              1.0079855349046298,
+              1.0001302227714135,
+              31.499819214874186
+            ],
+            [
+              1.007977602347835,
+              1.0001254825688666,
+              31.499571318642293
+            ],
+            [
+              1.0078829544428758,
+              1.0001319930807584,
+              31.49661335201791
+            ]
+          ]
+        }
+      },
+      "passed": true
+    },
+    "recovery_midpoint": {
+      "capture_report_sha256": "b60d9f8e9504db28b54bff2bb804794c297c227d12ad84a2d4629cdf034c4842",
+      "common_interval_seconds": 3.0,
+      "physics_ticks_per_world": 3000,
+      "worlds": 6,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.0045303438154791,
+          "mean_upward_wrench_body_weights": 1.0014554218425797,
+          "mean_absolute_sweep_speed_rad_s": 31.391890765346933,
+          "per_case": [
+            [
+              1.0062922157672691,
+              1.0009824468789679,
+              31.4469295071457
+            ],
+            [
+              1.0062976138060487,
+              1.0009853471629038,
+              31.447098192309394
+            ],
+            [
+              1.004042650393485,
+              1.0017679603612752,
+              31.376658939952677
+            ],
+            [
+              1.0040387928573065,
+              1.0017597214430602,
+              31.376538368720226
+            ],
+            [
+              1.002728995683453,
+              1.001509330046768,
+              31.335612040954253
+            ],
+            [
+              1.0037817943853118,
+              1.0017277251625045,
+              31.368507542999335
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 1.0062096988228333,
+          "mean_upward_wrench_body_weights": 1.0005941885023228,
+          "mean_absolute_sweep_speed_rad_s": 31.444349080956034,
+          "per_case": [
+            [
+              1.0071113582470923,
+              1.00040140373764,
+              31.47251605755297
+            ],
+            [
+              1.0071084533376458,
+              1.0003978534530291,
+              31.472425277925296
+            ],
+            [
+              1.0059820064404754,
+              1.000673862828509,
+              31.437238612996627
+            ],
+            [
+              1.0057977252605181,
+              1.0006162999843844,
+              31.431479373472175
+            ],
+            [
+              1.0052709154683068,
+              1.0007866331757993,
+              31.41501829119719
+            ],
+            [
+              1.0059877341829613,
+              1.0006890778345747,
+              31.437416872591953
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.996537183842585,
+          "mean_upward_wrench_body_weights": 0.9899430702183305,
+          "mean_absolute_sweep_speed_rad_s": 31.142070806822545,
+          "per_case": [
+            [
+              0.9968836495662511,
+              0.989653506453836,
+              31.15289209938327
+            ],
+            [
+              0.9968884283068941,
+              0.9896578876888258,
+              31.153041437857567
+            ],
+            [
+              0.9963251578835031,
+              0.9898416774558749,
+              31.13544834567952
+            ],
+            [
+              0.9959512346623765,
+              0.9897786099834236,
+              31.123762670251466
+            ],
+            [
+              0.9963877515122325,
+              0.9904141283895074,
+              31.1374038636707
+            ],
+            [
+              0.9967868811242531,
+              0.990312611338516,
+              31.14987642409274
+            ]
+          ]
+        },
+        "2_3_seconds": {
+          "mean_lift_body_weights": 1.0076684977754355,
+          "mean_upward_wrench_body_weights": 1.0002285746447837,
+          "mean_absolute_sweep_speed_rad_s": 31.489921221734676,
+          "per_case": [
+            [
+              1.0076925086838218,
+              1.0002180424138323,
+              31.49067123739819
+            ],
+            [
+              1.0076913838677952,
+              1.0002176966829022,
+              31.490636087743862
+            ],
+            [
+              1.0075551894423813,
+              1.0001696527085469,
+              31.486380629436866
+            ],
+            [
+              1.007758358334109,
+              1.0002327601498573,
+              31.49272951167023
+            ],
+            [
+              1.0076496657417944,
+              1.000267562308204,
+              31.489332828760663
+            ],
+            [
+              1.0076638805827118,
+              1.0002657336053593,
+              31.48977703539824
+            ]
+          ]
+        }
+      },
+      "passed": true
+    },
+    "cold_final": {
+      "capture_report_sha256": "c9a10f69b673f72f9750027887151fda75d510a209830337b244352211682f04",
+      "common_interval_seconds": 0.796,
+      "physics_ticks_per_world": 796,
+      "worlds": 4,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.0098019283738475,
+          "mean_upward_wrench_body_weights": 1.0060846239403867,
+          "mean_absolute_sweep_speed_rad_s": 31.556996123186444,
+          "per_case": [
+            [
+              1.0098012535654017,
+              1.0060837884708504,
+              31.556975037807078
+            ],
+            [
+              1.0098028159121286,
+              1.0060858730608249,
+              31.55702385630408
+            ],
+            [
+              1.009803717467615,
+              1.0060854912964954,
+              31.557052042324468
+            ],
+            [
+              1.0097999265502442,
+              1.0060833429333764,
+              31.55693355631015
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 0.9690334710968144,
+          "mean_upward_wrench_body_weights": 0.9896915377356053,
+          "mean_absolute_sweep_speed_rad_s": 30.28269618082408,
+          "per_case": [
+            [
+              0.9690391425480737,
+              0.9896950087839274,
+              30.282873363629875
+            ],
+            [
+              0.9690316568281153,
+              0.9896914300044648,
+              30.282639522262752
+            ],
+            [
+              0.9690340779827983,
+              0.9896913520460712,
+              30.282715131477563
+            ],
+            [
+              0.9690290070282704,
+              0.9896883601079577,
+              30.282556705926126
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.9422318417848619,
+          "mean_upward_wrench_body_weights": 0.9827759981878199,
+          "mean_absolute_sweep_speed_rad_s": 29.445643914131026,
+          "per_case": [
+            [
+              0.9422572990744372,
+              0.9827857220824556,
+              29.446438913065
+            ],
+            [
+              0.9422476308101371,
+              0.9827833549748869,
+              29.446137046395844
+            ],
+            [
+              0.9422291479893975,
+              0.9827751507615389,
+              29.44555979047068
+            ],
+            [
+              0.9421932892654757,
+              0.9827597649323982,
+              29.44443990659258
+            ]
+          ]
+        }
+      },
+      "passed": true
+    },
+    "recovery_final": {
+      "capture_report_sha256": "89cc79d22d268e0406a8304efe41ae7c26adbcf219f4f29d2851aeaa47f83641",
+      "common_interval_seconds": 3.0,
+      "physics_ticks_per_world": 3000,
+      "worlds": 6,
+      "maximum_body_position_replay_error_cm": 0.0,
+      "windows": {
+        "0_0.2_seconds": {
+          "mean_lift_body_weights": 1.0046192240466711,
+          "mean_upward_wrench_body_weights": 1.0014519898041379,
+          "mean_absolute_sweep_speed_rad_s": 31.39467912311874,
+          "per_case": [
+            [
+              1.0063059541363792,
+              1.0009399915824626,
+              31.447371597999073
+            ],
+            [
+              1.006296046947421,
+              1.0009346210795125,
+              31.447061986532546
+            ],
+            [
+              1.0041646207133905,
+              1.0017797089166143,
+              31.380480694668673
+            ],
+            [
+              1.0041585473727845,
+              1.0017711527927529,
+              31.38029088363468
+            ],
+            [
+              1.0028766098590234,
+              1.001540053791867,
+              31.340234018186365
+            ],
+            [
+              1.0039135652510283,
+              1.0017464106616176,
+              31.37263555769112
+            ]
+          ]
+        },
+        "0.2_0.6_seconds": {
+          "mean_lift_body_weights": 1.0061534903342315,
+          "mean_upward_wrench_body_weights": 1.000634347624757,
+          "mean_absolute_sweep_speed_rad_s": 31.442602565097427,
+          "per_case": [
+            [
+              1.006989119726224,
+              1.000424586191787,
+              31.468707029578066
+            ],
+            [
+              1.006989638830224,
+              1.0004252289048485,
+              31.468723249155214
+            ],
+            [
+              1.0060812134981865,
+              1.0007278598396794,
+              31.440348715037317
+            ],
+            [
+              1.0054595607717056,
+              1.0006992898550875,
+              31.420921141408144
+            ],
+            [
+              1.0053371677925815,
+              1.0008096666688506,
+              31.417097484760976
+            ],
+            [
+              1.0060642413864676,
+              1.000719454288289,
+              31.439817770644844
+            ]
+          ]
+        },
+        "0.6_0.796_seconds": {
+          "mean_lift_body_weights": 0.9967405661231172,
+          "mean_upward_wrench_body_weights": 0.9899607419548174,
+          "mean_absolute_sweep_speed_rad_s": 31.148434081337303,
+          "per_case": [
+            [
+              0.9969950797387862,
+              0.9897122617737538,
+              31.156382440584412
+            ],
+            [
+              0.9970052614528716,
+              0.9897193134800748,
+              31.156700627663486
+            ],
+            [
+              0.9965960381805355,
+              0.9898756441495101,
+              31.143921044561843
+            ],
+            [
+              0.99641873373317,
+              0.9897100442581381,
+              31.13837922656661
+            ],
+            [
+              0.9964531738056497,
+              0.9903913820024602,
+              31.139454954637692
+            ],
+            [
+              0.996975109827691,
+              0.9903558060649669,
+              31.15576619400976
+            ]
+          ]
+        },
+        "2_3_seconds": {
+          "mean_lift_body_weights": 1.0080501238644304,
+          "mean_upward_wrench_body_weights": 1.0002815842693293,
+          "mean_absolute_sweep_speed_rad_s": 31.501849121146304,
+          "per_case": [
+            [
+              1.0080512002724524,
+              1.0002362799746602,
+              31.50188256972412
+            ],
+            [
+              1.0080520624730531,
+              1.00023630829048,
+              31.501909515925334
+            ],
+            [
+              1.0080394588572519,
+              1.0002592290111907,
+              31.501516329045113
+            ],
+            [
+              1.0081315887567535,
+              1.0004085211145417,
+              31.504394323348933
+            ],
+            [
+              1.008006404180824,
+              1.000274555123938,
+              31.50048306632283
+            ],
+            [
+              1.0080200286462482,
+              1.0002746121011656,
+              31.50090892251148
+            ]
+          ]
+        }
+      },
+      "passed": true
+    }
+  },
+  "passed": true,
+  "scope": "Exact recorded-action physics replay; read-only force observer at all 1 kHz ticks, no neural inference, updates, additional force or post-failure samples. Raw lift differs from net upward wrench, which includes body response and drag."
+}

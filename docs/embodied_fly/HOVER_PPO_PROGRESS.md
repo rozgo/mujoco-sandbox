@@ -44,6 +44,13 @@ preferred overall. [Full results and video](runs/velocity_hover_ppo_13/SUMMARY.m
 Exact-action reward replay scores final41.47 versus parent33.81, revealing that
 the current reward favors the vertical/sideways tradeoff rejected by evaluation.
 
+Run 14 tests a coordinated reward with the original 5 mm/s precision after a
+successful exact-action objective audit. Midpoint total RMS is 12.81 mm/s, with
+63.62 mm climb. Final fails all four cold starts at 0.796 s but completes all six
+warm recoveries. A per-physics-tick audit finds a startup lift deficit, with no
+replay error. Keep run 11 preferred and run 13 as the vertical candidate.
+[Results, four-way video and next diagnostic](runs/velocity_hover_ppo_14/SUMMARY.md).
+
 Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
 probe confirms all three measured velocity signals reach the motor features.
 The completed imitation ablation retains the original run-05/06 reward and
@@ -69,6 +76,7 @@ Stationary hover remains unfinished.
 | 11 | Half exploration; retain midpoint over final | 606.861 | 1,769,472 | 4/4 | Midpoint 16.79 / final 14.88 mm/s |
 | 12 | Tighter KL limit; vertical gain, sideways regression | 604.080 | 1,769,472 | 4/4 | Midpoint 15.45 / final 14.57 mm/s |
 | 13 | Half recovery starts; much less climb, more sideways drift | 604.081 | 1,769,472 | 4/4 | Midpoint 15.96 / final 13.92 mm/s |
+| 14 | Coordinated reward; final loses cold-start support | 603.458 | 1,769,472 | Midpoint 4/4; final 0/4 | Midpoint 16.15; final interval incomplete |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
 Early RMS uses 0–2 s across all four starts. The earlier run-05 improvement over
@@ -94,8 +102,8 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Thirteen completed PPO trials: **7,854.385287 s = 130 min 54 s**, **20,168,704 transitions**,
-  **40,337,408 physics steps**, **11.205 hours of aggregate simulated experience**.
+- Fourteen completed PPO trials: **8,457.843753 s = 140 min 57 s**, **21,938,176 transitions**,
+  **43,876,352 physics steps**, **12.188 hours of aggregate simulated experience**.
 - Productive checkpoint lineage: **25 min 8 s PPO**, following **31 min 6 s
   imitation**, for **56 min 14 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.
@@ -109,9 +117,8 @@ are separately measured; lower training loss alone is never used as success.
 - Setup, replay checks, evaluation, rendering, transfer, tests and discarded
   smoke runs are measured separately in the per-run reports and TIME_LOG.
   An early audit-only aborted collection has no retained compute timer.
-- Full fly suite after recovery initialization/replay: **259 passed**.
-  Two additional recovery-scoring tests pass separately. GPU restoration tests
-  and exact recorded-action physical replay pass.
+- Full fly suite after coordinated reward/recovery implementation: **266 passed**.
+  GPU restoration tests and exact recorded-action physical/force replay pass.
   GPU replay, frozen-parameter and matched recipe checks pass. Comparison videos
   are fully decoded, inspected and opened locally.
 
@@ -120,14 +127,12 @@ the selected run-11 midpoint, its run-05 parent and the later final checkpoint;
 the latest update is not automatically the best controller. Survival alone is
 not stationary hover.
 
-That recovery-start block is complete. Further training is paused. Next, audit
-a coordinated3D-velocity reward on saved flights: the current objective scores
-the new sideways regression as an overall gain. Preserve vertical precision,
-alive/orientation terms and phase-independent body-motion scoring. Only after
-the candidate objective ranks the intended behavior correctly should one
-bounded PPO trial resume from run13's vertical candidate. If that still fails,
-diagnose phase-conditioned sensing/control authority before changing interfaces.
-[Concrete proposed plan](runs/velocity_hover_ppo_13/NEXT_REWARD_PLAN.md).
+The coordinated-reward block is complete and did not pass the combined gate.
+The learning goal remains active. Next, measure small existing wing-decoder
+parameter changes across cold and warm histories, and test whether independent
+support and braking are available. Use this evidence to choose the next learning
+change; do not extend unchanged PPO or add a global force increase.
+[Concrete diagnostic plan](runs/velocity_hover_ppo_14/NEXT_CONTROL_PLAN.md).
 
 [Retained run details](runs/velocity_hover_ppo_11/SUMMARY.md) and
 [checkpoint manifest](PREFERRED_HOVER.json).
