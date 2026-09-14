@@ -137,4 +137,6 @@ def physical_contract(model):
     }
     if force_config.activity_filter_seconds == 0:
         contract["wing_response"] = "instant"
+    if getattr(force_config, "yaw_pitch_acceleration", 0):
+        contract["independent_heading_control"] = True
     return contract

@@ -36,6 +36,17 @@ class WingMotionConfig:
 CONFIG = WingMotionConfig()
 INSTANT_CONFIG = replace(CONFIG, version="wing_motion_instant_v2", activity_filter_seconds=0.0)
 RESPONSE_NUMERIC = "wing_force_response"
+HEADING_NUMERIC = "wing_heading_control"
+
+
+@dataclass(frozen=True)
+class HeadingWingMotionConfig(WingMotionConfig):
+    version: str = "wing_motion_heading_v3"
+    activity_filter_seconds: float = 0.0
+    yaw_pitch_acceleration: float = 120.0  # rad/s^2 per sine of measured pitch difference
+
+
+HEADING_CONFIG = HeadingWingMotionConfig()
 
 
 def config_for_model(model):
@@ -51,6 +62,14 @@ def config_for_model(model):
     address = model.numeric_adr[index]
     if model.numeric_size[index] != 1 or model.numeric_data[address] != 1:
         raise ValueError("Unknown recorded wing force response")
+    heading = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_NUMERIC, HEADING_NUMERIC)
+    if heading >= 0:
+        if (
+            model.numeric_size[heading] != 1
+            or model.numeric_data[model.numeric_adr[heading]] != 1
+        ):
+            raise ValueError("Unknown recorded wing heading model")
+        return HEADING_CONFIG
     return INSTANT_CONFIG
 
 
@@ -172,6 +191,14 @@ class WingMotionForces:
             ],
             axis=1,
         )
+        if isinstance(c, HeadingWingMotionConfig):
+            # An additional independent measured-wing degree of freedom makes
+            # yaw controllable without requiring a roll or translation command.
+            # Symmetric pitch deviations about -1 rad have equal lift efficiency.
+            # No desired heading/rate, actor output or controller state enters.
+            steer_local[:, 2] += c.yaw_pitch_acceleration * np.sin(
+                angles[:, 1, 2] - angles[:, 0, 2]
+            )
         acceleration += np.einsum("nij,nj->ni", rotation, steer_local)
         norm = np.linalg.norm(acceleration, axis=1)
         acceleration *= np.minimum(

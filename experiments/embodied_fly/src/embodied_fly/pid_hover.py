@@ -58,7 +58,7 @@ class HoverPID:
         self.desired_acceleration = np.zeros(3)
 
     def act(self):
-        e, c, law = self.env, self.config, self.env.wing_forces.config
+        e, c = self.env, self.config
         dt = e.control_dt
         error = self.target - e.data.qpos[:3]
         velocity = e.data.qvel[:3].copy()  # free-root linear velocity in world axes
@@ -77,6 +77,15 @@ class HoverPID:
             -c.acceleration_limit_cm_s2,
             c.acceleration_limit_cm_s2,
         )
+        return self.action_for_acceleration(acceleration)
+
+    def action_for_acceleration(self, acceleration, yaw_acceleration=None):
+        """Shared bounded wing mapping; no position/velocity goal is read here."""
+        e, c, law = self.env, self.config, self.env.wing_forces.config
+        dt = e.control_dt
+        acceleration = np.asarray(acceleration, dtype=np.float64)
+        if acceleration.shape != (3,) or not np.isfinite(acceleration).all():
+            raise ValueError("Expected a finite world-frame acceleration vector")
         self.desired_acceleration[:] = acceleration
         rotation = e.data.xmat[e.thorax_id].reshape(3, 3)
         angular = e.anatomical_velocity()[:3]
@@ -121,6 +130,19 @@ class HoverPID:
         omega = 2 * np.pi * c.frequency_hz
         phase = omega * (e.data.time + dt / 2)
         desired = np.column_stack((amplitude * np.sin(phase), np.full(2, stroke), -np.ones(2)))
+        if yaw_acceleration is not None:
+            authority = getattr(law, "yaw_pitch_acceleration", 0)
+            if not authority or not np.isfinite(yaw_acceleration):
+                raise ValueError("Independent yaw request requires the heading-control plant")
+            restoring_yaw = np.dot(restoring_world, rotation[:, 2])
+            yaw_effort = (
+                yaw_acceleration
+                + angular[2] / law.angular_drag_seconds
+                - restoring_yaw
+                - law.steering_acceleration * differential
+            ) / authority
+            offset = 0.5 * np.arcsin(np.clip(yaw_effort, -np.sin(0.5), np.sin(0.5)))
+            desired[:, 2] += (-offset, offset)
         speed = np.zeros((2, 3))
         speed[:, 0] = amplitude * omega * np.cos(phase)
         wing_acceleration = np.zeros((2, 3))

@@ -22,7 +22,12 @@ from embodied_fly.observations import (
     wing_angle_indices,
     wing_velocity_indices,
 )
-from embodied_fly.wing_motion import RESPONSE_NUMERIC, WingMotionForces, configure_model
+from embodied_fly.wing_motion import (
+    HEADING_NUMERIC,
+    RESPONSE_NUMERIC,
+    WingMotionForces,
+    configure_model,
+)
 from embodied_fly.wing_position import configure_position
 
 PHYSICS_DT = 0.0002
@@ -34,8 +39,15 @@ NEED_NAMES = ("energy", "hydration", "fatigue", "heat", "injury")
 
 
 def make_body(
-    preset="walking", *, wing_limits="original", wing_response="filtered", physics_hz=None
+    preset="walking",
+    *,
+    wing_limits="original",
+    wing_response="filtered",
+    physics_hz=None,
+    heading_control=False,
 ):
+    if heading_control and (preset != "wing_position" or wing_response != "instant"):
+        raise ValueError("Independent heading requires the instantaneous wing-position plant")
     if preset not in ("walking", "flight", "wing_motion", "wing_position"):
         raise ValueError(f"Unknown physical preset: {preset}")
     if wing_response not in ("filtered", "instant") or (
@@ -90,6 +102,8 @@ def make_body(
     root = arena.mjcf_model
     if wing_response == "instant":
         root.custom.add("numeric", name=RESPONSE_NUMERIC, data=[1])
+    if heading_control:
+        root.custom.add("numeric", name=HEADING_NUMERIC, data=[1])
     root.compiler.boundmass = 0
     root.compiler.boundinertia = 0
     spawn = root.worldbody.add("site", pos=(0, 0, 0.1278))
@@ -141,12 +155,17 @@ class FlyEnvironment:
         wing_limits="original",
         wing_response="filtered",
         physics_hz=None,
+        heading_control=False,
     ):
         self.preset = preset
         self.wing_limits = wing_limits
         self.control_dt = FLIGHT_CONTROL_DT if preset == "flight" else CONTROL_DT
         self.physics, self.fly = make_body(
-            preset, wing_limits=wing_limits, wing_response=wing_response, physics_hz=physics_hz
+            preset,
+            wing_limits=wing_limits,
+            wing_response=wing_response,
+            physics_hz=physics_hz,
+            heading_control=heading_control,
         )
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr
