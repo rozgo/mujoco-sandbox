@@ -1382,3 +1382,16 @@ reference-only physical validation follows the user's directional curriculum.
   frames also reviewed. Both automatically opened. No new physics for the map.
 - The fresh student remains uninitialized/untrained. Faster teacher review
   is the next user milestone; previous accepted slow footage remains preserved.
+
+### Fly training architecture image
+
+- First observed image-generation clock 2026-09-14 05:17:21 UTC, after source
+  review and initial prompt preparation; no earlier start inferred. Final image
+  reviewed and saved 05:20:21 UTC: three observed minutes to this milestone.
+- Built-in image generation: one initial generation (40.4 s tool wall time)
+  and one targeted correction (38.6 s). These are tool durations, not measured
+  model compute. Correction fixes supervision-arrow origin and text contrast.
+- Final PNG 1536x1024, decoded and visually reviewed. Saved with prompts,
+  checksum and implementation reference. It distinguishes fixed MaleCNS wiring
+  from trainable cell dynamics and separates completed PID validation from
+  future motor, utility and multi-fly learning. No training or physics runs.

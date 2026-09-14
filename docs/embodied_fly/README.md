@@ -1,5 +1,7 @@
 # Embodied fly: learned utility and direct body control
 
+[Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
+
 Latest: [faster physical flight reference](runs/pid_velocity_fast_04/SUMMARY.md)
 and [71.2-second video at 1x playback](../../previews/embodied_fly/pid_velocity_fast_exercise_v3.mp4).
 Commands are ten times faster: 15 mm/s per translation axis and 4.5 rad/s yaw.
