@@ -25,7 +25,7 @@ from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import synchronize
 from embodied_fly.velocity_demonstrations import environment
-from embodied_fly.velocity_hover import RECIPE, HoverReward, evaluate_hover, start_states
+from embodied_fly.velocity_hover import HoverReward, evaluate_hover, start_states
 from embodied_fly.velocity_imitation import sequence_loss
 from embodied_fly.velocity_motor import SCHEMA, observation
 from embodied_fly.wing_position import wing_actuators
@@ -157,7 +157,7 @@ def train(args):
     starts = start_states(args.dataset, range(8))
     world_episode = np.arange(args.worlds) % 8
     commands = np.zeros((args.worlds, 4), np.float32)
-    reward_fn = HoverReward(env)
+    reward_fn = HoverReward(env, args.horizontal_reward_scale)
 
     def reset(ids):
         env.reset(ids, state={k: v[world_episode[ids]] for k, v in starts.items()})
@@ -206,7 +206,7 @@ def train(args):
         "teacher_control_share": 0,
         "additional_actuator_noise": False,
         "command": [0, 0, 0, 0],
-        "reward": RECIPE,
+        "reward": reward_fn.recipe,
         "timescales": physical_timescales(
             0.002, gamma, gae_lambda, args.horizon, args.sequence
         ),
@@ -672,4 +672,5 @@ if __name__ == "__main__":
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--baseline-dir", type=Path)
     p.add_argument("--bounded-updates", action="store_true")
+    p.add_argument("--horizontal-reward-scale", type=float, default=0.5)
     train(p.parse_args())

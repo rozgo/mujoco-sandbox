@@ -44,11 +44,13 @@ RECIPE = {
 }
 
 
-def reward_rates(velocity, angular, upright):
+def reward_rates(velocity, angular, upright, horizontal_scale=0.5):
+    if not np.isfinite(horizontal_scale) or horizontal_scale <= 0:
+        raise ValueError("Positive finite horizontal reward scale required")
     return {
         "alive": np.ones(len(velocity)),
         "vertical": 2 / (1 + (velocity[:, 2] / 0.5) ** 2),
-        "horizontal": 1 / (1 + np.sum((velocity[:, :2] / 0.5) ** 2, axis=1)),
+        "horizontal": 1 / (1 + np.sum((velocity[:, :2] / horizontal_scale) ** 2, axis=1)),
         "angular": 0.5 / (1 + np.sum((angular / 0.5) ** 2, axis=1)),
         "upright": 0.5 * np.clip(upright, 0, 1),
     }
@@ -63,8 +65,10 @@ def failures(env):
 
 
 class HoverReward:
-    def __init__(self, env):
+    def __init__(self, env, horizontal_scale=0.5):
         self.env = env
+        self.horizontal_scale = horizontal_scale
+        self.recipe = RECIPE | {"horizontal_velocity_scale_cm_s": horizontal_scale}
         self.history = np.zeros((50, env.n, 6))
         self.total = np.zeros((env.n, 6))
         self.count = np.zeros(env.n, dtype=int)
@@ -87,7 +91,10 @@ class HoverReward:
         self.count = np.minimum(self.count + 1, 50)
         mean = self.mean()
         terms = reward_rates(
-            mean[:, :3], mean[:, 3:], env.fields["xmat"][:, env.template.thorax_id, 8]
+            mean[:, :3],
+            mean[:, 3:],
+            env.fields["xmat"][:, env.template.thorax_id, 8],
+            self.horizontal_scale,
         )
         failed = failures(env)
         reward = sum(terms.values()) * env.control_dt * ~failed - 2 * failed

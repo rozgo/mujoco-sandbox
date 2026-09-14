@@ -9,6 +9,19 @@ from embodied_fly.velocity_hover import HoverReward, reward_rates
 from embodied_fly.velocity_hover_ppo import replay, replay_audit
 
 
+def test_wider_horizontal_reward_recognizes_reducing_large_drift_without_moving_optimum():
+    speeds = np.array([[0, 0, 0], [2.5, 0, 0], [3.0, 0, 0]])
+    old = reward_rates(speeds, np.zeros((3, 3)), np.ones(3))
+    new = reward_rates(speeds, np.zeros((3, 3)), np.ones(3), horizontal_scale=2.0)
+    assert new["horizontal"][0] == old["horizontal"][0] == 1
+    assert new["horizontal"][0] > new["horizontal"][1] > new["horizontal"][2]
+    assert new["horizontal"][1] - new["horizontal"][2] > 7 * (
+        old["horizontal"][1] - old["horizontal"][2]
+    )
+    for key in ("alive", "vertical", "angular", "upright"):
+        np.testing.assert_array_equal(old[key], new[key])
+
+
 def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus():
     stable = sum(reward_rates(np.zeros((1, 3)), np.zeros((1, 3)), np.ones(1)).values())[0]
     climbing = sum(
