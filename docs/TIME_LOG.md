@@ -1214,3 +1214,26 @@ Critic mixing: fixed-data fits completed in 23.105900 seconds. No new physical
 experience or actor learning. Full diagnostic gate fails despite much better
 shared-profile prediction. Paired round-trip target tests pass (2 in 0.80s);
 reference-only physical validation follows the user's directional curriculum.
+
+### Critic diagnostic and round-trip reference review
+
+- This continuation began 2026-09-14 01:07:57 UTC; the reviewed reference video
+  opened 01:36:55 UTC: 28 min 58 s to this milestone, including user discussion,
+  implementation, checks, one interrupted render and review. Archival follows.
+- Critic fixed-data comparison: 23.105900 s wall on Mac CPU, three paired seeds,
+  24 critic fits with 960 updates each. No new physical collection or actor training.
+- First Mac reference attempt stops before stepping at the exact model-fingerprint
+  check. Preserved array differences show compiler roundoff; no criterion was relaxed.
+- Matching Linux plant: 7 CPU worlds, 7 physics threads, 42,000 action transitions,
+  12 s per world / 84 aggregate simulated seconds. Capture 24.180077 s; total wall
+  31.244537 s including setup/export. No actor/critic training in this reference.
+- First renderer interrupted after roughly five minutes because repeated NPZ
+  decompression per frame was slow. Partial video/log retained. Final renderer loads
+  arrays once and takes 67.774088 s. It replays the same saved physical states.
+- Final video: 600 frames, 50 fps, 1600×1000, 12 seconds at 1x. Full decode,
+  checksum, and eight sampled frames covering travel/reversal/return/hold pass.
+  Automatically opened on the Mac after inspection. Original raw-speed gate
+  failures remain in the report; rendering QA is separate from physical acceptance.
+- Six focused critic tests pass in 1.30 s; full critic-change package has 185 tests
+  passing in 155.06 s. Two new target-path tests pass in 0.80 s; the seven-world
+  capture validates their physical reference use. No learned round-trip run yet.

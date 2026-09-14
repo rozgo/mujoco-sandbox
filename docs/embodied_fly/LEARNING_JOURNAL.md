@@ -2880,3 +2880,21 @@ RMS 8.724 → 8.652 mm and position RMS 63.708 → 63.776 mm. Three review start
 stay airborne, zero pass accurate hover. Final critic explained variance remains
 near zero. More actor updates were achieved; better hover was not demonstrated.
 The preferred imitation actor stays unchanged, and value learning remains open.
+
+## Critic sample mixing and six closed flight paths
+
+The matched, fixed-data critic comparison takes 23.105900 seconds without new
+physics or actor updates. Shuffling individual time/world samples improves the
+safe-cohort median explained variance from 0.0001 to 0.9739 with original inputs.
+However, within-time inter-world RMSE worsens and the full predeclared gate fails.
+Input standardization performs poorly here. Preserve both results; the critic's
+shared time-profile learning does not establish action-outcome discrimination.
+
+The user proposes six paired direction sequences ending where they started.
+The [reference check](runs/round_trip_reference_01/SUMMARY.md) uses the same plant
+and accepted PID to reach +/-1.5 mm targets, reverse, return and hold. All six
+return with under 0.08 mm final-hold error; worst 100ms displacement speed is
+0.0307 mm/s. An overly strict 1.5 mm/s raw-speed gate fails even stationary PID
+because of small 60Hz wingbeat vibration. Keep that failure; no force or body
+filtering was added. This is plant authority, not learned motor behavior.
+The same-brain curriculum proposal is in CLOSED_FLIGHT_CURRICULUM.md.

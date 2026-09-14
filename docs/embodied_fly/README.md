@@ -1,5 +1,14 @@
 # Embodied fly: learned utility and direct body control
 
+The user-proposed next curriculum is [closed flight paths](CLOSED_FLIGHT_CURRICULUM.md):
+move, reverse, return to the starting point, then hold. The unchanged plant's
+[PID reference video](../../previews/embodied_fly/round_trip_reference_v1.mp4)
+shows all six directional orders plus stationary hover. All positions return
+within 0.08 mm; the original raw-speed gate and its wingbeat-vibration issue are
+preserved in the [report](runs/round_trip_reference_01/SUMMARY.md). This reference
+contains no learned actor; learned round-trip training has not started.
+
+
 Latest [exploration and critic trial](runs/hover_explore_01/SUMMARY.md) completes
 64 actor updates in 6 min 37 s, but does not meaningfully improve hover. All three
 starts stay airborne; drift and altitude loss remain. The preferred imitation
