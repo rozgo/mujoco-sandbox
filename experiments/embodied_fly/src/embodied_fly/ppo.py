@@ -194,6 +194,7 @@ def train(args):
     motor_mode = motor_ground or motor_all
     hover_physical = getattr(args, "hover_physical", False)
     hover_only = getattr(args, "hover_only", False)
+    round_trip = getattr(args, "round_trip", False)
     bounded_hover = getattr(args, "bounded_hover_reward", False)
     reset_critic = getattr(args, "reset_critic", False)
     reset_exploration = getattr(args, "reset_exploration", False)
@@ -204,6 +205,15 @@ def train(args):
         raise ValueError("Custom hover speed scale requires bounded hover reward")
     if bounded_hover and not hover_only:
         raise ValueError("Bounded hover reward requires hover-only training")
+    if round_trip and (
+        not (hover_only and bounded_hover and motor_all)
+        or args.episode_seconds != 12
+        or args.worlds < 12
+        or args.worlds % 2
+    ):
+        raise ValueError(
+            "Round trips require bounded hover motor training, 12 s episodes and even worlds >=12"
+        )
     if hover_only and (not hover_physical or args.preset != "wing_position"):
         raise ValueError("Hover-only requires the physical hover motor curriculum")
     critic_lr = getattr(args, "critic_lr", 3e-4)
@@ -346,6 +356,10 @@ def train(args):
                 from embodied_fly.hover_only import HoverOnlyTasks
 
                 tasks = HoverOnlyTasks(env, args.seed)
+                if round_trip:
+                    from embodied_fly.round_trip_tasks import RoundTripTasks
+
+                    tasks = RoundTripTasks(env, args.seed)
                 if bounded_hover:
                     tasks.promotion_rate = 5.5
     control_dt = env.control_dt
@@ -560,7 +574,14 @@ def train(args):
                     if retainer is not None:
                         retention_buf.append(retainer.act(observation).detach())
                     previous = env.previous_action.copy()
+                    if round_trip:
+                        previous_target = np.column_stack(
+                            (env.requested_xy_cm, env.requested_height_cm)
+                        )
                     next_observation = env.step(action.cpu().numpy())
+                    if round_trip:
+                        tasks.after_step()
+                        next_observation = env.observation()
                     trace.append(
                         {
                             "observation": observation.cpu().numpy().copy(),
@@ -590,6 +611,10 @@ def train(args):
                     trace[-1]["reward_rates"] = np.stack(list(terms.values()), axis=1)
                     trace[-1]["task_id"] = task_ids.copy()
                     trace[-1]["requested_height_cm"] = env.requested_height_cm.copy()
+                    if round_trip:
+                        trace[-1]["requested_xy_cm"] = env.requested_xy_cm.copy()
+                        trace[-1]["pre_action_target_cm"] = previous_target
+                        trace[-1]["observer_route_id"] = tasks.route_ids.copy()
                     physical_rewards.append(float(reward.mean()))
                     for key, term in terms.items():
                         term_sums[key] = (
@@ -651,6 +676,11 @@ def train(args):
                             }
                         )
                         if hover_only:
+                            if round_trip:
+                                episode_records[-1].update(tasks.episode_metrics(i))
+                                episode_records[-1]["complete_target_sequence_tracking"] &= (
+                                    bool(timeout[i] and not failed[i])
+                                )
                             tasks.observe_episode(episode_records[-1])
                     reset_worlds(ids)
                     reward_fn.reset(ids)
@@ -975,7 +1005,9 @@ def train(args):
             "source_commit": run_evidence["source_commit"],
             "parent_checkpoint_sha256": sha256(args.resume),
             "method": (
-                "recurrent physical-outcome PPO, motor-only hover-first curriculum"
+                "recurrent physical-outcome PPO, motor-only closed-flight curriculum"
+                if round_trip
+                else "recurrent physical-outcome PPO, motor-only hover-first curriculum"
                 if hover_only
                 else "recurrent physical-outcome PPO plus corrective wing supervision"
                 if wing_weight
@@ -999,7 +1031,9 @@ def train(args):
             "reward_recipe": reward_fn.recipe,
             "motor_only": motor_mode,
             "physical_contract": contract,
-            "training_tasks": ["hover"]
+            "training_tasks": list(tasks.report()["transitions_by_target_sequence"])
+            if round_trip
+            else ["hover"]
             if hover_only
             else ["stand", "walk", "hover"]
             if motor_all
@@ -1152,6 +1186,11 @@ if __name__ == "__main__":
     parser.add_argument("--motor-all", action="store_true")
     parser.add_argument("--hover-physical", action="store_true")
     parser.add_argument("--hover-only", action="store_true")
+    parser.add_argument(
+        "--round-trip",
+        action="store_true",
+        help="Explicit mixed hover and closed-flight curriculum",
+    )
     parser.add_argument("--bounded-hover-reward", action="store_true")
     parser.add_argument(
         "--hover-vertical-speed-scale",

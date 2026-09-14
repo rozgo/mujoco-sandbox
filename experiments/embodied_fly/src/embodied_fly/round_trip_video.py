@@ -1,4 +1,4 @@
-"""Seven synchronized PID round-trip views; observer geometry only."""
+"""Seven synchronized round-trip views; optional learned actor/PID comparison."""
 
 import argparse
 import json
@@ -14,7 +14,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.record import font
 
 
-def record(source, output):
+def record(source, output, reference=None):
     if output.exists():
         raise FileExistsError("Preserve prior reference videos")
     started = time.perf_counter()
@@ -27,6 +27,43 @@ def record(source, output):
         states = {
             key: archive[key] for key in ("time", "qpos", "qvel", "act", "ctrl", "target")
         }
+    learned = "checkpoint_sha256" in report
+    reference_report = None
+    if learned and reference is None:
+        raise ValueError("Learned review requires the preserved PID reference capture")
+    if reference is not None:
+        if not learned:
+            raise ValueError("Additional reference is for learned reviews only")
+        reference_report = json.loads((reference / "report.json").read_text())
+        assert sha256(reference / "capture.npz") == reference_report["capture_sha256"]
+        assert reference_report["model_sha256"] == report["model_sha256"]
+        with np.load(reference / "capture.npz") as archive:
+            np.testing.assert_allclose(states["time"], archive["time"])
+            for key, value in states.items():
+                if key != "time":
+                    states[key] = np.concatenate((value, archive[key][:, 6:7]), axis=1)
+        report["cases"].append(reference_report["cases"][6])
+        report["origins_cm"].append(reference_report["origins_cm"][6])
+    camera_targets = np.asarray(report["origins_cm"]).copy()
+    chart_range = 2.0
+    if learned:
+        chart_range = max(
+            2.0,
+            float(
+                np.ceil(
+                    max(
+                        np.abs(
+                            (
+                                states["qpos"][:, i, case["axis"]]
+                                - report["origins_cm"][i][case["axis"]]
+                            )
+                            * 10
+                        ).max()
+                        for i, case in enumerate(report["cases"])
+                    )
+                )
+            ),
+        )
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
     data = mujoco.MjData(model)
     camera = mujoco.MjvCamera()
@@ -55,6 +92,8 @@ def record(source, output):
         "DOWN / UP",
         "STATIONARY HOVER",
     )
+    if learned:
+        labels += ("PID REFERENCE / HOVER",)
     frame_count = 0
     try:
         with mujoco.Renderer(model, height=260, width=384) as renderer:
@@ -66,7 +105,11 @@ def record(source, output):
                 )
                 draw.text(
                     (16, 52),
-                    "PID reference / Wing-driven flight / No learned actor / 1x playback",
+                    (
+                        "One learned MaleCNS actor / Six routes + hover / PID hover reference at right / 1x"
+                        if learned
+                        else "PID reference / Wing-driven flight / No learned actor / 1x playback"
+                    ),
                     font=font(20),
                     fill="#e6e1db",
                 )
@@ -80,7 +123,14 @@ def record(source, output):
                     data.time = t
                     mujoco.mj_forward(model, data)
                     origin = np.asarray(report["origins_cm"][i])
-                    camera.lookat[:] = origin
+                    if learned:
+                        camera_targets[i] += 0.08 * (
+                            states["qpos"][step, i, :3] - camera_targets[i]
+                        )
+                        camera.lookat[:] = camera_targets[i]
+                        camera.distance = 1.4
+                    else:
+                        camera.lookat[:] = origin
                     renderer.update_scene(data, camera=camera, scene_option=option)
                     scene = renderer.scene
                     for point, size, color in (
@@ -108,7 +158,7 @@ def record(source, output):
                         points = list(
                             zip(
                                 x + 8 + 368 * states["time"][history] / 12,
-                                chart_y - 20 * np.clip(values, -2, 2),
+                                chart_y - 40 * np.clip(values / chart_range, -1, 1),
                             )
                         )
                         if len(points) > 1:
@@ -130,25 +180,30 @@ def record(source, output):
                         font=font(17),
                         fill="#a8b0b5",
                     )
-                x, y = 1216, 570
-                for j, (text, color) in enumerate(
-                    (
-                        ("ONE PHYSICAL FLY", "#ffc31f"),
-                        ("Same body in every world", "#e6e1db"),
-                        ("Targets: +/-1.5 mm", "#e6e1db"),
-                        ("Out / reverse / return / hold", "#e6e1db"),
-                        ("Amber: requested position", "#ffc31f"),
-                        ("Green: actual axis position", "#70a88a"),
-                        ("White marker: starting point", "#e6e1db"),
-                        ("1,000 Hz physics", "#a8b0b5"),
-                        ("500 Hz wing commands", "#a8b0b5"),
-                        ("Reference only; no RL updates", "#a8b0b5"),
-                    )
-                ):
-                    draw.text((x, y + 32 * j), text, font=font(17), fill=color)
+                if not learned:
+                    x, y = 1216, 570
+                    for j, (text, color) in enumerate(
+                        (
+                            ("ONE PHYSICAL FLY", "#ffc31f"),
+                            ("Same body in every world", "#e6e1db"),
+                            ("Targets: +/-1.5 mm", "#e6e1db"),
+                            ("Out / reverse / return / hold", "#e6e1db"),
+                            ("Amber: requested position", "#ffc31f"),
+                            ("Green: actual axis position", "#70a88a"),
+                            ("White marker: starting point", "#e6e1db"),
+                            ("1,000 Hz physics", "#a8b0b5"),
+                            ("500 Hz wing commands", "#a8b0b5"),
+                            ("Reference only; no RL updates", "#a8b0b5"),
+                        )
+                    ):
+                        draw.text((x, y + 32 * j), text, font=font(17), fill=color)
                 draw.text(
                     (16, 968),
-                    f"t = {t:.2f} / 12.00 s   |   Fixed observer cameras   |   Final four seconds hold the original position",
+                    (
+                        f"t={t:.2f}/12 s | Amber: target / Green: actual | Axis scale +/-{chart_range:g} mm | Damped following cameras | Return, then hold"
+                        if learned
+                        else f"t = {t:.2f} / 12.00 s   |   Fixed observer cameras   |   Final four seconds hold the original position"
+                    ),
                     font=font(19),
                     fill="#a8b0b5",
                 )
@@ -169,10 +224,22 @@ def record(source, output):
         "playback_multiplier": 1,
         "render_seconds": time.perf_counter() - started,
         "sha256": sha256(output),
-        "controller": "PID reference only",
+        "controller": "same learned MaleCNS actor in seven worlds; PID hover in eighth"
+        if learned
+        else "PID reference only",
+        "checkpoint_sha256": report.get("checkpoint_sha256"),
+        "reference_capture_sha256": reference_report["capture_sha256"]
+        if reference_report
+        else None,
+        "axis_chart_range_mm": chart_range,
         "actor_training": False,
         "observer_only_markers": True,
-        "fixed_camera": {"azimuth": 135, "elevation": -22, "distance_cm": 1.15},
+        "camera": {
+            "azimuth": 135,
+            "elevation": -22,
+            "distance_cm": 1.4 if learned else 1.15,
+            "mode": "damped following, alpha .08 at 50 fps" if learned else "fixed",
+        },
         "case_order": labels,
     }
     output.with_suffix(".json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -183,5 +250,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("source", type=Path)
     p.add_argument("output", type=Path)
+    p.add_argument("--reference", type=Path)
     args = p.parse_args()
-    record(args.source, args.output)
+    record(args.source, args.output, args.reference)
