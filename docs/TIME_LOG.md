@@ -1496,3 +1496,22 @@ reference-only physical validation follows the user's directional curriculum.
   **7 tests in 1.33 s**. Development/verification time is separate from training.
 - User subsequently authorized continued improvement. Run 02 is a separately
   measured pilot with post-step KL enforcement; do not fold its time into run 01.
+
+
+### Continued hover PPO pilots, September 14
+
+- Run 02: **603.389538 s training**, **704,512 transitions**, 32 worlds. Began
+  **08:43:21.035178 UTC**, final report **08:54:57.922854 UTC**. Separate setup
+  12.254148 s, replay audit 3.381664 s, checkpoint writes .151360 s, physical
+  evaluation 89.929249 s. Video decoded in 4.347555 s and opened **09:02:33 UTC**.
+- Run 03: **603.909827 s training**, **720,896 transitions**, 32 worlds. Began
+  **09:00:16.736797 UTC**, final report **09:11:54.695054 UTC**. Separate setup
+  12.611745 s, audit 3.371672 s, writes .201928 s, evaluation 90.428619 s.
+  Render 70.095797 s, decode 4.366964 s, video opened **09:17:39 UTC**.
+- Focused readout infrastructure smoke: **16.848396 s training** (12 requested,
+  finishes current rollout), **49,152 transitions**, three actor updates. Its
+  weights are discarded; not part of the next checkpoint's ancestry. Optimization
+  .161627 s, including .002975 s imitation; collection 16.382858 s. Actual graph
+  replay and cached readout checks pass; upstream parameters remain identical.
+- Full fly suite for readout stage: **229 passed in 165.88 s**. Tests, setup,
+  evaluation, rendering and unsuccessful pilots remain separate from ancestry.

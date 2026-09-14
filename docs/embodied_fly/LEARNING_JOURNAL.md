@@ -3203,3 +3203,24 @@ returns to the original parent and uses smaller initial LR plus analytic
 post-step KL acceptance, exact parameter/Adam rollback and backtracking. Rewards,
 body, observations, commands, worlds, teacher anchor and critic are unchanged.
 See runs/velocity_hover_ppo_01/SUMMARY.md and runs/velocity_hover_ppo_02/PLAN.md.
+
+
+### September 14 — bounded PPO, reward scale, focused readout
+
+Run 02 fixes optimizer acceptance: all 146 accepted steps stay below analytic
+minibatch KL .02. It slightly prolongs two flights but increases drift/climb.
+Run 03 changes only horizontal reward width .5 -> 2 cm/s. Final survival is
+10/10/7.232/4.732 seconds; early speed RMS barely changes (25.96 -> 25.88 mm/s).
+Neither passes the declared hover milestone. Keep both checkpoints and videos.
+
+The user explicitly authorized continuing improvement rather than stopping at
+another failed pilot. Run 04 holds encoder/core/base decoder fixed and trains
+the existing 105,222-parameter wing readout. All actor inputs/outputs and physics
+stay the same. Cached recorded motor-neuron features give exact conditional PPO
+replay while upstream weights are frozen. Tests verify equality after updates
+and resets; the full-GPU smoke verifies action/log-probability reproduction and
+zero upstream parameter changes. Exploration is held at .003 during this stage.
+This is a temporary trainable scope in the same actor, not a new controller.
+
+Full fly suite after this implementation: 229 passed, 45 known upstream warnings,
+165.88 seconds. Run 04 remains subject to the same physical evaluation criterion.
