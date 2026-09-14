@@ -11,10 +11,17 @@ remains unfinished.
 PID reference, original imitation and final PPO; same body, forces, starts,
 commands, camera settings and chart scales. Four cases, 43 seconds at 1x.
 
-Two later trials remain preserved: unchanged continuation (run 06) worsened
+Three later trials remain preserved: unchanged continuation (run 06) worsened
 sideways control; a vertical reward increase (run 07) reduced climb to about
-67 mm but raised horizontal RMS to 14.1 mm/s. Neither improves the combined
-objective enough to replace run 05. [Latest comparison and measured tradeoff](runs/velocity_hover_ppo_07/SUMMARY.md).
+67 mm but raised horizontal RMS to 14.1 mm/s. A combined velocity reward (run 08)
+lowered horizontal RMS to 7.73 mm/s but increased climb to 135 mm and total RMS
+to 16.43 mm/s. None replaces run 05. [Latest comparison and diagnostics](runs/velocity_hover_ppo_08/SUMMARY.md).
+
+Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
+probe confirms all three measured velocity signals reach the motor features.
+Run 09 tests recovery practice: eight calm training worlds and 24 with brief
+physical force pulses, with unchanged calm evaluation. Results remain pending;
+the flight-improvement goal is active.
 
 ## The learning sequence, including failures
 
@@ -27,6 +34,7 @@ objective enough to replace run 05. [Latest comparison and measured tradeoff](ru
 | 05 | Continue same weights/optimizer/critic; retained | 604.488 | 1,769,472 | 4/4 | 15.59 mm/s |
 | 06 | Unchanged continuation; sideways regression | 603.991 | 1,769,472 | 4/4 | 15.08 mm/s |
 | 07 | Vertical reward rate 2 -> 3; mixed outcome | 603.681 | 1,769,472 | 4/4 | 13.19 mm/s |
+| 08 | Combined velocity reward; climb regression | 605.275 | 1,769,472 | 4/4 | 17.58 mm/s |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
 Early RMS uses 0–2 s across all four starts. The quoted 53% overall velocity and
@@ -51,8 +59,8 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Seven PPO trials: **4,225.993082 s = 70 min 26 s**, **9,568,256 transitions**,
-  **19,136,512 physics steps**, **5.316 hours of aggregate simulated experience**.
+- Eight completed PPO trials: **4,831.268365 s = 80 min 31 s**, **11,337,728 transitions**,
+  **22,675,456 physics steps**, **6.299 hours of aggregate simulated experience**.
 - Productive checkpoint lineage: **20 min 7 s PPO**, following **31 min 6 s
   imitation**, for **51 min 13 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.
@@ -66,7 +74,7 @@ are separately measured; lower training loss alone is never used as success.
 - Setup, replay checks, evaluation, rendering, transfer, tests and discarded
   smoke runs are measured separately in the per-run reports and TIME_LOG.
   An early audit-only aborted collection has no retained compute timer.
-- Full fly suite after the reward-adjustment implementation: **231 passed**. GPU replay, frozen-parameter and resume checks
+- Full fly suite after the recovery-curriculum implementation: **235 passed**. GPU replay, frozen-parameter and resume checks
   pass. Every comparison video was fully decoded, inspected and opened locally.
 
 The remaining weakness is joint regulation of vertical and horizontal motion. The retained checkpoint reduces the

@@ -3316,3 +3316,40 @@ MaleCNS cell classes, without a raw observation-to-action bypass. The learned
 motor decoder is not constrained to a verified per-muscle innervation map.
 Fixed graph routing alone does not establish that specific biological circuits
 are necessary; that would require targeted ablations, not just a performance video.
+
+
+### September 14 — restore the actual flight-improvement goal
+
+The user corrected the stopping criterion: completing training and archiving
+trials did not complete the goal of improved flying. The broader goal was
+restored at 15:50:06 UTC. Run 05 remains the parent. Run 08 uses a single
+full-vector velocity reward after an offline alignment audit found that the
+separate-axis formula scores run 07 above run 05 despite higher total velocity
+error. The new formula ranks the three saved flights in total-error order and
+passes a rotation-invariance counterexample where the old formula prefers twice
+as much motion if that motion shifts out of the vertical axis.
+
+This is evidence for a reward mismatch, not proof of an ideal critic or encoder.
+Keep body, graph, clocks, observation/action schema and trainable scope fixed for
+the first correction. One critic-only rollout adapts to the changed objective.
+Completing this next block will not close the goal unless the physical criteria
+are met together. Preserve every tested snapshot and continue if necessary.
+
+
+### September 14 — vector reward trial fails; measure causes before changing scope
+
+Run 08 still completes all four flights but worsens climb to 134.63 mm and total
+RMS to 16.43 mm/s. Horizontal RMS improves to 7.73 mm/s. Retain run 05; goal active.
+The comparison was checked and opened at 16:15:41 UTC. A frozen timing comparison
+rules out the extra evaluation sensor refresh as the main explanation: climb
+changes only 0.23 mm. A second diagnostic replays the captured neural history
+within 3.58e-7 action error and shows independent forward/left/up signals at
+motor features. Encoder information is present, though this does not prove
+sufficiency for all control or a biologically validated motor map.
+
+Run 09 therefore keeps the network and vector objective and changes the training
+experience: eight calm worlds plus 24 receiving brief small physical force pulses.
+Reset-only velocity offsets were considered, but the existing 80–120 ms drag
+would erase them quickly. Pulses give repeated recovery experience after the
+wing pattern is established. Forces are added to the existing physics, not
+commands or pose assignments, and the original calm evaluations remain unchanged.

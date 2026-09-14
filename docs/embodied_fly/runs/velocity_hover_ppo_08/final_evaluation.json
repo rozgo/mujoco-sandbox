@@ -1,0 +1,126 @@
+{
+  "completed_utc": "2026-09-14T16:09:29.005692+00:00",
+  "seconds_requested": 10,
+  "controller": "MaleCNS actor alone",
+  "command": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant",
+    "independent_heading_control": true
+  },
+  "model_sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3",
+  "cases": [
+    {
+      "episode": 0,
+      "split": "training",
+      "file": "episode_00.npz",
+      "sha256": "9bee63903934ad1e5e8b870333db0c17a574553d0d0420d05cb63c1dc62f0dd6",
+      "first_failure_seconds": null,
+      "airborne_seconds": 10,
+      "survived_ten_seconds": true,
+      "velocity_rms_mm_s": 16.424980504423214,
+      "vertical_velocity_rms_mm_s": 14.49050210486003,
+      "horizontal_velocity_rms_mm_s": 7.733390803504615,
+      "angular_rms_rad_s": 0.08396591714935822,
+      "peak_displacement_mm": 136.8289595054673,
+      "final_displacement_mm": [
+        3.057907868426243,
+        24.24817423107818,
+        134.6285237432109
+      ],
+      "height_span_mm": 135.51875062271608,
+      "minimum_upright": 0.9966182163302852,
+      "common_first_two_seconds_complete": true,
+      "first_two_seconds_velocity_rms_mm_s": 17.581074374812985,
+      "metrics_scope": "Before first failure only; early failure never counts as full hover"
+    },
+    {
+      "episode": 1,
+      "split": "training",
+      "file": "episode_01.npz",
+      "sha256": "a25c5a27ecf057fbc20818472494934c320a0f6fcf39b24b3215aed95cf14aa1",
+      "first_failure_seconds": null,
+      "airborne_seconds": 10,
+      "survived_ten_seconds": true,
+      "velocity_rms_mm_s": 16.42582908437993,
+      "vertical_velocity_rms_mm_s": 14.491236674302899,
+      "horizontal_velocity_rms_mm_s": 7.733816700607807,
+      "angular_rms_rad_s": 0.08395935265436283,
+      "peak_displacement_mm": 136.8362942131117,
+      "final_displacement_mm": [
+        10.083309991105633,
+        22.262753215533387,
+        134.63605792232923
+      ],
+      "height_span_mm": 135.526337873914,
+      "minimum_upright": 0.9966181832478799,
+      "common_first_two_seconds_complete": true,
+      "first_two_seconds_velocity_rms_mm_s": 17.581435626572468,
+      "metrics_scope": "Before first failure only; early failure never counts as full hover"
+    },
+    {
+      "episode": 8,
+      "split": "validation",
+      "file": "episode_08.npz",
+      "sha256": "8aa71c6ae77710a9ec999b41a5cd55f0e8c1f1505302f1aee6dfa6120a472c00",
+      "first_failure_seconds": null,
+      "airborne_seconds": 10,
+      "survived_ten_seconds": true,
+      "velocity_rms_mm_s": 16.42523802038686,
+      "vertical_velocity_rms_mm_s": 14.490759367288149,
+      "horizontal_velocity_rms_mm_s": 7.733455694947302,
+      "angular_rms_rad_s": 0.0839673360475791,
+      "peak_displacement_mm": 136.8307502142832,
+      "final_displacement_mm": [
+        6.6486437841394475,
+        23.518627440089915,
+        134.63032311990278
+      ],
+      "height_span_mm": 135.52057589218472,
+      "minimum_upright": 0.9966182822014924,
+      "common_first_two_seconds_complete": true,
+      "first_two_seconds_velocity_rms_mm_s": 17.580925205217298,
+      "metrics_scope": "Before first failure only; early failure never counts as full hover"
+    },
+    {
+      "episode": 9,
+      "split": "validation",
+      "file": "episode_09.npz",
+      "sha256": "29f9191dc19a81d17122920a2e0eaf1e178d02d4524ac75325a6a4e2ae73d430",
+      "first_failure_seconds": null,
+      "airborne_seconds": 10,
+      "survived_ten_seconds": true,
+      "velocity_rms_mm_s": 16.425370142103883,
+      "vertical_velocity_rms_mm_s": 14.490717734415746,
+      "horizontal_velocity_rms_mm_s": 7.733814314205297,
+      "angular_rms_rad_s": 0.08396618089164654,
+      "peak_displacement_mm": 136.83309613672617,
+      "final_displacement_mm": [
+        -0.5971627573696493,
+        24.43363392654156,
+        134.6326005399417
+      ],
+      "height_span_mm": 135.52288392687956,
+      "minimum_upright": 0.9966181393952659,
+      "common_first_two_seconds_complete": true,
+      "first_two_seconds_velocity_rms_mm_s": 17.580734579443543,
+      "metrics_scope": "Before first failure only; early failure never counts as full hover"
+    }
+  ],
+  "physical_resets": "Once at initialization; no rescue or resets during capture",
+  "setup_seconds": 4.239855726249516,
+  "capture_seconds": 36.73289895383641,
+  "total_wall_seconds": 45.743989929091185
+}

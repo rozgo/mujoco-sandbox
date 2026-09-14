@@ -1587,3 +1587,25 @@ reference-only physical validation follows the user's directional curriculum.
   **3,538,944 transitions**; the 17.009556-second discarded smoke is separate.
   All seven full PPO trials total **4,225.993082 s (70m26s)** and **9,568,256
   transitions**. Run 05 remains preferred, with unchanged selected ancestry.
+
+
+### Restored flight-improvement goal and vector reward trial, September 14
+
+- Goal restored **15:50:06 UTC**; it remains active because no combined physical
+  improvement passed. Training-block completion is not goal completion.
+- Run 08: **605.275283 s training**, 32 worlds,
+  **1,769,472 transitions**. Started **2026-09-14T15:57:49.200201+00:00**,
+  report **2026-09-14T16:09:29.079380+00:00**. Setup 14.748966 s,
+  audit 3.381892 s, checkpoint IO 0.072490 s,
+  physical evaluation 91.117554 s, separately measured.
+- Run 08 discarded smoke: **16.653117 s training**, ten actor updates; weights
+  excluded from ancestry. Focused tests 14 passed in 1.37 s; full suite 234 passed,
+  45 warnings, 165.88 s. Later timing-switch checks: nine passed in 1.42 s.
+- Video render **71.093333 s**, full decode **4.332757 s**;
+  43 s / 2,150 frames / 50 fps / 1920x1080 / 1x. Inspected and opened
+  **16:15:41 UTC**. Goal still unmet; run 05 retained.
+- Frozen run-05 sensor timing comparison: **45.700021 s**. Neural velocity-input
+  response probe: **19.524581 s**. Neither changes weights or counts as training.
+- Recovery-curriculum verification: 11 focused tests passed in 1.27 s; full fly
+  suite **235 passed**, 45 warnings, **170.19 s**. Run 09 is in progress; its
+  training cost will be recorded from the completed report.

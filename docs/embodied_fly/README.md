@@ -14,8 +14,11 @@ record the continuation, preserved optimizer/critic, limitations and timing.
 
 Follow-up trials are preserved in the [vertical regulation report](runs/velocity_hover_ppo_07/SUMMARY.md).
 Increasing the vertical reward reduced climb to about 67 mm but worsened
-sideways RMS to 14.1 mm/s. Run 05 remains the preferred overall checkpoint;
-neither follow-up meets the combined hover criterion.
+sideways RMS to 14.1 mm/s. A subsequent [combined-velocity reward trial and diagnostics](runs/velocity_hover_ppo_08/SUMMARY.md)
+improve horizontal RMS to 7.73 mm/s but worsen climb to 135 mm. Run 05 remains
+the preferred overall checkpoint; none of these follow-ups meets the combined
+hover criterion. A [recovery-practice trial](runs/velocity_hover_ppo_09/PLAN.md)
+is underway, with small physical gusts during training and calm evaluation.
 
 Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).
