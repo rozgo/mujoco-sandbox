@@ -19,7 +19,9 @@ from embodied_fly.velocity_motor import SCHEMA
 from embodied_fly.wing_position import wing_actuators
 
 
-def sample_windows(rng, episodes, batch, sequence, warmup, steps, cold_starts=0):
+def sample_windows(
+    rng, episodes, batch, sequence, warmup, steps, cold_starts=0, stage_windows=None
+):
     """Cover every stage each update; never join two physical episodes."""
     if (
         cold_starts < 0
@@ -34,16 +36,27 @@ def sample_windows(rng, episodes, batch, sequence, warmup, steps, cold_starts=0)
         np.arange(len(STAGES)), rng.integers(len(STAGES), size=regular - len(STAGES))
     ]
     rng.shuffle(stages)
-    starts = np.array(
-        [
-            rng.integers(boundaries[s], min(boundaries[s + 1], steps - sequence + 1))
-            for s in stages
-        ]
-    )
-    worlds = rng.choice(episodes, size=regular)
+    if stage_windows is None:
+        starts = np.array(
+            [
+                rng.integers(boundaries[s], min(boundaries[s + 1], steps - sequence + 1))
+                for s in stages
+            ]
+        )
+        worlds = rng.choice(episodes, size=regular)
+    else:
+        worlds = rng.choice(episodes, size=regular)
+        starts = np.array(
+            [
+                rng.integers(
+                    stage_windows[w, s, 0], min(stage_windows[w, s, 1], steps - sequence + 1)
+                )
+                for w, s in zip(worlds, stages, strict=True)
+            ]
+        )
     if cold_starts:
-        # Whole recorded starts: resting wings and zero neural state, not an
-        # artificial reset inserted into the middle of a physical episode.
+        # Whole recorded episode starts with zero neural memory. Recovery
+        # episodes can start with already moving wings; no live reset is inserted.
         cold_worlds = np.resize(rng.permutation(episodes), cold_starts)
         starts = np.r_[starts, np.zeros(cold_starts, dtype=int)]
         worlds = np.r_[worlds, cold_worlds]
@@ -53,15 +66,22 @@ def sample_windows(rng, episodes, batch, sequence, warmup, steps, cold_starts=0)
     return worlds, indices.clip(0, steps - 1), valid, stages
 
 
-def validate_resume_recipe(previous, current, allow_sampling_change=False):
+def validate_resume_recipe(
+    previous, current, allow_sampling_change=False, allow_dataset_change=False
+):
     previous = dict(previous, cold_starts=previous.get("cold_starts", 0))
     if previous == current:
         return False
-    if not allow_sampling_change or {
-        k: v for k, v in previous.items() if k != "cold_starts"
-    } != {k: v for k, v in current.items() if k != "cold_starts"}:
+    allowed = set()
+    if allow_sampling_change:
+        allowed.add("cold_starts")
+    if allow_dataset_change:
+        allowed.add("dataset_report_sha256")
+    if {k: v for k, v in previous.items() if k not in allowed} != {
+        k: v for k, v in current.items() if k not in allowed
+    }:
         raise ValueError(
-            "Continuation must preserve the recipe except an explicit sampling change"
+            "Continuation must preserve the recipe except explicit sampling/dataset changes"
         )
     return True
 
@@ -106,7 +126,7 @@ def train(args):
     ):
         raise ValueError("Initial input must be a fresh untrained checkpoint")
     data_report = json.loads((args.dataset / "report.json").read_text())
-    if not data_report["passed"]:
+    if not data_report["passed"] or data_report.get("probe_only", False):
         raise ValueError("Teacher dataset has not passed the accepted flight gates")
     for filename in ("observations", "actions"):
         if sha256(args.dataset / f"{filename}.npy") != data_report[f"{filename}_sha256"]:
@@ -126,6 +146,15 @@ def train(args):
     ):
         raise ValueError("Invalid demonstration layout")
     wings = torch.as_tensor(wing_actuators(model), device=device)
+    train_episodes = data_report.get("train_episode_ids", list(range(8)))
+    validation_episodes = data_report.get("validation_episode_ids", [8, 9])
+    if set(train_episodes) & set(validation_episodes):
+        raise ValueError("Training and validation episodes overlap")
+    stage_windows = data_report.get("stage_windows")
+    if stage_windows is not None:
+        stage_windows = np.asarray(stage_windows, dtype=np.int64)
+        if stage_windows.shape != (observations.shape[0], len(STAGES), 2):
+            raise ValueError("Invalid per-episode stage window metadata")
     parameters = [p for p in actor.parameters() if p.requires_grad]
     optimizer = torch.optim.Adam(parameters, lr=args.lr)
     rng = np.random.default_rng(args.seed)
@@ -145,7 +174,10 @@ def train(args):
     sampling_changed = False
     if args.resume:
         sampling_changed = validate_resume_recipe(
-            parent["imitation_recipe"], recipe, args.allow_sampling_change
+            parent["imitation_recipe"],
+            recipe,
+            args.allow_sampling_change,
+            args.allow_dataset_change,
         )
         optimizer.load_state_dict(parent["optimizer_state_dict"])
         rng.bit_generator.state = json.loads(parent["sampler_state_json"])
@@ -155,11 +187,12 @@ def train(args):
     initial_parameters = {k: p.detach().cpu().clone() for k, p in actor.named_parameters()}
     validation_windows = sample_windows(
         np.random.default_rng(121102),
-        [8, 9],
+        validation_episodes,
         args.batch,
         args.sequence,
         args.warmup,
         observations.shape[1],
+        stage_windows=stage_windows,
     )
 
     def get_batch(windows):
@@ -187,7 +220,7 @@ def train(args):
             "wing_channel_mse": channel[wings].cpu().tolist(),
             "wall_seconds": time.perf_counter() - begin,
             "full_flight_evaluation": False,
-            "split": "held-out episodes 8 and 9",
+            "split": f"held-out episodes {validation_episodes}",
         }
 
     synchronize(device)
@@ -234,12 +267,13 @@ def train(args):
         while time.perf_counter() - started - checkpoint_seconds < args.seconds:
             windows = sample_windows(
                 rng,
-                range(8),
+                train_episodes,
                 args.batch,
                 args.sequence,
                 args.warmup,
                 observations.shape[1],
                 args.cold_starts,
+                stage_windows,
             )
             obs, target, valid = get_batch(windows)
             optimizer.zero_grad(set_to_none=True)
@@ -320,6 +354,13 @@ def train(args):
         "snapshot_interval_seconds": args.snapshot_seconds,
         "snapshots": snapshots,
         "explicit_sampling_change": sampling_changed,
+        "explicit_dataset_change": bool(
+            args.resume
+            and parent["imitation_recipe"]["dataset_report_sha256"]
+            != recipe["dataset_report_sha256"]
+        ),
+        "train_episode_ids": train_episodes,
+        "validation_episode_ids": validation_episodes,
         "updates_this_burst": len(progress),
         "cumulative_updates": result["training_updates"],
         "cumulative_training_seconds": result["cumulative_training_seconds"],
@@ -327,7 +368,7 @@ def train(args):
         "warmup_observations": len(progress) * args.batch * args.warmup,
         "padded_cold_start_context_slots": len(progress) * args.cold_starts * args.warmup,
         "cold_start_sequences": len(progress) * args.cold_starts,
-        "unique_training_dataset_transitions": 8 * observations.shape[1],
+        "unique_training_dataset_transitions": len(train_episodes) * observations.shape[1],
         "physical_worlds_during_optimizer": 0,
         "physical_steps_during_optimizer": 0,
         "replay_sequences_in_parallel": args.batch,
@@ -383,5 +424,6 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=121101)
     parser.add_argument("--cold-starts", type=int, default=0)
     parser.add_argument("--allow-sampling-change", action="store_true")
+    parser.add_argument("--allow-dataset-change", action="store_true")
     parser.add_argument("--snapshot-seconds", type=float, default=0)
     train(parser.parse_args())

@@ -19,12 +19,13 @@ from embodied_fly.velocity_exercise import (
     STAGES,
     command_at,
     metrics,
+    ordered_stages,
     rolling_velocity,
 )
 from embodied_fly.velocity_motor import SCHEMA, observation
 
 
-def completed_stage_metrics(arrays, failure_seconds=None):
+def completed_stage_metrics(arrays, failure_seconds=None, order=None):
     """Score only complete settled windows before any physical failure."""
     velocity = rolling_velocity(arrays["measured_velocity"] * 10)
     yaw = rolling_velocity(arrays["yaw_rate"][:, None])[:, 0]
@@ -32,9 +33,10 @@ def completed_stage_metrics(arrays, failure_seconds=None):
         float(arrays["time"][-1]) + 0.002,
         failure_seconds if failure_seconds is not None else float("inf"),
     )
-    ends = np.cumsum([s[1] for s in STAGES])
+    scheduled = ordered_stages(order)
+    ends = np.cumsum([s[1] for _, s in scheduled])
     result = []
-    for stage, (end, (_, _, command)) in enumerate(zip(ends, STAGES, strict=True)):
+    for end, (stage, (_, _, command)) in zip(ends, scheduled, strict=True):
         if end > valid_until + 1e-9:
             continue
         selected = (arrays["time"] >= end - 0.4) & (arrays["time"] < end)
@@ -80,7 +82,8 @@ def evaluate(args):
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
     setup_seconds = time.perf_counter() - started
     cases = []
-    for episode in (0, 8):
+    for episode in args.episodes:
+        order = teacher.get("stage_orders", {}).get(str(episode))
         reference = args.dataset / f"episode_{episode:02d}.npz"
         with np.load(reference) as data:
             reset = {k: data[k][0:1].copy() for k in ("qpos", "qvel", "act", "ctrl")}
@@ -93,7 +96,7 @@ def evaluate(args):
         begin = time.perf_counter()
         for step in range(round(DURATION / env.control_dt)):
             seconds = step * env.control_dt
-            command, stage = command_at(seconds, 1.5, 4.5)
+            command, stage = command_at(seconds, 1.5, 4.5, order)
             row = pre_row(env, command[None], seconds, stage)
             obs = observation(env, command[None])
             result = actor(torch.as_tensor(obs, device=device), memory)
@@ -140,8 +143,8 @@ def evaluate(args):
         velocity = rolling_velocity(arrays["measured_velocity"] * 10)
         duration = len(rows) * env.control_dt
         complete = failure is None and len(rows) == round(DURATION / env.control_dt)
-        full = metrics(arrays, 10) if complete else None
-        completed_stages = completed_stage_metrics(arrays, first_failure)
+        full = metrics(arrays, 10, order) if complete else None
+        completed_stages = completed_stage_metrics(arrays, first_failure, order)
         summary = {
             "episode": episode,
             "file": file.name,
@@ -154,6 +157,7 @@ def evaluate(args):
             "completed_full_exercise": complete,
             "passed": bool(full and full["passed"]),
             "stage_count": 50,
+            "stage_order": list(range(50)) if order is None else order,
             "stages_reached": np.unique(arrays["stage"]).tolist(),
             "stages_passed": sum(s["passed"] for s in completed_stages),
             "completed_stage_metrics": completed_stages,
@@ -207,4 +211,5 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--episodes", nargs="+", type=int, default=[0, 8])
     evaluate(parser.parse_args())

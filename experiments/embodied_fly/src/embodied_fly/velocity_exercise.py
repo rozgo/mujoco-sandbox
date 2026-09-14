@@ -58,25 +58,33 @@ YAW_RAD_S = 0.45  # 25.8 degrees/s.
 RAMP_SECONDS = 0.25
 
 
-def command_at(seconds, speed=COMMAND_CM_S, yaw_speed=YAW_RAD_S):
+def ordered_stages(order=None):
+    order = list(range(len(STAGES))) if order is None else list(order)
+    if sorted(order) != list(range(len(STAGES))):
+        raise ValueError("Exercise order must contain every original stage exactly once")
+    return [(i, STAGES[i]) for i in order]
+
+
+def command_at(seconds, speed=COMMAND_CM_S, yaw_speed=YAW_RAD_S, order=None):
     if (
         not np.isfinite([seconds, speed, yaw_speed]).all()
         or min(seconds, speed, yaw_speed) < 0
     ):
         raise ValueError("Finite nonnegative time/speed required")
-    ends = np.cumsum([stage[1] for stage in STAGES])
+    scheduled = ordered_stages(order)
+    ends = np.cumsum([stage[1] for _, stage in scheduled])
     index = min(int(np.searchsorted(ends, seconds, side="right")), len(STAGES) - 1)
     start = 0 if index == 0 else ends[index - 1]
-    previous = np.asarray(STAGES[max(0, index - 1)][2], dtype=float) * (
+    previous = np.asarray(scheduled[max(0, index - 1)][1][2], dtype=float) * (
         speed,
         speed,
         speed,
         yaw_speed,
     )
-    target = np.asarray(STAGES[index][2], dtype=float) * (speed, speed, speed, yaw_speed)
+    target = np.asarray(scheduled[index][1][2], dtype=float) * (speed, speed, speed, yaw_speed)
     u = np.clip((seconds - start) / RAMP_SECONDS, 0, 1)
     blend = u**3 * (10 - 15 * u + 6 * u * u)
-    return previous + (target - previous) * blend, index
+    return previous + (target - previous) * blend, scheduled[index][0]
 
 
 def rolling_velocity(velocities, width=50):
@@ -87,15 +95,16 @@ def rolling_velocity(velocities, width=50):
     return (sums[count] - sums[starts]) / (count - starts)[:, None]
 
 
-def metrics(arrays, speed_scale=1.0):
+def metrics(arrays, speed_scale=1.0, order=None):
     measured = arrays["measured_velocity"] * 10
     requested = arrays["command"][:, :3] * 10
     yaw_mean = rolling_velocity(arrays["yaw_rate"][:, None])[:, 0]
     mean = rolling_velocity(measured)
     results = []
-    ends = np.cumsum([stage[1] for stage in STAGES])
-    for i, (name, duration, command) in enumerate(STAGES):
-        end = ends[i]
+    scheduled = ordered_stages(order)
+    ends = np.cumsum([stage[1] for _, stage in scheduled])
+    for position, (i, (name, duration, command)) in enumerate(scheduled):
+        end = ends[position]
         # Settled performance is predeclared, not selected after seeing a run.
         selected = (arrays["time"] >= end - 0.4) & (arrays["time"] < end)
         error = mean[selected] - requested[selected]
