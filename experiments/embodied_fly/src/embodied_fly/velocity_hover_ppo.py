@@ -20,6 +20,7 @@ from embodied_fly.evaluate import load_actor
 from embodied_fly.physical_contract import physical_contract
 from embodied_fly.ppo import advantages, joint_log_probability, motor_distribution
 from embodied_fly.ppo_critic import StandardizedValueNetwork, fit_critic
+from embodied_fly.ppo_step import bounded_step, motor_kl
 from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.train import synchronize
@@ -188,6 +189,7 @@ def train(args):
         "gae_lambda": gae_lambda,
         "clip": 0.2,
         "target_kl": 0.02,
+        "post_update_kl_backtracking": args.bounded_updates,
         "gradient_norm_cap": 1,
         "initial_tanh_latent_std": 0.003,
         "minimum_std": 0.0005,
@@ -386,6 +388,7 @@ def train(args):
                 final_features = critic.features(actor, obs, memory, reward_fn, env)
                 final_value = critic.network(final_features).squeeze(-1)
             data = {k: torch.stack(v) for k, v in buffers.items()}
+            old_log_std = log_std.detach().clone()
             del buffers
             adv, returns = advantages(
                 data["reward"], data["value"], final_value, data["done"], gamma, gae_lambda
@@ -404,20 +407,33 @@ def train(args):
                 )
                 print(json.dumps({"replay_audit": audit}), flush=True)
             begin = time.perf_counter()
-            losses, kls, imitation_losses = [], [], []
+            losses, kls, imitation_losses, step_checks = [], [], [], []
             stop = False
+            if args.bounded_updates:
+                for group in optimizer.param_groups:
+                    group["lr"] = args.lr
             # Let the new critic see one rollout before it drives actor updates.
             for _ in range(0 if counters["rollouts"] == 0 else 2):
                 for chunk in rng.permutation(len(states)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
-                    new_logp, _, _ = replay(
+                    new_logp, means_before, _ = replay(
                         actor, data, states[chunk].detach(), a, b, active, log_std, True
                     )
                     log_ratio = new_logp - data["logp"][a:b]
                     ratio = log_ratio.exp()
                     kl = ((ratio - 1) - log_ratio).mean()
                     kls.append(float(kl.detach()))
-                    if not torch.isfinite(kl) or kl.detach() > 0.02:
+                    analytic_before = (
+                        motor_kl(
+                            data["mean_action"][a:b],
+                            means_before.detach(),
+                            old_log_std,
+                            log_std,
+                        )
+                        if args.bounded_updates
+                        else 0
+                    )
+                    if not torch.isfinite(kl) or kl.detach() > 0.02 or analytic_before > 0.015:
                         stop = True
                         break
                     physical_loss = torch.maximum(
@@ -463,7 +479,36 @@ def train(args):
                         synchronize(device)
                         counters["imitation_seconds"] += time.perf_counter() - anchor_begin
                     nn.utils.clip_grad_norm_(parameters, 1, error_if_nonfinite=True)
-                    optimizer.step()
+                    if args.bounded_updates:
+
+                        def measure(
+                            data=data,
+                            state=states[chunk],
+                            a=a,
+                            b=b,
+                            old_log_std=old_log_std,
+                        ):
+                            _, means, _ = replay(
+                                actor,
+                                data,
+                                state,
+                                a,
+                                b,
+                                active,
+                                log_std,
+                                False,
+                            )
+                            return motor_kl(
+                                data["mean_action"][a:b], means, old_log_std, log_std
+                            )
+
+                        check = bounded_step(optimizer, parameters, measure)
+                        step_checks.append(check)
+                        if not check["accepted"]:
+                            stop = True
+                            break
+                    else:
+                        optimizer.step()
                     losses.append(float(physical_loss.detach()))
                     counters["actor_updates"] += 1
                 if stop:
@@ -516,6 +561,8 @@ def train(args):
                 "maximum_kl": max(kls, default=0),
                 "mean_policy_loss": float(np.mean(losses)) if losses else None,
                 "imitation_loss": imitation_losses,
+                "post_update_checks": step_checks,
+                "actor_lr": optimizer.param_groups[0]["lr"],
                 "reward_rates": term_sum,
                 "critic": fitted,
                 "completed_episodes": len(episodes),
@@ -624,4 +671,5 @@ if __name__ == "__main__":
     p.add_argument("--device", default="cuda")
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--baseline-dir", type=Path)
+    p.add_argument("--bounded-updates", action="store_true")
     train(p.parse_args())

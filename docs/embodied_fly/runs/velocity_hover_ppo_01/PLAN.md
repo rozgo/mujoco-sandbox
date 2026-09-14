@@ -72,3 +72,29 @@ and rendering. Evaluate near 300 s and at the end. Preserve final and midpoint
 checkpoints; final is primary, with no retrospective checkpoint selection.
 Do not extend this pilot automatically. Record and open a 1x comparison showing
 the PID, parent and final actor, with common plot scales and explicit failures.
+
+## Pre-update implementation checks
+
+The GPU initially held an LFS pointer for the parent. Fetching that exact asset
+restored the expected SHA256; no neural updates ran in that failed start.
+
+On the first real GPU rollout, maximum action replay difference was 5.29e-7
+and maximum joint log-probability difference 0.00250244 over 16,384 transitions.
+The original 0.002 absolute log-probability threshold stopped before any actor
+or critic update. With small action variance and 78 summed channels, tiny
+float32 differences accumulate. The revised check retains the 2e-6 action
+limit and requires both maximum log-probability difference below 0.01 and
+aggregate numerical KL below 1e-6 (versus the learning KL threshold 0.02).
+Measure and archive all three quantities; no actor/dynamics change accompanied
+this numerical tolerance correction. The pre-update PID/parent physical captures
+are reused after checking their physical contracts and trajectory hashes.
+
+The full fly suite passed 223 tests in 167.71 s. The revised numerical check
+also passed the focused three tests in 1.31 s. The completed run's report will
+record its actual source commit, times and physical outcomes.
+
+Subsequent user steering, 2026-09-14: "if it fails continue self improving until
+we start getting results." Further evidence-driven iterations are now authorized.
+Preserve this pilot and its declared settings; record each subsequent change
+and measured allowance as a separate run. Physical progress, rather than offline
+loss or critic fit, governs whether to continue a checkpoint or return to parent.
