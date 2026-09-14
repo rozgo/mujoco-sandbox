@@ -1203,3 +1203,9 @@ suite launched00:49UTC; next bounded PPO recipe recorded before execution.
   opening/transient/middle/final sampled-frame visual inspection pass before opening.
 - Eight focused tests pass in 1.30 s; full 184-test package passes in 157.62 s.
   Preferred imitation checkpoint remains preserved. Archival follows review.
+
+## September14 UTC — critic minibatch comparison
+
+Observed start 2026-09-14 01:07:57 UTC. Reuse recorded physical experience to
+compare time-window and individually shuffled value batches at matched sample
+and update counts. No new actor or physics training in the diagnostic.

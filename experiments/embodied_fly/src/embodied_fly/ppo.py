@@ -214,8 +214,10 @@ def train(args):
     critic_epochs = getattr(args, "critic_epochs", None)
     critic_epochs = args.epochs if critic_epochs is None else critic_epochs
     standardize_critic = getattr(args, "critic_standardize_inputs", False)
+    shuffle_critic = getattr(args, "critic_shuffle_transitions", False)
     if critic_epochs < 1 or (
-        (standardize_critic or critic_epochs != args.epochs) and not independent_critic
+        (standardize_critic or shuffle_critic or critic_epochs != args.epochs)
+        and not independent_critic
     ):
         raise ValueError("Separate critic epochs/input calibration require independent critic")
     if independent_critic and args.epochs < 1:
@@ -852,6 +854,7 @@ def train(args):
                     args.sequence,
                     critic_epochs,
                     critic_rng,
+                    shuffle=shuffle_critic,
                 )
                 if motor_mode:
                     critic_after = value_quality(
@@ -1062,6 +1065,9 @@ def train(args):
                 "learning_rate": critic_lr,
                 "independent_of_actor_kl": independent_critic,
                 "epochs": critic_epochs,
+                "sample_order": "shuffled time/world transitions"
+                if shuffle_critic
+                else "shuffled contiguous time windows",
                 "input_standardization": "first training rollout mean/std, frozen thereafter; floor .05 and clip +/-10"
                 if standardize_critic
                 else "none beyond actor observation statistics",
@@ -1160,6 +1166,7 @@ if __name__ == "__main__":
     parser.add_argument("--independent-critic", action="store_true")
     parser.add_argument("--critic-epochs", type=int)
     parser.add_argument("--critic-standardize-inputs", action="store_true")
+    parser.add_argument("--critic-shuffle-transitions", action="store_true")
     parser.add_argument("--motor-retention-weight", type=float, default=0.0)
     parser.add_argument("--critic-warmup-rollouts", type=int, default=0)
     parser.add_argument("--wing-supervision", type=float, default=0.0)

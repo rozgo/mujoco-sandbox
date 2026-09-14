@@ -36,12 +36,14 @@ class StandardizedValueNetwork(nn.Sequential):
         return super().forward(features)
 
 
-def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
+def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng, *, shuffle=False):
     """Each epoch visits every rollout sample once; no actor/physics invocation.
 
     Features contain the observation and preceding descending-neuron state from
     collection. Targets are the fixed, timeout-aware GAE returns for that rollout.
     Detaching both prevents value fitting from changing the deployed brain.
+    The optional shuffle mixes individual time/world samples without altering
+    recurrent actor replay, target construction, batch size or epoch coverage.
     """
     features, returns = features.detach(), returns.detach()
     if sequence < 1 or epochs < 1 or len(features) % sequence:
@@ -63,11 +65,22 @@ def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
 
     before = predict()
     losses = []
+    flat_features, flat_returns = features.flatten(0, 1), returns.flatten()
     for _ in range(epochs):
-        for chunk in rng.permutation(chunks):
-            a, b = chunk * sequence, (chunk + 1) * sequence
-            prediction = critic.network(features[a:b]).squeeze(-1)
-            loss = F.mse_loss(prediction, returns[a:b])
+        order = rng.permutation(returns.numel() if shuffle else chunks)
+        batch_size = sequence * returns.shape[1]
+        if shuffle:
+            order = torch.as_tensor(order, device=features.device)
+        for index in range(chunks):
+            if shuffle:
+                ids = order[index * batch_size : (index + 1) * batch_size]
+                inputs, target = flat_features[ids], flat_returns[ids]
+            else:
+                chunk = order[index]
+                a, b = chunk * sequence, (chunk + 1) * sequence
+                inputs, target = features[a:b], returns[a:b]
+            prediction = critic.network(inputs).squeeze(-1)
+            loss = F.mse_loss(prediction, target)
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite independent critic loss")
             optimizer.zero_grad(set_to_none=True)
@@ -83,6 +96,9 @@ def fit_critic(critic, optimizer, features, returns, sequence, epochs, rng):
         "updates": len(losses),
         "sample_presentations": returns.numel() * epochs,
         "input_calibrated_this_fit": calibrated_now,
+        "sample_order": "shuffled time/world transitions"
+        if shuffle
+        else "shuffled contiguous time windows",
         "fit_mse_before": float(F.mse_loss(before, returns)),
         "fit_mse_after": float(F.mse_loss(after, returns)),
         "predictions": after,

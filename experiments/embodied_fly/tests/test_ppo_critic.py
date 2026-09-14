@@ -6,6 +6,45 @@ from embodied_fly.ppo import Critic
 from embodied_fly.ppo_critic import fit_critic, value_quality
 
 
+def test_shuffling_visits_each_time_world_pair_once_per_epoch_without_actor_gradients():
+    class RecordingNetwork(torch.nn.Linear):
+        def __init__(self):
+            super().__init__(2, 1)
+            self.seen = []
+
+        def forward(self, x):
+            if torch.is_grad_enabled():
+                self.seen.append(x[..., 0].detach().flatten().tolist())
+            return super().forward(x)
+
+    torch.manual_seed(208)
+    network = RecordingNetwork()
+    critic = torch.nn.Module()
+    critic.network = network
+    features = (
+        torch.stack([torch.arange(24).float(), torch.ones(24)], dim=-1)
+        .reshape(8, 3, 2)
+        .requires_grad_()
+    )
+    targets = (features[..., 0].detach() * 0.01).requires_grad_()
+    fit = fit_critic(
+        critic,
+        torch.optim.Adam(critic.parameters(), lr=0.001),
+        features,
+        targets,
+        2,
+        3,
+        np.random.default_rng(9),
+        shuffle=True,
+    )
+    assert fit["updates"] == 12 and fit["sample_presentations"] == 72
+    assert features.grad is targets.grad is None
+    for epoch in range(3):
+        seen = [item for batch in network.seen[4 * epoch : 4 * (epoch + 1)] for item in batch]
+        assert sorted(seen) == list(range(24))
+    assert len({int(x) // 3 for x in network.seen[0]}) > 2
+
+
 def test_critic_calibration_is_training_only_fixed_and_checkpointed():
     torch.manual_seed(202)
     brain = make_brain()
