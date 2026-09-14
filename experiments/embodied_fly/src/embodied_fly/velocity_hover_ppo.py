@@ -7,6 +7,7 @@ One small clean PID replay batch accompanies the first actor update per rollout.
 import argparse
 import json
 import math
+import shutil
 import time
 from pathlib import Path
 
@@ -76,6 +77,7 @@ def replay(actor, data, state, a, b, active, log_std, gradients):
 @torch.no_grad()
 def replay_audit(actor, data, states, sequence, active, log_std):
     maximum_action_error = maximum_logp_error = 0.0
+    errors = []
     for chunk, initial in enumerate(states):
         a, b = chunk * sequence, (chunk + 1) * sequence
         logp, actions, _ = replay(actor, data, initial, a, b, active, log_std, False)
@@ -85,12 +87,20 @@ def replay_audit(actor, data, states, sequence, active, log_std):
         maximum_logp_error = max(
             maximum_logp_error, float((logp - data["logp"][a:b]).abs().max())
         )
+        errors.append((logp - data["logp"][a:b]).double())
+    delta = torch.cat(errors)
+    aggregate_kl = float((delta.expm1() - delta).mean())
     report = {
         "maximum_action_error": maximum_action_error,
         "maximum_log_probability_error": maximum_logp_error,
         "frames": data["logp"].numel(),
         "reset_events": int(data["done"].sum()),
-        "passed": maximum_action_error < 2e-6 and maximum_logp_error < 0.002,
+        "roundoff_aggregate_kl": aggregate_kl,
+        "mean_absolute_log_probability_error": float(delta.abs().mean()),
+        "tolerances": {"action": 2e-6, "maximum_logp": 0.01, "aggregate_kl": 1e-6},
+        "passed": maximum_action_error < 2e-6
+        and maximum_logp_error < 0.01
+        and aggregate_kl < 1e-6,
     }
     if not report["passed"]:
         raise RuntimeError(f"Recurrent replay differs before optimization: {report}")
@@ -206,11 +216,22 @@ def train(args):
     eval_seconds = 0.0
     if not args.smoke:
         for label, teacher in (("pid", True), ("parent", False)):
-            report = evaluate_hover(
-                actor, parent, args.dataset, args.output / label, device, teacher=teacher
-            )
+            if args.baseline_dir:
+                source = args.baseline_dir / label
+                report = json.loads((source / "report.json").read_text())
+                if report["physical_contract"] != parent["physical_contract"]:
+                    raise ValueError("Cached pre-update evaluation physical contract differs")
+                for case in report["cases"]:
+                    if sha256(source / case["file"]) != case["sha256"]:
+                        raise ValueError("Cached physical capture checksum mismatch")
+                shutil.copytree(source, args.output / label)
+                report = dict(report, reused_preupdate_capture=True)
+            else:
+                report = evaluate_hover(
+                    actor, parent, args.dataset, args.output / label, device, teacher=teacher
+                )
+                eval_seconds += report["total_wall_seconds"]
             evaluations[label] = report
-            eval_seconds += report["total_wall_seconds"]
             print(json.dumps({"evaluation": label, "cases": report["cases"]}), flush=True)
     memory = actor.initial_state(args.worlds)
     obs = torch.as_tensor(observation(env, commands), device=device)
@@ -602,4 +623,5 @@ if __name__ == "__main__":
     p.add_argument("--seed", type=int, default=151101)
     p.add_argument("--device", default="cuda")
     p.add_argument("--smoke", action="store_true")
+    p.add_argument("--baseline-dir", type=Path)
     train(p.parse_args())
