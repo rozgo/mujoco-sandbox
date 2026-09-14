@@ -1,0 +1,5961 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T08:43:08.519611+00:00",
+    "source_commit": "45ca0009ec94b073410dbe893c47592c6f2525e7",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "1c605531bfa5d73a5a93a4d8b92fc1ce0473649191641f2731b4386c40f478ad",
+      "src/embodied_fly/body.py": "110877f4ff1e87721e31c9fcc0bf9b4339d7d4c7d0a3ac77541e25ecc31eb0c5",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/fresh_velocity_actor.py": "3fd8ca2c26a87b4b61dfea020f6f5577674d9771944ac5ed69df516594b4c293",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "a89d557e18f61a8b00d29d435ac2b3ab3392050a2e38db490d71515480157c3c",
+      "src/embodied_fly/pid_hover.py": "2a25d6a196e172bc6b60a294418e145f2a80d1a45288af03d2fdf4cdb2239081",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_step.py": "1f3f17037920908bef0efc01867d507c36e3353537632279ee4911510277b7d2",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/random_velocity_commands.py": "79d7f2d82e5c433661349ddc7b2aa4d6f2c960f470d0c8011457da8d2cebc6c8",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/velocity_comparison.py": "1407943477ee73117b0cb9898d0bd1711aed446b54a0bc174b36e8edd1d92314",
+      "src/embodied_fly/velocity_demonstrations.py": "a5c45d39692ef59170b975dd24259d9dcb19b9bb18098b9b8340749d311c224d",
+      "src/embodied_fly/velocity_exercise.py": "3aa2d83183de4ec822aeab121f2f469faa3567cb3a33b8358078a9eed6b2a89b",
+      "src/embodied_fly/velocity_hover.py": "21bed4a3c082f8967513e51056fe5beda3c73d308334e38ebc4ae2f1a6348411",
+      "src/embodied_fly/velocity_hover_ppo.py": "e289bede02fcd7ceefe2b47a50085619d9103f8f546014b23a2704c9f08e8372",
+      "src/embodied_fly/velocity_hover_video.py": "c6bf410adfb3c78beb214c2c3c65a95704c6e109d4de8f7d5e7b2324b1a8fa35",
+      "src/embodied_fly/velocity_imitation.py": "88bd6b437d42637b10f133cbbf71022fd98e34ea635a2cbfbb1c294ba0641e99",
+      "src/embodied_fly/velocity_map.py": "514e90c087c9ed17ce9224579b300947dd92c25c121cc0c592a9cb65a361ed23",
+      "src/embodied_fly/velocity_motor.py": "e438c6cc15773f89a42d1d14f1fa864b58c9e0384ff8851684c1ebf572362133",
+      "src/embodied_fly/velocity_recovery.py": "17a6efb36ea74d95295d8f583fecfcd0f03bbb26787d8ec4ade5b53c166d7385",
+      "src/embodied_fly/velocity_student.py": "39dbe8368003958baeb9b106a28e95c50e4732029b0ae9cd1a30a3df45f2d607",
+      "src/embodied_fly/velocity_video.py": "7bfd47c653fb873f2df62282461975a904f722f4a68c146b52377d2466031893",
+      "src/embodied_fly/wing_motion.py": "d10adeee6a10ce028d351125c0b615dd98e07841ea623c1ba5ba5ba05abd333a",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "started_utc": "2026-09-14T08:43:21.035178+00:00",
+  "completed_utc": "2026-09-14T08:54:57.922854+00:00",
+  "requested_training_seconds": 600.0,
+  "training_wall_seconds": 603.3895375863649,
+  "cumulative_training_seconds": 2469.539002266247,
+  "parent_checkpoint_sha256": "c4a87e93a9fffb4679c84a6bca42716bc2e89365d48be97d9ec37780df2779e4",
+  "checkpoint_sha256": "377093936a91ab1621160c356353f395b30f41db0b9f04461cc7d25f5dcebc63",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant",
+    "independent_heading_control": true
+  },
+  "recipe": {
+    "worlds": 32,
+    "physics_threads": 16,
+    "physics_backend": "CPU MuJoCo/mjbatch",
+    "learning_device": "cuda",
+    "physics_hz": 1000,
+    "control_hz": 500,
+    "horizon": 512,
+    "sequence": 64,
+    "actor_epochs": 2,
+    "critic_epochs": 4,
+    "actor_lr": 3e-07,
+    "critic_lr": 0.0003,
+    "gamma": 0.999000499833375,
+    "gae_lambda": 0.9920319148370607,
+    "clip": 0.2,
+    "target_kl": 0.02,
+    "post_update_kl_backtracking": true,
+    "gradient_norm_cap": 1,
+    "initial_tanh_latent_std": 0.003,
+    "minimum_std": 0.0005,
+    "entropy_bonus": 0,
+    "imitation_weight": 1.0,
+    "imitation_loss": "wing MSE + 0.1 nonwing MSE",
+    "imitation_frequency": "8 sequences x 64 target steps, once on first actor minibatch per rollout",
+    "imitation_context_steps": 64,
+    "imitation_split": "episodes 0..7, initial 2-second hover only",
+    "optimizer_transition": "fresh PPO Adam and fresh critic; all learned actor weights retained",
+    "critic_warmup_rollouts": 1,
+    "episode_seconds": 10,
+    "recurrent_carry": "after updates reconstruct final sequence with new weights; older boundary state is detached",
+    "teacher_control_share": 0,
+    "additional_actuator_noise": false,
+    "command": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "reward": {
+      "version": "velocity_hover_v1",
+      "control_dt": 0.002,
+      "velocity_window_seconds": 0.1,
+      "alive_rate": 1.0,
+      "vertical_tracking_rate": 2.0,
+      "horizontal_tracking_rate": 1.0,
+      "angular_tracking_rate": 0.5,
+      "upright_rate": 0.5,
+      "velocity_scale_cm_s": 0.5,
+      "angular_scale_rad_s": 0.5,
+      "tracking_shape": "1 / (1 + squared normalized error)",
+      "failure_penalty_once": 2.0,
+      "failure_height_below_cm": 0.5,
+      "failure_upright_below": 0.85,
+      "failure_forbidden_body_weights_above": 0.1,
+      "timing": "sum of reward rates times dt, then one failure penalty at termination",
+      "height_or_position_target": false,
+      "wing_speed_or_action_change_penalty": false,
+      "minimum_live_rate": 1.0,
+      "maximum_live_rate": 5.0
+    },
+    "timescales": {
+      "action_seconds": 0.002,
+      "rollout_seconds": 1.024,
+      "recurrent_gradient_seconds": 0.128,
+      "discount_efold_seconds": 2.000000000000061,
+      "gae_trace_efold_seconds": 0.2222222222222246,
+      "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+    }
+  },
+  "counters": {
+    "rollouts": 43,
+    "actor_updates": 146,
+    "critic_updates": 1376,
+    "transitions": 704512,
+    "imitation_presentations": 21504,
+    "collection_seconds": 238.8865601173602,
+    "optimization_seconds": 344.51063895830885,
+    "imitation_seconds": 59.77398211415857,
+    "critic_seconds": 1.8092079632915556,
+    "memory_refresh_seconds": 18.16515132319182
+  },
+  "snapshots": [
+    {
+      "file": "midpoint_actor.pt",
+      "sha256": "b83cd8e6ff55188f46d9b02f4a9bb2aa76445f37a878b712d1bd36b06747e393",
+      "training_seconds": 310.0258657913655
+    },
+    {
+      "file": "final_actor.pt",
+      "sha256": "377093936a91ab1621160c356353f395b30f41db0b9f04461cc7d25f5dcebc63",
+      "training_seconds": 603.3895375863649
+    }
+  ],
+  "progress": [
+    {
+      "rollout": 1,
+      "training_seconds": 6.583869324531406,
+      "transitions": 16384,
+      "actor_updates": 0,
+      "minibatch_updates": 0,
+      "kl_stop": false,
+      "maximum_kl": 0,
+      "mean_policy_loss": null,
+      "imitation_loss": [],
+      "post_update_checks": [],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.35858563120250897,
+        "horizontal": 0.5971668030973668,
+        "angular": 0.4613956268919069,
+        "upright": 0.4991951505027606
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": true,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.2847360670566559,
+        "fit_mse_after": 0.11999363452196121,
+        "explained_variance": 0.7972372770309448
+      },
+      "completed_episodes": 0,
+      "recent_mean_episode_seconds": null,
+      "live_mean_height_mm": 36.691496082435144,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 2,
+      "training_seconds": 43.452358128502965,
+      "transitions": 32768,
+      "actor_updates": 16,
+      "minibatch_updates": 16,
+      "kl_stop": false,
+      "maximum_kl": 0.013757869601249695,
+      "mean_policy_loss": 0.0021504247561097145,
+      "imitation_loss": [
+        0.00016680030967108905
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 3,
+          "trial_kl": [
+            0.09238230154448948,
+            0.023071063879447053,
+            0.005772034800885868
+          ],
+          "accepted_kl": 0.005772034800885868,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012761907146337506
+          ],
+          "accepted_kl": 0.012761907146337506,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013728778948298765
+          ],
+          "accepted_kl": 0.013728778948298765,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013026172898402608
+          ],
+          "accepted_kl": 0.013026172898402608,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01127037440948258
+          ],
+          "accepted_kl": 0.01127037440948258,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.009453817850015324
+          ],
+          "accepted_kl": 0.009453817850015324,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.007459671874955578
+          ],
+          "accepted_kl": 0.007459671874955578,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00642329699423683
+          ],
+          "accepted_kl": 0.00642329699423683,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.006147070113645849
+          ],
+          "accepted_kl": 0.006147070113645849,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.006836439708697653
+          ],
+          "accepted_kl": 0.006836439708697653,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.007580435077447566
+          ],
+          "accepted_kl": 0.007580435077447566,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.009393286288189615
+          ],
+          "accepted_kl": 0.009393286288189615,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011058071745932353
+          ],
+          "accepted_kl": 0.011058071745932353,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012435145796037455
+          ],
+          "accepted_kl": 0.012435145796037455,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013683240055697148
+          ],
+          "accepted_kl": 0.013683240055697148,
+          "lr": 7.5e-08
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.010607844730770302
+          ],
+          "accepted_kl": 0.010607844730770302,
+          "lr": 7.5e-08
+        }
+      ],
+      "actor_lr": 7.5e-08,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5398685267888509,
+        "horizontal": 0.04843855385299516,
+        "angular": 0.3970874270064773,
+        "upright": 0.498482111002037
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.22438481450080872,
+        "fit_mse_after": 0.03834407776594162,
+        "explained_variance": 0.4934443235397339
+      },
+      "completed_episodes": 3,
+      "recent_mean_episode_seconds": 1.9573333333333334,
+      "live_mean_height_mm": 43.741329030830734,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 3,
+      "training_seconds": 56.54983339831233,
+      "transitions": 49152,
+      "actor_updates": 19,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01805453561246395,
+      "mean_policy_loss": -0.018860265612602234,
+      "imitation_loss": [
+        0.00017303235654253513
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00761146725916334
+          ],
+          "accepted_kl": 0.00761146725916334,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014973374226999282
+          ],
+          "accepted_kl": 0.014973374226999282,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017852805804792194
+          ],
+          "accepted_kl": 0.017852805804792194,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6024710887343194,
+        "horizontal": 0.17253238404105353,
+        "angular": 0.29937001896444987,
+        "upright": 0.49867158247410925
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.23933352530002594,
+        "fit_mse_after": 0.07437615841627121,
+        "explained_variance": 0.8067704439163208
+      },
+      "completed_episodes": 17,
+      "recent_mean_episode_seconds": 2.6025882352941174,
+      "live_mean_height_mm": 32.439054593844986,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 4,
+      "training_seconds": 69.68951840512455,
+      "transitions": 65536,
+      "actor_updates": 22,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017250709235668182,
+      "mean_policy_loss": -0.20950463910897574,
+      "imitation_loss": [
+        0.00017476042557973415
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.004073225966573341
+          ],
+          "accepted_kl": 0.004073225966573341,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013400242124204218
+          ],
+          "accepted_kl": 0.013400242124204218,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01770201021518541
+          ],
+          "accepted_kl": 0.01770201021518541,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.4034372431390733,
+        "horizontal": 0.2922709514441887,
+        "angular": 0.38195496411919405,
+        "upright": 0.4988046556277173
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.187343031167984,
+        "fit_mse_after": 0.060395412147045135,
+        "explained_variance": 0.8815092444419861
+      },
+      "completed_episodes": 27,
+      "recent_mean_episode_seconds": 2.922,
+      "live_mean_height_mm": 37.18828034080251,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 5,
+      "training_seconds": 82.95560572110116,
+      "transitions": 81920,
+      "actor_updates": 25,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01710650883615017,
+      "mean_policy_loss": 0.0787857969601949,
+      "imitation_loss": [
+        0.0001622172276256606
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0025088057177668267
+          ],
+          "accepted_kl": 0.0025088057177668267,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.009724530490363271
+          ],
+          "accepted_kl": 0.009724530490363271,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017222113845184038
+          ],
+          "accepted_kl": 0.017222113845184038,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5539361426837591,
+        "horizontal": 0.12525363603994244,
+        "angular": 0.36157683410620456,
+        "upright": 0.4985620205444941
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1567208468914032,
+        "fit_mse_after": 0.06177324801683426,
+        "explained_variance": 0.8179901242256165
+      },
+      "completed_episodes": 31,
+      "recent_mean_episode_seconds": 3.1378064516129034,
+      "live_mean_height_mm": 41.29073318209389,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 6,
+      "training_seconds": 96.43726618029177,
+      "transitions": 98304,
+      "actor_updates": 28,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016951192170381546,
+      "mean_policy_loss": 0.07318824032942454,
+      "imitation_loss": [
+        0.0001736724516376853
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0036439701586577903
+          ],
+          "accepted_kl": 0.0036439701586577903,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014243150670987536
+          ],
+          "accepted_kl": 0.014243150670987536,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02305302848639085,
+            0.018041466515434833
+          ],
+          "accepted_kl": 0.018041466515434833,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6242683884630611,
+        "horizontal": 0.15183343441924047,
+        "angular": 0.31418916848713013,
+        "upright": 0.4986188212917005
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1922706663608551,
+        "fit_mse_after": 0.09335999190807343,
+        "explained_variance": 0.8696817755699158
+      },
+      "completed_episodes": 40,
+      "recent_mean_episode_seconds": 3.4373750000000003,
+      "live_mean_height_mm": 39.63568806114755,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 7,
+      "training_seconds": 109.72865436552092,
+      "transitions": 114688,
+      "actor_updates": 31,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01911233551800251,
+      "mean_policy_loss": -0.023316907385985058,
+      "imitation_loss": [
+        0.00017205551557708532
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00313982256849791
+          ],
+          "accepted_kl": 0.00313982256849791,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012137898282121005
+          ],
+          "accepted_kl": 0.012137898282121005,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01912507304986149
+          ],
+          "accepted_kl": 0.01912507304986149,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5297274226056777,
+        "horizontal": 0.18791144556139114,
+        "angular": 0.32949674859099315,
+        "upright": 0.49867710261361786
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.19477713108062744,
+        "fit_mse_after": 0.14375907182693481,
+        "explained_variance": 0.8757161498069763
+      },
+      "completed_episodes": 50,
+      "recent_mean_episode_seconds": 3.610375,
+      "live_mean_height_mm": 36.74911164284869,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 8,
+      "training_seconds": 123.10258458741009,
+      "transitions": 131072,
+      "actor_updates": 34,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.021519538015127182,
+      "mean_policy_loss": 0.05577567592263222,
+      "imitation_loss": [
+        0.00016775944095570594
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0025703085193237796
+          ],
+          "accepted_kl": 0.0025703085193237796,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011446143898007795
+          ],
+          "accepted_kl": 0.011446143898007795,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0197916004226497
+          ],
+          "accepted_kl": 0.0197916004226497,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5287533942960758,
+        "horizontal": 0.21020065619363348,
+        "angular": 0.36166574162459114,
+        "upright": 0.4986770174241339
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.16453208029270172,
+        "fit_mse_after": 0.09671616554260254,
+        "explained_variance": 0.8978403210639954
+      },
+      "completed_episodes": 58,
+      "recent_mean_episode_seconds": 3.7522499999999996,
+      "live_mean_height_mm": 39.203177651659765,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 9,
+      "training_seconds": 136.30947812832892,
+      "transitions": 147456,
+      "actor_updates": 37,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01542654074728489,
+      "mean_policy_loss": -0.023771390318870544,
+      "imitation_loss": [
+        0.00016908958787098527
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.003136075685339478
+          ],
+          "accepted_kl": 0.003136075685339478,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011090035810796523
+          ],
+          "accepted_kl": 0.011090035810796523,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01610934556173292
+          ],
+          "accepted_kl": 0.01610934556173292,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5560990696041099,
+        "horizontal": 0.1454505817105997,
+        "angular": 0.3382611732144897,
+        "upright": 0.4986198957627192
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.2188996523618698,
+        "fit_mse_after": 0.17581459879875183,
+        "explained_variance": 0.8653465509414673
+      },
+      "completed_episodes": 67,
+      "recent_mean_episode_seconds": 3.72325,
+      "live_mean_height_mm": 37.294423989876904,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 10,
+      "training_seconds": 151.27227821340784,
+      "transitions": 163840,
+      "actor_updates": 41,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.01808738335967064,
+      "mean_policy_loss": 0.039890059269964695,
+      "imitation_loss": [
+        0.00015763676492497325
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0020440879216139596
+          ],
+          "accepted_kl": 0.0020440879216139596,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.007884326020591326
+          ],
+          "accepted_kl": 0.007884326020591326,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014486847198087625
+          ],
+          "accepted_kl": 0.014486847198087625,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017535240391561145
+          ],
+          "accepted_kl": 0.017535240391561145,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.486889113029813,
+        "horizontal": 0.23298257028364627,
+        "angular": 0.3464682098426204,
+        "upright": 0.49871171739259645
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.16884875297546387,
+        "fit_mse_after": 0.1237388402223587,
+        "explained_variance": 0.900515615940094
+      },
+      "completed_episodes": 76,
+      "recent_mean_episode_seconds": 3.7731250000000003,
+      "live_mean_height_mm": 37.71588148018719,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 11,
+      "training_seconds": 164.3032452953048,
+      "transitions": 180224,
+      "actor_updates": 44,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016950521618127823,
+      "mean_policy_loss": -0.018820907920598984,
+      "imitation_loss": [
+        0.00016320821305271238
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0026927790577237036
+          ],
+          "accepted_kl": 0.0026927790577237036,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011139595571155477
+          ],
+          "accepted_kl": 0.011139595571155477,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017331226215565407
+          ],
+          "accepted_kl": 0.017331226215565407,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.541247211672536,
+        "horizontal": 0.15128025772936599,
+        "angular": 0.34335013089343513,
+        "upright": 0.49863136016546966
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.16605956852436066,
+        "fit_mse_after": 0.11973169445991516,
+        "explained_variance": 0.9102631211280823
+      },
+      "completed_episodes": 85,
+      "recent_mean_episode_seconds": 3.7139374999999997,
+      "live_mean_height_mm": 37.828284558245365,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 12,
+      "training_seconds": 177.4676511962898,
+      "transitions": 196608,
+      "actor_updates": 47,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01679779216647148,
+      "mean_policy_loss": 0.003985345363616943,
+      "imitation_loss": [
+        0.0001630897168070078
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002273770828472991
+          ],
+          "accepted_kl": 0.002273770828472991,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.008637309058054462
+          ],
+          "accepted_kl": 0.008637309058054462,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.016747736502045002
+          ],
+          "accepted_kl": 0.016747736502045002,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.49474864232874227,
+        "horizontal": 0.19783700316762118,
+        "angular": 0.33916887358828396,
+        "upright": 0.49868762407094264
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1938757598400116,
+        "fit_mse_after": 0.17648093402385712,
+        "explained_variance": 0.9009246826171875
+      },
+      "completed_episodes": 95,
+      "recent_mean_episode_seconds": 3.6304374999999998,
+      "live_mean_height_mm": 37.19324494210944,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 13,
+      "training_seconds": 191.04845539620146,
+      "transitions": 212992,
+      "actor_updates": 50,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017068292945623398,
+      "mean_policy_loss": -0.11415315916140874,
+      "imitation_loss": [
+        0.00017486898286733776
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0033999416770133725
+          ],
+          "accepted_kl": 0.0033999416770133725,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013447035509755593
+          ],
+          "accepted_kl": 0.013447035509755593,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.0206974254529913,
+            0.01667697593960942
+          ],
+          "accepted_kl": 0.01667697593960942,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.4588314500844908,
+        "horizontal": 0.20140654451329945,
+        "angular": 0.3598448886224461,
+        "upright": 0.49868234749561297
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.16369517147541046,
+        "fit_mse_after": 0.13746106624603271,
+        "explained_variance": 0.9268020391464233
+      },
+      "completed_episodes": 106,
+      "recent_mean_episode_seconds": 3.5151250000000003,
+      "live_mean_height_mm": 37.63803223780953,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 14,
+      "training_seconds": 206.0553671871312,
+      "transitions": 229376,
+      "actor_updates": 54,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.019238825887441635,
+      "mean_policy_loss": -0.038519563153386116,
+      "imitation_loss": [
+        0.00016059823974501342
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00216813415975514
+          ],
+          "accepted_kl": 0.00216813415975514,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0077265405981303365
+          ],
+          "accepted_kl": 0.0077265405981303365,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01422172139976689
+          ],
+          "accepted_kl": 0.01422172139976689,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01892068822387555
+          ],
+          "accepted_kl": 0.01892068822387555,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.4705786700062495,
+        "horizontal": 0.20974876635423623,
+        "angular": 0.3624252202361215,
+        "upright": 0.4987057050983145
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1455976665019989,
+        "fit_mse_after": 0.12123669683933258,
+        "explained_variance": 0.9355653524398804
+      },
+      "completed_episodes": 116,
+      "recent_mean_episode_seconds": 3.5088125000000003,
+      "live_mean_height_mm": 38.80697067111339,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 15,
+      "training_seconds": 220.9067168352194,
+      "transitions": 245760,
+      "actor_updates": 58,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.019176270812749863,
+      "mean_policy_loss": 0.009839944541454315,
+      "imitation_loss": [
+        0.00015986153448466212
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0026903891195125705
+          ],
+          "accepted_kl": 0.0026903891195125705,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.008726146297946245
+          ],
+          "accepted_kl": 0.008726146297946245,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014938012501083939
+          ],
+          "accepted_kl": 0.014938012501083939,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.019439279181557655
+          ],
+          "accepted_kl": 0.019439279181557655,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5436441337878646,
+        "horizontal": 0.1491978062862711,
+        "angular": 0.355993487198804,
+        "upright": 0.498620951493202
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1627492755651474,
+        "fit_mse_after": 0.12764140963554382,
+        "explained_variance": 0.9163961410522461
+      },
+      "completed_episodes": 122,
+      "recent_mean_episode_seconds": 3.4743125,
+      "live_mean_height_mm": 40.79610684699376,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 16,
+      "training_seconds": 234.64388283435255,
+      "transitions": 262144,
+      "actor_updates": 61,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01498357579112053,
+      "mean_policy_loss": -0.0024841725826263428,
+      "imitation_loss": [
+        0.0001647050230531022
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002423824523265612
+          ],
+          "accepted_kl": 0.002423824523265612,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011641305078750861
+          ],
+          "accepted_kl": 0.011641305078750861,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02031053455491053,
+            0.01544684262399882
+          ],
+          "accepted_kl": 0.01544684262399882,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5261256767366427,
+        "horizontal": 0.1477483627973901,
+        "angular": 0.32852894674849603,
+        "upright": 0.49861176647159705
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.24668261408805847,
+        "fit_mse_after": 0.19444334506988525,
+        "explained_variance": 0.8991628289222717
+      },
+      "completed_episodes": 131,
+      "recent_mean_episode_seconds": 3.4355,
+      "live_mean_height_mm": 38.077880712595835,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 17,
+      "training_seconds": 254.9764490542002,
+      "transitions": 278528,
+      "actor_updates": 68,
+      "minibatch_updates": 7,
+      "kl_stop": true,
+      "maximum_kl": 0.018312808126211166,
+      "mean_policy_loss": -0.015449449952159609,
+      "imitation_loss": [
+        0.00017048383597284555
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00216825918224024
+          ],
+          "accepted_kl": 0.00216825918224024,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0076262822875155295
+          ],
+          "accepted_kl": 0.0076262822875155295,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012600791565250053
+          ],
+          "accepted_kl": 0.012600791565250053,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01477917225263066
+          ],
+          "accepted_kl": 0.01477917225263066,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014212237351285798
+          ],
+          "accepted_kl": 0.014212237351285798,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013826035005202224
+          ],
+          "accepted_kl": 0.013826035005202224,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01788697368803984
+          ],
+          "accepted_kl": 0.01788697368803984,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5143066644767964,
+        "horizontal": 0.22806583006706804,
+        "angular": 0.35641981852833926,
+        "upright": 0.49874773600326294
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.21000885963439941,
+        "fit_mse_after": 0.13714656233787537,
+        "explained_variance": 0.9314326643943787
+      },
+      "completed_episodes": 141,
+      "recent_mean_episode_seconds": 3.52775,
+      "live_mean_height_mm": 38.68056677990994,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 18,
+      "training_seconds": 268.79131052829325,
+      "transitions": 294912,
+      "actor_updates": 71,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017070135101675987,
+      "mean_policy_loss": 0.035841395457585655,
+      "imitation_loss": [
+        0.00016820321616251022
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0032764044695345867
+          ],
+          "accepted_kl": 0.0032764044695345867,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012644747196544778
+          ],
+          "accepted_kl": 0.012644747196544778,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02206891201183027,
+            0.016920579929483218
+          ],
+          "accepted_kl": 0.016920579929483218,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5296855440019164,
+        "horizontal": 0.153970078428051,
+        "angular": 0.3614669402762829,
+        "upright": 0.49862049332187364
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.15133295953273773,
+        "fit_mse_after": 0.11871803551912308,
+        "explained_variance": 0.9176832437515259
+      },
+      "completed_episodes": 148,
+      "recent_mean_episode_seconds": 3.6990625,
+      "live_mean_height_mm": 41.920482554677854,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 19,
+      "training_seconds": 281.9928706875071,
+      "transitions": 311296,
+      "actor_updates": 74,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.0164894238114357,
+      "mean_policy_loss": 0.005941248809297879,
+      "imitation_loss": [
+        0.00017404707614332438
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0024738339341677986
+          ],
+          "accepted_kl": 0.0024738339341677986,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011031175278635369
+          ],
+          "accepted_kl": 0.011031175278635369,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.016804330685712233
+          ],
+          "accepted_kl": 0.016804330685712233,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5836061943576972,
+        "horizontal": 0.15904227882095087,
+        "angular": 0.33559810387864975,
+        "upright": 0.498633482809595
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.20295841991901398,
+        "fit_mse_after": 0.17229324579238892,
+        "explained_variance": 0.9070796966552734
+      },
+      "completed_episodes": 158,
+      "recent_mean_episode_seconds": 3.655875,
+      "live_mean_height_mm": 39.11296576724196,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 20,
+      "training_seconds": 296.9421564624645,
+      "transitions": 327680,
+      "actor_updates": 78,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.016772640869021416,
+      "mean_policy_loss": 0.07643113657832146,
+      "imitation_loss": [
+        0.00015698029892519116
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0017802250387011947
+          ],
+          "accepted_kl": 0.0017802250387011947,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.006987823997782076
+          ],
+          "accepted_kl": 0.006987823997782076,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012653787203224283
+          ],
+          "accepted_kl": 0.012653787203224283,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01695003355872965
+          ],
+          "accepted_kl": 0.01695003355872965,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5214877552432001,
+        "horizontal": 0.180592595646647,
+        "angular": 0.34534553293239545,
+        "upright": 0.4986585553627676
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.1970243752002716,
+        "fit_mse_after": 0.16666477918624878,
+        "explained_variance": 0.9255038499832153
+      },
+      "completed_episodes": 167,
+      "recent_mean_episode_seconds": 3.8466249999999995,
+      "live_mean_height_mm": 37.63473803555072,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 21,
+      "training_seconds": 310.0254397513345,
+      "transitions": 344064,
+      "actor_updates": 81,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017384139820933342,
+      "mean_policy_loss": 0.002597381671269735,
+      "imitation_loss": [
+        0.00017007242422550917
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.003434101916752452
+          ],
+          "accepted_kl": 0.003434101916752452,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011647617882671688
+          ],
+          "accepted_kl": 0.011647617882671688,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017529671123022065
+          ],
+          "accepted_kl": 0.017529671123022065,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5092777512838526,
+        "horizontal": 0.22793192841874016,
+        "angular": 0.37300252043444343,
+        "upright": 0.498721890684377
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.18247058987617493,
+        "fit_mse_after": 0.16833190619945526,
+        "explained_variance": 0.9136930704116821
+      },
+      "completed_episodes": 175,
+      "recent_mean_episode_seconds": 3.589,
+      "live_mean_height_mm": 41.19133390866163,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 22,
+      "training_seconds": 323.71178641729057,
+      "transitions": 360448,
+      "actor_updates": 84,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01693933643400669,
+      "mean_policy_loss": 0.04067689801255862,
+      "imitation_loss": [
+        0.00016295004752464592
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00328067595214679
+          ],
+          "accepted_kl": 0.00328067595214679,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01371358190503004
+          ],
+          "accepted_kl": 0.01371358190503004,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.021805835597302446,
+            0.01737052755433899
+          ],
+          "accepted_kl": 0.01737052755433899,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5278239191849198,
+        "horizontal": 0.19158563636641904,
+        "angular": 0.37190394134347193,
+        "upright": 0.49867080813355463
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.10420231521129608,
+        "fit_mse_after": 0.09015169739723206,
+        "explained_variance": 0.953948438167572
+      },
+      "completed_episodes": 184,
+      "recent_mean_episode_seconds": 3.7784375,
+      "live_mean_height_mm": 42.96818393964359,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 23,
+      "training_seconds": 337.4796503484249,
+      "transitions": 376832,
+      "actor_updates": 87,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016042564064264297,
+      "mean_policy_loss": 0.080215685069561,
+      "imitation_loss": [
+        0.00016289218910969794
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002757290217990028
+          ],
+          "accepted_kl": 0.002757290217990028,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01244453028239194
+          ],
+          "accepted_kl": 0.01244453028239194,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02161302891724598,
+            0.01652081290151513
+          ],
+          "accepted_kl": 0.01652081290151513,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.594590121336749,
+        "horizontal": 0.10279382528819579,
+        "angular": 0.3390891170957585,
+        "upright": 0.49855529683349253
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.17306481301784515,
+        "fit_mse_after": 0.1352117359638214,
+        "explained_variance": 0.885377824306488
+      },
+      "completed_episodes": 189,
+      "recent_mean_episode_seconds": 3.7465625,
+      "live_mean_height_mm": 43.796520231938146,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 24,
+      "training_seconds": 350.799275463447,
+      "transitions": 393216,
+      "actor_updates": 90,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016819942742586136,
+      "mean_policy_loss": -0.04422307014465332,
+      "imitation_loss": [
+        0.00016217600204981863
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0021744664043681096
+          ],
+          "accepted_kl": 0.0021744664043681096,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.009899269178760585
+          ],
+          "accepted_kl": 0.009899269178760585,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01625190868954062
+          ],
+          "accepted_kl": 0.01625190868954062,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6096916517296592,
+        "horizontal": 0.14678259529275825,
+        "angular": 0.32578558519862777,
+        "upright": 0.49863842559667476
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.23758426308631897,
+        "fit_mse_after": 0.2037113904953003,
+        "explained_variance": 0.8932322859764099
+      },
+      "completed_episodes": 198,
+      "recent_mean_episode_seconds": 3.7965,
+      "live_mean_height_mm": 39.54321592388041,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 25,
+      "training_seconds": 364.5027985102497,
+      "transitions": 409600,
+      "actor_updates": 93,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016262449324131012,
+      "mean_policy_loss": -0.07311496138572693,
+      "imitation_loss": [
+        0.0001626571174710989
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.003440548776693015
+          ],
+          "accepted_kl": 0.003440548776693015,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013927081765750166
+          ],
+          "accepted_kl": 0.013927081765750166,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.020014151740587585,
+            0.016635125570092453
+          ],
+          "accepted_kl": 0.016635125570092453,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5163355518253223,
+        "horizontal": 0.17932048288946664,
+        "angular": 0.3630540538208007,
+        "upright": 0.49865744448159266
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.14036186039447784,
+        "fit_mse_after": 0.11749417334794998,
+        "explained_variance": 0.9311559796333313
+      },
+      "completed_episodes": 206,
+      "recent_mean_episode_seconds": 3.817375,
+      "live_mean_height_mm": 43.12462353864808,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 26,
+      "training_seconds": 375.88086535036564,
+      "transitions": 425984,
+      "actor_updates": 95,
+      "minibatch_updates": 2,
+      "kl_stop": true,
+      "maximum_kl": 0.015518592670559883,
+      "mean_policy_loss": -0.06651108339428902,
+      "imitation_loss": [
+        0.00016502173093613237
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0029565637686874346
+          ],
+          "accepted_kl": 0.0029565637686874346,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.015006708634021105
+          ],
+          "accepted_kl": 0.015006708634021105,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5306466379338652,
+        "horizontal": 0.1257173991499305,
+        "angular": 0.35115922251174775,
+        "upright": 0.498582772968718
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.17820298671722412,
+        "fit_mse_after": 0.1431831270456314,
+        "explained_variance": 0.8902952671051025
+      },
+      "completed_episodes": 211,
+      "recent_mean_episode_seconds": 3.6310625000000005,
+      "live_mean_height_mm": 45.849698320932895,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 27,
+      "training_seconds": 387.3966218982823,
+      "transitions": 442368,
+      "actor_updates": 97,
+      "minibatch_updates": 2,
+      "kl_stop": true,
+      "maximum_kl": 0.016314737498760223,
+      "mean_policy_loss": -0.10373533144593239,
+      "imitation_loss": [
+        0.00015713217726442963
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.006230795670888011
+          ],
+          "accepted_kl": 0.006230795670888011,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.015615141908902857
+          ],
+          "accepted_kl": 0.015615141908902857,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.589899683332696,
+        "horizontal": 0.12567849113991184,
+        "angular": 0.3269782826085206,
+        "upright": 0.4985946546842836
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.2122163027524948,
+        "fit_mse_after": 0.1828690767288208,
+        "explained_variance": 0.9023321866989136
+      },
+      "completed_episodes": 221,
+      "recent_mean_episode_seconds": 4.1136875,
+      "live_mean_height_mm": 43.26585503941371,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 28,
+      "training_seconds": 401.1619621482678,
+      "transitions": 458752,
+      "actor_updates": 100,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017805155366659164,
+      "mean_policy_loss": -0.054744607458511986,
+      "imitation_loss": [
+        0.00015772876213304698
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.003583313977593955
+          ],
+          "accepted_kl": 0.003583313977593955,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013760672926010218
+          ],
+          "accepted_kl": 0.013760672926010218,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02213183884327267,
+            0.017444219563269074
+          ],
+          "accepted_kl": 0.017444219563269074,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5614085912013648,
+        "horizontal": 0.14930039412962426,
+        "angular": 0.34260751506155784,
+        "upright": 0.49863251418712606
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.23912543058395386,
+        "fit_mse_after": 0.14452028274536133,
+        "explained_variance": 0.8897805213928223
+      },
+      "completed_episodes": 225,
+      "recent_mean_episode_seconds": 4.1178125,
+      "live_mean_height_mm": 45.36550550801461,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 29,
+      "training_seconds": 414.31107123056427,
+      "transitions": 475136,
+      "actor_updates": 103,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.015573281794786453,
+      "mean_policy_loss": 0.020310180882612865,
+      "imitation_loss": [
+        0.00016840433818288147
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002228635458287566
+          ],
+          "accepted_kl": 0.002228635458287566,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.007810930248373118
+          ],
+          "accepted_kl": 0.007810930248373118,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.015235916207585541
+          ],
+          "accepted_kl": 0.015235916207585541,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6107914034198534,
+        "horizontal": 0.10275462462815238,
+        "angular": 0.3258175674230224,
+        "upright": 0.49856144073987674
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.22650426626205444,
+        "fit_mse_after": 0.16472524404525757,
+        "explained_variance": 0.8728100061416626
+      },
+      "completed_episodes": 230,
+      "recent_mean_episode_seconds": 4.262125,
+      "live_mean_height_mm": 45.57075372732456,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 30,
+      "training_seconds": 427.61470030946657,
+      "transitions": 491520,
+      "actor_updates": 106,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.020778018981218338,
+      "mean_policy_loss": -0.038293046255906425,
+      "imitation_loss": [
+        0.00017466486315242946
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0027067121889570887
+          ],
+          "accepted_kl": 0.0027067121889570887,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011163412290201935
+          ],
+          "accepted_kl": 0.011163412290201935,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01997646467771048
+          ],
+          "accepted_kl": 0.01997646467771048,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.525884408470775,
+        "horizontal": 0.14518883262375226,
+        "angular": 0.33005880413747213,
+        "upright": 0.49863532031499475
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.186805859208107,
+        "fit_mse_after": 0.1396598517894745,
+        "explained_variance": 0.9133296608924866
+      },
+      "completed_episodes": 239,
+      "recent_mean_episode_seconds": 4.939,
+      "live_mean_height_mm": 44.21890732405557,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 31,
+      "training_seconds": 440.8797831106931,
+      "transitions": 507904,
+      "actor_updates": 109,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017655599862337112,
+      "mean_policy_loss": -0.0003625104824701945,
+      "imitation_loss": [
+        0.00015905352483969182
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0024626387314172545
+          ],
+          "accepted_kl": 0.0024626387314172545,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.010673537475116898
+          ],
+          "accepted_kl": 0.010673537475116898,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01844382798292009
+          ],
+          "accepted_kl": 0.01844382798292009,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.48281194730977445,
+        "horizontal": 0.15297255852698965,
+        "angular": 0.3485883993974361,
+        "upright": 0.4986227238898933
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.2624910771846771,
+        "fit_mse_after": 0.2187475711107254,
+        "explained_variance": 0.9105799198150635
+      },
+      "completed_episodes": 248,
+      "recent_mean_episode_seconds": 4.92075,
+      "live_mean_height_mm": 41.87257794294577,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 32,
+      "training_seconds": 454.5398278106004,
+      "transitions": 524288,
+      "actor_updates": 112,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.016225647181272507,
+      "mean_policy_loss": 0.025947589427232742,
+      "imitation_loss": [
+        0.000165814213687554
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0029237652757999194
+          ],
+          "accepted_kl": 0.0029237652757999194,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.012520497878012599
+          ],
+          "accepted_kl": 0.012520497878012599,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02157993402345286,
+            0.01653503749936041
+          ],
+          "accepted_kl": 0.01653503749936041,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.457462529934374,
+        "horizontal": 0.20790703803732746,
+        "angular": 0.3690743849023844,
+        "upright": 0.4986995002821857
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.21319171786308289,
+        "fit_mse_after": 0.16118139028549194,
+        "explained_variance": 0.9058313965797424
+      },
+      "completed_episodes": 256,
+      "recent_mean_episode_seconds": 4.8963125000000005,
+      "live_mean_height_mm": 44.65525352602853,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 33,
+      "training_seconds": 467.6351681915112,
+      "transitions": 540672,
+      "actor_updates": 115,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.019813504070043564,
+      "mean_policy_loss": -0.021675139665603638,
+      "imitation_loss": [
+        0.00016090209828689694
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0031985420073284525
+          ],
+          "accepted_kl": 0.0031985420073284525,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.011885201159863313
+          ],
+          "accepted_kl": 0.011885201159863313,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01978553441485008
+          ],
+          "accepted_kl": 0.01978553441485008,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.48177343645800375,
+        "horizontal": 0.11400141447136064,
+        "angular": 0.36272653481354816,
+        "upright": 0.4985697186869037
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.15353237092494965,
+        "fit_mse_after": 0.11509517580270767,
+        "explained_variance": 0.9063138961791992
+      },
+      "completed_episodes": 261,
+      "recent_mean_episode_seconds": 4.90925,
+      "live_mean_height_mm": 49.179991372417085,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 34,
+      "training_seconds": 480.9992545163259,
+      "transitions": 557056,
+      "actor_updates": 118,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.018362129107117653,
+      "mean_policy_loss": 0.029205987850824993,
+      "imitation_loss": [
+        0.0001613259082660079
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0026461601719549154
+          ],
+          "accepted_kl": 0.0026461601719549154,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.010344718556557
+          ],
+          "accepted_kl": 0.010344718556557,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.017191363472638006
+          ],
+          "accepted_kl": 0.017191363472638006,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6386708675127041,
+        "horizontal": 0.10767464285274754,
+        "angular": 0.3329587053234217,
+        "upright": 0.4985561787754651
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.17427058517932892,
+        "fit_mse_after": 0.1273702085018158,
+        "explained_variance": 0.9108853340148926
+      },
+      "completed_episodes": 267,
+      "recent_mean_episode_seconds": 4.8213125,
+      "live_mean_height_mm": 48.518145729770055,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 35,
+      "training_seconds": 496.0737744513899,
+      "transitions": 573440,
+      "actor_updates": 122,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.016683917492628098,
+      "mean_policy_loss": -0.097599015571177,
+      "imitation_loss": [
+        0.00015801512927282602
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002293647029105305
+          ],
+          "accepted_kl": 0.002293647029105305,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.00903121041410193
+          ],
+          "accepted_kl": 0.00903121041410193,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.014519613474040993
+          ],
+          "accepted_kl": 0.014519613474040993,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01685420980193355
+          ],
+          "accepted_kl": 0.01685420980193355,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6479847062929872,
+        "horizontal": 0.10153170997776544,
+        "angular": 0.3243393980378887,
+        "upright": 0.49855665991522025
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.22689184546470642,
+        "fit_mse_after": 0.1760227084159851,
+        "explained_variance": 0.820702850818634
+      },
+      "completed_episodes": 270,
+      "recent_mean_episode_seconds": 4.5209375000000005,
+      "live_mean_height_mm": 51.68574919492299,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 36,
+      "training_seconds": 507.48834165837616,
+      "transitions": 589824,
+      "actor_updates": 124,
+      "minibatch_updates": 2,
+      "kl_stop": true,
+      "maximum_kl": 0.016252420842647552,
+      "mean_policy_loss": -0.004707781597971916,
+      "imitation_loss": [
+        0.00016119482461363077
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.004171353855299084
+          ],
+          "accepted_kl": 0.004171353855299084,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01647766722981111
+          ],
+          "accepted_kl": 0.01647766722981111,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6177938582482205,
+        "horizontal": 0.07279645605624241,
+        "angular": 0.32032410217955065,
+        "upright": 0.49851701956624483
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.12478142231702805,
+        "fit_mse_after": 0.09318068623542786,
+        "explained_variance": 0.919256329536438
+      },
+      "completed_episodes": 273,
+      "recent_mean_episode_seconds": 4.6049375,
+      "live_mean_height_mm": 53.53735077338832,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 37,
+      "training_seconds": 521.3232180024497,
+      "transitions": 606208,
+      "actor_updates": 127,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.017183959484100342,
+      "mean_policy_loss": 0.03635491927464803,
+      "imitation_loss": [
+        0.0001602439151611179
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.006259738142140378
+          ],
+          "accepted_kl": 0.006259738142140378,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.020120339203457786,
+            0.012002651742162893
+          ],
+          "accepted_kl": 0.012002651742162893,
+          "lr": 1.5e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.016012539645593456
+          ],
+          "accepted_kl": 0.016012539645593456,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.601407663333062,
+        "horizontal": 0.13064816944195984,
+        "angular": 0.3239809380082536,
+        "upright": 0.49859643337266657
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.28690552711486816,
+        "fit_mse_after": 0.2182571291923523,
+        "explained_variance": 0.9156725406646729
+      },
+      "completed_episodes": 281,
+      "recent_mean_episode_seconds": 4.8421875000000005,
+      "live_mean_height_mm": 46.89386578402807,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 38,
+      "training_seconds": 534.6000000275671,
+      "transitions": 622592,
+      "actor_updates": 130,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01878218725323677,
+      "mean_policy_loss": -0.07155815263589223,
+      "imitation_loss": [
+        0.00016075742314569652
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0027804394932545847
+          ],
+          "accepted_kl": 0.0027804394932545847,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01191289260091653
+          ],
+          "accepted_kl": 0.01191289260091653,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.019005219109314707
+          ],
+          "accepted_kl": 0.019005219109314707,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5013610101443836,
+        "horizontal": 0.16523124980516307,
+        "angular": 0.35126020107656014,
+        "upright": 0.4986379111496928
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.2400122880935669,
+        "fit_mse_after": 0.214131161570549,
+        "explained_variance": 0.8748452663421631
+      },
+      "completed_episodes": 289,
+      "recent_mean_episode_seconds": 5.4815625,
+      "live_mean_height_mm": 48.68505028557457,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 39,
+      "training_seconds": 549.6603810405359,
+      "transitions": 638976,
+      "actor_updates": 134,
+      "minibatch_updates": 4,
+      "kl_stop": true,
+      "maximum_kl": 0.016370268538594246,
+      "mean_policy_loss": 0.07452048733830452,
+      "imitation_loss": [
+        0.00015190502745099366
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0018600194553772594
+          ],
+          "accepted_kl": 0.0018600194553772594,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.007595847775915556
+          ],
+          "accepted_kl": 0.007595847775915556,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013599787046934052
+          ],
+          "accepted_kl": 0.013599787046934052,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.016764252744653013
+          ],
+          "accepted_kl": 0.016764252744653013,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6249839937032197,
+        "horizontal": 0.10230580796773843,
+        "angular": 0.3425984571002741,
+        "upright": 0.49855529605632765
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.223897784948349,
+        "fit_mse_after": 0.1757846176624298,
+        "explained_variance": 0.8520309925079346
+      },
+      "completed_episodes": 293,
+      "recent_mean_episode_seconds": 5.509125,
+      "live_mean_height_mm": 49.97378736554807,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 40,
+      "training_seconds": 563.0094423466362,
+      "transitions": 655360,
+      "actor_updates": 137,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.019352948293089867,
+      "mean_policy_loss": 0.026256456971168518,
+      "imitation_loss": [
+        0.00016301462892442942
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0026080000913234116
+          ],
+          "accepted_kl": 0.0026080000913234116,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01058235423078938
+          ],
+          "accepted_kl": 0.01058235423078938,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01915876142080775
+          ],
+          "accepted_kl": 0.01915876142080775,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.6160017163897199,
+        "horizontal": 0.135567054963417,
+        "angular": 0.33646223851515156,
+        "upright": 0.498605302393887
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.16078193485736847,
+        "fit_mse_after": 0.10971043258905411,
+        "explained_variance": 0.9336749911308289
+      },
+      "completed_episodes": 300,
+      "recent_mean_episode_seconds": 5.436,
+      "live_mean_height_mm": 49.41005137614014,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 41,
+      "training_seconds": 576.2904046336189,
+      "transitions": 671744,
+      "actor_updates": 140,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.015413030982017517,
+      "mean_policy_loss": 0.003521271049976349,
+      "imitation_loss": [
+        0.00016550440341234207
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.002965195692899803
+          ],
+          "accepted_kl": 0.002965195692899803,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.010449256156614465
+          ],
+          "accepted_kl": 0.010449256156614465,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.01615250446041177
+          ],
+          "accepted_kl": 0.01615250446041177,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5232938290098347,
+        "horizontal": 0.11163250341622605,
+        "angular": 0.33671105225256365,
+        "upright": 0.49855498671251114
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.3383128046989441,
+        "fit_mse_after": 0.2882993817329407,
+        "explained_variance": 0.877426266670227
+      },
+      "completed_episodes": 306,
+      "recent_mean_episode_seconds": 5.3800625,
+      "live_mean_height_mm": 49.118128539956686,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 42,
+      "training_seconds": 589.6438531936146,
+      "transitions": 688128,
+      "actor_updates": 143,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.018321026116609573,
+      "mean_policy_loss": 0.08893152823050816,
+      "imitation_loss": [
+        0.00016729853814467788
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.0019015372764099596
+          ],
+          "accepted_kl": 0.0019015372764099596,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.008591754629361702
+          ],
+          "accepted_kl": 0.008591754629361702,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.018117362993702625
+          ],
+          "accepted_kl": 0.018117362993702625,
+          "lr": 3e-07
+        }
+      ],
+      "actor_lr": 3e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.4692771678079353,
+        "horizontal": 0.20087192941688084,
+        "angular": 0.35608689823692047,
+        "upright": 0.4986978733300418
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.31019169092178345,
+        "fit_mse_after": 0.2647298574447632,
+        "explained_variance": 0.9036148190498352
+      },
+      "completed_episodes": 315,
+      "recent_mean_episode_seconds": 5.3056874999999994,
+      "live_mean_height_mm": 45.057333445829556,
+      "std_mean": 0.0029999997932463884
+    },
+    {
+      "rollout": 43,
+      "training_seconds": 603.3891106243245,
+      "transitions": 704512,
+      "actor_updates": 146,
+      "minibatch_updates": 3,
+      "kl_stop": true,
+      "maximum_kl": 0.01681528240442276,
+      "mean_policy_loss": -0.03582621676226457,
+      "imitation_loss": [
+        0.0001549183070892468
+      ],
+      "post_update_checks": [
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.004147147650552653
+          ],
+          "accepted_kl": 0.004147147650552653,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 1,
+          "trial_kl": [
+            0.013625373471534617
+          ],
+          "accepted_kl": 0.013625373471534617,
+          "lr": 3e-07
+        },
+        {
+          "accepted": true,
+          "attempts": 2,
+          "trial_kl": [
+            0.02150407104106749,
+            0.01713226412154937
+          ],
+          "accepted_kl": 0.01713226412154937,
+          "lr": 1.5e-07
+        }
+      ],
+      "actor_lr": 1.5e-07,
+      "reward_rates": {
+        "alive": 1.0,
+        "vertical": 0.5209409798958804,
+        "horizontal": 0.15517668233830756,
+        "angular": 0.36886526552341453,
+        "upright": 0.49862656993605
+      },
+      "critic": {
+        "updates": 32,
+        "sample_presentations": 65536,
+        "input_calibrated_this_fit": false,
+        "sample_order": "shuffled time/world transitions",
+        "fit_mse_before": 0.28787705302238464,
+        "fit_mse_after": 0.24449585378170013,
+        "explained_variance": 0.9003192782402039
+      },
+      "completed_episodes": 325,
+      "recent_mean_episode_seconds": 5.29775,
+      "live_mean_height_mm": 42.874094263390454,
+      "std_mean": 0.0029999997932463884
+    }
+  ],
+  "episodes": [
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 1.8960000000000001,
+      "failed": true,
+      "return": 2.9983766353689134
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 1.968,
+      "failed": true,
+      "return": 3.210317965829745
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 2.008,
+      "failed": true,
+      "return": 3.1140784374438226
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 2.19,
+      "failed": true,
+      "return": 3.428214466199279
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 2.346,
+      "failed": true,
+      "return": 3.790593679761514
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 2.602,
+      "failed": true,
+      "return": 4.220384928863496
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 2.618,
+      "failed": true,
+      "return": 4.704436535015702
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 2.658,
+      "failed": true,
+      "return": 4.530924839433283
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 2.708,
+      "failed": true,
+      "return": 5.283915379783139
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 2.7560000000000002,
+      "failed": true,
+      "return": 5.40626704855822
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 2.774,
+      "failed": true,
+      "return": 5.34777213470079
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 2.824,
+      "failed": true,
+      "return": 4.888443307485431
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 2.884,
+      "failed": true,
+      "return": 5.63948642835021
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 2.888,
+      "failed": true,
+      "return": 5.517090593464673
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 3.0060000000000002,
+      "failed": true,
+      "return": 6.006294977618381
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 3.0580000000000003,
+      "failed": true,
+      "return": 5.998762850416824
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 3.06,
+      "failed": true,
+      "return": 5.493335330160335
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 3.094,
+      "failed": true,
+      "return": 6.183571136556566
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.17,
+      "failed": true,
+      "return": 5.926847627619281
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 3.2960000000000003,
+      "failed": true,
+      "return": 6.738972422899678
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 3.3080000000000003,
+      "failed": true,
+      "return": 6.398611568612978
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 3.334,
+      "failed": true,
+      "return": 6.468847941607237
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 3.556,
+      "failed": true,
+      "return": 7.307739295065403
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 3.564,
+      "failed": true,
+      "return": 7.212793178157881
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 3.588,
+      "failed": true,
+      "return": 7.315204929327592
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 3.674,
+      "failed": true,
+      "return": 7.17107378365472
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 4.066,
+      "failed": true,
+      "return": 8.684940526960418
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 4.268,
+      "failed": true,
+      "return": 9.622750270646065
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 4.464,
+      "failed": true,
+      "return": 10.328753961250186
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 4.546,
+      "failed": true,
+      "return": 9.841314586345106
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 5.1000000000000005,
+      "failed": true,
+      "return": 10.748278412269428
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 2.426,
+      "failed": true,
+      "return": 4.279396514641121
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 2.692,
+      "failed": true,
+      "return": 4.431521693710238
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 3.0540000000000003,
+      "failed": true,
+      "return": 5.366307537769899
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 2.48,
+      "failed": true,
+      "return": 4.329680611845106
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 5.676,
+      "failed": true,
+      "return": 12.93149775476195
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 3.88,
+      "failed": true,
+      "return": 7.796816442394629
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 3.7800000000000002,
+      "failed": true,
+      "return": 7.386182872811332
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 2.914,
+      "failed": true,
+      "return": 5.1784941726364195
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 4.108,
+      "failed": true,
+      "return": 8.258879393571988
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 3.348,
+      "failed": true,
+      "return": 6.19565752777271
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 3.186,
+      "failed": true,
+      "return": 5.738411494530737
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 3.956,
+      "failed": true,
+      "return": 8.45467350143008
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 3.8040000000000003,
+      "failed": true,
+      "return": 7.823692878708243
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 2.982,
+      "failed": true,
+      "return": 5.821292702341452
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 4.6000000000000005,
+      "failed": true,
+      "return": 10.357675344217569
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 3.242,
+      "failed": true,
+      "return": 5.920168283395469
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 2.862,
+      "failed": true,
+      "return": 5.083015657262877
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 2.67,
+      "failed": true,
+      "return": 4.895953458966687
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.938,
+      "failed": true,
+      "return": 7.996821331093088
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 2.882,
+      "failed": true,
+      "return": 5.165304038440809
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 4.056,
+      "failed": true,
+      "return": 8.387663285480812
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 4.756,
+      "failed": true,
+      "return": 9.800364435184747
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 4.694,
+      "failed": true,
+      "return": 9.988141815410927
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 3.998,
+      "failed": true,
+      "return": 8.632395578548312
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 4.064,
+      "failed": true,
+      "return": 8.750874520046636
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 4.744,
+      "failed": true,
+      "return": 9.89063152950257
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 2.836,
+      "failed": true,
+      "return": 5.099993908545002
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 5.224,
+      "failed": true,
+      "return": 11.689381735399365
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 1.962,
+      "failed": true,
+      "return": 2.8577194593381137
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 3.244,
+      "failed": true,
+      "return": 6.3534263169858605
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 3.028,
+      "failed": true,
+      "return": 5.946747184498236
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 4.356,
+      "failed": true,
+      "return": 9.095260420814157
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 5.604,
+      "failed": true,
+      "return": 12.606217383872718
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 3.882,
+      "failed": true,
+      "return": 8.2729772424791
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.552,
+      "failed": true,
+      "return": 4.516121567226946
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 2.316,
+      "failed": true,
+      "return": 3.9045630833134055
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 3.608,
+      "failed": true,
+      "return": 7.558515433222055
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 2.204,
+      "failed": true,
+      "return": 3.488092369865626
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 2.386,
+      "failed": true,
+      "return": 4.0606341829989105
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 3.626,
+      "failed": true,
+      "return": 7.474903998430818
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 6.68,
+      "failed": true,
+      "return": 14.7280035559088
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 6.768,
+      "failed": true,
+      "return": 16.57339747925289
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 4.526,
+      "failed": true,
+      "return": 9.963351668789983
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 3.8280000000000003,
+      "failed": true,
+      "return": 7.8298101630061865
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 2.622,
+      "failed": true,
+      "return": 4.694833393441513
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 2.854,
+      "failed": true,
+      "return": 5.570109645603225
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 2.848,
+      "failed": true,
+      "return": 4.872244189959019
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 3.326,
+      "failed": true,
+      "return": 6.326907872688025
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 4.04,
+      "failed": true,
+      "return": 8.164814064046368
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 3.16,
+      "failed": true,
+      "return": 6.445905380649492
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 4.542,
+      "failed": true,
+      "return": 9.54118109261617
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 2.454,
+      "failed": true,
+      "return": 3.7553403426427394
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 4.2940000000000005,
+      "failed": true,
+      "return": 9.060356200672686
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 2.576,
+      "failed": true,
+      "return": 4.5013374565169215
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 3.0540000000000003,
+      "failed": true,
+      "return": 5.5892266891896725
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 2.654,
+      "failed": true,
+      "return": 4.504354163771495
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 2.464,
+      "failed": true,
+      "return": 4.39880011160858
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 2.52,
+      "failed": true,
+      "return": 4.3171248799189925
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 6.346,
+      "failed": true,
+      "return": 14.585673231398687
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 5.316,
+      "failed": true,
+      "return": 11.857115437509492
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 2.984,
+      "failed": true,
+      "return": 5.992363314609975
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.902,
+      "failed": true,
+      "return": 5.5291294124908745
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 4.63,
+      "failed": true,
+      "return": 9.96863724454306
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 2.608,
+      "failed": true,
+      "return": 4.743342488072813
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 4.768,
+      "failed": true,
+      "return": 9.960111672058702
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 3.46,
+      "failed": true,
+      "return": 7.123997926944867
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 3.076,
+      "failed": true,
+      "return": 5.740683296928182
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 2.942,
+      "failed": true,
+      "return": 5.128529560286552
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 2.54,
+      "failed": true,
+      "return": 4.322701161261648
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 3.79,
+      "failed": true,
+      "return": 7.548429216025397
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.692,
+      "failed": true,
+      "return": 7.180887550814077
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 3.086,
+      "failed": true,
+      "return": 5.944413443095982
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 4.3340000000000005,
+      "failed": true,
+      "return": 9.168439984321594
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 3.712,
+      "failed": true,
+      "return": 7.427680899621919
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 5.062,
+      "failed": true,
+      "return": 11.037528577959165
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 2.856,
+      "failed": true,
+      "return": 4.956424753647298
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 7.686,
+      "failed": true,
+      "return": 17.157924303086475
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 2.714,
+      "failed": true,
+      "return": 4.738807389745489
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 2.582,
+      "failed": true,
+      "return": 4.7387915884610265
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 2.724,
+      "failed": true,
+      "return": 4.736505854874849
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 3.338,
+      "failed": true,
+      "return": 6.613843859406188
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 3.188,
+      "failed": true,
+      "return": 6.184100397164002
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 2.81,
+      "failed": true,
+      "return": 5.069271185901016
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 2.336,
+      "failed": true,
+      "return": 3.706850051647052
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 3.532,
+      "failed": true,
+      "return": 7.3747770874761045
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 2.936,
+      "failed": true,
+      "return": 5.300549035193399
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 2.854,
+      "failed": true,
+      "return": 5.244023745181039
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 2.59,
+      "failed": true,
+      "return": 4.809945181244984
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 3.322,
+      "failed": true,
+      "return": 6.357007310260087
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 3.068,
+      "failed": true,
+      "return": 5.528868611436337
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 3.74,
+      "failed": true,
+      "return": 7.598624779377133
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 3.62,
+      "failed": true,
+      "return": 6.627254507737234
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 3.2800000000000002,
+      "failed": true,
+      "return": 6.186994213145226
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 3.08,
+      "failed": true,
+      "return": 5.67008861945942
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 2.832,
+      "failed": true,
+      "return": 5.087644602172077
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 5.216,
+      "failed": true,
+      "return": 10.92556602298282
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 3.3000000000000003,
+      "failed": true,
+      "return": 6.1962483047973365
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 3.18,
+      "failed": true,
+      "return": 5.828449014108628
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 2.5260000000000002,
+      "failed": true,
+      "return": 4.387875107815489
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 4.41,
+      "failed": true,
+      "return": 8.704346839571372
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 2.548,
+      "failed": true,
+      "return": 4.451702664140612
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 2.84,
+      "failed": true,
+      "return": 5.142465858720243
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 2.312,
+      "failed": true,
+      "return": 3.826509587932378
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 6.91,
+      "failed": true,
+      "return": 15.908808871172369
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.826,
+      "failed": true,
+      "return": 7.745045838411897
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.976740507408977
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 3.17,
+      "failed": true,
+      "return": 6.327581132762134
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 4.244,
+      "failed": true,
+      "return": 8.429869596846402
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 2.22,
+      "failed": true,
+      "return": 3.6089937151409686
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 4.354,
+      "failed": true,
+      "return": 9.067763700149953
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 2.406,
+      "failed": true,
+      "return": 3.7517520196270198
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 2.732,
+      "failed": true,
+      "return": 5.100174230989069
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 2.722,
+      "failed": true,
+      "return": 4.707504755351692
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 3.77,
+      "failed": true,
+      "return": 7.516304466873407
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 6.2860000000000005,
+      "failed": true,
+      "return": 13.705283853923902
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 5.0280000000000005,
+      "failed": true,
+      "return": 11.786824151175097
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 3.048,
+      "failed": true,
+      "return": 5.636916214833036
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 2.512,
+      "failed": true,
+      "return": 4.16159668774344
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 2.432,
+      "failed": true,
+      "return": 4.025670995237306
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 3.126,
+      "failed": true,
+      "return": 5.646751039195806
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 2.86,
+      "failed": true,
+      "return": 5.116092759650201
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 2.572,
+      "failed": true,
+      "return": 4.764943679794669
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 4.412,
+      "failed": true,
+      "return": 9.333845503628254
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 2.914,
+      "failed": true,
+      "return": 5.613209414295852
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 2.888,
+      "failed": true,
+      "return": 5.454153891419992
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.982,
+      "failed": true,
+      "return": 5.763727161101997
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 3.242,
+      "failed": true,
+      "return": 6.739626635797322
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 5.854,
+      "failed": true,
+      "return": 12.069020186550915
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 2.968,
+      "failed": true,
+      "return": 5.630088844336569
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 3.0180000000000002,
+      "failed": true,
+      "return": 5.180303283734247
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.416,
+      "failed": true,
+      "return": 6.8529131463728845
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 2.7960000000000003,
+      "failed": true,
+      "return": 5.105085609247908
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 7.288,
+      "failed": true,
+      "return": 18.191184553317726
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 6.5440000000000005,
+      "failed": true,
+      "return": 15.03190523921512
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 3.628,
+      "failed": true,
+      "return": 7.833437365712598
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 3.834,
+      "failed": true,
+      "return": 7.638557394267991
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 3.604,
+      "failed": true,
+      "return": 7.066214179852977
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 2.74,
+      "failed": true,
+      "return": 4.863532750867307
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 4.896,
+      "failed": true,
+      "return": 10.949961959850043
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 3.004,
+      "failed": true,
+      "return": 5.387949896045029
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 3.18,
+      "failed": true,
+      "return": 6.360000111628324
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 2.27,
+      "failed": true,
+      "return": 3.5778490661177784
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 1.964,
+      "failed": true,
+      "return": 2.910520145203918
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 3.0500000000000003,
+      "failed": true,
+      "return": 5.797864715801552
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 3.27,
+      "failed": true,
+      "return": 6.579726672265679
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 8.164,
+      "failed": true,
+      "return": 19.486621538409963
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 6.2,
+      "failed": true,
+      "return": 13.8494054954499
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 3.222,
+      "failed": true,
+      "return": 5.929028030717745
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 2.5060000000000002,
+      "failed": true,
+      "return": 4.386193996760994
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 2.7640000000000002,
+      "failed": true,
+      "return": 4.897473183460534
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 2.766,
+      "failed": true,
+      "return": 4.788182056043297
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 3.7720000000000002,
+      "failed": true,
+      "return": 8.298965978901833
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 5.182,
+      "failed": true,
+      "return": 11.48629540973343
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 3.29,
+      "failed": true,
+      "return": 6.227840475039557
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 2.458,
+      "failed": true,
+      "return": 4.095222731120884
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 3.3040000000000003,
+      "failed": true,
+      "return": 6.055534879909828
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 2.734,
+      "failed": true,
+      "return": 4.995434948476031
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 2.962,
+      "failed": true,
+      "return": 5.778927621664479
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 4.854,
+      "failed": true,
+      "return": 10.653565695276484
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.63,
+      "failed": true,
+      "return": 7.097012462560087
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 3.426,
+      "failed": true,
+      "return": 6.285663383081555
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 3.552,
+      "failed": true,
+      "return": 7.070369743043557
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 3.122,
+      "failed": true,
+      "return": 5.713730920571834
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 4.612,
+      "failed": true,
+      "return": 9.600282807135954
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 26.717894133878872
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 3.218,
+      "failed": true,
+      "return": 6.164804175961763
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 3.938,
+      "failed": true,
+      "return": 7.729773040162399
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 2.77,
+      "failed": true,
+      "return": 4.931564660742879
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 2.994,
+      "failed": true,
+      "return": 5.544325795723125
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 2.352,
+      "failed": true,
+      "return": 3.839699908392504
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 3.044,
+      "failed": true,
+      "return": 5.777641265420243
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 3.254,
+      "failed": true,
+      "return": 6.625679320655763
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 4.088,
+      "failed": true,
+      "return": 8.443009531125426
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 4.756,
+      "failed": true,
+      "return": 10.35636699013412
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.902,
+      "failed": true,
+      "return": 5.271614848868921
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 3.936,
+      "failed": true,
+      "return": 7.836219830205664
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 3.846,
+      "failed": true,
+      "return": 7.6548696316313
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 4.494,
+      "failed": true,
+      "return": 9.341124296188354
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 3.346,
+      "failed": true,
+      "return": 6.827160417335108
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 2.322,
+      "failed": true,
+      "return": 3.7374655117746443
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 4.922,
+      "failed": true,
+      "return": 10.988060666248202
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 2.832,
+      "failed": true,
+      "return": 5.121089827269316
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 7.486,
+      "failed": true,
+      "return": 17.457567812409252
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 26.24736165185459
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 3.7560000000000002,
+      "failed": true,
+      "return": 7.152004458010197
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 3.404,
+      "failed": true,
+      "return": 6.695746429963037
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 2.606,
+      "failed": true,
+      "return": 4.600087559083477
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 1.792,
+      "failed": true,
+      "return": 2.7237573261372745
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 7.348,
+      "failed": true,
+      "return": 17.816082428442314
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 3.036,
+      "failed": true,
+      "return": 5.417502146214247
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 4.376,
+      "failed": true,
+      "return": 9.204970269463956
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 3.338,
+      "failed": true,
+      "return": 6.041209754999727
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 3.584,
+      "failed": true,
+      "return": 7.05814656871371
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 4.296,
+      "failed": true,
+      "return": 8.82776206289418
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 4.274,
+      "failed": true,
+      "return": 8.901086698286235
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 2.576,
+      "failed": true,
+      "return": 4.3266817685216665
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.970284525537863
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 3.278,
+      "failed": true,
+      "return": 6.148476924048737
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 9.38,
+      "failed": true,
+      "return": 23.563961676787585
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 5.162,
+      "failed": true,
+      "return": 11.59281620872207
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 4.144,
+      "failed": true,
+      "return": 8.672341791447252
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 5.828,
+      "failed": true,
+      "return": 12.731431545689702
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 6.882000000000001,
+      "failed": true,
+      "return": 15.290709507651627
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 4.72,
+      "failed": true,
+      "return": 9.83665483747609
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 3.5300000000000002,
+      "failed": true,
+      "return": 6.934300438500941
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.450241749640554
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 5.97,
+      "failed": true,
+      "return": 13.23733414313756
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 5.5200000000000005,
+      "failed": true,
+      "return": 11.253403509967029
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 3.482,
+      "failed": true,
+      "return": 6.870598222594708
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 5.426,
+      "failed": true,
+      "return": 11.4876288685482
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 3.644,
+      "failed": true,
+      "return": 7.128742908127606
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 3.612,
+      "failed": true,
+      "return": 7.0002332017757
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 4.546,
+      "failed": true,
+      "return": 9.632439900189638
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 3.988,
+      "failed": true,
+      "return": 7.910179802682251
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 3.734,
+      "failed": true,
+      "return": 7.044303051428869
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 4.0760000000000005,
+      "failed": true,
+      "return": 8.361258760560304
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 9.912,
+      "failed": true,
+      "return": 24.634202648652717
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 3.102,
+      "failed": true,
+      "return": 5.869980089599267
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 2.1,
+      "failed": true,
+      "return": 3.063645629910752
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 6.538,
+      "failed": true,
+      "return": 14.277727944543585
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 3.532,
+      "failed": true,
+      "return": 7.091569795506075
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 5.09,
+      "failed": true,
+      "return": 10.813426738837734
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 3.8280000000000003,
+      "failed": true,
+      "return": 6.927288008155301
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 2.36,
+      "failed": true,
+      "return": 3.567874411586672
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 2.152,
+      "failed": true,
+      "return": 3.152234689332545
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.692,
+      "failed": true,
+      "return": 4.379988520639017
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 4.792,
+      "failed": true,
+      "return": 10.668976541841403
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 9.806000000000001,
+      "failed": true,
+      "return": 23.095423510530964
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 3.0660000000000003,
+      "failed": true,
+      "return": 5.584050773642957
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 4.482,
+      "failed": true,
+      "return": 8.89788765925914
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.94171884097159
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 4.5120000000000005,
+      "failed": true,
+      "return": 8.915212478721514
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 6.922,
+      "failed": true,
+      "return": 14.936133615905419
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 4.732,
+      "failed": true,
+      "return": 9.0355908353813
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 4.324,
+      "failed": true,
+      "return": 8.711676096310839
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 2.8120000000000003,
+      "failed": true,
+      "return": 5.096674486994743
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 2.948,
+      "failed": true,
+      "return": 5.620995228877291
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 4.212,
+      "failed": true,
+      "return": 8.201699578436092
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 2.728,
+      "failed": true,
+      "return": 4.698754493379965
+    },
+    {
+      "world": 2,
+      "start_episode": 2,
+      "seconds": 7.0120000000000005,
+      "failed": true,
+      "return": 16.584514850983396
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 5.61,
+      "failed": true,
+      "return": 12.435297257034108
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 4.494,
+      "failed": true,
+      "return": 9.244928708998486
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 24.939979832386598
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 2.5300000000000002,
+      "failed": true,
+      "return": 4.312001726822928
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 5.8660000000000005,
+      "failed": true,
+      "return": 12.958876851014793
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 3.398,
+      "failed": true,
+      "return": 6.462934504961595
+    },
+    {
+      "world": 20,
+      "start_episode": 4,
+      "seconds": 6.2780000000000005,
+      "failed": true,
+      "return": 13.607003351906314
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 4.386,
+      "failed": true,
+      "return": 9.717551252571866
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 5.588,
+      "failed": true,
+      "return": 12.117835351265967
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 6.16,
+      "failed": true,
+      "return": 14.153373677516356
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 6.408,
+      "failed": true,
+      "return": 15.273478613467887
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 6.668,
+      "failed": true,
+      "return": 14.22386102587916
+    },
+    {
+      "world": 9,
+      "start_episode": 1,
+      "seconds": 6.798,
+      "failed": true,
+      "return": 15.549042529659346
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 6.33,
+      "failed": true,
+      "return": 14.03875373234041
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 5.336,
+      "failed": true,
+      "return": 10.926196290878579
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 6.738,
+      "failed": true,
+      "return": 14.255335396621376
+    },
+    {
+      "world": 15,
+      "start_episode": 7,
+      "seconds": 4.122,
+      "failed": true,
+      "return": 8.44712905632332
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 6.352,
+      "failed": true,
+      "return": 13.686261827126145
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 2.594,
+      "failed": true,
+      "return": 4.435419502900913
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.66337764286436
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 7.58,
+      "failed": true,
+      "return": 17.87792224972509
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 2.854,
+      "failed": true,
+      "return": 5.119443158619106
+    },
+    {
+      "world": 17,
+      "start_episode": 1,
+      "seconds": 2.5060000000000002,
+      "failed": true,
+      "return": 3.9680741836782545
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 5.266,
+      "failed": true,
+      "return": 11.322307385737076
+    },
+    {
+      "world": 22,
+      "start_episode": 6,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 26.624008723534644
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 3.438,
+      "failed": true,
+      "return": 6.60680253081955
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 2.698,
+      "failed": true,
+      "return": 4.550175388343632
+    },
+    {
+      "world": 23,
+      "start_episode": 7,
+      "seconds": 6.248,
+      "failed": true,
+      "return": 13.93568834499456
+    },
+    {
+      "world": 14,
+      "start_episode": 6,
+      "seconds": 3.754,
+      "failed": true,
+      "return": 7.263351780595258
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 25.089291150216013
+    },
+    {
+      "world": 21,
+      "start_episode": 5,
+      "seconds": 3.884,
+      "failed": true,
+      "return": 7.387522435048595
+    },
+    {
+      "world": 0,
+      "start_episode": 0,
+      "seconds": 2.34,
+      "failed": true,
+      "return": 3.83585176570341
+    },
+    {
+      "world": 26,
+      "start_episode": 2,
+      "seconds": 6.390000000000001,
+      "failed": true,
+      "return": 13.583023234969005
+    },
+    {
+      "world": 31,
+      "start_episode": 7,
+      "seconds": 2.456,
+      "failed": true,
+      "return": 3.8142952357884496
+    },
+    {
+      "world": 6,
+      "start_episode": 6,
+      "seconds": 7.196,
+      "failed": true,
+      "return": 16.16903588268906
+    },
+    {
+      "world": 18,
+      "start_episode": 2,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 26.561740349745378
+    },
+    {
+      "world": 13,
+      "start_episode": 5,
+      "seconds": 4.038,
+      "failed": true,
+      "return": 8.217180719831958
+    },
+    {
+      "world": 10,
+      "start_episode": 2,
+      "seconds": 3.774,
+      "failed": true,
+      "return": 7.413904968416318
+    },
+    {
+      "world": 29,
+      "start_episode": 5,
+      "seconds": 4.316,
+      "failed": true,
+      "return": 8.999782045604661
+    },
+    {
+      "world": 19,
+      "start_episode": 3,
+      "seconds": 2.242,
+      "failed": true,
+      "return": 3.6034365771338344
+    },
+    {
+      "world": 28,
+      "start_episode": 4,
+      "seconds": 6.764,
+      "failed": true,
+      "return": 15.107165177352726
+    },
+    {
+      "world": 1,
+      "start_episode": 1,
+      "seconds": 2.652,
+      "failed": true,
+      "return": 4.2425397608894855
+    },
+    {
+      "world": 24,
+      "start_episode": 0,
+      "seconds": 4.686,
+      "failed": true,
+      "return": 10.21420668810606
+    },
+    {
+      "world": 4,
+      "start_episode": 4,
+      "seconds": 6.43,
+      "failed": true,
+      "return": 13.831214378587902
+    },
+    {
+      "world": 5,
+      "start_episode": 5,
+      "seconds": 4.426,
+      "failed": true,
+      "return": 9.307024131063372
+    },
+    {
+      "world": 11,
+      "start_episode": 3,
+      "seconds": 9.8,
+      "failed": true,
+      "return": 23.475915211020038
+    },
+    {
+      "world": 8,
+      "start_episode": 0,
+      "seconds": 4.5760000000000005,
+      "failed": true,
+      "return": 9.077523780986667
+    },
+    {
+      "world": 7,
+      "start_episode": 7,
+      "seconds": 6.322,
+      "failed": true,
+      "return": 14.895103053888306
+    },
+    {
+      "world": 12,
+      "start_episode": 4,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 27.04512721975334
+    },
+    {
+      "world": 25,
+      "start_episode": 1,
+      "seconds": 4.066,
+      "failed": true,
+      "return": 8.514789570355788
+    },
+    {
+      "world": 27,
+      "start_episode": 3,
+      "seconds": 2.492,
+      "failed": true,
+      "return": 4.100847332039848
+    },
+    {
+      "world": 3,
+      "start_episode": 3,
+      "seconds": 3.406,
+      "failed": true,
+      "return": 6.24726559012197
+    },
+    {
+      "world": 30,
+      "start_episode": 6,
+      "seconds": 3.362,
+      "failed": true,
+      "return": 6.038202549563721
+    },
+    {
+      "world": 16,
+      "start_episode": 0,
+      "seconds": 10.0,
+      "failed": false,
+      "return": 26.1824310219381
+    }
+  ],
+  "evaluations": {
+    "pid": {
+      "completed_utc": "2026-09-14T08:22:41.781928+00:00",
+      "seconds_requested": 10,
+      "controller": "PID reference",
+      "command": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "physical_contract": {
+        "schema": "fly-motor-physical-contract-v1",
+        "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+        "preset": "wing_position",
+        "body_and_force_law_shared_across_tasks": true,
+        "wing_mass_inertia_collision_aerodynamics": "zero",
+        "wing_body_coupling": "custom flight law reads measured wing motion",
+        "physics_hz": 1000.0,
+        "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+        "wing_response": "instant",
+        "independent_heading_control": true
+      },
+      "model_sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3",
+      "cases": [
+        {
+          "episode": 0,
+          "split": "training",
+          "file": "episode_00.npz",
+          "sha256": "063c7b7b01a9809c083290ea4b8ffb5f58e3c2a9815dfaa35d2cd98aa73f983c",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 0.051923692657451635,
+          "vertical_velocity_rms_mm_s": 0.05136556947391843,
+          "horizontal_velocity_rms_mm_s": 0.0075926366833635045,
+          "angular_rms_rad_s": 0.027507174042808148,
+          "peak_displacement_mm": 0.6024326307459105,
+          "final_displacement_mm": [
+            0.013103378841623362,
+            0.0006147611165995223,
+            -0.598397159220867
+          ],
+          "height_span_mm": 0.5787215430636428,
+          "minimum_upright": 0.9956636132869144,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 2.569785856556686,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 1,
+          "split": "training",
+          "file": "episode_01.npz",
+          "sha256": "ec3a1009fc85935f5bf87b246940ce8e871345dea54d5a0e391ab6e01f3b2666",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 0.030024721319273532,
+          "vertical_velocity_rms_mm_s": 0.02899186706439386,
+          "horizontal_velocity_rms_mm_s": 0.007807402539933051,
+          "angular_rms_rad_s": 0.027749150782729614,
+          "peak_displacement_mm": 0.635364908024865,
+          "final_displacement_mm": [
+            0.013180733041135213,
+            -0.004413163456928038,
+            -0.6341613593899398
+          ],
+          "height_span_mm": 0.6116537640204545,
+          "minimum_upright": 0.9955972042263715,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 2.0346271842190182,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 8,
+          "split": "validation",
+          "file": "episode_08.npz",
+          "sha256": "477976a580d3b71bb13e75ec68e12f0c8dd57e7a697b6ae440cd36bad243588a",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 0.0626907006227603,
+          "vertical_velocity_rms_mm_s": 0.062209645684924965,
+          "horizontal_velocity_rms_mm_s": 0.0077513823495332776,
+          "angular_rms_rad_s": 0.027937849706606965,
+          "peak_displacement_mm": 0.6752753066102533,
+          "final_displacement_mm": [
+            0.012790245044089677,
+            -0.002305601424831711,
+            -0.6064831564251172
+          ],
+          "height_span_mm": 0.6516912976747657,
+          "minimum_upright": 0.9955878384516743,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 2.92089248340385,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 9,
+          "split": "validation",
+          "file": "episode_09.npz",
+          "sha256": "30bfbdb7080a51ec45b2993081204611acad30c00277f1ed0be9c08073cdcb4f",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 0.03963637860480903,
+          "vertical_velocity_rms_mm_s": 0.038874594972306824,
+          "horizontal_velocity_rms_mm_s": 0.007733587436814823,
+          "angular_rms_rad_s": 0.027810131278967334,
+          "peak_displacement_mm": 0.5656073170760083,
+          "final_displacement_mm": [
+            0.011487397561223812,
+            0.0022345405294984747,
+            -0.5654862364866298
+          ],
+          "height_span_mm": 0.5419237267592614,
+          "minimum_upright": 0.9956047657527537,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 2.2969968287509004,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        }
+      ],
+      "physical_resets": "Once at initialization; no rescue or resets during capture",
+      "setup_seconds": 4.3346062079072,
+      "capture_seconds": 17.4025225257501,
+      "total_wall_seconds": 24.238559579011053,
+      "reused_preupdate_capture": true
+    },
+    "parent": {
+      "completed_utc": "2026-09-14T08:23:25.752449+00:00",
+      "seconds_requested": 10,
+      "controller": "MaleCNS actor alone",
+      "command": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "physical_contract": {
+        "schema": "fly-motor-physical-contract-v1",
+        "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+        "preset": "wing_position",
+        "body_and_force_law_shared_across_tasks": true,
+        "wing_mass_inertia_collision_aerodynamics": "zero",
+        "wing_body_coupling": "custom flight law reads measured wing motion",
+        "physics_hz": 1000.0,
+        "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+        "wing_response": "instant",
+        "independent_heading_control": true
+      },
+      "model_sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3",
+      "cases": [
+        {
+          "episode": 0,
+          "split": "training",
+          "file": "episode_00.npz",
+          "sha256": "294f549ce8139c02bdaf18fcbcb5fe6ea0251f86160aeae94eac060a79235b2d",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 31.76885573847428,
+          "vertical_velocity_rms_mm_s": 8.22991586818494,
+          "horizontal_velocity_rms_mm_s": 30.684339323742787,
+          "angular_rms_rad_s": 0.4404695746687298,
+          "peak_displacement_mm": 148.85308712294275,
+          "final_displacement_mm": [
+            -38.69281252257948,
+            -116.29932507512429,
+            44.682938041749324
+          ],
+          "height_span_mm": 45.45885261194205,
+          "minimum_upright": 0.9966224701680084,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 25.958054961231063,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 1,
+          "split": "training",
+          "file": "episode_01.npz",
+          "sha256": "9967e6d9845afafab0c9428f43fb0061e8f0e4a719586f36f37b05a4770e6498",
+          "first_failure_seconds": 6.772,
+          "airborne_seconds": 6.772,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 45.48518030096027,
+          "vertical_velocity_rms_mm_s": 34.20247943137572,
+          "horizontal_velocity_rms_mm_s": 29.984863310630338,
+          "angular_rms_rad_s": 0.4276586319990928,
+          "peak_displacement_mm": 142.08016959566828,
+          "final_displacement_mm": [
+            -135.75910237338744,
+            -31.692155785399564,
+            -14.386802982766
+          ],
+          "height_span_mm": 55.91808096531567,
+          "minimum_upright": 0.9961349750619974,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 25.958388264324174,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 8,
+          "split": "validation",
+          "file": "episode_08.npz",
+          "sha256": "63d3b1f5be7d0dbc88f5f31dafb054aefe69b47df8398e64e111f43b97fc9179",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 31.77944091748812,
+          "vertical_velocity_rms_mm_s": 8.220240573034754,
+          "horizontal_velocity_rms_mm_s": 30.697890969080458,
+          "angular_rms_rad_s": 0.44063807951657924,
+          "peak_displacement_mm": 148.8629091592656,
+          "final_displacement_mm": [
+            -55.61426089547686,
+            -109.13700459387228,
+            44.602544588869506
+          ],
+          "height_span_mm": 45.378477305910906,
+          "minimum_upright": 0.9966225117113963,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 25.957463125185107,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 9,
+          "split": "validation",
+          "file": "episode_09.npz",
+          "sha256": "f7e752829e154c2586c26c0b3710823dc10a587db84cb09af96f65842206fe2b",
+          "first_failure_seconds": 4.19,
+          "airborne_seconds": 4.19,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 48.3687380380026,
+          "vertical_velocity_rms_mm_s": 39.172487445659776,
+          "horizontal_velocity_rms_mm_s": 28.37342148399707,
+          "angular_rms_rad_s": 0.3888593155580768,
+          "peak_displacement_mm": 96.91994610586752,
+          "final_displacement_mm": [
+            -95.31084915119224,
+            -10.960038918404127,
+            -13.754836754756823
+          ],
+          "height_span_mm": 50.18534175427507,
+          "minimum_upright": 0.9962942867396818,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 25.957612976129088,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        }
+      ],
+      "physical_resets": "Once at initialization; no rescue or resets during capture",
+      "setup_seconds": 4.0357575649395585,
+      "capture_seconds": 36.39320120587945,
+      "total_wall_seconds": 43.94463115511462,
+      "reused_preupdate_capture": true
+    },
+    "midpoint": {
+      "completed_utc": "2026-09-14T08:49:19.175845+00:00",
+      "seconds_requested": 10,
+      "controller": "MaleCNS actor alone",
+      "command": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "physical_contract": {
+        "schema": "fly-motor-physical-contract-v1",
+        "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+        "preset": "wing_position",
+        "body_and_force_law_shared_across_tasks": true,
+        "wing_mass_inertia_collision_aerodynamics": "zero",
+        "wing_body_coupling": "custom flight law reads measured wing motion",
+        "physics_hz": 1000.0,
+        "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+        "wing_response": "instant",
+        "independent_heading_control": true
+      },
+      "model_sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3",
+      "cases": [
+        {
+          "episode": 0,
+          "split": "training",
+          "file": "episode_00.npz",
+          "sha256": "24c7d5b9c99a37f203409dd31283a50744e12cf3227723387993fb9ea64c7670",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 32.29088063178666,
+          "vertical_velocity_rms_mm_s": 8.889025417486556,
+          "horizontal_velocity_rms_mm_s": 31.043295558035922,
+          "angular_rms_rad_s": 0.4168928711365669,
+          "peak_displacement_mm": 161.86771321165665,
+          "final_displacement_mm": [
+            -55.19406066274267,
+            -127.51760364616209,
+            57.90380863637914
+          ],
+          "height_span_mm": 58.660535107761675,
+          "minimum_upright": 0.9966155864323377,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.693408308498974,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 1,
+          "split": "training",
+          "file": "episode_01.npz",
+          "sha256": "1a78fcfaeafa9952d6dc33c990da2d94b178aa68e14cfd65cd95a25701113998",
+          "first_failure_seconds": 7.18,
+          "airborne_seconds": 7.18,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 48.35815468721802,
+          "vertical_velocity_rms_mm_s": 37.51356689369081,
+          "horizontal_velocity_rms_mm_s": 30.51628128828103,
+          "angular_rms_rad_s": 0.4136718222387195,
+          "peak_displacement_mm": 154.44562463098669,
+          "final_displacement_mm": [
+            -144.83392698384247,
+            -39.692215930367624,
+            -13.980106383781987
+          ],
+          "height_span_mm": 65.21126716211572,
+          "minimum_upright": 0.996139954114166,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.69304336463071,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 8,
+          "split": "validation",
+          "file": "episode_08.npz",
+          "sha256": "cb00e932ef6721271dc766808dd492d0054bb03134859a19a1890da95ffe6454",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 32.2991705759265,
+          "vertical_velocity_rms_mm_s": 8.886186261190344,
+          "horizontal_velocity_rms_mm_s": 31.052731178178647,
+          "angular_rms_rad_s": 0.41690412173422436,
+          "peak_displacement_mm": 161.94602616869534,
+          "final_displacement_mm": [
+            -73.72921648270314,
+            -117.79327080397893,
+            57.91782119778128
+          ],
+          "height_span_mm": 58.67456098828598,
+          "minimum_upright": 0.9966155947437533,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.691890517437933,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 9,
+          "split": "validation",
+          "file": "episode_09.npz",
+          "sha256": "dbdac46436bedb2bec2e8d32382c9bfe303861bf688c4d4d7795925e24af2e2c",
+          "first_failure_seconds": 4.524,
+          "airborne_seconds": 4.524,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 51.221001282295084,
+          "vertical_velocity_rms_mm_s": 42.00768310375888,
+          "horizontal_velocity_rms_mm_s": 29.307772563179316,
+          "angular_rms_rad_s": 0.3820936295009628,
+          "peak_displacement_mm": 108.76270839868079,
+          "final_displacement_mm": [
+            -106.31379741960592,
+            -17.761065805694173,
+            -14.534364722452118
+          ],
+          "height_span_mm": 56.985525290629255,
+          "minimum_upright": 0.9962392618748286,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.693617142760232,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        }
+      ],
+      "physical_resets": "Once at initialization; no rescue or resets during capture",
+      "setup_seconds": 4.4514399049803615,
+      "capture_seconds": 36.34641713183373,
+      "total_wall_seconds": 44.694854197092354
+    },
+    "final": {
+      "completed_utc": "2026-09-14T08:54:57.846489+00:00",
+      "seconds_requested": 10,
+      "controller": "MaleCNS actor alone",
+      "command": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "physical_contract": {
+        "schema": "fly-motor-physical-contract-v1",
+        "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+        "preset": "wing_position",
+        "body_and_force_law_shared_across_tasks": true,
+        "wing_mass_inertia_collision_aerodynamics": "zero",
+        "wing_body_coupling": "custom flight law reads measured wing motion",
+        "physics_hz": 1000.0,
+        "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+        "wing_response": "instant",
+        "independent_heading_control": true
+      },
+      "model_sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3",
+      "cases": [
+        {
+          "episode": 0,
+          "split": "training",
+          "file": "episode_00.npz",
+          "sha256": "eb1a1abf0ac1c5a8d8c04c6a6b266771db483f827e5bcc5db819300cfdae13d6",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 31.98680850451243,
+          "vertical_velocity_rms_mm_s": 10.128744672016897,
+          "horizontal_velocity_rms_mm_s": 30.34080502678593,
+          "angular_rms_rad_s": 0.37229013567613656,
+          "peak_displacement_mm": 182.90217129222572,
+          "final_displacement_mm": [
+            -89.3587909318907,
+            -135.75994813645048,
+            80.50261864690172
+          ],
+          "height_span_mm": 81.27162108997948,
+          "minimum_upright": 0.9966131882744572,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.542374209539762,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 1,
+          "split": "training",
+          "file": "episode_01.npz",
+          "sha256": "33fd8eff0cea4dd8abff8ce5e6cd91b0ca87ceec31feac9d72f3cc0c7692777f",
+          "first_failure_seconds": 7.812,
+          "airborne_seconds": 7.812,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 55.59944575121268,
+          "vertical_velocity_rms_mm_s": 46.88011328672558,
+          "horizontal_velocity_rms_mm_s": 29.892362671187705,
+          "angular_rms_rad_s": 0.37785546240646867,
+          "peak_displacement_mm": 172.54154969039487,
+          "final_displacement_mm": [
+            -156.35258788797375,
+            -42.984858721115444,
+            -14.74879926713118
+          ],
+          "height_span_mm": 83.38817077541238,
+          "minimum_upright": 0.9960358301644041,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.54381223323545,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 8,
+          "split": "validation",
+          "file": "episode_08.npz",
+          "sha256": "0d66f2fc245abc8da2f09005619d3d78be8feceb97222c46a5365540d667f8a3",
+          "first_failure_seconds": null,
+          "airborne_seconds": 10,
+          "survived_ten_seconds": true,
+          "velocity_rms_mm_s": 31.990514220403576,
+          "vertical_velocity_rms_mm_s": 10.128923463460385,
+          "horizontal_velocity_rms_mm_s": 30.344652075072556,
+          "angular_rms_rad_s": 0.3723308399348298,
+          "peak_displacement_mm": 182.90968186377134,
+          "final_displacement_mm": [
+            -108.7081853476538,
+            -120.81249004656604,
+            80.48839669132691
+          ],
+          "height_span_mm": 81.25739737255344,
+          "minimum_upright": 0.9966131841129409,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.542605706293624,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        },
+        {
+          "episode": 9,
+          "split": "validation",
+          "file": "episode_09.npz",
+          "sha256": "3a49f9cf2fe7ab4496f6f73b849738fa62b322c63074fb7151e6ad24546acf32",
+          "first_failure_seconds": 4.924,
+          "airborne_seconds": 4.924,
+          "survived_ten_seconds": false,
+          "velocity_rms_mm_s": 59.55905206428378,
+          "vertical_velocity_rms_mm_s": 51.58399040479147,
+          "horizontal_velocity_rms_mm_s": 29.7720106259965,
+          "angular_rms_rad_s": 0.3408449975374253,
+          "peak_displacement_mm": 123.52597143386097,
+          "final_displacement_mm": [
+            -117.04961023439813,
+            -22.474053981649732,
+            -14.160529821839647
+          ],
+          "height_span_mm": 71.4334098816888,
+          "minimum_upright": 0.9961287691809201,
+          "common_first_two_seconds_complete": true,
+          "first_two_seconds_velocity_rms_mm_s": 26.542673226451594,
+          "metrics_scope": "Before first failure only; early failure never counts as full hover"
+        }
+      ],
+      "physical_resets": "Once at initialization; no rescue or resets during capture",
+      "setup_seconds": 4.072493907995522,
+      "capture_seconds": 37.141063605900854,
+      "total_wall_seconds": 45.20723350485787
+    }
+  },
+  "replay_audit": {
+    "maximum_action_error": 4.6938657760620117e-07,
+    "maximum_log_probability_error": 0.002349853515625,
+    "frames": 16384,
+    "reset_events": 0,
+    "roundoff_aggregate_kl": 1.0739097549362724e-07,
+    "mean_absolute_log_probability_error": 0.00035243481397628784,
+    "tolerances": {
+      "action": 2e-06,
+      "maximum_logp": 0.01,
+      "aggregate_kl": 1e-06
+    },
+    "passed": true
+  },
+  "physical_gradient_audit": {
+    "core.excitability": 3.1350409984588623,
+    "core.leak": 0.11493021249771118,
+    "core.bias": 110.53678131103516,
+    "sensory_encoder.0.weight": 43.52108383178711,
+    "sensory_encoder.0.bias": 4.946273326873779,
+    "sensory_encoder.2.weight": 25.133085250854492,
+    "sensory_encoder.2.bias": 7.534483432769775,
+    "motor_decoder.0.weight": 7.844449520111084,
+    "motor_decoder.0.bias": 9.712457656860352,
+    "motor_decoder.1.weight": 449.014892578125,
+    "motor_decoder.1.bias": 15.715625762939453,
+    "motor_decoder.3.weight": 439.1393737792969,
+    "motor_decoder.3.bias": 41.44746780395508,
+    "wing_residual.network.0.weight": 123.98827362060547,
+    "wing_residual.network.0.bias": 4.339117527008057,
+    "wing_residual.network.2.weight": 52.05885314941406,
+    "wing_residual.network.2.bias": 9.978679656982422
+  },
+  "parameter_changes_l2": {
+    "core.excitability": 8.168871136149392e-05,
+    "core.leak": 7.309530337806791e-05,
+    "core.bias": 0.00026092768530361354,
+    "sensory_encoder.0.weight": 0.0003230114816688001,
+    "sensory_encoder.0.bias": 1.581375181558542e-05,
+    "sensory_encoder.2.weight": 0.0008351484430022538,
+    "sensory_encoder.2.bias": 0.00010221850243397057,
+    "utility_head.0.weight": 0.0,
+    "utility_head.0.bias": 0.0,
+    "utility_head.1.weight": 0.0,
+    "utility_head.1.bias": 0.0,
+    "utility_head.3.weight": 0.0,
+    "utility_head.3.bias": 0.0,
+    "intention_encoder.weight": 0.0,
+    "motor_decoder.0.weight": 4.600741158355959e-05,
+    "motor_decoder.0.bias": 3.65316191164311e-05,
+    "motor_decoder.1.weight": 0.0008615084807388484,
+    "motor_decoder.1.bias": 2.3535203581559472e-05,
+    "motor_decoder.3.weight": 0.0002617555728647858,
+    "motor_decoder.3.bias": 1.456862719351193e-05,
+    "wing_residual.network.0.weight": 0.00037197547499090433,
+    "wing_residual.network.0.bias": 8.780640200711787e-06,
+    "wing_residual.network.2.weight": 4.0008493670029566e-05,
+    "wing_residual.network.2.bias": 1.9309895833430346e-06
+  },
+  "fixed_graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "peak_cuda_bytes": 4101086720,
+  "setup_seconds": 12.254147787112743,
+  "replay_audit_seconds": 3.381664259824902,
+  "checkpoint_seconds": 0.15136016067117453,
+  "evaluation_seconds": 89.92924926895648,
+  "physics_steps": 1409024,
+  "aggregate_simulated_seconds": 1409.0240000000001,
+  "smoke_only": false,
+  "training_complete": true
+}
