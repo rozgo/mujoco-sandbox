@@ -1,0 +1,47 @@
+{
+  "promoted": false,
+  "retained_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_11_midpoint.pt",
+  "retained_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+  "video_snapshot": "midpoint",
+  "reason": "Run12 midpoint improves startup and later vertical regulation but regresses horizontal and total RMS; none of the snapshots meets the combined gate. Keep the retained parent.",
+  "candidate_metrics": {
+    "parent": {
+      "velocity_rms_mm_s": 12.75771810264544,
+      "vertical_velocity_rms_mm_s": 8.852625014041331,
+      "horizontal_velocity_rms_mm_s": 9.186411873780358,
+      "first_two_seconds_velocity_rms_mm_s": 16.78831489089629,
+      "peak_displacement_mm": 75.75905867806011,
+      "climb_mm": 60.72603719807915,
+      "survived": 4
+    },
+    "quarter": {
+      "velocity_rms_mm_s": 14.233561455047795,
+      "vertical_velocity_rms_mm_s": 6.3317584427022435,
+      "horizontal_velocity_rms_mm_s": 12.747656310775792,
+      "first_two_seconds_velocity_rms_mm_s": 14.208472485819557,
+      "peak_displacement_mm": 98.6426541848532,
+      "climb_mm": 46.02506746735835,
+      "survived": 4
+    },
+    "midpoint": {
+      "velocity_rms_mm_s": 13.609292925305905,
+      "vertical_velocity_rms_mm_s": 6.8505335567057255,
+      "horizontal_velocity_rms_mm_s": 11.759378340180298,
+      "first_two_seconds_velocity_rms_mm_s": 15.451272548448511,
+      "peak_displacement_mm": 85.40656533279235,
+      "climb_mm": 43.739143851391816,
+      "survived": 4
+    },
+    "final": {
+      "velocity_rms_mm_s": 13.686765482346472,
+      "vertical_velocity_rms_mm_s": 7.263041274069103,
+      "horizontal_velocity_rms_mm_s": 11.600667741906591,
+      "first_two_seconds_velocity_rms_mm_s": 14.571137241732252,
+      "peak_displacement_mm": 92.65281214325992,
+      "climb_mm": 54.87445249098465,
+      "survived": 4
+    }
+  },
+  "next_action": "One bounded recovery-start PPO block, then pause extensions for control/interface diagnostics if physical outcome does not improve",
+  "next_plan": "NEXT_RECOVERY_PLAN.md"
+}

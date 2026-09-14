@@ -3441,3 +3441,36 @@ checkpoint/video hashes. The actor remains the same full-connectome controller;
 only training exploration and numerical verification differ. PID/run05/midpoint
 video is fully decoded, inspected and opened **19:03:45 UTC**. The selection is
 recorded in `PREFERRED_HOVER.json`. No further training is running.
+
+
+### Smaller PPO updates, September 14
+
+User approved continuing the retained run11 midpoint with only the PPO KL cap
+changed .02 -> .005. The cap is shared by sampled/analytic early stops and
+post-step backtracking; exploration remains .0015 and all rewards, brain,
+physical model, trainable wing readout and optimizer/critic state are retained.
+Captured checkpoints at149.899153/301.099211/604.079904seconds. Exact parent SHA
+selects the reused run11 midpoint capture, not that run's later final output.
+
+All three snapshots complete4/4 ten-second flights. The new midpoint is best
+among them on total error/climb:13.61mm/s total RMS,11.76mm/s horizontal RMS,
+43.74mm climb. Parent is12.76/9.19/60.73. Startup minimum height improves from
+8.53to10.27mm and later climb rate from8.08to5.76mm/s, so lower net climb is not
+an initial-drop artifact. However sideways error worsens. No snapshot meets
+all targets; retain run11 midpoint and preserve all run12 checkpoints.
+
+Actual training604.079904s,1,769,472transitions,217 actor updates,3,456critic
+minibatches,55,296imitation presentations.283 failures among601 completed
+training episodes.32 worlds,16 CPU physics threads,RTX4090 neural computation;
+MuJoCo/mjbatch CPU physics, not Warp. Full suite256passed in164.77s. All accepted
+KL values are <=.005 (maximum.004994826), replay/frozen-parameter/recipe/asset
+checks pass. The43s video is decoded, visually reviewed and opened19:50:22UTC.
+
+Next recommended experiment is one10-minute recovery-start block from the
+retained parent:16 normal starts plus16 saved valid climbing/drifting states,
+with their full neural, action and reward histories. Same controller/reward/
+physics, no added gusts or force helper. Preserve startup performance and require
+joint velocity improvement. If this does not improve physical flight, pause
+further PPO extensions for phase-conditioned control/interface diagnostics.
+See runs/velocity_hover_ppo_12/NEXT_RECOVERY_PLAN.md; this next experiment has
+not been implemented or run in this report. No training is currently running.

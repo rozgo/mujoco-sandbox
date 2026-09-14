@@ -1673,3 +1673,29 @@ reference-only physical validation follows the user's directional curriculum.
 - GPU video render **69.270898 s**, complete decode **4.287509 s**, 43 s / 2,150
   frames / 50 fps / 1x. Inspected and opened **19:03:45 UTC**, **30 min 29 s**
   after the effort began. Remaining archival/synchronization is not training.
+
+
+### Tighter-update hover refinement, September 14
+
+- Effort began **2026-09-14 19:28:23 UTC**. User approved run11 midpoint
+  continuation with PPO KL.02 -> .005; all other learning/physical choices fixed.
+- Run12 training began **19:32:44.961128 UTC**; report completed **19:45:07.240496 UTC**.
+  **604.079904s training**,108rollouts,1,769,472transitions,3,538,944physicssteps.
+  Quarter149.899153s,midpoint301.099211s;32worlds,16CPUphysics threads,RTX4090
+  neural inference/learning. CPU MuJoCo/mjbatch, not Warp.
+- Collection597.562803s,actor optimization2.312371s (includes imitation.146835s),
+  critic4.178672s. Separate setup15.718949s,replay audit3.367842s,
+  checkpointIO.100526s,physical evaluation134.699693s. Parent/PID reused after
+  matching exact checkpoint and physics. Tests/transfer/render are not training.
+- Full fly tests **256passed/45warnings in164.77s**;33focused checks passed
+  before launch. All217accepted actor updates satisfyKL<=.005.
+- None of three snapshots improves combined hover. Midpoint climbs43.74mm
+  versus parent's60.73mm, but horizontal RMS11.76 versus9.19mm/s. Startup and
+  later vertical motion both improve, while sideways drift regresses. Keep
+  run11 midpoint as preferred. All candidate weights and failures preserved.
+- GPU video render **69.439856s**, full decode **4.244762s**. **43s/2,150frames/
+  50fps/1920x1080/1x**, visually reviewed and opened **19:50:22 UTC**,
+  **21min59s** after this effort began. Archival and Git sync follow separately.
+- Next proposed work: one bounded recovery-start PPO block with matching
+  body/brain histories and normal-start retention. If physical outcome still
+  plateaus, pause further training for phase-conditioned control diagnostics.

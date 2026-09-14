@@ -28,6 +28,13 @@ reward and imitation. Its midpoint gives 12.76 mm/s total RMS, 9.19 mm/s
 horizontal RMS and 60.73 mm climb. This is the new preferred development
 checkpoint. [Frozen comparison](runs/hover_exploration_01/SUMMARY.md).
 
+Run12 resumes that midpoint with a tighter PPO KL cap (.02 -> .005). Its
+quarter/midpoint/final all survive4/4, but none improves combined hover. The
+midpoint reduces climb to43.74mm while increasing horizontal RMS to11.76mm/s
+and total RMS to13.61mm/s. Startup dips less and later climb is slower, so the
+vertical gain is real; sideways drift prevents promotion. Run11 remains
+selected. [Results and trial video](runs/velocity_hover_ppo_12/SUMMARY.md).
+
 Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
 probe confirms all three measured velocity signals reach the motor features.
 The completed imitation ablation retains the original run-05/06 reward and
@@ -51,6 +58,7 @@ Stationary hover remains unfinished.
 | 09 | Small training gusts; climb regression | 604.224 | 1,753,088 | 4/4 | 17.76 mm/s |
 | 10 | Imitation gradient off; rhythm retained, climb regresses | 603.871 | 1,769,472 | 4/4 | 16.36 mm/s |
 | 11 | Half exploration; retain midpoint over final | 606.861 | 1,769,472 | 4/4 | Midpoint 16.79 / final 14.88 mm/s |
+| 12 | Tighter KL limit; vertical gain, sideways regression | 604.080 | 1,769,472 | 4/4 | Midpoint 15.45 / final 14.57 mm/s |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
 Early RMS uses 0–2 s across all four starts. The earlier run-05 improvement over
@@ -76,8 +84,8 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Eleven completed PPO trials: **6,646.224680 s = 110 min 46 s**, **16,629,760 transitions**,
-  **33,259,520 physics steps**, **9.239 hours of aggregate simulated experience**.
+- Twelve completed PPO trials: **7,250.304584 s = 120 min 50 s**, **18,399,232 transitions**,
+  **36,798,464 physics steps**, **10.222 hours of aggregate simulated experience**.
 - Productive checkpoint lineage: **25 min 8 s PPO**, following **31 min 6 s
   imitation**, for **56 min 14 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.
@@ -91,8 +99,8 @@ are separately measured; lower training loss alone is never used as success.
 - Setup, replay checks, evaluation, rendering, transfer, tests and discarded
   smoke runs are measured separately in the per-run reports and TIME_LOG.
   An early audit-only aborted collection has no retained compute timer.
-- Full fly suite after the earlier imitation-ablation implementation: **241 passed**.
-  This distribution change passes **27 focused sampling/replay/optimizer tests**.
+- Full fly suite after the tighter-update implementation: **256 passed**.
+  The refinement also passes **33 focused sampling/replay/optimizer tests**.
   GPU replay, frozen-parameter and matched recipe checks pass. Comparison videos
   are fully decoded, inspected and opened locally.
 
@@ -100,6 +108,14 @@ The remaining weaknesses are residual climb and cold-start regulation. Preserve
 the selected run-11 midpoint, its run-05 parent and the later final checkpoint;
 the latest update is not automatically the best controller. Survival alone is
 not stationary hover.
+
+Next: a single roughly ten-minute recovery-start PPO block, with16 normal-start
+worlds and16 initialized from the policy's own valid climbing/drifting states.
+Restore physical state and full neural/reward histories together; retain the
+same actor, reward, physics and evaluation. Promote only on joint improvement
+of vertical and horizontal control without worse startup. If it fails, pause
+further extensions for phase-conditioned control/interface diagnostics.
+[Concrete implementation and gate](runs/velocity_hover_ppo_12/NEXT_RECOVERY_PLAN.md).
 
 [Retained run details](runs/velocity_hover_ppo_11/SUMMARY.md) and
 [checkpoint manifest](PREFERRED_HOVER.json).

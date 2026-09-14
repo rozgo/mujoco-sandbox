@@ -11,6 +11,14 @@ five-minute midpoint beats the ten-minute final checkpoint and is explicitly
 selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
+Latest follow-up: [smaller PPO updates](runs/velocity_hover_ppo_12/SUMMARY.md)
+reduce climb to44mm but worsen horizontal RMS to11.76mm/s. All four flights
+complete; the retained run11 checkpoint remains better overall. The
+[new comparison](../../previews/embodied_fly/velocity_hover_ppo_12_comparison_v1.mp4)
+shows PID, the retained policy and run12's best midpoint. Next is one bounded
+[recovery-start experiment](runs/velocity_hover_ppo_12/NEXT_RECOVERY_PLAN.md),
+with matching body/brain history and explicit retain-or-pause criteria.
+
 Previous retained parent: [PPO learning progress and measured costs](HOVER_PPO_PROGRESS.md)
 and [PID / original imitation / final PPO video](../../previews/embodied_fly/velocity_hover_ppo_progress_v1.mp4).
 All four starts complete ten seconds airborne. On the two comparable complete
