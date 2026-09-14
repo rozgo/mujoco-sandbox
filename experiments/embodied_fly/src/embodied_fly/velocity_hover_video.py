@@ -129,6 +129,19 @@ def record(args):
             + "  |  16 normal + 16 recovery starts"
             + "  |  Same brain and physics  |  1x"
         )
+        if (
+            training["recipe"].get("reward_transition", {}).get("velocity_objective_after")
+            == "vector"
+        ):
+            titles = (
+                "PID REFERENCE",
+                "VERTICAL-CONTROL PARENT",
+                f"TRIAL / {args.snapshot.upper()}",
+            )
+            subtitle = (
+                f"{selected_seconds / 60:.1f} min PPO + light imitation"
+                + "  |  Coordinated velocity reward  |  16 normal + 16 recovery starts  |  1x"
+            )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
