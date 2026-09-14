@@ -21,6 +21,18 @@ def record(args):
         raise FileExistsError("Preserve previous comparison videos")
     report = json.loads((args.student / "report.json").read_text())
     training = json.loads(args.training_report.read_text())
+    long_run = training["requested_training_seconds"] >= 120
+    training_title = (
+        f"{training['requested_training_seconds'] / 60:.0f}-MINUTE TRAINING"
+        if long_run
+        else "FIRST LEARNING BURST"
+    )
+    training_caption = (
+        f"MaleCNS  /  {training['training_wall_seconds'] / 60:.1f} min this run"
+        f"  /  {training['cumulative_training_seconds'] / 60:.1f} min total  /  Same physics  /  1x"
+        if long_run
+        else f"Fresh MaleCNS student  /  {training['training_wall_seconds']:.1f}s training  /  Same flight physics  /  1x"
+    )
     teacher_report = json.loads((args.dataset / "report.json").read_text())
     assert report["physical_contract"] == teacher_report["physical_contract"]
     assert report["checkpoint_sha256"] == training["checkpoint_sha256"]
@@ -50,7 +62,10 @@ def record(args):
     frames = 0
     sections = []
     try:
-        with mujoco.Renderer(model, height=440, width=776) as renderer:
+        with (
+            mujoco.Renderer(model, height=440, width=776) as renderer,
+            mujoco.Renderer(model, height=170, width=240) as detail,
+        ):
             for case in report["cases"]:
                 world = case["episode"]
                 teacher_path = args.dataset / f"episode_{world:02d}.npz"
@@ -84,13 +99,13 @@ def record(args):
                     draw = ImageDraw.Draw(board)
                     draw.text(
                         (22, 15),
-                        "FLIGHT SCHOOL / FIRST LEARNING BURST",
+                        "FLIGHT SCHOOL / " + training_title,
                         font=font(31),
                         fill="#ffc31f",
                     )
                     draw.text(
                         (22, 57),
-                        f"Fresh MaleCNS student  /  {training['training_wall_seconds']:.1f}s training  /  Same flight physics  /  1x",
+                        training_caption,
                         font=font(22),
                         fill="#e6e1db",
                     )
@@ -122,9 +137,12 @@ def record(args):
                                 font=font(24),
                                 fill="#e6e1db",
                             )
+                            failure_time = case["first_failure_seconds"]
                             draw.text(
                                 (x + 36, 390),
-                                f"First failure: {case['first_failure_seconds']:.3f}s",
+                                f"First failure: {failure_time:.3f}s"
+                                if failure_time is not None
+                                else f"Capture ended: {case['duration_seconds']:.3f}s",
                                 font=font(22),
                                 fill="#aab3b8",
                             )
@@ -146,6 +164,18 @@ def record(args):
                             camera.lookat[2] = max(0.9, tracked[column][2] - 0.8)
                             renderer.update_scene(data, camera=camera, scene_option=option)
                             board.paste(Image.fromarray(renderer.render()), (x, 176))
+                            if args.wing_detail:
+                                close = mujoco.MjvCamera()
+                                close.azimuth, close.elevation, close.distance = 135, -24, 1.25
+                                close.lookat[:] = arrays["qpos"][step, :3]
+                                detail.update_scene(data, camera=close, scene_option=option)
+                                board.paste(Image.fromarray(detail.render()), (x + 532, 182))
+                                draw.text(
+                                    (x + 540, 186),
+                                    "BODY-FOLLOWING DETAIL",
+                                    font=font(13),
+                                    fill="#e6e1db",
+                                )
                             draw.text(
                                 (x + 16, 574),
                                 f"Altitude {arrays['qpos'][step, 2] * 10:.2f} mm",
@@ -212,13 +242,20 @@ def record(args):
                     frames += 1
             board = Image.new("RGB", size, "#111519")
             draw = ImageDraw.Draw(board)
-            draw.text((70, 150), "ONE-MINUTE CHECKPOINT", font=font(44), fill="#ffc31f")
+            draw.text(
+                (70, 150),
+                training_title if long_run else "ONE-MINUTE CHECKPOINT",
+                font=font(44),
+                fill="#ffc31f",
+            )
             lines = [
                 f"{training['updates_this_burst']} optimizer updates / {training['supervised_targets']:,} supervised targets",
                 f"Held-out wing MSE: {training['validation_before']['wing_mse']:.5f} -> {training['validation_after']['wing_mse']:.5f}",
                 f"Full flight exercises completed: {sum(c['completed_full_exercise'] for c in report['cases'])}/{len(report['cases'])}",
                 "Fixed connectome wiring / fresh trainable encoder, readouts and cell dynamics",
-                "Checkpoint + optimizer saved for the next one-minute burst",
+                "Checkpoint + optimizer preserved; physical flight determines the outcome"
+                if long_run
+                else "Checkpoint + optimizer saved for the next one-minute burst",
             ]
             for line, text in enumerate(lines):
                 draw.text((70, 255 + line * 74), text, font=font(27), fill="#e6e1db")
@@ -244,6 +281,9 @@ def record(args):
         "failure_display": "Student replaced with explicitly labeled end card after recorded failure continuation; no frozen body or synthetic recovery",
         "velocities": "Trailing 100 ms mean, display only",
         "result_card_seconds": 3,
+        "wing_detail_inset": args.wing_detail,
+        "training_wall_seconds": training["training_wall_seconds"],
+        "cumulative_training_seconds": training["cumulative_training_seconds"],
     }
     args.output.with_suffix(".json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest), flush=True)
@@ -255,4 +295,5 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", required=True, type=Path)
     parser.add_argument("--training-report", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--wing-detail", action="store_true")
     record(parser.parse_args())

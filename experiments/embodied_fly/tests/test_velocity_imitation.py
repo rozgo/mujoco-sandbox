@@ -97,3 +97,25 @@ def test_continuation_only_allows_declared_sampling_change():
     assert validate_resume_recipe(old, new, True)
     with pytest.raises(ValueError):
         validate_resume_recipe(old, dict(new, lr=3e-4), True)
+
+
+def test_failure_does_not_earn_later_stage_success():
+    from embodied_fly.velocity_exercise import command_at
+    from embodied_fly.velocity_student import completed_stage_metrics
+
+    times = np.arange(2200) * 0.002
+    commands = np.stack([command_at(t, 1.5, 4.5)[0] for t in times])
+    arrays = {
+        "time": times,
+        "command": commands,
+        "measured_velocity": commands[:, :3],
+        "yaw_rate": commands[:, 3],
+    }
+    full = completed_stage_metrics(arrays)
+    assert [s["stage"] for s in full] == [0, 1]
+    assert all(s["passed"] for s in full)
+    # Even if capture continues, a failure before the forward stage ends means
+    # its later settled window cannot be credited as successful flight.
+    earlier = completed_stage_metrics(arrays, 3.9)
+    assert [s["stage"] for s in earlier] == [0]
+    assert completed_stage_metrics(arrays, 0.07) == []

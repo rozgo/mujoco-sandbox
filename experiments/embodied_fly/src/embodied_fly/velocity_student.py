@@ -24,6 +24,42 @@ from embodied_fly.velocity_exercise import (
 from embodied_fly.velocity_motor import SCHEMA, observation
 
 
+def completed_stage_metrics(arrays, failure_seconds=None):
+    """Score only complete settled windows before any physical failure."""
+    velocity = rolling_velocity(arrays["measured_velocity"] * 10)
+    yaw = rolling_velocity(arrays["yaw_rate"][:, None])[:, 0]
+    valid_until = min(
+        float(arrays["time"][-1]) + 0.002,
+        failure_seconds if failure_seconds is not None else float("inf"),
+    )
+    ends = np.cumsum([s[1] for s in STAGES])
+    result = []
+    for stage, (end, (_, _, command)) in enumerate(zip(ends, STAGES, strict=True)):
+        if end > valid_until + 1e-9:
+            continue
+        selected = (arrays["time"] >= end - 0.4) & (arrays["time"] < end)
+        if not selected.any():
+            continue
+        velocity_error = float(
+            np.linalg.norm(
+                velocity[selected] - arrays["command"][selected, :3] * 10, axis=1
+            ).max()
+        )
+        yaw_error = float(np.abs(yaw[selected] - arrays["command"][selected, 3]).max())
+        velocity_limit = max(0.5, 1.5 * np.linalg.norm(command[:3]))
+        yaw_limit = max(0.12, 0.45 * abs(command[3]))
+        result.append(
+            {
+                "stage": stage,
+                "name": STAGES[stage][0],
+                "settled_velocity_error_peak_mm_s": velocity_error,
+                "settled_yaw_error_peak_rad_s": yaw_error,
+                "passed": velocity_error < velocity_limit and yaw_error < yaw_limit,
+            }
+        )
+    return result
+
+
 @torch.no_grad()
 def evaluate(args):
     started = time.perf_counter()
@@ -105,6 +141,7 @@ def evaluate(args):
         duration = len(rows) * env.control_dt
         complete = failure is None and len(rows) == round(DURATION / env.control_dt)
         full = metrics(arrays, 10) if complete else None
+        completed_stages = completed_stage_metrics(arrays, first_failure)
         summary = {
             "episode": episode,
             "file": file.name,
@@ -118,7 +155,8 @@ def evaluate(args):
             "passed": bool(full and full["passed"]),
             "stage_count": 50,
             "stages_reached": np.unique(arrays["stage"]).tolist(),
-            "stages_passed": sum(s["passed"] for s in full["stages"]) if full else 0,
+            "stages_passed": sum(s["passed"] for s in completed_stages),
+            "completed_stage_metrics": completed_stages,
             "incomplete_stage_metrics_not_scored": not complete,
             "minimum_altitude_mm": float(arrays["post_position"][:, 2].min() * 10),
             "height_span_mm": float(np.ptp(arrays["post_position"][:, 2]) * 10),
