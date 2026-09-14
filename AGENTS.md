@@ -80,6 +80,7 @@ Most CLIs expose `preview`, `view`, `run` and `record`; the hexapod uses `render
 - Match metric windows and denominators. Do not count an early-terminated run as zero full-task error. Label conditional metrics such as RMSE on complete paired windows, and report success rates across all attempted cases separately.
 - Audit reward versus termination before training. Added running costs can make early failure cheaper than continuing a recoverable episode. Check explicit poor-but-valid, recovery and failure trajectories; test the intended return ordering and retain the counterexample. A lower error after a fall is not improved task performance.
 - For comparisons, run multiple predetermined seeds and retain inconvenient outcomes. A more dramatic camera or stronger scenario does not establish a better model. Report measured improvements without implying general robustness or causation from unmatched experiments.
+- Every training report must end with a concrete next action, why the evidence supports it, and the result that would justify continuing, changing direction or pausing. A completed training run alone is not a useful handoff.
 - Run focused checks first; run the relevant complete suite before finishing a substantial change. Report skipped tests and missing optional dependencies or caches. Do not rerun expensive simulations for a documentation-only or simple video edit unless its content changes a simulation claim.
 
 ```sh

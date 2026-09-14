@@ -152,7 +152,34 @@ def cached_replay_errors(actions, recorded_actions, logp, recorded_logp):
         }
 
 
+def baseline_capture_label(baseline, checkpoint_sha):
+    """Reuse only the physical capture attached to this exact parent checkpoint."""
+    if baseline["checkpoint_sha256"] == checkpoint_sha:
+        return "final"
+    for snapshot in baseline.get("snapshots", []):
+        if snapshot["sha256"] == checkpoint_sha:
+            label = snapshot["file"].removesuffix("_actor.pt")
+            if label in ("quarter", "midpoint", "final") and label in baseline["evaluations"]:
+                return label
+    if baseline["parent_checkpoint_sha256"] == checkpoint_sha:
+        return "parent"
+    raise ValueError("Cached parent does not correspond to this training parent")
+
+
+def policy_update_exceeded(sampled_kl, analytic_kl, target_kl):
+    """Use one declared KL limit in both early stopping and post-step acceptance."""
+    if not np.isfinite(target_kl) or target_kl <= 0:
+        raise ValueError("Target KL must be finite and positive")
+    return (
+        not np.isfinite(sampled_kl)
+        or not np.isfinite(analytic_kl)
+        or sampled_kl > target_kl
+        or analytic_kl > 0.75 * target_kl
+    )
+
+
 def train(args):
+    policy_update_exceeded(0, 0, args.target_kl)
     if not np.isfinite(args.exploration_scale) or args.exploration_scale <= 0:
         raise ValueError("Exploration scale must be finite and positive")
     if args.exploration_scale != 1 and not args.wing_readout_only:
@@ -300,10 +327,11 @@ def train(args):
         "gamma": gamma,
         "gae_lambda": gae_lambda,
         "clip": 0.2,
-        "target_kl": 0.02,
+        "target_kl": args.target_kl,
+        "pre_update_analytic_kl_limit": 0.75 * args.target_kl,
         "post_update_kl_backtracking": args.bounded_updates,
         "gradient_norm_cap": 1,
-        "initial_tanh_latent_std": 0.003,
+        "initial_tanh_latent_std": float(log_std.detach().exp().mean()),
         "minimum_std": 0.0005,
         "entropy_bonus": 0,
         "imitation_weight": args.imitation_weight,
@@ -333,6 +361,19 @@ def train(args):
         recipe.update(
             optimizer_transition="restore actor Adam, critic weights/Adam, fixed exploration and actor sampling RNG; reset physical episodes; critic sample shuffle restarts from declared seed",
             critic_warmup_rollouts=0,
+        )
+    old_target_kl = parent.get("ppo_recipe", {}).get("target_kl", 0.02)
+    if args.target_kl != old_target_kl:
+        recipe["policy_update_transition"] = {
+            "target_kl_before": old_target_kl,
+            "target_kl_after": args.target_kl,
+            "pre_update_analytic_limit": 0.75 * args.target_kl,
+            "scope": "Same limit in sampled/analytic early stops and backtracking acceptance; PPO clip and actor learning rate unchanged",
+            "optimizer": "Retain actor/critic weights and Adam moments",
+        }
+    if args.quarter_evaluation:
+        recipe["evaluation_schedule"] = (
+            "quarter, midpoint, final; measured training time excludes physical evaluation"
         )
     if args.exploration_scale != 1:
         recipe["exploration_transition"] = {
@@ -395,14 +436,9 @@ def train(args):
                 source = args.baseline_dir / label
                 baseline_training = json.loads((args.baseline_dir / "report.json").read_text())
                 if label == "parent":
-                    if baseline_training["checkpoint_sha256"] == sha256(args.checkpoint):
-                        source = args.baseline_dir / "final"
-                    elif baseline_training["parent_checkpoint_sha256"] != sha256(
-                        args.checkpoint
-                    ):
-                        raise ValueError(
-                            "Cached parent does not correspond to this training parent"
-                        )
+                    source = args.baseline_dir / baseline_capture_label(
+                        baseline_training, sha256(args.checkpoint)
+                    )
                 report = json.loads((source / "report.json").read_text())
                 if report["physical_contract"] != parent["physical_contract"]:
                     raise ValueError("Cached pre-update evaluation physical contract differs")
@@ -492,6 +528,7 @@ def train(args):
 
     during_eval_seconds = 0.0
     midpoint_done = False
+    quarter_done = False
     with (args.output / "progress.jsonl").open("x") as log:
         while (
             counters["rollouts"] < args.rollouts
@@ -676,7 +713,9 @@ def train(args):
                         if args.bounded_updates
                         else 0
                     )
-                    if not torch.isfinite(kl) or kl.detach() > 0.02 or analytic_before > 0.015:
+                    if policy_update_exceeded(
+                        float(kl.detach()), analytic_before, args.target_kl
+                    ):
                         stop = True
                         break
                     physical_loss = torch.maximum(
@@ -768,7 +807,9 @@ def train(args):
                                 data["mean_action"][a:b], means, old_log_std, log_std
                             )
 
-                        check = bounded_step(optimizer, parameters, measure)
+                        check = bounded_step(
+                            optimizer, parameters, measure, limit=args.target_kl
+                        )
                         step_checks.append(check)
                         if not check["accepted"]:
                             stop = True
@@ -846,6 +887,27 @@ def train(args):
             log.flush()
             print(json.dumps(row), flush=True)
             del data, states, prediction, returns, adv
+            quarter_due = (
+                counters["rollouts"] >= (args.rollouts + 3) // 4
+                if args.rollouts is not None
+                else training_seconds() >= args.seconds / 4
+            )
+            if args.quarter_evaluation and not quarter_done and quarter_due:
+                measured = training_seconds()
+                save("quarter_actor.pt", measured)
+                if not args.smoke:
+                    begin = time.perf_counter()
+                    evaluations["quarter"] = evaluate_hover(
+                        actor, parent, args.dataset, args.output / "quarter", device
+                    )
+                    during_eval_seconds += time.perf_counter() - begin
+                    print(
+                        json.dumps(
+                            {"evaluation": "quarter", "cases": evaluations["quarter"]["cases"]}
+                        ),
+                        flush=True,
+                    )
+                quarter_done = True
             halfway = (
                 counters["rollouts"] >= (args.rollouts + 1) // 2
                 if args.rollouts is not None
@@ -942,6 +1004,8 @@ if __name__ == "__main__":
     )
     p.add_argument("--imitation-weight", type=float, default=1.0)
     p.add_argument("--exploration-scale", type=float, default=1.0)
+    p.add_argument("--target-kl", type=float, default=0.02)
+    p.add_argument("--quarter-evaluation", action="store_true")
     p.add_argument("--worlds", type=int, default=32)
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--horizon", type=int, default=512)
