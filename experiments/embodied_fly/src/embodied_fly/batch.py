@@ -38,6 +38,7 @@ class FlyBatch:
         wing_response="filtered",
         physics_hz=None,
         heading_control=False,
+        fast_flight=False,
     ):
         if sensor_extension_size not in (0, 6, 12, 14, 16):
             raise ValueError("Unknown batched sensory extension")
@@ -47,6 +48,7 @@ class FlyBatch:
             wing_response=wing_response,
             physics_hz=physics_hz,
             heading_control=heading_control,
+            fast_flight=fast_flight,
         )
         self.preset = preset
         self.control_dt = self.template.control_dt

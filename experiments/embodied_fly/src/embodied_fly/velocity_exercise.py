@@ -58,8 +58,11 @@ YAW_RAD_S = 0.45  # 25.8 degrees/s.
 RAMP_SECONDS = 0.25
 
 
-def command_at(seconds, speed=COMMAND_CM_S):
-    if not np.isfinite([seconds, speed]).all() or min(seconds, speed) < 0:
+def command_at(seconds, speed=COMMAND_CM_S, yaw_speed=YAW_RAD_S):
+    if (
+        not np.isfinite([seconds, speed, yaw_speed]).all()
+        or min(seconds, speed, yaw_speed) < 0
+    ):
         raise ValueError("Finite nonnegative time/speed required")
     ends = np.cumsum([stage[1] for stage in STAGES])
     index = min(int(np.searchsorted(ends, seconds, side="right")), len(STAGES) - 1)
@@ -68,9 +71,9 @@ def command_at(seconds, speed=COMMAND_CM_S):
         speed,
         speed,
         speed,
-        YAW_RAD_S,
+        yaw_speed,
     )
-    target = np.asarray(STAGES[index][2], dtype=float) * (speed, speed, speed, YAW_RAD_S)
+    target = np.asarray(STAGES[index][2], dtype=float) * (speed, speed, speed, yaw_speed)
     u = np.clip((seconds - start) / RAMP_SECONDS, 0, 1)
     blend = u**3 * (10 - 15 * u + 6 * u * u)
     return previous + (target - previous) * blend, index
@@ -84,19 +87,25 @@ def rolling_velocity(velocities, width=50):
     return (sums[count] - sums[starts]) / (count - starts)[:, None]
 
 
-def metrics(arrays):
+def metrics(arrays, speed_scale=1.0):
     measured = arrays["measured_velocity"] * 10
     requested = arrays["command"][:, :3] * 10
     yaw_mean = rolling_velocity(arrays["yaw_rate"][:, None])[:, 0]
     mean = rolling_velocity(measured)
     results = []
     ends = np.cumsum([stage[1] for stage in STAGES])
-    for i, (name, duration, _) in enumerate(STAGES):
+    for i, (name, duration, command) in enumerate(STAGES):
         end = ends[i]
         # Settled performance is predeclared, not selected after seeing a run.
         selected = (arrays["time"] >= end - 0.4) & (arrays["time"] < end)
         error = mean[selected] - requested[selected]
         peak = float(np.linalg.norm(error, axis=1).max())
+        # Predeclared faster-motion gates: 10% command magnitude, with the
+        # original absolute floors. Braking/hover retain the slow gates.
+        velocity_limit = max(
+            0.5, COMMAND_CM_S * 10 * speed_scale * 0.1 * np.linalg.norm(command[:3])
+        )
+        yaw_limit = max(0.12, YAW_RAD_S * speed_scale * 0.1 * abs(command[3]))
         results.append(
             {
                 "index": i,
@@ -126,9 +135,11 @@ def metrics(arrays):
                         - np.unwrap(arrays["heading"])[arrays["stage"] == i][0]
                     )
                 ),
-                "passed": peak < 0.5
+                "velocity_error_limit_mm_s": float(velocity_limit),
+                "yaw_error_limit_rad_s": float(yaw_limit),
+                "passed": peak < velocity_limit
                 and float(np.abs(yaw_mean[selected] - arrays["command"][selected, 3]).max())
-                < 0.12,
+                < yaw_limit,
             }
         )
     physical = (
@@ -147,11 +158,13 @@ def metrics(arrays):
         "mean_velocity_error_whole_exercise_rms_mm_s": float(
             np.sqrt(np.mean(np.sum((mean - requested) ** 2, axis=1)))
         ),
-        "gate": "Each stage's final 0.4 s: 100 ms mean vector velocity error <0.5 mm/s and mean yaw-rate error <0.12 rad/s; upright >0.85; altitude >5 mm; forbidden contact <0.1 bodyweights. Raw wingbeat velocity retained; no position-return gate.",
+        "gate": "Each stage's final 0.4 s: 100 ms mean vector velocity error <max(0.5 mm/s, 10% requested vector speed) and yaw-rate error <max(0.12 rad/s, 10% requested yaw rate); upright >0.85; altitude >5 mm; forbidden contact <0.1 bodyweights. Raw wingbeat velocity retained; no position-return gate.",
     }
 
 
 def run(args):
+    if not np.isfinite(args.speed_scale) or args.speed_scale <= 0:
+        raise ValueError("Positive finite physical command speed scale required")
     started = time.perf_counter()
     args.output.mkdir(parents=True, exist_ok=False)
     provenance = evidence()
@@ -163,6 +176,7 @@ def run(args):
         wing_response="instant",
         physics_hz=1000,
         heading_control=True,
+        fast_flight=args.fast_flight,
     )
     expected = json.loads(args.contract_report.read_text())["physical_contract"]
     base = FlyBatch(1, 1, 12, preset="wing_position", wing_response="instant", physics_hz=1000)
@@ -183,7 +197,9 @@ def run(args):
     rows = []
     for step in range(round(DURATION / e.control_dt)):
         t = step * e.control_dt
-        command, stage = command_at(t)
+        command, stage = command_at(
+            t, COMMAND_CM_S * args.speed_scale, YAW_RAD_S * args.speed_scale
+        )
         e.batch.forward()  # Current derived feedback, without advancing time.
         observed = observation(e, command[None])
         for key in ("qpos", "qvel", "act", "ctrl"):
@@ -231,16 +247,23 @@ def run(args):
         "duration_seconds": DURATION,
         "episode_resets_after_initialization": 0,
         "all_movements_in_one_continuous_episode": True,
-        "command_speed_mm_s": COMMAND_CM_S * 10,
+        "physical_command_speed_scale": args.speed_scale,
+        "fast_flight": args.fast_flight,
+        "command_speed_mm_s": COMMAND_CM_S * 10 * args.speed_scale,
         "command_ramp_seconds": RAMP_SECONDS,
         "controller_kp": controller.kp.tolist(),
         "controller_ki": controller.ki.tolist(),
         "wing_controller": asdict(controller.wings.config),
         "position_target": False,
         "heading_target": False,
-        "yaw_command_rad_s": YAW_RAD_S,
+        "yaw_command_rad_s": YAW_RAD_S * args.speed_scale,
         "body_mechanics_match_previous_plant": True,
-        "force_law_change": "Versioned v3: independent yaw authority from measured left/right wing pitch asymmetry; previous v2 preserved",
+        "force_law_change": (
+            "Versioned v4: v3 measured-wing heading authority with yaw damping time constant 0.25 s instead of 0.025 s; roll/pitch damping unchanged"
+            if args.fast_flight
+            else "Versioned v3: independent yaw authority from measured left/right wing pitch asymmetry; previous v2 preserved"
+        ),
+        "wing_force_config": asdict(e.template.wing_forces.config),
         "previous_physical_contract": expected,
         "teacher_clock_hz": controller.wings.config.frequency_hz,
         "observation_schema": schema_report(),
@@ -250,7 +273,7 @@ def run(args):
         "setup_seconds": setup,
         "capture_seconds": capture_seconds,
         "total_wall_seconds": time.perf_counter() - started,
-        **metrics(arrays),
+        **metrics(arrays, args.speed_scale),
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2), flush=True)
@@ -261,4 +284,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--contract-report", type=Path, required=True)
+    p.add_argument("--speed-scale", type=float, default=1.0)
+    p.add_argument("--fast-flight", action="store_true")
     run(p.parse_args())

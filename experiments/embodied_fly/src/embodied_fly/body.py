@@ -45,7 +45,10 @@ def make_body(
     wing_response="filtered",
     physics_hz=None,
     heading_control=False,
+    fast_flight=False,
 ):
+    if fast_flight and not heading_control:
+        raise ValueError("Fast flight requires independent heading control")
     if heading_control and (preset != "wing_position" or wing_response != "instant"):
         raise ValueError("Independent heading requires the instantaneous wing-position plant")
     if preset not in ("walking", "flight", "wing_motion", "wing_position"):
@@ -103,7 +106,7 @@ def make_body(
     if wing_response == "instant":
         root.custom.add("numeric", name=RESPONSE_NUMERIC, data=[1])
     if heading_control:
-        root.custom.add("numeric", name=HEADING_NUMERIC, data=[1])
+        root.custom.add("numeric", name=HEADING_NUMERIC, data=[2 if fast_flight else 1])
     root.compiler.boundmass = 0
     root.compiler.boundinertia = 0
     spawn = root.worldbody.add("site", pos=(0, 0, 0.1278))
@@ -156,6 +159,7 @@ class FlyEnvironment:
         wing_response="filtered",
         physics_hz=None,
         heading_control=False,
+        fast_flight=False,
     ):
         self.preset = preset
         self.wing_limits = wing_limits
@@ -166,6 +170,7 @@ class FlyEnvironment:
             wing_response=wing_response,
             physics_hz=physics_hz,
             heading_control=heading_control,
+            fast_flight=fast_flight,
         )
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr

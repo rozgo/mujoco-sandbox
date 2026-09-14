@@ -73,3 +73,26 @@ Later utility and navigation learning should remain connected through the same
 MaleCNS core. Velocity commands are motor-teaching inputs, not a decision to
 install permanent external utility/navigation networks above the connectome.
 No student training starts during this teacher-reference review.
+
+## Faster physical flight follow-up
+
+The user likes the full teacher video but requests approximately ten times faster
+physical motion, with playback still 1x. `--speed-scale 10` commands 15 mm/s per
+translation axis and 4.5 rad/s (258 degrees/s) yaw on the same 71.2-second
+continuous schedule, including its 0.25-second ramps. No simulation clock or
+replay speed is multiplied. Preserve the previous video and captures.
+
+`--fast-flight` explicitly selects `wing_motion_fast_heading_v4`. Only body-axis
+yaw damping changes: its time constant is 0.25 s instead of 0.025 s. Roll/pitch
+damping, wing-to-force gains, body/joint mechanics, actuator bounds and clocks
+remain unchanged. The old yaw damping would require 180 rad/s² just to sustain
+4.5 rad/s, beyond the pitch channel's 120 rad/s² peak; reducing yaw resistance
+provides the needed turning range. The PID's inverse wing mapping uses the new
+declared damping. Forces still depend only on measured body/wing state.
+
+Predeclared faster-motion review uses the same final 0.4-second stage window and
+100 ms mean. Vector velocity error must be below max(0.5 mm/s, 10% of requested
+vector speed); yaw-rate error below max(0.12 rad/s, 10% of requested yaw rate).
+Braking and hover retain the original absolute tolerances. Physical upright,
+altitude and contact gates are unchanged. Retain all failed development runs.
+The faster body's controller must be validated before fresh student training.

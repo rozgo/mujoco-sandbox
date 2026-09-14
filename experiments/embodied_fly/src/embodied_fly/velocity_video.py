@@ -20,6 +20,8 @@ def record(source, output):
     if output.exists():
         raise FileExistsError("Preserve earlier teacher videos")
     report = json.loads((source / "report.json").read_text())
+    speed_scale = report.get("physical_command_speed_scale", 1.0)
+    tracking_seconds = 0.12 if speed_scale > 1 else 0.4
     assert sha256(source / "capture.npz") == report["capture_sha256"]
     assert sha256(source / "model.mjb") == report["model_sha256"]
     with np.load(source / "capture.npz") as data:
@@ -66,7 +68,11 @@ def record(source, output):
                 board = Image.new("RGB", size, "#111519")
                 draw = ImageDraw.Draw(board)
                 draw.text(
-                    (20, 12), "FLIGHT SCHOOL / PID TEACHER", font=font(30), fill="#ffc31f"
+                    (20, 12),
+                    "FLIGHT SCHOOL / PID TEACHER"
+                    + (" / FAST FLIGHT" if speed_scale > 1 else ""),
+                    font=font(30),
+                    fill="#ffc31f",
                 )
                 draw.text(
                     (20, 54),
@@ -78,7 +84,9 @@ def record(source, output):
                     getattr(data, key)[:] = arrays[key][step]
                 data.time = t
                 mujoco.mj_forward(model, data)
-                tracked += (1 - np.exp(-1 / fps / 0.4)) * (positions[step] - tracked)
+                tracked += (1 - np.exp(-1 / fps / tracking_seconds)) * (
+                    positions[step] - tracked
+                )
                 camera.lookat[:] = tracked
                 main.update_scene(data, camera=camera, scene_option=option)
                 board.paste(Image.fromarray(main.render()), (12, 125))
@@ -122,7 +130,11 @@ def record(source, output):
                 )
                 draw.text(
                     (24, 661),
-                    "Damped observer camera / continuous physical state",
+                    (
+                        f"{speed_scale:g}x commanded speeds / 1x playback / physical wing control"
+                        if speed_scale > 1
+                        else "Damped observer camera / continuous physical state"
+                    ),
                     font=font(19),
                     fill="#e6e1db",
                     stroke_width=1,
@@ -164,6 +176,7 @@ def record(source, output):
                     mean_range = max(
                         35 if axis == 3 else 3,
                         float(np.ceil(np.abs(mean[history, axis]).max() * 1.1)),
+                        float(np.ceil(np.abs(requested[history, axis]).max() * 1.1)),
                     )
                     draw.text(
                         (x + 10, y + 88),
@@ -217,6 +230,9 @@ def record(source, output):
         "size": size,
         "duration_s": frame_count / fps,
         "playback_multiplier": 1,
+        "physical_command_speed_scale": speed_scale,
+        "command_speed_mm_s": report["command_speed_mm_s"],
+        "yaw_command_rad_s": report["yaw_command_rad_s"],
         "render_seconds": time.perf_counter() - started,
         "measurement_display": "Raw velocity and trailing 100 ms mean; mean is observer-only and never feeds PID or physics",
         "raw_chart_ranges": ranges.tolist(),
@@ -224,7 +240,7 @@ def record(source, output):
         "continuous_episode": True,
         "teacher_metric_gate_passed": report["passed"],
         "camera": {
-            "main": "damped position tracking, 0.4 s time constant, fixed azimuth",
+            "main": f"damped position tracking, {tracking_seconds:g} s time constant, fixed azimuth",
             "overview": "fixed for entire episode",
         },
     }

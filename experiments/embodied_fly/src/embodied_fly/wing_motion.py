@@ -49,6 +49,16 @@ class HeadingWingMotionConfig(WingMotionConfig):
 HEADING_CONFIG = HeadingWingMotionConfig()
 
 
+@dataclass(frozen=True)
+class FastHeadingWingMotionConfig(HeadingWingMotionConfig):
+    version: str = "wing_motion_fast_heading_v4"
+    # Preserve strong roll/pitch damping; allow agile wing-driven yaw turns.
+    yaw_drag_seconds: float = 0.25
+
+
+FAST_HEADING_CONFIG = FastHeadingWingMotionConfig()
+
+
 def config_for_model(model):
     """The compiled model carries its force-law version, including MJB replays.
 
@@ -66,10 +76,14 @@ def config_for_model(model):
     if heading >= 0:
         if (
             model.numeric_size[heading] != 1
-            or model.numeric_data[model.numeric_adr[heading]] != 1
+            or model.numeric_data[model.numeric_adr[heading]] not in (1, 2)
         ):
             raise ValueError("Unknown recorded wing heading model")
-        return HEADING_CONFIG
+        return (
+            FAST_HEADING_CONFIG
+            if model.numeric_data[model.numeric_adr[heading]] == 2
+            else HEADING_CONFIG
+        )
     return INSTANT_CONFIG
 
 
@@ -182,6 +196,13 @@ class WingMotionForces:
         )
         angular_world = np.einsum("nij,nj->ni", rotation, body_velocity[:, :3])
         acceleration = -angular_world / c.angular_drag_seconds
+        if isinstance(c, FastHeadingWingMotionConfig):
+            # Replace only body-axis yaw resistance. No goal or controller state.
+            acceleration += (
+                rotation[:, :, 2]
+                * body_velocity[:, 2, None]
+                * (1 / c.angular_drag_seconds - 1 / c.yaw_drag_seconds)
+            )
         acceleration += c.attitude_stiffness * np.cross(rotation[:, :, 2], (0, 0, 1))
         steer_local = np.stack(
             [

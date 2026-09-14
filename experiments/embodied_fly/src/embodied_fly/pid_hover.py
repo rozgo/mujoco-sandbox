@@ -137,7 +137,7 @@ class HoverPID:
             restoring_yaw = np.dot(restoring_world, rotation[:, 2])
             yaw_effort = (
                 yaw_acceleration
-                + angular[2] / law.angular_drag_seconds
+                + angular[2] / getattr(law, "yaw_drag_seconds", law.angular_drag_seconds)
                 - restoring_yaw
                 - law.steering_acceleration * differential
             ) / authority
