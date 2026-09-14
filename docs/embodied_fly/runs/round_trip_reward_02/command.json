@@ -1,0 +1,6 @@
+{
+  "command_from_gpu_checkout": "MUJOCO_GL=egl experiments/embodied_fly/.venv/bin/python -m embodied_fly.ppo --motor-all --hover-physical --hover-only --round-trip --flight-tracking-reward --bounded-hover-reward --hover-vertical-speed-scale 2 --reset-critic --checkpoint-activations --independent-critic --critic-epochs 16 --critic-shuffle-transitions --preset wing_position --resume assets/embodied_fly/diagnostics/pid_imitation_01_teacher_stage.pt --graph ../fly-survival/outputs/fly_survival/malecns --output outputs/embodied_fly/round_trip_reward_02 --seconds 300 --worlds 64 --threads 16 --episode-seconds 12 --horizon 2048 --sequence 128 --epochs 2 --lr .0000001 --critic-lr .0001 --noise .003 --minimum-noise .003 --critic-warmup-rollouts 2 --target-kl .03 --entropy 0 --gamma .9996000799893344 --gae-lambda .9994001799640054 --seed 120901 > outputs/embodied_fly/round_trip_reward_02.log 2>&1",
+  "requested_seconds": 300,
+  "source": "source commit recorded by training evidence",
+  "note": "Same preceding single-seed PPO recipe with the audited flight-tracking reward; graph path is a sibling data cache."
+}
