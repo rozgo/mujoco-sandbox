@@ -137,9 +137,13 @@ def metrics(arrays, speed_scale=1.0):
                 ),
                 "velocity_error_limit_mm_s": float(velocity_limit),
                 "yaw_error_limit_rad_s": float(yaw_limit),
-                "passed": peak < velocity_limit
-                and float(np.abs(yaw_mean[selected] - arrays["command"][selected, 3]).max())
-                < yaw_limit,
+                "passed": bool(
+                    peak < velocity_limit
+                    and float(
+                        np.abs(yaw_mean[selected] - arrays["command"][selected, 3]).max()
+                    )
+                    < yaw_limit
+                ),
             }
         )
     physical = (

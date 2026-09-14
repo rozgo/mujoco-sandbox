@@ -94,15 +94,27 @@ def test_causal_wing_lift_mirroring_decay_and_damping(env):
 
 
 @pytest.mark.parametrize(
-    "preset,response,physics_hz",
+    "preset,response,physics_hz,fast_flight",
     (
-        ("wing_motion", "filtered", 5000),
-        ("wing_position", "instant", 5000),
-        ("wing_position", "instant", 1000),
+        ("wing_motion", "filtered", 5000, False),
+        ("wing_position", "instant", 5000, False),
+        ("wing_position", "instant", 1000, False),
+        ("wing_position", "instant", 1000, True),
     ),
 )
-def test_native_batch_force_law_feedback_and_selective_reset(preset, response, physics_hz):
-    batch = FlyBatch(2, 2, 12, preset=preset, wing_response=response, physics_hz=physics_hz)
+def test_native_batch_force_law_feedback_and_selective_reset(
+    preset, response, physics_hz, fast_flight
+):
+    batch = FlyBatch(
+        2,
+        2,
+        12,
+        preset=preset,
+        wing_response=response,
+        physics_hz=physics_hz,
+        heading_control=fast_flight,
+        fast_flight=fast_flight,
+    )
     e = batch.template
     state = {name: getattr(e.data, name).copy() for name in ("qpos", "qvel", "act", "ctrl")}
     state["qpos"][2] = 3
