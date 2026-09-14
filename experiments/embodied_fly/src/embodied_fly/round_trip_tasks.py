@@ -7,7 +7,12 @@ from embodied_fly.round_trip import CASES
 
 
 def batched_targets(seconds, origins, route_ids, amplitudes):
-    seconds = np.asarray(seconds)
+    return batched_target_motion(seconds, origins, route_ids, amplitudes)[0]
+
+
+def batched_target_motion(seconds, origins, route_ids, amplitudes, time_scales=1.0):
+    """Requested position and its analytic velocity; never writes physical state."""
+    seconds = np.asarray(seconds) / time_scales
     knots = np.asarray((0.0, 1.0, 2.0, 4.0, 5.0, 7.0, 8.0, 12.0))
     values = np.asarray((0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.0, 0.0))
     indices = np.clip(np.searchsorted(knots, seconds, side="right") - 1, 0, 6)
@@ -20,7 +25,18 @@ def batched_targets(seconds, origins, route_ids, amplitudes):
     signs = np.asarray([c[2] for c in CASES])[route_ids]
     targets = origins.copy()
     targets[np.arange(len(targets)), axes] += signs * displacement
-    return targets
+    velocity = np.zeros_like(targets)
+    velocity[np.arange(len(targets)), axes] = (
+        signs
+        * amplitudes
+        * (values[indices + 1] - values[indices])
+        * 30
+        * u**2
+        * (1 - u) ** 2
+        / (knots[indices + 1] - knots[indices])
+        / time_scales
+    )
+    return targets, velocity
 
 
 class RoundTripTasks(HoverOnlyTasks):
@@ -31,6 +47,7 @@ class RoundTripTasks(HoverOnlyTasks):
         self.route_ids = np.full(env.n, 6, dtype=np.int64)
         self.amplitudes = np.full(env.n, 0.15)
         self.duration_scale = np.ones(env.n)
+        self.target_velocity_cm_s = np.zeros((env.n, 3))
         self.episode_counts = np.zeros(env.n, dtype=np.int64)
         self.window_counts = np.zeros((env.n, 3), dtype=np.int64)
         self.window_peaks = np.zeros((env.n, 3))
@@ -63,10 +80,16 @@ class RoundTripTasks(HoverOnlyTasks):
 
     def update_targets(self):
         e = self.env
-        tau = e.ages * e.control_dt / self.duration_scale
-        target = batched_targets(tau, self.start, self.route_ids, self.amplitudes)
+        target, velocity = batched_target_motion(
+            e.ages * e.control_dt,
+            self.start,
+            self.route_ids,
+            self.amplitudes,
+            self.duration_scale,
+        )
         e.requested_xy_cm[:] = target[:, :2]
         e.requested_height_cm[:] = target[:, 2]
+        self.target_velocity_cm_s[:] = velocity
         return target
 
     def after_step(self):
@@ -124,7 +147,11 @@ class RoundTripTasks(HoverOnlyTasks):
             "transitions_by_target_sequence": {
                 c[0]: int(n) for c, n in zip(CASES, self.transitions)
             },
-            "reward": "unchanged bounded physical scores, relative to current requested position",
+            "reward": getattr(
+                self,
+                "reward_description",
+                "unchanged bounded physical scores, relative to current requested position",
+            ),
             "target_timing": "post-step command advance before reward and timeout bootstrap; next actor reads that same target",
             "measurement_only_drift_seconds": 50 * self.env.control_dt,
             "original_raw_speed_gate": "preserved in reference report; this task measures sustained drift from positions",

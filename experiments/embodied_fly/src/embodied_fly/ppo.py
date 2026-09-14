@@ -195,6 +195,7 @@ def train(args):
     hover_physical = getattr(args, "hover_physical", False)
     hover_only = getattr(args, "hover_only", False)
     round_trip = getattr(args, "round_trip", False)
+    flight_tracking = getattr(args, "flight_tracking_reward", False)
     bounded_hover = getattr(args, "bounded_hover_reward", False)
     reset_critic = getattr(args, "reset_critic", False)
     reset_exploration = getattr(args, "reset_exploration", False)
@@ -205,6 +206,8 @@ def train(args):
         raise ValueError("Custom hover speed scale requires bounded hover reward")
     if bounded_hover and not hover_only:
         raise ValueError("Bounded hover reward requires hover-only training")
+    if flight_tracking and not round_trip:
+        raise ValueError("Flight-tracking reward requires the explicit round-trip curriculum")
     if round_trip and (
         not (hover_only and bounded_hover and motor_all)
         or args.episode_seconds != 12
@@ -291,6 +294,7 @@ def train(args):
             parent.get("config", {}).get("bounded_hover_reward", False) != bounded_hover
             or parent.get("config", {}).get("hover_vertical_speed_scale", 5.0)
             != hover_speed_scale
+            or parent.get("config", {}).get("flight_tracking_reward", False) != flight_tracking
         )
         and not reset_critic
     ):
@@ -395,6 +399,10 @@ def train(args):
                     from embodied_fly.hover_only import HoverBalancedReward
 
                     reward_fn = HoverBalancedReward(env, hover_speed_scale)
+                    if flight_tracking:
+                        from embodied_fly.flight_tracking_reward import FlightTrackingReward
+
+                        reward_fn = FlightTrackingReward(env, tasks, hover_speed_scale)
     active = torch.as_tensor(
         np.ones(env.model.nu, bool)
         if flight_resets or motor_mode
@@ -613,6 +621,10 @@ def train(args):
                     trace[-1]["requested_height_cm"] = env.requested_height_cm.copy()
                     if round_trip:
                         trace[-1]["requested_xy_cm"] = env.requested_xy_cm.copy()
+                        if flight_tracking:
+                            trace[-1]["reward_target_velocity_cm_s"] = (
+                                tasks.target_velocity_cm_s.copy()
+                            )
                         trace[-1]["pre_action_target_cm"] = previous_target
                         trace[-1]["observer_route_id"] = tasks.route_ids.copy()
                     physical_rewards.append(float(reward.mean()))
@@ -1192,6 +1204,7 @@ if __name__ == "__main__":
         help="Explicit mixed hover and closed-flight curriculum",
     )
     parser.add_argument("--bounded-hover-reward", action="store_true")
+    parser.add_argument("--flight-tracking-reward", action="store_true")
     parser.add_argument(
         "--hover-vertical-speed-scale",
         type=float,
