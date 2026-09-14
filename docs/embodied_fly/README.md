@@ -2,12 +2,15 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Latest learning: [first one-minute fresh velocity imitation](runs/velocity_imitation_01/SUMMARY.md)
-and [PID/student comparison](../../previews/embodied_fly/velocity_imitation_01_pid_comparison_v1.mp4).
-The 62.6-second burst completes 14 updates, but the student falls during the
-opening hover in both physical checks. Its lower imitation loss mainly reflects
-fitting mean joint positions; wing motion and flight are not learned yet.
-The checkpoint and optimizer are saved for another short continuation.
+Latest learning: [30-minute velocity imitation continuation](runs/velocity_imitation_30m_01/SUMMARY.md)
+and [PID/student comparison](../../previews/embodied_fly/velocity_imitation_30m_01_pid_comparison_v1.mp4).
+Wing sweeps now correlate about 0.99 with the teacher on held-out recordings,
+but physical control remains unsuccessful: both starts climb and drift before
+falling at about 5.6 seconds, with no completed stage passing. The run adds 401
+updates in 30 min 4 s on the RTX 4090. Final weights, optimizer and six snapshots
+are preserved. All demonstrations used the same stage order; the approved
+follow-up will vary ordering and add corrections from student-visited states.
+The [first-minute failure](runs/velocity_imitation_01/SUMMARY.md) remains archived.
 
 Accepted teacher: [faster physical flight reference](runs/pid_velocity_fast_04/SUMMARY.md)
 and [71.2-second video at 1x playback](../../previews/embodied_fly/pid_velocity_fast_exercise_v3.mp4).

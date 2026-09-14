@@ -1,0 +1,90 @@
+{
+  "completed_utc": "2026-09-14T07:00:40.995078+00:00",
+  "checkpoint_sha256": "c4a87e93a9fffb4679c84a6bca42716bc2e89365d48be97d9ec37780df2779e4",
+  "audit_wall_seconds": 7.139562832657248,
+  "channels": [
+    {
+      "name": "walker/wing_yaw_left",
+      "prediction_mse": 0.00025376828853040934,
+      "constant_training_mean_mse": 0.010487567633390427,
+      "predicted_std": 0.1008063331246376,
+      "target_std": 0.10240399092435837,
+      "correlation": 0.9894412081397761,
+      "improvement_over_constant": 0.9758029414063124
+    },
+    {
+      "name": "walker/wing_roll_left",
+      "prediction_mse": 0.0001068041892722249,
+      "constant_training_mean_mse": 0.00020746827067341655,
+      "predicted_std": 0.010394755750894547,
+      "target_std": 0.014345944859087467,
+      "correlation": 0.8204637904585089,
+      "improvement_over_constant": 0.48520229659431
+    },
+    {
+      "name": "walker/wing_pitch_left",
+      "prediction_mse": 0.0010785162448883057,
+      "constant_training_mean_mse": 0.0018032753141596913,
+      "predicted_std": 0.024416977539658546,
+      "target_std": 0.042464807629585266,
+      "correlation": 0.641825617813553,
+      "improvement_over_constant": 0.40191259957945813
+    },
+    {
+      "name": "walker/wing_yaw_right",
+      "prediction_mse": 0.00032812549034133554,
+      "constant_training_mean_mse": 0.010272383689880371,
+      "predicted_std": 0.10012108832597733,
+      "target_std": 0.10134804993867874,
+      "correlation": 0.9896400122693733,
+      "improvement_over_constant": 0.9680575122340318
+    },
+    {
+      "name": "walker/wing_roll_right",
+      "prediction_mse": 0.00011906788859050721,
+      "constant_training_mean_mse": 0.00023316219449043274,
+      "predicted_std": 0.011660611256957054,
+      "target_std": 0.015242394991219044,
+      "correlation": 0.7935706572535527,
+      "improvement_over_constant": 0.4893345001717554
+    },
+    {
+      "name": "walker/wing_pitch_right",
+      "prediction_mse": 0.0010145482374355197,
+      "constant_training_mean_mse": 0.0018032753141596913,
+      "predicted_std": 0.025752026587724686,
+      "target_std": 0.042464807629585266,
+      "correlation": 0.669503576858704,
+      "improvement_over_constant": 0.4373858337276195
+    }
+  ],
+  "physical_motion": [
+    {
+      "controller": "teacher",
+      "measured_window_seconds": 0.07,
+      "mean_absolute_sweep_speed_rad_s": [
+        31.613605187008464,
+        31.442954435337956
+      ],
+      "peak_sweep_speed_rad_s": [
+        56.594211578099134,
+        56.25402855259523
+      ]
+    },
+    {
+      "controller": "student",
+      "measured_window_seconds": 0.07,
+      "mean_absolute_sweep_speed_rad_s": [
+        31.997320265194105,
+        31.74805887896523
+      ],
+      "peak_sweep_speed_rad_s": [
+        52.529106023337164,
+        52.283513972282165
+      ]
+    }
+  ],
+  "mean_wing_mse": 0.0004834717547055334,
+  "mean_constant_training_pose_mse": 0.004134522285312414,
+  "scope": "Frozen checkpoint; same held-out windows as training validation. Constant predictor is an analysis baseline, never deployed control. No training updates."
+}

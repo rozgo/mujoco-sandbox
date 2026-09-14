@@ -74,7 +74,10 @@ MaleCNS core. Velocity commands are motor-teaching inputs, not a decision to
 install permanent external utility/navigation networks above the connectome.
 No student training started during this teacher-reference review. The user later
 authorized [one-minute fresh imitation bursts](runs/velocity_imitation_01/SUMMARY.md)
-on the accepted faster v5 plant; their results are separate from this reference.
+on the accepted faster v5 plant, followed by a
+[30-minute continuation](runs/velocity_imitation_30m_01/SUMMARY.md). Their results
+are separate from this reference. The initial ten demonstrations all used the
+same movement order; varied heading and oscillator phase are not order variation.
 
 ## Faster physical flight follow-up
 

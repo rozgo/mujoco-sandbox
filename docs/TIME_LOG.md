@@ -1421,3 +1421,29 @@ reference-only physical validation follows the user's directional curriculum.
 - Documentation and archive work continues after the video milestone; it is not
   included in the reported neural training time. Dataset and optimizer are cached
   for later bursts, so their setup need not be repeated from scratch.
+
+## Thirty-minute velocity imitation continuation — September 14, 2026
+
+- First observed work: **06:18:37 UTC**. Learning starts **06:23:50.669394 UTC**,
+  report completes **06:53:56.563441 UTC**. An initial Git conflict with our own
+  generated video was resolved by preserving it before pulling; no learning ran
+  during that sync failure. Actual learning **1,803.594666 s**, 401 updates;
+  cumulative ancestry **1,866.149465 s**, 415 updates.
+- Setup **9.159773 s**; validation **2.030445/1.820664 s** separately. Periodic
+  checkpoint writes **0.320581 s** excluded. Cached demonstrations reused.
+  **3,284,992 supervised replay targets**, not new physics transitions.
+- Midpoint peek requested during learning: CPU setup **9.101697 s**, one-second
+  simulated hover **113.710033 s** wall time; completed **06:43:44.427838 UTC**.
+  Two CPU Torch threads, no GPU neural evaluation; training continued concurrently.
+- First final evaluation's report writer failed after saving its first trajectory;
+  that aborted attempt's precise timer is unavailable. Fixed NumPy conversion,
+  retained trace/log, repeated the two predefined cases. Final loop timers
+  **10.272602/10.151080 s**, complete evaluation process **30.308664 s**.
+  Physical failures **5.624/5.626 simulated seconds**, no full exercise success.
+- Frozen wing audit **7.139563 s**. Render **18.938412 s**; full MP4 decode
+  **1.264845 s**. Video **15.04 s, 752 frames, 50 fps, 1600x960, 1x**; inspected
+  and opened **07:02:45 UTC**, 44m08s observed elapsed from work start.
+- Full fly suite: **214 passed in 168.60 s**, 45 existing upstream warnings.
+  Archival and subsequent planning occur after the video milestone and are not
+  counted as neural training. The user approved a separate follow-up with varied
+  exercise order and student-state recovery demonstrations.

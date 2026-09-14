@@ -1,0 +1,11 @@
+{
+  "source_commit": "06cb24a",
+  "error": "NumPy int64 from summing NumPy boolean stage passes was not JSON serializable",
+  "training_affected": false,
+  "trajectory_saved_before_report_failure": true,
+  "capture_path": "outputs/embodied_fly/velocity_imitation_30m_01_evaluation_report_failure/episode_00.npz",
+  "capture_sha256": "d8d8251469673039dba64509001c27eb0cab2cfb6088eed7633cbbd7e241726f",
+  "lost_evaluation_wall_timer_seconds": null,
+  "fix_commit": "186e937",
+  "resolution": "Explicit Python bool stage pass; JSON regression assertion. Repeated the two predeclared evaluations from the same frozen final checkpoint. Aborted capture and log retained in outputs."
+}

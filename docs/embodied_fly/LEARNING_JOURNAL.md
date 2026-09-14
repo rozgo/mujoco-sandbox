@@ -3122,3 +3122,25 @@ extra burst was run. The user subsequently requested a proposed configuration
 for a 30-minute training allowance; this discussion does not itself constitute
 a completed longer run. See runs/velocity_imitation_01/SUMMARY.md for measured
 times, preserved checkpoints and exact continuation commands.
+
+## Continuous thirty-minute velocity imitation
+
+The approved 1,800-second continuation finished 401 additional updates in
+1,803.594666 seconds. Same checkpoint, Adam state, graph, physical model and
+loss; the explicit sampler change uses eight cold starts plus 56 all-stage
+windows. Held-out wing MSE drops 94% to 0.000483. Sweep correlations reach
+0.989/0.990, beating the constant-pose baseline, and measured startup wing
+speeds approach the PID. This supports learning wing motion, not successful
+flight: both fixed physical evaluations climb toward 99 mm and fall after
+5.624/5.626 seconds. No completed tracking stage passes.
+
+The user-requested midpoint CPU peek found upright but climbing behavior over
+one second; it did not interrupt GPU learning or determine checkpoint choice.
+The final result uses the last checkpoint. A NumPy report serialization bug
+required repeating evaluation, without more training. All 214 tests pass.
+The 1x video was decoded, visually inspected and opened at 07:02:45 UTC.
+
+All ten teacher episodes used the same sequence; headings/wing phases varied.
+The user approved varying order, retaining all skills in each complete episode,
+and collecting PID corrections from student-visited drift/climb states before
+continuing the same policy. See runs/velocity_imitation_30m_01/SUMMARY.md.

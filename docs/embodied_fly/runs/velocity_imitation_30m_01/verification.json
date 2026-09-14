@@ -1,0 +1,29 @@
+{
+  "completed_utc": "2026-09-14T07:02:45+00:00",
+  "tests": {
+    "command": "uv run --project experiments/embodied_fly --locked pytest -q experiments/embodied_fly/tests",
+    "passed": 214,
+    "warnings": 45,
+    "seconds": 168.6,
+    "warnings_scope": "Existing PyTorch sparse CSR beta and dm_control NumPy shape deprecations"
+  },
+  "verified_captures": [
+    {
+      "path": "outputs/embodied_fly/velocity_imitation_30m_01_evaluation/episode_00.npz",
+      "sha256": "d9aa5081022bd7ea1511bcc8d850b324697058bd1b962b911f151fccf4bffed0"
+    },
+    {
+      "path": "outputs/embodied_fly/velocity_imitation_30m_01_evaluation/episode_08.npz",
+      "sha256": "bf65b509dccd36603ec50077c219630a9e74560c88bc7d67befbf075e8a3327d"
+    },
+    {
+      "path": "outputs/embodied_fly/velocity_imitation_30m_01_evaluation/model.mjb",
+      "sha256": "3c4096b192b7d8b11bdcecd5f6e5038c4289c5d6c7c8671239242a99556ddcf3"
+    }
+  ],
+  "all_archived_checkpoint_hashes_match": true,
+  "teacher_student_physical_contract_match": true,
+  "neural_training_source_commit": "3917c7ae8c1f3110994ca0eacc4732aa580cb5bd",
+  "evaluation_source_commit": "186e937510ebc7ce0a6f3c73e7d577a834640bf6",
+  "video_full_decode": true
+}
