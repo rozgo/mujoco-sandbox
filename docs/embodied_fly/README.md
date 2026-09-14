@@ -17,6 +17,12 @@ Keep the earlier imitation checkpoint as this round's
 Accurate hover remains open. Earlier multi-command reviews below
 retain their historical physical models; utility remains deferred.
 
+The subsequent [longer-credit PPO trial](runs/hover_credit_01/SUMMARY.md) collects
+1.70million actions in10min21s and preserves all three airborne starts, but does
+not reduce altitude loss or drift. Its [before/after video](../../previews/embodied_fly/hover_credit_before_after_v1.mp4)
+and failed progress criteria remain recorded. The preferred imitation checkpoint
+above is unchanged; more training time did not establish a better controller.
+
 The current priority is [stand, walk and hover motor learning](MOTOR_FOCUS.md):
 one command-conditioned actor and exactly the same `wing_position` body in every
 task. Utility selection is temporarily disabled while these primitives are

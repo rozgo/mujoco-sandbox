@@ -1,6 +1,12 @@
 # Hover first, with a PID comparison
 
-Latest completed work: [PID imitation](runs/pid_imitation_01/SUMMARY.md) followed
+Newest result: [longer-credit PPO](runs/hover_credit_01/SUMMARY.md) preserves
+the learned wing rhythm and three airborne starts after620.902s, but does not
+improve hover. Rollouts grow to4.096s and reward-credit trace decay to2s with
+the same body, brain, clocks and reward. The earlier imitation actor stays
+preferred. Watch [before/after](../../previews/embodied_fly/hover_credit_before_after_v1.mp4).
+
+Preceding work: [PID imitation](runs/pid_imitation_01/SUMMARY.md) followed
 by [physical PPO](runs/pid_imitation_ppo_01/SUMMARY.md). Teaching produces a
 promising independent 29.75 Hz wing rhythm with three airborne starts, but loses
 altitude and drifts. The later imitation handoff collapses, so PPO starts from

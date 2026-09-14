@@ -1,0 +1,3334 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T00:05:57.190147+00:00",
+    "source_commit": "6570f52e2bb134302242282fb09f56b621068050",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "16fbd2236f63c5ef2c998307885c20afd113ea05ce727bf2877ddf1a00cce555",
+      "src/embodied_fly/body.py": "954974b59b488fc5c3a5834c6afc6b7788d0293b5505798ba2670339efc29ba1",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "c05f4e45d008762ce8d8d0da533eba57a0deb50194b90549a1d3c59ccf681c46",
+      "src/embodied_fly/pid_hover.py": "dced3c776113fbcf8d470873788f676e906ee3f778b678a540139195a9c874b9",
+      "src/embodied_fly/pid_imitation.py": "6484dae7b199d4c277cc466a608a45783650e730a62ce77dbf1957b7369b1788",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "8b71fdf863526eaeaed15a694186060bc302cbb12b608f6ed9f30a0a0f7fe8e3",
+      "src/embodied_fly/ppo_critic.py": "016a719515c20f08a2987489572b4d1a499006fa13047cc9cb5737357e12ccf2",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "939199d2f00847ee7269f97d706744377b685d6f6d4e666327227b7bc34f2f54",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "config": {
+    "rehearsal": null,
+    "motor_ground": false,
+    "motor_all": true,
+    "hover_physical": true,
+    "hover_only": true,
+    "bounded_hover_reward": true,
+    "hover_vertical_speed_scale": 2.0,
+    "reset_critic": true,
+    "reset_exploration": false,
+    "critic_lr": 0.0001,
+    "checkpoint_activations": true,
+    "independent_critic": true,
+    "motor_retention_weight": 0.0,
+    "critic_warmup_rollouts": 4,
+    "wing_supervision": 0.0,
+    "wing_angle_perturbation": 0.0,
+    "wing_speed_perturbation": 0.0,
+    "preset": "wing_position",
+    "flight_resets": null,
+    "device": "cuda",
+    "worlds": 64,
+    "threads": 16,
+    "seconds": 600.0,
+    "horizon": 2048,
+    "sequence": 128,
+    "epochs": 2,
+    "episode_seconds": 10.0,
+    "gamma": 0.9996000799893344,
+    "gae_lambda": 0.9994001799640054,
+    "lr": 1e-07,
+    "noise": 0.001,
+    "minimum_noise": 0.001,
+    "target_kl": 0.03,
+    "entropy": 0.0,
+    "rehearsal_weight": 1.0,
+    "stationary_cost": 0.0,
+    "stationary_turn_cost": 0.0,
+    "seed": 120403,
+    "internal_steps": 4,
+    "ground_posture": true
+  },
+  "reward_recipe": {
+    "version": "hover_bounded_scores_v2",
+    "alive_rate": 0.5,
+    "height_scale_cm": 0.1,
+    "vertical_speed_scale_cm_s": 2.0,
+    "horizontal_speed_scale_cm_s": 0.5,
+    "angular_speed_scale_rad_s": 1.0,
+    "failure_height_below_cm": 0.5,
+    "failure_upright_below": 0.5,
+    "failure_penalty_once": 1,
+    "height_target": "requested altitude, independent of reset altitude",
+    "reward_timing": "rate * actual control_dt; failure penalty once before reset",
+    "wing_motion_or_action_imitation": false,
+    "reference_controller_or_force_target": false,
+    "horizontal_position_scale_cm": 0.1,
+    "action_difference_or_wing_stillness_penalty": false,
+    "position_feedback": "two anatomical target-error inputs, ideal simulator sensing",
+    "score_formula": "1 / sqrt(1 + normalized_error**2)",
+    "maximum_reward_rate": 6.1,
+    "minimum_valid_airborne_rate": 0.498,
+    "tracking_score_weights": {
+      "height": 2,
+      "horizontal_position": 1,
+      "vertical_velocity": 1,
+      "horizontal_velocity": 1,
+      "upright": 0.5,
+      "angular_velocity": 0.1
+    },
+    "failure_forbidden_support_above_bodyweights": 0.1,
+    "termination_incentive": "Valid airborne rate stays positive; failed step gets exactly -1"
+  },
+  "motor_only": true,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "training_tasks": [
+    "hover"
+  ],
+  "worlds_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 64
+  },
+  "utility_and_intention_weights_unchanged": true,
+  "active_motor_channels": 78,
+  "teacher_present_during_collection": false,
+  "executed_teacher_actions": false,
+  "wing_supervision": {
+    "weight": 0.0,
+    "channels": [],
+    "target": "bounded corrective torque from pre-action measured wing q/qvel",
+    "kp": null,
+    "kd": null,
+    "loss": "mean squared normalized action error over six wing channels only",
+    "included_in_ppo_optimization_seconds": true,
+    "deployed_module": false
+  },
+  "motor_retention": {
+    "weight": 0.0,
+    "parent_checkpoint_sha256": null,
+    "weights_unchanged": false,
+    "scope": "all 78 mean motor outputs, ground worlds only",
+    "runtime_module": false,
+    "extra_physics_transitions": 0
+  },
+  "core_gradient_audit_from_ground_retention": null,
+  "training_started_utc": "2026-09-14T00:06:04.891081+00:00",
+  "completed_utc": "2026-09-14T00:16:25.901280+00:00",
+  "setup_seconds": 7.720014975871891,
+  "training_wall_seconds": 620.9018159769475,
+  "rollouts": 13,
+  "ppo_updates": 41,
+  "critic_updates": 416,
+  "critic_sample_presentations": 3407872,
+  "critic_updates_after_actor_stop": 256,
+  "actor_kl_stops": 8,
+  "independent_critic_seconds": 0.6991892578080297,
+  "critic_warmup_rollouts": 4,
+  "transitions": 1703936,
+  "rehearsal_frames": 0,
+  "wing_supervised_presentations": 0,
+  "collection_seconds": 442.60940782306716,
+  "optimization_seconds": 178.28735973266885,
+  "ppo_optimization_seconds": 178.28735973266885,
+  "rehearsal_seconds": 0.0,
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "parallel_physics_worlds": 64,
+  "aggregate_simulated_seconds": 3407.8720000000003,
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "neural_time_scale": 1.0,
+  "effective_gamma": 0.9996000799893344,
+  "effective_gae_lambda": 0.9994001799640054,
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 4.096,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 5.0000000000002816,
+    "gae_trace_efold_seconds": 2.000000000000061,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "activation_recomputation": true,
+  "critic_schedule": {
+    "learning_rate": 0.0001,
+    "independent_of_actor_kl": true,
+    "epochs": 2,
+    "features": "normalized observation + preceding descending state",
+    "feature_source": "saved during physical collection",
+    "targets": "fixed timeout-aware GAE returns from the collected rollout",
+    "updates_per_complete_rollout": 32,
+    "actor_or_physics_replay_for_value_fit": false,
+    "deployed_module": false
+  },
+  "transitions_by_task": {
+    "stand": 0,
+    "walk": 0,
+    "hover": 1703936
+  },
+  "aggregate_simulated_seconds_by_task": {
+    "stand": 0.0,
+    "walk": 0.0,
+    "hover": 3407.8720000000003
+  },
+  "hover_reset_curriculum": {
+    "world_proportions": {
+      "stand": 0,
+      "walk": 0,
+      "hover": 1
+    },
+    "initial_height_cm": 1.86651647,
+    "widening": 0.0,
+    "curriculum_updates": 0,
+    "progress_gate": "64 complete episodes >=5 s, none failed, mean reward rate >5.5; then widen by 0.1",
+    "maximum_height_offset_cm": 0.02,
+    "maximum_initial_linear_speed_cm_s_per_axis": 1,
+    "perturbed_fraction": 0.5,
+    "cold_stationary_wings": true,
+    "changes_only_at_episode_resets": true,
+    "teacher_actions": false
+  },
+  "airborne_resets": null,
+  "rehearsal_control_hz": null,
+  "transitions_per_training_wall_second": 2744.292183006375,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "core_gradient_audit_from_physical_reward": {
+    "excitability": {
+      "l2": 17.709388732910156,
+      "finite": true,
+      "nonzero_cells": 165351
+    },
+    "leak": {
+      "l2": 0.8797290325164795,
+      "finite": true,
+      "nonzero_cells": 165475
+    },
+    "bias": {
+      "l2": 466.865478515625,
+      "finite": true,
+      "nonzero_cells": 165503
+    }
+  },
+  "core_gradient_audit_from_weighted_wing_supervision": null,
+  "core_changes": {
+    "excitability": 2.1789275706396438e-05,
+    "leak": 8.986548891698476e-06,
+    "bias": 5.35959770786576e-05
+  },
+  "peak_cuda_allocated_bytes": 14281320448,
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "checkpoint_sha256": "be6128d0566aaca6f264ac9d8517bffa3ca28c226a215a03a93cdfc966cc4655",
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899",
+  "flight_force_model": {
+    "name": "Flight dynamics driven by measured wing motion",
+    "config": {
+      "version": "wing_motion_instant_v2",
+      "angular_armature": 2e-06,
+      "joint_damping": 0.0002,
+      "joint_stiffness": 0.001,
+      "joint_torque_limit": 0.03,
+      "activity_filter_seconds": 0.0,
+      "reference_sweep_speed": 50.0,
+      "maximum_activity": 1.4,
+      "lift_weight_multiplier": 1.6,
+      "horizontal_drag_seconds": 0.12,
+      "vertical_drag_seconds": 0.08,
+      "angular_drag_seconds": 0.025,
+      "attitude_stiffness": 100.0,
+      "steering_acceleration": 60.0,
+      "maximum_angular_acceleration": 250.0,
+      "inertia_radius_cm": 0.06,
+      "forward_force_fraction": 0.25
+    },
+    "inputs": "six actual wing angles and speeds; measured body orientation/velocity",
+    "body_mass_kg": 9.686214691323194e-07,
+    "wing_mass_and_body_inertial_coupling": "zero; independent diagonal angular response",
+    "aerodynamic_force_model": false,
+    "causal_activity_state_shape": [
+      64,
+      2
+    ],
+    "wing_response": "instant",
+    "force_update": "current wing/body measurements before every MuJoCo physics step",
+    "temporal_wing_average": false,
+    "attitude_assistance": "activity-dependent angular damping and restoring torque",
+    "translation": "bounded wing-motion lift/thrust and drag; no target-position servo"
+  },
+  "rehearsal_manifest_sha256": null,
+  "rehearsal_episode_sha256": {},
+  "rehearsal_validation_indices": [],
+  "completed_episodes": [
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.048701744526625,
+      "distance_cm": 11.249469822866816
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.09753677342087,
+      "distance_cm": 11.056889612171243
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.031844206154346,
+      "distance_cm": 11.130399913878477
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.969280035234988,
+      "distance_cm": 11.193230141591169
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.826029219198972,
+      "distance_cm": 11.342283579883539
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.925221170298755,
+      "distance_cm": 11.181831793044173
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.85378785105422,
+      "distance_cm": 11.293202380881992
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.105483484454453,
+      "distance_cm": 11.128733492454616
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.18689546873793,
+      "distance_cm": 10.954033642641226
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.092108234297484,
+      "distance_cm": 11.11782645258898
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.021638215053827,
+      "distance_cm": 11.307058664431544
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.095864875707775,
+      "distance_cm": 11.11619899193896
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.098303598351777,
+      "distance_cm": 11.124974897677076
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.105376947671175,
+      "distance_cm": 11.14361164263666
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02451290283352,
+      "distance_cm": 11.254174322258368
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.021441306453198,
+      "distance_cm": 11.201995130697394
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.073000357020646,
+      "distance_cm": 11.132577374478569
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.152090990450233,
+      "distance_cm": 11.069424434544443
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.13637866638601,
+      "distance_cm": 11.055835005368634
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.238770209718496,
+      "distance_cm": 11.020027488949044
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.97165207285434,
+      "distance_cm": 11.108064854139899
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.874715300742537,
+      "distance_cm": 11.394346221712114
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.006161542143673,
+      "distance_cm": 11.209492664006204
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.031517643947154,
+      "distance_cm": 11.149285961721267
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.183749464340508,
+      "distance_cm": 11.028147595720146
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.953287807293236,
+      "distance_cm": 11.11340525301678
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.13340205186978,
+      "distance_cm": 10.959216961396935
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.9554961794056,
+      "distance_cm": 11.177933004460673
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.08929287502542,
+      "distance_cm": 11.113355442362378
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.966599948704243,
+      "distance_cm": 11.285181629390205
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.980152426753193,
+      "distance_cm": 11.18746805537596
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.051358768716455,
+      "distance_cm": 11.18585224514124
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.08419487439096,
+      "distance_cm": 11.22562449198769
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.986904595512897,
+      "distance_cm": 11.26975292075902
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.976433042436838,
+      "distance_cm": 11.178248427255966
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.996144564822316,
+      "distance_cm": 11.183553838040375
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.952337430790067,
+      "distance_cm": 11.227648404786967
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.910422388464212,
+      "distance_cm": 11.183865642020686
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.03128411527723,
+      "distance_cm": 11.144807377919948
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.999134349171072,
+      "distance_cm": 11.15445678392816
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.002780025359243,
+      "distance_cm": 11.389241605765296
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.01084961788729,
+      "distance_cm": 11.180213400598829
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.060334398411214,
+      "distance_cm": 11.110908507303543
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.126915859989822,
+      "distance_cm": 11.132704702939494
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.148570404853672,
+      "distance_cm": 11.096624231218172
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.069429574068636,
+      "distance_cm": 11.121655499822355
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.24217379419133,
+      "distance_cm": 10.979764182290877
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.98437657393515,
+      "distance_cm": 11.191483726818504
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.167938944417983,
+      "distance_cm": 10.976996077202484
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.050290666986257,
+      "distance_cm": 11.133158320832676
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.057915805839002,
+      "distance_cm": 11.255026034297142
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.877085332758725,
+      "distance_cm": 11.241238198141103
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.983510376885533,
+      "distance_cm": 11.188566344069653
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.88439079420641,
+      "distance_cm": 11.28694293211547
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.24182664277032,
+      "distance_cm": 11.023127461608926
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.003218580037355,
+      "distance_cm": 11.281188333880946
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.99351143138483,
+      "distance_cm": 11.316393665382916
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.039100388530642,
+      "distance_cm": 11.272907717445566
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.81088790949434,
+      "distance_cm": 11.44212847967305
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.177413537167013,
+      "distance_cm": 10.976401355410797
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.995864413678646,
+      "distance_cm": 11.236990799904286
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.044960224069655,
+      "distance_cm": 11.10366967171119
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.01859433343634,
+      "distance_cm": 11.043060878088687
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.06807194277644,
+      "distance_cm": 11.194756527474851
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.990850306581706,
+      "distance_cm": 11.13751787156235
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.085719109978527,
+      "distance_cm": 11.085271555496726
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.069190574344248,
+      "distance_cm": 11.053595632741766
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.144603583961725,
+      "distance_cm": 11.025576386557665
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.993306582327932,
+      "distance_cm": 11.135774295068842
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.052196170203388,
+      "distance_cm": 11.192083126010953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.180581913795322,
+      "distance_cm": 11.116537743227003
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.123166446574032,
+      "distance_cm": 11.032535240373862
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.923782111611217,
+      "distance_cm": 11.334574913199381
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.989293199498206,
+      "distance_cm": 11.180264640049344
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.920060233213007,
+      "distance_cm": 11.248445933594136
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.935110222082585,
+      "distance_cm": 11.33820395774666
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.24895528284833,
+      "distance_cm": 11.119898210642187
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.10524836136028,
+      "distance_cm": 11.119515932713925
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.13868169253692,
+      "distance_cm": 11.038024976164532
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.069051638245583,
+      "distance_cm": 11.17326174163409
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.981607729103416,
+      "distance_cm": 11.191417255729656
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.82129179686308,
+      "distance_cm": 11.410628133866782
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.157146320212632,
+      "distance_cm": 11.010919149020745
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.1921633859165,
+      "distance_cm": 11.147407308514033
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.086741011124104,
+      "distance_cm": 11.022974766686561
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.1118260351941,
+      "distance_cm": 11.275526755077777
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.9682514234446,
+      "distance_cm": 11.165276033224687
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.104645747691393,
+      "distance_cm": 11.121142544826032
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.050605038180947,
+      "distance_cm": 11.174407058814507
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.08291287207976,
+      "distance_cm": 11.13284281088702
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.991068525705487,
+      "distance_cm": 11.106802477255643
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.96388410264626,
+      "distance_cm": 11.231815037127426
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02749510295689,
+      "distance_cm": 11.338093219052277
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0033503388986,
+      "distance_cm": 11.16723739155625
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.107099297456443,
+      "distance_cm": 11.031997387322923
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.91509960917756,
+      "distance_cm": 11.242330411415537
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.100446212571114,
+      "distance_cm": 11.077151634841641
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.102825009729713,
+      "distance_cm": 11.05844837258464
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.98619031207636,
+      "distance_cm": 11.233671502875143
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.121122823562473,
+      "distance_cm": 11.183188152346457
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.09969319263473,
+      "distance_cm": 11.128202187800197
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.034237742889673,
+      "distance_cm": 11.239410374498526
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.363418449647725,
+      "distance_cm": 11.090219662920793
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.125031650532037,
+      "distance_cm": 11.130344653020929
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.200332621578127,
+      "distance_cm": 10.991335388127776
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.911999490577728,
+      "distance_cm": 11.224720167157873
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.977888652589172,
+      "distance_cm": 11.280389085820715
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.214380820747465,
+      "distance_cm": 11.054826816133087
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.15963944653049,
+      "distance_cm": 11.049896133045525
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.14926346205175,
+      "distance_cm": 11.000257952289278
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.87658564839512,
+      "distance_cm": 11.361267274909183
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02611921308562,
+      "distance_cm": 11.255177188681863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.99905643146485,
+      "distance_cm": 11.187888432279633
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.267703925725073,
+      "distance_cm": 11.04063764919291
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.090667622163892,
+      "distance_cm": 11.050499638022663
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.918028736952692,
+      "distance_cm": 11.423229326648299
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.088113531004637,
+      "distance_cm": 11.136960335306064
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.927057723049074,
+      "distance_cm": 11.156652012176906
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.988334690686315,
+      "distance_cm": 11.156756077001193
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.250456176698208,
+      "distance_cm": 11.102387247588663
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.00115567399189,
+      "distance_cm": 11.285275102662554
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.139737870544195,
+      "distance_cm": 11.059263805910058
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.916040506679565,
+      "distance_cm": 11.349039167648476
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.104820433538407,
+      "distance_cm": 11.176847699294239
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.064967587124556,
+      "distance_cm": 11.200133980327045
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.165459756273776,
+      "distance_cm": 10.99276216655937
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.86009740130976,
+      "distance_cm": 11.268209414950924
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.055300174746662,
+      "distance_cm": 11.127174356786453
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0779817244038,
+      "distance_cm": 11.114029653575138
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.10530729359016,
+      "distance_cm": 11.013206944899366
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.91259971493855,
+      "distance_cm": 11.378975038167985
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.084343027789146,
+      "distance_cm": 11.148995345346766
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.04573175124824,
+      "distance_cm": 11.094569165673592
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.062877267133445,
+      "distance_cm": 11.069971970342039
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.99485183786601,
+      "distance_cm": 11.177997258004828
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.192503115627915,
+      "distance_cm": 10.990095165324487
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.113382475450635,
+      "distance_cm": 11.080609492216183
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.966665581334382,
+      "distance_cm": 11.247324061682642
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.823551643639803,
+      "distance_cm": 11.254841772057016
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.033156471326947,
+      "distance_cm": 11.147984659298624
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.992467639036477,
+      "distance_cm": 11.31371643973393
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.06619878485799,
+      "distance_cm": 11.140236475857238
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.962027636356652,
+      "distance_cm": 11.312289483198374
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.94613975379616,
+      "distance_cm": 11.117256719655973
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.954379491042346,
+      "distance_cm": 11.29418049895981
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.245790508110076,
+      "distance_cm": 10.97127249468306
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.996830618474633,
+      "distance_cm": 11.230324086504684
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.947770329657942,
+      "distance_cm": 11.202954887608204
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.195813606027514,
+      "distance_cm": 11.014677232314797
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.08240211987868,
+      "distance_cm": 11.195656602086974
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.96938866050914,
+      "distance_cm": 11.205595373436553
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.012761090882123,
+      "distance_cm": 11.23640587277733
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.10260371817276,
+      "distance_cm": 11.105746371720237
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.07220384432003,
+      "distance_cm": 11.208602450837557
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.952200976200402,
+      "distance_cm": 11.12621397198685
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.94708233466372,
+      "distance_cm": 11.198613834807603
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.942775289993733,
+      "distance_cm": 11.259022022494976
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.94974794657901,
+      "distance_cm": 11.22627448261101
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.1744515709579,
+      "distance_cm": 11.082108174331855
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0406506722793,
+      "distance_cm": 11.014987461898324
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.993113534059376,
+      "distance_cm": 11.136858838876725
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.784005155786872,
+      "distance_cm": 11.350461490947788
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.041450187098235,
+      "distance_cm": 11.223477608920067
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.93794695008546,
+      "distance_cm": 11.21010064350042
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.921204274054617,
+      "distance_cm": 11.259219921800794
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.134298579767346,
+      "distance_cm": 11.068973528871913
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.261675934307277,
+      "distance_cm": 10.971782838762726
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.11942475568503,
+      "distance_cm": 11.04124992355573
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.982078697532415,
+      "distance_cm": 11.180423389543162
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.947885651607066,
+      "distance_cm": 11.246965248945031
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.12754404824227,
+      "distance_cm": 11.106444282341583
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.00625509908423,
+      "distance_cm": 11.119048787240489
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.102172078564763,
+      "distance_cm": 11.062721700198185
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02450819918886,
+      "distance_cm": 11.069169653551446
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.252270944882184,
+      "distance_cm": 10.907293180927898
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.074828962329775,
+      "distance_cm": 11.156818079094387
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.223834581207484,
+      "distance_cm": 10.896057853208436
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.245360197499394,
+      "distance_cm": 11.044815157557416
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.128087524324656,
+      "distance_cm": 11.077847204982023
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.046094493940473,
+      "distance_cm": 11.077168011261598
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.996733614243567,
+      "distance_cm": 11.145424277555177
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.00968889379874,
+      "distance_cm": 11.182071636712658
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.9876299938187,
+      "distance_cm": 11.223045441043638
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.995662979781628,
+      "distance_cm": 11.106066514931925
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.156535358633846,
+      "distance_cm": 11.055388057939403
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.964708697982132,
+      "distance_cm": 11.195267498083743
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.951764575205743,
+      "distance_cm": 11.25123284068869
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.05215669469908,
+      "distance_cm": 11.159615039687758
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.136313755996525,
+      "distance_cm": 11.05103392162582
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.094983308576047,
+      "distance_cm": 11.165839134024925
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.89681363804266,
+      "distance_cm": 11.296980242505505
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.128868923522532,
+      "distance_cm": 11.0411692581656
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.998254375066608,
+      "distance_cm": 11.152570524763247
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.981639270670712,
+      "distance_cm": 11.199496738423285
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.03336703311652,
+      "distance_cm": 11.075651013517966
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.969333530403674,
+      "distance_cm": 11.135645846812261
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.985879132989794,
+      "distance_cm": 11.172636829502187
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.85002490505576,
+      "distance_cm": 11.299399401268628
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.987943343352526,
+      "distance_cm": 11.091004722211379
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.940397379919887,
+      "distance_cm": 11.177816143754164
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.079834546893835,
+      "distance_cm": 11.134722907928918
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.90240220911801,
+      "distance_cm": 11.304525334008376
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.001108431257308,
+      "distance_cm": 11.231859546789432
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.092256878502667,
+      "distance_cm": 11.113165447585535
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.016083006281406,
+      "distance_cm": 11.183145311927937
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.95054713310674,
+      "distance_cm": 11.137321061081876
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.063348325900733,
+      "distance_cm": 11.157870285095054
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.01513632480055,
+      "distance_cm": 11.267976069417662
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.75090548209846,
+      "distance_cm": 11.463471967452309
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.950158594641834,
+      "distance_cm": 11.26643562280518
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.043881598394364,
+      "distance_cm": 11.08439538806931
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.083799629937857,
+      "distance_cm": 11.202772978528788
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.875126648694277,
+      "distance_cm": 11.21960292723774
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.965384398587048,
+      "distance_cm": 11.252804749751322
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.958134333603084,
+      "distance_cm": 11.255448142941754
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.967151678167284,
+      "distance_cm": 11.282344913102948
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.264786788728088,
+      "distance_cm": 11.012228456769666
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.173905012197793,
+      "distance_cm": 11.119455231127406
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.150973727926612,
+      "distance_cm": 11.092062729340368
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.806662944611162,
+      "distance_cm": 11.321811864203184
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02533668652177,
+      "distance_cm": 11.124097729490392
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.077556040603667,
+      "distance_cm": 11.060202082920457
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.118524455931038,
+      "distance_cm": 11.189964039433931
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.990164004731923,
+      "distance_cm": 11.250540883215848
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.030225632246584,
+      "distance_cm": 11.198214522232176
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.141030258499086,
+      "distance_cm": 10.949328786580299
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.966477105859667,
+      "distance_cm": 11.139158662417106
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.965035198256373,
+      "distance_cm": 11.182542041454358
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.904523676726967,
+      "distance_cm": 11.18758078704578
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.99245862290263,
+      "distance_cm": 11.19542110074086
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.996109870728105,
+      "distance_cm": 11.147360954836403
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.174567230511457,
+      "distance_cm": 11.040252941460606
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.080378675833344,
+      "distance_cm": 11.06876145519592
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.87969789095223,
+      "distance_cm": 11.282480164136196
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.92709333775565,
+      "distance_cm": 11.32123536188115
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.974632421974093,
+      "distance_cm": 11.12332029804948
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.999250857159495,
+      "distance_cm": 11.041850428886574
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.16643917094916,
+      "distance_cm": 11.173766171664502
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.04702544445172,
+      "distance_cm": 11.132373798042442
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.97664120187983,
+      "distance_cm": 11.16944906453257
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.88793745590374,
+      "distance_cm": 11.201078168987953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.9732314562425,
+      "distance_cm": 11.22416159130439
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.917895272374153,
+      "distance_cm": 11.23504573734594
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.988959899637848,
+      "distance_cm": 11.09561053725713
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.13152031088248,
+      "distance_cm": 11.000287462593324
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.942610328551382,
+      "distance_cm": 11.307733464135262
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.14537825016305,
+      "distance_cm": 11.10524583801863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.865619481075555,
+      "distance_cm": 11.195440964881344
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.985597025603056,
+      "distance_cm": 11.146065070072556
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.059978290926665,
+      "distance_cm": 11.024477610601776
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.979041600599885,
+      "distance_cm": 11.154260987213464
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.116204500198364,
+      "distance_cm": 11.14656351344458
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.923831582069397,
+      "distance_cm": 11.376997822273065
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.064813246484846,
+      "distance_cm": 11.300740101714814
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02564394334331,
+      "distance_cm": 11.150472992416
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.033311096951365,
+      "distance_cm": 11.204669993439623
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.935243195388466,
+      "distance_cm": 11.241070335372166
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.12645060243085,
+      "distance_cm": 11.084015981591211
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.15602942975238,
+      "distance_cm": 11.12932517526685
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02408900950104,
+      "distance_cm": 11.178589968791039
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.822496708482504,
+      "distance_cm": 11.466859447813848
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.105141253210604,
+      "distance_cm": 10.99640699357036
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.057370741851628,
+      "distance_cm": 11.13127355034528
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.27211001655087,
+      "distance_cm": 10.93569394599652
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.02342118928209,
+      "distance_cm": 11.082577663570708
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.896746309939772,
+      "distance_cm": 11.3348599657159
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.89971591439098,
+      "distance_cm": 11.32444671265612
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.144465206190944,
+      "distance_cm": 11.077584976269524
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.136862855404615,
+      "distance_cm": 11.109120554925687
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.031111064832658,
+      "distance_cm": 11.087511362183273
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.71734392317012,
+      "distance_cm": 11.539836918951341
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.023979055229574,
+      "distance_cm": 11.08703646398052
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.094759825617075,
+      "distance_cm": 11.206614713642004
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.809215889312327,
+      "distance_cm": 11.3724145237613
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.04143469966948,
+      "distance_cm": 11.199895457035849
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0727746123448,
+      "distance_cm": 10.986960551253343
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.812473682221025,
+      "distance_cm": 11.289674867423711
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.899159411434084,
+      "distance_cm": 11.23548408734656
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.252135433256626,
+      "distance_cm": 11.016735523912365
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.91941786138341,
+      "distance_cm": 11.280321941519999
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.990277123171836,
+      "distance_cm": 11.099065164865687
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.039189293514937,
+      "distance_cm": 11.044903601914953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.829028220381588,
+      "distance_cm": 11.436169068844753
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.994767067953944,
+      "distance_cm": 11.160007047506536
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.93186432728544,
+      "distance_cm": 11.251633458183793
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.032504450064152,
+      "distance_cm": 11.29658486343627
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.268550923559815,
+      "distance_cm": 11.031450462859691
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.16184727381915,
+      "distance_cm": 11.044236038479688
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.979252331424505,
+      "distance_cm": 11.125195028948868
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.019974745810032,
+      "distance_cm": 11.177407296612419
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.071847149636596,
+      "distance_cm": 11.192917102265403
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.075545164756477,
+      "distance_cm": 11.0160620742976
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.026929437182844,
+      "distance_cm": 11.270830965983006
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.967703524511307,
+      "distance_cm": 11.29428012825144
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.979800483211875,
+      "distance_cm": 11.217511898340609
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.05027564940974,
+      "distance_cm": 11.18636928839094
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.92082523694262,
+      "distance_cm": 11.331742938585888
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.821371618192643,
+      "distance_cm": 11.392362921544018
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.943161752074957,
+      "distance_cm": 11.226938717231725
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.1286433422938,
+      "distance_cm": 10.98135999528409
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.969540464691818,
+      "distance_cm": 11.302260185871313
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.053944246843457,
+      "distance_cm": 11.260140467570386
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.990703179035336,
+      "distance_cm": 11.299354710235784
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.95526254689321,
+      "distance_cm": 11.192391068268694
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.93389649130404,
+      "distance_cm": 11.220819535737386
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.007957361638546,
+      "distance_cm": 11.253624108543379
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.876675859559327,
+      "distance_cm": 11.339531908295239
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0472974893637,
+      "distance_cm": 11.120676976608205
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.06219520047307,
+      "distance_cm": 11.14603709183426
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.239336900413036,
+      "distance_cm": 11.011610817148126
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.14547661691904,
+      "distance_cm": 11.04800961356675
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.987650072202086,
+      "distance_cm": 11.178330946981399
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.031992412172258,
+      "distance_cm": 11.115726543767893
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.0998687739484,
+      "distance_cm": 11.058605613049863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.080849558115005,
+      "distance_cm": 11.196641383147867
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.15693228552118,
+      "distance_cm": 11.026257373553863
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.082466742955148,
+      "distance_cm": 11.125988420115954
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.850599384866655,
+      "distance_cm": 11.32185171752953
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 27.8657691963017,
+      "distance_cm": 11.290717212768831
+    },
+    {
+      "case_id": 2,
+      "task": "hover",
+      "failed": false,
+      "failure_trace": null,
+      "simulated_seconds": 10.0,
+      "return": 28.10408696718514,
+      "distance_cm": 11.199888194825801
+    }
+  ],
+  "failure": null,
+  "physical_success": "Not established by training reward; independent evaluation required",
+  "optimizer_resumed": false,
+  "exploration_reset_explicitly": false,
+  "initial_exploration_std": [
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295,
+    0.0009999999310821295
+  ],
+  "critic_reset_for_new_reward": true,
+  "optimizer_initialization": "new PPO and critic Adam; parent actor and normalization retained",
+  "critic_warmup": {
+    "requested_rollouts": 4,
+    "completed_rollouts": 4,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  }
+}

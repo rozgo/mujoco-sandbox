@@ -1,0 +1,41 @@
+{
+  "checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "capture_sha256": "692f2cc16752e54ef5b8335678767a41b8f386b1c883819a1eaf9a52a370b5c1",
+  "scope": "Read-only existing nominal ten-second trajectory; no input or normalization change. This checks clipping, not controllability or information use.",
+  "actor_normalization": "(obs-mean)/max(std,.05), then clip[-10,10]",
+  "channels": [
+    {
+      "observation_index": 395,
+      "name": "actual_height",
+      "normalized_min": 0.428506076335907,
+      "normalized_max": 1.0096324682235718,
+      "fraction_clipped": 0.0,
+      "first_clip_seconds": null
+    },
+    {
+      "observation_index": 396,
+      "name": "target_height",
+      "normalized_min": 0.9332582354545593,
+      "normalized_max": 0.9332582354545593,
+      "fraction_clipped": 0.0,
+      "first_clip_seconds": null
+    },
+    {
+      "observation_index": 397,
+      "name": "x_target_error",
+      "normalized_min": -0.169967919588089,
+      "normalized_max": 10.52617359161377,
+      "fraction_clipped": 0.0442,
+      "first_clip_seconds": 9.558
+    },
+    {
+      "observation_index": 398,
+      "name": "y_target_error",
+      "normalized_min": -2.498387098312378,
+      "normalized_max": 0.000784922216553241,
+      "fraction_clipped": 0.0,
+      "first_clip_seconds": null
+    }
+  ],
+  "interpretation": "The x-error channel clips only late in the drift. This does not explain its onset; the current trial preserves these input semantics."
+}

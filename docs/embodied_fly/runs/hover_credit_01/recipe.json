@@ -1,0 +1,28 @@
+{
+  "requested_training_seconds": 600,
+  "worlds": 64,
+  "physics_threads": 16,
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "arguments": {
+    "horizon": 2048,
+    "sequence": 128,
+    "episode_seconds": 10,
+    "gamma": 0.9996000799893344,
+    "gae_lambda": 0.9994001799640054,
+    "lr": 1e-07,
+    "critic_lr": 0.0001,
+    "noise": 0.001,
+    "minimum_noise": 0.001,
+    "critic_warmup_rollouts": 4,
+    "epochs": 2,
+    "target_kl": 0.03,
+    "entropy": 0,
+    "seed": 120403
+  },
+  "source_commit": "6570f52e2bb134302242282fb09f56b621068050",
+  "code_changed": false,
+  "plant_changed": false,
+  "reward_changed": false,
+  "checkpoint_name": "assets/embodied_fly/diagnostics/hover_credit_01.pt",
+  "scope": "One longer-credit training run; compare with the preserved earlier imitation actor. No timing/recipe change while the job is running."
+}

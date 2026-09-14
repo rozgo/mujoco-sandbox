@@ -1149,3 +1149,25 @@ the preferred PID-imitation actor with longer rollout, discount/GAE timescales
 and ten-second episodes. Preserve body, graph, clocks, reward and64worlds.
 Requested600seconds training; measure setup, training, evaluation and video
 separately. See docs/embodied_fly/runs/hover_credit_01/PLAN.md.
+
+### Longer-credit PPO measured completion
+
+- Start00:01:59UTC, both reviewed final videos opened00:22:29UTC on September14:
+  **20min30s** to the review milestone. Final archival follows the discussion.
+- Training00:06:04.891–00:16:25.901UTC; **620.901816s training**,7.720015s setup.
+  Requested600s finishes the current rollout/update.64hover worlds,16CPU
+  MuJoCo/mjbatch threads,RTX4090 neural training;1,000Hz physics/500Hz actions.
+- **1,703,936actions**, **3,407.872aggregate simulated seconds (56min47.872s)**,
+  13rollouts,41actor/416critic updates.320completed ten-second episodes,zero falls.
+  Four critic-only fitting rollouts take135.805563s inside the training budget.
+  Collection442.609408s; optimization178.287360s. No imitation or rehearsal.
+- Frozen four-world comparison36.779771s, setup6.819405s;20,000actions and40
+  aggregate simulated seconds. Three learned starts remain airborne but all
+  accurate-hover gates and the declared nominal-improvement criteria fail.
+- Final PID/PPO render65.400899s; before/after71.483189s, concurrently. Each ten
+  seconds,500frames,50fps,1600x900,1x. Full decode and sampled-frame inspection
+  pass; both opened automatically. Same preferred parent remains preserved.
+- Eleven focused timing/critic/hover tests pass in7.66s withonePyTorch sparse
+  warning. Source-identical trainer/body/reward had already passed179tests;
+  no full-suite repetition for a CLI-only experiment. Graph/body/routing,
+  finite actor tensors, declared recipe and fresh optimizer histories verified.

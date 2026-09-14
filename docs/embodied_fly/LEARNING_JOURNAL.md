@@ -2827,3 +2827,40 @@ phase before changing clocks or adding more of the same PPO. All179package
 tests pass; both imitation videos and both final PPO comparisons were fully
 decoded, visually inspected and opened. See pid_imitation_01 and
 pid_imitation_ppo_01 for full metrics, hashes, source, clocks and ancestry.
+
+## September14 UTC — longer reward credit does not resolve drift
+
+The user approved the next PPO experiment from the preferred imitation actor.
+Rollout length increases1.024 ->4.096seconds, discount decay about2 ->5seconds,
+combined GAE trace decay.333 ->2seconds, and episode duration5 ->10seconds.
+The399-input/78-output actor, graph, body, reward,64worlds,1,000Hz physics and
+500Hz action clock stay fixed. Recurrent gradient chunks remain.256seconds;
+this is longer return credit, not longer full-graph backpropagation. The numeric
+audit confirms changed delayed-reward weighting and correct episode boundaries.
+
+One620.901816-second run collects1,703,936actions,3,407.872aggregate simulated
+seconds,41actor and416critic updates. All320completed ten-second episodes
+survive. Four actor-frozen critic-fitting rollouts use135.805563seconds inside
+the budget. Eight active rollouts hit the approximate-KL guard; the final round
+accepts32updates. The guard limits further updates but retains already-applied
+weights and lets the critic continue; it is not a physical fall detector.
+
+Frozen evaluation retains three airborne starts and29.75Hz wing motion, but
+nominal altitude RMS8.724 ->8.793mm and peak position error108.999 ->109.484mm
+fail the predeclared improvement criteria. The earlier imitation actor remains
+preferred. The new actor is preserved as a diagnostic; training time and survival
+alone do not establish improvement. Critic explained variance remains near zero
+on its own bootstrap targets. This run does not isolate a single cause.
+
+The recommended next discussion is exploration and critic feedback: check
+slightly larger action variation on the frozen good actor, verify whether the
+critic distinguishes realized better/worse outcomes, then choose a bounded PPO
+trial from that evidence. Keep the guard initially; narrow action distributions
+can make small mean changes appear large in KL. No new exploration setting or
+training run was silently started while reporting this result.
+
+Eleven focused tests pass in7.66seconds; source-identical implementation already
+passed179tests. Checkpoint/body/graph/optimizer invariants verified. Both final
+videos fully decoded, sampled frames inspected and opened at00:22:29UTC;
+20min30s after the observed start. See hover_credit_01 for source, timing,
+all measurements, failed progress gates and retained comparison artifacts.

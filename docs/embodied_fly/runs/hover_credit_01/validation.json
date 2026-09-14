@@ -1,0 +1,20 @@
+{
+  "training_implementation_changed": false,
+  "physical_model_changed": false,
+  "source_commit": "6570f52e2bb134302242282fb09f56b621068050",
+  "focused_tests": {
+    "files": ["test_ppo_timing.py", "test_ppo_critic.py", "test_hover_only.py"],
+    "passed": 11,
+    "warnings": 1,
+    "seconds": 7.66,
+    "warning": "PyTorch sparse CSR beta support"
+  },
+  "previous_complete_suite": {
+    "passed": 179,
+    "seconds": 157.91,
+    "reference": "docs/embodied_fly/runs/pid_imitation_01/validation.json",
+    "repeat_needed": false,
+    "reason": "Only CLI training configuration changed; source-identical PPO trainer, body and reward. Relevant timing, critic and hover tests were rerun."
+  },
+  "numeric_timing_check": "timing_audit.json"
+}
