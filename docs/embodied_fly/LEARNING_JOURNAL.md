@@ -3271,3 +3271,23 @@ Both the continuation and the direct original-to-final comparison were decoded
 fully, inspected and opened. The final checkpoint is a useful starting point
 for vertical regulation, not a completed release of all fly motor skills or
 utility learning. Total trial cost and selected ancestry are kept separate.
+
+
+### September 14 — unchanged continuation plateaus; explicit vertical adjustment
+
+Run 06 completes four ten-second flights, but horizontal RMS worsens from
+9.30 to 15.43 mm/s and net climb only decreases about 106 to 101 mm. Its midpoint
+also trades sideways control for vertical improvement. Preserve both snapshots,
+but retain run 05 as the better parent. Exact recipe equality and unchanged
+upstream actor parameters are verified. The comparison was fully decoded,
+inspected and opened at 15:15:04 UTC.
+
+The user-approved conditional fallback is run 07: resume run 05 and increase
+only the vertical tracking reward rate from 2 to 3. Keep the same velocity width,
+all other rewards, physics, commands, network, exploration and PPO settings.
+One initial rollout adapts only the restored critic to the new reward; do not
+recalibrate its inputs or discard its optimizer. A short discarded GPU smoke
+verifies that transition, later actor updates, cached/full recurrent replay and
+unchanged upstream parameters. Full fly suite: 231 passed in 165.98 seconds.
+A launch-path typo aborted before graph loading completed or any training;
+the aborted output is preserved separately and the path corrected.

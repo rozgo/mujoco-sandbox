@@ -1554,3 +1554,19 @@ reference-only physical validation follows the user's directional curriculum.
   Smoke updates and failed pilots are separate; unknown startup timing is not
   estimated. Final progress video opened **1h41m28s** after the initial observed
   goal/implementation time **08:10:47 UTC**. Subsequent archival is additional.
+
+
+### Hover vertical-regulation follow-up, September 14
+
+- New goal started **14:52:05 UTC**. Run 06 training began **14:53:55.921374 UTC**,
+  report completed **15:05:33.423539 UTC**. **603.990932 s measured training**,
+  32 worlds, 1,769,472 transitions. Collection 597.360504 s, actor optimization
+  2.459984 s (includes .141817 s imitation), critic 4.143642 s.
+- Separate setup 15.127430 s, replay audit 3.388092 s, writes .069445 s,
+  physical evaluation 90.020289 s. Render 69.082268 s, decode 4.295003 s;
+  43-second / 2,150-frame / 50-fps / 1920x1080 / 1x video opened **15:15:04 UTC**.
+- This run is preserved but is not the parent of run 07 because sideways control
+  regressed. Its time stays in total trial cost. No training time is attributed
+  to the subsequent path-typo startup abort: it stopped before data collection.
+- Reward-change focused tests: 11 passed in 1.48 s. Full fly suite: 231 passed,
+  45 upstream warnings, 165.98 s. These checks are separate from training.
