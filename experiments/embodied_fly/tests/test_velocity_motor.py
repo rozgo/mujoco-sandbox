@@ -112,9 +112,10 @@ def test_independent_yaw_comes_from_wing_pitch_and_preserves_body_mechanics(tmp_
     wrench = force.advance(
         angles, speed, np.tile(np.eye(3), (3, 1, 1)), np.zeros((3, 6)), 0.001
     ).copy()
-    np.testing.assert_array_equal(wrench[:, 3:5], 0)  # No roll or pitch torque.
+    # cos((-1 +/- .1) + 1) can differ by floating-point roundoff.
+    np.testing.assert_allclose(wrench[:, 3:5], 0, atol=1e-15, rtol=0)
     assert wrench[0, 5] == 0 and wrench[1, 5] > 0 and wrench[2, 5] < 0
-    np.testing.assert_allclose(wrench[1, :5], wrench[2, :5])
+    np.testing.assert_allclose(wrench[1, :5], wrench[2, :5], atol=1e-15)
     np.testing.assert_array_equal(
         force.advance(
             angles,
