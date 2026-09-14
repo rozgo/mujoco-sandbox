@@ -1209,3 +1209,8 @@ suite launched00:49UTC; next bounded PPO recipe recorded before execution.
 Observed start 2026-09-14 01:07:57 UTC. Reuse recorded physical experience to
 compare time-window and individually shuffled value batches at matched sample
 and update counts. No new actor or physics training in the diagnostic.
+
+Critic mixing: fixed-data fits completed in 23.105900 seconds. No new physical
+experience or actor learning. Full diagnostic gate fails despite much better
+shared-profile prediction. Paired round-trip target tests pass (2 in 0.80s);
+reference-only physical validation follows the user's directional curriculum.
