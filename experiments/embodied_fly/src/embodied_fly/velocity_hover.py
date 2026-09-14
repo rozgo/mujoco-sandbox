@@ -44,17 +44,39 @@ RECIPE = {
 }
 
 
-def reward_rates(velocity, angular, upright, horizontal_scale=0.5, vertical_weight=2.0):
+def reward_rates(
+    velocity,
+    angular,
+    upright,
+    horizontal_scale=0.5,
+    vertical_weight=2.0,
+    velocity_objective="separate",
+):
     if not np.isfinite(horizontal_scale) or horizontal_scale <= 0:
         raise ValueError("Positive finite horizontal reward scale required")
     if not np.isfinite(vertical_weight) or vertical_weight <= 0:
         raise ValueError("Positive finite vertical reward weight required")
-    return {
+    if velocity_objective not in ("separate", "vector"):
+        raise ValueError("Unknown velocity objective")
+    if velocity_objective == "vector" and vertical_weight != 2.0:
+        raise ValueError(
+            "Vector objective replaces both axis rewards; no vertical reweighting"
+        )
+    terms = {
         "alive": np.ones(len(velocity)),
-        "vertical": vertical_weight / (1 + (velocity[:, 2] / 0.5) ** 2),
-        "horizontal": 1 / (1 + np.sum((velocity[:, :2] / horizontal_scale) ** 2, axis=1)),
         "angular": 0.5 / (1 + np.sum((angular / 0.5) ** 2, axis=1)),
         "upright": 0.5 * np.clip(upright, 0, 1),
+    }
+    if velocity_objective == "vector":
+        terms["velocity"] = 3 / (1 + np.sum((velocity / horizontal_scale) ** 2, axis=1))
+        return terms
+    # Preserve the original term order and arithmetic for earlier recipes.
+    return {
+        "alive": terms["alive"],
+        "vertical": vertical_weight / (1 + (velocity[:, 2] / 0.5) ** 2),
+        "horizontal": 1 / (1 + np.sum((velocity[:, :2] / horizontal_scale) ** 2, axis=1)),
+        "angular": terms["angular"],
+        "upright": terms["upright"],
     }
 
 
@@ -67,10 +89,21 @@ def failures(env):
 
 
 class HoverReward:
-    def __init__(self, env, horizontal_scale=0.5, vertical_weight=2.0):
+    def __init__(
+        self, env, horizontal_scale=0.5, vertical_weight=2.0, velocity_objective="separate"
+    ):
         self.env = env
         self.horizontal_scale = horizontal_scale
         self.vertical_weight = vertical_weight
+        self.velocity_objective = velocity_objective
+        reward_rates(
+            np.zeros((1, 3)),
+            np.zeros((1, 3)),
+            np.ones(1),
+            horizontal_scale,
+            vertical_weight,
+            velocity_objective,
+        )
         self.recipe = RECIPE | {
             "horizontal_velocity_scale_cm_s": horizontal_scale,
             "vertical_tracking_rate": vertical_weight,
@@ -78,6 +111,20 @@ class HoverReward:
         }
         if vertical_weight != 2.0:
             self.recipe["version"] = "velocity_hover_v2_vertical_weight"
+        if velocity_objective == "vector":
+            for name in (
+                "vertical_tracking_rate",
+                "horizontal_tracking_rate",
+                "horizontal_velocity_scale_cm_s",
+            ):
+                self.recipe.pop(name)
+            self.recipe.update(
+                version="velocity_hover_v3_vector",
+                velocity_objective="vector",
+                velocity_tracking_rate=3.0,
+                velocity_scale_cm_s=horizontal_scale,
+                tracking_shape="3 / (1 + squared full velocity norm / scale squared)",
+            )
         self.history = np.zeros((50, env.n, 6))
         self.total = np.zeros((env.n, 6))
         self.count = np.zeros(env.n, dtype=int)
@@ -105,6 +152,7 @@ class HoverReward:
             env.fields["xmat"][:, env.template.thorax_id, 8],
             self.horizontal_scale,
             self.vertical_weight,
+            self.velocity_objective,
         )
         failed = failures(env)
         reward = sum(terms.values()) * env.control_dt * ~failed - 2 * failed

@@ -129,14 +129,22 @@ def train(args):
     critic_rng = np.random.default_rng(args.seed ^ 0xC8171C)
     device = torch.device(args.device)
     actor, parent = load_actor(args.checkpoint, args.graph, device)
-    old_vertical_weight = (
-        parent.get("ppo_recipe", {}).get("reward", {}).get("vertical_tracking_rate", 2.0)
-    )
-    changing_reward = args.resume_ppo and old_vertical_weight != args.vertical_reward_weight
-    if bool(args.adapt_vertical_reward) != changing_reward:
+    old_reward = parent.get("ppo_recipe", {}).get("reward", {})
+    old_vertical_weight = old_reward.get("vertical_tracking_rate", 2.0)
+    old_objective = old_reward.get("velocity_objective", "separate")
+    changing_objective = args.resume_ppo and old_objective != args.velocity_objective
+    changing_vertical = args.resume_ppo and old_vertical_weight != args.vertical_reward_weight
+    changing_reward = changing_vertical or changing_objective
+    if bool(args.adapt_vertical_reward) != changing_vertical:
         raise ValueError(
             "A changed vertical reward requires explicit --adapt-vertical-reward on resume"
         )
+    if bool(args.adapt_velocity_objective) != changing_objective:
+        raise ValueError(
+            "Changed velocity objective requires explicit --adapt-velocity-objective on resume"
+        )
+    if changing_vertical and changing_objective:
+        raise ValueError("Change the velocity objective or vertical weight separately")
     if parent.get("observation_schema") != SCHEMA or not actor.motor_only:
         raise ValueError("Requires the preserved velocity-command motor actor")
     if not args.resume_ppo and (
@@ -147,7 +155,7 @@ def train(args):
     if args.resume_ppo and (
         not args.wing_readout_only
         or not parent.get("ppo_recipe", {}).get("wing_readout_only")
-        or parent["ppo_recipe"]["reward"]["horizontal_velocity_scale_cm_s"]
+        or old_reward.get("horizontal_velocity_scale_cm_s", old_reward["velocity_scale_cm_s"])
         != args.horizontal_reward_scale
     ):
         raise ValueError("Continuation requires the same recorded wing-readout PPO recipe")
@@ -182,7 +190,9 @@ def train(args):
     starts = start_states(args.dataset, range(8))
     world_episode = np.arange(args.worlds) % 8
     commands = np.zeros((args.worlds, 4), np.float32)
-    reward_fn = HoverReward(env, args.horizontal_reward_scale, args.vertical_reward_weight)
+    reward_fn = HoverReward(
+        env, args.horizontal_reward_scale, args.vertical_reward_weight, args.velocity_objective
+    )
 
     def reset(ids):
         env.reset(ids, state={k: v[world_episode[ids]] for k, v in starts.items()})
@@ -276,6 +286,15 @@ def train(args):
             },
             critic_warmup_rollouts=1,
         )
+        if changing_objective:
+            recipe["reward_transition"] = {
+                "velocity_objective_before": old_objective,
+                "velocity_objective_after": args.velocity_objective,
+                "reward_before": old_reward,
+                "reward_after": reward_fn.recipe,
+                "other_reward_terms_changed": False,
+                "critic_adaptation": "one new-reward rollout, critic updates only; retain critic weights/Adam/calibration",
+            }
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
@@ -797,4 +816,6 @@ if __name__ == "__main__":
     p.add_argument("--horizontal-reward-scale", type=float, default=0.5)
     p.add_argument("--vertical-reward-weight", type=float, default=2.0)
     p.add_argument("--adapt-vertical-reward", action="store_true")
+    p.add_argument("--velocity-objective", choices=("separate", "vector"), default="separate")
+    p.add_argument("--adapt-velocity-objective", action="store_true")
     train(p.parse_args())

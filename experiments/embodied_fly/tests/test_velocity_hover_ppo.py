@@ -38,10 +38,20 @@ def test_wider_horizontal_reward_recognizes_reducing_large_drift_without_moving_
         np.testing.assert_array_equal(old[key], new[key])
 
 
-@pytest.mark.parametrize("vertical_weight", [2.0, 3.0])
-def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus(vertical_weight):
+@pytest.mark.parametrize(
+    "vertical_weight,objective", [(2.0, "separate"), (3.0, "separate"), (2.0, "vector")]
+)
+def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus(
+    vertical_weight, objective
+):
     def rates(velocity, angular, upright):
-        return reward_rates(velocity, angular, upright, vertical_weight=vertical_weight)
+        return reward_rates(
+            velocity,
+            angular,
+            upright,
+            vertical_weight=vertical_weight,
+            velocity_objective=objective,
+        )
 
     stable = sum(rates(np.zeros((1, 3)), np.zeros((1, 3)), np.ones(1)).values())[0]
     climbing = sum(rates(np.array([[0, 0, 3.0]]), np.zeros((1, 3)), np.ones(1)).values())[0]
@@ -61,7 +71,8 @@ def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus(ver
     assert outcome([poor] * 101, 100) > outcome([poor], 0)
 
 
-def test_reward_filter_is_causal_reset_local_and_not_part_of_dynamics():
+@pytest.mark.parametrize("objective", ["separate", "vector"])
+def test_reward_filter_is_causal_reset_local_and_not_part_of_dynamics(objective):
     qpos = np.zeros((2, 7))
     qpos[:, 2] = 2
     qvel = np.zeros((2, 6))
@@ -78,7 +89,7 @@ def test_reward_filter_is_causal_reset_local_and_not_part_of_dynamics():
         body_weight=1,
         control_dt=0.002,
     )
-    reward = HoverReward(env)
+    reward = HoverReward(env, velocity_objective=objective)
     for i in range(50):
         qvel[:, 2] = np.sin(2 * np.pi * 30 * i * 0.002)
         reward()
@@ -92,6 +103,26 @@ def test_reward_filter_is_causal_reset_local_and_not_part_of_dynamics():
     qpos[0, 2] = 0.4
     r, failed, _ = reward()
     assert failed[0] and r[0] == -2 and r[1] > 0
+
+
+def test_vector_reward_is_rotation_invariant_and_does_not_buy_more_error_on_another_axis():
+    velocities = np.array(
+        [[1, 0, 0], [0, -1, 0], [0, 0, 1], [0.6, 0.8, 0], [0, 2, 0], [0, 0, -2], [0, 0, 0]]
+    )
+    zero = np.zeros_like(velocities)
+    up = np.ones(len(velocities))
+    result = reward_rates(
+        velocities, zero, up, horizontal_scale=2, velocity_objective="vector"
+    )
+    np.testing.assert_allclose(result["velocity"][:4], result["velocity"][0])
+    assert result["velocity"][6] > result["velocity"][0] > result["velocity"][4]
+    assert result["velocity"][4] == result["velocity"][5]
+    old = reward_rates(velocities, zero, up, horizontal_scale=2)
+    for name in ("alive", "upright", "angular"):
+        np.testing.assert_array_equal(result[name], old[name])
+    # Counterexample: separate-axis rewards favor twice as much total motion
+    # when that motion moves from the more heavily penalized vertical axis.
+    assert (old["vertical"] + old["horizontal"])[4] > (old["vertical"] + old["horizontal"])[2]
 
 
 def test_actual_ppo_replay_reproduces_sampling_with_episode_resets_and_nonzero_memory():
