@@ -3095,3 +3095,30 @@ The map shows actual past motion and current heading, with a 5 mm grid and a
 clearly labeled position marker. Final v3 remains 71.2 seconds at 1x, fully
 decoded and visually reviewed, opened 2026-09-14 05:03:41 UTC. No new physics
 or learning was run for this presentation fix. The previous videos are preserved.
+
+## Fresh velocity imitation, first one-minute burst
+
+The user requested 60-second learning bursts with continuation state preserved.
+The new replay trainer uses the fresh 391-input velocity actor and exact accepted
+v5 flight model. Ten complete 71.2-second PID demonstrations pass all 500 stage
+checks; eight train and two validate. All movements remain in every episode.
+Sampling recurrent windows from these recordings prevents a short wall budget
+from seeing only the early stages. Every update covers all 50 stage IDs.
+
+The first 62.554799-second burst completes 14 Adam updates and 114,688 supervised
+targets on the RTX 4090, with 64 sequences, 128 supervised steps and 64 context
+steps. Checkpoint, optimizer and sampler state are retained. All encoder/readout
+and cell-dynamics paths receive gradients; graph weights stay unchanged.
+
+Held-out wing MSE falls from 0.396961 to 0.008018, but both student-only physical
+episodes fail at 0.070 seconds, before any movement command. The read-only audit
+finds that constant mean wing positions achieve lower MSE (0.004135), and the
+student's predicted sweep variation is much smaller than the teacher's. The
+large loss reduction is therefore not evidence of learning the wingbeat. Fourteen
+updates are too few to settle whether sustained imitation will learn it.
+
+The failure is visible in the synchronized 1x comparison, opened after QA. No
+extra burst was run. The user subsequently requested a proposed configuration
+for a 30-minute training allowance; this discussion does not itself constitute
+a completed longer run. See runs/velocity_imitation_01/SUMMARY.md for measured
+times, preserved checkpoints and exact continuation commands.

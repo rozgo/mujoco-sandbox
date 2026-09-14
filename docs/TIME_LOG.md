@@ -1395,3 +1395,29 @@ reference-only physical validation follows the user's directional curriculum.
   checksum and implementation reference. It distinguishes fixed MaleCNS wiring
   from trainable cell dynamics and separates completed PID validation from
   future motor, utility and multi-fly learning. No training or physics runs.
+
+### Fresh velocity imitation: first one-minute burst
+
+- First observed implementation clock 2026-09-14 05:53:27 UTC. Completed comparison
+  fully decoded, visually inspected and opened at 06:10:19 UTC: 16m52s observed
+  elapsed time to the video, including implementation, collection and review.
+- Ten full PID episodes, each 71.2 simulated seconds: eight training and two
+  held-out. All 500 stage checks pass. Capture 219.386192 s; total dataset process
+  266.948907 s including setup, compression and checksums. No neural updates here.
+- Fresh graph-actor initialization 4.879179 s. Training setup 8.057617 s.
+  Requested 60 s training, actual 62.554799 s finishing the active update;
+  14 updates, 114,688 supervised replay targets and 57,344 context observations.
+  Training starts 06:03:34.412197 UTC. Before/after held-out validation takes
+  2.030457/1.809674 s separately. No additional training burst performed.
+- Student physical evaluation loops 0.910613/0.785070 s; both fail the opening
+  hover at 0.070 simulated seconds. Capture continues 0.4 s after failure to show
+  it. These short failed traces are not full-exercise tracking measurements.
+- Read-only wing audit 8.319643 s. The trained MSE remains worse than a constant
+  training-mean wing-pose predictor; large improvement over random weights does
+  not establish learned wingbeat or flight.
+- Video render 14.779096 s; full decode 1.166906 s. Fifteen seconds at 1x,
+  750 frames, 50 fps, 1600x960. Failure panels explicitly end rather than freezing
+  or resetting the fly. Thirteen relevant tests pass in 8.97 s.
+- Documentation and archive work continues after the video milestone; it is not
+  included in the reported neural training time. Dataset and optimizer are cached
+  for later bursts, so their setup need not be repeated from scratch.

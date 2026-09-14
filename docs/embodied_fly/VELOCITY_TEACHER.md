@@ -72,7 +72,9 @@ Mac can render its transferred MJB/capture without recompiling the model.
 Later utility and navigation learning should remain connected through the same
 MaleCNS core. Velocity commands are motor-teaching inputs, not a decision to
 install permanent external utility/navigation networks above the connectome.
-No student training starts during this teacher-reference review.
+No student training started during this teacher-reference review. The user later
+authorized [one-minute fresh imitation bursts](runs/velocity_imitation_01/SUMMARY.md)
+on the accepted faster v5 plant; their results are separate from this reference.
 
 ## Faster physical flight follow-up
 

@@ -2,20 +2,27 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Latest: [faster physical flight reference](runs/pid_velocity_fast_04/SUMMARY.md)
+Latest learning: [first one-minute fresh velocity imitation](runs/velocity_imitation_01/SUMMARY.md)
+and [PID/student comparison](../../previews/embodied_fly/velocity_imitation_01_pid_comparison_v1.mp4).
+The 62.6-second burst completes 14 updates, but the student falls during the
+opening hover in both physical checks. Its lower imitation loss mainly reflects
+fitting mean joint positions; wing motion and flight are not learned yet.
+The checkpoint and optimizer are saved for another short continuation.
+
+Accepted teacher: [faster physical flight reference](runs/pid_velocity_fast_04/SUMMARY.md)
 and [71.2-second video at 1x playback](../../previews/embodied_fly/pid_velocity_fast_exercise_v3.mp4).
 Commands are ten times faster: 15 mm/s per translation axis and 4.5 rad/s yaw.
 The complete exercise passes all 50 stage checks, including tight sideways
 turns and braking. The versioned wing-driven model adds independent lateral
 thrust and faster yaw response; body mechanics and torque limits remain fixed.
-This is PID/plant validation. No fresh student training has started.
+This is PID/plant validation, separate from the fresh student result above.
 
 Preserved slow reference: [continuous velocity and heading PID reference](runs/pid_velocity_teacher_03/SUMMARY.md)
 and [complete 71.2-second teacher video](../../previews/embodied_fly/pid_velocity_full_exercise_v1.mp4).
 One physical episode contains translation, independent turns, combinations,
 braking and hover, without resets. All 50 declared stage checks pass after
 three teacher-tuning captures on the same versioned plant. This demonstrates
-the PID and physics; the fresh MaleCNS student has not been trained.
+the PID and physics; no student was trained on this slower reference.
 Commands are forward/left/up velocity and yaw rate, with no position or heading
 targets. See [the current interface and reproduction guide](VELOCITY_TEACHER.md).
 Utility and navigation remain future learning through the same MaleCNS core.
