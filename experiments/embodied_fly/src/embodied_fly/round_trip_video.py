@@ -101,12 +101,17 @@ def record(source, output, reference=None):
                 board = Image.new("RGB", (1600, 1000), "#111519")
                 draw = ImageDraw.Draw(board)
                 draw.text(
-                    (16, 12), "ROUND TRIPS / RETURN TO START", font=font(28), fill="#ffc31f"
+                    (16, 12),
+                    "LEARNED FLIGHT / ROUND-TRIP TEST"
+                    if learned
+                    else "ROUND TRIPS / RETURN TO START",
+                    font=font(28),
+                    fill="#ffc31f",
                 )
                 draw.text(
                     (16, 52),
                     (
-                        "One learned MaleCNS actor / Six routes + hover / PID hover reference at right / 1x"
+                        "Development trial / One MaleCNS actor / Six routes + hover / PID hover reference at right / 1x"
                         if learned
                         else "PID reference / Wing-driven flight / No learned actor / 1x playback"
                     ),
