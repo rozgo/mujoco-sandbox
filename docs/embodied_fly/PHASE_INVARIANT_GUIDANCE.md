@@ -81,4 +81,4 @@ oscillator, new actor output or bypass around MaleCNS is proposed.
 The run-09 recovery-practice trial completed four ten-second flights but regressed
 to approximately 161 mm climb and 18.69 mm/s total velocity RMS. Run 05 remains
 retained. These results do not establish phase mismatch as the cause. The overall
-RL flight-improvement goal remains active.
+RL flight-improvement objective remains unfinished.

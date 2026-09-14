@@ -17,8 +17,10 @@ Increasing the vertical reward reduced climb to about 67 mm but worsened
 sideways RMS to 14.1 mm/s. A subsequent [combined-velocity reward trial and diagnostics](runs/velocity_hover_ppo_08/SUMMARY.md)
 improve horizontal RMS to 7.73 mm/s but worsen climb to 135 mm. Run 05 remains
 the preferred overall checkpoint; none of these follow-ups meets the combined
-hover criterion. A [recovery-practice trial](runs/velocity_hover_ppo_09/PLAN.md)
-is underway, with small physical gusts during training and calm evaluation.
+hover criterion. The [recovery-practice trial](runs/velocity_hover_ppo_09/SUMMARY.md)
+also regressed: four complete flights, but 161 mm climb. A [controlled imitation
+ablation](runs/velocity_hover_ppo_10/PLAN.md) now tests whether the teacher's
+framewise command penalty restricts useful PPO corrections.
 
 Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).

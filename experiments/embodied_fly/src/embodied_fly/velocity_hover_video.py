@@ -23,13 +23,34 @@ def record(args):
     training = json.loads((args.run / "report.json").read_text())
     reports = [training["evaluations"][label] for label in ("pid", "parent", "final")]
     roots = [args.run] * 3
+    capture_labels = ["pid", "parent", "final"]
     original = None
+    comparison = None
     if args.original_run:
         original = json.loads((args.original_run / "report.json").read_text())
         if original["physical_contract"] != training["physical_contract"]:
             raise ValueError("Original comparison must use the same physical contract")
         reports[1] = original["evaluations"]["parent"]
         roots[1] = args.original_run
+    if args.comparison_run:
+        comparison = json.loads((args.comparison_run / "report.json").read_text())
+        if (
+            comparison["physical_contract"] != training["physical_contract"]
+            or comparison["parent_checkpoint_sha256"] != training["parent_checkpoint_sha256"]
+            or comparison["counters"]["transitions"] != training["counters"]["transitions"]
+        ):
+            raise ValueError("Ablation needs the same parent, physics and experience budget")
+        for key in ("reward", "worlds", "horizon", "sequence", "actor_lr", "critic_lr"):
+            if comparison["recipe"][key] != training["recipe"][key]:
+                raise ValueError(f"Ablation recipe differs in {key}")
+        if (
+            comparison["recipe"]["imitation_weight"] != 1
+            or training["recipe"]["imitation_weight"] != 0
+        ):
+            raise ValueError("Ablation video requires imitation weights 1 and 0")
+        reports[1] = comparison["evaluations"]["final"]
+        roots[1] = args.comparison_run
+        capture_labels[1] = "final"
     model = mujoco.MjModel.from_binary_path(str(args.run / "model.mjb"))
     model.vis.global_.offwidth = max(model.vis.global_.offwidth, 1920)
     model.vis.global_.offheight = max(model.vis.global_.offheight, 1080)
@@ -46,6 +67,21 @@ def record(args):
     )
     if original:
         titles = ("PID REFERENCE", "ORIGINAL IMITATION", "AFTER PPO")
+    if comparison:
+        titles = ("PID REFERENCE", "PPO / IMITATION ON", "PPO / IMITATION OFF")
+    subtitle = (
+        "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
+        if original
+        else f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO"
+        + (
+            " + light imitation"
+            if training["recipe"].get("imitation_weight", 1)
+            else " / imitation OFF"
+        )
+        + "  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
+    )
+    if comparison:
+        subtitle = "Same starting checkpoint  |  1.77M experiences each  |  32 worlds  |  Only imitation weight changes  |  1x"
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -69,9 +105,7 @@ def record(args):
         try:
             for case_index, episode in enumerate(EVALUATION_EPISODES):
                 captures, cases = [], []
-                for label, report, root in zip(
-                    ("pid", "parent", "final"), reports, roots, strict=True
-                ):
+                for label, report, root in zip(capture_labels, reports, roots, strict=True):
                     case = next(c for c in report["cases"] if c["episode"] == episode)
                     file = root / label / case["file"]
                     assert sha256(file) == case["sha256"]
@@ -101,15 +135,15 @@ def record(args):
                     draw = ImageDraw.Draw(board)
                     draw.text(
                         (24, 18),
-                        "FLIGHT SCHOOL  /  LEARNING TO HOVER",
+                        "FLIGHT SCHOOL  /  IMITATION ABLATION"
+                        if comparison
+                        else "FLIGHT SCHOOL  /  LEARNING TO HOVER",
                         font=font(34),
                         fill="#ffc31f",
                     )
                     draw.text(
                         (24, 66),
-                        "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
-                        if original
-                        else f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO + light imitation  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x",
+                        subtitle,
                         font=font(23),
                         fill="#e6e1db",
                     )
@@ -221,7 +255,9 @@ def record(args):
             draw = ImageDraw.Draw(board)
             draw.text(
                 (50, 55),
-                "LEARNING PROGRESS / MEASURED OUTCOME"
+                "IMITATION ON / OFF: MEASURED FLIGHT"
+                if comparison
+                else "LEARNING PROGRESS / MEASURED OUTCOME"
                 if original
                 else "PPO CONTINUATION / MEASURED OUTCOME"
                 if continued
@@ -284,6 +320,12 @@ def record(args):
         "original_comparison_checkpoint_sha256": original["parent_checkpoint_sha256"]
         if original
         else None,
+        "ablation_comparison_report_sha256": sha256(args.comparison_run / "report.json")
+        if comparison
+        else None,
+        "ablation_comparison_checkpoint_sha256": comparison["checkpoint_sha256"]
+        if comparison
+        else None,
     }
     args.output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report), flush=True)
@@ -294,5 +336,7 @@ if __name__ == "__main__":
     p.add_argument("--run", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
-    p.add_argument("--original-run", type=Path)
+    group = p.add_mutually_exclusive_group()
+    group.add_argument("--original-run", type=Path)
+    group.add_argument("--comparison-run", type=Path)
     record(p.parse_args())

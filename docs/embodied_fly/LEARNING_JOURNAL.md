@@ -3353,3 +3353,28 @@ Reset-only velocity offsets were considered, but the existing 80–120 ms drag
 would erase them quickly. Pulses give repeated recovery experience after the
 wing pattern is established. Forces are added to the existing physics, not
 commands or pose assignments, and the original calm evaluations remain unchanged.
+
+
+### Recovery-practice result and imitation ablation, September 14
+
+Run09 completes four ten-second calm flights but worsens total velocity RMS
+to18.69mm/s and climb to160.75mm. Eight calm and24 disturbed training worlds
+record1248force pulses, none in the calm group. Frozen upstream and recurrent
+replay checks pass. Training604.224114s; physical evaluation90.579135s. The
+43-second comparison is decoded, inspected and opened17:57:14UTC. Run05 stays
+retained. This outcome does not complete the flight-improvement objective.
+
+The user identified the risk of penalizing a useful wingbeat that differs only
+in phase. Code inspection distinguishes current teacher-history command MSE
+from the body-motion PPO reward, which has no teacher phase reference. No
+phase-mismatch cause is established. The approved first test is removing the
+imitation gradient only, preserving run05's parent, run06's original reward
+and a matched108-rollout budget. Teacher batches remain sampled and scored
+for diagnostics, with zero supervised presentations. No new phase-alignment
+loss, PID correction, gust curriculum or force law is introduced.
+
+The first smoke's rewards differ slightly from the historical run06; a new
+imitation-enabled smoke also differs. Record this execution variability rather
+than claim bitwise reproduction. Functional replay passes and all upstream
+weights stay identical. The full ablation uses the declared matched settings;
+a small single-seed outcome difference cannot establish causality.

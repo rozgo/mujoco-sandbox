@@ -1609,3 +1609,23 @@ reference-only physical validation follows the user's directional curriculum.
 - Recovery-curriculum verification: 11 focused tests passed in 1.27 s; full fly
   suite **235 passed**, 45 warnings, **170.19 s**. Run 09 is in progress; its
   training cost will be recorded from the completed report.
+
+- Run 09 completed: **604.224114 s training**, **1,753,088 transitions**,
+  107 rollouts; start **16:29:08.248645 UTC**, report **16:40:46.520727 UTC**.
+  Setup 15.063301 s, audit 3.363404 s, checkpoint IO .072635 s, physical evaluation
+  90.579135 s. Rendering 69.229384 s and full decode 4.409229 s are separate.
+  Video inspected and opened **17:57:14 UTC**. The intervening discussion/idle
+  time is not training. Run 05 retained; run 09 regresses calm flight.
+
+### Controlled imitation ablation, September 14
+
+- User-approved work started **17:54:14 UTC**. Same run-05 parent and run-06
+  reward/settings, with imitation weight zero. Fixed 108-rollout experience
+  budget; actual training time to be recorded after completion.
+- Focused tests: **16 passed**, one warning, **1.51 s**. Full fly suite:
+  **241 passed**, 45 warnings, **169.44 s**. Renderer checks are separate.
+- Three-rollout imitation-off smoke: **17.135644 s training**. Functional replay,
+  zero imitation-gradient and frozen-upstream checks pass. Initial collection
+  is not bitwise identical to the older run: maximum reward-rate difference
+  .00013823; a repeated imitation-on smoke also differs (.00010820). Both are
+  discarded. Full training begins only after documenting that repeat variability.

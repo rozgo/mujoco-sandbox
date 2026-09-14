@@ -41,3 +41,12 @@ Render, fully decode, inspect and open the comparison. Record failed outcomes
 and measured costs. The broader flight-improvement criteria remain unchanged:
 four ten-second flights, lower total RMS than run 05, climb at most 50 mm and
 horizontal RMS at most 10 mm/s in each case.
+
+The initial strict bitwise check did not pass: first-rollout vertical reward
+differs from run 06 by 0.000138 with imitation off and 0.000108 in a separate
+imitation-on smoke. The teacher diagnostic loss differs by about 3e-11.
+Repeating the original setting also varies, so this is a matched-settings
+comparison, not a bitwise replay. Preserve the mismatch in verification.json;
+functional replay, exact unchanged upstream weights and reward checks pass.
+Do not treat a small single-seed result difference as proof of phase causality.
+Both three-rollout smokes are discarded before full training.
