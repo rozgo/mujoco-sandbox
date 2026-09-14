@@ -79,11 +79,19 @@ def collect(args):
     np.savez_compressed(args.output / "states.npz", **arrays)
     tolerances = {"observation": 2e-6, "action": 2e-6, "qpos": 1e-8, "reward": 2e-7}
     errors = {k: 0.0 for k in tolerances}
+    details = []
     synchronize(device)
     begin = time.perf_counter()
     for anchor, saved in zip(anchors, snapshots, strict=True):
         restore(env, reward, memory, np.arange(10), saved)
-        for expected in checks[anchor]:
+        restored = capture(env, reward, memory)
+        initial_errors = {
+            k: float(np.max(np.abs(restored[k] - v)))
+            for k, v in saved.items()
+            if k != "physical_age"
+        }
+        step_errors = []
+        for step, expected in enumerate(checks[anchor]):
             obs = observation(env, commands)
             result = actor(torch.as_tensor(obs, device=device), memory)
             action = result.action.cpu().numpy()
@@ -98,6 +106,16 @@ def collect(args):
             }
             for k, previous in errors.items():
                 errors[k] = max(previous, float(np.max(np.abs(actual[k] - expected[k]))))
+            step_errors.append(
+                {k: float(np.max(np.abs(actual[k] - expected[k]))) for k in errors}
+            )
+        details.append(
+            {
+                "parent_step": anchor,
+                "initial_restore_errors": initial_errors,
+                "step_errors": step_errors,
+            }
+        )
     synchronize(device)
     audit_seconds = time.perf_counter() - begin
     passed = not bool(ever_failed.any()) and all(errors[k] <= tolerances[k] for k in errors)
@@ -120,6 +138,7 @@ def collect(args):
         "collection_seconds": collection_seconds,
         "restoration_audit_seconds": audit_seconds,
         "restoration_errors": errors,
+        "restoration_details": details,
         "restoration_tolerances": tolerances,
         "parent_failures": int(ever_failed.sum()),
         "restored_continuation_seconds_per_state": 0.128,
