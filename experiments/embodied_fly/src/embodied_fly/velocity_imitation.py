@@ -1,4 +1,4 @@
-"""Resumable one-minute recurrent imitation from complete velocity exercises."""
+"""Timed, resumable recurrent imitation from complete velocity exercises."""
 
 import argparse
 import json
@@ -19,12 +19,20 @@ from embodied_fly.velocity_motor import SCHEMA
 from embodied_fly.wing_position import wing_actuators
 
 
-def sample_windows(rng, episodes, batch, sequence, warmup, steps):
+def sample_windows(rng, episodes, batch, sequence, warmup, steps, cold_starts=0):
     """Cover every stage each update; never join two physical episodes."""
-    if batch < len(STAGES) or min(sequence, warmup, steps) <= 0:
+    if (
+        cold_starts < 0
+        or batch - cold_starts < len(STAGES)
+        or min(sequence, warmup, steps) <= 0
+    ):
         raise ValueError("Need at least 50 samples and positive sequence lengths")
     boundaries = np.rint(np.r_[0, np.cumsum([s[1] for s in STAGES])] * 500).astype(int)
-    stages = np.r_[np.arange(len(STAGES)), rng.integers(len(STAGES), size=batch - len(STAGES))]
+    episodes = np.asarray(list(episodes))
+    regular = batch - cold_starts
+    stages = np.r_[
+        np.arange(len(STAGES)), rng.integers(len(STAGES), size=regular - len(STAGES))
+    ]
     rng.shuffle(stages)
     starts = np.array(
         [
@@ -32,10 +40,30 @@ def sample_windows(rng, episodes, batch, sequence, warmup, steps):
             for s in stages
         ]
     )
-    worlds = rng.choice(episodes, size=batch)
+    worlds = rng.choice(episodes, size=regular)
+    if cold_starts:
+        # Whole recorded starts: resting wings and zero neural state, not an
+        # artificial reset inserted into the middle of a physical episode.
+        cold_worlds = np.resize(rng.permutation(episodes), cold_starts)
+        starts = np.r_[starts, np.zeros(cold_starts, dtype=int)]
+        worlds = np.r_[worlds, cold_worlds]
+        stages = np.r_[stages, np.zeros(cold_starts, dtype=int)]
     indices = starts[None] + np.arange(-warmup, sequence)[:, None]
     valid = indices >= 0
     return worlds, indices.clip(0, steps - 1), valid, stages
+
+
+def validate_resume_recipe(previous, current, allow_sampling_change=False):
+    previous = dict(previous, cold_starts=previous.get("cold_starts", 0))
+    if previous == current:
+        return False
+    if not allow_sampling_change or {
+        k: v for k, v in previous.items() if k != "cold_starts"
+    } != {k: v for k, v in current.items() if k != "cold_starts"}:
+        raise ValueError(
+            "Continuation must preserve the recipe except an explicit sampling change"
+        )
+    return True
 
 
 def sequence_loss(actor, observations, targets, valid, warmup, wings, gradients):
@@ -63,7 +91,7 @@ def sequence_loss(actor, observations, targets, valid, warmup, wings, gradients)
 
 
 def train(args):
-    if args.seconds <= 0 or args.lr <= 0:
+    if args.seconds <= 0 or args.lr <= 0 or args.snapshot_seconds < 0:
         raise ValueError("Positive budget and learning rate required")
     args.output.mkdir(parents=True, exist_ok=False)
     setup_started = time.perf_counter()
@@ -112,10 +140,13 @@ def train(args):
         "loss": "wing MSE + 0.1 * nonwing MSE",
         "gradient_clip": 1,
         "dtype": "float32",
+        "cold_starts": args.cold_starts,
     }
+    sampling_changed = False
     if args.resume:
-        if parent["imitation_recipe"] != recipe:
-            raise ValueError("Continuation must preserve the recorded training recipe")
+        sampling_changed = validate_resume_recipe(
+            parent["imitation_recipe"], recipe, args.allow_sampling_change
+        )
         optimizer.load_state_dict(parent["optimizer_state_dict"])
         rng.bit_generator.state = json.loads(parent["sampler_state_json"])
         torch.set_rng_state(parent["torch_rng_state"].cpu())
@@ -168,13 +199,47 @@ def train(args):
     progress = []
     audit = None
     stage_counts = np.zeros(len(STAGES), dtype=int)
+    snapshots = []
+    checkpoint_seconds = 0.0
+    next_snapshot = args.snapshot_seconds or float("inf")
+    parent_hash = sha256(args.initial or args.resume)
+
+    def save_checkpoint(name, training_seconds):
+        result = {
+            k: v for k, v in parent.items() if k not in ("state_dict", "optimizer_state_dict")
+        }
+        result.update(
+            state_dict={k: v.detach().cpu() for k, v in actor.state_dict().items()},
+            optimizer_state_dict=optimizer.state_dict(),
+            sampler_state_json=json.dumps(rng.bit_generator.state),
+            torch_rng_state=torch.get_rng_state(),
+            cuda_rng_state=torch.cuda.get_rng_state(device).cpu()
+            if device.type == "cuda"
+            else torch.empty(0),
+            training_updates=parent.get("training_updates", 0) + len(progress),
+            cumulative_training_seconds=parent.get("cumulative_training_seconds", 0)
+            + training_seconds,
+            parent_checkpoint_sha256=parent_hash,
+            source_commit=provenance["source_commit"],
+            imitation_recipe=recipe,
+            method="Recurrent velocity PID imitation from complete physical demonstrations",
+        )
+        torch.save(result, args.output / name)
+        return result
+
     started_utc = utc_now()
     synchronize(device)
     started = time.perf_counter()
     with (args.output / "progress.jsonl").open("x") as log:
-        while time.perf_counter() - started < args.seconds:
+        while time.perf_counter() - started - checkpoint_seconds < args.seconds:
             windows = sample_windows(
-                rng, range(8), args.batch, args.sequence, args.warmup, observations.shape[1]
+                rng,
+                range(8),
+                args.batch,
+                args.sequence,
+                args.warmup,
+                observations.shape[1],
+                args.cold_starts,
             )
             obs, target, valid = get_batch(windows)
             optimizer.zero_grad(set_to_none=True)
@@ -204,7 +269,7 @@ def train(args):
             stage_counts += np.bincount(windows[3], minlength=len(STAGES))
             row = {
                 "update": len(progress) + 1,
-                "elapsed_seconds": time.perf_counter() - started,
+                "elapsed_seconds": time.perf_counter() - started - checkpoint_seconds,
                 "loss": float(loss.detach()),
                 "wing_mse": float(wing.detach()),
                 "posture_mse": float(posture.detach()),
@@ -216,30 +281,25 @@ def train(args):
             log.write(json.dumps(row) + "\n")
             log.flush()
             print(json.dumps(row), flush=True)
+            if row["elapsed_seconds"] >= next_snapshot:
+                checkpoint_started = time.perf_counter()
+                name = f"checkpoint_{int(next_snapshot):04d}s.pt"
+                saved = save_checkpoint(name, row["elapsed_seconds"])
+                snapshots.append(
+                    {
+                        "file": name,
+                        "sha256": sha256(args.output / name),
+                        "training_seconds": row["elapsed_seconds"],
+                        "cumulative_updates": saved["training_updates"],
+                    }
+                )
+                checkpoint_seconds += time.perf_counter() - checkpoint_started
+                next_snapshot += args.snapshot_seconds
     synchronize(device)
-    training_seconds = time.perf_counter() - started
+    training_seconds = time.perf_counter() - started - checkpoint_seconds
     after = validate()
     # All continuation state is retained; no reset to random weights next burst.
-    result = {
-        k: v for k, v in parent.items() if k not in ("state_dict", "optimizer_state_dict")
-    }
-    result.update(
-        state_dict={k: v.detach().cpu() for k, v in actor.state_dict().items()},
-        optimizer_state_dict=optimizer.state_dict(),
-        sampler_state_json=json.dumps(rng.bit_generator.state),
-        torch_rng_state=torch.get_rng_state(),
-        cuda_rng_state=torch.cuda.get_rng_state(device).cpu()
-        if device.type == "cuda"
-        else torch.empty(0),
-        training_updates=parent.get("training_updates", 0) + len(progress),
-        cumulative_training_seconds=parent.get("cumulative_training_seconds", 0)
-        + training_seconds,
-        parent_checkpoint_sha256=sha256(args.initial or args.resume),
-        source_commit=provenance["source_commit"],
-        imitation_recipe=recipe,
-        method="Recurrent velocity PID imitation from complete physical demonstrations",
-    )
-    torch.save(result, args.output / "actor.pt")
+    result = save_checkpoint("actor.pt", training_seconds)
     changed = [
         k
         for k, p in actor.named_parameters()
@@ -256,11 +316,17 @@ def train(args):
         "setup_seconds": setup_seconds,
         "requested_training_seconds": args.seconds,
         "training_wall_seconds": training_seconds,
+        "checkpoint_write_seconds_excluded": checkpoint_seconds,
+        "snapshot_interval_seconds": args.snapshot_seconds,
+        "snapshots": snapshots,
+        "explicit_sampling_change": sampling_changed,
         "updates_this_burst": len(progress),
         "cumulative_updates": result["training_updates"],
         "cumulative_training_seconds": result["cumulative_training_seconds"],
         "supervised_targets": len(progress) * args.batch * args.sequence,
         "warmup_observations": len(progress) * args.batch * args.warmup,
+        "padded_cold_start_context_slots": len(progress) * args.cold_starts * args.warmup,
+        "cold_start_sequences": len(progress) * args.cold_starts,
         "unique_training_dataset_transitions": 8 * observations.shape[1],
         "physical_worlds_during_optimizer": 0,
         "physical_steps_during_optimizer": 0,
@@ -315,4 +381,7 @@ if __name__ == "__main__":
     parser.add_argument("--warmup", type=int, default=64)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=121101)
+    parser.add_argument("--cold-starts", type=int, default=0)
+    parser.add_argument("--allow-sampling-change", action="store_true")
+    parser.add_argument("--snapshot-seconds", type=float, default=0)
     train(parser.parse_args())
