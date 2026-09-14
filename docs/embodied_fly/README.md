@@ -1,9 +1,13 @@
 # Embodied fly: learned utility and direct body control
 
-Latest: [goal-directed reward correction](runs/flight_reward_01/SUMMARY.md).
-Velocity scores now favor moving toward the target and slowing near it, including
-motion of the target itself. Existing reward weights, physical plant and brain
-are preserved. Preference checks pass; this variant has not been trained yet.
+Latest: [goal-directed reward PPO result](runs/round_trip_reward_02/SUMMARY.md)
+and [new comparison video](../../previews/embodied_fly/round_trip_reward_v2.mp4).
+The audited reward is now trained: 6 min 40 s, 64 worlds, 524,288 transitions.
+All seven frozen cases stay airborne, but none completes accurate tracking.
+Route error is only 0.14% lower than the previous PPO trial and 2.24% worse than
+the preferred imitation parent. The reward correction alone has not produced
+useful flight improvement; preserve the preferred parent. Same physical plant,
+brain, critic and reward weights; only the velocity preference changes.
 
 The new curriculum is [closed flight paths](CLOSED_FLIGHT_CURRICULUM.md):
 move, reverse, return to the starting point, then hold. The unchanged plant's

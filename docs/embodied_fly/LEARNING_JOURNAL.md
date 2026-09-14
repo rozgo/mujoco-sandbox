@@ -2937,3 +2937,24 @@ Nine timing/distance fixture settings across six directions pass all 270 compari
 physical PID recordings also score above both learned checkpoints. No new actor
 training or new physical capture has run. See flight_reward_01 for all scores,
 conservative effort bounds, tests and limitations.
+
+## Goal-directed reward trained and recorded — September 14 UTC
+
+The user requested the missing learned result and video. Repeated the preceding
+PPO recipe from the same preferred parent with only the explicit goal-directed
+velocity reward flag changed. All 64 worlds, timing, seed, network, critic and
+physical settings are matched. Training takes 399.676774 seconds plus 7.961510 s
+setup, with 524,288 transitions, 64 actor updates and 1,024 critic updates.
+There are five failed training episodes, zero completed tracking sequences,
+and no KL guard stops. No teacher or imitation updates occur in this run.
+
+Frozen review remains 7/7 airborne and 0/7 accurate waypoint/return/hold cases.
+Six-route position RMS is 75.762 mm: only 0.14% lower than the prior PPO child's
+75.870 mm, and 2.24% worse than the preferred parent's 74.103 mm. Stationary
+hover RMS is 78.707 mm versus 77.357 mm for the preferred parent. Neither the
+progress nor full acceptance gate passes. The new child is diagnostic evidence,
+and the preferred parent remains unchanged. This matched single-seed result
+does not show that a better local reward preference is sufficient for learning
+target corrections. Preserve that distinction instead of claiming the audit
+proved a successful controller. See runs/round_trip_reward_02 for measured
+resources, physical captures, tensor/config verification and the new video.

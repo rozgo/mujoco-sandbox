@@ -1,0 +1,112 @@
+{
+  "checkpoint_sha256": "95916e11b7e1fb62cbc0e18d37867e0b2c8a9b9bfe0ca67dd728c681ccb96300",
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "physical_graph_contracts_preserved": true,
+  "all_actor_tensors_finite": true,
+  "fixed_tensors": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed_tensors": [
+    "core.excitability",
+    "core.leak",
+    "core.bias",
+    "sensory_encoder.0.weight",
+    "sensory_encoder.0.bias",
+    "sensory_encoder.2.weight",
+    "sensory_encoder.2.bias",
+    "sensor_extension.weight",
+    "motor_decoder.0.weight",
+    "motor_decoder.0.bias",
+    "motor_decoder.1.weight",
+    "motor_decoder.1.bias",
+    "motor_decoder.3.weight",
+    "motor_decoder.3.bias",
+    "wing_residual.network.0.weight",
+    "wing_residual.network.0.bias",
+    "wing_residual.network.2.weight",
+    "wing_residual.network.2.bias"
+  ],
+  "optimizer_history": {
+    "optimizer_state_dict": {
+      "parameters_with_history": 19,
+      "fresh_adam_steps": 64
+    },
+    "value_optimizer_state_dict": {
+      "parameters_with_history": 6,
+      "fresh_adam_steps": 1024
+    }
+  },
+  "reward_weights_and_other_terms_unchanged": true,
+  "config_difference_from_prior_ppo": {
+    "flight_tracking_reward": [
+      false,
+      true
+    ]
+  },
+  "reward_recipe": {
+    "version": "flight_tracking_scores_v1",
+    "alive_rate": 0.5,
+    "height_scale_cm": 0.1,
+    "vertical_speed_scale_cm_s": 2.0,
+    "horizontal_speed_scale_cm_s": 0.5,
+    "angular_speed_scale_rad_s": 1.0,
+    "failure_height_below_cm": 0.5,
+    "failure_upright_below": 0.5,
+    "failure_penalty_once": 1,
+    "height_target": "requested altitude, independent of reset altitude",
+    "reward_timing": "rate * actual control_dt; failure penalty once before reset",
+    "wing_motion_or_action_imitation": false,
+    "reference_controller_or_force_target": false,
+    "horizontal_position_scale_cm": 0.1,
+    "action_difference_or_wing_stillness_penalty": false,
+    "position_feedback": "two anatomical target-error inputs, ideal simulator sensing",
+    "score_formula": "1 / sqrt(1 + normalized_error**2)",
+    "maximum_reward_rate": 6.1,
+    "minimum_valid_airborne_rate": 0.498,
+    "tracking_score_weights": {
+      "height": 2,
+      "horizontal_position": 1,
+      "vertical_velocity": 1,
+      "horizontal_velocity": 1,
+      "upright": 0.5,
+      "angular_velocity": 0.1
+    },
+    "failure_forbidden_support_above_bodyweights": 0.1,
+    "termination_incentive": "Valid airborne rate stays positive; failed step gets exactly -1",
+    "velocity_target": "analytic current target velocity + bounded position-error correction",
+    "correction": {
+      "approach_seconds": 0.5,
+      "maximum_correction_cm_s": 0.5
+    },
+    "velocity_reference_scope": "reward only; no actuator commands or applied forces",
+    "position_and_stability_weights_unchanged": true,
+    "task_specific_wing_pattern": false
+  },
+  "verified_failure_windows": 5,
+  "teacher_or_rehearsal_during_ppo": false,
+  "route_transition_counts_verified": {
+    "left_right": 47173,
+    "right_left": 46960,
+    "forward_backward": 49152,
+    "backward_forward": 43152,
+    "up_down": 37305,
+    "down_up": 38402,
+    "hover": 262144
+  },
+  "complete_training_episodes": 65,
+  "failed_training_episodes": 5,
+  "complete_training_trips_tracking": 0
+}

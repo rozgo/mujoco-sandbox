@@ -1272,3 +1272,27 @@ reference-only physical validation follows the user's directional curriculum.
 - No new training video generated because no training was performed. Prior
   policy and physical videos remain the review references. One explicit reward
   variant is implemented and ready for a later bounded PPO comparison.
+
+
+### Goal-directed reward PPO result and video
+
+- Observed follow-up timer starts 2026-09-14 02:37:52 UTC, after the initial
+  request/status inspection; no earlier start is inferred. Reviewed new video
+  opened 02:51:06 UTC: 13 min 14 s to this milestone, including preparation,
+  synchronization, training, evaluation, transfer, rendering and QA. Archival follows.
+- Training starts 02:39:33.766787 UTC. Actual training 399.676774 s
+  (6 min 39.677 s), plus 7.961510 s setup. Requested 300 s finishes the active
+  complete update cycle; critic warmup is included in training time.
+- 64 CPU MuJoCo/mjbatch worlds, 16 threads, RTX 4090 neural learning.
+  524,288 transitions = 1,048.576 aggregate simulated seconds.
+  Collection 138.963871 s; optimization 260.711175 s; 64 actor /1,024 critic updates.
+- New seven-world frozen evaluation: 45.589914 s capture, 7.185971 s setup.
+  Reused the unchanged parent and previous PPO captures; no duplicate training
+  or parent evaluation is included. Seven 12-second cases remain airborne,
+  zero complete the existing tracking/settling gates.
+- Render: 71.589149 s. Video is 600 frames, 50 fps, 1600x1000, 12 s at 1x.
+  Full decode/checksum plus eight sampled times and a full frame inspected.
+  Automatically opened after QA. No further training launched in this follow-up.
+- Same validated reward source (195 tests previously passed); no source behavior
+  changed for this run. Result fails progress: route error 2.24% worse than the
+  preferred parent, only 0.14% lower than the previous reward PPO child.

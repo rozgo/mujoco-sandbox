@@ -1,0 +1,85 @@
+{
+  "training_started_utc": "2026-09-14T02:39:33.766787+00:00",
+  "setup_seconds": 7.96151024941355,
+  "training_wall_seconds": 399.676773511339,
+  "parallel_physics_worlds": 64,
+  "physics_threads": 16,
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "physics_backend": "native MuJoCo CPU / mjbatch",
+  "physics_hz": 1000.0,
+  "control_hz": 500.0,
+  "transitions": 524288,
+  "aggregate_simulated_seconds": 1048.576,
+  "transitions_per_training_wall_second": 1311.7800051123704,
+  "rollouts": 4,
+  "ppo_updates": 64,
+  "critic_updates": 1024,
+  "actor_kl_stops": 0,
+  "collection_seconds": 138.96387147391215,
+  "optimization_seconds": 260.7111751413904,
+  "actor_parameters": 2516402,
+  "critic_parameters": 236033,
+  "peak_cuda_allocated_bytes": 9073805312,
+  "critic_warmup": {
+    "requested_rollouts": 2,
+    "completed_rollouts": 2,
+    "actor_and_exploration_frozen_during_warmup": true,
+    "included_in_training_wall_seconds": true,
+    "extra_physics_worlds": 0
+  },
+  "physical_timescales": {
+    "action_seconds": 0.002,
+    "rollout_seconds": 4.096,
+    "recurrent_gradient_seconds": 0.256,
+    "discount_efold_seconds": 5.0000000000002816,
+    "gae_trace_efold_seconds": 2.000000000000061,
+    "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+  },
+  "hover_reset_curriculum": {
+    "curriculum": "closed target trips plus stationary hover",
+    "stationary_worlds": 32,
+    "round_trip_worlds": 32,
+    "route_ids_are_observer_only": true,
+    "future_waypoints_in_observation": false,
+    "amplitude_mm_range": [
+      1.2,
+      1.8
+    ],
+    "time_scale_range": [
+      0.85,
+      1.15
+    ],
+    "initial_reset_widening": 0.0,
+    "transitions_by_target_sequence": {
+      "left_right": 47173,
+      "right_left": 46960,
+      "forward_backward": 49152,
+      "backward_forward": 43152,
+      "up_down": 37305,
+      "down_up": 38402,
+      "hover": 262144
+    },
+    "reward": "bounded physical scores with goal-directed velocity; see reward_recipe",
+    "target_timing": "post-step command advance before reward and timeout bootstrap; next actor reads that same target",
+    "measurement_only_drift_seconds": 0.1,
+    "original_raw_speed_gate": "preserved in reference report; this task measures sustained drift from positions",
+    "teacher_actions": false,
+    "body_pose_assignment": "initialization and episode resets only"
+  },
+  "source_commit": "35c1ecfb00eeb74111307bfa7c3a611a703d9bbe",
+  "checkpoint_sha256": "95916e11b7e1fb62cbc0e18d37867e0b2c8a9b9bfe0ca67dd728c681ccb96300",
+  "completed_training_episodes": 65,
+  "failed_training_episodes": 5,
+  "tracked_training_trips": 0,
+  "critic_explained_variance_after_each_fit": [
+    0.9191662073135376,
+    0.9038726091384888,
+    0.7572339773178101,
+    0.8825303316116333
+  ],
+  "maximum_actor_kl": 0.01819920726120472,
+  "evaluation_capture_seconds": 45.58991431631148,
+  "evaluation_setup_seconds": 7.185971213970333,
+  "evaluation_passed_cases": 0,
+  "evaluation_airborne_cases": 7
+}
