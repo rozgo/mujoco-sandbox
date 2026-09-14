@@ -1515,3 +1515,22 @@ reference-only physical validation follows the user's directional curriculum.
   replay and cached readout checks pass; upstream parameters remain identical.
 - Full fly suite for readout stage: **229 passed in 165.88 s**. Tests, setup,
   evaluation, rendering and unsuccessful pilots remain separate from ancestry.
+
+
+### Focused wing-readout PPO and continuation, September 14
+
+- Run 04: **602.165516 s training**, **1,753,088 transitions**, 32 worlds. Began
+  **09:18:13.429060 UTC**, final report **09:29:50.570761 UTC**. Collection
+  595.695655 s, actor optimization 2.233227 s (includes .137114 s imitation),
+  critic 4.210001 s. Separate setup 16.566958 s, audit 3.388102 s, writes
+  .090672 s, physical evaluation 91.460285 s.
+- Video render **68.708463 s**, full decode **4.302793 s**, 43 s / 2,150 frames /
+  50 fps / 1920x1080 / 1x; inspected and opened **09:35:41 UTC**.
+- Selected checkpoint ancestry **2,468.314980 s** = original imitation parent
+  plus run 04. Pilots 01–03 and discarded smoke weights are excluded from this
+  ancestry but remain part of total development compute.
+- Continuation smoke: **17.336441 s training**, **49,152 transitions**, four actor
+  updates; weights discarded. Collection 16.893884 s, actor optimization
+  .283788 s (includes .004842 s imitation), critic .157571 s. Recorded replay
+  checks and optimizer/critic restoration pass. Run 05 then starts separately
+  from run 04's final checkpoint; no smoke time is added to its ancestry.

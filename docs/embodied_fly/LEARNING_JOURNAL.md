@@ -3224,3 +3224,25 @@ This is a temporary trainable scope in the same actor, not a new controller.
 
 Full fly suite after this implementation: 229 passed, 45 known upstream warnings,
 165.88 seconds. Run 04 remains subject to the same physical evaluation criterion.
+
+
+### September 14 — four completed flights, with a climb tradeoff
+
+Run 04's final actor completes all four ten-second captures. Early velocity RMS
+improves 25.96 -> 20.28 mm/s (22%). In paired complete case 0, horizontal RMS
+improves 30.68 -> 18.83 mm/s and full RMS 31.77 -> 24.40 mm/s. However vertical
+RMS grows 8.23 -> 15.51 mm/s, net climb 44.68 -> 152.00 mm and peak displacement
+148.85 -> 217.18 mm. Report both outcomes; no stable-hover claim.
+
+The initial survival/early-error milestone is reached. Because upward drift
+still needs regulation, continue this same final checkpoint in run 05. Restore
+actor Adam, trained critic/Adam, fixed exploration and actor sampling RNG.
+Physical episodes restart at the same declared starts; critic shuffle alone
+restarts from the recorded seed. A discarded 17.336441-second GPU smoke verifies
+restoration, no critic recalibration and no upstream parameter changes. Preserve
+the improved run 04 independently in case continuation regresses.
+
+The readout cache is training-only: full graph processing occurs in every live
+physical actor step. The speed gain is from reducing trainable scope and avoiding
+repeated full-graph backprop, not from moving physics to GPU or bypassing the
+connectome. Same deployed architecture throughout.
