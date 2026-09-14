@@ -140,6 +140,18 @@ def scale_exploration(log_std, scale):
         log_std.copy_(proposed)
 
 
+def cached_replay_errors(actions, recorded_actions, logp, recorded_logp):
+    """Check batched GEMM roundoff by action error and distribution error together."""
+    with torch.no_grad():
+        delta = (logp - recorded_logp).double()
+        return {
+            "cached_max_action_error": float((actions - recorded_actions).abs().max()),
+            "cached_max_logp_error": float(delta.abs().max()),
+            "cached_mean_absolute_logp_error": float(delta.abs().mean()),
+            "cached_roundoff_aggregate_kl": float((delta.expm1() - delta).mean()),
+        }
+
+
 def train(args):
     if not np.isfinite(args.exploration_scale) or args.exploration_scale <= 0:
         raise ValueError("Exploration scale must be finite and positive")
@@ -586,15 +598,23 @@ def train(args):
                     cached_logp, cached_action, _ = readout_replay(
                         actor, data, 0, args.horizon, active, log_std
                     )
-                    audit["cached_max_action_error"] = float(
-                        (cached_action - data["mean_action"]).abs().max()
+                    audit.update(
+                        cached_replay_errors(
+                            cached_action, data["mean_action"], cached_logp, data["logp"]
+                        )
                     )
-                    audit["cached_max_logp_error"] = float(
-                        (cached_logp - data["logp"]).abs().max()
+                    audit["cached_tolerances"] = {
+                        "action": 2e-6,
+                        "maximum_logp": 0.02,
+                        "aggregate_kl": 1e-6,
+                    }
+                    (args.output / "replay_audit.json").write_text(
+                        json.dumps(audit, indent=2) + "\n"
                     )
                     if (
                         audit["cached_max_action_error"] > 2e-6
-                        or audit["cached_max_logp_error"] > 0.01
+                        or audit["cached_max_logp_error"] > 0.02
+                        or audit["cached_roundoff_aggregate_kl"] > 1e-6
                     ):
                         raise RuntimeError(f"Cached readout replay mismatch: {audit}")
                     del cached_logp, cached_action
@@ -604,6 +624,24 @@ def train(args):
                     json.dumps(audit, indent=2) + "\n"
                 )
                 print(json.dumps({"replay_audit": audit}), flush=True)
+                if args.audit_only:
+                    (args.output / "audit_only.json").write_text(
+                        json.dumps(
+                            {
+                                "completed_utc": utc_now(),
+                                "optimizer_updates": 0,
+                                "collection_seconds": counters["collection_seconds"],
+                                "replay_audit_seconds": audit_seconds,
+                                "setup_seconds": setup_seconds,
+                                "transitions": counters["transitions"],
+                                "audit": audit,
+                                "parent_checkpoint_sha256": sha256(args.checkpoint),
+                            },
+                            indent=2,
+                        )
+                        + "\n"
+                    )
+                    return
             begin = time.perf_counter()
             losses, kls, imitation_losses, step_checks = [], [], [], []
             stop = False
@@ -912,6 +950,7 @@ if __name__ == "__main__":
     p.add_argument("--seed", type=int, default=151101)
     p.add_argument("--device", default="cuda")
     p.add_argument("--smoke", action="store_true")
+    p.add_argument("--audit-only", action="store_true")
     p.add_argument("--baseline-dir", type=Path)
     p.add_argument("--bounded-updates", action="store_true")
     p.add_argument("--wing-readout-only", action="store_true")

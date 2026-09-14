@@ -6,7 +6,7 @@ import torch
 from embodied_fly.hover_exploration_audit import sampled_action
 from embodied_fly.ppo import motor_distribution
 from embodied_fly.ppo_step import motor_kl
-from embodied_fly.velocity_hover_ppo import scale_exploration
+from embodied_fly.velocity_hover_ppo import cached_replay_errors, scale_exploration
 
 
 def test_paired_noise_has_exact_half_latent_perturbation_and_deployed_zero():
@@ -59,3 +59,14 @@ def test_training_noise_transition_preserves_rng_and_changes_probability_and_kl(
     for invalid in (0, -1, float("nan"), 0.001, 1000):
         with pytest.raises(ValueError):
             scale_exploration(log_std, invalid)
+
+
+def test_cached_distribution_check_distinguishes_rare_roundoff_from_systematic_error():
+    actions = torch.zeros(16384, 6)
+    logp = torch.zeros(16384)
+    logp[0] = 0.011  # Rare worst-case cancellation at half exploration.
+    report = cached_replay_errors(actions, actions, logp, torch.zeros_like(logp))
+    assert report["cached_max_logp_error"] > 0.01
+    assert report["cached_roundoff_aggregate_kl"] < 1e-6
+    report = cached_replay_errors(actions, actions, logp + 0.01, torch.zeros_like(logp))
+    assert report["cached_roundoff_aggregate_kl"] > 1e-6
