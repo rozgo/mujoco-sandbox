@@ -89,3 +89,50 @@ def test_constant_velocity_and_quaternion_conventions():
     np.testing.assert_allclose(r[0], np.eye(3))
     np.testing.assert_allclose(r[0], r[1])
     np.testing.assert_allclose(r[2] @ [1, 0, 0], [0, 1, 0], atol=1e-15)
+
+
+def test_intervention_changes_only_named_wings_and_effect_gate_checks_magnitude():
+    from embodied_fly.world_evaluate import action_variants, effect_errors
+
+    actions = np.full((100, 78), 0.1, np.float32)
+    wings = np.arange(14, 20)
+    variants, names, clipped = action_variants(actions, wings)
+    np.testing.assert_array_equal(variants[0], actions)
+    np.testing.assert_array_equal(variants[15], actions)
+    nonwing = np.r_[0:14, 20:78]
+    np.testing.assert_array_equal(
+        variants[..., nonwing], np.repeat(actions[None, :, nonwing], 16, axis=0)
+    )
+    assert len(names) == 16 and clipped == 0
+    np.testing.assert_allclose(variants[1, :, 14], 0.103)
+    np.testing.assert_allclose(variants[13, :, 14], 0.103)
+    actual = np.array([1.0, -2.0, 0.01])
+    assert effect_errors(actual, actual, 0.2)["passed"]
+    assert not effect_errors(-actual, actual, 0.2)["passed"]
+    assert not effect_errors(2 * actual, actual, 0.2)["passed"]
+
+
+def test_analytical_wing_integrator_matches_decoupled_mujoco_hinges():
+    from embodied_fly.velocity_demonstrations import environment, initialize_worlds
+    from embodied_fly.wing_position import normalize_targets
+    from embodied_fly.world_analytic import AnalyticalFly, wing_step
+
+    env = environment(3, 3)
+    base = initialize_worlds(env, np.zeros(3))
+    analytic = AnalyticalFly(env.model)
+    wings = analytic.indices["wing_action"]
+    q = env.fields["qpos"][:, analytic.indices["wing_qpos"]].copy()
+    v = env.fields["qvel"][:, analytic.indices["wing_qvel"]].copy()
+    action = np.repeat(base[None], 3, axis=0)
+    target = q + np.array([[0.01], [0.1], [-0.1]])
+    action[:, wings] = normalize_targets(env.model, target)
+    for _ in range(10):
+        for _ in range(2):
+            q, v = wing_step(q, v, action[:, wings], analytic.parameters, 0.001)
+        env.step(action)
+    np.testing.assert_allclose(
+        q, env.fields["qpos"][:, analytic.indices["wing_qpos"]], atol=1e-10
+    )
+    np.testing.assert_allclose(
+        v, env.fields["qvel"][:, analytic.indices["wing_qvel"]], atol=1e-9
+    )

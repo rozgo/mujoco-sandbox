@@ -22,7 +22,11 @@ class CausalLayer(nn.Module):
 class FlyWorldModel(nn.Module):
     def __init__(self, feature_size, action_size=78, width=64):
         super().__init__()
-        self.config = {"feature_size": feature_size, "action_size": action_size, "width": width}
+        self.config = {
+            "feature_size": feature_size,
+            "action_size": action_size,
+            "width": width,
+        }
         self.register_buffer("mean", torch.zeros(feature_size))
         self.register_buffer("scale", torch.ones(feature_size))
         self.encoder = nn.Sequential(
