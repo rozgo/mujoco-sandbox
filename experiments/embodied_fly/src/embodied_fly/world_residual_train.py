@@ -318,13 +318,22 @@ def run(args):
             model.zero_grad(set_to_none=False)
             loss = physical_loss(model, plant, static)
             loss.backward()
+        eager_loss = loss.detach().clone()
+        eager_gradients = [p.grad.detach().clone() for p in model.prober.parameters()]
         synchronize(device)
         graph = torch.cuda.CUDAGraph()
         with torch.cuda.graph(graph):
             model.zero_grad(set_to_none=False)
             loss = physical_loss(model, plant, static)
             loss.backward()
+        graph.replay()
         synchronize(device)
+        torch.testing.assert_close(loss, eager_loss, atol=1e-7, rtol=1e-5)
+        for parameter, expected in zip(
+            model.prober.parameters(), eager_gradients, strict=True
+        ):
+            torch.testing.assert_close(parameter.grad, expected, atol=1e-6, rtol=1e-4)
+        report["cuda_graph_matches_eager_loss_and_gradients"] = True
     if not all(torch.equal(v, model.state_dict()[k]) for k, v in best_state.items()):
         raise RuntimeError("Graph setup unexpectedly changed weights")
     report["graph_setup_seconds"] = time.perf_counter() - start

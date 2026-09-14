@@ -108,6 +108,9 @@ class Evaluator:
         ]
         return self.net.metric_rollout(*tensors).cpu().numpy()
 
+    def predict_with_support(self, history, actions, initial):
+        return self.predict(history, actions, initial), None
+
     def forecasts(self):
         records, all_predictions, all_truth = (
             [],
@@ -192,7 +195,9 @@ class Evaluator:
                 )
                 history = np.repeat(batch["sequence"][:, :HISTORY], 16, axis=0)
                 initial = np.repeat(batch["initial"], 16, axis=0)
-                predictions = self.predict(history, actions, initial)
+                predictions, predicted_lift = self.predict_with_support(
+                    history, actions, initial
+                )
                 states = {
                     k: np.repeat(data[k][start : start + 1], 16, axis=0)
                     for k in ("qpos", "qvel", "act", "ctrl")
@@ -231,6 +236,9 @@ class Evaluator:
                     truth=truth,
                     lift=lift,
                     analytical_lift=analytic_lift,
+                    predicted_lift=predicted_lift
+                    if predicted_lift is not None
+                    else np.empty((0,)),
                     valid=valid,
                 )
                 results.append(
@@ -258,6 +266,7 @@ class Evaluator:
                         analytic_lift,
                         valid,
                         initial,
+                        predicted_lift,
                     )
                 )
                 print(json.dumps(results[-1]), flush=True)
@@ -285,6 +294,7 @@ class Evaluator:
                     analytic_lift,
                     valid,
                     initial,
+                    predicted_lift,
                 ) in arrays_for_scores:
                     if row["phase"] != phase:
                         continue
@@ -304,6 +314,10 @@ class Evaluator:
                         np.concatenate((first, pred_lift), axis=1)[:, :-1]
                         + np.concatenate((first, pred_lift), axis=1)[:, 1:]
                     ).mean(1) / 2
+                    if predicted_lift is not None:
+                        # Integrated residual models produce forces at all 1 kHz
+                        # ticks. The historical direct-state probe has no such path.
+                        pred_mean = predicted_lift[:, : 2 * h].mean(1)
                     for key, x in (
                         ("jepa_lift", pred_mean),
                         ("analytical_lift", analytic_lift[:, : 2 * h].mean(1)),
@@ -334,11 +348,11 @@ class Evaluator:
         }
 
 
-def run(args):
+def run(args, evaluator_class=Evaluator):
     args.output.mkdir(parents=True, exist_ok=False)
     begin = time.perf_counter()
     torch.set_num_threads(4)
-    evaluation = Evaluator(args)
+    evaluation = evaluator_class(args)
     setup = time.perf_counter() - begin
     started = time.perf_counter()
     forecasts = evaluation.forecasts()
