@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "training_source": "04d7457b8eff5f87c1c7f8eac1a324e6177bdc04",
+  "compared_recipe_keys": [
+    "reward",
+    "worlds",
+    "physics_threads",
+    "physics_backend",
+    "learning_device",
+    "physics_hz",
+    "control_hz",
+    "horizon",
+    "sequence",
+    "actor_epochs",
+    "critic_epochs",
+    "actor_lr",
+    "critic_lr",
+    "gamma",
+    "gae_lambda",
+    "clip",
+    "target_kl",
+    "gradient_norm_cap",
+    "imitation_weight",
+    "imitation_frequency",
+    "episode_seconds",
+    "recurrent_carry",
+    "teacher_control_share",
+    "command",
+    "wing_readout_only",
+    "trainable_actor_parameters"
+  ],
+  "maximum_accepted_kl": 0.019832042647331106,
+  "accepted_updates": 427,
+  "checkpoint_sha256": "79caefcf879e92b574ab07f95133d3e2caf10e4e450ff055aed71e9e88af746e",
+  "summary": {
+    "parent": {
+      "velocity_rms_mm_s": 14.92194871065723,
+      "vertical_velocity_rms_mm_s": 11.670642504012783,
+      "horizontal_velocity_rms_mm_s": 9.298422277986337,
+      "first_two_seconds_velocity_rms_mm_s": 15.592019607768412,
+      "peak_displacement_mm": 117.0993188137855,
+      "climb_mm": 105.99033978641394,
+      "survived": 4
+    },
+    "midpoint": {
+      "velocity_rms_mm_s": 12.75771810264544,
+      "vertical_velocity_rms_mm_s": 8.852625014041331,
+      "horizontal_velocity_rms_mm_s": 9.186411873780358,
+      "first_two_seconds_velocity_rms_mm_s": 16.78831489089629,
+      "peak_displacement_mm": 75.75905867806011,
+      "climb_mm": 60.72603719807915,
+      "survived": 4
+    },
+    "final": {
+      "velocity_rms_mm_s": 13.59398997885215,
+      "vertical_velocity_rms_mm_s": 8.439622831622767,
+      "horizontal_velocity_rms_mm_s": 10.656861066116715,
+      "first_two_seconds_velocity_rms_mm_s": 14.875049989746135,
+      "peak_displacement_mm": 94.368218268974,
+      "climb_mm": 68.22548112385317,
+      "survived": 4
+    }
+  },
+  "training_wall_seconds": 606.8609804483131,
+  "counters": {
+    "rollouts": 108,
+    "actor_updates": 427,
+    "critic_updates": 3456,
+    "transitions": 1769472,
+    "imitation_presentations": 55296,
+    "collection_seconds": 600.095070392359,
+    "optimization_seconds": 2.6857691248878837,
+    "imitation_seconds": 0.14283598074689507,
+    "critic_seconds": 4.052824660204351,
+    "memory_refresh_seconds": 0.0008172346279025078
+  },
+  "snapshots": [
+    {
+      "file": "midpoint_actor.pt",
+      "sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+      "training_seconds": 301.325883848127
+    },
+    {
+      "file": "final_actor.pt",
+      "sha256": "79caefcf879e92b574ab07f95133d3e2caf10e4e450ff055aed71e9e88af746e",
+      "training_seconds": 606.8609804483131
+    }
+  ],
+  "episode_count": 584,
+  "failed_training_episodes": 265
+}

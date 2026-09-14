@@ -2,7 +2,16 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Retained result: [PPO learning progress and measured costs](HOVER_PPO_PROGRESS.md)
+Current retained result: [run-11 midpoint](runs/velocity_hover_ppo_11/SUMMARY.md)
+and [PID / run05 / improved hover video](../../previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4).
+Halving PPO exploration noise reduces total velocity RMS 14.5% and climb 42.7%
+versus run05, with slightly lower sideways RMS and all four ten-second flights
+complete. Climb is still 61 mm; the first two seconds are slightly worse. The
+five-minute midpoint beats the ten-minute final checkpoint and is explicitly
+selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
+[Training history and costs](HOVER_PPO_PROGRESS.md).
+
+Previous retained parent: [PPO learning progress and measured costs](HOVER_PPO_PROGRESS.md)
 and [PID / original imitation / final PPO video](../../previews/embodied_fly/velocity_hover_ppo_progress_v1.mp4).
 All four starts complete ten seconds airborne. On the two comparable complete
 flights, velocity RMS decreases about 53% and horizontal RMS about 70%. It still
@@ -21,7 +30,8 @@ hover criterion. The [recovery-practice trial](runs/velocity_hover_ppo_09/SUMMAR
 also regressed: four complete flights, but 161 mm climb. The [controlled imitation
 ablation](runs/velocity_hover_ppo_10/SUMMARY.md) preserves the 30 Hz wing rhythm
 with the teacher gradient removed, but still worsens climb to 133 mm and total
-RMS to 16.82 mm/s. Run 05 remains retained. [Watch imitation on/off](../../previews/embodied_fly/velocity_hover_ppo_10_ablation_v1.mp4).
+RMS to 16.82 mm/s. Those trials retained run05, before the run11 improvement above.
+[Watch imitation on/off](../../previews/embodied_fly/velocity_hover_ppo_10_ablation_v1.mp4).
 
 Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).

@@ -1660,3 +1660,16 @@ reference-only physical validation follows the user's directional curriculum.
 - Frozen-diagnostic video: **186.400340 s render on Mac**, **4.296018 s full
   decode**, 43 s / 2,150 frames / 50 fps / 1x. Reviewed and opened **18:47:30 UTC**.
   Run 11 is in progress; its actual training and evaluation times will follow.
+
+- Run 11 completed **606.860980 s training**, 108 rollouts, 1,769,472 transitions.
+  Start **18:45:26.818510 UTC**; report **18:57:07.352876 UTC**. Collection
+  600.095070 s, actor optimization 2.685769 s (including .142836 s imitation),
+  critic 4.052825 s. Separate setup 14.829247 s, replay audit 3.372205 s,
+  checkpoint IO .071106 s, physical evaluation 90.199609 s.
+- Retain midpoint at **301.325884 s / 884,736 transitions**: total RMS 12.76 mm/s,
+  climb 60.73 mm, sideways RMS 9.19 mm/s, all four flights complete. Final is
+  worse on total/sideways RMS, climb and displacement. Full trial cost remains
+  recorded. The 50 mm climb target is still unmet; cold-start RMS also worsens.
+- GPU video render **69.270898 s**, complete decode **4.287509 s**, 43 s / 2,150
+  frames / 50 fps / 1x. Inspected and opened **19:03:45 UTC**, **30 min 29 s**
+  after the effort began. Remaining archival/synchronization is not training.

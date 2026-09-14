@@ -1,15 +1,16 @@
 # Learning to regulate flight with PPO
 
-The retained run-05 checkpoint completes four ten-second flights. Velocity error is
-approximately **53% lower**, horizontal velocity error **70% lower**, and peak
-displacement **21% lower** than the original imitation checkpoint on the two
-matched complete flights. It still climbs about 106 mm in ten seconds. The
-initial sustained-flight/reduced-error milestone is reached; stationary hover
-remains unfinished.
+The retained **run-11 midpoint** completes four ten-second flights. Relative to
+run 05, total velocity RMS is **14.5% lower**, climb **42.7% lower**, and peak
+displacement **35.3% lower**, with slightly lower horizontal RMS. It still climbs
+about **61 mm**, above the 50 mm goal; stationary hover remains unfinished.
+The first two seconds have slightly higher velocity error than the parent.
 
-[Watch the full comparison](../../previews/embodied_fly/velocity_hover_ppo_progress_v1.mp4).
-PID reference, original imitation and final PPO; same body, forces, starts,
+[Watch the retained comparison](../../previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4).
+PID reference, run 05 and selected five-minute midpoint; same body, forces, starts,
 commands, camera settings and chart scales. Four cases, 43 seconds at 1x.
+The ten-minute final continuation regressed relative to midpoint and remains
+archived. [Selection and measured costs](runs/velocity_hover_ppo_11/SUMMARY.md).
 
 Five later trials remain preserved: unchanged continuation (run 06) worsened
 sideways control; a vertical reward increase (run 07) reduced climb to about
@@ -18,8 +19,14 @@ lowered horizontal RMS to 7.73 mm/s but increased climb to 135 mm and total RMS
 to 16.43 mm/s. Recovery practice with small training gusts (run 09) increased
 climb to 161 mm and total RMS to 18.69 mm/s. Removing the imitation gradient
 (run 10) preserves the 30 Hz wingbeat but still yields 133 mm climb and
-16.82 mm/s total RMS. None replaces run 05.
-[Latest completed comparison](runs/velocity_hover_ppo_10/SUMMARY.md).
+16.82 mm/s total RMS. None of runs 06–10 replaces run 05.
+
+A subsequent frozen-noise diagnostic finds 32/32 ten-second survivors without
+noise, 30/32 with half noise, and 18/32 with original noise. Run 11 therefore
+changes only fixed exploration amplitude .003 -> .0015, preserving the original
+reward and imitation. Its midpoint gives 12.76 mm/s total RMS, 9.19 mm/s
+horizontal RMS and 60.73 mm climb. This is the new preferred development
+checkpoint. [Frozen comparison](runs/hover_exploration_01/SUMMARY.md).
 
 Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
 probe confirms all three measured velocity signals reach the motor features.
@@ -37,17 +44,19 @@ Stationary hover remains unfinished.
 | 02 | Post-step KL guard and lower LR | 603.390 | 704,512 | 2/4 | 26.54 mm/s |
 | 03 | Wider horizontal reward | 603.910 | 720,896 | 2/4 | 25.88 mm/s |
 | 04 | PPO on existing wing readout | 602.166 | 1,753,088 | 4/4 | 20.28 mm/s |
-| 05 | Continue same weights/optimizer/critic; retained | 604.488 | 1,769,472 | 4/4 | 15.59 mm/s |
+| 05 | Continue same weights/optimizer/critic; retained parent | 604.488 | 1,769,472 | 4/4 | 15.59 mm/s |
 | 06 | Unchanged continuation; sideways regression | 603.991 | 1,769,472 | 4/4 | 15.08 mm/s |
 | 07 | Vertical reward rate 2 -> 3; mixed outcome | 603.681 | 1,769,472 | 4/4 | 13.19 mm/s |
 | 08 | Combined velocity reward; climb regression | 605.275 | 1,769,472 | 4/4 | 17.58 mm/s |
 | 09 | Small training gusts; climb regression | 604.224 | 1,753,088 | 4/4 | 17.76 mm/s |
 | 10 | Imitation gradient off; rhythm retained, climb regresses | 603.871 | 1,769,472 | 4/4 | 16.36 mm/s |
+| 11 | Half exploration; retain midpoint over final | 606.861 | 1,769,472 | 4/4 | Midpoint 16.79 / final 14.88 mm/s |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
-Early RMS uses 0–2 s across all four starts. The quoted 53% overall velocity and
-70% horizontal reductions use 0.2–10 s on starts 0 and 8, which complete both
-before and after. All velocity metrics use the declared 100 ms average. These
+Early RMS uses 0–2 s across all four starts. The earlier run-05 improvement over
+original imitation was 53% total and 70% horizontal RMS, using 0.2–10 s on
+starts 0 and 8, which complete both before and after. The new run-11 comparison
+uses all four complete flights against run 05. All velocity metrics use the declared 100 ms average. These
 are four fixed development starts, not a broad robustness benchmark.
 
 The optimizer guard fixed oversized updates but did not by itself solve flight.
@@ -67,31 +76,34 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Ten completed PPO trials: **6,039.363699 s = 100 min 39 s**, **14,860,288 transitions**,
-  **29,720,576 physics steps**, **8.256 hours of aggregate simulated experience**.
-- Productive checkpoint lineage: **20 min 7 s PPO**, following **31 min 6 s
-  imitation**, for **51 min 13 s selected training ancestry**. Failed pilots
+- Eleven completed PPO trials: **6,646.224680 s = 110 min 46 s**, **16,629,760 transitions**,
+  **33,259,520 physics steps**, **9.239 hours of aggregate simulated experience**.
+- Productive checkpoint lineage: **25 min 8 s PPO**, following **31 min 6 s
+  imitation**, for **56 min 14 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.
 - All pilots: **32 worlds**, **16 CPU physics threads**, RTX 4090 neural work.
   MuJoCo/mjbatch CPU physics; **not MuJoCo Warp**. **1,000 Hz physics**, **500 Hz
   actor**, four internal neural updates per actor step. No clock changes.
-- Retained run-05 stage: approximately **2,927 world/action transitions/s**, including
+- Run-11 full trial: approximately **2,916 world/action transitions/s**, including
   learning, and **1.44 GiB peak PyTorch CUDA allocation**. Physics collection and
-  full-brain inference dominate; cached readout optimization takes 2.65 seconds
-  within the 604.49-second stage.
+  full-brain inference dominate; cached actor optimization takes 2.69 seconds
+  within the 606.86-second stage. The selected snapshot is at 301.33 seconds.
 - Setup, replay checks, evaluation, rendering, transfer, tests and discarded
   smoke runs are measured separately in the per-run reports and TIME_LOG.
   An early audit-only aborted collection has no retained compute timer.
-- Full fly suite after the imitation-ablation implementation: **241 passed**. GPU replay, frozen-parameter and resume checks
-  pass. Every comparison video was fully decoded, inspected and opened locally.
+- Full fly suite after the earlier imitation-ablation implementation: **241 passed**.
+  This distribution change passes **27 focused sampling/replay/optimizer tests**.
+  GPU replay, frozen-parameter and matched recipe checks pass. Comparison videos
+  are fully decoded, inspected and opened locally.
 
-The remaining weakness is joint regulation of vertical and horizontal motion. The retained checkpoint reduces the
-extra climb of run 04, but still climbs more than the original imitation parent.
-Preserve this result as the starting point for that work; avoid restarting from
-an unrelated checkpoint or treating survival alone as hover.
+The remaining weaknesses are residual climb and cold-start regulation. Preserve
+the selected run-11 midpoint, its run-05 parent and the later final checkpoint;
+the latest update is not automatically the best controller. Survival alone is
+not stationary hover.
 
-[Retained run details and reproduction](runs/velocity_hover_ppo_05/SUMMARY.md).
+[Retained run details](runs/velocity_hover_ppo_11/SUMMARY.md) and
+[checkpoint manifest](PREFERRED_HOVER.json).
 
 ```sh
-open previews/embodied_fly/velocity_hover_ppo_progress_v1.mp4
+open previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4
 ```

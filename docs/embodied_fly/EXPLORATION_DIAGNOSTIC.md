@@ -61,3 +61,17 @@ Record every metric. This modifies only verification, not sampling, replay
 arithmetic or optimizer gradients. Preserve both stopped startup directories;
 neither is a trained checkpoint. The full continuation still must pass its
 startup check before any update.
+
+## Completed continuation
+
+[Run 11](runs/velocity_hover_ppo_11/SUMMARY.md) completed 108 rollouts in
+606.860980 s. Its **301.325884-second midpoint** is retained: all four flights
+survive, total velocity RMS **12.76 mm/s**, horizontal RMS **9.19 mm/s**, climb
+**60.73 mm**. Relative to run 05 this lowers total RMS 14.5% and climb 42.7%.
+The final continuation regresses to 13.59 mm/s total RMS, 10.66 mm/s horizontal
+RMS and 68.23 mm climb. Preserve both snapshots and the parent.
+
+The midpoint still exceeds the 50 mm climb target and its first two seconds
+have higher velocity RMS than run 05. It improves longer-flight regulation,
+not every aspect of hover. This experiment is complete; the broader stationary
+hover objective remains unfinished. No additional training is running.

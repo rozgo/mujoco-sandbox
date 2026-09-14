@@ -3425,3 +3425,19 @@ objective or modified gradient calculation. Preserve the stopped diagnostics.
 
 The frozen comparison video is decoded, visually reviewed and opened18:47:30UTC;
 27 focused sampling/replay/update tests pass. Final training results are pending.
+
+Run 11 completes **606.860980 s** and **1,769,472 transitions**. Retain its
+predeclared midpoint at **301.325884 s**: total RMS 12.76 mm/s, horizontal RMS
+9.19 mm/s, climb 60.73 mm and peak displacement 75.76 mm, with four complete
+ten-second flights. Relative to run 05, total RMS decreases 14.5% and climb 42.7%.
+The final checkpoint regresses to 13.59 mm/s total RMS, 10.66 mm/s horizontal RMS
+and 68.23 mm climb. Preserve it as a failed continuation of the midpoint gain.
+The midpoint's first two seconds are worse (16.79 versus 15.59 mm/s), and climb
+still exceeds 50 mm. This is improved sustained regulation, not solved hover.
+
+Verification confirms the same reward/core recipe, parent/graph/physics,
+unchanged upstream parameters, all 427 accepted KL values ≤ .02, and the selected
+checkpoint/video hashes. The actor remains the same full-connectome controller;
+only training exploration and numerical verification differ. PID/run05/midpoint
+video is fully decoded, inspected and opened **19:03:45 UTC**. The selection is
+recorded in `PREFERRED_HOVER.json`. No further training is running.
