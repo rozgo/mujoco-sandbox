@@ -1,0 +1,399 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T03:21:27.200280+00:00",
+    "source_commit": "db1322f67d1e882a6a6a184d4c75d2145dab5f7c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "16fbd2236f63c5ef2c998307885c20afd113ea05ce727bf2877ddf1a00cce555",
+      "src/embodied_fly/body.py": "954974b59b488fc5c3a5834c6afc6b7788d0293b5505798ba2670339efc29ba1",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "c05f4e45d008762ce8d8d0da533eba57a0deb50194b90549a1d3c59ccf681c46",
+      "src/embodied_fly/pid_hover.py": "dced3c776113fbcf8d470873788f676e906ee3f778b678a540139195a9c874b9",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "939199d2f00847ee7269f97d706744377b685d6f6d4e666327227b7bc34f2f54",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-14T03:22:29.243693+00:00",
+  "mode": "learned MaleCNS actor; deterministic mean, no exploration, no resets",
+  "checkpoint_sha256": "0c9cc2596a9e7f126983e25241b987e284683b2242b6fb6718b99137ebaed5ac",
+  "actor_training_method": "PID-supervised recurrent motor imitation; teacher absent at deployment",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899",
+  "capture_sha256": "2d0c55425ef6a0aa2dea9379c02616d396f0491df0e4440aa5c793432e7b0ca8",
+  "worlds": 7,
+  "physical_transitions": 42000,
+  "simulated_seconds_per_world": 12,
+  "physics_hz": 1000,
+  "control_hz": 500,
+  "setup_seconds": 7.603604651987553,
+  "capture_seconds": 45.02743186382577,
+  "total_wall_seconds": 62.186812195926905,
+  "origins_cm": [
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ],
+    [
+      0.0,
+      0.0,
+      1.86651647
+    ]
+  ],
+  "amplitude_cm": 0.15,
+  "cases": [
+    {
+      "case": "left_right",
+      "axis": 1,
+      "first_sign": 1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 16.09822651378717,
+          "position_rms_mm": 15.52069240548202,
+          "raw_speed_rms_mm_s": 13.53718288794147,
+          "100ms_drift_peak_mm_s": 3.0177834059496553
+        },
+        "opposite_target": {
+          "position_peak_mm": 22.685466739610586,
+          "position_rms_mm": 22.234752250327837,
+          "raw_speed_rms_mm_s": 13.38284000501478,
+          "100ms_drift_peak_mm_s": 1.8395444133234855
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.170697500116233,
+          "position_rms_mm": 29.39967304815678,
+          "raw_speed_rms_mm_s": 13.359173306066733,
+          "100ms_drift_peak_mm_s": 1.6799152795701051
+        }
+      },
+      "whole_path_position_rms_mm": 20.867470884100246,
+      "after_first_second_position_rms_mm": 21.684661015786155,
+      "final_origin_error_mm": 30.170697500116233,
+      "minimum_upright": 0.9957688742153837,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "right_left",
+      "axis": 1,
+      "first_sign": -1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 16.692276609546806,
+          "position_rms_mm": 16.131161261589003,
+          "raw_speed_rms_mm_s": 13.530555452948406,
+          "100ms_drift_peak_mm_s": 2.93539161055302
+        },
+        "opposite_target": {
+          "position_peak_mm": 21.91302137270562,
+          "position_rms_mm": 21.464071805096143,
+          "raw_speed_rms_mm_s": 13.382942852917205,
+          "100ms_drift_peak_mm_s": 1.8768905801870635
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.08440084240259,
+          "position_rms_mm": 29.31204952196049,
+          "raw_speed_rms_mm_s": 13.358483935785033,
+          "100ms_drift_peak_mm_s": 1.685200723965465
+        }
+      },
+      "whole_path_position_rms_mm": 20.746914465527308,
+      "after_first_second_position_rms_mm": 21.55812144624536,
+      "final_origin_error_mm": 30.08440084240259,
+      "minimum_upright": 0.9957668207214969,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "forward_backward",
+      "axis": 0,
+      "first_sign": 1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 14.965410158129554,
+          "position_rms_mm": 14.38503439222437,
+          "raw_speed_rms_mm_s": 13.534051125935811,
+          "100ms_drift_peak_mm_s": 2.9683091433880358
+        },
+        "opposite_target": {
+          "position_peak_mm": 23.56182427380525,
+          "position_rms_mm": 23.112625117662553,
+          "raw_speed_rms_mm_s": 13.382751940383875,
+          "100ms_drift_peak_mm_s": 1.8514470315014857
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.12051319257759,
+          "position_rms_mm": 29.342084573571704,
+          "raw_speed_rms_mm_s": 13.35713849287502,
+          "100ms_drift_peak_mm_s": 1.675842939852219
+        }
+      },
+      "whole_path_position_rms_mm": 20.877413885364067,
+      "after_first_second_position_rms_mm": 21.695093666533047,
+      "final_origin_error_mm": 30.12051319257759,
+      "minimum_upright": 0.9957693664010678,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "backward_forward",
+      "axis": 0,
+      "first_sign": -1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 17.713547273785892,
+          "position_rms_mm": 17.150034109923887,
+          "raw_speed_rms_mm_s": 13.533552654867549,
+          "100ms_drift_peak_mm_s": 2.988407188632354
+        },
+        "opposite_target": {
+          "position_peak_mm": 20.96666907405786,
+          "position_rms_mm": 20.514708702814822,
+          "raw_speed_rms_mm_s": 13.38336878967068,
+          "100ms_drift_peak_mm_s": 1.8672328542702559
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.150755419250608,
+          "position_rms_mm": 29.373280733066398,
+          "raw_speed_rms_mm_s": 13.357323256918303,
+          "100ms_drift_peak_mm_s": 1.6762376910060857
+        }
+      },
+      "whole_path_position_rms_mm": 20.7313420706821,
+      "after_first_second_position_rms_mm": 21.54177712051487,
+      "final_origin_error_mm": 30.150755419250608,
+      "minimum_upright": 0.9957698611261282,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "up_down",
+      "axis": 2,
+      "first_sign": 1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 15.627113903112914,
+          "position_rms_mm": 15.129722090971367,
+          "raw_speed_rms_mm_s": 13.48382508331438,
+          "100ms_drift_peak_mm_s": 2.6994951986875035
+        },
+        "opposite_target": {
+          "position_peak_mm": 23.15431300483974,
+          "position_rms_mm": 22.651539799793817,
+          "raw_speed_rms_mm_s": 13.397134245447312,
+          "100ms_drift_peak_mm_s": 2.0928597566370737
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.061374759637015,
+          "position_rms_mm": 29.286749977032176,
+          "raw_speed_rms_mm_s": 13.358923081592021,
+          "100ms_drift_peak_mm_s": 1.6810431319669115
+        }
+      },
+      "whole_path_position_rms_mm": 20.894486812866006,
+      "after_first_second_position_rms_mm": 21.713014796421557,
+      "final_origin_error_mm": 30.061374759637015,
+      "minimum_upright": 0.9957630731952333,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "down_up",
+      "axis": 2,
+      "first_sign": -1,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 17.18744157055099,
+          "position_rms_mm": 16.55231950483498,
+          "raw_speed_rms_mm_s": 13.560364396413053,
+          "100ms_drift_peak_mm_s": 3.145506199400088
+        },
+        "opposite_target": {
+          "position_peak_mm": 21.518646999060284,
+          "position_rms_mm": 21.108912781218617,
+          "raw_speed_rms_mm_s": 13.370455401347638,
+          "100ms_drift_peak_mm_s": 1.6853020585549778
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.250724110056254,
+          "position_rms_mm": 29.45132128391767,
+          "raw_speed_rms_mm_s": 13.35014757450966,
+          "100ms_drift_peak_mm_s": 1.666867656795115
+        }
+      },
+      "whole_path_position_rms_mm": 20.73271299772603,
+      "after_first_second_position_rms_mm": 21.543215483398644,
+      "final_origin_error_mm": 30.250724110056254,
+      "minimum_upright": 0.9957607617824955,
+      "maximum_forbidden_bodyweights": 0.0
+    },
+    {
+      "case": "hover",
+      "axis": 0,
+      "first_sign": 0,
+      "passed": false,
+      "first_failure_seconds": null,
+      "windows": {
+        "first_target": {
+          "position_peak_mm": 16.326498483756847,
+          "position_rms_mm": 15.755086300924864,
+          "raw_speed_rms_mm_s": 13.534082785988886,
+          "100ms_drift_peak_mm_s": 2.9790458143717333
+        },
+        "opposite_target": {
+          "position_peak_mm": 22.243629048016853,
+          "position_rms_mm": 21.793598590829113,
+          "raw_speed_rms_mm_s": 13.382887722040335,
+          "100ms_drift_peak_mm_s": 1.8621103949874422
+        },
+        "returned_hold": {
+          "position_peak_mm": 30.121439681178195,
+          "position_rms_mm": 29.345081758745884,
+          "raw_speed_rms_mm_s": 13.357203644790607,
+          "100ms_drift_peak_mm_s": 1.678797481008558
+        }
+      },
+      "whole_path_position_rms_mm": 20.77371674796797,
+      "after_first_second_position_rms_mm": 21.586249522008526,
+      "final_origin_error_mm": 30.121439681178195,
+      "minimum_upright": 0.9957706832283365,
+      "maximum_forbidden_bodyweights": 0.0
+    }
+  ],
+  "passed": false,
+  "actor_has_pid_or_external_oscillator": false,
+  "future_waypoints_or_route_ids_in_observation": false,
+  "gate": "Each waypoint window peak error <0.5 mm; final 100 ms displacement drift peak <1.5 mm/s; no physical failure. Full 12 s retained, including failures.",
+  "scope": "Fixed development paths. One shared actor. Targets only; no body pose writes or helper forces. Raw velocity retained separately from measurement-only sustained drift. Does not overwrite the earlier PID raw-speed gate."
+}

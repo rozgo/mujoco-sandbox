@@ -2958,3 +2958,55 @@ does not show that a better local reward preference is sufficient for learning
 target corrections. Preserve that distinction instead of claiming the audit
 proved a successful controller. See runs/round_trip_reward_02 for measured
 resources, physical captures, tensor/config verification and the new video.
+
+## PID movement imitation and rejected target-following review
+
+The user proposes richer expert movements instead of stationary-hover teaching.
+Added round-trip PID imitation, fixed teacher assistance and an intermediate
+checkpoint to the existing trainer. No new brain, body, actuator interface, PPO
+or critic changes. 64 worlds, half hover/half movement, 1.2–1.8 mm excursions and
+0.85–1.15 timing scales, full 12-second episodes. Target/input schema documented.
+
+Training takes 601.387001 seconds plus 7.431540 s setup; 133 Adam updates and
+544,768 supervised world/action examples. All actions during teaching are PID
+actions. All 64 completed teacher trajectories pass their tracking checks.
+The five-minute and final actors are evaluated independently without PID or resets.
+Route position RMS falls from 74.103 mm to 23.388 mm and then 20.808 mm; hover
+RMS falls from 77.357 mm to 24.293 mm and then 21.586 mm. Both stay airborne in
+7/7 cases but complete 0/7 precise tracking cases. Both videos are preserved/opened.
+
+The user correctly rejects interpreting this as target-following. Opposite
+horizontal requests produce nearly identical paths; vertical response is reversed.
+This exposes a limitation of aggregate error as a progress signal: a less-drifting
+oscillator can score better without correctly obeying commands. Preserve the
+numeric gates and their outcomes, but do not accept the policy as a controller.
+
+A zero-step read-only audit verifies tested target encodings, unit scales,
+world/body rotation and PID correction signs. No corresponding wiring error is
+found in those fixtures. Saved teaching data has 95th-percentile altitude error
+0.1508 mm and horizontal error 0.9464 mm, versus student drift of tens of mm.
+Actual/requested teaching altitudes correlate 0.9841. Richer target paths still
+leave most expert states close to target and do not guarantee learnable recovery.
+The exact cause of reversed learned response is not fully established. Next work
+must validate corrective response on matched error/recovery states before more
+training. See pid_movement_imitation_01/SUMMARY.md and REVIEW_DECISION.json.
+
+
+### PID imitation: implementation audit after rejected movement review
+
+The user requests a deeper bug investigation: walking imitation worked and the
+PID controls the same plant, so more training/data should not be assumed to be
+the answer. Freeze physics and actor weights. The real-graph GPU audit verifies
+wing actuator channels/normalization, reproduces the parent's original recorded
+training predictions, and compares deployment and training forward/backward
+paths. All tested mappings and gradients pass; current/target position inputs
+receive gradients. Twenty relevant existing physical/control-path tests pass.
+No new learning updates. Root cause remains unresolved; target following remains
+unaccepted. Preserve this distinction in demos and avoid presenting drift
+reduction as flight-command learning.
+
+The user reaffirms that the aim is consistent, learnable dynamics, not realistic
+aerodynamics. Do not introduce realism qualifications as an issue with the chosen
+plant. Half of the 64 training worlds hover; the others execute separate 12-second
+out-and-back directional exercises in the same run, updating the same actor.
+Evidence: runs/pid_movement_imitation_01/learning_path_audit.json and SUMMARY.md.

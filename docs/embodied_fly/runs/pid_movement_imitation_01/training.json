@@ -1,0 +1,2728 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T03:08:57.290392+00:00",
+    "source_commit": "db1322f67d1e882a6a6a184d4c75d2145dab5f7c",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "16fbd2236f63c5ef2c998307885c20afd113ea05ce727bf2877ddf1a00cce555",
+      "src/embodied_fly/body.py": "954974b59b488fc5c3a5834c6afc6b7788d0293b5505798ba2670339efc29ba1",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "c05f4e45d008762ce8d8d0da533eba57a0deb50194b90549a1d3c59ccf681c46",
+      "src/embodied_fly/pid_hover.py": "dced3c776113fbcf8d470873788f676e906ee3f778b678a540139195a9c874b9",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/wing_motion.py": "939199d2f00847ee7269f97d706744377b685d6f6d4e666327227b7bc34f2f54",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "training_started_utc": "2026-09-14T03:09:04.722287+00:00",
+  "completed_utc": "2026-09-14T03:19:06.161931+00:00",
+  "setup_seconds": 7.431540409103036,
+  "training_wall_seconds": 601.387001011055,
+  "collection_seconds": 302.5831835139543,
+  "optimization_seconds": 174.0611975765787,
+  "trace_write_and_loop_overhead_seconds": 124.74261992052197,
+  "checkpoint_sha256": "0c9cc2596a9e7f126983e25241b987e284683b2242b6fb6718b99137ebaed5ac",
+  "teacher_stage_checkpoint_sha256": null,
+  "intermediate_snapshot": {
+    "file": "snapshot.pt",
+    "sha256": "6284115a8e5827f230bbb84878ddff8f6346431cd61a4fab6bf0d26d5d62da11",
+    "elapsed_training_seconds": 304.51032944675535,
+    "updates": 67,
+    "transitions": 274432
+  },
+  "parent_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899",
+  "pid_config": {
+    "frequency_hz": 30.0,
+    "height_kp": 900.0,
+    "height_ki": 1600.0,
+    "height_kd": 50.0,
+    "horizontal_kp": 15.0,
+    "horizontal_ki": 3.0,
+    "horizontal_kd": 5.0,
+    "integral_limit_cm_s": 1.0,
+    "acceleration_limit_cm_s2": 300.0,
+    "roll_kp": 100.0,
+    "roll_kd": 15.0,
+    "wing_velocity_feedback": 0.0008
+  },
+  "config": {
+    "seconds": 600.0,
+    "worlds": 64,
+    "sequence": 64,
+    "lr": 0.0001,
+    "seed": 121001,
+    "episode_seconds": 12.0,
+    "teacher_schedule": "fixed fraction; independent evaluation determines any later handoff",
+    "fixed_teacher_fraction": 1.0,
+    "round_trip": true,
+    "snapshot_seconds": 300.0,
+    "wing_loss_weight": 1,
+    "nonwing_posture_weight": 0.1
+  },
+  "updates": 133,
+  "transitions": 544768,
+  "aggregate_simulated_seconds": 1089.536,
+  "student_only_transitions": 0,
+  "equivalent_teacher_action_share": 1.0,
+  "physics_hz": 1000,
+  "control_hz": 500,
+  "worlds": 64,
+  "threads": 16,
+  "neural_device": "cuda",
+  "neural_device_name": "NVIDIA GeForce RTX 4090",
+  "peak_cuda_allocated_bytes": 4196587520,
+  "actor_parameters": 2516402,
+  "core_gradient_audit": {
+    "excitability": {
+      "l2": 0.000260628032265231,
+      "finite": true
+    },
+    "leak": {
+      "l2": 6.323185516521335e-05,
+      "finite": true
+    },
+    "bias": {
+      "l2": 0.004124239552766085,
+      "finite": true
+    }
+  },
+  "fixed_tensors": [
+    "observation_mean",
+    "observation_std",
+    "sensory_ids",
+    "descending_ids",
+    "motor_ids",
+    "utility_head.0.weight",
+    "utility_head.0.bias",
+    "utility_head.1.weight",
+    "utility_head.1.bias",
+    "utility_head.3.weight",
+    "utility_head.3.bias",
+    "intention_encoder.weight",
+    "wing_residual.feature_mean",
+    "wing_residual.feature_scale"
+  ],
+  "changed_tensors": [
+    "core.excitability",
+    "core.leak",
+    "core.bias",
+    "sensory_encoder.0.weight",
+    "sensory_encoder.0.bias",
+    "sensory_encoder.2.weight",
+    "sensory_encoder.2.bias",
+    "sensor_extension.weight",
+    "motor_decoder.0.weight",
+    "motor_decoder.0.bias",
+    "motor_decoder.1.weight",
+    "motor_decoder.1.bias",
+    "motor_decoder.3.weight",
+    "motor_decoder.3.bias",
+    "wing_residual.network.0.weight",
+    "wing_residual.network.0.bias",
+    "wing_residual.network.2.weight",
+    "wing_residual.network.2.bias"
+  ],
+  "optimizer_initialization": "Fresh imitation Adam; PPO/critic optimizer states removed for next stage",
+  "teacher_has_clock_and_integral": true,
+  "actor_receives_teacher_clock_or_integral": false,
+  "all_motor_outputs_learned": true,
+  "executed_body_force_override": false,
+  "episodes": [
+    {
+      "world": 0,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4075915831735344,
+      "target_time_scale": 1.0496997724782664,
+      "waypoint_window_samples": [
+        263,
+        262,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15533675722886245,
+        0.08877539247224417,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 1,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.37355087362404,
+      "target_time_scale": 1.0841759100029873,
+      "waypoint_window_samples": [
+        271,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15113481304442297,
+        0.08555475861568655,
+        0.05973666254084277
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00627686887893562,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981721725684376
+    },
+    {
+      "world": 2,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.513559440097998,
+      "target_time_scale": 0.9888306596825915,
+      "waypoint_window_samples": [
+        247,
+        247,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16098142333445584,
+        0.09373814906328709,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 3,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.760471481131953,
+      "target_time_scale": 0.9832684591927828,
+      "waypoint_window_samples": [
+        246,
+        246,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16099855765031612,
+        0.09450201276179097,
+        0.0597372405215883
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629884867793495,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049817003601155256
+    },
+    {
+      "world": 4,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6997649803684678,
+      "target_time_scale": 1.0634138848649468,
+      "waypoint_window_samples": [
+        266,
+        265,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15393355480050527,
+        0.08745582124638254,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 5,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6751181738158805,
+      "target_time_scale": 1.1406574394757936,
+      "waypoint_window_samples": [
+        285,
+        285,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14563347134838786,
+        0.0814752215873562,
+        0.05973791456871447
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006286334966103596,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049818553701796386
+    },
+    {
+      "world": 6,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.639979934386389,
+      "target_time_scale": 0.967383204317285,
+      "waypoint_window_samples": [
+        242,
+        242,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16239511207518653,
+        0.09603759498911671,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 7,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2869079916882618,
+      "target_time_scale": 1.085873596481963,
+      "waypoint_window_samples": [
+        271,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15114447135802772,
+        0.08555783218604958,
+        0.05973841166071238
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006253959029101951,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981775530524353
+    },
+    {
+      "world": 8,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.7199248928300315,
+      "target_time_scale": 0.9129052442174639,
+      "waypoint_window_samples": [
+        228,
+        229,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16802034721632314,
+        0.10182217988259701,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 9,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2325533143723386,
+      "target_time_scale": 1.1207093148814238,
+      "waypoint_window_samples": [
+        280,
+        280,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1483858752385654,
+        0.08259606964113406,
+        0.0597378115636487
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0062856629607161586,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981714880274866
+    },
+    {
+      "world": 10,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6803064347089385,
+      "target_time_scale": 0.9873183549207236,
+      "waypoint_window_samples": [
+        247,
+        247,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16098142333445584,
+        0.09449280768048997,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 11,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2786696408086693,
+      "target_time_scale": 1.0473420248120084,
+      "waypoint_window_samples": [
+        262,
+        262,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15534469219258598,
+        0.08877814543564744,
+        0.059736913238015686
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006259503267809693,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981774329870041
+    },
+    {
+      "world": 12,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3525977807373422,
+      "target_time_scale": 0.9944937489434784,
+      "waypoint_window_samples": [
+        248,
+        248,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15960975194810936,
+        0.09373814906328709,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 13,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2064214889267413,
+      "target_time_scale": 1.1330786874692835,
+      "waypoint_window_samples": [
+        284,
+        283,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1470107393337147,
+        0.08203168218324909,
+        0.05973773312114071
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006279786887353661,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.0498157018249866
+    },
+    {
+      "world": 14,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.7271009046061088,
+      "target_time_scale": 0.8702364261840663,
+      "waypoint_window_samples": [
+        218,
+        217,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.17216694655159806,
+        0.10727072483640934,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 15,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6577063795829745,
+      "target_time_scale": 1.095652904428442,
+      "waypoint_window_samples": [
+        274,
+        274,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14976418228050573,
+        0.08494825193198771,
+        0.05973736923703196
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006270762694769194,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816781393216374
+    },
+    {
+      "world": 16,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3734338764171676,
+      "target_time_scale": 0.9635346816656387,
+      "waypoint_window_samples": [
+        241,
+        241,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16380723992849866,
+        0.09682792493987336,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 17,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6912392876656441,
+      "target_time_scale": 1.02031448319044,
+      "waypoint_window_samples": [
+        255,
+        255,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15815079536844842,
+        0.09084130414003884,
+        0.05973684701164218
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006290240436703298,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049818221086333894
+    },
+    {
+      "world": 18,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.589407398405199,
+      "target_time_scale": 0.9125471286787611,
+      "waypoint_window_samples": [
+        229,
+        228,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16802034721632314,
+        0.10182217988259701,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 19,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.64802356981811,
+      "target_time_scale": 0.9517885136958525,
+      "waypoint_window_samples": [
+        238,
+        238,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16391305235708364,
+        0.0976370764951458,
+        0.059737226825419903
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629485674112045,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049818941754233126
+    },
+    {
+      "world": 20,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.7945106660118126,
+      "target_time_scale": 1.0776307448807885,
+      "waypoint_window_samples": [
+        270,
+        269,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15253533626589966,
+        0.08617863347593616,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 21,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3476759466586088,
+      "target_time_scale": 1.001166118261542,
+      "waypoint_window_samples": [
+        250,
+        251,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15956743753898056,
+        0.0930006090759277,
+        0.05973774892882779
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006277475432528115,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049818891851283104
+    },
+    {
+      "world": 22,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5353194961572778,
+      "target_time_scale": 1.1214635911908546,
+      "waypoint_window_samples": [
+        280,
+        281,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.147005723846203,
+        0.0825908403766985,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 23,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2262812936018004,
+      "target_time_scale": 1.0050753818613707,
+      "waypoint_window_samples": [
+        252,
+        251,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15956809764971044,
+        0.09227112719606337,
+        0.05973875624593363
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0062875436268930275,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049817925744128785
+    },
+    {
+      "world": 24,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.478437974152397,
+      "target_time_scale": 1.0497193091171342,
+      "waypoint_window_samples": [
+        262,
+        263,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15393355480050527,
+        0.08877539247224417,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 25,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.6034227178737899,
+      "target_time_scale": 1.1298046109406108,
+      "waypoint_window_samples": [
+        282,
+        283,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14700126096389013,
+        0.08202968286711446,
+        0.059737749083337004
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006286686288138662,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981536149757562
+    },
+    {
+      "world": 26,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.4674330622679108,
+      "target_time_scale": 1.0843427628454356,
+      "waypoint_window_samples": [
+        271,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15114275977143185,
+        0.08555553917159225,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 27,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.203171531755595,
+      "target_time_scale": 0.9766279625294184,
+      "waypoint_window_samples": [
+        244,
+        244,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16238394494541403,
+        0.09526413260863151,
+        0.059736460984442664
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00628928975987484,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816078450527
+    },
+    {
+      "world": 28,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.3028057576874508,
+      "target_time_scale": 1.107933481291407,
+      "waypoint_window_samples": [
+        277,
+        277,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14837722598029685,
+        0.08374710644281935,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 29,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.5426389715689581,
+      "target_time_scale": 1.0835008158986794,
+      "waypoint_window_samples": [
+        271,
+        271,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15113739025848916,
+        0.08555393701682117,
+        0.05973913485911736
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006269456752367808,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981755866067643
+    },
+    {
+      "world": 30,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.2607157721159572,
+      "target_time_scale": 0.8591453720130928,
+      "waypoint_window_samples": [
+        215,
+        215,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1735263274175937,
+        0.10822453074038482,
+        0.05973739496347835
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00629131444316402,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049816610944868334
+    },
+    {
+      "world": 31,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "hover",
+      "target_amplitude_mm": 1.408238090191591,
+      "target_time_scale": 0.9423750630384975,
+      "waypoint_window_samples": [
+        235,
+        236,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16520440333815922,
+        0.09844843227320216,
+        0.0597363645451745
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00627161802472305,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04981730437061475
+    },
+    {
+      "world": 32,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.340625785750621,
+      "target_time_scale": 1.0937901364619718,
+      "waypoint_window_samples": [
+        273,
+        274,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.25930555748102685,
+        0.14942064261609414,
+        0.07372897473631042
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.038501097640547176,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06771089015140479
+    },
+    {
+      "world": 33,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.2804761587706346,
+      "target_time_scale": 0.9287780994231609,
+      "waypoint_window_samples": [
+        232,
+        232,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.20794630578526793,
+        0.13546077581202307,
+        0.067026721801082
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.010482215015948216,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.0590288432240455
+    },
+    {
+      "world": 34,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.3159036351014974,
+      "target_time_scale": 1.083385279527594,
+      "waypoint_window_samples": [
+        271,
+        270,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1447774653488701,
+        0.19559118621135144,
+        0.06107271971423035
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.07201980825851055,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.051761808075745805
+    },
+    {
+      "world": 35,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.6150141643300273,
+      "target_time_scale": 1.062074343674833,
+      "waypoint_window_samples": [
+        266,
+        266,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15525899072904076,
+        0.0898355570153754,
+        0.06026681159063796
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006479846681722472,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04972788778462612
+    },
+    {
+      "world": 36,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.2963748338111505,
+      "target_time_scale": 1.0641372953692616,
+      "waypoint_window_samples": [
+        266,
+        266,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15364530781222716,
+        0.09142432690616761,
+        0.05929845107002858
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006375127303577689,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04988899355792724
+    },
+    {
+      "world": 37,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.3350983980692375,
+      "target_time_scale": 1.1002897744942073,
+      "waypoint_window_samples": [
+        275,
+        276,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.08128087649417448,
+        0.24663992521589095,
+        0.05667741167782472
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.053433651130534596,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.048719432468315754
+    },
+    {
+      "world": 38,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.25106350262236,
+      "target_time_scale": 0.88319494449647,
+      "waypoint_window_samples": [
+        221,
+        221,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.25493255064328785,
+        0.09947234719062051,
+        0.07025933762879505
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.008217584151471623,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.05878265533195079
+    },
+    {
+      "world": 39,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.595466352827735,
+      "target_time_scale": 1.0479569792193617,
+      "waypoint_window_samples": [
+        262,
+        262,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.2372771059877525,
+        0.1616687346318618,
+        0.0713164738641375
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.05562467964776328,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.065181249541357
+    },
+    {
+      "world": 40,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.4438860327118959,
+      "target_time_scale": 1.0390043486943668,
+      "waypoint_window_samples": [
+        260,
+        260,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15013117868320713,
+        0.19387906149262776,
+        0.060323030167008206
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.050721697954396044,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.053059275996629796
+    },
+    {
+      "world": 41,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.2967760671150108,
+      "target_time_scale": 0.9861812652222356,
+      "waypoint_window_samples": [
+        247,
+        246,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.16222037103970469,
+        0.09703711728654768,
+        0.05985154119648681
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006279499537441592,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04978099863900003
+    },
+    {
+      "world": 42,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.7785616165738791,
+      "target_time_scale": 1.0187099486877966,
+      "waypoint_window_samples": [
+        255,
+        255,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15862168208240868,
+        0.09801350453755032,
+        0.05944804058166834
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006328452226090683,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049873490783985674
+    },
+    {
+      "world": 43,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.7361650046939539,
+      "target_time_scale": 0.9317748642469439,
+      "waypoint_window_samples": [
+        233,
+        233,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.09481120163336644,
+        0.2597970971964416,
+        0.05648334138042701
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.008497717855171333,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.048199330709034455
+    },
+    {
+      "world": 44,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.6447424159623298,
+      "target_time_scale": 0.9967828457333588,
+      "waypoint_window_samples": [
+        249,
+        249,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.29105472926953946,
+        0.1573036945650744,
+        0.07732999243235525
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.00802282211145374,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06859393010487273
+    },
+    {
+      "world": 45,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.751362182708506,
+      "target_time_scale": 0.9248980682986632,
+      "waypoint_window_samples": [
+        231,
+        232,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.23330302848636633,
+        0.15569525061491873,
+        0.0715207808653152
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.013467463793309481,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06409806932478125
+    },
+    {
+      "world": 46,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.2418909834486136,
+      "target_time_scale": 1.1422879820680898,
+      "waypoint_window_samples": [
+        285,
+        286,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14033259936967935,
+        0.19993777989189845,
+        0.0766113370451265
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.11999274455840991,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049918145480218945
+    },
+    {
+      "world": 47,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.70919293546839,
+      "target_time_scale": 1.0778771440640371,
+      "waypoint_window_samples": [
+        269,
+        269,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15385899679031168,
+        0.08859464147096298,
+        0.060456509468654225
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0065692813137645896,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04969974004751545
+    },
+    {
+      "world": 48,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.749132907142009,
+      "target_time_scale": 0.8608463808663367,
+      "waypoint_window_samples": [
+        215,
+        215,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.17551748467638753,
+        0.11838594008268058,
+        0.05972226257748703
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006284898802522066,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04982668757538112
+    },
+    {
+      "world": 49,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.472495640324786,
+      "target_time_scale": 0.9007064553957466,
+      "waypoint_window_samples": [
+        225,
+        225,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.11203782529313873,
+        0.22180086694680162,
+        0.055567936961730784
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006139482684133289,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.046931723495713715
+    },
+    {
+      "world": 50,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.373150714596414,
+      "target_time_scale": 1.0511828157497107,
+      "waypoint_window_samples": [
+        263,
+        263,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.26427729111639003,
+        0.14348602655179082,
+        0.07393465299860882
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.01948238790377122,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.0670055238206506
+    },
+    {
+      "world": 51,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.5672954215846346,
+      "target_time_scale": 1.1063351258616803,
+      "waypoint_window_samples": [
+        276,
+        277,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.23820204741419299,
+        0.18279671654786422,
+        0.06919683150316117
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.10123260397575132,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06307726947902811
+    },
+    {
+      "world": 52,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.31665243164319,
+      "target_time_scale": 0.8504295074522976,
+      "waypoint_window_samples": [
+        212,
+        213,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.17571414435376823,
+        0.1405924254766832,
+        0.05909024711853322
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.008171113659662697,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04995147248368301
+    },
+    {
+      "world": 53,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.3963094087456955,
+      "target_time_scale": 0.9144876325261851,
+      "waypoint_window_samples": [
+        228,
+        228,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1699567324167673,
+        0.10605407229141266,
+        0.059776409258773575
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006266279398796919,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04980155033164388
+    },
+    {
+      "world": 54,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.329707343883183,
+      "target_time_scale": 1.012039040958785,
+      "waypoint_window_samples": [
+        253,
+        253,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15841719433007692,
+        0.09600572839694994,
+        0.0595441742476309
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006309248400591081,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04985396420008641
+    },
+    {
+      "world": 55,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.3895639149279038,
+      "target_time_scale": 1.0866708127787934,
+      "waypoint_window_samples": [
+        272,
+        272,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.08141036640030785,
+        0.2525945132706717,
+        0.05694107242425666
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.04714374465012772,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.049017220516525
+    },
+    {
+      "world": 56,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.3871648279097415,
+      "target_time_scale": 1.1271792443647295,
+      "waypoint_window_samples": [
+        282,
+        282,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.26210780747821577,
+        0.16423533447384175,
+        0.07462202043653463
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.06464118059338747,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.0688483368674855
+    },
+    {
+      "world": 57,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.7462632115298677,
+      "target_time_scale": 0.9833081953564728,
+      "waypoint_window_samples": [
+        246,
+        246,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.24232237366234138,
+        0.142116746251395,
+        0.07251712254093562
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.028875274299971186,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06629569777436768
+    },
+    {
+      "world": 58,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "backward_forward",
+      "target_amplitude_mm": 1.3627869291487305,
+      "target_time_scale": 1.114169136897458,
+      "waypoint_window_samples": [
+        279,
+        278,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.14666248632497755,
+        0.2083230145924994,
+        0.06734656592134043
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.1003868436345392,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.05135879433883049
+    },
+    {
+      "world": 59,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "up_down",
+      "target_amplitude_mm": 1.7470047879750816,
+      "target_time_scale": 1.0270249004044272,
+      "waypoint_window_samples": [
+        257,
+        257,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.1583195605537644,
+        0.09456269292905363,
+        0.06006341360299221
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006359992719300982,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04975595310392288
+    },
+    {
+      "world": 60,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "down_up",
+      "target_amplitude_mm": 1.724622964160277,
+      "target_time_scale": 1.0139206366792672,
+      "waypoint_window_samples": [
+        253,
+        253,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.15853564754855165,
+        0.09750963401150026,
+        0.05947939223740509
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.006319928127874503,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04986734328808516
+    },
+    {
+      "world": 61,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "left_right",
+      "target_amplitude_mm": 1.4188064036408137,
+      "target_time_scale": 0.8938015263476411,
+      "waypoint_window_samples": [
+        223,
+        224,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.11596123654941505,
+        0.21498425533925108,
+        0.05548720448381054
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.0058643445636177745,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.04679102192881179
+    },
+    {
+      "world": 62,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "right_left",
+      "target_amplitude_mm": 1.4524879461307083,
+      "target_time_scale": 1.0991728876337565,
+      "waypoint_window_samples": [
+        275,
+        275,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.26950228078083216,
+        0.16622602161154107,
+        0.07553264782500757
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.04569304373321021,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.06974385361421928
+    },
+    {
+      "world": 63,
+      "failed": false,
+      "seconds": 12.0,
+      "teacher_fraction_at_end": 1.0,
+      "teacher_fraction_mean": 1.0,
+      "entire_episode_student_only": false,
+      "trace_file": "batch_00093.npz",
+      "trace_end_frame": 47,
+      "target_sequence": "forward_backward",
+      "target_amplitude_mm": 1.444904490758598,
+      "target_time_scale": 1.059510048792624,
+      "waypoint_window_samples": [
+        265,
+        265,
+        501
+      ],
+      "waypoint_window_peak_errors_mm": [
+        0.2267201701079408,
+        0.15181815744915983,
+        0.06936012697049812
+      ],
+      "final_hold_100ms_drift_peak_mm_s": 0.05692601575055891,
+      "complete_target_sequence_tracking": true,
+      "final_origin_error_mm": 0.0630506622568491
+    }
+  ],
+  "traces": [
+    {
+      "file": "batch_00000.npz",
+      "sha256": "ef2346375ee8dbffca440b55c07b566cedef0771a747a487a23c50d80c3b7410",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00001.npz",
+      "sha256": "d1b803b7184b97d03a9a3092cb8388a1eb7ed4f12baf8c68229c3b6b5384e88e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00002.npz",
+      "sha256": "6dcc84005d3d3c1080de01a385c5eca170648e8002b6553ef9ac1e4f0bfd0d0a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00003.npz",
+      "sha256": "c221f5a5a83513f6b427fd7ce77fd2427d2006227789e7cf9a1aad1b6f6518a1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00004.npz",
+      "sha256": "fc35046a212710630b69bde8745481be9911906a1893f4c7d18fe2864510a90a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00005.npz",
+      "sha256": "8e80b87f56da5f9d993cd70909c05419dc22d0a1e3c3080cdfffac65cfb7a7eb",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00006.npz",
+      "sha256": "bcc99c447de88605dfd72c24ebcf503c6c0cee3aaaf729a27ebf222ce766c89d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00007.npz",
+      "sha256": "40553c787fa4df315dd00f8b04752dc6e9df71a90a033dc9f7d00137d1dd6ec7",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00008.npz",
+      "sha256": "1a791c2e2e304ad36d96ddcd7412f4fb0e714ebc7aacae169ccc4ce5d7962086",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00009.npz",
+      "sha256": "92f8bfc836a9386f420084bed0b6f60404f2ffd17900a814e2596d394b0bf9b6",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00010.npz",
+      "sha256": "0a4a58dda6852681b5a2e5213d2f6a910f23a891fca16e2d91620b6879e5e765",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00011.npz",
+      "sha256": "70bf29208dd5691fff7869979a2086bcefbc3bf26e2257a639bee4bc97fb20ad",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00012.npz",
+      "sha256": "76c67130f25b55e91aa8a0dcaa8038c41164efb340572c88cc5dc0fc35014383",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00013.npz",
+      "sha256": "389904e1323f7323a1677ec85b59332649d6000b978b9a633423f83ba379f82c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00014.npz",
+      "sha256": "a29b9f2cd549d751741ec73426dd5838a9226e4d697e50ee1dbf0adeeeb3adc0",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00015.npz",
+      "sha256": "25ef6e5e8d57f2c5054271190636a561f4b85f7583c66624e9dc6d568b0b3723",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00016.npz",
+      "sha256": "e823894ec29a259bee8b8f99eaf848ca8b826ef8e7a6f3cc9b814c89aded1339",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00017.npz",
+      "sha256": "bbaaaec77cf198041a15aa2ff9ccc5aa74a5e902d37d96a2697023487780e7f4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00018.npz",
+      "sha256": "06e4cbbf9ef94da61b0f524040396b2c75e41ea1d28a294a0ad24cda26238a61",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00019.npz",
+      "sha256": "72ecc75db3aeab2d03c1c8188c54d38719bc4fbc27692c4cb3f57419256a3a48",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00020.npz",
+      "sha256": "014960380c3e9fb9b5a1f81cdbe6a5efd5d667729323f9bfb345d2b70cec629a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00021.npz",
+      "sha256": "54cc8604c72b02e29d307299ef1f635b691dc548f5263d327310af8b87235c6f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00022.npz",
+      "sha256": "2df34cdbcd349807bda6f4ecd855865807c7d347c35b6ca69364e11d4b88ff10",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00023.npz",
+      "sha256": "347e28e02009b0e89fd4a2ebe6a1195e4bd9569cfa0bf299433059ccfe38ca91",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00024.npz",
+      "sha256": "d39667ac3357ef4199ab0dd55ae8f4d4646cd9155cd82f49045423b8c093691a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00025.npz",
+      "sha256": "41a6681496951ae821f2b0e341ce5c1000f9cf3c3d1154bccba39c052a7f2296",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00026.npz",
+      "sha256": "4986cb592857c297cd7b80cb0cee13be298d6f145ee2d8689f0caa468b83ece1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00027.npz",
+      "sha256": "08bfee67cba81ed934e4c974671ddf2ea76f4e57eab104d0fe71585590edafed",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00028.npz",
+      "sha256": "e222c7239052175634cdd684b0e58b29173181b8d57872758481101cc83746d9",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00029.npz",
+      "sha256": "3d509e2b7029de07ad812e016945f0f6f4dcb233dd456fa8684eee9ab456e3b1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00030.npz",
+      "sha256": "81b79dbccab059a0639bf77955cf2f39e0385b0bfe6ee7fa44aef52ca109dc33",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00031.npz",
+      "sha256": "4de7845a6ea305ba055388f8a6ec7bf2794c41347dd526382ef8697039a5c0af",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00032.npz",
+      "sha256": "5863a5f6786e3242968689de2cfe5466840052969f0dc80c2a5992780fbdff01",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00033.npz",
+      "sha256": "1ce00565d8f96c21c117b5d789312bb1cdcb77e1c131fc62ddecb6f3ef1a4768",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00034.npz",
+      "sha256": "f5e4ed89ff0349adeb1393da2b9a88dac85b1983dd6f65560b19887796a57cc4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00035.npz",
+      "sha256": "f6213f3a8f51751de9ce1e0cd5ad3b5162c4589e77aa2d7bfc7d89d59fe55711",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00036.npz",
+      "sha256": "d502ccddc1cae9ba9da7588b90c577b9f6ba96d33782289531718230124365af",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00037.npz",
+      "sha256": "e8bb8395373d1c7e335dd6a52d91de5f4a7d458f079d1c00d9554f021da0209c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00038.npz",
+      "sha256": "1450fd23db7b15fd430634a4e2ff44b14d948bf7b3c65714a09330b8f2f9f69c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00039.npz",
+      "sha256": "e9241c5d778da7ea732e455abe45a99411f35a3f0fec8cbcb3e2cd7cebfc0ff1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00040.npz",
+      "sha256": "6993ccd2d4b4e4b44d9e15c5b42a3b5aa450bb553bc64f4596c68cd37b8812b0",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00041.npz",
+      "sha256": "36ed58ce3e577417f6f9bedfbdc4b42d8492f2103c5a0d8ca90e3e949e2f4675",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00042.npz",
+      "sha256": "7f1fcf474626c18bcac35eb5a5a380506afaec04245163ecb88ff44bf685e3ff",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00043.npz",
+      "sha256": "5d796a4be8e2eb2534a434fdfa686033027987948de3e4d9e3896901efc015a3",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00044.npz",
+      "sha256": "4c32d4eee4311fb8eba2e86b5d0c98686c6c50eb8e71bd03f197af058a6b5f7b",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00045.npz",
+      "sha256": "9d0d77b2677040e1d0e6c70cf7e515c42a333e7f8349e9a357d042be862a680b",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00046.npz",
+      "sha256": "2b3da3ae2720746c1a3044d487e6d7ff24791e2c50c7c5dc072002ea9ed94a7f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00047.npz",
+      "sha256": "375f3b415a54deba304a7e751adaf7a72fe82d72129137ff9273d0e9bcaa087a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00048.npz",
+      "sha256": "9cd775e08bfce2ed2e73334734c1bba5ddac14d28dbea45456ecfe110dfc6b7b",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00049.npz",
+      "sha256": "57fe944210849b6407c77789801f09d797bc4964dd90ce34e4a1ba88c4081b20",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00050.npz",
+      "sha256": "2a142944d67d324eeb6f471cce12dc31ba73b8e493f9e49b9c12085e75bc1b2d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00051.npz",
+      "sha256": "5fbcb1aa1c705977e2a12f8624c4118f5b35b81d6d7c25e9dc2816b735f9ca39",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00052.npz",
+      "sha256": "422731b7e621d5b71d29a88a284cc79ea44e45bea126dd243e1233e4718f26ec",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00053.npz",
+      "sha256": "8a6b90df42959b3bd1114826de8822e1e21a32eb8b8c867d4546f26e35d314a2",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00054.npz",
+      "sha256": "dd441251644dab337d5d675bc17372eb576c30c7c42f05a79d106ebf7c3c0fb0",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00055.npz",
+      "sha256": "df576c394d49087502393665393c9054ddf7386644662b2ac5aa15de6da02640",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00056.npz",
+      "sha256": "b2998147ed432d4dfd7017e41f12b791c5e66869defc320350ff0e3821a65dbd",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00057.npz",
+      "sha256": "94628e56dae7f9af0664470c059c947120b282d49e0894ba0d9461bc1dc6972d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00058.npz",
+      "sha256": "6b7e196ec5f3c87503026457931fd4fbcb45644d8e79628f2a78e812dd910bd5",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00059.npz",
+      "sha256": "d72e720cca0c7eaf6e86285b0244d0c59fc084a43e58de64a3a15776b1d2b116",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00060.npz",
+      "sha256": "5b07787785213e16945b73df9b530a026fc9b3f774ac0221d42eb6b243a4f7b3",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00061.npz",
+      "sha256": "7ec31ed1486bfe91381d0d6cf6eb6f7077cefb5d05ab24d57b9eed8224e93cf9",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00062.npz",
+      "sha256": "8522a55c60e5cde530f84774720601e60515dcee259a72d6820873677d6a7e75",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00063.npz",
+      "sha256": "3a025a1020e180a7d47eba00a15512cc2d03066381aafbf039ca60d1a12fc302",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00064.npz",
+      "sha256": "e9f872efd45176cc4035cd45fc5a346450030613aaedd0df1f0792014ccc71e4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00065.npz",
+      "sha256": "10fb885ea291a06de9b4d375feed0dec99a6254b90346a5b0867d816256d7ced",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00066.npz",
+      "sha256": "6ff137dd56faaf0f7622cd1378b3073ab36c58cb988e8f46b6b778bc985bbbbd",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00067.npz",
+      "sha256": "e7a08d10043f590e0817fc3266d440b1db47cb7baebe4b0e47819f577a361ca5",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00068.npz",
+      "sha256": "91f721672f870210e0d21bfab8dae3f21667c51490d106bc866ce43064b99452",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00069.npz",
+      "sha256": "2d7ae257606388827833d50d1d9f0dbe30d5c029c4c4a9b3e15bb429f5e79fbe",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00070.npz",
+      "sha256": "00be1ca4485b5d3893ea8d53360f0fdde5eb1dd72f7b5aae53811354324a76ed",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00071.npz",
+      "sha256": "4f2f07779dfda685d9bc292f168101e6a9ba2f28cc6be3a45bc1efec1b83c0d1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00072.npz",
+      "sha256": "0070c6b5404af576633c5d178ae4b5d3ac07ea7a9e257e5a9bdfbe50ddc91fb1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00073.npz",
+      "sha256": "edce83097f1a8b9f8f938d132e48c41b72e5eb0f666d39aaefcbda1c7080194e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00074.npz",
+      "sha256": "01195fb1b1aee9483d52d5bea2c3c8d295f8f3deb3b7262b1ed81ceac100d657",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00075.npz",
+      "sha256": "d1d55bb12c434bf7dc5d3c535779108c4bfb8734058941e599b0bbc1f750ebaa",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00076.npz",
+      "sha256": "27136ba7fbd226f68a5796e41a5ef48ffd64cf080dd4495105916c9bb2536b36",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00077.npz",
+      "sha256": "85e0ce176bb6bbff42025ce37c0d3cd772c570eb973f0f596d1355138fa1d34f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00078.npz",
+      "sha256": "db45074d8cb6fceb8ecae60d831e60219f121775bfb603504afd7b4530def8b5",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00079.npz",
+      "sha256": "c358b43942edd0acf7fdee9992218cfc449900dfe8e849c5f00432c0af569bca",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00080.npz",
+      "sha256": "c1906184c43f6bad1c9c83fa0a7d7a7b02d7621a3fb805bc39779879fc0c7eb5",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00081.npz",
+      "sha256": "19fded849497f275894c9c7a22daa3024374907627582adbc1a881f8ea9d0467",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00082.npz",
+      "sha256": "3f6aa9225f36e762c8446d3d2e44c6fbd12405cbac75438bc73ef07c50d74ee4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00083.npz",
+      "sha256": "51b491607cae98489935124da407b9f62ae2b1db430d0532a7bf7e3ec0e57360",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00084.npz",
+      "sha256": "6a7b52a7a41c28df2f4ab43eff77f561db3626991c388a9d55d06c6ceae1407d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00085.npz",
+      "sha256": "aff0af6b8b68eb3a54f2ecd186f6ede9a7b0280bef7fa16acaee57b3792e7256",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00086.npz",
+      "sha256": "e1988cbe9b18a81f5fadd45558ba630faa1fd97ae599fc824cbc09202902d1fc",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00087.npz",
+      "sha256": "cbd8cac8881e1a892c5d42b7044333aa8ad25bc9596fd5fcb7374bbf563a56c4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00088.npz",
+      "sha256": "67b207bd7dac1eccbe966ead81c0f55226dd3691dc999de1f3d390a3dc09565e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00089.npz",
+      "sha256": "751d982031bc6c5c09dc9e0502fd84ce3caa39618fd954ff175d5e2829ba94b6",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00090.npz",
+      "sha256": "a47b2e9332a50eecc5327f37b0d19f79f3a352e56916f1b7f5823b3e204c1f40",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00091.npz",
+      "sha256": "fe40c2b4fcff694a2464b90461157541cce30ad8b900cd1514a15bc3768c2261",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00092.npz",
+      "sha256": "914ede916fec5a0cb9f893162d5ad7bc519eca23898c8dfbe16ce2c03a371fae",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00093.npz",
+      "sha256": "60ad6940f0943693867b5143cfd1262ac99e59f9542135132decfbfb3254cf5c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00094.npz",
+      "sha256": "01056a0821c87327b89625d0710dad358dda263d1dc7f2b20737158f47983cb3",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00095.npz",
+      "sha256": "4e61dd564671bd56b864ee430564f638c6c04fca8e500039e5dd159cef7bf25a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00096.npz",
+      "sha256": "4110d7e22ed48bebc5900036ca879d01cbd3c1374c825a1f12050ac452059b5e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00097.npz",
+      "sha256": "44111f5acdba8fd4e69563e06cf92fec2012bf7b86ef1b96e5c600f2a5800ab4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00098.npz",
+      "sha256": "4e7e1a1c56d1bf87236482cbfadb8e388891cde5bcb1b4cff36a6a3f03b46584",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00099.npz",
+      "sha256": "dad971be7e15a946512bbcd24d7fdfe9cf1bd65c6d38935f102dcd845af54ffd",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00100.npz",
+      "sha256": "a905825cb5983a17021713431394c0d3452d73f98326f34a64f093196d5aac5e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00101.npz",
+      "sha256": "3d47bc97c11bb2e0588f281e8fd26923756f082c81d854ee4dd76ebec1ac450c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00102.npz",
+      "sha256": "64db1617c508a3b6da342dc9ac2f4d25f8d9d07b1dbf44199935619107d128d3",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00103.npz",
+      "sha256": "451bcda87660b43bda3403861431db1d83df4b48f0a924f7be1001b49b246a2d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00104.npz",
+      "sha256": "fb6df657bf8f92438560ac055c4fb8ece9bf13e5b1d30524b7008ef1cfbde60f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00105.npz",
+      "sha256": "e570c45661da871b686c6b5d932cd5d14078ec2bd165d93b13c98002e1d1860f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00106.npz",
+      "sha256": "6d5927113ab9e0157387e4e1f1b06650f17cf9d371353de0edaf86b8c11f6fd4",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00107.npz",
+      "sha256": "667071ca1f0fe1a7dec79793206f5a20f63d570cdaf288faf6f4a7cad87220cc",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00108.npz",
+      "sha256": "f1ba0b80220507f7eea6002b93f2783ac17d344a4e01a98634754c08e760383f",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00109.npz",
+      "sha256": "4a968b228af68f4025c152a806e9e83954956cf858c09c26a7d3f3fe18d816b2",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00110.npz",
+      "sha256": "3b57b4507c436891c35e0b9d4cc133490a989d038b8e1895ccbb420bbf4b2f61",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00111.npz",
+      "sha256": "d00d18256063dd7fd291dabc2b3d21f83f4db898fdc6efe2941413d4f00d206d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00112.npz",
+      "sha256": "b85f1ebfc3f308b43ae39c43f46fcbd6b9489eb722cb47410f96ecaa4b97a38e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00113.npz",
+      "sha256": "52c946adc457627920d7fb8365c42dc999dfc9159441c53acd7fa0d56c904165",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00114.npz",
+      "sha256": "5855ab892a8713715b04d1dc7b88d3292f527366618d4fcd4a6674c6f50d635a",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00115.npz",
+      "sha256": "65ebf0f1c4aeadd22ac264ceabaeb4014dc32a36ceab09a48aaab1e039c48991",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00116.npz",
+      "sha256": "ce6ff548ef090100c59e17a21abb78ddb3d1310e6aa94081abd573e54f1a57eb",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00117.npz",
+      "sha256": "c3ce2f31be29dee7acd535c3e3e8b9671b3f4336b54f5038c48ca69210e40356",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00118.npz",
+      "sha256": "251a45b06868a9e346bfa16d9ad9576b6ce65693cac7faf55dd129f38a0dbdb6",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00119.npz",
+      "sha256": "946e728420a05582627d0ad19110bedb1f28a0070ff73450c65fe47033f4b347",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00120.npz",
+      "sha256": "9fbab5f55c89cfd7a7fadd568201234c11dcc675ae31b6e6586683a02765aa6d",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00121.npz",
+      "sha256": "acdfebccf0e555fd906f453f05271254947e332a460daa83ee9d785df3cf8319",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00122.npz",
+      "sha256": "bfa90ea745dab3f481e7f88e2a5bd99775ba5f57a5f55746ddfdd1340b7e9931",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00123.npz",
+      "sha256": "7bf6385785f83a79745d107d384915ab8a1ad06b518b60467801124ed3d4be3c",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00124.npz",
+      "sha256": "28101f3458941b77cdc486135b3afeb2c86c80bef19ab19d0d8093fbefa955b2",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00125.npz",
+      "sha256": "cf006c82289818f37bd5cfb533ca8749f1a598b2ec0530d7b12b8d385bc5be3e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00126.npz",
+      "sha256": "66d1a3b174a00a57f1827e0e21ea0197e0b246f1853d2d4cf315a486561c16d1",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00127.npz",
+      "sha256": "6beeb6f7829ffd8aba3ca5e983374374e4bc43e8fee6486b1530706ceec4747e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00128.npz",
+      "sha256": "b0edb09a8bce31d9b70dc74051e4d862524f1431617c795f34a19d1d69257013",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00129.npz",
+      "sha256": "f2906541601735f18f2e4b6f21ec025383b2fa6fefecd187d9cef86d31dc7d0e",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00130.npz",
+      "sha256": "a9796f11b1bcce2c2a8281aa21f3082b96b90b2b55a45c8ff332467df400dd26",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00131.npz",
+      "sha256": "8cd560374e9e39d760986cc357e01ee5582f57f22ad5753ab58bdad5b5fb5743",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    },
+    {
+      "file": "batch_00132.npz",
+      "sha256": "87bc7da2ac4d105b9db6812f729c37185cbe16f306bc1f863d7329cca6ed8fbb",
+      "actions": 4096,
+      "teacher_fraction": 1.0
+    }
+  ],
+  "curriculum": {
+    "curriculum": "closed target trips plus stationary hover",
+    "stationary_worlds": 32,
+    "round_trip_worlds": 32,
+    "route_ids_are_observer_only": true,
+    "future_waypoints_in_observation": false,
+    "amplitude_mm_range": [
+      1.2,
+      1.8
+    ],
+    "time_scale_range": [
+      0.85,
+      1.15
+    ],
+    "initial_reset_widening": 0.0,
+    "transitions_by_target_sequence": {
+      "left_right": 42560,
+      "right_left": 48560,
+      "forward_backward": 51072,
+      "backward_forward": 45072,
+      "up_down": 42560,
+      "down_up": 42560,
+      "hover": 272384
+    },
+    "reward": "Supervised wing/posture command error; no PPO or critic",
+    "target_timing": "post-step command advance before reward and timeout bootstrap; next actor reads that same target",
+    "measurement_only_drift_seconds": 0.1,
+    "original_raw_speed_gate": "preserved in reference report; this task measures sustained drift from positions",
+    "teacher_actions": true,
+    "body_pose_assignment": "initialization and episode resets only"
+  },
+  "scope": "Training-only PID imitation; assistance schedule explicitly recorded; independent actor-only evaluation required. Executed teacher trajectory success is not student success."
+}

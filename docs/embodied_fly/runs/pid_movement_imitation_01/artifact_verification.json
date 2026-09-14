@@ -1,0 +1,71 @@
+{
+  "checkpoints": [
+    {
+      "asset": "assets/embodied_fly/diagnostics/pid_movement_imitation_01_midpoint.pt",
+      "sha256": "6284115a8e5827f230bbb84878ddff8f6346431cd61a4fab6bf0d26d5d62da11",
+      "fresh_imitation_adam_steps": 67,
+      "fixed_graph_body_routing_normalization_utility": true,
+      "all_tensors_finite": true,
+      "changed_tensors": [
+        "core.excitability",
+        "core.leak",
+        "core.bias",
+        "sensory_encoder.0.weight",
+        "sensory_encoder.0.bias",
+        "sensory_encoder.2.weight",
+        "sensory_encoder.2.bias",
+        "sensor_extension.weight",
+        "motor_decoder.0.weight",
+        "motor_decoder.0.bias",
+        "motor_decoder.1.weight",
+        "motor_decoder.1.bias",
+        "motor_decoder.3.weight",
+        "motor_decoder.3.bias",
+        "wing_residual.network.0.weight",
+        "wing_residual.network.0.bias",
+        "wing_residual.network.2.weight",
+        "wing_residual.network.2.bias"
+      ]
+    },
+    {
+      "asset": "assets/embodied_fly/diagnostics/pid_movement_imitation_01.pt",
+      "sha256": "0c9cc2596a9e7f126983e25241b987e284683b2242b6fb6718b99137ebaed5ac",
+      "fresh_imitation_adam_steps": 133,
+      "fixed_graph_body_routing_normalization_utility": true,
+      "all_tensors_finite": true,
+      "changed_tensors": [
+        "core.excitability",
+        "core.leak",
+        "core.bias",
+        "sensory_encoder.0.weight",
+        "sensory_encoder.0.bias",
+        "sensory_encoder.2.weight",
+        "sensory_encoder.2.bias",
+        "sensor_extension.weight",
+        "motor_decoder.0.weight",
+        "motor_decoder.0.bias",
+        "motor_decoder.1.weight",
+        "motor_decoder.1.bias",
+        "motor_decoder.3.weight",
+        "motor_decoder.3.bias",
+        "wing_residual.network.0.weight",
+        "wing_residual.network.0.bias",
+        "wing_residual.network.2.weight",
+        "wing_residual.network.2.bias"
+      ]
+    }
+  ],
+  "verified_training_traces": 133,
+  "verified_transitions": 544768,
+  "route_transition_counts": [
+    42560,
+    48560,
+    51072,
+    45072,
+    42560,
+    42560,
+    272384
+  ],
+  "executed_actions_equal_pid_labels_every_training_step": true,
+  "model_sha256": "214cd5830379849d44e790647116b05e873496747bd8619e91a47dd558161899"
+}

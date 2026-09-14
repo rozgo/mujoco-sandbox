@@ -1,6 +1,15 @@
 # Embodied fly: learned utility and direct body control
 
-Latest: [goal-directed reward PPO result](runs/round_trip_reward_02/SUMMARY.md)
+Latest: [PID movement imitation and control diagnosis](runs/pid_movement_imitation_01/SUMMARY.md).
+The [new student video](../../previews/embodied_fly/pid_movement_imitation_final_v1.mp4)
+shows less aggregate drift after ten minutes of supervised learning, but still
+does not follow targets. The user rejected it as a target-following result.
+Opposing horizontal commands barely change its path, and vertical response has
+the wrong sign. Command encoding, actuator mapping, real-graph gradients, and training/evaluation
+forward checks pass in the tested fixtures. The root cause is still unresolved. No policy is
+accepted or automatic handoff started. [Motor command schema](COMMAND_SCHEMA.md).
+
+Preceding: [goal-directed reward PPO result](runs/round_trip_reward_02/SUMMARY.md)
 and [new comparison video](../../previews/embodied_fly/round_trip_reward_v2.mp4).
 The audited reward is now trained: 6 min 40 s, 64 worlds, 524,288 transitions.
 All seven frozen cases stay airborne, but none completes accurate tracking.

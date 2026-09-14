@@ -1,0 +1,171 @@
+{
+  "started_utc": "2026-09-14T03:44:10.083681+00:00",
+  "optimizer_updates": 0,
+  "physical_steps": 0,
+  "script_sha256": "df0722b6f26332d7de1d5f9b8c9345b71e86f6a292fda633ac41d7fa57ba7f99",
+  "actuator_interface": {
+    "named_wing_ids": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "names": [
+      "walker/wing_yaw_left",
+      "walker/wing_roll_left",
+      "walker/wing_pitch_left",
+      "walker/wing_yaw_right",
+      "walker/wing_roll_right",
+      "walker/wing_pitch_right"
+    ],
+    "residual_readout_ids_match": true,
+    "normalized_target_roundtrip_max_error": 5.960464477539063e-08,
+    "trace_executed_equals_teacher": true,
+    "limits": [
+      [
+        -1.5,
+        1.5
+      ],
+      [
+        -1.0,
+        1.5
+      ],
+      [
+        -1.27,
+        2.92
+      ],
+      [
+        -1.5,
+        1.5
+      ],
+      [
+        -1.0,
+        1.5
+      ],
+      [
+        -1.27,
+        2.92
+      ]
+    ]
+  },
+  "parent_training_capture_replay": {
+    "frames": 64,
+    "worlds": 64,
+    "max_absolute_action_error": 4.917383193969727e-07,
+    "rms_action_error": 5.6803081349698914e-08,
+    "same_checkpoint_sha256": "315ef3a259ed0e74757163bf58ab22feabbc2049d24992a5028d6802805df1d3",
+    "trace_sha256": "ef2346375ee8dbffca440b55c07b566cedef0771a747a487a23c50d80c3b7410",
+    "scope": "Exact pre-first-update parent, stored observations, cold recurrent state; deployment forward reproduces training predictions"
+  },
+  "train_vs_deployment": {
+    "frames": 16,
+    "worlds": 4,
+    "action_max_difference": 2.682209014892578e-07,
+    "loss_direct": 0.00021787498553749174,
+    "loss_training_wrapper": 0.0002178749127779156,
+    "max_parameter_gradient_difference": 4.6566128730773926e-09,
+    "input_gradient_max_difference": 2.7284841053187847e-10,
+    "all_trainable_gradients_finite": true,
+    "sensor_extension_gradient_column_l2": [
+      8.786362286627991e-07,
+      2.9349089825103647e-09,
+      2.2243830174437107e-19,
+      8.58682767557184e-07,
+      2.9349089825103647e-09,
+      2.2243830174437107e-19,
+      1.7511647456558421e-06,
+      2.176667476305738e-05,
+      3.0776947824051604e-05,
+      1.7159877643280197e-06,
+      2.176667476305738e-05,
+      3.0776947824051604e-05,
+      8.89283255673945e-05,
+      9.023546590469778e-05,
+      1.6078236342309538e-07,
+      3.5046860968890314e-09
+    ],
+    "raw_observation_gradient_last_four_l2": [
+      2.828991227943334e-06,
+      3.3377129966538632e-06,
+      7.930263734579057e-08,
+      8.878866708528221e-08
+    ],
+    "gradient_l2_by_parameter": {
+      "core.excitability": 7.959036156535149e-05,
+      "core.leak": 2.684025957933045e-06,
+      "core.bias": 0.00199442938901484,
+      "sensory_encoder.0.weight": 0.005145520903170109,
+      "sensory_encoder.0.bias": 9.66886364039965e-05,
+      "sensory_encoder.2.weight": 0.0015946842031553388,
+      "sensory_encoder.2.bias": 0.00016321749717462808,
+      "sensor_extension.weight": 0.00013747818593401462,
+      "motor_decoder.0.weight": 0.00011469542369013652,
+      "motor_decoder.0.bias": 0.0001453396544093266,
+      "motor_decoder.1.weight": 0.003285145852714777,
+      "motor_decoder.1.bias": 0.00011386478581698611,
+      "motor_decoder.3.weight": 0.1416318267583847,
+      "motor_decoder.3.bias": 0.009857180528342724,
+      "wing_residual.network.0.weight": 0.001213525771163404,
+      "wing_residual.network.0.bias": 4.2073508666362613e-05,
+      "wing_residual.network.2.weight": 0.1102181077003479,
+      "wing_residual.network.2.bias": 0.00985687505453825
+    }
+  },
+  "one_action_input_interventions": [
+    {
+      "input_index": 395,
+      "plus_minus_mm": 1.0,
+      "wing_action_plus_minus_difference": [
+        0.0001772567629814148,
+        -1.8477439880371094e-06,
+        -5.960464477539063e-08,
+        0.00017655640840530396,
+        -8.940696716308594e-08,
+        1.7881393432617188e-07
+      ]
+    },
+    {
+      "input_index": 396,
+      "plus_minus_mm": 1.0,
+      "wing_action_plus_minus_difference": [
+        0.0002665966749191284,
+        -1.2814998626708984e-06,
+        -1.7881393432617188e-07,
+        0.0002659037709236145,
+        7.748603820800781e-07,
+        4.172325134277344e-07
+      ]
+    },
+    {
+      "input_index": 397,
+      "plus_minus_mm": 1.0,
+      "wing_action_plus_minus_difference": [
+        1.895427703857422e-05,
+        2.086162567138672e-07,
+        0.0,
+        1.8961727619171143e-05,
+        8.940696716308594e-08,
+        0.0
+      ]
+    },
+    {
+      "input_index": 398,
+      "plus_minus_mm": 1.0,
+      "wing_action_plus_minus_difference": [
+        -8.530914783477783e-06,
+        0.0,
+        0.0,
+        -8.299946784973145e-06,
+        5.960464477539063e-08,
+        5.960464477539063e-08
+      ]
+    }
+  ],
+  "parameters_and_buffers_unchanged": true,
+  "completed_utc": "2026-09-14T03:44:21.581906+00:00",
+  "wall_seconds": 11.499505941290408,
+  "final_checkpoint_sha256": "0c9cc2596a9e7f126983e25241b987e284683b2242b6fb6718b99137ebaed5ac",
+  "scope": "Tests actuator indexing/normalization, exact initial captured training predictions, real MaleCNS train/eval path and gradients. No root-cause assertion or proof of successful feedback learning."
+}

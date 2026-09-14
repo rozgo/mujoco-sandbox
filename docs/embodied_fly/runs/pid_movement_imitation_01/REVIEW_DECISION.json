@@ -1,0 +1,18 @@
+{
+  "status": "not_accepted_as_target_following_controller",
+  "automated_error_metric_choice": "final",
+  "predeclared_numeric_progress_gate_passes": [
+    "midpoint",
+    "final"
+  ],
+  "full_tracking_acceptance": false,
+  "preferred_parent_preserved": true,
+  "automatic_training_handoff": false,
+  "user_review": "The fly does not follow targets and drifts to another location; investigate a fundamental design error.",
+  "measured_problem": "Horizontal opposite-target separation <=0.0361 mm for a 3 mm command; vertical response has reversed sign.",
+  "command_path_checks": "Target encoding, unit scaling, world/body rotation fixture and PID acceleration correction signs pass the saved read-only audit; this is not proof all implementation bugs are excluded.",
+  "training_design_issue": "Successful PID demonstrations concentrate near the target and correlate current/target altitude (0.984); supervised command fit and lower drift do not establish correct feedback control.",
+  "next_before_any_training": "At matched states and wing history, compare the student and teacher corrective responses to independently varied current position, target position, and velocity. Establish directional correction before more long training. Keep the physical plant fixed.",
+  "learning_path_checks": "Named actuator IDs and normalized position targets match; saved parent reproduces original first training sequence within 4.92e-7; real MaleCNS training-wrapper/deployment forward and gradients match within floating-point roundoff; current/target position inputs receive gradients. No weights changed.",
+  "root_cause_status": "Unresolved. Near-target teacher-state coverage and weak corrective signal are hypotheses, not a demonstrated sole cause. No confirmed software bug and no justification yet to prescribe longer training."
+}

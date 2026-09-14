@@ -1296,3 +1296,32 @@ reference-only physical validation follows the user's directional curriculum.
 - Same validated reward source (195 tests previously passed); no source behavior
   changed for this run. Result fails progress: route error 2.24% worse than the
   preferred parent, only 0.14% lower than the previous reward PPO child.
+
+
+### PID movement imitation, rejected control review and frozen audit
+
+- Observed task start 2026-09-14 02:59:15 UTC. Intermediate video opened
+  03:25:53 UTC and final video 03:27:43 UTC: 28 min 28 s to both videos,
+  including development, validation, training, capture, transfer and rendering.
+  Discussion, artifact transfer and implementation audit continue afterward;
+  those activities are not training time.
+- Training starts 03:09:04.722287 UTC. Measured training 601.387001 s,
+  plus 7.431540 s setup. 64 CPU MuJoCo/mjbatch worlds, 16 physics threads,
+  RTX 4090 neural learning, 1,000 Hz physics /500 Hz actions.
+- 133 Adam updates, 544,768 transitions, 1,089.536 aggregate simulated seconds.
+  Collection including neural forward 302.583184 s, optimization 174.061198 s,
+  logging/loop overhead 124.742620 s. Intermediate saved at 304.510329 s.
+  Teacher executes 100% of training actions; student-only training transitions zero.
+- Independent intermediate capture 45.269479 s, setup 6.922258 s, total
+  61.218510 s. Final capture 45.027432 s, setup 7.603605 s, total 62.186812 s.
+  Each seven worlds ×12 s, 42,000 transitions. Prior parent capture reused.
+- Intermediate/final renders 72.496802 s /72.390755 s. Each 600 frames,
+  50 fps, 1600x1000, 12 seconds at 1x. Both fully decoded, sampled and opened.
+  Videos fail target-following review despite improved aggregate error.
+- Pre-training focused tests 10 passed in 8.82 s; full package 196 passed
+  in 158.46 s. Subsequent targeted implementation/physics audit tests:
+  20 passed in 20.50 s. No production source behavior changed in the audit.
+- Read-only command/data audit 2.317072 s; subsequent frozen MaleCNS GPU
+  learning-path audit 11.499506 s, completed 03:44:21.581906 UTC.
+  Both audit scripts have zero physical steps and zero optimizer updates;
+  regression tests separately exercise physical steps. No training restarted.

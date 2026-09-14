@@ -1,0 +1,116 @@
+{
+  "scope": "Read-only command-path and saved-teacher-data audit. Zero training updates and zero physical steps; scratch state/clock and pure rotation fixtures only.",
+  "physical_steps": 0,
+  "training_updates": 0,
+  "actor_command_observation_indices": {
+    "current_height_div_2cm": 395,
+    "target_height_div_2cm": 396,
+    "body_frame_horizontal_error_div_cm": [
+      397,
+      398
+    ]
+  },
+  "target_observation_encoding_passes": true,
+  "world_to_body_90_degree_fixture_passes": true,
+  "pid_acceleration_command_sign_and_gain_passes": true,
+  "pid_query_changes_no_live_world_fields": true,
+  "counterfactual_target_offsets_mm": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      1.5,
+      0.0,
+      0.0
+    ],
+    [
+      -1.5,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.5,
+      0.0
+    ],
+    [
+      0.0,
+      -1.5,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.5
+    ],
+    [
+      0.0,
+      0.0,
+      -1.5
+    ]
+  ],
+  "counterfactual_pid_accelerations_cm_s2": [
+    [
+      0.0,
+      0.0,
+      8.211158817772457e-07
+    ],
+    [
+      2.25090008944273,
+      0.0,
+      8.211158817772457e-07
+    ],
+    [
+      -2.25090008944273,
+      0.0,
+      8.211158817772457e-07
+    ],
+    [
+      0.0,
+      2.25090008944273,
+      8.211158817772457e-07
+    ],
+    [
+      0.0,
+      -2.25090008944273,
+      8.211158817772457e-07
+    ],
+    [
+      0.0,
+      0.0,
+      135.4799792871498
+    ],
+    [
+      0.0,
+      0.0,
+      -135.47997764491805
+    ]
+  ],
+  "teacher_state_observations": 544768,
+  "teacher_error_quantiles_percent": [
+    50,
+    90,
+    95,
+    99,
+    100
+  ],
+  "teacher_horizontal_error_mm_quantiles": [
+    0.13688809424638748,
+    0.5017738699913024,
+    0.9463971495628355,
+    1.8935824906825998,
+    2.7159547805786133
+  ],
+  "teacher_altitude_error_mm_quantiles": [
+    0.03924727439880371,
+    0.08613491058349604,
+    0.15083497762680026,
+    0.36605119705200195,
+    0.7647860050201416
+  ],
+  "teacher_current_target_height_correlation": 0.9840595726308036,
+  "elapsed_audit_seconds": 2.3170723750954494,
+  "limitations": "Checks command encoding and current-state PID label signs; does not prove the actor learned a stabilizing mapping or rule out other bugs. Accurate PID tracking yields small position-error examples even when the requested target moves."
+}
