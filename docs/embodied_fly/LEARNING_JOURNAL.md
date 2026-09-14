@@ -2864,3 +2864,19 @@ passed179tests. Checkpoint/body/graph/optimizer invariants verified. Both final
 videos fully decoded, sampled frames inspected and opened at00:22:29UTC;
 20min30s after the observed start. See hover_credit_01 for source, timing,
 all measurements, failed progress gates and retained comparison artifacts.
+
+## Exploration and critic scaling — September 14 UTC
+
+A frozen 64-world sweep tests four action-noise levels. All 16 worlds survive
+at .003, while ten fail at .006. Critic target scaling alone helps little.
+Input standardization improves the mixed held-out set but worsens the safe-noise
+subset; both findings are retained. No actor updates occur in these diagnostics.
+
+The subsequent [bounded PPO trial](runs/hover_explore_01/SUMMARY.md) uses .003,
+fixed first-rollout critic input statistics and 16 critic epochs. It completes
+64 actor updates without a KL stop, compared with heavy early stops previously.
+Its 6 min 37 s training still fails both nominal improvement criteria: altitude
+RMS 8.724 → 8.652 mm and position RMS 63.708 → 63.776 mm. Three review starts
+stay airborne, zero pass accurate hover. Final critic explained variance remains
+near zero. More actor updates were achieved; better hover was not demonstrated.
+The preferred imitation actor stays unchanged, and value learning remains open.

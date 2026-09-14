@@ -1183,3 +1183,23 @@ body, clocks, graph and full motor output interface.
 Exploration diagnostic completed2026-09-14 00:40:48.791UTC:99.209063s wall,
 76.343576s physical collection, zero actor updates.184-test critic calibration
 suite launched00:49UTC; next bounded PPO recipe recorded before execution.
+
+### Exploration/critic PPO completed and reviewed
+
+- Combined diagnostic/continuation effort started 2026-09-14 00:30:01 UTC.
+  Both final videos were opened on the Mac at 01:04:23 UTC: 34 min 22 s to review.
+- Frozen diagnostic: 99.209063 s wall, including 76.343576 s physical collection;
+  320,000 action transitions and zero actor updates. Separate follow-up fixed-data
+  critic fits are timed in input_scale_followup.json; no new physics or actor learning.
+- PPO: 396.971387 s training, 7.726508 s setup. The requested 300 s completes
+  the current update cycle. 524,288 transitions, 64 worlds, 16 CPU physics threads,
+  RTX 4090 neural computation. 64 actor updates, 1,024 critic updates, 64 completed
+  episodes with two failures. Warmup is included: 68.386636 s for two rollouts.
+  Collection 135.559705 s; optimization 261.410056 s. No PID or imitation.
+- Frozen evaluation: 36.812061 s capture, 6.664712 s setup. All three actor starts
+  remain airborne; all accurate-hover gates and nominal progress criteria fail.
+- Concurrent native Mac renders: PID/PPO 67.904355 s, before/after 73.797389 s.
+  Both are ten seconds, 500 frames at 50 fps, 1600×900, 1x. Full decode and
+  opening/transient/middle/final sampled-frame visual inspection pass before opening.
+- Eight focused tests pass in 1.30 s; full 184-test package passes in 157.62 s.
+  Preferred imitation checkpoint remains preserved. Archival follows review.

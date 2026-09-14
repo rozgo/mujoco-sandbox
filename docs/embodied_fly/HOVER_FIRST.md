@@ -1,5 +1,12 @@
 # Hover first, with a PID comparison
 
+Latest [exploration and critic trial](runs/hover_explore_01/SUMMARY.md) completes
+64 actor updates in 6 min 37 s, but does not meaningfully improve hover. All three
+starts stay airborne; drift and altitude loss remain. The preferred imitation
+checkpoint is unchanged. Watch [before/after](../../previews/embodied_fly/hover_explore_before_after_v1.mp4)
+or [PID/PPO](../../previews/embodied_fly/hover_explore_pid_comparison_v1.mp4).
+
+
 Newest result: [longer-credit PPO](runs/hover_credit_01/SUMMARY.md) preserves
 the learned wing rhythm and three airborne starts after620.902s, but does not
 improve hover. Rollouts grow to4.096s and reward-credit trace decay to2s with
