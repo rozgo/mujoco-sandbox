@@ -1171,3 +1171,11 @@ separately. See docs/embodied_fly/runs/hover_credit_01/PLAN.md.
   warning. Source-identical trainer/body/reward had already passed179tests;
   no full-suite repetition for a CLI-only experiment. Graph/body/routing,
   finite actor tensors, declared recipe and fresh optimizer histories verified.
+
+## September14 UTC — exploration and critic diagnostic
+
+Active-goal continuation observed start **2026-09-14 00:30:01UTC**. Frozen64world
+action-noise sweep from the preferred imitation actor, then fixed-data critic
+capacity checks. Actor training remains zero in this diagnostic; physical
+collection and critic-only fitting will be timed separately. Preserve the same
+body, clocks, graph and full motor output interface.
