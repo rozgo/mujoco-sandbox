@@ -1763,3 +1763,25 @@ reference-only physical validation follows the user's directional curriculum.
   **27 min 53 s** after effort start. Archival/synchronization follow separately.
 - Next: bounded phase-dependent decoder-authority diagnosis, then an evidence-led
   learning change. No additional unchanged PPO continuation is running.
+
+## September 14: fly world-model prediction pilot
+
+- New goal created **21:34:07 UTC**; implementation started **21:34:29 UTC**.
+  User redirected the paused decoder diagnostic to a prediction-only world model.
+- Data preparation **9.613617 s** using prior captures, not newly collected
+  teacher flight. Training setup **0.754743 s**; latent training **6.099721 s**;
+  physical readout training **7.205270 s**; validation **0.122322 s**.
+  Full training command **15.072027 s**. No fly policy updates.
+- Evaluation setup **0.294582 s**, held-out forecast comparisons **3.289762 s**,
+  physical interventions/capture/scoring **14.257217 s**, total **17.866726 s**.
+  336 held-out forecast windows and 576 physical continuations, 16 CPU worlds;
+  57,600 action transitions, 115,200 physics steps. GPU is used for the model.
+- Full suite **280 passed**, 45 upstream warnings, **177.62 s**. Focused causal
+  and analytical-wing tests **7 passed**, **2.86 s**. The analytical comparator's
+  integrator assumption was corrected; canonical fly physics was not changed.
+- JEPA fails forecast/effect gates. All 36 replay/duplicate checks pass. The
+  analytical model predicts the direction of all significant tested velocity
+  corrections, with group-normalized effect RMSE below 10%.
+- Evidence archived **22:00:49 UTC**, **26 min 20 s** after implementation start;
+  documentation and Git synchronization follow. Plot visually inspected.
+  [Full result and next experiment](embodied_fly/world_model/PILOT_01.md).

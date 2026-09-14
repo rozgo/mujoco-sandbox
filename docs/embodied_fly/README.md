@@ -11,14 +11,20 @@ five-minute midpoint beats the ten-minute final checkpoint and is explicitly
 selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
-Newest experiment: [coordinated hover reward](runs/velocity_hover_ppo_14/SUMMARY.md)
+Newest experiment: [JEPA-style dynamics prediction pilot](world_model/PILOT_01.md).
+The model trains in 13.3 seconds on the RTX 4090, but fails physical prediction
+and corrective-action tests. An analytical predictor accurately estimates the
+tested corrections, supporting a bounded analytical-guidance experiment next.
+No fly policy was updated. [Comparison chart](../../previews/embodied_fly/world_model_01_comparison.png).
+
+Previous experiment: [coordinated hover reward](runs/velocity_hover_ppo_14/SUMMARY.md)
 passes its objective audit, but does not improve the overall controller. The
 midpoint reduces sideways error while increasing climb; the final fails all
 cold starts at 0.796 s, despite completing six warmed-up recovery flights.
 Exact per-tick force replay identifies a startup lift deficit. Run 11 remains
 preferred overall. [Watch all four methods](../../previews/embodied_fly/velocity_hover_ppo_14_comparison_v1.mp4).
-The [next diagnostic](runs/velocity_hover_ppo_14/NEXT_CONTROL_PLAN.md) measures
-phase-dependent control authority through the existing wing decoder.
+The planned [decoder diagnostic](runs/velocity_hover_ppo_14/NEXT_CONTROL_PLAN.md)
+was paused before execution when the user selected the world-model pilot above.
 
 Previous experiment: [recovery-start PPO](runs/velocity_hover_ppo_13/SUMMARY.md)
 cuts climb from60.7 to13.8mm and improves withheld vertical recovery, but raises
