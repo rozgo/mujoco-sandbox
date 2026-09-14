@@ -168,3 +168,16 @@ training labels and an explicitly recorded share of training actuator commands.
 Its clock/integral must remain outside the deployed actor. Preserve the same
 graph/body/action interface; evaluate the actor alone after teaching and PPO.
 Label imitation and policy-gradient learning separately, including their times.
+
+User steering, September 14: prepare a fresh student without inherited policy,
+optimizer or normalization state; preserve the measured MaleCNS graph. First
+show and validate one continuous PID flight exercise before student training.
+Every episode must include all movements, brakes and hovers; order may vary,
+but do not allocate separate worlds exclusively to isolated skills. Commands
+are forward/left/up velocity and yaw rate, with no position/heading targets.
+Translation, turning in place and mixed commands must be independently tested.
+The explicit `wing_motion_heading_v3` force model adds independent yaw authority
+through measured wing pitch; earlier models remain preserved. Keep this same
+versioned body/force law across subsequent teacher/student tasks. Future utility
+and navigation should connect through the same MaleCNS core; do not substitute
+permanent external decision networks by default. See the velocity teacher guide.

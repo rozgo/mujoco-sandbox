@@ -130,7 +130,7 @@ def record(source, output):
                 )
                 draw.text(
                     (20, 708),
-                    "Amber: command    Green: measured velocity, 100 ms mean    Faint gray: raw physics velocity",
+                    "Amber: command    Green: measured velocity, 100 ms mean    Gray strip: raw physics velocity",
                     font=font(19),
                     fill="#a8b0b5",
                 )
@@ -144,29 +144,47 @@ def record(source, output):
                         "TURN RATE  deg/s",
                     )
                 ):
-                    x, y = 12 + 396 * axis, 744
-                    draw.rectangle((x, y, x + 384, y + 190), fill="#1b2025")
+                    x, y = 12 + 396 * axis, 734
+                    draw.rectangle((x, y, x + 384, y + 208), fill="#1b2025")
                     draw.text((x + 10, y + 8), label, font=font(18), fill="#e6e1db")
-                    zero = y + 102
+                    zero = y + 140
                     draw.line((x + 10, zero, x + 374, zero), fill="#555e65")
                     draw.text(
-                        (x + 10, y + 33), f"+/-{ranges[axis]:g}", font=font(14), fill="#8b9398"
+                        (x + 10, y + 30),
+                        f"Raw +/-{ranges[axis]:g}",
+                        font=font(13),
+                        fill="#8b9398",
+                    )
+                    chart_x = x + 10 + (arrays["time"][history] - start_time) / 8 * 364
+                    raw_points = list(
+                        zip(chart_x, y + 64 - raw[history, axis] / ranges[axis] * 18)
+                    )
+                    if len(raw_points) > 1:
+                        draw.line(raw_points, fill="#777f85", width=1)
+                    mean_range = max(
+                        35 if axis == 3 else 3,
+                        float(np.ceil(np.abs(mean[history, axis]).max() * 1.1)),
+                    )
+                    draw.text(
+                        (x + 10, y + 88),
+                        f"Mean +/-{mean_range:g}",
+                        font=font(13),
+                        fill="#8b9398",
                     )
                     for values, color, width in (
-                        (raw, "#596168", 1),
                         (requested, "#ffc31f", 2),
                         (mean, "#70a88a", 2),
                     ):
                         points = list(
                             zip(
-                                x + 10 + (arrays["time"][history] - start_time) / 8 * 364,
-                                zero - values[history, axis] / ranges[axis] * 62,
+                                chart_x,
+                                zero - values[history, axis] / mean_range * 35,
                             )
                         )
                         if len(points) > 1:
                             draw.line(points, fill=color, width=width)
                     draw.text(
-                        (x + 10, y + 162),
+                        (x + 10, y + 184),
                         f"Goal {requested[step, axis]:+.2f}   Actual {mean[step, axis]:+.2f}",
                         font=font(17),
                         fill="#e6e1db",
@@ -201,7 +219,8 @@ def record(source, output):
         "playback_multiplier": 1,
         "render_seconds": time.perf_counter() - started,
         "measurement_display": "Raw velocity and trailing 100 ms mean; mean is observer-only and never feeds PID or physics",
-        "chart_ranges": ranges.tolist(),
+        "raw_chart_ranges": ranges.tolist(),
+        "mean_chart_range": "Labeled per trailing window; minimum +/-3 mm/s and +/-35 deg/s; expands to include cold-start transient without clipping",
         "continuous_episode": True,
         "teacher_metric_gate_passed": report["passed"],
         "camera": {

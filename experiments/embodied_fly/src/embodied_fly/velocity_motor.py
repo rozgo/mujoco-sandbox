@@ -77,7 +77,7 @@ class VelocityPID:
         # Stronger horizontal velocity damping and faster roll correction handle
         # braking after yaw motion; vertical gains retain the accepted response.
         self.kp = np.array([20.0, 20.0, 50.0])
-        self.ki = np.array([15.0, 15.0, 900.0])
+        self.ki = np.array([20.0, 20.0, 900.0])
 
     def reset(self):
         self.integral[:] = 0
