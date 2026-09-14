@@ -11,20 +11,23 @@ remains unfinished.
 PID reference, original imitation and final PPO; same body, forces, starts,
 commands, camera settings and chart scales. Four cases, 43 seconds at 1x.
 
-Four later trials remain preserved: unchanged continuation (run 06) worsened
+Five later trials remain preserved: unchanged continuation (run 06) worsened
 sideways control; a vertical reward increase (run 07) reduced climb to about
 67 mm but raised horizontal RMS to 14.1 mm/s. A combined velocity reward (run 08)
 lowered horizontal RMS to 7.73 mm/s but increased climb to 135 mm and total RMS
 to 16.43 mm/s. Recovery practice with small training gusts (run 09) increased
-climb to 161 mm and total RMS to 18.69 mm/s. None replaces run 05.
-[Latest completed comparison](runs/velocity_hover_ppo_09/SUMMARY.md).
+climb to 161 mm and total RMS to 18.69 mm/s. Removing the imitation gradient
+(run 10) preserves the 30 Hz wingbeat but still yields 133 mm climb and
+16.82 mm/s total RMS. None replaces run 05.
+[Latest completed comparison](runs/velocity_hover_ppo_10/SUMMARY.md).
 
 Sensor timing accounts for only about 0.23 mm of climb. A frozen-weight neural
 probe confirms all three measured velocity signals reach the motor features.
-The next approved test removes the PID imitation gradient while retaining the
-original run-05/06 reward and experience budget. See the [run-10 plan](runs/velocity_hover_ppo_10/PLAN.md)
-and [phase discussion](PHASE_INVARIANT_GUIDANCE.md). Flight improvement remains
-unfinished; the completed gust trial is not a success claim.
+The completed imitation ablation retains the original run-05/06 reward and
+experience budget. Its first teacher gradient is only about .025% of the PPO
+gradient norm before clipping/Adam. This single-run comparison does not establish
+phase-sensitive imitation as the main cause. See the [phase discussion](PHASE_INVARIANT_GUIDANCE.md).
+Stationary hover remains unfinished.
 
 ## The learning sequence, including failures
 
@@ -39,6 +42,7 @@ unfinished; the completed gust trial is not a success claim.
 | 07 | Vertical reward rate 2 -> 3; mixed outcome | 603.681 | 1,769,472 | 4/4 | 13.19 mm/s |
 | 08 | Combined velocity reward; climb regression | 605.275 | 1,769,472 | 4/4 | 17.58 mm/s |
 | 09 | Small training gusts; climb regression | 604.224 | 1,753,088 | 4/4 | 17.76 mm/s |
+| 10 | Imitation gradient off; rhythm retained, climb regresses | 603.871 | 1,769,472 | 4/4 | 16.36 mm/s |
 
 Original imitation: 2/4 complete, common early RMS approximately 25.96 mm/s.
 Early RMS uses 0–2 s across all four starts. The quoted 53% overall velocity and
@@ -63,8 +67,8 @@ are separately measured; lower training loss alone is never used as success.
 
 ## Training cost and backend
 
-- Nine completed PPO trials: **5,435.492479 s = 90 min 35 s**, **13,090,816 transitions**,
-  **26,181,632 physics steps**, **7.273 hours of aggregate simulated experience**.
+- Ten completed PPO trials: **6,039.363699 s = 100 min 39 s**, **14,860,288 transitions**,
+  **29,720,576 physics steps**, **8.256 hours of aggregate simulated experience**.
 - Productive checkpoint lineage: **20 min 7 s PPO**, following **31 min 6 s
   imitation**, for **51 min 13 s selected training ancestry**. Failed pilots
   remain part of trial cost even though their weights are not ancestors.

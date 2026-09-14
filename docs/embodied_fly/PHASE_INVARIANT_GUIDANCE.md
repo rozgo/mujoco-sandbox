@@ -82,3 +82,13 @@ The run-09 recovery-practice trial completed four ten-second flights but regress
 to approximately 161 mm climb and 18.69 mm/s total velocity RMS. Run 05 remains
 retained. These results do not establish phase mismatch as the cause. The overall
 RL flight-improvement objective remains unfinished.
+
+## Completed first ablation
+
+[Run 10](runs/velocity_hover_ppo_10/SUMMARY.md) disables the teacher gradient
+for 108 rollouts from run 05, matching run 06's experience budget. The wings
+retain a 30 Hz rhythm, but total RMS is 16.82 mm/s and climb 133.49 mm, both
+worse than the retained parent. The first anchor gradient norm is .03906 versus
+155.21 for PPO, before clipping/Adam. This is not a bound on later updates and
+does not prove phase independence, but it provides no basis for calling the
+existing imitation anchor the dominant demonstrated cause. Keep run 05.

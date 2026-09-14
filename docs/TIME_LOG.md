@@ -1629,3 +1629,16 @@ reference-only physical validation follows the user's directional curriculum.
   is not bitwise identical to the older run: maximum reward-rate difference
   .00013823; a repeated imitation-on smoke also differs (.00010820). Both are
   discarded. Full training begins only after documenting that repeat variability.
+
+- Control smoke: **16.942442 s**,49,152transitions,eight actor updates. Off-smoke
+  nine actor updates. Both smokes are excluded from selected training ancestry.
+- Run10: **603.871220 s measured training**,108rollouts,1,769,472transitions;
+  start **18:02:48.495156 UTC**,report **18:14:26.112156 UTC**. Collection
+  597.147245s,actor optimization2.519554s (including .079860s diagnostic
+  teacher loss, no imitation gradient),critic4.177458s. Separate setup
+  14.831243s,audit3.371294s,checkpoint IO .073152s,evaluation90.271678s.
+- Frozen first-anchor gradient probe **6.962223s**, no optimizer updates.
+  Video render **68.552991s**, full decode **4.449667s**,43s/2150frames/50fps/1x.
+  Inspected and opened **18:18:32 UTC**,24m18s after the comparison began.
+  Final result:4/4complete,total RMS16.82mm/s,climb133.49mm;run05retained.
+  Remaining archival/synchronization adds wall time, not training.

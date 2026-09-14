@@ -18,9 +18,10 @@ sideways RMS to 14.1 mm/s. A subsequent [combined-velocity reward trial and diag
 improve horizontal RMS to 7.73 mm/s but worsen climb to 135 mm. Run 05 remains
 the preferred overall checkpoint; none of these follow-ups meets the combined
 hover criterion. The [recovery-practice trial](runs/velocity_hover_ppo_09/SUMMARY.md)
-also regressed: four complete flights, but 161 mm climb. A [controlled imitation
-ablation](runs/velocity_hover_ppo_10/PLAN.md) now tests whether the teacher's
-framewise command penalty restricts useful PPO corrections.
+also regressed: four complete flights, but 161 mm climb. The [controlled imitation
+ablation](runs/velocity_hover_ppo_10/SUMMARY.md) preserves the 30 Hz wing rhythm
+with the teacher gradient removed, but still worsens climb to 133 mm and total
+RMS to 16.82 mm/s. Run 05 remains retained. [Watch imitation on/off](../../previews/embodied_fly/velocity_hover_ppo_10_ablation_v1.mp4).
 
 Preceding: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
 and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).

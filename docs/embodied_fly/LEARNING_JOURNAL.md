@@ -3378,3 +3378,26 @@ imitation-enabled smoke also differs. Record this execution variability rather
 than claim bitwise reproduction. Functional replay passes and all upstream
 weights stay identical. The full ablation uses the declared matched settings;
 a small single-seed outcome difference cannot establish causality.
+
+
+Run10 completes108rollouts in603.871220s, with1,769,472transitions and424actor
+updates. All four flights survive10s. Imitation off gives16.82mm/s total RMS,
+9.12mm/s horizontal RMS and133.49mm climb. The matching imitation-on continuation
+measures18.65/15.42/101.04; retained run05 measures14.92/9.30/105.99. Thus the
+ablation improves some metrics over continuation but fails to improve the best
+parent. Midpoint also fails the combined goal. Keep run05 and all failed trials.
+
+Recorded wings retain30Hz with nearly unchanged .55rad sweep range. The first
+anchor gradient norm is .03906 versus155.21 for physical PPO, about .0252%,
+before clipping/Adam. This probe changes no weights and costs6.962223s. It
+covers only the first update; neither the norm ratio nor this single training
+seed establishes general phase causality. Removing imitation did not destroy
+the useful pattern, but it did not resolve lift regulation either.
+
+Full suite241passed; all retained upstream weights unchanged; same parent,
+physics, graph, experience budget and core settings verified. No supervised
+imitation presentations;55,296diagnostic targets. The43-second PID/on/off
+video is completely decoded, reviewed and opened18:18:32UTC. The user-approved
+ablation is complete; stationary hover remains unfinished. A useful next
+diagnostic would separate exploration noise from changing-policy training
+using frozen weights before introducing more phase-sensitive penalties.
