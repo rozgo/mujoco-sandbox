@@ -22,6 +22,14 @@ def record(args):
     begin = time.perf_counter()
     training = json.loads((args.run / "report.json").read_text())
     reports = [training["evaluations"][label] for label in ("pid", "parent", "final")]
+    roots = [args.run] * 3
+    original = None
+    if args.original_run:
+        original = json.loads((args.original_run / "report.json").read_text())
+        if original["physical_contract"] != training["physical_contract"]:
+            raise ValueError("Original comparison must use the same physical contract")
+        reports[1] = original["evaluations"]["parent"]
+        roots[1] = args.original_run
     model = mujoco.MjModel.from_binary_path(str(args.run / "model.mjb"))
     model.vis.global_.offwidth = max(model.vis.global_.offwidth, 1920)
     model.vis.global_.offheight = max(model.vis.global_.offheight, 1080)
@@ -36,6 +44,8 @@ def record(args):
         if continued
         else ("PID REFERENCE", "BEFORE PPO", "AFTER PPO")
     )
+    if original:
+        titles = ("PID REFERENCE", "ORIGINAL IMITATION", "AFTER PPO")
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -59,13 +69,18 @@ def record(args):
         try:
             for case_index, episode in enumerate(EVALUATION_EPISODES):
                 captures, cases = [], []
-                for label, report in zip(("pid", "parent", "final"), reports, strict=True):
+                for label, report, root in zip(
+                    ("pid", "parent", "final"), reports, roots, strict=True
+                ):
                     case = next(c for c in report["cases"] if c["episode"] == episode)
-                    file = args.run / label / case["file"]
+                    file = root / label / case["file"]
                     assert sha256(file) == case["sha256"]
                     with np.load(file) as saved:
                         captures.append({k: saved[k] for k in saved.files})
                     cases.append(case)
+                for capture in captures[1:]:
+                    np.testing.assert_array_equal(capture["qpos"][0], captures[0]["qpos"][0])
+                    np.testing.assert_array_equal(capture["qvel"][0], captures[0]["qvel"][0])
                 velocities = [rolling_velocity(c["measured_velocity"] * 10) for c in captures]
                 heights = [c["post_position"][:, 2] * 10 for c in captures]
                 speed_limit = max(
@@ -92,7 +107,9 @@ def record(args):
                     )
                     draw.text(
                         (24, 66),
-                        f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO + light imitation  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x",
+                        "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
+                        if original
+                        else f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO + light imitation  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x",
                         font=font(23),
                         fill="#e6e1db",
                     )
@@ -204,7 +221,9 @@ def record(args):
             draw = ImageDraw.Draw(board)
             draw.text(
                 (50, 55),
-                "PPO CONTINUATION / MEASURED OUTCOME"
+                "LEARNING PROGRESS / MEASURED OUTCOME"
+                if original
+                else "PPO CONTINUATION / MEASURED OUTCOME"
                 if continued
                 else "TEN-MINUTE PPO PILOT / MEASURED OUTCOME",
                 font=font(39),
@@ -259,6 +278,12 @@ def record(args):
         "sections": sections,
         "camera": "0.2 s damped following, identical settings; plots share scales within case",
         "source_training_report_sha256": sha256(args.run / "report.json"),
+        "original_comparison_report_sha256": sha256(args.original_run / "report.json")
+        if original
+        else None,
+        "original_comparison_checkpoint_sha256": original["parent_checkpoint_sha256"]
+        if original
+        else None,
     }
     args.output.with_suffix(".json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report), flush=True)
@@ -269,4 +294,5 @@ if __name__ == "__main__":
     p.add_argument("--run", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
+    p.add_argument("--original-run", type=Path)
     record(p.parse_args())
