@@ -21,7 +21,12 @@ def record(source, output):
     report = json.loads((source / "report.json").read_text())
     assert sha256(source / "capture.npz") == report["capture_sha256"]
     assert sha256(source / "model.mjb") == report["model_sha256"]
-    states = np.load(source / "capture.npz")
+    # NpzFile decompresses an array on every key lookup. Load each needed array
+    # once; seven panels must share memory rather than decompress per frame.
+    with np.load(source / "capture.npz") as archive:
+        states = {
+            key: archive[key] for key in ("time", "qpos", "qvel", "act", "ctrl", "target")
+        }
     model = mujoco.MjModel.from_binary_path(str(source / "model.mjb"))
     data = mujoco.MjData(model)
     camera = mujoco.MjvCamera()
