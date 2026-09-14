@@ -126,7 +126,27 @@ def apply_imitation_gradient(anchor, weight):
         (anchor if weight == 1 else weight * anchor).backward()
 
 
+@torch.no_grad()
+def scale_exploration(log_std, scale):
+    """Explicitly scale the policy distribution used by sampling, replay and KL."""
+    if not np.isfinite(scale) or scale <= 0:
+        raise ValueError("Exploration scale must be finite and positive")
+    proposed = log_std + math.log(scale)
+    if torch.any(proposed < math.log(0.0005)) or torch.any(proposed > math.log(0.15)):
+        raise ValueError(
+            "Requested exploration must remain within PPO's standard-deviation bounds"
+        )
+    if scale != 1:
+        log_std.copy_(proposed)
+
+
 def train(args):
+    if not np.isfinite(args.exploration_scale) or args.exploration_scale <= 0:
+        raise ValueError("Exploration scale must be finite and positive")
+    if args.exploration_scale != 1 and not args.wing_readout_only:
+        raise ValueError(
+            "Controlled noise continuation requires fixed wing-readout exploration"
+        )
     if not np.isfinite(args.imitation_weight) or args.imitation_weight < 0:
         raise ValueError("Imitation weight must be finite and nonnegative")
     if args.rollouts is not None and args.rollouts < 1:
@@ -243,6 +263,8 @@ def train(args):
         torch.set_rng_state(parent["torch_rng_state"].cpu())
         if device.type == "cuda":
             torch.cuda.set_rng_state(parent["cuda_rng_state"].cpu(), device)
+    previous_std = log_std.detach().exp().cpu().tolist()
+    scale_exploration(log_std, args.exploration_scale)
     gamma, gae_lambda = math.exp(-0.002 / 2), math.exp(-0.002 / 0.25)
     recipe = {
         "wing_readout_only": args.wing_readout_only,
@@ -300,6 +322,16 @@ def train(args):
             optimizer_transition="restore actor Adam, critic weights/Adam, fixed exploration and actor sampling RNG; reset physical episodes; critic sample shuffle restarts from declared seed",
             critic_warmup_rollouts=0,
         )
+    if args.exploration_scale != 1:
+        recipe["exploration_transition"] = {
+            "scale_relative_to_parent": args.exploration_scale,
+            "latent_std_before": previous_std,
+            "latent_std_after": log_std.detach().exp().cpu().tolist(),
+            "scope": "All 78 independent tanh-normal channels; sampling/replay/KL use the same new distribution",
+            "optimizer": "Retain actor and critic weights, Adam moments and RNG; fixed log_std has no optimizer state",
+            "physics_changed": False,
+        }
+        recipe["initial_tanh_latent_std"] = float(log_std.detach().exp().mean())
     if args.imitation_weight != parent.get("ppo_recipe", {}).get("imitation_weight", 1.0):
         recipe["imitation_transition"] = {
             "before": parent.get("ppo_recipe", {}).get("imitation_weight", 1.0),
@@ -871,6 +903,7 @@ if __name__ == "__main__":
         "--rollouts", type=int, help="Fixed experience budget; overrides seconds stop"
     )
     p.add_argument("--imitation-weight", type=float, default=1.0)
+    p.add_argument("--exploration-scale", type=float, default=1.0)
     p.add_argument("--worlds", type=int, default=32)
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--horizon", type=int, default=512)

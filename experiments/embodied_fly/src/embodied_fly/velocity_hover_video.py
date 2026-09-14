@@ -21,9 +21,16 @@ def record(args):
         raise FileExistsError("Preserve prior videos")
     begin = time.perf_counter()
     training = json.loads((args.run / "report.json").read_text())
-    reports = [training["evaluations"][label] for label in ("pid", "parent", "final")]
+    noise_audit = args.noise_audit
+    if noise_audit and (args.original_run or args.comparison_run):
+        raise ValueError("Noise audit cannot be combined with training comparisons")
+    if noise_audit and not training.get("weights_unchanged"):
+        raise ValueError("Noise comparison requires verified frozen weights")
+    capture_labels = ["zero", "half", "current"] if noise_audit else ["pid", "parent", "final"]
+    reports = [training["evaluations"][label] for label in capture_labels]
+    if noise_audit:
+        reports = [r | {"cases": [c for c in r["cases"] if "file" in c]} for r in reports]
     roots = [args.run] * 3
-    capture_labels = ["pid", "parent", "final"]
     original = None
     comparison = None
     if args.original_run:
@@ -59,7 +66,7 @@ def record(args):
     option.geomgroup[3:] = 0
     camera = mujoco.MjvCamera()
     camera.azimuth, camera.elevation, camera.distance = 135, -20, 3.8
-    continued = training["recipe"].get("resumed_ppo_optimizer_and_critic", False)
+    continued = training.get("recipe", {}).get("resumed_ppo_optimizer_and_critic", False)
     titles = (
         ("PID REFERENCE", "BEFORE CONTINUATION", "AFTER CONTINUATION")
         if continued
@@ -69,8 +76,12 @@ def record(args):
         titles = ("PID REFERENCE", "ORIGINAL IMITATION", "AFTER PPO")
     if comparison:
         titles = ("PID REFERENCE", "PPO / IMITATION ON", "PPO / IMITATION OFF")
+    if noise_audit:
+        titles = ("NO EXPLORATION", "HALF EXPLORATION", "CURRENT EXPLORATION")
     subtitle = (
-        "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
+        "Same frozen run-05 weights  |  32 worlds per condition  |  Paired random draws  |  No training  |  1x"
+        if noise_audit
+        else "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
         if original
         else f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO"
         + (
@@ -137,6 +148,8 @@ def record(args):
                         (24, 18),
                         "FLIGHT SCHOOL  /  IMITATION ABLATION"
                         if comparison
+                        else "FLIGHT SCHOOL  /  EXPLORATION DIAGNOSTIC"
+                        if noise_audit
                         else "FLIGHT SCHOOL  /  LEARNING TO HOVER",
                         font=font(34),
                         fill="#ffc31f",
@@ -243,8 +256,10 @@ def record(args):
                                 draw.line(points, fill=colors[col], width=2)
                     draw.text(
                         (24, 1020),
-                        "Full MaleCNS controls all 78 outputs  ·  Training the existing wing readout  ·  Same fly, physics and starts"
-                        if training["recipe"].get("wing_readout_only")
+                        "Fixed MaleCNS actor  ·  PPO sampling noise only  ·  First replicate of four predefined starts shown"
+                        if noise_audit
+                        else "Full MaleCNS controls all 78 outputs  ·  Training the existing wing readout  ·  Same fly, physics and starts"
+                        if training.get("recipe", {}).get("wing_readout_only")
                         else "Same fly / same flight dynamics / same starts  ·  Actor controls all 78 outputs  ·  Damped tracking cameras, shared chart scales",
                         font=font(22),
                         fill="#aab3b8",
@@ -257,6 +272,8 @@ def record(args):
                 (50, 55),
                 "IMITATION ON / OFF: MEASURED FLIGHT"
                 if comparison
+                else "FROZEN POLICY / EXPLORATION OUTCOME"
+                if noise_audit
                 else "LEARNING PROGRESS / MEASURED OUTCOME"
                 if original
                 else "PPO CONTINUATION / MEASURED OUTCOME"
@@ -274,6 +291,13 @@ def record(args):
             for col, report in enumerate(reports):
                 x = 50 + 625 * col
                 draw.text((x, 220), titles[col], font=font(29), fill=colors[col])
+                if noise_audit:
+                    draw.text(
+                        (x, 265),
+                        f"All worlds: {report['survived']}/32 survive 10 s",
+                        font=font(24),
+                        fill="#e6e1db",
+                    )
                 for row, case in enumerate(report["cases"]):
                     y = 310 + row * 115
                     draw.text(
@@ -309,6 +333,7 @@ def record(args):
         "dimensions": list(size),
         "playback_speed": 1,
         "wing_detail_inset": args.detail,
+        "frozen_noise_diagnostic": noise_audit,
         "render_wall_seconds": time.perf_counter() - begin,
         "checkpoint_sha256": training["checkpoint_sha256"],
         "sections": sections,
@@ -336,6 +361,7 @@ if __name__ == "__main__":
     p.add_argument("--run", required=True, type=Path)
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
+    p.add_argument("--noise-audit", action="store_true")
     group = p.add_mutually_exclusive_group()
     group.add_argument("--original-run", type=Path)
     group.add_argument("--comparison-run", type=Path)

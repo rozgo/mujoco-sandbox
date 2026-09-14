@@ -24,3 +24,21 @@ before choosing the next training change. Correlated noise is a possible later
 experiment, not part of the initial test or a new force filter.
 
 Run provenance, measured results and the subsequent decision will be appended.
+
+## Frozen result and training decision
+
+Source `168d5f7`, checkpoint run 05. No noise: **32/32** survive ten seconds;
+half noise: **30/32**; original noise: **18/32**. Mean airborne durations are
+10.000, 9.421 and 6.630 seconds respectively. This isolates a material sampling
+effect with fixed weights. The lower average climb among original-noise
+survivors is not a fair improvement claim: 14 failed flights are excluded.
+Collection took 50.349, 50.883 and 50.780 seconds separately from setup/IO.
+
+Proceed with run 11 from run 05, fixed tanh-latent standard deviation **.0015**
+instead of **.003** on all 78 actions. Preserve imitation weight 1, original
+separate-axis reward, Adam/critic state, recurrent core, physical model and
+sampling RNG. The altered distribution is used consistently in collection,
+log probabilities and analytic KL. This also changes the absolute action
+change allowed by the same KL bound; it is a distribution change, not an
+extra filter on controls or physics. Match 108 rollouts / 1,769,472 transitions,
+with midpoint after 54. Measure actual wall time, keep all outcomes.
