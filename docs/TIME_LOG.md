@@ -1642,3 +1642,21 @@ reference-only physical validation follows the user's directional curriculum.
   Inspected and opened **18:18:32 UTC**,24m18s after the comparison began.
   Final result:4/4complete,total RMS16.82mm/s,climb133.49mm;run05retained.
   Remaining archival/synchronization adds wall time, not training.
+
+### Frozen exploration and reduced-noise PPO, September 14
+
+- Approved work started **18:33:16 UTC**. Frozen run-05 noise diagnostic:
+  **191.765242 s wall time**, **22.941998 s setup**, physical collection
+  **50.349333 / 50.882661 / 50.780151 s** for zero/half/current noise.
+  96 ten-second worlds, **480,000 transitions**; no optimizer updates.
+  Survivors: **32/32, 30/32, 18/32**. This justifies the planned half-noise trial.
+- Two startup attempts stopped before optimizer updates on cached replay
+  roundoff checks. Each collected one 16,384-transition rollout. Their exact
+  collection/audit wall timers were not persisted before the exceptions;
+  do not count them as completed training or invent timings. Both retained.
+- Focused distribution, replay and optimizer tests: **27 passed**, one upstream
+  warning, **1.49 s**. The aggregate cached replay error is approximately 2.1e-6,
+  bounded at 4e-6 versus the .02 PPO update cap; physical/recurrent paths unchanged.
+- Frozen-diagnostic video: **186.400340 s render on Mac**, **4.296018 s full
+  decode**, 43 s / 2,150 frames / 50 fps / 1x. Reviewed and opened **18:47:30 UTC**.
+  Run 11 is in progress; its actual training and evaluation times will follow.

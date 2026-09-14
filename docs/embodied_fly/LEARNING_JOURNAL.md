@@ -3401,3 +3401,27 @@ video is completely decoded, reviewed and opened18:18:32UTC. The user-approved
 ablation is complete; stationary hover remains unfinished. A useful next
 diagnostic would separate exploration noise from changing-policy training
 using frozen weights before introducing more phase-sensitive penalties.
+
+### Exploration separated from learning, September 14
+
+The user approved the frozen-policy diagnostic and a conditional ten-minute
+continuation. With run 05 unchanged, zero/half/current action noise survives
+32/32, 30/32 and 18/32 ten-second worlds respectively. Eleven of fourteen
+current-noise failures occur by 1.094 s, during cold wingbeat startup. The
+remaining failures occur later. Same Gaussian draws are paired across the
+nonzero conditions; four noise streams for each of eight starts, not separate
+training seeds. This establishes a sampling effect and motivates half-noise
+PPO. It does not establish that every training failure was caused by sampling.
+
+Run 11 changes fixed latent standard deviation .003 -> .0015, retaining all
+78 actions, the same parent/optimizer/critic, imitation weight 1, original
+physical reward and 108-rollout budget. No physics filter or supplied oscillator
+is added. Two startup attempts stopped before updating due to cached matrix-batch
+roundoff magnified by smaller standard deviation. Aggregate replay error was
+measured (~2.1e-6), and is now checked against 4e-6 in addition to the unchanged
+2e-6 action tolerance. The full-core replay check remains unchanged. All checks
+pass on the restarted run. These are verification changes, not a revised
+objective or modified gradient calculation. Preserve the stopped diagnostics.
+
+The frozen comparison video is decoded, visually reviewed and opened18:47:30UTC;
+27 focused sampling/replay/update tests pass. Final training results are pending.

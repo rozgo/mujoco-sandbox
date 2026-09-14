@@ -22,11 +22,15 @@ def record(args):
     begin = time.perf_counter()
     training = json.loads((args.run / "report.json").read_text())
     noise_audit = args.noise_audit
+    if args.snapshot != "final" and (noise_audit or args.comparison_run):
+        raise ValueError("Midpoint selection is only for PID/parent/continued-policy videos")
     if noise_audit and (args.original_run or args.comparison_run):
         raise ValueError("Noise audit cannot be combined with training comparisons")
     if noise_audit and not training.get("weights_unchanged"):
         raise ValueError("Noise comparison requires verified frozen weights")
-    capture_labels = ["zero", "half", "current"] if noise_audit else ["pid", "parent", "final"]
+    capture_labels = (
+        ["zero", "half", "current"] if noise_audit else ["pid", "parent", args.snapshot]
+    )
     reports = [training["evaluations"][label] for label in capture_labels]
     if noise_audit:
         reports = [r | {"cases": [c for c in r["cases"] if "file" in c]} for r in reports]
@@ -78,12 +82,21 @@ def record(args):
         titles = ("PID REFERENCE", "PPO / IMITATION ON", "PPO / IMITATION OFF")
     if noise_audit:
         titles = ("NO EXPLORATION", "HALF EXPLORATION", "CURRENT EXPLORATION")
+    selected_seconds = training.get("training_wall_seconds", 0)
+    selected_checkpoint = training["checkpoint_sha256"]
+    if args.snapshot == "midpoint":
+        snapshot = next(s for s in training["snapshots"] if s["file"] == "midpoint_actor.pt")
+        selected_seconds, selected_checkpoint = (
+            snapshot["training_seconds"],
+            snapshot["sha256"],
+        )
+        titles = (titles[0], titles[1], "AFTER PPO / MIDPOINT")
     subtitle = (
         "Same frozen run-05 weights  |  32 worlds per condition  |  Paired random draws  |  No training  |  1x"
         if noise_audit
         else "Original imitation to learned flight  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x"
         if original
-        else f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO"
+        else f"{selected_seconds / 60:.1f} min {'additional ' if continued else ''}PPO"
         + (
             " + light imitation"
             if training["recipe"].get("imitation_weight", 1)
@@ -93,6 +106,14 @@ def record(args):
     )
     if comparison:
         subtitle = "Same starting checkpoint  |  1.77M experiences each  |  32 worlds  |  Only imitation weight changes  |  1x"
+    if training.get("recipe", {}).get("exploration_transition"):
+        weight = training["recipe"].get("imitation_weight", 1)
+        subtitle = (
+            f"{selected_seconds / 60:.1f} min PPO"
+            + (" + light imitation" if weight else " / imitation OFF")
+            + f"  |  {100 * training['recipe']['exploration_transition']['scale_relative_to_parent']:g}% training noise"
+            + "  |  32 worlds  |  1 kHz physics / 500 Hz brain  |  1x"
+        )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -335,7 +356,9 @@ def record(args):
         "wing_detail_inset": args.detail,
         "frozen_noise_diagnostic": noise_audit,
         "render_wall_seconds": time.perf_counter() - begin,
-        "checkpoint_sha256": training["checkpoint_sha256"],
+        "checkpoint_sha256": selected_checkpoint,
+        "selected_snapshot": args.snapshot if not noise_audit else None,
+        "selected_snapshot_training_seconds": selected_seconds if not noise_audit else None,
         "sections": sections,
         "camera": "0.2 s damped following, identical settings; plots share scales within case",
         "source_training_report_sha256": sha256(args.run / "report.json"),
@@ -362,6 +385,7 @@ if __name__ == "__main__":
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
     p.add_argument("--noise-audit", action="store_true")
+    p.add_argument("--snapshot", choices=("midpoint", "final"), default="final")
     group = p.add_mutually_exclusive_group()
     group.add_argument("--original-run", type=Path)
     group.add_argument("--comparison-run", type=Path)
