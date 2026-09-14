@@ -23,7 +23,7 @@ def record(args):
     training = json.loads((args.run / "report.json").read_text())
     noise_audit = args.noise_audit
     if args.snapshot != "final" and (noise_audit or args.comparison_run):
-        raise ValueError("Midpoint selection is only for PID/parent/continued-policy videos")
+        raise ValueError("Snapshot selection is only for PID/parent/continued-policy videos")
     if noise_audit and (args.original_run or args.comparison_run):
         raise ValueError("Noise audit cannot be combined with training comparisons")
     if noise_audit and not training.get("weights_unchanged"):
@@ -84,13 +84,15 @@ def record(args):
         titles = ("NO EXPLORATION", "HALF EXPLORATION", "CURRENT EXPLORATION")
     selected_seconds = training.get("training_wall_seconds", 0)
     selected_checkpoint = training["checkpoint_sha256"]
-    if args.snapshot == "midpoint":
-        snapshot = next(s for s in training["snapshots"] if s["file"] == "midpoint_actor.pt")
+    if args.snapshot != "final":
+        snapshot = next(
+            s for s in training["snapshots"] if s["file"] == f"{args.snapshot}_actor.pt"
+        )
         selected_seconds, selected_checkpoint = (
             snapshot["training_seconds"],
             snapshot["sha256"],
         )
-        titles = (titles[0], titles[1], "AFTER PPO / MIDPOINT")
+        titles = (titles[0], titles[1], f"AFTER PPO / {args.snapshot.upper()}")
     subtitle = (
         "Same frozen run-05 weights  |  32 worlds per condition  |  Paired random draws  |  No training  |  1x"
         if noise_audit
@@ -112,6 +114,12 @@ def record(args):
             f"{selected_seconds / 60:.1f} min PPO"
             + (" + light imitation" if weight else " / imitation OFF")
             + f"  |  {100 * training['recipe']['exploration_transition']['scale_relative_to_parent']:g}% training noise"
+            + "  |  32 worlds  |  1 kHz physics / 500 Hz brain  |  1x"
+        )
+    if training.get("recipe", {}).get("policy_update_transition"):
+        subtitle = (
+            f"{selected_seconds / 60:.1f} min PPO + light imitation"
+            + f"  |  Tighter updates / KL {training['recipe']['target_kl']:g}"
             + "  |  32 worlds  |  1 kHz physics / 500 Hz brain  |  1x"
         )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
@@ -385,7 +393,7 @@ if __name__ == "__main__":
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
     p.add_argument("--noise-audit", action="store_true")
-    p.add_argument("--snapshot", choices=("midpoint", "final"), default="final")
+    p.add_argument("--snapshot", choices=("quarter", "midpoint", "final"), default="final")
     group = p.add_mutually_exclusive_group()
     group.add_argument("--original-run", type=Path)
     group.add_argument("--comparison-run", type=Path)
