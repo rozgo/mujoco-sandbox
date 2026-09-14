@@ -22,6 +22,10 @@ def record(args):
     begin = time.perf_counter()
     training = json.loads((args.run / "report.json").read_text())
     noise_audit = args.noise_audit
+    if args.include_midpoint and (
+        noise_audit or args.original_run or args.comparison_run or args.snapshot != "final"
+    ):
+        raise ValueError("Four-way view requires PID/parent/midpoint/final from one run")
     if args.snapshot != "final" and (noise_audit or args.comparison_run):
         raise ValueError("Snapshot selection is only for PID/parent/continued-policy videos")
     if noise_audit and (args.original_run or args.comparison_run):
@@ -31,10 +35,12 @@ def record(args):
     capture_labels = (
         ["zero", "half", "current"] if noise_audit else ["pid", "parent", args.snapshot]
     )
+    if args.include_midpoint:
+        capture_labels = ["pid", "parent", "midpoint", "final"]
     reports = [training["evaluations"][label] for label in capture_labels]
     if noise_audit:
         reports = [r | {"cases": [c for c in r["cases"] if "file" in c]} for r in reports]
-    roots = [args.run] * 3
+    roots = [args.run] * len(capture_labels)
     original = None
     comparison = None
     if args.original_run:
@@ -143,7 +149,10 @@ def record(args):
                 + "  |  Coordinated velocity reward  |  16 normal + 16 recovery starts  |  1x"
             )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
-    fps, size = 50, (1920, 1080)
+    if args.include_midpoint:
+        titles = (titles[0], titles[1], "TRIAL / MIDPOINT", "TRIAL / FINAL")
+        colors = ("#b7c6d3", "#ffc31f", "#82b89b", "#db705d")
+    fps, size = 50, (2560 if args.include_midpoint else 1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(
         str(args.output),
@@ -387,6 +396,14 @@ def record(args):
         "checkpoint_sha256": selected_checkpoint,
         "selected_snapshot": args.snapshot if not noise_audit else None,
         "selected_snapshot_training_seconds": selected_seconds if not noise_audit else None,
+        "included_capture_labels": capture_labels,
+        "included_midpoint": args.include_midpoint,
+        "midpoint_checkpoint": next(
+            (s for s in training.get("snapshots", []) if s["file"] == "midpoint_actor.pt"),
+            None,
+        )
+        if args.include_midpoint
+        else None,
         "sections": sections,
         "camera": "0.2 s damped following, identical settings; plots share scales within case",
         "source_training_report_sha256": sha256(args.run / "report.json"),
@@ -413,6 +430,7 @@ if __name__ == "__main__":
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--detail", action="store_true")
     p.add_argument("--noise-audit", action="store_true")
+    p.add_argument("--include-midpoint", action="store_true")
     p.add_argument("--snapshot", choices=("quarter", "midpoint", "final"), default="final")
     group = p.add_mutually_exclusive_group()
     group.add_argument("--original-run", type=Path)
