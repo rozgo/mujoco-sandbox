@@ -2,6 +2,8 @@
 
 One unchanged graph actor, all 78 sampled controls, no teacher control in PPO.
 One small clean PID replay batch accompanies the first actor update per rollout.
+An explicit zero imitation weight retains its sampling and diagnostic loss but
+removes its gradient for controlled comparisons.
 """
 
 import argparse
@@ -116,7 +118,19 @@ def replay_audit(actor, data, states, sequence, active, log_std):
     return report
 
 
+def apply_imitation_gradient(anchor, weight):
+    """Keep the PPO gradient intact when teacher supervision is disabled."""
+    if not np.isfinite(weight) or weight < 0:
+        raise ValueError("Imitation weight must be finite and nonnegative")
+    if weight:
+        (anchor if weight == 1 else weight * anchor).backward()
+
+
 def train(args):
+    if not np.isfinite(args.imitation_weight) or args.imitation_weight < 0:
+        raise ValueError("Imitation weight must be finite and nonnegative")
+    if args.rollouts is not None and args.rollouts < 1:
+        raise ValueError("Fixed rollout budget must be positive")
     if not np.isfinite(args.training_gust_speed) or not 0 <= args.training_gust_speed <= 3:
         raise ValueError("Training gust speed must be finite and in [0, 3] cm/s")
     if args.horizon % args.sequence or args.worlds % 8 or min(args.seconds, args.lr) <= 0:
@@ -258,7 +272,7 @@ def train(args):
         "initial_tanh_latent_std": 0.003,
         "minimum_std": 0.0005,
         "entropy_bonus": 0,
-        "imitation_weight": 1.0,
+        "imitation_weight": args.imitation_weight,
         "imitation_loss": "wing MSE + 0.1 nonwing MSE",
         "imitation_frequency": "8 sequences x 64 target steps, once on first actor minibatch per rollout",
         "imitation_context_steps": 64,
@@ -285,6 +299,25 @@ def train(args):
         recipe.update(
             optimizer_transition="restore actor Adam, critic weights/Adam, fixed exploration and actor sampling RNG; reset physical episodes; critic sample shuffle restarts from declared seed",
             critic_warmup_rollouts=0,
+        )
+    if args.imitation_weight != parent.get("ppo_recipe", {}).get("imitation_weight", 1.0):
+        recipe["imitation_transition"] = {
+            "before": parent.get("ppo_recipe", {}).get("imitation_weight", 1.0),
+            "after": args.imitation_weight,
+            "sampling": "same diagnostic teacher batch and RNG draws; zero weight applies no imitation gradient",
+            "optimizer": "retain parent Adam moments and critic without recalibration",
+        }
+    if args.rollouts is not None:
+        recipe["fixed_rollout_budget"] = args.rollouts
+        recipe["budget_rule"] = (
+            "fixed rollouts replace the seconds stop; actual training wall time measured"
+        )
+    if args.imitation_weight == 0:
+        recipe["imitation_frequency"] = (
+            "diagnostic only: same 8 x 64 teacher targets on first actor minibatch; no gradient"
+        )
+        recipe["imitation_timing"] = (
+            "imitation_seconds measures diagnostic forward loss computation only"
         )
     if changing_reward:
         recipe.update(
@@ -396,7 +429,9 @@ def train(args):
             cumulative_training_seconds=parent["cumulative_training_seconds"] + measured,
             parent_checkpoint_sha256=sha256(args.checkpoint),
             source_commit=provenance["source_commit"],
-            method="Velocity hover PPO with light PID imitation anchor",
+            method="Velocity hover PPO without imitation gradient"
+            if args.imitation_weight == 0
+            else "Velocity hover PPO with PID imitation anchor",
             ppo_recipe=recipe,
             ppo_counters=dict(counters),
             torch_rng_state=torch.get_rng_state(),
@@ -414,7 +449,11 @@ def train(args):
     during_eval_seconds = 0.0
     midpoint_done = False
     with (args.output / "progress.jsonl").open("x") as log:
-        while training_seconds() < args.seconds:
+        while (
+            counters["rollouts"] < args.rollouts
+            if args.rollouts is not None
+            else training_seconds() < args.seconds
+        ):
             begin = time.perf_counter()
             buffers = {
                 k: []
@@ -618,9 +657,14 @@ def train(args):
                                 wings,
                                 True,
                             )
-                        anchor.backward()
+                        apply_imitation_gradient(anchor, args.imitation_weight)
                         imitation_losses.append(float(anchor.detach()))
-                        counters["imitation_presentations"] += 512
+                        if args.imitation_weight:
+                            counters["imitation_presentations"] += 512
+                        else:
+                            counters["imitation_diagnostic_presentations"] = (
+                                counters.get("imitation_diagnostic_presentations", 0) + 512
+                            )
                         synchronize(device)
                         counters["imitation_seconds"] += time.perf_counter() - anchor_begin
                     nn.utils.clip_grad_norm_(parameters, 1, error_if_nonfinite=True)
@@ -732,7 +776,12 @@ def train(args):
             log.flush()
             print(json.dumps(row), flush=True)
             del data, states, prediction, returns, adv
-            if not midpoint_done and training_seconds() >= args.seconds / 2:
+            halfway = (
+                counters["rollouts"] >= (args.rollouts + 1) // 2
+                if args.rollouts is not None
+                else training_seconds() >= args.seconds / 2
+            )
+            if not midpoint_done and halfway:
                 measured = training_seconds()
                 save("midpoint_actor.pt", measured)
                 if not args.smoke:
@@ -769,6 +818,7 @@ def train(args):
         "started_utc": started_utc,
         "completed_utc": utc_now(),
         "requested_training_seconds": args.seconds,
+        "requested_rollouts": args.rollouts,
         "training_wall_seconds": measured,
         "cumulative_training_seconds": parent["cumulative_training_seconds"] + measured,
         "parent_checkpoint_sha256": sha256(args.checkpoint),
@@ -817,6 +867,10 @@ if __name__ == "__main__":
     p.add_argument("--dataset", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--seconds", type=float, default=600)
+    p.add_argument(
+        "--rollouts", type=int, help="Fixed experience budget; overrides seconds stop"
+    )
+    p.add_argument("--imitation-weight", type=float, default=1.0)
     p.add_argument("--worlds", type=int, default=32)
     p.add_argument("--threads", type=int, default=16)
     p.add_argument("--horizon", type=int, default=512)

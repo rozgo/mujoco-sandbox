@@ -7,7 +7,30 @@ from test_brain import make_brain
 
 from embodied_fly.ppo import joint_log_probability, motor_distribution
 from embodied_fly.velocity_hover import HoverReward, reward_rates
-from embodied_fly.velocity_hover_ppo import replay, replay_audit
+from embodied_fly.velocity_hover_ppo import apply_imitation_gradient, replay, replay_audit
+
+
+@pytest.mark.parametrize("weight", [0.0, 0.25, 1.0])
+def test_imitation_ablation_preserves_physical_gradient_and_does_not_advance_rng(weight):
+    parameter = torch.tensor([0.4, -0.8], requires_grad=True)
+    physical = (parameter - torch.tensor([0.7, 0.2])).square().mean()
+    physical.backward()
+    physical_gradient = parameter.grad.clone()
+    target = torch.tensor([-0.6, -0.4])
+    anchor = (parameter - target).square().mean()
+    random_before = torch.get_rng_state().clone()
+    apply_imitation_gradient(anchor, weight)
+    torch.testing.assert_close(
+        parameter.grad, physical_gradient + weight * (parameter.detach() - target)
+    )
+    assert torch.equal(random_before, torch.get_rng_state())
+    assert anchor.item() > 0  # still measurable with no teacher gradient
+
+
+@pytest.mark.parametrize("weight", [-1, np.inf, np.nan])
+def test_imitation_ablation_rejects_invalid_weights(weight):
+    with pytest.raises(ValueError, match="Imitation weight"):
+        apply_imitation_gradient(torch.tensor(1.0, requires_grad=True), weight)
 
 
 def test_vertical_reward_adjustment_changes_only_vertical_term():
