@@ -29,6 +29,13 @@ from embodied_fly.velocity_hover import HoverReward, evaluate_hover, start_state
 from embodied_fly.velocity_imitation import sequence_loss
 from embodied_fly.velocity_motor import SCHEMA, observation
 from embodied_fly.wing_position import wing_actuators
+from embodied_fly.wing_readout_ppo import (
+    freeze_upstream,
+    motor_features,
+    readout_action,
+    readout_replay,
+    teacher_features,
+)
 
 
 class HoverCritic(nn.Module):
@@ -130,6 +137,8 @@ def train(args):
     ):
         raise ValueError("This first pilot must start from the approved 5.6-second checkpoint")
     actor.train()
+    if args.wing_readout_only:
+        freeze_upstream(actor)
     initial = {name: p.detach().cpu().clone() for name, p in actor.named_parameters()}
     env = environment(args.worlds, args.threads)
     if physical_contract(env.model) != parent["physical_contract"]:
@@ -153,6 +162,7 @@ def train(args):
         np.load(args.dataset / "actions.npy", mmap_mode="r")[:8, :1000].copy(), device=device
     )
     assert torch.count_nonzero(demo_obs[:, :, 375:379]) == 0
+    cached_demo = teacher_features(actor, demo_obs) if args.wing_readout_only else None
     wings = torch.as_tensor(wing_actuators(env.model), device=device)
     starts = start_states(args.dataset, range(8))
     world_episode = np.arange(args.worlds) % 8
@@ -167,12 +177,20 @@ def train(args):
     critic = HoverCritic(actor).to(device)
     active = torch.ones(78, dtype=torch.bool, device=device)
     log_std = nn.Parameter(torch.full((78,), math.log(0.003), device=device))
-    parameters = [p for p in actor.parameters() if p.requires_grad] + [log_std]
+    log_std.requires_grad_(not args.wing_readout_only)
+    parameters = [p for p in actor.parameters() if p.requires_grad]
+    if log_std.requires_grad:
+        parameters.append(log_std)
     # This is an explicit imitation->PPO optimizer transition, no old Adam moments.
     optimizer = torch.optim.Adam(parameters, lr=args.lr, eps=1e-5)
     value_optimizer = torch.optim.Adam(critic.parameters(), lr=3e-4, eps=1e-5)
     gamma, gae_lambda = math.exp(-0.002 / 2), math.exp(-0.002 / 0.25)
     recipe = {
+        "wing_readout_only": args.wing_readout_only,
+        "trainable_actor_parameters": sum(
+            p.numel() for p in actor.parameters() if p.requires_grad
+        ),
+        "fixed_exploration": args.wing_readout_only,
         "worlds": args.worlds,
         "physics_threads": args.threads,
         "physics_backend": "CPU MuJoCo/mjbatch",
@@ -211,6 +229,12 @@ def train(args):
             0.002, gamma, gae_lambda, args.horizon, args.sequence
         ),
     }
+    if args.wing_readout_only:
+        recipe.update(
+            imitation_context_steps="full frozen-core history from episode start",
+            recurrent_carry="exact: upstream weights frozen; retain actual live neural state",
+            optimizer_transition="fresh PPO Adam for existing wing readout only; fresh critic; fixed exploration",
+        )
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
@@ -362,6 +386,9 @@ def train(args):
                         "done": torch.as_tensor(done, device=device),
                         "features": features,
                     }
+                    if args.wing_readout_only:
+                        items["motor_features"] = motor_features(actor, output.state)
+                        buffers.setdefault("motor_features", [])
                     for key, item in items.items():
                         buffers[key].append(item)
                     for key, term in terms.items():
@@ -400,6 +427,22 @@ def train(args):
             if audit is None:
                 begin = time.perf_counter()
                 audit = replay_audit(actor, data, states, args.sequence, active, log_std)
+                if args.wing_readout_only:
+                    cached_logp, cached_action, _ = readout_replay(
+                        actor, data, 0, args.horizon, active, log_std
+                    )
+                    audit["cached_max_action_error"] = float(
+                        (cached_action - data["mean_action"]).abs().max()
+                    )
+                    audit["cached_max_logp_error"] = float(
+                        (cached_logp - data["logp"]).abs().max()
+                    )
+                    if (
+                        audit["cached_max_action_error"] > 2e-6
+                        or audit["cached_max_logp_error"] > 0.01
+                    ):
+                        raise RuntimeError(f"Cached readout replay mismatch: {audit}")
+                    del cached_logp, cached_action
                 synchronize(device)
                 audit_seconds += time.perf_counter() - begin
                 (args.output / "replay_audit.json").write_text(
@@ -416,9 +459,14 @@ def train(args):
             for _ in range(0 if counters["rollouts"] == 0 else 2):
                 for chunk in rng.permutation(len(states)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
-                    new_logp, means_before, _ = replay(
-                        actor, data, states[chunk].detach(), a, b, active, log_std, True
-                    )
+                    if args.wing_readout_only:
+                        new_logp, means_before, _ = readout_replay(
+                            actor, data, a, b, active, log_std
+                        )
+                    else:
+                        new_logp, means_before, _ = replay(
+                            actor, data, states[chunk].detach(), a, b, active, log_std, True
+                        )
                     log_ratio = new_logp - data["logp"][a:b]
                     ratio = log_ratio.exp()
                     kl = ((ratio - 1) - log_ratio).mean()
@@ -451,7 +499,11 @@ def train(args):
                             p.grad is not None
                             and torch.isfinite(p.grad).all()
                             and p.grad.norm() > 0
-                            for p in actor.core.parameters()
+                            for p in (
+                                actor.wing_residual.parameters()
+                                if args.wing_readout_only
+                                else actor.core.parameters()
+                            )
                         ):
                             raise RuntimeError(
                                 "Physical PPO gradients do not reach the recurrent core"
@@ -464,15 +516,22 @@ def train(args):
                         valid = torch.as_tensor(indices >= 0, device=device)
                         ix = torch.as_tensor(indices.clip(0), device=device)
                         wi = torch.arange(8, device=device)[None]
-                        anchor, _, _, _ = sequence_loss(
-                            actor,
-                            demo_obs[wi, ix],
-                            demo_actions[wi, ix[64:]],
-                            valid,
-                            64,
-                            wings,
-                            True,
-                        )
+                        if args.wing_readout_only:
+                            predicted = readout_action(actor, cached_demo[wi, ix[64:]])
+                            target = demo_actions[wi, ix[64:]]
+                            anchor = (
+                                (predicted[..., wings] - target[..., wings]).square().mean()
+                            )
+                        else:
+                            anchor, _, _, _ = sequence_loss(
+                                actor,
+                                demo_obs[wi, ix],
+                                demo_actions[wi, ix[64:]],
+                                valid,
+                                64,
+                                wings,
+                                True,
+                            )
                         anchor.backward()
                         imitation_losses.append(float(anchor.detach()))
                         counters["imitation_presentations"] += 512
@@ -488,6 +547,13 @@ def train(args):
                             b=b,
                             old_log_std=old_log_std,
                         ):
+                            if args.wing_readout_only:
+                                _, means, _ = readout_replay(
+                                    actor, data, a, b, active, log_std
+                                )
+                                return motor_kl(
+                                    data["mean_action"][a:b], means, old_log_std, log_std
+                                )
                             _, means, _ = replay(
                                 actor,
                                 data,
@@ -537,17 +603,18 @@ def train(args):
             synchronize(device)
             counters["critic_seconds"] += time.perf_counter() - begin
             begin = time.perf_counter()
-            with torch.no_grad():
-                _, _, memory = replay(
-                    actor,
-                    data,
-                    states[-1],
-                    args.horizon - args.sequence,
-                    args.horizon,
-                    active,
-                    log_std,
-                    False,
-                )
+            if not args.wing_readout_only:
+                with torch.no_grad():
+                    _, _, memory = replay(
+                        actor,
+                        data,
+                        states[-1],
+                        args.horizon - args.sequence,
+                        args.horizon,
+                        active,
+                        log_std,
+                        False,
+                    )
             synchronize(device)
             counters["memory_refresh_seconds"] += time.perf_counter() - begin
             counters["rollouts"] += 1
@@ -672,5 +739,6 @@ if __name__ == "__main__":
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--baseline-dir", type=Path)
     p.add_argument("--bounded-updates", action="store_true")
+    p.add_argument("--wing-readout-only", action="store_true")
     p.add_argument("--horizontal-reward-scale", type=float, default=0.5)
     train(p.parse_args())
