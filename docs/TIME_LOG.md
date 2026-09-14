@@ -1257,3 +1257,18 @@ reference-only physical validation follows the user's directional curriculum.
   opened after inspection; physical task gates still fail 0/7.
 - Child is diagnostic only; preferred parent unchanged. No training workers
   remain active after this trial and its frozen captures.
+
+### Minimal flight reward correction and audit
+
+- Observed start: 2026-09-14 02:18:17 UTC. Audit and full test results reviewed
+  at 02:31:06 UTC: 12 min 49 s to this milestone; archival/synchronization follows.
+- Focused tests: 14 passed in 8.29 s. Full package: 195 passed in 156.10 s.
+- Reward audit uses existing physical recordings and kinematic scoring fixtures;
+  zero new trajectory collection, zero actor/critic updates, no GPU training.
+  The audit script was not separately timed. Regression tests do step physics.
+- Nine distance/timing settings, six directions, five unsuccessful behaviors:
+  270 preference comparisons pass. Recorded PID scores above both recorded
+  learned actors in all seven cases, with effort omission conservatively bounded.
+- No new training video generated because no training was performed. Prior
+  policy and physical videos remain the review references. One explicit reward
+  variant is implemented and ready for a later bounded PPO comparison.

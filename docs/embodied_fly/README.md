@@ -1,5 +1,10 @@
 # Embodied fly: learned utility and direct body control
 
+Latest: [goal-directed reward correction](runs/flight_reward_01/SUMMARY.md).
+Velocity scores now favor moving toward the target and slowing near it, including
+motion of the target itself. Existing reward weights, physical plant and brain
+are preserved. Preference checks pass; this variant has not been trained yet.
+
 The new curriculum is [closed flight paths](CLOSED_FLIGHT_CURRICULUM.md):
 move, reverse, return to the starting point, then hold. The unchanged plant's
 [PID reference video](../../previews/embodied_fly/round_trip_reference_v1.mp4)

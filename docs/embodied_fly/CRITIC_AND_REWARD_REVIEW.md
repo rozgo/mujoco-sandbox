@@ -1,5 +1,10 @@
 # Critic and reward review — September 14, 2026 UTC
 
+Follow-up user steering prioritizes reward design before critic changes.
+See the [implemented goal-directed reward correction](runs/flight_reward_01/SUMMARY.md).
+The active-reward table below describes the preceding round_trip_ppo_01 recipe;
+the explicit new variant changes its preferred velocity, not its weights.
+
 The current critic is a reasonable PPO baseline; it has not been shown to be
 best for the embodied fly. This is research and code review, not another trained
 variant. Preserve the parent checkpoint and completed round_trip_ppo_01 results.

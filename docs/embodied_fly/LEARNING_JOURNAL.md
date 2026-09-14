@@ -2919,3 +2919,21 @@ Next: measure causal target-to-wing response, then consider short PID examples
 of correction/braking before more PPO. Do not simply extend the failed trial
 or change several reward/physics settings together. Utility remains deferred;
 the overall shared-brain survival goal is still active and incomplete.
+
+## Reward objectives before further training — September 14 UTC
+
+User correction: reward the intended behavior, avoid many task-specific fixes.
+Implemented one velocity-reference change: requested target velocity plus bounded
+position-error correction, tapering to zero near a held target. All old reward
+weights and physical/brain settings remain fixed. It is reward computation only,
+not an action controller. Same rule for all axes and phases; no new completion
+bonus or wing template. Explicit CLI variant and fresh critic on reward transfer.
+
+At equal 8 mm horizontal error, velocity-score ordering changes from stopped >
+returning=departing to returning > stopped > departing. This is the specific
+incentive being corrected. The old complete-trajectory scores already preferred
+the successful PID, so do not overstate the reward issue as proof of all failure.
+Nine timing/distance fixture settings across six directions pass all 270 comparisons;
+physical PID recordings also score above both learned checkpoints. No new actor
+training or new physical capture has run. See flight_reward_01 for all scores,
+conservative effort bounds, tests and limitations.
