@@ -1,0 +1,31 @@
+{
+  "prior": {
+    "timescales": {
+      "action_seconds": 0.002,
+      "rollout_seconds": 1.024,
+      "recurrent_gradient_seconds": 0.256,
+      "discount_efold_seconds": 1.9989998332499455,
+      "gae_trace_efold_seconds": 0.33261034061256733,
+      "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+    },
+    "gamma": 0.999,
+    "gae_lambda": 0.995,
+    "two_second_delayed_reward_advantage": 0.002446693368256092,
+    "real_reset_blocks_cross_episode_reward": true
+  },
+  "proposed": {
+    "timescales": {
+      "action_seconds": 0.002,
+      "rollout_seconds": 4.096,
+      "recurrent_gradient_seconds": 0.256,
+      "discount_efold_seconds": 5.0000000000002816,
+      "gae_trace_efold_seconds": 2.000000000000061,
+      "interpretation": "Trace decay is not a hard horizon; the critic bootstraps later returns"
+    },
+    "gamma": 0.9996000799893344,
+    "gae_lambda": 0.9994001799640054,
+    "two_second_delayed_reward_advantage": 0.3678755462169647,
+    "real_reset_blocks_cross_episode_reward": true
+  },
+  "scope": "Existing GAE code on synthetic 4.096s trajectory with reward after2s; zero values isolate trace decay. Prior calculation uses same long synthetic trajectory to isolate discounting, not a claim that its original1.024s rollout contained this future reward."
+}

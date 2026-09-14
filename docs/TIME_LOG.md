@@ -1141,3 +1141,11 @@ The PID clock/integral remain training-only. Previous checkpoints remain intact.
   both imitation checkpoints, PPO checkpoint and physical/graph invariants verified.
   Git LFS integrity passed. All failures remain archived; preferred result is the
   user-reviewed end-of-teaching actor, with accurate hover still open.
+
+## September13 local / September14 UTC — longer-credit hover PPO
+
+User-approved effort observed start **2026-09-14 00:01:59 UTC**. Continue from
+the preferred PID-imitation actor with longer rollout, discount/GAE timescales
+and ten-second episodes. Preserve body, graph, clocks, reward and64worlds.
+Requested600seconds training; measure setup, training, evaluation and video
+separately. See docs/embodied_fly/runs/hover_credit_01/PLAN.md.
