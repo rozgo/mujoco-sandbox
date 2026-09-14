@@ -117,6 +117,7 @@ def record(args):
             + "  |  32 worlds  |  1 kHz physics / 500 Hz brain  |  1x"
         )
     if training.get("recipe", {}).get("policy_update_transition"):
+        titles = ("PID REFERENCE", "RETAINED POLICY", f"TRIAL / {args.snapshot.upper()}")
         subtitle = (
             f"{selected_seconds / 60:.1f} min PPO + light imitation"
             + f"  |  Tighter updates / KL {training['recipe']['target_kl']:g}"
