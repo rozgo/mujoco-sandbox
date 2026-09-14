@@ -22,6 +22,7 @@ from embodied_fly.physical_contract import physical_contract
 from embodied_fly.pid_hover import HoverPID, PIDConfig
 from embodied_fly.ppo_timing import recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
+from embodied_fly.round_trip_tasks import RoundTripTasks
 from embodied_fly.train import synchronize
 from embodied_fly.wing_position import wing_actuators
 
@@ -52,8 +53,12 @@ class BatchPID:
         return np.asarray(actions, dtype=np.float32)
 
 
-def teacher_fraction(progress):
+def teacher_fraction(progress, fixed=None):
     """First half expert-driven, next 30% handoff, final 20% student-driven."""
+    if fixed is not None:
+        if not np.isfinite(fixed) or not 0 <= fixed <= 1:
+            raise ValueError("Fixed teacher fraction must be between zero and one")
+        return float(fixed)
     return float(np.clip((0.8 - progress) / 0.3, 0, 1))
 
 
@@ -65,8 +70,16 @@ def imitation_loss(action, target, wings):
 
 
 def train(args):
+    round_trip = getattr(args, "round_trip", False)
+    fixed_teacher = getattr(args, "fixed_teacher_fraction", None)
+    snapshot_seconds = getattr(args, "snapshot_seconds", None)
     if min(args.worlds, args.sequence, args.seconds, args.lr, args.episode_seconds) <= 0:
         raise ValueError("Positive training settings required")
+    teacher_fraction(0, fixed_teacher)
+    if round_trip and (args.worlds < 12 or args.worlds % 2 or args.episode_seconds != 12):
+        raise ValueError("Round-trip imitation requires even >=12 worlds and 12 s episodes")
+    if snapshot_seconds is not None and not 0 < snapshot_seconds < args.seconds:
+        raise ValueError("Snapshot time must be inside the training allowance")
     args.output.mkdir(parents=True, exist_ok=False)
     provenance, started = evidence(), time.perf_counter()
     torch.set_num_threads(4)
@@ -85,7 +98,7 @@ def train(args):
         physics_hz=1000,
     )
     assert physical_contract(env.model) == parent["physical_contract"]
-    tasks = HoverOnlyTasks(env, args.seed)
+    tasks = (RoundTripTasks if round_trip else HoverOnlyTasks)(env, args.seed)
     teacher = BatchPID(env, tasks)
     wings = wing_actuators(env.model)
     original = {k: v.detach().cpu().clone() for k, v in actor.state_dict().items()}
@@ -110,9 +123,14 @@ def train(args):
         env.mean_sensors[ids] = env.fields["sensordata"][ids]
         teacher.reset(ids)
         episode_teacher_sum[ids] = 0
-        horizon[ids] = np.rint(
-            rng.uniform(0.8, 1, len(ids)) * args.episode_seconds / env.control_dt
-        ).astype(int)
+        if round_trip:
+            # Keep the complete return/settle window; the route itself already
+            # randomizes time and amplitude. Never truncate it on reset jitter.
+            horizon[ids] = round(args.episode_seconds / env.control_dt)
+        else:
+            horizon[ids] = np.rint(
+                rng.uniform(0.8, 1, len(ids)) * args.episode_seconds / env.control_dt
+            ).astype(int)
 
     reset(np.arange(env.n))
     mujoco.mj_saveModel(env.model, str(args.output / "model.mjb"))
@@ -125,7 +143,12 @@ def train(args):
             "lr": args.lr,
             "seed": args.seed,
             "episode_seconds": args.episode_seconds,
-            "teacher_schedule": "1 for first50%, linear to0 by80%, then0",
+            "teacher_schedule": "1 for first50%, linear to0 by80%, then0"
+            if fixed_teacher is None
+            else "fixed fraction; independent evaluation determines any later handoff",
+            "fixed_teacher_fraction": fixed_teacher,
+            "round_trip": round_trip,
+            "snapshot_seconds": snapshot_seconds,
             "wing_loss_weight": 1,
             "nonwing_posture_weight": 0.1,
         }
@@ -160,11 +183,11 @@ def train(args):
     equivalent_teacher_transitions = 0.0
     collection_seconds = optimization_seconds = 0.0
     episodes, batches = [], []
-    gradient_audit, supervised_checkpoint = None, False
+    gradient_audit, supervised_checkpoint, snapshot = None, False, None
     with (args.output / "progress.jsonl").open("x") as log:
         while time.perf_counter() - started < args.seconds:
             progress = (time.perf_counter() - started) / args.seconds
-            mixture = teacher_fraction(progress)
+            mixture = teacher_fraction(progress, fixed_teacher)
             if mixture < 1 and not supervised_checkpoint:
                 save("teacher_stage.pt")
                 supervised_checkpoint = True
@@ -202,7 +225,17 @@ def train(args):
                         "age_actions": env.ages.copy(),
                     }
                 )
+                if round_trip:
+                    rows[-1].update(
+                        target=np.column_stack((env.requested_xy_cm, env.requested_height_cm)),
+                        route_id=tasks.route_ids.copy(),
+                    )
                 env.step(executed)
+                if round_trip:
+                    tasks.after_step()
+                    rows[-1]["post_target"] = np.column_stack(
+                        (env.requested_xy_cm, env.requested_height_cm)
+                    )
                 rows[-1]["post_qpos"] = env.fields["qpos"].copy()
                 rows[-1]["post_qvel"] = env.fields["qvel"].copy()
                 rows[-1]["forbidden_bodyweights"] = env.forbidden_peak.copy() / env.body_weight
@@ -229,6 +262,7 @@ def train(args):
                             "entire_episode_student_only": bool(episode_teacher_sum[i] == 0),
                             "trace_file": f"batch_{updates:05d}.npz",
                             "trace_end_frame": len(rows) - 1,
+                            **(tasks.episode_metrics(i) if round_trip else {}),
                         }
                     )
                 reset(np.flatnonzero(done))
@@ -278,6 +312,19 @@ def train(args):
             log.write(json.dumps(row) + "\n")
             log.flush()
             print(json.dumps(row), flush=True)
+            if (
+                snapshot_seconds is not None
+                and snapshot is None
+                and row["elapsed_seconds"] >= snapshot_seconds
+            ):
+                save("snapshot.pt")
+                snapshot = {
+                    "file": "snapshot.pt",
+                    "sha256": sha256(args.output / "snapshot.pt"),
+                    "elapsed_training_seconds": time.perf_counter() - started,
+                    "updates": updates,
+                    "transitions": transitions,
+                }
     synchronize(device)
     training_seconds = time.perf_counter() - started
     save("actor.pt")
@@ -306,6 +353,7 @@ def train(args):
         "teacher_stage_checkpoint_sha256": sha256(args.output / "teacher_stage.pt")
         if supervised_checkpoint
         else None,
+        "intermediate_snapshot": snapshot,
         "parent_checkpoint_sha256": sha256(args.resume),
         "physical_contract": physical_contract(env.model),
         "model_sha256": sha256(args.output / "model.mjb"),
@@ -338,7 +386,12 @@ def train(args):
         "executed_body_force_override": False,
         "episodes": episodes,
         "traces": batches,
-        "scope": "Training-only PID imitation with action handoff; independent actor-only evaluation required",
+        "curriculum": {
+            **tasks.report(),
+            "teacher_actions": True,
+            "reward": "Supervised wing/posture command error; no PPO or critic",
+        },
+        "scope": "Training-only PID imitation; assistance schedule explicitly recorded; independent actor-only evaluation required. Executed teacher trajectory success is not student success.",
     }
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     return report
@@ -357,4 +410,7 @@ if __name__ == "__main__":
     p.add_argument("--episode-seconds", type=float, default=4)
     p.add_argument("--lr", type=float, default=0.0001)
     p.add_argument("--seed", type=int, default=120401)
+    p.add_argument("--round-trip", action="store_true")
+    p.add_argument("--fixed-teacher-fraction", type=float, default=None)
+    p.add_argument("--snapshot-seconds", type=float, default=None)
     train(p.parse_args())

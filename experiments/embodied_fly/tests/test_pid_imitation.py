@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import mujoco
 import numpy as np
+import pytest
 import torch
 from scipy import sparse
 
@@ -45,6 +46,10 @@ def test_handoff_ends_with_student_and_wing_loss_has_body_posture_gradient():
     np.testing.assert_allclose(
         [teacher_fraction(p) for p in (0, 0.5, 0.65, 0.8, 1)], [1, 1, 0.5, 0, 0]
     )
+    assert all(teacher_fraction(p, 1) == 1 for p in (0, 0.5, 0.8, 1, 1.01))
+    for bad in (-0.1, 1.1, np.nan):
+        with pytest.raises(ValueError):
+            teacher_fraction(0, bad)
     actions = torch.ones(2, 78, requires_grad=True)
     loss, wing, posture = imitation_loss(actions, torch.zeros_like(actions), np.arange(14, 20))
     loss.backward()
@@ -52,8 +57,9 @@ def test_handoff_ends_with_student_and_wing_loss_has_body_posture_gradient():
     assert actions.grad[:, 14:20].mean() > actions.grad[:, :14].mean() > 0
 
 
+@pytest.mark.parametrize("round_trip", [False, True])
 def test_pid_imitation_checkpoint_preserves_graph_body_and_discards_ppo_optimizer(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, round_trip
 ):
     from embodied_fly import pid_imitation
 
@@ -85,12 +91,14 @@ def test_pid_imitation_checkpoint_preserves_graph_body_and_discards_ppo_optimize
         output=tmp_path / "run",
         device="cpu",
         seconds=0.02,
-        worlds=2,
+        worlds=12 if round_trip else 2,
         threads=1,
         sequence=4,
-        episode_seconds=0.05,
+        episode_seconds=12 if round_trip else 0.05,
         lr=0.0001,
         seed=120401,
+        round_trip=round_trip,
+        fixed_teacher_fraction=1.0 if round_trip else None,
     )
     report = pid_imitation.train(args)
     saved = torch.load(args.output / "actor.pt", weights_only=True)
@@ -104,3 +112,18 @@ def test_pid_imitation_checkpoint_preserves_graph_body_and_discards_ppo_optimize
     assert report["transitions"] > 0 and report["updates"] > 0
     assert not report["actor_receives_teacher_clock_or_integral"]
     assert all(v["finite"] and v["l2"] > 0 for v in report["core_gradient_audit"].values())
+    if round_trip:
+        assert report["equivalent_teacher_action_share"] == 1
+        assert report["student_only_transitions"] == 0
+        assert report["teacher_stage_checkpoint_sha256"] is None
+        trace = np.load(args.output / report["traces"][0]["file"])
+        np.testing.assert_array_equal(trace["executed_action"], trace["teacher_action"])
+        assert trace["target"].shape == trace["post_target"].shape == (4, 12, 3)
+        assert set(trace["route_id"][0]) == set(range(7))
+        assert trace["observation"].shape[-1] == 399
+        assert report["curriculum"]["teacher_actions"]
+        assert report["curriculum"]["stationary_worlds"] == 6
+        assert (
+            sum(report["curriculum"]["transitions_by_target_sequence"].values())
+            == report["transitions"]
+        )

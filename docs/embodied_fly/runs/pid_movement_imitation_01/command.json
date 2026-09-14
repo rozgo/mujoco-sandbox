@@ -1,0 +1,6 @@
+{
+  "command_from_gpu_checkout": "MUJOCO_GL=egl experiments/embodied_fly/.venv/bin/python -m embodied_fly.pid_imitation --resume assets/embodied_fly/diagnostics/pid_imitation_01_teacher_stage.pt --graph ../fly-survival/outputs/fly_survival/malecns --output outputs/embodied_fly/pid_movement_imitation_01 --seconds 600 --worlds 64 --threads 16 --sequence 64 --episode-seconds 12 --lr .0001 --seed 121001 --round-trip --fixed-teacher-fraction 1 --snapshot-seconds 300 > outputs/embodied_fly/pid_movement_imitation_01.log 2>&1",
+  "requested_seconds": 600,
+  "source": "Training evidence records exact committed source",
+  "note": "Graph path is a local sibling data cache. No credentials included."
+}
