@@ -1,6 +1,18 @@
 # Embodied fly: learned utility and direct body control
 
-Latest: [PID movement imitation and control diagnosis](runs/pid_movement_imitation_01/SUMMARY.md).
+Latest: [continuous velocity and heading PID reference](runs/pid_velocity_teacher_03/SUMMARY.md)
+and [complete 71.2-second teacher video](../../previews/embodied_fly/pid_velocity_full_exercise_v1.mp4).
+One physical episode contains translation, independent turns, combinations,
+braking and hover, without resets. All 50 declared stage checks pass after
+three teacher-tuning captures on the same versioned plant. This demonstrates
+the PID and physics; the fresh MaleCNS student has not been trained.
+Commands are forward/left/up velocity and yaw rate, with no position or heading
+targets. See [the current interface and reproduction guide](VELOCITY_TEACHER.md).
+Utility and navigation remain future learning through the same MaleCNS core.
+
+Earlier experiments below retain their original interfaces and physical contracts.
+
+Preceding: [PID movement imitation and control diagnosis](runs/pid_movement_imitation_01/SUMMARY.md).
 The [new student video](../../previews/embodied_fly/pid_movement_imitation_final_v1.mp4)
 shows less aggregate drift after ten minutes of supervised learning, but still
 does not follow targets. The user rejected it as a target-following result.

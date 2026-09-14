@@ -1325,3 +1325,29 @@ reference-only physical validation follows the user's directional curriculum.
   learning-path audit 11.499506 s, completed 03:44:21.581906 UTC.
   Both audit scripts have zero physical steps and zero optimizer updates;
   regression tests separately exercise physical steps. No training restarted.
+
+### Continuous velocity/heading teacher and fresh-interface preparation
+
+- First observed follow-up clock: 2026-09-14 03:59:14 UTC. Reviewed video
+  opened 04:32:33 UTC: 33 min 19 s to this milestone. Includes discussion,
+  implementation, tests, synchronization, PID tuning, capture, transfer,
+  rendering and QA; archival follows. This is not neural training time.
+- Three single-world CPU MuJoCo/mjbatch PID captures, one physics thread,
+  identical compiled model. Each 71.2 simulated seconds, 35,600 actions,
+  71,200 physics steps; 1,000 Hz physics /500 Hz controls.
+- Capture times: 65.180640 s, 64.054189 s, 63.988636 s; total 193.223464 s.
+  Aggregate simulated time 213.6 s. Final setup 3.532174 s and complete
+  process wall time 73.747210 s. No neural learning or optimizer updates.
+- Declared stage checks improve 29/50 -> 49/50 -> 50/50 through PID feedback
+  tuning. Independent heading uses an explicitly versioned wing-force law;
+  the body and physical parameters match across all three captures.
+- Render 154.285572 s. Final video 3,560 frames, 50 fps, 1600x1000,
+  71.2 seconds at 1x. Full decode and checksum verified, ten sampled times
+  plus a full-resolution frame inspected; automatically opened after QA.
+- Initial focused tests 13 passed in 7.30 s. Full package 201 passed and one
+  failed in 161.47 s: a new zero-force assertion rejected floating-point
+  residual 2.32e-20. Test tolerance corrected to 1e-15; affected tests then
+  passed (6 in 5.15 s). Subsequent velocity/PID/wing checks 26 passed in
+  16.50 s, final velocity checks 6 passed in 4.95 s. No physical gate loosened.
+- Fresh student initialization is prepared, but the full checkpoint has not
+  been initialized or trained. Teacher review remains the next user milestone.

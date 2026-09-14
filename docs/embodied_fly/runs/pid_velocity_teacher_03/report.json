@@ -1,0 +1,1371 @@
+{
+  "provenance": {
+    "schema": "embodied-fly-evidence-v1",
+    "captured_utc": "2026-09-14T04:22:03.385763+00:00",
+    "source_commit": "81dfaf625651c3d9e07e0c15efbab9fe549e329f",
+    "package_has_uncommitted_changes": false,
+    "source_file_sha256": {
+      "pyproject.toml": "bbfeeafead7f5e6cc2672069c0b5380f1a074f9eca22c57b8272992c7a990774",
+      "uv.lock": "84a66d82b148bca7608f5a3910b199dd0c3126116a68c2f60b7c9eb4d799c017",
+      "src/embodied_fly/__init__.py": "46f7d5d25128ded8adfdf7ad4c1b188ea4e43345249bc4862074d5c896208577",
+      "src/embodied_fly/batch.py": "d36517e49eb836d51cadec3c8a9c9391fde61143add3235d28c7aa7fb4f6ef55",
+      "src/embodied_fly/body.py": "d8118eddb2bf5869c6bcb46eb6e862c1142de03806ef79f535be1e0325d89884",
+      "src/embodied_fly/brain.py": "ff9885986395143381af81fd8d616878de78b2a943f646feaf43520cd4eaedb3",
+      "src/embodied_fly/braking.py": "58fd4a1596c67c7c1930b751dcbc15c45902f3913dddc865f70d0b2bff243e93",
+      "src/embodied_fly/collect.py": "81baca1daede644c0ce8d23289bb58d0638234955dfe4ed48d3a4baab1fab4f2",
+      "src/embodied_fly/critic_mixing.py": "eeb6c4aaa12d9672350bc69a94b4ab8aa8fe2cf61f169f5e7ef29024e3a95a7c",
+      "src/embodied_fly/critic_scale.py": "817b403fa83781107041046c05a54a459b529bf79c88364884246cb40497981f",
+      "src/embodied_fly/dagger.py": "783231dbeac379d5f10ce6c77afad2832350b2a137283945e3bc2d870deea5a5",
+      "src/embodied_fly/diagnose.py": "b324e3256866bd64a64f31eb990d614258331b1a4cf17874b753908154a65d17",
+      "src/embodied_fly/evaluate.py": "939d7abe7b3afeb52428fc583d0a58510dcde98c553a6e219b1d0cacba41fde4",
+      "src/embodied_fly/exploration_value.py": "8364f05ceef0c0f7f95e32634b12cf072c3cb17c7365a09c5949ecc5e114e92c",
+      "src/embodied_fly/flight_collect.py": "8bbfebd21631a87f3d82d32e3582add9e7636bdd0cf54827e11346db840da868",
+      "src/embodied_fly/flight_diagnose.py": "d30fc7676f208dc857dacb2780e29ba644ca6683f643fc4874aa641e04e0927d",
+      "src/embodied_fly/flight_outcome.py": "94dfe09f0a5997880364a705e5e4c8d7607b8aa1bffdef64373b0dbb8784e460",
+      "src/embodied_fly/flight_probe.py": "412d5199894deb795095bb085741839688676149caaa5221043edd8e51b517b2",
+      "src/embodied_fly/flight_reward_audit.py": "e6943c276d313b1e9b94ca66a08467d030eb7f3e8f1ce122120551e951000723",
+      "src/embodied_fly/flight_student.py": "94181ecd507a4cadbd2eb096239acf5b83791e8818e850e2a8396909c1b3276f",
+      "src/embodied_fly/flight_teacher.py": "a9d549f7e0ed2bfaf90b9ac36c2da8c27dc0030757e4968c06fbfd9b5d4f949d",
+      "src/embodied_fly/flight_tracking_reward.py": "97cec6726043d334a046f66965c42f118eea7d31e70be1c77a0f5d162db44e41",
+      "src/embodied_fly/fresh_velocity_actor.py": "3fd8ca2c26a87b4b61dfea020f6f5577674d9771944ac5ed69df516594b4c293",
+      "src/embodied_fly/ground_posture.py": "6335dc3b8961caf39f613e21d1b0342455cf03a0e89f896bbb0f9dcd909abe31",
+      "src/embodied_fly/ground_readout.py": "68c6ca6d9e665523f0fd43fbab1a6a5b7a44d50434deedf5a12c5fb7ca98fada",
+      "src/embodied_fly/hover_audit.py": "e1f5ccfaf997c27e8db145d830327de49c69d01f251c71996b854bc19bce8e4d",
+      "src/embodied_fly/hover_clock_audit.py": "cced07ab6c0db455977071a898466b72fa5aef1ae79bd6a7ae6bf22eb6ca077b",
+      "src/embodied_fly/hover_compare.py": "4b662ddca18604d7dce5f5e651f5b096527667374fc73fae1f43fd8d1ff9e728",
+      "src/embodied_fly/hover_feedback.py": "9da43e22b8db19ecbca5d818f41c83d5752a36764ec31bbc62b43cd42dcf7b24",
+      "src/embodied_fly/hover_migrate.py": "45aa0430f50aa5bb0913d004b917f7a7f078c7da118f1990cd012985147118fb",
+      "src/embodied_fly/hover_only.py": "4b926d33df495fef3af08ee6c71881e5e504f2d76730f51d4dc3115230b7b820",
+      "src/embodied_fly/hover_ppo.py": "ebf02ade9d9785d0a7695ed3afbcfbf5e8e49b4516dadda6beed0ea2e8652220",
+      "src/embodied_fly/hover_recovery.py": "c1d511fd0c98e6d958f8ab4ffd1057f1d94604028d7657f7b251f12705f489f7",
+      "src/embodied_fly/hover_response.py": "8f9a0cf93c41bc890dd244bb4cd8ae7e7b1728270c8689d05fbb124b141cde6a",
+      "src/embodied_fly/hover_video.py": "78c600ec4681d11b9bba66577a28b9541fb55792a9382627d42b2086a161faa0",
+      "src/embodied_fly/instant_migrate.py": "0cfebb15a7926fdcd341a64a4a57eca290586b0e547e935df86c228acd5f7ecd",
+      "src/embodied_fly/migration.py": "aec23160a91bb4cedc5665357aa7f010b3f7b59315e90cdc2a46018a785af5f4",
+      "src/embodied_fly/montage.py": "4cab6ce698cffdf8d01ab2bf9895adbdbbe056c6ce847dfd3c077a5b190818b5",
+      "src/embodied_fly/motion_flight.py": "c8f44ea2297d4fd91b695ccc41e5a5edee084e54b35edf95fdec864519f784c0",
+      "src/embodied_fly/motor_calibration.py": "bb307ada698fdc84f67f7ff84a3eb6ef062de5b5cbfe9110f336b0ac1e636a5c",
+      "src/embodied_fly/motor_curriculum.py": "8ed2dc7743cfae973aca1c6df989ac7ef25aa858b923ed33410952bbbddedc90",
+      "src/embodied_fly/motor_exploration.py": "5179d4c2653f3f270394de7481cef68be24cf04177b01fdd1692f3653883cc40",
+      "src/embodied_fly/motor_features.py": "928775f1fdaa047464e5e97283ecada1d365ac2b538eebe7a36e1bf2427c698b",
+      "src/embodied_fly/motor_focus.py": "3c53908e7278b9237c72c7555c3eafcf4659e6c1f4be4a209e247f1754b4f3fd",
+      "src/embodied_fly/motor_interventions.py": "b138b25ccf8e88240414201bc922111e81b5f3c478f4e1351594dcd19f5774e2",
+      "src/embodied_fly/motor_nonlinear_fit.py": "d6cd742af4cb00725159cf216a60ef18e892766d8ca4e3ddaa66d48cb8174ef4",
+      "src/embodied_fly/motor_outcome.py": "a8066d0567c331557baefe9e809e4c35b4b7c4d27d154ec213e4636d3a6313a1",
+      "src/embodied_fly/motor_parameter_subset.py": "653b8da874b94d4a949862fe893034be0d8f7506e3591e56b3d7bc42010fb29c",
+      "src/embodied_fly/motor_reset_audit.py": "186514228c1b3fdedc3918c38b044fd2ece31e903b8d9d9977f3123d3c010b2f",
+      "src/embodied_fly/motor_response.py": "e3f061b5bcd23eccfb48449f245dc9aecbfb0a4d03f50dbaa3370136018bb00a",
+      "src/embodied_fly/motor_retention.py": "18ee32e1894053eca2938a8f6cf017db5dcf0b054b23c9a494705a162712b20d",
+      "src/embodied_fly/motor_sequence.py": "ca1174af03d0bd6813fa0318277b9aa8d2a716d2dbeeac5dffab561f247915c0",
+      "src/embodied_fly/motor_state_fit.py": "f9ef671ad54fbc4319af3e556a6916ca967d8e21e3d9e49cfff1a06650933686",
+      "src/embodied_fly/neural_view.py": "725c4454d563476e71aefa7126980e14c2d803ac50af09f5aa97633bbf01a48a",
+      "src/embodied_fly/observations.py": "3a2c10dc8fa975e4f79d3f738b05b436f87546b6e4314a2f668231166711ed3d",
+      "src/embodied_fly/online.py": "29ef17ba791ee7574f01b1bfd2d4431739e77f30b9c9280c395e8cce30015225",
+      "src/embodied_fly/physical_contract.py": "a89d557e18f61a8b00d29d435ac2b3ab3392050a2e38db490d71515480157c3c",
+      "src/embodied_fly/pid_hover.py": "693f133dd880610dceccf268634c7410b5cd3ae7bcf343d56621b09ff80f6c6e",
+      "src/embodied_fly/pid_imitation.py": "8bf1249eba8aac57892ec1814f8def25e1797aea87328a3283ce1e037fe23b59",
+      "src/embodied_fly/position_migrate.py": "4781ad72964fa6f9fa210d3b95fadeea14b37ba322e94e899093417443026594",
+      "src/embodied_fly/ppo.py": "12514d31d294fce6322b6c08ab2cb710601f000da5f2134dbb08490612cc57ad",
+      "src/embodied_fly/ppo_critic.py": "3112d9ec14bf1f093d0b608348d94e46d6077cce104af98f24f23585dc8ee48e",
+      "src/embodied_fly/ppo_timing.py": "a80a16b2a582452da10f774720a5e4739a448394df44db2a04ca134ef0b63762",
+      "src/embodied_fly/provenance.py": "7319ea68eac675021b9b7079850baf200635189282c8233d6a281f1456b4bda5",
+      "src/embodied_fly/record.py": "23bcb581e0473df84ddff33f390934791f1f10f91da0000da557cf0738629b2e",
+      "src/embodied_fly/retention.py": "49b7ff77728bdcf346a9cf891bd5ce3462f75261e631e50c70996ad519a5dce9",
+      "src/embodied_fly/round_trip.py": "af2e5a980baee32c51c409a2e7dd3cabbb7a5e67e15e390a8104a23ab3e68f80",
+      "src/embodied_fly/round_trip_evaluate.py": "b41e61c2632cd68daa130b90ab59502b69dcd0bc09ff7cdd4b7658eb545e84dc",
+      "src/embodied_fly/round_trip_tasks.py": "9a906d97d8776d6409534f285c7e4022ecf402e57e27e4f38d47ed97520e6a3f",
+      "src/embodied_fly/round_trip_video.py": "311bf2303b04df339ece3b3d1ebc0b78814b07db057e45ce60215e4a340e9bda",
+      "src/embodied_fly/state_hover.py": "0d2f3fc9b474483f1238b79289a6ad522e5988588115cdd0dfd94f6ca17913a1",
+      "src/embodied_fly/sweep_search.py": "21f97ea473118a607d5bea79ffd8a0d6bd4536203679a03c52a20838c7d87300",
+      "src/embodied_fly/teacher.py": "793494fee211bb39f6f38515cb988be4e72249f28bb5a8e33ae0e838e226c27d",
+      "src/embodied_fly/tracking.py": "3ff90beedef76ef18aef36e87fba1705adcb849f672d3a5b5b24685bb7523654",
+      "src/embodied_fly/train.py": "2c26b67b5e25ee6ed353a3a1ff99a4649c5551183627918937c36369809fb3a6",
+      "src/embodied_fly/transitions.py": "485027ec3be3eafe3549562a5a1632fda1b5034e2e55b895bad33a7e4926ac4a",
+      "src/embodied_fly/velocity_exercise.py": "67e6e17d17de8ae1aa3c39c132bd423562676f6cb667f9151ed3a7c7b48afa81",
+      "src/embodied_fly/velocity_motor.py": "0261094ab85616a4e20be073276582fd95cc5e0372f22a9f6201191fa825ea47",
+      "src/embodied_fly/velocity_video.py": "3caf799ac86567c9fbf7efc17d4d3f3e5e2f2266b226b187aea9bd7a00a890d5",
+      "src/embodied_fly/wing_motion.py": "0885a21a6c427b08d5897091595b59c4d4c85e80a0f047b8399185a2c37dce12",
+      "src/embodied_fly/wing_observability.py": "94ab76bffa10642ed259465d6d248df5a08bd5f29863c5fc1f9d2a579cde2cef",
+      "src/embodied_fly/wing_position.py": "af18e55e5014fffdf5e1228705bc7e8c14b4c8ea753c4753d71fa32ba6ae8fb4",
+      "src/embodied_fly/wing_readout.py": "4da5af297471c220ebe6d734985f052050d9feaf4b78b33e558373f9d1278ec8",
+      "src/embodied_fly/wing_response_learning.py": "1a4361f133d573990ff97a0a05756518096cbcbc691996dd0bc3f88ee72f7e8d"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "system": "Linux",
+      "architecture": "x86_64",
+      "packages": {
+        "torch": "2.14.0",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "mujoco": "3.13.0",
+        "mjbatch": "0.1.0",
+        "mujoco-warp": null,
+        "flybody": "0.1.0",
+        "dm-control": "1.0.46"
+      }
+    }
+  },
+  "completed_utc": "2026-09-14T04:23:17.025327+00:00",
+  "controller": "Velocity PID teacher; PI feedback with bounded wing-joint commands",
+  "learned_actor": false,
+  "training_updates": 0,
+  "worlds": 1,
+  "physical_transitions": 35600,
+  "physics_hz": 1000,
+  "control_hz": 500,
+  "duration_seconds": 71.2,
+  "episode_resets_after_initialization": 0,
+  "all_movements_in_one_continuous_episode": true,
+  "command_speed_mm_s": 1.5,
+  "command_ramp_seconds": 0.25,
+  "controller_kp": [
+    20.0,
+    20.0,
+    50.0
+  ],
+  "controller_ki": [
+    20.0,
+    20.0,
+    900.0
+  ],
+  "wing_controller": {
+    "frequency_hz": 30.0,
+    "height_kp": 900.0,
+    "height_ki": 1600.0,
+    "height_kd": 50.0,
+    "horizontal_kp": 15.0,
+    "horizontal_ki": 3.0,
+    "horizontal_kd": 5.0,
+    "integral_limit_cm_s": 1.0,
+    "acceleration_limit_cm_s2": 300.0,
+    "roll_kp": 300.0,
+    "roll_kd": 35.0,
+    "wing_velocity_feedback": 0.0008
+  },
+  "position_target": false,
+  "heading_target": false,
+  "yaw_command_rad_s": 0.45,
+  "body_mechanics_match_previous_plant": true,
+  "force_law_change": "Versioned v3: independent yaw authority from measured left/right wing pitch asymmetry; previous v2 preserved",
+  "previous_physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "9cc5ee704febf6fe4e5c97667d86cb783ff331b63e22126af4e2d00464cb43ce",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant"
+  },
+  "teacher_clock_hz": 30.0,
+  "observation_schema": {
+    "schema": "flight_velocity_motor_v1",
+    "observation_size": 391,
+    "command": [
+      "forward_cm_s",
+      "left_cm_s",
+      "up_cm_s",
+      "yaw_rad_s"
+    ],
+    "frame": "heading-relative horizontal axes; world vertical",
+    "command_indices": [
+      375,
+      376,
+      377,
+      378
+    ],
+    "command_scale_cm_s": 1.0,
+    "yaw_command_scale_rad_s": 1.0,
+    "position_target_inputs": false,
+    "absolute_position_inputs": false,
+    "needs_inputs": false,
+    "teacher_phase_or_integral_inputs": false,
+    "zero_command": "actively brake translation and keep supporting weight",
+    "actions": "78 bounded physical joint/adhesion commands, including six wing angle targets",
+    "return_to_origin_required": false,
+    "recurrent_controller": "same fixed MaleCNS graph; fresh trainable parameters"
+  },
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "719619573f538ec7ea8ad0055ee29d198273a2b6d8d36af60fb170bd4281d6f3",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant",
+    "independent_heading_control": true
+  },
+  "model_sha256": "65b375de4d9c7a2ae4b1f342cf2c5a1670b992dd7ff13f5ce25e17a3854d22ca",
+  "capture_sha256": "31f568114b2d4ede48125101c8ef5353d8ccbc78cf730a9e9b745bfa561b5c09",
+  "setup_seconds": 3.5321744699031115,
+  "capture_seconds": 63.98863592278212,
+  "total_wall_seconds": 73.74720955826342,
+  "stages": [
+    {
+      "index": 0,
+      "stage": "HOVER",
+      "start_seconds": 0.0,
+      "end_seconds": 2.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.0302507632650366,
+        0.009478780687189133,
+        0.0006571219390949097
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.035910815136130356,
+      "settled_velocity_error_rms_mm_s": 0.03180203563095171,
+      "raw_velocity_error_rms_mm_s": 13.54871319895042,
+      "settled_yaw_error_peak_rad_s": 0.0018461557850156219,
+      "heading_change_degrees": 0.4321457313317575,
+      "passed": true
+    },
+    {
+      "index": 1,
+      "stage": "FORWARD / NO TURN",
+      "start_seconds": 2.0,
+      "end_seconds": 4.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        1.4010569498662906,
+        0.0016800079520270172,
+        4.968534548526265e-05
+      ],
+      "requested_velocity_mm_s": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.11476253201172966,
+      "settled_velocity_error_rms_mm_s": 0.09934113688797923,
+      "raw_velocity_error_rms_mm_s": 13.549126364171515,
+      "settled_yaw_error_peak_rad_s": 4.094093921588993e-05,
+      "heading_change_degrees": -0.0034767470135414792,
+      "passed": true
+    },
+    {
+      "index": 2,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 4.0,
+      "end_seconds": 5.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.18126682905603822,
+        0.0007701323968197961,
+        -8.85403888186601e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.2102191404691391,
+      "settled_velocity_error_rms_mm_s": 0.1819714901998649,
+      "raw_velocity_error_rms_mm_s": 13.549842179704989,
+      "settled_yaw_error_peak_rad_s": 1.7009259311429049e-06,
+      "heading_change_degrees": -0.010639394135547998,
+      "passed": true
+    },
+    {
+      "index": 3,
+      "stage": "BACKWARD / NO TURN",
+      "start_seconds": 5.0,
+      "end_seconds": 7.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.3547353531960087,
+        0.00012205780020695048,
+        -7.109680643038129e-05
+      ],
+      "requested_velocity_mm_s": [
+        -1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.16845650278655055,
+      "settled_velocity_error_rms_mm_s": 0.14582774491609796,
+      "raw_velocity_error_rms_mm_s": 13.54934543947806,
+      "settled_yaw_error_peak_rad_s": 1.197433355670796e-06,
+      "heading_change_degrees": -0.02614724714649008,
+      "passed": true
+    },
+    {
+      "index": 4,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 7.0,
+      "end_seconds": 8.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.159680521480624,
+        4.2835293455868505e-05,
+        7.854487761567985e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.1851906774613174,
+      "settled_velocity_error_rms_mm_s": 0.16029996214618428,
+      "raw_velocity_error_rms_mm_s": 13.549573423017263,
+      "settled_yaw_error_peak_rad_s": 5.393884638049684e-06,
+      "heading_change_degrees": -0.011152036681857097,
+      "passed": true
+    },
+    {
+      "index": 5,
+      "stage": "LEFT / NO TURN",
+      "start_seconds": 8.0,
+      "end_seconds": 10.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.034650508696031194,
+        1.406303459191679,
+        1.9427778119371906e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.11628452302599722,
+      "settled_velocity_error_rms_mm_s": 0.10030521817143087,
+      "raw_velocity_error_rms_mm_s": 13.548910928846146,
+      "settled_yaw_error_peak_rad_s": 0.0013976651937444907,
+      "heading_change_degrees": 0.08047514905235889,
+      "passed": true
+    },
+    {
+      "index": 6,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 10.0,
+      "end_seconds": 11.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.0163873487453941,
+        0.17265576583141531,
+        2.1678458676889535e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.25054304599687727,
+      "settled_velocity_error_rms_mm_s": 0.17794538974110607,
+      "raw_velocity_error_rms_mm_s": 13.549663443861268,
+      "settled_yaw_error_peak_rad_s": 0.001077949051308007,
+      "heading_change_degrees": -0.10193554922020172,
+      "passed": true
+    },
+    {
+      "index": 7,
+      "stage": "RIGHT / NO TURN",
+      "start_seconds": 11.0,
+      "end_seconds": 13.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.0035426174672660827,
+        -1.3723447192733544,
+        7.983717748373914e-07
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        -1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.14866525980614315,
+      "settled_velocity_error_rms_mm_s": 0.12822452172065787,
+      "raw_velocity_error_rms_mm_s": 13.549421237597754,
+      "settled_yaw_error_peak_rad_s": 9.72257125558862e-05,
+      "heading_change_degrees": -0.12260648825563646,
+      "passed": true
+    },
+    {
+      "index": 8,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 13.0,
+      "end_seconds": 14.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.0018110045511763751,
+        -0.1573730622771688,
+        1.0244720645536632e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.23223477155777028,
+      "settled_velocity_error_rms_mm_s": 0.16203456474774777,
+      "raw_velocity_error_rms_mm_s": 13.54951560490103,
+      "settled_yaw_error_peak_rad_s": 0.001024250313974111,
+      "heading_change_degrees": 0.0788223778769575,
+      "passed": true
+    },
+    {
+      "index": 9,
+      "stage": "UP / NO TURN",
+      "start_seconds": 14.0,
+      "end_seconds": 16.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.0003795265128651229,
+        -0.030670851316558157,
+        1.4999990046611082
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.03572172142656463,
+      "settled_velocity_error_rms_mm_s": 0.03079916714950495,
+      "raw_velocity_error_rms_mm_s": 13.557199814905863,
+      "settled_yaw_error_peak_rad_s": 2.4289293511614574e-05,
+      "heading_change_degrees": -0.021778364174165475,
+      "passed": true
+    },
+    {
+      "index": 10,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 16.0,
+      "end_seconds": 17.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.00021087550734005982,
+        -0.013964501242649276,
+        1.9279559642927774e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.016249808676651777,
+      "settled_velocity_error_rms_mm_s": 0.014023047758547064,
+      "raw_velocity_error_rms_mm_s": 13.548708284601693,
+      "settled_yaw_error_peak_rad_s": 2.2134235184871898e-05,
+      "heading_change_degrees": -0.010173835490665438,
+      "passed": true
+    },
+    {
+      "index": 11,
+      "stage": "DOWN / NO TURN",
+      "start_seconds": 17.0,
+      "end_seconds": 19.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.3274126645601577e-06,
+        -0.002898588592171046,
+        -1.49999820824219
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        -1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.003374108832303906,
+      "settled_velocity_error_rms_mm_s": 0.0029104140792786987,
+      "raw_velocity_error_rms_mm_s": 13.540290326297244,
+      "settled_yaw_error_peak_rad_s": 3.4338893468977007e-06,
+      "heading_change_degrees": -0.0252031320965941,
+      "passed": true
+    },
+    {
+      "index": 12,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 19.0,
+      "end_seconds": 20.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        5.200679697967915e-05,
+        -0.00132933298538626,
+        -1.9060745043712753e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.0015678608835102332,
+      "settled_velocity_error_rms_mm_s": 0.0013366715041884139,
+      "raw_velocity_error_rms_mm_s": 13.548702355181861,
+      "settled_yaw_error_peak_rad_s": 8.05242471644263e-06,
+      "heading_change_degrees": -0.011137938934268392,
+      "passed": true
+    },
+    {
+      "index": 13,
+      "stage": "TURN LEFT IN PLACE",
+      "start_seconds": 20.0,
+      "end_seconds": 22.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.06873258428116921,
+        0.12839653423384986,
+        0.0004978623629410248
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.1539398097724092,
+      "settled_velocity_error_rms_mm_s": 0.14594325705421848,
+      "raw_velocity_error_rms_mm_s": 13.548277469382853,
+      "settled_yaw_error_peak_rad_s": 0.010725841241599032,
+      "heading_change_degrees": 47.91397297124368,
+      "passed": true
+    },
+    {
+      "index": 14,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 22.0,
+      "end_seconds": 23.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.06187418194017166,
+        -0.18188320175737435,
+        0.0003628644445558547
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.2303491981256023,
+      "settled_velocity_error_rms_mm_s": 0.19306806892783815,
+      "raw_velocity_error_rms_mm_s": 13.549974037814017,
+      "settled_yaw_error_peak_rad_s": 0.04064854878203164,
+      "heading_change_degrees": 4.660911986282887,
+      "passed": true
+    },
+    {
+      "index": 15,
+      "stage": "TURN RIGHT IN PLACE",
+      "start_seconds": 23.0,
+      "end_seconds": 25.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.027821470986948954,
+        -0.14818944475793452,
+        0.0005954179840581873
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.17119125139382935,
+      "settled_velocity_error_rms_mm_s": 0.15129155042821993,
+      "raw_velocity_error_rms_mm_s": 13.548816318219464,
+      "settled_yaw_error_peak_rad_s": 0.012284510548690841,
+      "heading_change_degrees": -48.832397558384166,
+      "passed": true
+    },
+    {
+      "index": 16,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 25.0,
+      "end_seconds": 26.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.03118298186058808,
+        0.1788900408264442,
+        0.00033009084709918133
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.21820830090833046,
+      "settled_velocity_error_rms_mm_s": 0.18249147472605293,
+      "raw_velocity_error_rms_mm_s": 13.549768105994678,
+      "settled_yaw_error_peak_rad_s": 0.04041470194766213,
+      "heading_change_degrees": -4.702069580639266,
+      "passed": true
+    },
+    {
+      "index": 17,
+      "stage": "FORWARD + TURN LEFT",
+      "start_seconds": 26.0,
+      "end_seconds": 27.8,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        1.3168253156005831,
+        0.08871978534517432,
+        0.0008890796495743627
+      ],
+      "requested_velocity_mm_s": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.2270536867810021,
+      "settled_velocity_error_rms_mm_s": 0.20456313383048289,
+      "raw_velocity_error_rms_mm_s": 13.549046398969798,
+      "settled_yaw_error_peak_rad_s": 0.017776390374523332,
+      "heading_change_degrees": 43.529611374901116,
+      "passed": true
+    },
+    {
+      "index": 18,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 27.8,
+      "end_seconds": 28.6,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.12196103049297573,
+        -0.23546679803023704,
+        0.0014582793593783594
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.3018433412519829,
+      "settled_velocity_error_rms_mm_s": 0.26828711401456,
+      "raw_velocity_error_rms_mm_s": 13.582143498367348,
+      "settled_yaw_error_peak_rad_s": 0.03972705777223382,
+      "heading_change_degrees": 5.112676813643229,
+      "passed": true
+    },
+    {
+      "index": 19,
+      "stage": "FORWARD + TURN RIGHT",
+      "start_seconds": 28.6,
+      "end_seconds": 30.400000000000002,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        1.390128921900234,
+        -0.07123336202754797,
+        0.0009320853350336477
+      ],
+      "requested_velocity_mm_s": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.1581238003348399,
+      "settled_velocity_error_rms_mm_s": 0.13294375431397307,
+      "raw_velocity_error_rms_mm_s": 13.579319743405698,
+      "settled_yaw_error_peak_rad_s": 0.018664675016997312,
+      "heading_change_degrees": -43.91653608993458,
+      "passed": true
+    },
+    {
+      "index": 20,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 30.400000000000002,
+      "end_seconds": 31.200000000000003,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.17120650870979084,
+        0.2555945135879084,
+        0.001442812045743527
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.34354488573861075,
+      "settled_velocity_error_rms_mm_s": 0.3103871691683864,
+      "raw_velocity_error_rms_mm_s": 13.552278035253538,
+      "settled_yaw_error_peak_rad_s": 0.03953217509647066,
+      "heading_change_degrees": -5.140305817132004,
+      "passed": true
+    },
+    {
+      "index": 21,
+      "stage": "BACKWARD + TURN LEFT",
+      "start_seconds": 31.2,
+      "end_seconds": 33.0,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.352057529402437,
+        0.24934218319200924,
+        0.0008225762168798069
+      ],
+      "requested_velocity_mm_s": [
+        -1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.3250569392355111,
+      "settled_velocity_error_rms_mm_s": 0.2907716750609909,
+      "raw_velocity_error_rms_mm_s": 13.550359841732222,
+      "settled_yaw_error_peak_rad_s": 0.01890113028569318,
+      "heading_change_degrees": 43.87188833953712,
+      "passed": true
+    },
+    {
+      "index": 22,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 33.0,
+      "end_seconds": 33.8,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.2086484631620188,
+        -0.10129851658427194,
+        0.0011105888979254478
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.2518252117295538,
+      "settled_velocity_error_rms_mm_s": 0.23709387874437288,
+      "raw_velocity_error_rms_mm_s": 13.550726282763199,
+      "settled_yaw_error_peak_rad_s": 0.03969525838464733,
+      "heading_change_degrees": 5.129641287158311,
+      "passed": true
+    },
+    {
+      "index": 23,
+      "stage": "BACKWARD + TURN RIGHT",
+      "start_seconds": 33.8,
+      "end_seconds": 35.599999999999994,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.4195343127745494,
+        -0.2703234765814538,
+        0.0008771910285886104
+      ],
+      "requested_velocity_mm_s": [
+        -1.5,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.3005983396788719,
+      "settled_velocity_error_rms_mm_s": 0.28227690083737994,
+      "raw_velocity_error_rms_mm_s": 13.550787595788544,
+      "settled_yaw_error_peak_rad_s": 0.018918266021841545,
+      "heading_change_degrees": -43.92401068467547,
+      "passed": true
+    },
+    {
+      "index": 24,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 35.599999999999994,
+      "end_seconds": 36.39999999999999,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.229177204233455,
+        0.08299104483850289,
+        0.001137138505494902
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.27449442030458954,
+      "settled_velocity_error_rms_mm_s": 0.24901145197078267,
+      "raw_velocity_error_rms_mm_s": 13.550830135664716,
+      "settled_yaw_error_peak_rad_s": 0.03968465648709982,
+      "heading_change_degrees": -5.146582939627429,
+      "passed": true
+    },
+    {
+      "index": 25,
+      "stage": "LEFT + TURN LEFT",
+      "start_seconds": 36.39999999999999,
+      "end_seconds": 38.19999999999999,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.006115336496501165,
+        1.5662965004734273,
+        0.0009410040517433242
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.07720053254179991,
+      "settled_velocity_error_rms_mm_s": 0.06697981732210612,
+      "raw_velocity_error_rms_mm_s": 13.547479661664841,
+      "settled_yaw_error_peak_rad_s": 0.018999168676490374,
+      "heading_change_degrees": 44.00252252330411,
+      "passed": true
+    },
+    {
+      "index": 26,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 38.19999999999999,
+      "end_seconds": 38.999999999999986,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.012829693917286467,
+        -0.011568874241317438,
+        0.001898048485495539
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.09026224788907426,
+      "settled_velocity_error_rms_mm_s": 0.045872991251884924,
+      "raw_velocity_error_rms_mm_s": 13.548764396744083,
+      "settled_yaw_error_peak_rad_s": 0.040676759397318844,
+      "heading_change_degrees": 5.030185712056245,
+      "passed": true
+    },
+    {
+      "index": 27,
+      "stage": "LEFT + TURN RIGHT",
+      "start_seconds": 38.999999999999986,
+      "end_seconds": 40.79999999999998,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.12417899012928622,
+        1.2435268330759703,
+        0.0008923467259902237
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.3093588401369316,
+      "settled_velocity_error_rms_mm_s": 0.28575496057410693,
+      "raw_velocity_error_rms_mm_s": 13.550805333746027,
+      "settled_yaw_error_peak_rad_s": 0.018806072407016927,
+      "heading_change_degrees": -43.835670802054175,
+      "passed": true
+    },
+    {
+      "index": 28,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 40.79999999999998,
+      "end_seconds": 41.59999999999998,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.1138802654239818,
+        0.32196516098868616,
+        0.0008791307753097988
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.4610449612132611,
+      "settled_velocity_error_rms_mm_s": 0.36202254337655104,
+      "raw_velocity_error_rms_mm_s": 13.5539206818752,
+      "settled_yaw_error_peak_rad_s": 0.03887011516032702,
+      "heading_change_degrees": -5.238361786767222,
+      "passed": true
+    },
+    {
+      "index": 29,
+      "stage": "RIGHT + TURN LEFT",
+      "start_seconds": 41.59999999999998,
+      "end_seconds": 43.39999999999998,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.12174668558240029,
+        -1.1472163473078651,
+        0.0008924184382238758
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        -1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.4163473371737273,
+      "settled_velocity_error_rms_mm_s": 0.37433377180144234,
+      "raw_velocity_error_rms_mm_s": 13.552599919541006,
+      "settled_yaw_error_peak_rad_s": 0.01871672574329747,
+      "heading_change_degrees": 43.7788126876227,
+      "passed": true
+    },
+    {
+      "index": 30,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 43.39999999999998,
+      "end_seconds": 44.199999999999974,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.11407444001473886,
+        -0.27062445389707573,
+        0.0008651628966915119
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.4121164614427047,
+      "settled_velocity_error_rms_mm_s": 0.31847262917032976,
+      "raw_velocity_error_rms_mm_s": 13.552855404559537,
+      "settled_yaw_error_peak_rad_s": 0.03891048387174124,
+      "heading_change_degrees": 5.219283951041493,
+      "passed": true
+    },
+    {
+      "index": 31,
+      "stage": "RIGHT + TURN RIGHT",
+      "start_seconds": 44.199999999999974,
+      "end_seconds": 45.99999999999997,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.07904345322359377,
+        -1.5811656193507955,
+        0.0009221625714536102
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        -1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.12512405750795766,
+      "settled_velocity_error_rms_mm_s": 0.11387020370394169,
+      "raw_velocity_error_rms_mm_s": 13.548584960900708,
+      "settled_yaw_error_peak_rad_s": 0.01886222719279884,
+      "heading_change_degrees": -44.00578799470746,
+      "passed": true
+    },
+    {
+      "index": 32,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 45.99999999999997,
+      "end_seconds": 46.79999999999997,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.046803415744602235,
+        0.016017984257769458,
+        0.0018277569957433923
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.10721206846127637,
+      "settled_velocity_error_rms_mm_s": 0.06548089941651038,
+      "raw_velocity_error_rms_mm_s": 13.548808298701427,
+      "settled_yaw_error_peak_rad_s": 0.0405093647407306,
+      "heading_change_degrees": -5.049025316580282,
+      "passed": true
+    },
+    {
+      "index": 33,
+      "stage": "UP + TURN LEFT",
+      "start_seconds": 46.79999999999997,
+      "end_seconds": 48.599999999999966,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.05361369445265849,
+        0.13072328432014058,
+        1.500883743585822
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.15424638216273678,
+      "settled_velocity_error_rms_mm_s": 0.1418103284616569,
+      "raw_velocity_error_rms_mm_s": 13.55666883968193,
+      "settled_yaw_error_peak_rad_s": 0.018894672385447397,
+      "heading_change_degrees": 43.87743821155853,
+      "passed": true
+    },
+    {
+      "index": 34,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 48.599999999999966,
+      "end_seconds": 49.39999999999996,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.06697961982302457,
+        -0.18366241711109105,
+        0.00019618728909626958
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.23189041431475604,
+      "settled_velocity_error_rms_mm_s": 0.1999610990796908,
+      "raw_velocity_error_rms_mm_s": 13.550299807970843,
+      "settled_yaw_error_peak_rad_s": 0.03964706170285012,
+      "heading_change_degrees": 5.126853907420385,
+      "passed": true
+    },
+    {
+      "index": 35,
+      "stage": "UP + TURN RIGHT",
+      "start_seconds": 49.39999999999996,
+      "end_seconds": 51.19999999999996,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.01716815214778737,
+        -0.17765322502460779,
+        1.5009068369576033
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.20734533421134682,
+      "settled_velocity_error_rms_mm_s": 0.17922295182011808,
+      "raw_velocity_error_rms_mm_s": 13.557576560049048,
+      "settled_yaw_error_peak_rad_s": 0.018818988873621267,
+      "heading_change_degrees": -43.91949432154572,
+      "passed": true
+    },
+    {
+      "index": 36,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 51.19999999999996,
+      "end_seconds": 51.99999999999996,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.029531074661721415,
+        0.16526017628663706,
+        0.0002014506319199427
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.20552321794831718,
+      "settled_velocity_error_rms_mm_s": 0.17320204179730164,
+      "raw_velocity_error_rms_mm_s": 13.549848557968797,
+      "settled_yaw_error_peak_rad_s": 0.03963589854269726,
+      "heading_change_degrees": -5.142758161322029,
+      "passed": true
+    },
+    {
+      "index": 37,
+      "stage": "DOWN + TURN LEFT",
+      "start_seconds": 51.99999999999996,
+      "end_seconds": 53.799999999999955,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.042944106500691415,
+        0.1771040123220142,
+        -1.4991038815374298
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        -1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.20644248545438243,
+      "settled_velocity_error_rms_mm_s": 0.18289411556751087,
+      "raw_velocity_error_rms_mm_s": 13.540235702883981,
+      "settled_yaw_error_peak_rad_s": 0.01886054203653542,
+      "heading_change_degrees": 43.87377611465565,
+      "passed": true
+    },
+    {
+      "index": 38,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 53.799999999999955,
+      "end_seconds": 54.59999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.05568617535312757,
+        -0.16068493622848795,
+        0.002428894054875035
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.20663063778337445,
+      "settled_velocity_error_rms_mm_s": 0.17552289545426072,
+      "raw_velocity_error_rms_mm_s": 13.549988346167071,
+      "settled_yaw_error_peak_rad_s": 0.03964883419193484,
+      "heading_change_degrees": 5.126655992267367,
+      "passed": true
+    },
+    {
+      "index": 39,
+      "stage": "DOWN + TURN RIGHT",
+      "start_seconds": 54.59999999999995,
+      "end_seconds": 56.39999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.018233293475021336,
+        -0.17135722961326152,
+        -1.4990923907414844
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        -1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.19997324895213234,
+      "settled_velocity_error_rms_mm_s": 0.17304224159163775,
+      "raw_velocity_error_rms_mm_s": 13.540626024397971,
+      "settled_yaw_error_peak_rad_s": 0.018823191936540418,
+      "heading_change_degrees": -43.9181456314714,
+      "passed": true
+    },
+    {
+      "index": 40,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 56.39999999999995,
+      "end_seconds": 57.199999999999946,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.03051837235239515,
+        0.16825833546384292,
+        0.0024278269705225973
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.20874565970310047,
+      "settled_velocity_error_rms_mm_s": 0.17626848895283168,
+      "raw_velocity_error_rms_mm_s": 13.549928745650924,
+      "settled_yaw_error_peak_rad_s": 0.039585145866684004,
+      "heading_change_degrees": -5.144184693725479,
+      "passed": true
+    },
+    {
+      "index": 41,
+      "stage": "DIAGONAL FORWARD + LEFT",
+      "start_seconds": 57.199999999999946,
+      "end_seconds": 59.199999999999946,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        1.389347479878299,
+        1.436579230883665,
+        5.8747076616971595e-05
+      ],
+      "requested_velocity_mm_s": [
+        1.5,
+        1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.14781154155981321,
+      "settled_velocity_error_rms_mm_s": 0.12802725185932268,
+      "raw_velocity_error_rms_mm_s": 13.549221271350119,
+      "settled_yaw_error_peak_rad_s": 0.0034604928917482524,
+      "heading_change_degrees": 1.2931604561675745,
+      "passed": true
+    },
+    {
+      "index": 42,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 59.199999999999946,
+      "end_seconds": 60.199999999999946,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.17561466411493643,
+        0.18584191738158304,
+        -7.311314929695525e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.3332360556751331,
+      "settled_velocity_error_rms_mm_s": 0.2594095866666059,
+      "raw_velocity_error_rms_mm_s": 13.550881347659555,
+      "settled_yaw_error_peak_rad_s": 0.0007943710530228287,
+      "heading_change_degrees": -0.07210864926870476,
+      "passed": true
+    },
+    {
+      "index": 43,
+      "stage": "DIAGONAL BACK + RIGHT",
+      "start_seconds": 60.199999999999946,
+      "end_seconds": 62.199999999999946,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.355965319555174,
+        -1.3695998398994211,
+        -7.10356333340186e-05
+      ],
+      "requested_velocity_mm_s": [
+        -1.5,
+        -1.5,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.2257056950716033,
+      "settled_velocity_error_rms_mm_s": 0.19506436438103072,
+      "raw_velocity_error_rms_mm_s": 13.550077302804143,
+      "settled_yaw_error_peak_rad_s": 9.30376035441416e-05,
+      "heading_change_degrees": -0.1186645099279177,
+      "passed": true
+    },
+    {
+      "index": 44,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 62.199999999999946,
+      "end_seconds": 63.199999999999946,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.1604197231752107,
+        -0.15598443135468787,
+        8.761469304016462e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.29510154083307594,
+      "settled_velocity_error_rms_mm_s": 0.22746532249364892,
+      "raw_velocity_error_rms_mm_s": 13.550381024445358,
+      "settled_yaw_error_peak_rad_s": 0.0010280567988175094,
+      "heading_change_degrees": 0.0787918873218941,
+      "passed": true
+    },
+    {
+      "index": 45,
+      "stage": "CLIMBING DIAGONAL + TURN",
+      "start_seconds": 63.199999999999946,
+      "end_seconds": 65.19999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        1.3592782952137088,
+        1.4188284330590997,
+        1.5005703907584629
+      ],
+      "requested_velocity_mm_s": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.17595570309502181,
+      "settled_velocity_error_rms_mm_s": 0.1628950835151371,
+      "raw_velocity_error_rms_mm_s": 13.55684948323615,
+      "settled_yaw_error_peak_rad_s": 0.010789741061163316,
+      "heading_change_degrees": 48.04154772293137,
+      "passed": true
+    },
+    {
+      "index": 46,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 65.19999999999995,
+      "end_seconds": 66.19999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        0.14070760430874826,
+        -0.08893795716563418,
+        0.0004980984846748017
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.17810067803139654,
+      "settled_velocity_error_rms_mm_s": 0.16775161050762696,
+      "raw_velocity_error_rms_mm_s": 13.549712665708897,
+      "settled_yaw_error_peak_rad_s": 0.04162172122528546,
+      "heading_change_degrees": 4.562841007531638,
+      "passed": true
+    },
+    {
+      "index": 47,
+      "stage": "DESCENDING DIAGONAL + TURN",
+      "start_seconds": 66.19999999999995,
+      "end_seconds": 68.19999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -1.2839314499167551,
+        -1.5880821699412302,
+        -1.499447873613832
+      ],
+      "requested_velocity_mm_s": [
+        -1.5,
+        -1.5,
+        -1.5
+      ],
+      "settled_velocity_error_peak_mm_s": 0.24759289767911993,
+      "settled_velocity_error_rms_mm_s": 0.23354557128352654,
+      "raw_velocity_error_rms_mm_s": 13.541602343000692,
+      "settled_yaw_error_peak_rad_s": 0.012444429509287702,
+      "heading_change_degrees": -48.926451111304544,
+      "passed": true
+    },
+    {
+      "index": 48,
+      "stage": "BRAKE / HOVER",
+      "start_seconds": 68.19999999999995,
+      "end_seconds": 69.19999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.12096948004689219,
+        -0.021842232350713305,
+        0.0005572828712529911
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.1561071836586657,
+      "settled_velocity_error_rms_mm_s": 0.12611296183276857,
+      "raw_velocity_error_rms_mm_s": 13.549182802257539,
+      "settled_yaw_error_peak_rad_s": 0.041344527620347016,
+      "heading_change_degrees": -4.61368744411582,
+      "passed": true
+    },
+    {
+      "index": 49,
+      "stage": "FINAL HOVER",
+      "start_seconds": 69.19999999999995,
+      "end_seconds": 71.19999999999995,
+      "settled_window_seconds": 0.4,
+      "settled_mean_velocity_mm_s": [
+        -0.026541503468059474,
+        -0.0115054837069117,
+        1.4256559924402274e-05
+      ],
+      "requested_velocity_mm_s": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "settled_velocity_error_peak_mm_s": 0.0333995748191432,
+      "settled_velocity_error_rms_mm_s": 0.02903424030309209,
+      "raw_velocity_error_rms_mm_s": 13.548729416571453,
+      "settled_yaw_error_peak_rad_s": 0.001622877981232147,
+      "heading_change_degrees": 0.8452225304197054,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "physical_envelope_passed": true,
+  "minimum_upright": 0.9956318874966925,
+  "minimum_altitude_mm": 16.381226592610997,
+  "maximum_forbidden_contact_bodyweights": 0.0,
+  "raw_velocity_peak_mm_s": [
+    1.6756041600017015,
+    1.8561313366409016,
+    38.636735542434266
+  ],
+  "mean_velocity_error_whole_exercise_rms_mm_s": 0.576925982431939,
+  "gate": "Each stage's final 0.4 s: 100 ms mean vector velocity error <0.5 mm/s and mean yaw-rate error <0.12 rad/s; upright >0.85; altitude >5 mm; forbidden contact <0.1 bodyweights. Raw wingbeat velocity retained; no position-return gate."
+}

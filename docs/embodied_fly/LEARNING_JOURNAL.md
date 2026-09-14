@@ -3010,3 +3010,44 @@ aerodynamics. Do not introduce realism qualifications as an issue with the chose
 plant. Half of the 64 training worlds hover; the others execute separate 12-second
 out-and-back directional exercises in the same run, updating the same actor.
 Evidence: runs/pid_movement_imitation_01/learning_path_audit.json and SUMMARY.md.
+
+## Fresh velocity interface and continuous PID exercise — September 14 UTC
+
+The user requests a fresh start without inherited policy, optimizer or fitted
+normalization. Keep the measured MaleCNS graph and use velocity/turn-rate inputs
+instead of position targets. Every episode must contain all skills together;
+do not partition hover and directional tasks across separate worlds. First
+demonstrate the teacher and physics before any new student training. The earlier
+imitation failure remains unresolved and archived; this change is not proof
+that data coverage alone caused it.
+
+Independent heading exposed a concrete force-law limitation: sweep imbalance
+coupled roll and yaw. The explicit wing_motion_heading_v3 extension adds yaw
+authority from measured wing pitch difference, keeping the same physical body,
+limits and 1,000 Hz physics /500 Hz controls. It reads no commands or targets.
+All forces still come from measured wing/body state at every physical tick.
+Previous physical contracts and checkpoints remain preserved.
+
+Three PID captures share the exact compiled model. Feedback tuning improves
+declared stage checks from 29/50 to 49/50 to 50/50. The final 71.2-second episode
+has no resets; isolated strafing changes heading by at most 0.123 degrees.
+Translation, turns in place, mixed commands, brakes and hover all appear in
+the full video, decoded, sampled and opened for review. Final settled errors
+are below 0.5 mm/s translation and 0.12 rad/s yaw gates using a documented
+100 ms mean; raw wingbeat velocity is retained and shown separately.
+
+The fresh encoder/decoder initialization path is implemented and tested on a
+small graph fixture, but a full fresh checkpoint has not yet been instantiated
+and no student training occurred. The user questions adding external utility
+and navigation networks: that would outsource decisions they want learned
+through MaleCNS. Keep one shared core as the intended path. A future utility
+readout may expose its activity, but separate decision networks are not the
+default plan. Frozen wiring alone does not establish that the core is necessary;
+future ablations should test its contribution to learned behavior.
+
+Evidence: runs/pid_velocity_teacher_01 through _03 and VELOCITY_TEACHER.md.
+
+The user reviewed the completed video: "the video looks great," then requested
+approximately ten times faster physical flight, explicitly keeping real-time
+playback. Preserve this slow reference and develop a separate faster capture;
+the next work is still the PID/plant, not student training.

@@ -181,3 +181,8 @@ through measured wing pitch; earlier models remain preserved. Keep this same
 versioned body/force law across subsequent teacher/student tasks. Future utility
 and navigation should connect through the same MaleCNS core; do not substitute
 permanent external decision networks by default. See the velocity teacher guide.
+
+User review: the continuous velocity PID video looks great, but flight must be
+approximately ten times faster physically, with playback still 1x. Preserve the
+slow reference and measure actual speeds/turn rates in a new capture. Do not
+substitute video acceleration or start student training during this plant work.
