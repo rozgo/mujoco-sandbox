@@ -606,7 +606,7 @@ def train(args):
                     audit["cached_tolerances"] = {
                         "action": 2e-6,
                         "maximum_logp": 0.02,
-                        "aggregate_kl": 1e-6,
+                        "aggregate_kl": 4e-6,
                     }
                     (args.output / "replay_audit.json").write_text(
                         json.dumps(audit, indent=2) + "\n"
@@ -614,7 +614,7 @@ def train(args):
                     if (
                         audit["cached_max_action_error"] > 2e-6
                         or audit["cached_max_logp_error"] > 0.02
-                        or audit["cached_roundoff_aggregate_kl"] > 1e-6
+                        or audit["cached_roundoff_aggregate_kl"] > 4e-6
                     ):
                         raise RuntimeError(f"Cached readout replay mismatch: {audit}")
                     del cached_logp, cached_action

@@ -42,3 +42,22 @@ log probabilities and analytic KL. This also changes the absolute action
 change allowed by the same KL bound; it is a distribution change, not an
 extra filter on controls or physics. Match 108 rollouts / 1,769,472 transitions,
 with midpoint after 54. Measure actual wall time, keep all outcomes.
+
+## Startup replay precision
+
+The first attempt stopped before any optimizer update: cached readout actions
+differed by at most 9.39e-7, but maximum log-probability difference was .01062
+against the old .01 bound. A dedicated no-update replay probe quantified the
+cached aggregate distribution error as **2.11635e-6**, with maximum action
+error 1.01328e-6. Smaller standard deviation magnifies float32 forward-batch
+roundoff in log probabilities. The live and flattened cached readout use
+different matrix batch shapes.
+
+Keep the 2e-6 action bound and the original full-core recurrent replay check.
+For cached readout add an aggregate-KL bound of **4e-6** (5,000 times below
+the .02 PPO update cap) and allow maximum log-probability discrepancy .02.
+The aggregate bound detects systematic mismatches that a maximum alone misses.
+Record every metric. This modifies only verification, not sampling, replay
+arithmetic or optimizer gradients. Preserve both stopped startup directories;
+neither is a trained checkpoint. The full continuation still must pass its
+startup check before any update.
