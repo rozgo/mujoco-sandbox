@@ -3144,3 +3144,36 @@ All ten teacher episodes used the same sequence; headings/wing phases varied.
 The user approved varying order, retaining all skills in each complete episode,
 and collecting PID corrections from student-visited drift/climb states before
 continuing the same policy. See runs/velocity_imitation_30m_01/SUMMARY.md.
+
+## Reordered PID recoveries and second full continuation
+
+The user approved varied ordering, correction from student-visited states and
+continuation of the same checkpoint. Ten PID starts recover from eight actual
+student snapshots plus two cold starts. Every two-second recovery gate passes.
+Ten complete reordered episodes then pass 500/500 stage checks, with no live
+resets. Combined with original data, 16 training/four validation episodes pass
+1,000 checks. Per-episode semantic stage sampling and explicit dataset-transfer
+permission prevent accidentally sampling the old timing on reordered recordings.
+
+The second continuous block performs 401 updates in 1,804.362681 seconds, taking
+the actor's ancestry to 816 updates and 61 min 10.5 s. Same network, fixed graph,
+physical plant, optimizer state and loss. No PPO, critic or old reward functions.
+Held-out wing MSE improves 13.1% on the mixed data, and the original-window audit
+also improves. Physical flight regresses: all four cases fail opening hover at
+0.202/0.202/0.202/0.244 seconds. Initial observations match recorded starts exactly.
+Wing sweep speeds fall from about 31 rad/s at startup to 17–18 rad/s during
+0.15–0.20 seconds; the teacher and parent remain near 31 rad/s in that window.
+
+Do not treat better offline command matching as a successful controller. These
+are complete teacher recoveries branched from saved student errors, not online
+DAgger throughout student rollouts. Retain the parent (5.6-second airborne
+flight) as the better development reference; it also remains unsuccessful.
+No further training was launched. The 27-second, four-case 1x comparison was
+decoded, inspected and opened at 07:54:34 UTC. Final and all periodic checkpoints
+are preserved. Full suite 218 passed; two new random-command tests passed.
+
+The user's smooth random command idea now has a separate seeded generator with
+quintic transitions, bounded commands, isolated/combined requests and zero holds.
+It is not included in this block. A future physical collector must bound altitude
+and validate its teacher trajectories before using that additional data source.
+See runs/velocity_recovery_imitation_01/SUMMARY.md and RANDOM_COMMANDS.md.

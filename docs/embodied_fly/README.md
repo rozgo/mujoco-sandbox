@@ -2,7 +2,18 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Latest learning: [30-minute velocity imitation continuation](runs/velocity_imitation_30m_01/SUMMARY.md)
+Latest learning: [reordered recovery imitation](runs/velocity_recovery_imitation_01/SUMMARY.md)
+and [all four physical comparisons](../../previews/embodied_fly/velocity_recovery_imitation_01_pid_comparison_v1.mp4).
+The new complete teacher exercises pass all 1,000 combined stage checks. Another
+30 min 4 s of imitation improves held-out prediction error but **regresses
+physical flight**: all four starts fall within 0.20–0.24 s. Measured wing motion
+weakens after startup. Preserve the previous checkpoint as the better development
+reference; no full flight controller has passed. Same actor, optimizer, physics
+and loss, with explicitly changed demonstration data. A separate
+[smooth random command generator](RANDOM_COMMANDS.md) is implemented and tested;
+it is not included in this trained checkpoint.
+
+Preceding learning: [30-minute velocity imitation continuation](runs/velocity_imitation_30m_01/SUMMARY.md)
 and [PID/student comparison](../../previews/embodied_fly/velocity_imitation_30m_01_pid_comparison_v1.mp4).
 Wing sweeps now correlate about 0.99 with the teacher on held-out recordings,
 but physical control remains unsuccessful: both starts climb and drift before

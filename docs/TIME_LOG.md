@@ -1447,3 +1447,32 @@ reference-only physical validation follows the user's directional curriculum.
   Archival and subsequent planning occur after the video milestone and are not
   counted as neural training. The user approved a separate follow-up with varied
   exercise order and student-state recovery demonstrations.
+
+## Reordered recovery teaching and continuation — September 14, 2026
+
+- Implementation timestamp observed **07:07:07 UTC**. Ten two-second PID recovery
+  probes: setup **2.865707 s**, capture **6.562624 s**, total **10.805237 s**,
+  completed **07:13:37.904705 UTC**. All ten pass; 10,000 new action transitions.
+- Full new demonstration capture **231.649219 s**; setup **4.030683 s**; total
+  **281.709578 s** including copying/compression/hashing. Ten CPU worlds and ten
+  threads; 356,000 new actions, 712,000 physics steps, 712 aggregate sim seconds.
+  Original 356,000 actions are reused, not new physical experience. All combined
+  20 complete exercises pass 1,000 stage checks.
+- Learning **07:20:04.826103–07:50:11.492152 UTC** (end includes final validation
+  and write). Actual learning **1,804.362681 s**, 401 additional updates;
+  **3,284,992 supervised replay targets**. Setup **9.531554 s**, validation
+  **2.037091/1.825127 s** separately; checkpoint writes **0.317734 s** excluded.
+  Ancestry **3,670.512146 s**, 816 updates. No physics worlds run inside optimizer.
+- Four physical evaluation loops **1.190205/1.036721/1.037661/1.097139 s**;
+  process total **14.033169 s**, completed **07:50:52.766406 UTC**. All fail at
+  **0.202/0.202/0.202/0.244 simulated seconds**. No completed movement stage.
+- Read-only original-window audit **6.716078 s**. Saved-trajectory/reset-input
+  audit performed separately; exact audit compute timer was not retained.
+  No added neural updates. Render **31.318095 s**, full decode **2.116871 s**.
+  Video **27 s, 1,350 frames, 50 fps, 1600x960, 1x**, inspected and opened
+  **07:54:34 UTC**: **47m27s** observed elapsed from implementation timestamp.
+- Full fly suite **218 passed in 167.61 s**, 45 existing upstream warnings.
+  Separately added smooth random generator: **2 tests passed in 0.08 s**.
+  Generator is not part of this run's dataset. It was prepared locally while
+  the GPU checkout and training settings stayed frozen. Archival follows the
+  video milestone and is not included in learning time.
