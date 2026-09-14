@@ -76,7 +76,9 @@ def record(args):
                     teacher = {k: f[k] for k in f.files}
                 with np.load(student_path) as f:
                     student = {k: f[k] for k in f.files}
-                duration = min(71.2, max(6, case["duration_seconds"]))
+                duration = min(
+                    71.2, max(6, case["duration_seconds"] + (0.6 if case["failure"] else 0))
+                )
                 sections.append(
                     {
                         "episode": world,
@@ -112,7 +114,7 @@ def record(args):
                     stage = int(teacher["stage"][min(step, len(teacher["time"]) - 1)])
                     draw.text(
                         (22, 94),
-                        f"{'CANONICAL START' if world == 0 else 'HELD-OUT START'}  /  {STAGES[stage][0]}  /  {t:.2f}s",
+                        f"{case.get('case_label', 'CANONICAL START' if world == 0 else 'HELD-OUT START')}  /  {STAGES[stage][0]}  /  {t:.2f}s",
                         font=font(22),
                         fill="#aab3b8",
                     )

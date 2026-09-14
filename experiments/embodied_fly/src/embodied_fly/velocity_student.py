@@ -84,10 +84,16 @@ def evaluate(args):
     cases = []
     for episode in args.episodes:
         order = teacher.get("stage_orders", {}).get(str(episode))
+        teacher_case = next(c for c in teacher["cases"] if c["world"] == episode)
         reference = args.dataset / f"episode_{episode:02d}.npz"
         with np.load(reference) as data:
             reset = {k: data[k][0:1].copy() for k in ("qpos", "qvel", "act", "ctrl")}
         env.reset(np.array([0]), state=reset)
+        # Reset-only history from this exact recorded start. For recovery starts
+        # it is the previous STUDENT command; canonical cold starts contain zero.
+        saved_observations = np.load(args.dataset / "observations.npy", mmap_mode="r")
+        env.previous_action[0] = saved_observations[episode, 0, 297:375]
+        del saved_observations
         memory = actor.initial_state(1)
         rows = []
         failure = None
@@ -147,6 +153,14 @@ def evaluate(args):
         completed_stages = completed_stage_metrics(arrays, first_failure, order)
         summary = {
             "episode": episode,
+            "case_label": (
+                "CANONICAL START"
+                if episode == 0
+                else "HELD-OUT START"
+                if episode == 8
+                else f"REORDERED {'HELD-OUT' if teacher_case['split'] == 'validation' else 'TRAINING'} START"
+            ),
+            "split": teacher_case["split"],
             "file": file.name,
             "capture_sha256": sha256(file),
             "teacher_capture_sha256": sha256(reference),
