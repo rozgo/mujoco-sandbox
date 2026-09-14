@@ -30,7 +30,12 @@ def record(args):
     option.geomgroup[3:] = 0
     camera = mujoco.MjvCamera()
     camera.azimuth, camera.elevation, camera.distance = 135, -20, 3.8
-    titles = ("PID REFERENCE", "BEFORE PPO", "AFTER PPO")
+    continued = training["recipe"].get("resumed_ppo_optimizer_and_critic", False)
+    titles = (
+        ("PID REFERENCE", "BEFORE CONTINUATION", "AFTER CONTINUATION")
+        if continued
+        else ("PID REFERENCE", "BEFORE PPO", "AFTER PPO")
+    )
     colors = ("#b7c6d3", "#ffc31f", "#82b89b")
     fps, size = 50, (1920, 1080)
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -87,7 +92,7 @@ def record(args):
                     )
                     draw.text(
                         (24, 66),
-                        f"{training['training_wall_seconds'] / 60:.1f} min PPO + light imitation  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x",
+                        f"{training['training_wall_seconds'] / 60:.1f} min {'additional ' if continued else ''}PPO + light imitation  |  32 worlds  |  1,000 Hz physics / 500 Hz brain control  |  1x",
                         font=font(23),
                         fill="#e6e1db",
                     )
@@ -187,7 +192,9 @@ def record(args):
                                 draw.line(points, fill=colors[col], width=2)
                     draw.text(
                         (24, 1020),
-                        "Same fly / same flight dynamics / same starts  ·  Actor controls all 78 outputs  ·  Damped tracking cameras, shared chart scales",
+                        "Full MaleCNS controls all 78 outputs  ·  Training the existing wing readout  ·  Same fly, physics and starts"
+                        if training["recipe"].get("wing_readout_only")
+                        else "Same fly / same flight dynamics / same starts  ·  Actor controls all 78 outputs  ·  Damped tracking cameras, shared chart scales",
                         font=font(22),
                         fill="#aab3b8",
                     )
@@ -197,7 +204,9 @@ def record(args):
             draw = ImageDraw.Draw(board)
             draw.text(
                 (50, 55),
-                "TEN-MINUTE PPO PILOT / MEASURED OUTCOME",
+                "PPO CONTINUATION / MEASURED OUTCOME"
+                if continued
+                else "TEN-MINUTE PPO PILOT / MEASURED OUTCOME",
                 font=font(39),
                 fill="#ffc31f",
             )
