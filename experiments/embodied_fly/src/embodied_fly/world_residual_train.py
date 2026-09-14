@@ -218,7 +218,29 @@ def run(args):
     )
     training, evaluation, step, last_eval = 0.0, 0.0, 0, -15.0
     best, best_state, best_step, records = float("inf"), None, 0, []
-    while training < args.latent_seconds:
+    if args.resume_latent is not None:
+        saved = torch.load(args.resume_latent, map_location=device, weights_only=False)
+        if args.resume_latent_log is None or saved["stage"] != "latent":
+            raise ValueError("Latent resume requires its original measured log")
+        for key in ("dataset_sha256", "interventions_sha256", "physical_contract"):
+            if saved[key] != report[key]:
+                raise ValueError("Resumed latent belongs to different data or physics")
+        records = []
+        for line in args.resume_latent_log.read_text().splitlines():
+            if line.startswith('{"stage": "latent"'):
+                records.append(json.loads(line))
+        if not records or saved["seed"] != args.seed:
+            raise ValueError("Incomplete latent log or changed initialization seed")
+        best_state, best_step = saved["state_dict"], saved["step"]
+        training, step = records[-1]["training_seconds"], records[-1]["step"]
+        evaluation = None  # Interrupted original process did not persist this timing.
+        report["resumed_latent"] = {
+            "checkpoint_sha256": sha256(args.resume_latent),
+            "log_sha256": sha256(args.resume_latent_log),
+            "validation_timing_unavailable": True,
+            "no_latent_updates_in_this_invocation": True,
+        }
+    while args.resume_latent is None and training < args.latent_seconds:
         start = time.perf_counter()
         progress = min(training / args.latent_seconds, 1)
         optimizer.param_groups[0]["lr"] = (
@@ -267,6 +289,9 @@ def run(args):
         "records": records,
     }
     del optimizer, best_state
+    (args.output / "latent_report.json").write_text(json.dumps(report, indent=2) + "\n")
+    # Separate bank selection from the machine-dependent number of timed updates.
+    rng = np.random.default_rng(args.seed + 1)
 
     for name, parameter in model.named_parameters():
         parameter.requires_grad_(name.startswith("prober."))
@@ -314,15 +339,19 @@ def run(args):
     graph = None
     if device.type == "cuda" and not args.no_cuda_graph:
         # Warm up forward/backward only; no optimizer updates or hidden training.
-        for _ in range(2):
-            model.zero_grad(set_to_none=False)
-            loss = physical_loss(model, plant, static)
-            loss.backward()
+        capture_stream = torch.cuda.Stream()
+        capture_stream.wait_stream(torch.cuda.current_stream())
+        with torch.cuda.stream(capture_stream):
+            for _ in range(2):
+                model.zero_grad(set_to_none=False)
+                loss = physical_loss(model, plant, static)
+                loss.backward()
+        torch.cuda.current_stream().wait_stream(capture_stream)
         eager_loss = loss.detach().clone()
         eager_gradients = [p.grad.detach().clone() for p in model.prober.parameters()]
         synchronize(device)
         graph = torch.cuda.CUDAGraph()
-        with torch.cuda.graph(graph):
+        with torch.cuda.graph(graph, stream=capture_stream):
             model.zero_grad(set_to_none=False)
             loss = physical_loss(model, plant, static)
             loss.backward()
@@ -433,4 +462,6 @@ if __name__ == "__main__":
     p.add_argument("--batch", type=int, default=128)
     p.add_argument("--bank-windows", type=int, default=1024)
     p.add_argument("--no-cuda-graph", action="store_true")
+    p.add_argument("--resume-latent", type=Path)
+    p.add_argument("--resume-latent-log", type=Path)
     run(p.parse_args())
