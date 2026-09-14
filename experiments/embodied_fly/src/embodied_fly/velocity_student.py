@@ -54,7 +54,7 @@ def completed_stage_metrics(arrays, failure_seconds=None):
                 "name": STAGES[stage][0],
                 "settled_velocity_error_peak_mm_s": velocity_error,
                 "settled_yaw_error_peak_rad_s": yaw_error,
-                "passed": velocity_error < velocity_limit and yaw_error < yaw_limit,
+                "passed": bool(velocity_error < velocity_limit and yaw_error < yaw_limit),
             }
         )
     return result
