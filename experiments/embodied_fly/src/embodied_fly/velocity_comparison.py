@@ -254,7 +254,7 @@ def record(args):
                 f"{training['updates_this_burst']} optimizer updates / {training['supervised_targets']:,} supervised targets",
                 f"Held-out wing MSE: {training['validation_before']['wing_mse']:.5f} -> {training['validation_after']['wing_mse']:.5f}",
                 f"Full flight exercises completed: {sum(c['completed_full_exercise'] for c in report['cases'])}/{len(report['cases'])}",
-                "Fixed connectome wiring / fresh trainable encoder, readouts and cell dynamics",
+                "Fixed connectome wiring / learned encoder, readouts and cell dynamics",
                 "Checkpoint + optimizer preserved; physical flight determines the outcome"
                 if long_run
                 else "Checkpoint + optimizer saved for the next one-minute burst",
