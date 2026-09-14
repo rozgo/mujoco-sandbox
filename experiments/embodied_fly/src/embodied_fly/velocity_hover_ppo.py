@@ -26,6 +26,7 @@ from embodied_fly.ppo_critic import StandardizedValueNetwork, fit_critic
 from embodied_fly.ppo_step import bounded_step, motor_kl
 from embodied_fly.ppo_timing import physical_timescales, recurrent_forward
 from embodied_fly.provenance import evidence, sha256, utc_now
+from embodied_fly.recovery_starts import RecoveryStarts
 from embodied_fly.train import synchronize
 from embodied_fly.velocity_demonstrations import environment
 from embodied_fly.velocity_hover import HoverReward, evaluate_hover, start_states
@@ -82,6 +83,9 @@ def replay(actor, data, state, a, b, active, log_std, gradients):
         )
         actions.append(result.action)
         state = actor.reset_worlds(result.state, data["done"][t])
+        if t in data.get("reset_memories", {}):
+            ids, restored = data["reset_memories"][t]
+            state[:, ids] = restored
     return torch.stack(logps), torch.stack(actions), state
 
 
@@ -180,6 +184,10 @@ def policy_update_exceeded(sampled_kl, analytic_kl, target_kl):
 
 def train(args):
     policy_update_exceeded(0, 0, args.target_kl)
+    if args.recovery_bank and (
+        not args.resume_ppo or not args.wing_readout_only or args.training_gust_speed
+    ):
+        raise ValueError("Recovery starts require frozen-upstream continuation without gusts")
     if not np.isfinite(args.exploration_scale) or args.exploration_scale <= 0:
         raise ValueError("Exploration scale must be finite and positive")
     if args.exploration_scale != 1 and not args.wing_readout_only:
@@ -274,6 +282,27 @@ def train(args):
         if args.training_gust_speed
         else None
     )
+    recovery = (
+        RecoveryStarts(
+            args.recovery_bank,
+            env,
+            sha256(args.checkpoint),
+            actor,
+            reward_fn,
+            args.seed ^ 0x5A17,
+        )
+        if args.recovery_bank
+        else None
+    )
+
+    def recovery_reset(ids, memory):
+        if recovery is not None:
+            memory = recovery.reset(env, reward_fn, memory, ids)
+            for i in ids:
+                record = recovery.active_record[i]
+                if record >= 0:
+                    world_episode[i] = recovery.records[record]["episode"]
+        return memory
 
     def reset(ids):
         env.reset(ids, state={k: v[world_episode[ids]] for k, v in starts.items()})
@@ -425,6 +454,8 @@ def train(args):
             }
     if gusts is not None:
         recipe["training_disturbances"] = gusts.recipe
+    if recovery is not None:
+        recipe["recovery_initialization"] = recovery.recipe
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
     setup_seconds = time.perf_counter() - setup_start
@@ -455,6 +486,7 @@ def train(args):
             evaluations[label] = report
             print(json.dumps({"evaluation": label, "cases": report["cases"]}), flush=True)
     memory = actor.initial_state(args.worlds)
+    memory = recovery_reset(np.arange(args.worlds), memory)
     obs = torch.as_tensor(observation(env, commands), device=device)
     counters = {
         "rollouts": 0,
@@ -549,7 +581,7 @@ def train(args):
                     "features",
                 )
             }
-            states, term_sum = [], {}
+            states, term_sum, reset_memories = [], {}, {}
             with torch.no_grad():
                 for t in range(args.horizon):
                     if t % args.sequence == 0:
@@ -608,17 +640,32 @@ def train(args):
                                 "seconds": float(env.ages[i] * 0.002),
                                 "failed": bool(failed[i]),
                                 "return": float(episode_returns[i]),
+                                **(
+                                    {"recovery_record": int(recovery.active_record[i])}
+                                    if recovery is not None
+                                    else {}
+                                ),
                             }
                         )
                     memory = actor.reset_worlds(output.state, items["done"])
                     if len(ids):
                         reset(ids)
+                        memory = recovery_reset(ids, memory)
+                        if recovery is not None:
+                            warm = ids[recovery.enabled[ids]]
+                            if len(warm):
+                                reset_memories[t] = (
+                                    torch.as_tensor(warm, device=device),
+                                    memory[:, warm].detach().clone(),
+                                )
                         episode_returns[ids] = 0
                         next_obs = torch.as_tensor(observation(env, commands), device=device)
                     obs = next_obs
                 final_features = critic.features(actor, obs, memory, reward_fn, env)
                 final_value = critic.network(final_features).squeeze(-1)
             data = {k: torch.stack(v) for k, v in buffers.items()}
+            if recovery is not None:
+                data["reset_memories"] = reset_memories
             old_log_std = log_std.detach().clone()
             del buffers
             adv, returns = advantages(
@@ -978,6 +1025,8 @@ def train(args):
     }
     if gusts is not None:
         report["training_gust_events"] = gusts.events
+    if recovery is not None:
+        report["recovery_initializations"] = recovery.events
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(
         json.dumps(
@@ -1025,4 +1074,5 @@ if __name__ == "__main__":
     p.add_argument("--velocity-objective", choices=("separate", "vector"), default="separate")
     p.add_argument("--adapt-velocity-objective", action="store_true")
     p.add_argument("--training-gust-speed", type=float, default=0.0)
+    p.add_argument("--recovery-bank", type=Path)
     train(p.parse_args())
