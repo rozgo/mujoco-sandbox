@@ -129,6 +129,14 @@ def train(args):
     critic_rng = np.random.default_rng(args.seed ^ 0xC8171C)
     device = torch.device(args.device)
     actor, parent = load_actor(args.checkpoint, args.graph, device)
+    old_vertical_weight = (
+        parent.get("ppo_recipe", {}).get("reward", {}).get("vertical_tracking_rate", 2.0)
+    )
+    changing_reward = args.resume_ppo and old_vertical_weight != args.vertical_reward_weight
+    if bool(args.adapt_vertical_reward) != changing_reward:
+        raise ValueError(
+            "A changed vertical reward requires explicit --adapt-vertical-reward on resume"
+        )
     if parent.get("observation_schema") != SCHEMA or not actor.motor_only:
         raise ValueError("Requires the preserved velocity-command motor actor")
     if not args.resume_ppo and (
@@ -174,7 +182,7 @@ def train(args):
     starts = start_states(args.dataset, range(8))
     world_episode = np.arange(args.worlds) % 8
     commands = np.zeros((args.worlds, 4), np.float32)
-    reward_fn = HoverReward(env, args.horizontal_reward_scale)
+    reward_fn = HoverReward(env, args.horizontal_reward_scale, args.vertical_reward_weight)
 
     def reset(ids):
         env.reset(ids, state={k: v[world_episode[ids]] for k, v in starts.items()})
@@ -257,6 +265,16 @@ def train(args):
         recipe.update(
             optimizer_transition="restore actor Adam, critic weights/Adam, fixed exploration and actor sampling RNG; reset physical episodes; critic sample shuffle restarts from declared seed",
             critic_warmup_rollouts=0,
+        )
+    if changing_reward:
+        recipe.update(
+            reward_transition={
+                "vertical_tracking_rate_before": old_vertical_weight,
+                "vertical_tracking_rate_after": args.vertical_reward_weight,
+                "other_reward_terms_changed": False,
+                "critic_adaptation": "one new-reward rollout, critic updates only; retain critic weights/Adam/calibration",
+            },
+            critic_warmup_rollouts=1,
         )
     (args.output / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
     synchronize(device)
@@ -489,7 +507,9 @@ def train(args):
                 for group in optimizer.param_groups:
                     group["lr"] = args.lr
             # Let the new critic see one rollout before it drives actor updates.
-            for _ in range(0 if counters["rollouts"] == 0 and not args.resume_ppo else 2):
+            for _ in range(
+                0 if counters["rollouts"] < recipe["critic_warmup_rollouts"] else 2
+            ):
                 for chunk in rng.permutation(len(states)):
                     a, b = chunk * args.sequence, (chunk + 1) * args.sequence
                     if args.wing_readout_only:
@@ -775,4 +795,6 @@ if __name__ == "__main__":
     p.add_argument("--wing-readout-only", action="store_true")
     p.add_argument("--resume-ppo", action="store_true")
     p.add_argument("--horizontal-reward-scale", type=float, default=0.5)
+    p.add_argument("--vertical-reward-weight", type=float, default=2.0)
+    p.add_argument("--adapt-vertical-reward", action="store_true")
     train(p.parse_args())

@@ -44,12 +44,14 @@ RECIPE = {
 }
 
 
-def reward_rates(velocity, angular, upright, horizontal_scale=0.5):
+def reward_rates(velocity, angular, upright, horizontal_scale=0.5, vertical_weight=2.0):
     if not np.isfinite(horizontal_scale) or horizontal_scale <= 0:
         raise ValueError("Positive finite horizontal reward scale required")
+    if not np.isfinite(vertical_weight) or vertical_weight <= 0:
+        raise ValueError("Positive finite vertical reward weight required")
     return {
         "alive": np.ones(len(velocity)),
-        "vertical": 2 / (1 + (velocity[:, 2] / 0.5) ** 2),
+        "vertical": vertical_weight / (1 + (velocity[:, 2] / 0.5) ** 2),
         "horizontal": 1 / (1 + np.sum((velocity[:, :2] / horizontal_scale) ** 2, axis=1)),
         "angular": 0.5 / (1 + np.sum((angular / 0.5) ** 2, axis=1)),
         "upright": 0.5 * np.clip(upright, 0, 1),
@@ -65,10 +67,17 @@ def failures(env):
 
 
 class HoverReward:
-    def __init__(self, env, horizontal_scale=0.5):
+    def __init__(self, env, horizontal_scale=0.5, vertical_weight=2.0):
         self.env = env
         self.horizontal_scale = horizontal_scale
-        self.recipe = RECIPE | {"horizontal_velocity_scale_cm_s": horizontal_scale}
+        self.vertical_weight = vertical_weight
+        self.recipe = RECIPE | {
+            "horizontal_velocity_scale_cm_s": horizontal_scale,
+            "vertical_tracking_rate": vertical_weight,
+            "maximum_live_rate": 3.0 + vertical_weight,
+        }
+        if vertical_weight != 2.0:
+            self.recipe["version"] = "velocity_hover_v2_vertical_weight"
         self.history = np.zeros((50, env.n, 6))
         self.total = np.zeros((env.n, 6))
         self.count = np.zeros(env.n, dtype=int)
@@ -95,6 +104,7 @@ class HoverReward:
             mean[:, 3:],
             env.fields["xmat"][:, env.template.thorax_id, 8],
             self.horizontal_scale,
+            self.vertical_weight,
         )
         failed = failures(env)
         reward = sum(terms.values()) * env.control_dt * ~failed - 2 * failed

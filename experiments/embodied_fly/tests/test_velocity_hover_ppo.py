@@ -1,12 +1,28 @@
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 import torch
 from test_brain import make_brain
 
 from embodied_fly.ppo import joint_log_probability, motor_distribution
 from embodied_fly.velocity_hover import HoverReward, reward_rates
 from embodied_fly.velocity_hover_ppo import replay, replay_audit
+
+
+def test_vertical_reward_adjustment_changes_only_vertical_term():
+    velocity = np.array([[0, 0, 0], [0.7, -1.2, 0.5], [3, 2, -4]])
+    angular = np.full((3, 3), 0.1)
+    upright = np.array([1.0, 0.9, 0.85])
+    old = reward_rates(velocity, angular, upright, horizontal_scale=2)
+    new = reward_rates(velocity, angular, upright, horizontal_scale=2, vertical_weight=3)
+    np.testing.assert_allclose(new["vertical"], old["vertical"] * 1.5)
+    for key in ("alive", "horizontal", "angular", "upright"):
+        np.testing.assert_array_equal(old[key], new[key])
+    assert new["vertical"][0] == 3
+    for invalid in (0, -1, np.nan, np.inf):
+        with pytest.raises(ValueError, match="vertical reward weight"):
+            reward_rates(velocity, angular, upright, vertical_weight=invalid)
 
 
 def test_wider_horizontal_reward_recognizes_reducing_large_drift_without_moving_optimum():
@@ -22,15 +38,15 @@ def test_wider_horizontal_reward_recognizes_reducing_large_drift_without_moving_
         np.testing.assert_array_equal(old[key], new[key])
 
 
-def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus():
-    stable = sum(reward_rates(np.zeros((1, 3)), np.zeros((1, 3)), np.ones(1)).values())[0]
-    climbing = sum(
-        reward_rates(np.array([[0, 0, 3.0]]), np.zeros((1, 3)), np.ones(1)).values()
-    )[0]
-    poor = sum(
-        reward_rates(np.full((1, 3), 100), np.full((1, 3), 100), np.array([0.85])).values()
-    )[0]
-    assert stable == 5 and stable > climbing > poor >= 1
+@pytest.mark.parametrize("vertical_weight", [2.0, 3.0])
+def test_hover_reward_ordering_and_failure_cannot_earn_remaining_alive_bonus(vertical_weight):
+    def rates(velocity, angular, upright):
+        return reward_rates(velocity, angular, upright, vertical_weight=vertical_weight)
+
+    stable = sum(rates(np.zeros((1, 3)), np.zeros((1, 3)), np.ones(1)).values())[0]
+    climbing = sum(rates(np.array([[0, 0, 3.0]]), np.zeros((1, 3)), np.ones(1)).values())[0]
+    poor = sum(rates(np.full((1, 3), 100), np.full((1, 3), 100), np.array([0.85])).values())[0]
+    assert stable == 3 + vertical_weight and stable > climbing > poor >= 1
     gamma = np.exp(-0.002 / 2)
 
     def outcome(rates, fail_at=None):
