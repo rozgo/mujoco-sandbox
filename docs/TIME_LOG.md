@@ -1841,3 +1841,40 @@ reference-only physical validation follows the user's directional curriculum.
   observer-only world-model predictions. Next: bounded learning updates to the
   complete decoder, judged by reduced drift/climb in real MuJoCo rollouts.
   [Architecture, result and reproduction](embodied_fly/FULL_BODY_DECODER.md).
+
+## September 14: first model-guided full-body learning trial
+
+- Started September 15 **00:19:56 UTC** (September 14 local time). Same shared
+  decoder, canonical body/forces and upstream MaleCNS actor. Upstream tensors
+  and world model frozen; every one of the 78 decoder output rows updates.
+- Eight-world experience: setup **8.295460 s**, capture **38.945897 s**,
+  serialization **12.735259 s**, total **59.976708 s**. **80 simulated seconds /
+  40,000 physical transitions**, five training episodes and three validation.
+- Learned-model guidance: **100 updates / 8.381005 s** optimization; bank
+  preparation **2.908687 s**, graph setup/gradient checks **4.695443 s**;
+  complete invocation **18.134417 s**. Analytical-only comparator: same 100
+  updates/batches, **8.229232 s** optimization; bank **2.860857 s**, graph
+  setup **4.489487 s**, invocation **17.705955 s**. No PID or PPO updates.
+- Midpoint/final full-update physical checks **38.388450 s**: all four
+  candidates fail startup despite lower model cost. Parent retained.
+- Six smaller update checks **235.352005 s**. Two evidence-led refinements:
+  learned-model 5% **11.515261 s**, analytical 20% **46.735069 s**. These
+  are parameter backtracking plus evaluation, **zero additional optimizer
+  updates**. Twelve candidate policies / 48 physical episodes in total.
+- Best complete analytical candidate: **4.935% lower velocity RMS, 34.211%
+  less climb**. Best complete learned-model candidate: **1.643% lower velocity
+  RMS, 9.739% less climb**. Both complete four ten-second flights. Neither
+  meets every original promotion gate; current checkpoint/manifest unchanged.
+- Cold-start diagnostic distinguishes stale future neural history from model
+  error: learned model predicts vertical velocity −35.728 mm/s when given
+  executed commands, versus −35.541 actually measured. Frozen-history commands
+  instead predict +4.237 mm/s. A larger fit on the same cache is not justified.
+- Suite: **289 passed**, 45 upstream warnings, **177.45 s**. Focused **9/9**,
+  one warning, **3.31 s**. Archived all twelve checkpoints and verified unchanged
+  upstream tensors, physical contract, parent hash and all 78 changed output rows.
+- Video render **72.903125 s**, full decode **7.179971 s**; **48.5 s / 2,425
+  frames / 50 fps / 2560x1080 / 1x**. Encoded failure, comparison, late-flight
+  and results frames inspected. Opened **00:46:56 UTC**, exactly **27 minutes**
+  after effort start. Includes full-update failures and all four complete starts.
+- Next: short on-policy proposal/check/refresh cycles using actual brain/body
+  feedback, with analytical guidance retained as comparator. [Full result](embodied_fly/runs/full_body_guidance_01/SUMMARY.md).

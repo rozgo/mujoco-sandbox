@@ -2,6 +2,15 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
+Newest learning trial: [model-guided full-body updates](runs/full_body_guidance_01/SUMMARY.md)
+and [PID / parent / new candidates video](../../previews/embodied_fly/full_body_guidance_01_comparison_v1.mp4).
+Smaller analytical-guided updates reduce velocity RMS 4.9% and climb 34%; learned
+residual guidance gives smaller gains. Both displayed candidates complete all four
+flights. Full updates fail startup because their real neural feedback diverges
+from the fixed history used during training. No candidate meets every declared
+promotion gate; the preferred parent below remains unchanged. Next: small updates
+with fresh histories and actual recurrent feedback checks between updates.
+
 Current motor architecture: [one shared full-body decoder](FULL_BODY_DECODER.md)
 and [current progress video](../../previews/embodied_fly/full_body_progress_v1.mp4).
 The retained learned function now uses one dense decoder for all 78 actuators,
