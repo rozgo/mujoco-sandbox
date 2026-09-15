@@ -47,6 +47,7 @@ def load_actor(path, graph_path, device):
         motor_only=checkpoint.get("motor_only", False),
         wing_residual_enabled=checkpoint.get("wing_residual_enabled", False),
         wing_residual_hidden=checkpoint.get("wing_residual_hidden", 0),
+        shared_decoder_hidden=checkpoint.get("shared_decoder_hidden", 0),
     )
     brain.load_state_dict(checkpoint["state_dict"], strict=True)
     return brain.to(device).eval(), checkpoint

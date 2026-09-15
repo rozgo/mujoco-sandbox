@@ -216,6 +216,7 @@ def evaluate_hover(
     seconds=10,
     teacher=False,
     refresh_observations=True,
+    state_observer=None,
 ):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
@@ -258,6 +259,8 @@ def evaluate_hover(
         else:
             result = actor(torch.as_tensor(obs, device=device), state)
             action, state = result.action.cpu().numpy(), result.state
+            if state_observer is not None:
+                state_observer(state, step)
         row["action"] = action
         env.step(action)
         row.update(post_row(env))

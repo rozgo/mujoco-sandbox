@@ -28,7 +28,8 @@ def test_fresh_brain_reproducible_without_policy_baggage():
     assert parameter_digest(a) == parameter_digest(b) != parameter_digest(c)
     assert a.observation_size == 391 and a.sensor_extension_size == 0
     assert torch.all(a.observation_mean == 0) and torch.all(a.observation_std == 1)
-    assert torch.count_nonzero(a.wing_residual.network[-1].weight)
+    assert a.wing_residual is None and a.shared_decoder_hidden == 384
+    assert torch.count_nonzero(a.motor_decoder[3].weight)
     assert not a.initial_state(2).any()
     torch.testing.assert_close(a.core.adjacency.to_dense(), c.core.adjacency.to_dense())
 

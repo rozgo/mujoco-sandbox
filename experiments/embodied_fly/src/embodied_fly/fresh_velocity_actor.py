@@ -15,7 +15,7 @@ from embodied_fly.provenance import evidence, sha256, utc_now
 from embodied_fly.velocity_motor import OBSERVATION_SIZE, SCHEMA, schema_report
 
 
-def initialize(adjacency, sensory, descending, motor, seed):
+def initialize(adjacency, sensory, descending, motor, seed, legacy_wing_readout=False):
     """Standard fresh layer initialization, independent of all earlier fits."""
     with torch.random.fork_rng(devices=[]):
         torch.manual_seed(seed)
@@ -29,12 +29,14 @@ def initialize(adjacency, sensory, descending, motor, seed):
             internal_steps=4,
             sensor_extension_size=0,
             motor_only=True,
-            wing_residual_enabled=True,
-            wing_residual_hidden=128,
+            wing_residual_enabled=legacy_wing_readout,
+            wing_residual_hidden=128 if legacy_wing_readout else 0,
+            shared_decoder_hidden=0 if legacy_wing_readout else 384,
         )
         # This is a fresh parallel readout, not a zero-initialized correction
         # grafted onto an already trained motor policy.
-        actor.wing_residual.network[-1].reset_parameters()
+        if legacy_wing_readout:
+            actor.wing_residual.network[-1].reset_parameters()
     return actor
 
 
@@ -56,7 +58,9 @@ def run(args):
         sha256(args.graph / "brain.npz"),
     )
     adjacency, sensory, descending, motor = load_malecns(args.graph)
-    actor = initialize(adjacency, sensory, descending, motor, args.seed)
+    actor = initialize(
+        adjacency, sensory, descending, motor, args.seed, args.legacy_wing_readout
+    )
     model = mujoco.MjModel.from_binary_path(str(args.model))
     contract = physical_contract(model)
     if (
@@ -74,8 +78,9 @@ def run(args):
         "sensor_extension_size": 0,
         "observation_schema": SCHEMA,
         "motor_only": True,
-        "wing_residual_enabled": True,
-        "wing_residual_hidden": 128,
+        "wing_residual_enabled": actor.wing_residual is not None,
+        "wing_residual_hidden": actor.wing_residual_hidden,
+        "shared_decoder_hidden": actor.shared_decoder_hidden,
         "graph_sha256": graph_hash,
         "graph_metadata_sha256": metadata_hash,
         "physical_contract": contract,
@@ -132,4 +137,9 @@ if __name__ == "__main__":
     p.add_argument("--model", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--seed", type=int, default=121101)
+    p.add_argument(
+        "--legacy-wing-readout",
+        action="store_true",
+        help="Reproduce historical initialization only; new policies use the full-body decoder",
+    )
     run(p.parse_args())

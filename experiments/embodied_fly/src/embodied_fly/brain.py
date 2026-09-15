@@ -123,6 +123,7 @@ class EmbodiedBrain(nn.Module):
         motor_only: bool = False,
         wing_residual_enabled: bool = False,
         wing_residual_hidden: int = 0,
+        shared_decoder_hidden: int = 0,
     ):
         super().__init__()
         if internal_steps < 2:
@@ -175,6 +176,15 @@ class EmbodiedBrain(nn.Module):
             nn.Linear(256, action_size),
             nn.Tanh(),
         )
+        self.shared_decoder_hidden = shared_decoder_hidden
+        if shared_decoder_hidden:
+            from embodied_fly.full_body_decoder import FullBodyDecoder
+
+            if shared_decoder_hidden < 1 or wing_residual_enabled:
+                raise ValueError("A shared decoder cannot include a wing correction branch")
+            self.motor_decoder = FullBodyDecoder(
+                len(motor_ids), shared_decoder_hidden, action_size
+            )
         self.wing_residual = None
         self.wing_residual_hidden = 0
         if wing_residual_hidden < 0 or (wing_residual_hidden and not wing_residual_enabled):
@@ -190,6 +200,8 @@ class EmbodiedBrain(nn.Module):
         Start at zero so the parent function is preserved. The six corrections
         enter existing wing logits before their bounded output nonlinearity.
         """
+        if self.shared_decoder_hidden:
+            raise ValueError("Shared full-body policies do not support isolated wing branches")
         if self.action_size != 78:
             raise ValueError("Wing readout requires the canonical 78-actuator layout")
         if self.wing_residual is not None:

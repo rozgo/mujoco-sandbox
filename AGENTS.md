@@ -193,3 +193,14 @@ resistance and measured differential-stroke lateral thrust. Its full 10x-speed
 exercise passes 50/50 checks in `pid_velocity_fast_04`. Preserve earlier model
 versions and videos. Future student work must explicitly adopt the reviewed
 physical contract for every task, rather than silently loading the v3 default.
+
+User steering, September 14: remove the isolated wing decoder from the active
+fly policy. New motor learning uses one general decoder for all 78 actuators,
+including legs, antennae, mouth and wings. No permanent wing-only head, output
+mask or wing-only parameter selection in new training. Preserve old checkpoints
+and their legacy loading paths for reproduction. The shared-decoder migration
+consolidates the prior learned function into one dense hidden/output stack;
+all output rows and hidden connections remain available for subsequent learning.
+Decoder-only cached training must retain raw motor-neuron activity, since the
+decoder's normalization is trainable. World models are training/observer tools;
+do not imply their prediction improvements already improved the acting fly.
