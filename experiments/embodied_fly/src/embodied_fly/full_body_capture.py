@@ -34,6 +34,10 @@ def run(args):
         raise ValueError("Current capture requires the shared full-body decoder")
     projection = NeuralProjection.from_graph(args.graph, device=device, size=96)
     maps, times = [], []
+    parent = json.loads((args.parent_capture / "report.json").read_text())
+    timing = parent.get("observation_timing")
+    if timing not in ("refresh before actor", "physics-step return, matching PPO collection"):
+        raise ValueError("Parent must declare its observation timing")
 
     def observe(state, step):
         if step % 10 == 0:
@@ -46,7 +50,7 @@ def run(args):
         args.dataset,
         args.output / "flight",
         device,
-        refresh_observations=False,
+        refresh_observations=timing == "refresh before actor",
         state_observer=observe,
     )
     np.savez_compressed(
@@ -55,7 +59,6 @@ def run(args):
         time=np.asarray(times),
         occupancy=projection.occupancy,
     )
-    parent = json.loads((args.parent_capture / "report.json").read_text())
     if parent["physical_contract"] != checkpoint["physical_contract"]:
         raise ValueError("Parent capture has different physics")
     differences = []
