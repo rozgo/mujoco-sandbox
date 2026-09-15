@@ -1,0 +1,40 @@
+{
+  "selected_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_11_midpoint.pt",
+  "checkpoint_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+  "training_stage": "velocity_hover_ppo_11",
+  "snapshot": "midpoint",
+  "selection_basis": "Predeclared midpoint has lower total/horizontal RMS, climb and peak displacement than both run05 and run11 final; retain final and parent as historical evidence",
+  "additional_training_seconds": 301.325883848127,
+  "whole_trial_training_seconds": 606.8609804483131,
+  "additional_transitions": 884736,
+  "cumulative_selected_training_seconds": 3374.1293540275656,
+  "physical_contract": {
+    "schema": "fly-motor-physical-contract-v1",
+    "sha256": "1dcd257a38917e64c2cf326fc4ef33f1b243faa7993961744f7c45818aa0204b",
+    "preset": "wing_position",
+    "body_and_force_law_shared_across_tasks": true,
+    "wing_mass_inertia_collision_aerodynamics": "zero",
+    "wing_body_coupling": "custom flight law reads measured wing motion",
+    "physics_hz": 1000.0,
+    "scope": "body, joints, contacts, actuation, physics options and force parameters; observer sensors/cameras excluded",
+    "wing_response": "instant",
+    "independent_heading_control": true
+  },
+  "fixed_graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
+  "metrics": {
+    "velocity_rms_mm_s": 12.75771810264544,
+    "vertical_velocity_rms_mm_s": 8.852625014041331,
+    "horizontal_velocity_rms_mm_s": 9.186411873780358,
+    "first_two_seconds_velocity_rms_mm_s": 16.78831489089629,
+    "peak_displacement_mm": 75.75905867806011,
+    "climb_mm": 60.72603719807915,
+    "survived": 4
+  },
+  "stationary_hover_complete": false,
+  "remaining_limitations": [
+    "Climb about 60.73 mm exceeds 50 mm target",
+    "First 0\u20132 s velocity RMS 16.79 mm/s versus 15.59 mm/s in parent",
+    "Four fixed development starts, one trained seed; zero velocity commands only"
+  ],
+  "video": "previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4"
+}

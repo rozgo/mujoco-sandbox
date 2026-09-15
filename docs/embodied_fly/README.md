@@ -2,13 +2,23 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
-Current retained result: [run-11 midpoint](runs/velocity_hover_ppo_11/SUMMARY.md)
+Current motor architecture: [one shared full-body decoder](FULL_BODY_DECODER.md)
+and [current progress video](../../previews/embodied_fly/full_body_progress_v1.mp4).
+The retained learned function now uses one dense decoder for all 78 actuators,
+with no wing-specific branch. Algebraic consolidation adds no training; all four
+ten-second flights survive, with at most 0.035 mm position discrepancy from the
+parent. Hover still climbs and drifts. Actual simulated neural activity and
+observer-only world-model predictions are shown in the video. The
+[active manifest](PREFERRED_HOVER.json) selects this shared-decoder checkpoint.
+
+Retained learning source: [run-11 midpoint](runs/velocity_hover_ppo_11/SUMMARY.md)
 and [PID / run05 / improved hover video](../../previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4).
 Halving PPO exploration noise reduces total velocity RMS 14.5% and climb 42.7%
 versus run05, with slightly lower sideways RMS and all four ten-second flights
 complete. Climb is still 61 mm; the first two seconds are slightly worse. The
 five-minute midpoint beats the ten-minute final checkpoint and is explicitly
-selected in [the manifest](PREFERRED_HOVER.json). Same brain, rewards and physics.
+recorded in [the preserved parent manifest](runs/full_body_decoder_01/parent_selection.json).
+Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
 Newest experiment: [physics-integrated JEPA residuals](world_model/RESIDUAL_02.md).
@@ -16,7 +26,8 @@ After 120 seconds of GPU optimization, the predictor passes the held-out gates.
 Learned acceleration corrections reduce 200 ms velocity error on 504 controlled
 command changes by 59.8% versus the analytical model; ordinary-flight prediction
 improves only 1.6% averaged across horizons. No fly policy was updated. Next is
-a bounded model-guided decoder trial. [Comparison chart](../../previews/embodied_fly/world_residual_02_comparison.png).
+a bounded model-guided trial using the shared full-body decoder above.
+[Comparison chart](../../previews/embodied_fly/world_residual_02_comparison.png).
 The [first direct-state probe](world_model/PILOT_01.md) remains preserved.
 
 Previous experiment: [coordinated hover reward](runs/velocity_hover_ppo_14/SUMMARY.md)

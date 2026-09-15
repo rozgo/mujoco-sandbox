@@ -37,4 +37,59 @@ The video must identify persistent drift and distinguish learned flight from
 world-model prediction. Neural images show actual simulated latent activity
 binned at measured cell locations; they do not claim physiological spikes.
 
-Results, measured times and the video link will be recorded after physical review.
+The migration passes the complete **286-test** suite. On the real GPU graph,
+2,048 motor-state samples differ by at most **0.000000637** in normalized action.
+The full recurrent rollout is not bitwise identical because the dense matrix
+operations use a different floating-point summation order. In matched physical
+captures, maximum position discrepancy is **0.035 mm** over ten seconds; all four
+starts survive. Mean velocity RMS is **12.757 mm/s** (the existing rolling-velocity
+metric from 0.2–10 s, averaged across starts) and mean net climb is
+**60.720 mm**, effectively preserving the retained behavior. This does not solve
+stationary hover or establish leg, antenna or mouth task skills.
+
+An initial capture used a different observation-refresh setting from the parent.
+It was superseded after restoring the parent's explicit setting, `refresh before
+actor`. Its results are not used to claim equivalence. The accepted capture uses
+the same body, force law, starts, observations and commands as its parent.
+
+Active checkpoint: [full_body_decoder_01.pt](../../assets/embodied_fly/diagnostics/full_body_decoder_01.pt).
+[Selection manifest](PREFERRED_HOVER.json), [migration report](runs/full_body_decoder_01/migration.json),
+[physical comparison](runs/full_body_decoder_01/capture.json) and
+[preserved parent selection](runs/full_body_decoder_01/parent_selection.json).
+The old parent checkpoint is unchanged. Migration took **1.524 s**; accepted
+capture and observer predictions took **53.706 s**. Neither is training time.
+
+[Watch the current progress video](../../previews/embodied_fly/full_body_progress_v1.mp4):
+four ten-second flights, actual simulated neural activity and all 78 commands,
+followed by 200 ms world-model forecasts on start 8. Forecasts are conditioned on
+recorded future actuator commands; they are an observer audit, not a controller
+input. The final card reports the preceding [two-minute predictor experiment](world_model/RESIDUAL_02.md),
+whose improved predictions have not yet changed the actor. Playback is 1x.
+
+Reproduce on the GPU with the existing uv-managed environment (set `FLY_GRAPH`
+to the local processed graph). Raw captures stay under ignored `outputs/`:
+
+```sh
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.full_body_capture \
+  --checkpoint assets/embodied_fly/diagnostics/full_body_decoder_01.pt \
+  --graph "$FLY_GRAPH" \
+  --dataset outputs/embodied_fly/velocity_teacher_dataset_01 \
+  --parent-capture outputs/embodied_fly/velocity_hover_ppo_11/midpoint \
+  --world-data outputs/embodied_fly/world_data_01 \
+  --world-model assets/embodied_fly/world_models/residual_02/prober.pt \
+  --output outputs/embodied_fly/full_body_capture_replay
+
+uv run --project experiments/embodied_fly --locked python -m embodied_fly.full_body_video \
+  --capture outputs/embodied_fly/full_body_capture_replay \
+  --output previews/embodied_fly/full_body_progress_replay.mp4
+```
+
+Headless Linux rendering uses `MUJOCO_GL=egl`; do not set it on macOS.
+Open the delivered video on Mac with
+`open previews/embodied_fly/full_body_progress_v1.mp4`.
+
+Next: a bounded model-guided learning trial on **all parameters of this shared
+decoder**, with no wing-only parameter selection. The predictor can guide small
+changes, but the real MuJoCo loop must judge them: retain all four complete flights
+while reducing climb and total velocity error. The prediction result alone does
+not justify promoting a changed actor.

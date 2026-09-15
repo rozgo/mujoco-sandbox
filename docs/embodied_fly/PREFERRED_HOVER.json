@@ -1,12 +1,12 @@
 {
-  "selected_checkpoint": "assets/embodied_fly/diagnostics/velocity_hover_ppo_11_midpoint.pt",
-  "checkpoint_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
-  "training_stage": "velocity_hover_ppo_11",
-  "snapshot": "midpoint",
-  "selection_basis": "Predeclared midpoint has lower total/horizontal RMS, climb and peak displacement than both run05 and run11 final; retain final and parent as historical evidence",
-  "additional_training_seconds": 301.325883848127,
-  "whole_trial_training_seconds": 606.8609804483131,
-  "additional_transitions": 884736,
+  "selected_checkpoint": "assets/embodied_fly/diagnostics/full_body_decoder_01.pt",
+  "checkpoint_sha256": "f2af7deb5987499f32430a841dd995c68f5ab6ca7d6a84ed4fa99b29adbc2266",
+  "training_stage": "full_body_decoder_01",
+  "snapshot": "algebraic_consolidation",
+  "selection_basis": "User-requested shared decoder; retained run11 function consolidated with no training; four matched ten-second flights preserve behavior",
+  "additional_training_seconds": 0,
+  "whole_trial_training_seconds": 0,
+  "additional_transitions": 0,
   "cumulative_selected_training_seconds": 3374.1293540275656,
   "physical_contract": {
     "schema": "fly-motor-physical-contract-v1",
@@ -22,19 +22,39 @@
   },
   "fixed_graph_sha256": "e00e3f2a9828c921fe1f093cc567bf45a85adad0526176be0aa1b8be09336eeb",
   "metrics": {
-    "velocity_rms_mm_s": 12.75771810264544,
-    "vertical_velocity_rms_mm_s": 8.852625014041331,
-    "horizontal_velocity_rms_mm_s": 9.186411873780358,
-    "first_two_seconds_velocity_rms_mm_s": 16.78831489089629,
-    "peak_displacement_mm": 75.75905867806011,
-    "climb_mm": 60.72603719807915,
+    "velocity_rms_mm_s": 12.756988540741126,
+    "vertical_velocity_rms_mm_s": 8.851752165999892,
+    "horizontal_velocity_rms_mm_s": 9.186240313290288,
+    "first_two_seconds_velocity_rms_mm_s": 16.787535710623413,
+    "peak_displacement_mm": 75.75307600305813,
+    "climb_mm": 60.7203712011399,
     "survived": 4
   },
   "stationary_hover_complete": false,
   "remaining_limitations": [
-    "Climb about 60.73 mm exceeds 50 mm target",
-    "First 0\u20132 s velocity RMS 16.79 mm/s versus 15.59 mm/s in parent",
-    "Four fixed development starts, one trained seed; zero velocity commands only"
+    "Stationary hover remains unfinished: approximately 61 mm net climb in ten seconds",
+    "Four fixed development starts, one trained seed; zero velocity commands only",
+    "Leg, antenna and mouth task skills are not established by these flights",
+    "World-model prediction has not yet improved the deployed actor"
   ],
-  "video": "previews/embodied_fly/velocity_hover_ppo_11_comparison_v1.mp4"
+  "video": "previews/embodied_fly/full_body_progress_v1.mp4",
+  "decoder": {
+    "kind": "algebraic_full_body_decoder_consolidation_v1",
+    "parent_sha256": "69061012aa237832fcbd42be2b39bc9c2e6530932865b82d4df5190af9f56077",
+    "optimizer_updates": 0,
+    "training_seconds": 0,
+    "motor_neurons": 815,
+    "generic_input_views": 2,
+    "shared_hidden_units": 384,
+    "outputs": 78,
+    "maximum_action_disagreement": 6.370246410369873e-07,
+    "audit_motor_samples": 2048,
+    "all_other_tensors_exactly_preserved": true,
+    "output_masks": false,
+    "separate_wing_branch": false,
+    "decoder_parameters": 657964,
+    "future_trainable_scope": "all motor_decoder parameters; all 78 output rows; no joint-group masks",
+    "optimizer_transition": "fresh optimizer required for changed decoder topology"
+  },
+  "parent_selection": "docs/embodied_fly/runs/full_body_decoder_01/parent_selection.json"
 }

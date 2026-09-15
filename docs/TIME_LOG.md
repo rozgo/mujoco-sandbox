@@ -1816,3 +1816,28 @@ reference-only physical validation follows the user's directional curriculum.
 - Artifact/hash verification completed **23:42:53 UTC**, **21 min 37 s** after
   effort start; documentation and Git synchronization follow. Preferred actor
   and manifest hashes are unchanged. [Results and next step](embodied_fly/world_model/RESIDUAL_02.md).
+
+## September 14: one full-body decoder and progress video
+
+- Started **23:52:33 UTC**. User requested removal of the isolated wing decoder
+  and a video of current achievements. No new motor or world-model training.
+- Algebraic migration **1.524466 s**. One shared 384-unit hidden layer and 78
+  outputs; 657,964 decoder parameters. All upstream tensors and physical laws
+  unchanged. Maximum normalized action discrepancy on 2,048 samples 6.37e-7.
+- First capture **51.920809 s** used different observation-refresh timing from
+  its parent and was superseded. Accepted matched capture **53.706394 s**,
+  completed September 15 **00:10:25 UTC**: 40 aggregate simulated seconds,
+  four complete flights, maximum position difference 0.035 mm. Same retained
+  climb/drift; this is consolidation, not a learned improvement.
+- Focused checks **19 passed**, 1 warning, **9.19 s**. Full suite **286 passed**,
+  45 upstream warnings, **173.58 s**. Archived shared decoder also loads and
+  produces all 78 outputs on Mac CPU. Initial manual verification used reversed
+  constructor arguments; named arguments corrected that check without code changes.
+- Video render **39.391505 s**, full decode **2.768416 s**. **23.8 s / 1,190
+  frames / 50 fps / 1920x1080 / 1x**. Encoded opening-motion, transition, late
+  flight and results-card frames inspected. Opened on Mac **00:16:28 UTC**,
+  **23 min 55 s** after effort start. Artifact documentation/sync follow.
+- Current video separates actual shared-decoder flight and neural activity from
+  observer-only world-model predictions. Next: bounded learning updates to the
+  complete decoder, judged by reduced drift/climb in real MuJoCo rollouts.
+  [Architecture, result and reproduction](embodied_fly/FULL_BODY_DECODER.md).
