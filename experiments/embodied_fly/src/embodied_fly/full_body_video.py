@@ -86,8 +86,13 @@ class Film:
         camera = mujoco.MjvCamera()
         camera.azimuth = 135
         camera.elevation = -22
-        camera.distance = 1.65 if not large else 1.55
+        camera.distance = 0.95 if not large else 1.05
         camera.lookat[:] = self.follow[index][min(frame, len(self.follow[index]) - 1)]
+        # Retain damping, but keep the physical body inside the close view during
+        # the largest drifts. This changes only the observer camera.
+        camera.lookat[:] = self.data.qpos[:3] + np.clip(
+            camera.lookat - self.data.qpos[:3], -0.15, 0.15
+        )
         renderer = self.large if large else self.small
         renderer.update_scene(self.data, camera=camera, scene_option=self.option)
         return Image.fromarray(renderer.render())
@@ -223,7 +228,7 @@ class Film:
         ):
             d.line((x + 5, 149 + i * 33, x + 29, 149 + i * 33), fill=color, width=4)
             d.text((x + 42, 135 + i * 33), label, font=font(22), fill=color)
-        for axis, label in enumerate(("X / FORWARD", "Y / SIDEWAYS", "Z / VERTICAL")):
+        for axis, label in enumerate(("WORLD X", "WORLD Y", "WORLD Z / HEIGHT")):
             y = 267 + axis * 230
             w = 650
             h = 206
@@ -304,6 +309,8 @@ def run(args):
             film.four_flies(150).save(args.output / "flight.png")
             film.predictions(150).save(args.output / "forecast.png")
             film.outcome().save(args.output / "outcome.png")
+            for frame in (0, 25, 475):
+                film.four_flies(frame).save(args.output / f"flight_{frame:03d}.png")
             return
         if args.output.exists():
             raise FileExistsError("Preserve previous videos")
@@ -365,7 +372,7 @@ def run(args):
                     "duration_seconds": 4,
                 },
             ],
-            "camera": "0.2 s horizontal, 0.3 s vertical damping; body-relative observer only",
+            "camera": "0.2 s horizontal, 0.3 s vertical damping; 1.5 mm maximum following offset; body-relative observer only",
             "neural_view": "Actual actor latent state, binned using measured MaleCNS cell positions; observer-only",
             "world_model_control_share": 0,
             "new_motor_training_updates": 0,
