@@ -221,7 +221,12 @@ def evaluate_hover(
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     started = time.perf_counter()
-    env = environment(len(EVALUATION_EPISODES), len(EVALUATION_EPISODES))
+    env = environment(
+        len(EVALUATION_EPISODES),
+        len(EVALUATION_EPISODES),
+        reduced_coupling=parent["physical_contract"].get("force_law_version")
+        == "wing_motion_reduced_coupling_v6",
+    )
     assert physical_contract(env.model) == parent["physical_contract"]
     mujoco.mj_saveModel(env.model, str(output / "model.mjb"))
     resets = start_states(dataset, EVALUATION_EPISODES)

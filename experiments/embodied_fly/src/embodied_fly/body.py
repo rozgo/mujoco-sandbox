@@ -47,7 +47,10 @@ def make_body(
     heading_control=False,
     fast_flight=False,
     lateral_control=False,
+    reduced_coupling=False,
 ):
+    if reduced_coupling and not lateral_control:
+        raise ValueError("Reduced coupling requires the complete agile flight plant")
     if lateral_control and not fast_flight:
         raise ValueError("Independent lateral thrust requires the fast-flight plant")
     if fast_flight and not heading_control:
@@ -112,7 +115,7 @@ def make_body(
         root.custom.add(
             "numeric",
             name=HEADING_NUMERIC,
-            data=[3 if lateral_control else 2 if fast_flight else 1],
+            data=[4 if reduced_coupling else 3 if lateral_control else 2 if fast_flight else 1],
         )
     root.compiler.boundmass = 0
     root.compiler.boundinertia = 0
@@ -168,6 +171,7 @@ class FlyEnvironment:
         heading_control=False,
         fast_flight=False,
         lateral_control=False,
+        reduced_coupling=False,
     ):
         self.preset = preset
         self.wing_limits = wing_limits
@@ -180,6 +184,7 @@ class FlyEnvironment:
             heading_control=heading_control,
             fast_flight=fast_flight,
             lateral_control=lateral_control,
+            reduced_coupling=reduced_coupling,
         )
         self.model = self.physics.model.ptr
         self.data = self.physics.data.ptr

@@ -99,13 +99,23 @@ class HoverPID:
             1.15,
         )
         lift_acceleration = gravity * law.lift_weight_multiplier * collective
+        reduced = law.version == "wing_motion_reduced_coupling_v6"
+        thrust_acceleration = (
+            gravity * np.clip(2 * collective, 0, 1) if reduced else lift_acceleration
+        )
         desired_horizontal = acceleration[:2]
         forward_axis = rotation[:2, 0]
         side_axis = rotation[:2, 1]
         # Counter body tilt and command forward acceleration via stroke orientation.
-        forward = np.dot(
-            desired_horizontal / lift_acceleration - 0.2 * rotation[:2, 2], forward_axis
-        ) / max(np.dot(forward_axis, forward_axis), 0.5)
+        horizontal_request = (
+            (desired_horizontal - 0.2 * lift_acceleration * rotation[:2, 2])
+            / thrust_acceleration
+            if reduced
+            else desired_horizontal / lift_acceleration - 0.2 * rotation[:2, 2]
+        )
+        forward = np.dot(horizontal_request, forward_axis) / max(
+            np.dot(forward_axis, forward_axis), 0.5
+        )
         stroke = 0.7 + 0.5 * np.arctanh(
             np.clip(forward / law.forward_force_fraction, -0.8, 0.8)
         )
@@ -116,9 +126,9 @@ class HoverPID:
         )
         stroke_offset = 0.0
         if getattr(law, "lateral_force_fraction", 0):
-            side = np.dot(
-                desired_horizontal / lift_acceleration - 0.2 * rotation[:2, 2], side_axis
-            ) / max(np.dot(side_axis, side_axis), 0.5)
+            side = np.dot(horizontal_request, side_axis) / max(
+                np.dot(side_axis, side_axis), 0.5
+            )
             stroke_offset = 0.25 * np.arctanh(
                 np.clip(side / law.lateral_force_fraction, -0.8, 0.8)
             )
@@ -149,7 +159,7 @@ class HoverPID:
                 yaw_acceleration
                 + angular[2] / getattr(law, "yaw_drag_seconds", law.angular_drag_seconds)
                 - restoring_yaw
-                - law.steering_acceleration * differential
+                - (0 if reduced else law.steering_acceleration * differential)
             ) / authority
             offset = 0.5 * np.arcsin(np.clip(yaw_effort, -np.sin(0.5), np.sin(0.5)))
             desired[:, 2] += (-offset, offset)

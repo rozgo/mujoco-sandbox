@@ -68,6 +68,14 @@ class AgileWingMotionConfig(FastHeadingWingMotionConfig):
 AGILE_CONFIG = AgileWingMotionConfig()
 
 
+@dataclass(frozen=True)
+class ReducedCouplingConfig(AgileWingMotionConfig):
+    version: str = "wing_motion_reduced_coupling_v6"
+
+
+REDUCED_CONFIG = ReducedCouplingConfig()
+
+
 def config_for_model(model):
     """The compiled model carries its force-law version, including MJB replays.
 
@@ -85,9 +93,9 @@ def config_for_model(model):
     if heading >= 0:
         if model.numeric_size[heading] != 1 or model.numeric_data[
             model.numeric_adr[heading]
-        ] not in (1, 2, 3):
+        ] not in (1, 2, 3, 4):
             raise ValueError("Unknown recorded wing heading model")
-        return {1: HEADING_CONFIG, 2: FAST_HEADING_CONFIG, 3: AGILE_CONFIG}[
+        return {1: HEADING_CONFIG, 2: FAST_HEADING_CONFIG, 3: AGILE_CONFIG, 4: REDUCED_CONFIG}[
             model.numeric_data[model.numeric_adr[heading]]
         ]
     return INSTANT_CONFIG
@@ -178,6 +186,11 @@ class WingMotionForces:
             self.activity += alpha * (sweep - self.activity)
         # Pitch changes stroke effectiveness; sweep must move to produce lift.
         efficiency = 0.8 + 0.2 * np.cos(angles[:, :, 2] + 1.0)
+        reduced = isinstance(c, ReducedCouplingConfig)
+        if reduced:
+            # Pitch steers yaw without changing collective support. Actual sweep
+            # motion remains necessary for all flight forces, including steering.
+            efficiency = np.ones_like(efficiency)
         effort = self.activity * efficiency
         collective = effort.mean(axis=1)
         differential = effort[:, 1] - effort[:, 0]
@@ -187,10 +200,11 @@ class WingMotionForces:
         # inherited 0.7 rad folded reference. All steering is wing-state derived.
         forward = np.tanh((angles[:, :, 1].mean(axis=1) - 0.7) * 2)
         force_local = np.zeros((len(angles), 3))
-        force_local[:, 0] = self.lift * c.forward_force_fraction * forward
+        thrust_scale = self.weight * engagement if reduced else self.lift
+        force_local[:, 0] = thrust_scale * c.forward_force_fraction * forward
         if isinstance(c, AgileWingMotionConfig):
             lateral = np.tanh(2 * (angles[:, 1, 1] - angles[:, 0, 1]))
-            force_local[:, 1] = self.lift * c.lateral_force_fraction * lateral
+            force_local[:, 1] = thrust_scale * c.lateral_force_fraction * lateral
         # Upright-biased thrust and a damped restoring torque are declared body
         # response choices. They provide no translational target or hover servo.
         force_world = np.einsum("nij,nj->ni", rotation, force_local)
@@ -221,6 +235,10 @@ class WingMotionForces:
             ],
             axis=1,
         )
+        if reduced:
+            # Unequal sweep can still roll the body. Yaw is controlled by the
+            # independent measured pitch difference, without incidental yaw.
+            steer_local[:, 2] = 0
         if isinstance(c, HeadingWingMotionConfig):
             # An additional independent measured-wing degree of freedom makes
             # yaw controllable without requiring a roll or translation command.

@@ -16,7 +16,7 @@ from embodied_fly.velocity_exercise import DURATION, STAGES, command_at, metrics
 from embodied_fly.velocity_motor import VelocityPID, measured_velocity, observation
 
 
-def environment(worlds, threads):
+def environment(worlds, threads, *, reduced_coupling=False):
     return FlyBatch(
         worlds,
         threads,
@@ -27,6 +27,7 @@ def environment(worlds, threads):
         heading_control=True,
         fast_flight=True,
         lateral_control=True,
+        reduced_coupling=reduced_coupling,
     )
 
 
