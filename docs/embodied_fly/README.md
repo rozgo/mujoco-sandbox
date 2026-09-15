@@ -2,6 +2,10 @@
 
 [Architecture diagram: current teacher, motor learning and the full fly](../../previews/embodied_fly/fly_brain_training_architecture_v1.png).
 
+Before proposing more diagnostics, read the [evidence review](EVIDENCE_REVIEW.md)
+and [learning journal](LEARNING_JOURNAL.md). They distinguish completed feedback
+and training studies from unexecuted plans and identify the remaining uncertainty.
+
 Newest learning trial: [model-guided full-body updates](runs/full_body_guidance_01/SUMMARY.md)
 and [PID / parent / new candidates video](../../previews/embodied_fly/full_body_guidance_01_comparison_v1.mp4).
 Smaller analytical-guided updates reduce velocity RMS 4.9% and climb 34%; learned
@@ -30,12 +34,12 @@ recorded in [the preserved parent manifest](runs/full_body_decoder_01/parent_sel
 Same brain, rewards and physics.
 [Training history and costs](HOVER_PPO_PROGRESS.md).
 
-Newest experiment: [physics-integrated JEPA residuals](world_model/RESIDUAL_02.md).
+Earlier prediction experiment: [physics-integrated JEPA residuals](world_model/RESIDUAL_02.md).
 After 120 seconds of GPU optimization, the predictor passes the held-out gates.
 Learned acceleration corrections reduce 200 ms velocity error on 504 controlled
 command changes by 59.8% versus the analytical model; ordinary-flight prediction
-improves only 1.6% averaged across horizons. No fly policy was updated. Next is
-a bounded model-guided trial using the shared full-body decoder above.
+improves only 1.6% averaged across horizons. That prediction experiment did not
+update the fly policy; the subsequent model-guided trial is reported above.
 [Comparison chart](../../previews/embodied_fly/world_residual_02_comparison.png).
 The [first direct-state probe](world_model/PILOT_01.md) remains preserved.
 

@@ -3552,3 +3552,28 @@ The opened four-way video includes the failed final checkpoint. Next, measure
 phase-dependent control authority through small existing decoder-parameter
 changes; only then choose a learning change that preserves startup and regulates
 established flight. [Complete evidence and plan](runs/velocity_hover_ppo_14/SUMMARY.md).
+
+## History review before more diagnostics — September 15, 01:54:56 UTC
+
+The user correctly identified that a proposed velocity/phase feedback study
+repeated earlier work. [Cross-referenced evidence review](EVIDENCE_REVIEW.md)
+records completed sensing probes, joint encoder/readout training, phase-imitation
+ablation, exploration tests, actual learned improvements and reward failures.
+Velocity PPO08 already establishes independent local velocity signals at the
+motor cells; hover_response01 already tests physical phase-dependent responses
+on an older plant. A missing-input hypothesis should not outrank this evidence.
+
+Newer work is in separate reports: the [world-model first pilot](world_model/PILOT_01.md),
+[physics-integrated residual](world_model/RESIDUAL_02.md), [shared-decoder migration](FULL_BODY_DECODER.md)
+and [full-body guidance trial](runs/full_body_guidance_01/SUMMARY.md). The latter
+exposes fixed future neural histories diverging from actual changed-policy
+feedback. This is distinct from the conditional replay used in earlier PPO.
+The decoder-authority study was planned but paused; fixed-command world-model
+interventions must not be relabeled as that completed closed-loop study.
+
+No training or simulation ran during this review. Preferred weights, single
+78-output architecture, physics and rewards remain unchanged. Continue from
+the documented closed-loop guidance mismatch; do not repeat the generic sensor
+study or treat encoder-plus-decoder training as a new idea. Any refresh-based
+learning trial must still demonstrate combined physical improvement; fresh
+recordings alone do not reconstruct the omitted feedback gradient.
