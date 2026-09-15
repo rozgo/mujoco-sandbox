@@ -33,6 +33,8 @@ def run(args):
         ("learned_residual", args.learned),
         ("analytical", args.analytical),
     ):
+        if method not in args.methods:
+            continue
         source_checkpoint = torch.load(source, map_location="cpu", weights_only=False)
         for fraction in args.fractions:
             state = {
@@ -106,4 +108,10 @@ if __name__ == "__main__":
         p.add_argument("--" + name, type=Path, required=True)
     p.add_argument("--fractions", type=float, nargs="+", default=[0.1, 0.03, 0.01])
     p.add_argument("--device", default="cuda")
+    p.add_argument(
+        "--methods",
+        nargs="+",
+        choices=("learned_residual", "analytical"),
+        default=["learned_residual", "analytical"],
+    )
     run(p.parse_args())
