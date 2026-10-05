@@ -529,3 +529,339 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Follow-up began **2026-09-12 08:15:23 UTC**. User requested merging to main, pushing origin and removing local/remote development branches. Merged `feature/gpu-walking-from-scratch` tip `8c131ca` without conflicts as `897456e`, then updated the branch archive and film links in `0150c3d`. All implementation, checkpoint and preview files match the finished branch exactly; no new simulation, training or rendering.
 - Cleanup verified **08:17:55 UTC**, **2m 32s** after the first retained clock. Main is pushed and synchronized to the primary GPU checkout. Only `main` remains on the Mac, GPU machine and origin; development branch ancestry was checked before deletion. The GPU capture worktree is detached at its original `8c131ca`, preserving its ignored runs, caches and environment. All previous detached worktrees and three release tags remain unchanged.
 - Both primary worktrees are clean, Git LFS integrity passes on both machines, and the final shared actor plus full/short film hashes match their verified originals. This timing-note commit and synchronization follow the cleanup milestone; no repeated policy evaluation was needed for a conflict-free merge of the already verified artifacts.
+
+## October 5: surgical robot and PufferLib 5.0 project research
+
+- Observed research/documentation interval **17:16:01–17:23:48 UTC**:
+  **7 minutes 47 seconds elapsed**. Simulation **0 s**, training **0 s**,
+  rendering **0 s**; this interval is research and proposal preparation.
+- Inspected repository scene/viewer/batch patterns and primary upstream sources.
+  Recommended a dVRK Si dual-arm MuJoCo port, then needle handoff/ring passage,
+  with thread and compliant-pad closure as later stages.
+- Verified Puffer 5.0 native C/CUDA interfaces, continuous actions and NVIDIA
+  training requirement from documentation/source. No runtime compatibility or
+  performance claims were tested; no dependencies installed or GPU jobs started.
+- Saved the [brief](surgical/BRIEF.md) and [proposal](surgical/README.md), including
+  source revisions, setup, effort estimates, physics limitations and proposed gates.
+- Repository fast-forward check completed using a per-command rebase override;
+  origin was already current. Preserved pre-existing local changes. Documentation
+  whitespace checks passed; simulation tests were unnecessary for this report.
+- Next: convert and statically inspect one Si PSM with the 420006 needle driver,
+  then validate its physical mechanism before adding the second arm or training.
+
+## October 5: Neuralink robot comparison follow-up
+
+- Observed follow-up interval **17:34:30–17:35:23 UTC**:
+  **53 seconds elapsed**. Simulation, training and rendering **0 s**.
+- Checked Neuralink's public technology description and PRIME progress update,
+  and the ROSA ONE Brain manufacturer's description. R1's linear positioning
+  stage, optical head and specialized thread inserter are a closer design target
+  for neural implantation than the proposed bimanual dVRK scene.
+- A custom R1-inspired MuJoCo micromanipulator is a conditional alternative if
+  neural insertion is the intended task. No project pivot or model implementation
+  was performed. No public validated R1 MuJoCo asset was established by this search.
+
+## October 5: neural insertion refocus, interrupted for workspace correction
+
+- Observed interval **17:39:18–17:43:50 UTC**, **4 minutes 32 seconds elapsed**.
+  Researched the thread-insertion workflow and inspected the existing scene and
+  viewer code. No scene was written, compiled or rendered; no training ran.
+- A separate insertion worktree was created, then the user requested that the
+  primary checkout use `main` and the fly work move to its own workspace. The empty
+  worktree was subsequently reused for the fly; no insertion branch was retained.
+
+## October 5: preserve fly workspace and return primary checkout to main
+
+- Observed interval **17:43:50–17:51:24 UTC**, **7 minutes 34 seconds elapsed**.
+  Simulation **0 s**, training **0 s**, rendering **0 s**.
+- Saved 184 changed/new fly files in local commit `5a218e1` on
+  `feature/fly-brain`. Reused the empty worktree as the dedicated fly workspace.
+  Compared all 183 preserved content hashes in the migration manifest; they match.
+- Moved roughly 49 GB of generated fly outputs and the fly environments/caches by
+  same-filesystem rename, checking unchanged inode, size and modification time.
+  Retained migration manifests and pre-move changes in ignored local backups.
+- Git LFS integrity passes. Rebuilt relocated editable packages/native binding
+  from locked projects; repaired generated launcher paths with backups. Both fly
+  package import checks and both `pytest --version` entry points pass. The fly
+  working tree is clean. Training remains stopped; no remote push was performed.
+- Primary checkout is now `main`, fast-forward checked against origin. Preserved
+  the surgical research here, archived the earlier dVRK proposal, and saved the
+  active [neural insertion plan](neural_insertion/README.md) and
+  [brief](neural_insertion/BRIEF.md). Repository guidance records the user's main
+  workspace preference. No robot implementation is claimed at this checkpoint.
+
+## October 5: first surgical insertion scene
+
+- Observed work interval **18:11:16–18:22:49 UTC**, **11 minutes 33 seconds elapsed**.
+  Simulation **0 s**, training **0 s**. Three preview batches took **2.38 s**
+  of rendering/image-write wall time combined; the final batch took **0.735 s**.
+- Built `static_v1` on `main`: five constrained slides, needle/retainer, microscope,
+  supported tissue phantom, six targets, vessels and a four-thread cassette.
+  Added the dedicated package, CLI, six cameras and review sheets. Simplified the
+  brief to focus on our own robot and tasks.
+- Corrected carriage/beam and retracted-tool interference found during scratch
+  configuration checks. Disabled shadow maps after inspecting microgeometry
+  rendering artifacts; final views were visually inspected and all eight PNGs
+  decoded/hash-verified. Saved scene/image hashes and static check results with
+  the previews.
+- Static checks pass at 120 sampled poses: no penetrations, no warnings, enabled
+  command/force limits, 12.925 mm initial needle clearance and 4.925 mm sampled
+  minimum. Both static package tests pass, including a deliberate solid-phantom
+  collision probe. No physical hold or insertion cycle was run.
+- Native macOS viewer completed its bounded 15-second smoke check with exit 0;
+  automated native screenshot access was unavailable. Offscreen camera renders
+  supplied visual inspection. CLI help, source compilation, Git LFS integrity
+  and whitespace checks pass. Unrelated dynamic demo suites were not rerun.
+- Next: user visual inspection, then bounded hold and approach validation.
+
+## October 5: flexible-thread SI attempt, interrupted for resolution review
+
+- Observed interval **19:04:20–19:10:00 UTC**, **5 minutes 40 seconds elapsed**,
+  including interruption/recovery. No training or rendering was recorded.
+- A 1 s SI point-mass flex diagnostic ran with approximately 60 µm support
+  penetration; the articulated elastic cable failed minimum-inertia compilation.
+  These were different formulations/settings, not a controlled unit comparison.
+  Physics wall time was not separately recorded for this initial diagnostic.
+- Stopped at the user's resolution concern. The initial flexible-scene/native
+  drafts were never built or used for a robot mission; they are now archived in
+  ignored build storage. User subsequently authorized consistent unit-rescaling
+  experiments and requested documentation of requirements, pros and cons.
+
+## October 5: microscale unit-rescaling and accuracy study
+
+- Observed interval **19:12:31–19:43:07 UTC**, **30 minutes 36 seconds elapsed**
+  to the verification checkpoint. User explicitly prioritized accuracy over
+  performance. Work stayed on `main`; static workcell and fly workspace preserved.
+- Ran **36 saved exploratory cases** and a **nine-case final suite** using
+  standard CPU MuJoCo 3.12.0. Aggregate saved simulation time **23.27 s**; summed
+  trial wall time **684.61 s**, including compilation/Python stepping/telemetry.
+  Some exploratory trials overlapped, so this sum is not elapsed project time or
+  measured CPU compute time. Additional short diagnostic/test calls are excluded.
+- A separate native `mj_step(nstep=60000)` timing covered **0.15 s simulation**
+  in **32.8165 s wall time** while another trial ran; this contended timing is not
+  used as a standalone throughput claim. Training **0 s**.
+- Final validation: **7.02 s aggregate simulation**, **136.80 s summed trial wall**,
+  **137.04 s suite elapsed**. Unit equivalence and preliminary bending checks pass;
+  contact penetration reaches 1.739 µm, but finest timestep refinement differs by
+  34.979 µm and fails the 1 µm accuracy gate. Suite correctly exits 1 and retains
+  failures. Contact quality remains unresolved; no robot integration or RL began.
+- Added explicit dimensional conversions, reusable benchmarks, run provenance,
+  all pilot records, measured results and [requirements/tradeoffs](neural_insertion/RESCALING.md).
+  Identified generated-composite contact defaults and vertex rounding as special
+  cases. Kept physical masses/radii; no inertia floors or added armature.
+- Final plots and recorded-state render took **0.812 s** rendering/plotting wall
+  time, with **0 s additional simulation**. Inspected both actual PNGs; preserved
+  an earlier static bench image whose rendering time was not separately captured.
+  No video was produced for this failed-contact diagnostic.
+- All **six surgical-scene/rescaling tests pass**; static collision inspection
+  still passes all 120 sampled poses. CLI help, whitespace checks and Git LFS
+  integrity pass. Unrelated wind/locomotion suites were not rerun; the native
+  viewer implementation was unchanged from its prior smoke test. No commit/push.
+
+## October 5: document solver alternatives and Isaac Sim 6.1 integration
+
+- Retained documentation/verification clock window **19:55:51–20:03:32 UTC**,
+  **7 minutes 41 seconds elapsed**. Earlier research in this follow-up is outside
+  this measured window; no earlier start is reconstructed. Simulation **0 s**,
+  training **0 s**; no dependencies installed or remote jobs launched.
+- Saved the [solver decision](neural_insertion/SOLVER_DECISION.md), retaining the
+  failed contact results and numerical/physical-validation distinction. Inspected
+  pinned MuJoCo 3.12.0 plugin/integration source and official SOFA, PhysX, Newton
+  and Isaac documentation. User supplied the Isaac Sim 6.1 engine integration page;
+  recorded its one-active-engine rule, rigid-only Newton tensor coverage and
+  metre-based USD restriction from the companion backend guide.
+- Recommendation: benchmark standalone Newton VBD rods against an independently
+  refined SOFA beam model before a custom module or engine fork. An Isaac backend
+  is a proposed integration destination, not evidence of microscale accuracy.
+  No replacement solver has been accepted or implemented.
+- Used Archify to produce the proposed architecture as standalone HTML plus a
+  selected PNG. Updated the proposal for the user's Isaac 6.1 steering. Two
+  finalization passes took **2.620 s** combined including delivery/browser checks;
+  diagram rendering/capture time was not isolated from validation overhead.
+  Final **9/9 showcase checks**, zero errors/warnings, browser checks passed.
+  Inspected the final light/dark 2048×1320 captures; automated evidence also covers
+  1440×900. Portable hashes/review receipt accompany the diagram; machine-local
+  provenance stays ignored.
+- Documentation links, whitespace, portable-path/privacy checks and Git LFS
+  integrity pass. No dynamics tests rerun for this documentation-only follow-up;
+  previous physics failures remain unchanged. No commit/push.
+
+## October 5: prioritize MuJoCo DER after literature review
+
+- Observed research/documentation window **20:17:25–20:24:00 UTC**,
+  **6 minutes 35 seconds elapsed** to the verification checkpoint. Simulation,
+  training and rendering **0 s**; no dependencies installed or engine changes.
+- Checked the published MuJoCo DER paper and upstream revision
+  `71d2d504ef8e6408ccabcba2e05ec3a2b19e0fad`: capsule/joint representation,
+  quasistatic twist, and plugin instructions targeting 3.3.2 with custom composite
+  source changes. Checked Newton unified VBD/coupling documentation, DeformX paper
+  and setup, the historical inertia issue, and the inspected 3.12.0 cable source.
+- Updated brief, README and solver decision to the user's order: MuJoCo DER,
+  Isaac/Newton, coupled solvers, standalone alternatives. Retained accuracy gates
+  and the earlier diagram as an optional later integration route. Contact remains
+  an unisolated cause; no replacement solver has passed or been implemented.
+- Fast-forward synchronization confirmed main is up to date, with existing local
+  work preserved. Documentation local links, portable paths and whitespace pass.
+  No dynamics tests rerun for these documentation-only changes; no commit/push.
+
+## October 5: MuJoCo DER port and minimum acceptance checks
+
+- Observed interval **20:26:25–20:59:22 UTC**, **32 minutes 57 seconds elapsed**
+  to the verification checkpoint. Stayed on `main`; no worktree, installed-engine
+  patch, robot integration or RL training. Training **0 s**.
+- Pinned and preserved the upstream DER C++ source and MIT license. Built a local
+  plugin against MuJoCo 3.12.0 with hash-checked Eigen headers. Added explicit model
+  construction, lifecycle/state handling, and a separate direct-projection variant
+  with torsional endpoint moments. Native mass/inertia/contact geometry preserved.
+- The retained published force mapping returned zero torque for a straight
+  twisted rod. The corrected variant passes virtual-work checks at maximum
+  relative error 2.85e−9, repeated evaluation/copy/reset/restore, and force unit
+  equivalence. These are numerical consistency checks, not physical calibration.
+- Complete suite: **6.200002 s aggregate simulation**, **206.225 s elapsed wall**,
+  including model creation/Python stepping/telemetry. Cantilever error 2.400%;
+  free-relaxation shape refinement 0.0998 µm and energy drift 0.0380%. Contact
+  refinement differences 58.573 and 14.379 µm, failing the 1 µm gate.
+- One further matched contact refinement to **39.0625 ns**: **0.06 s simulation**,
+  **179.681 s elapsed wall**, with **41.762 µm** trajectory disagreement. Stopped
+  further timestep reduction at the failed, nonmonotonic convergence result.
+  Both accuracy commands exit 1 and preserve failed results.
+- An initial validation attempt completed three 2 s bending cases and one 0.01 s
+  relaxation before a JSON reporting error; those trajectories and the interrupted
+  manifest remain saved. Its three recorded bending trial walls total **47.98 s**;
+  relaxation wall was lost at reporting failure and is not reconstructed. Separate
+  force audit saved another 2 µs simulation. Regression-test/diagnostic simulation
+  time is not included in these benchmark totals. Some runs overlapped tests, so
+  reported wall times are not isolated physics compute or throughput measurements.
+- Two scientific-figure passes took **0.620 s** and **0.583 s** plotting wall with
+  **0 s additional simulation**. Static-preview rendering/build times were not
+  isolated. Inspected initial scenes and both actual result figures. Preserved
+  original and corrected preview variants; no video produced for the failed gate.
+- Focused **10 tests pass**; complete optional-stack suite **42 tests pass in
+  163.24 s**. Static robot still passes 120 sampled clearance poses. Corrected a
+  viewer-handle access error; the subsequent native static viewer completed a
+  clean 5 s smoke test. Whitespace, documentation links, source hashes, portable
+  result paths and Git LFS integrity pass. No commit/push.
+- Saved [acceptance report](neural_insertion/DER_VALIDATION.md), full result
+  manifests, repeatable benchmark/refinement commands and selected review images.
+  Contact accuracy, settled contact, actual grasp/release and physical calibration
+  remain unvalidated. The corrected model is not accepted for surgery tasks or RL.
+
+## October 5: isolate contact and explicitly recheck unit rescaling
+
+- Observed interval **21:11:50–21:32:03 UTC**, **20 minutes 13 seconds elapsed**
+  to the verification checkpoint. Stayed on `main`; preserved existing work,
+  synchronized with fast-forward only, and did not patch the installed engine.
+  No robot dynamics or RL added; training **0 s**. No commit/push.
+- Added normal and angled/sliding rigid-segment controls, the same articulated
+  chain with elastic forces removed, and a matched flexible DER continuation.
+  Saved a portable pre-contact state with source/trajectory provenance. Documented
+  why each control exists: rigid fixtures isolate contact, not replace the flexible
+  surgical thread. Static contact scenes were rendered and inspected before motion.
+- Checked each fixture in mm–g–s, mm–µg–s and 0.1 mm–g–s, separately changing
+  mass and length units. Compiled physical quantities agree to normalized error
+  4.65e−16. Preserved the original 0.01 µm unit-agreement and 1 µm timestep gates.
+- Full 24-case matrix: **1.08 s aggregate simulation**, **351.913 s elapsed wall**.
+  All cases complete without warnings; 11 of 28 comparison gates pass. Rigid
+  normal-drop refinement differs by 2.234 µm; angled/sliding by 0.345 µm. The
+  no-elasticity chain fails timestep and unit checks. Fine-step flexible DER differs
+  by 3.502 µm under mass-unit change and 3.055 µm under length-unit change. Its
+  matched-checkpoint timestep difference is 52.031 µm. Failed cases are retained.
+- Two explicitly recorded follow-up normal-drop halvings: **0.12 s simulation**,
+  **7.435 s elapsed wall**; differences 4.502 and 1.135 µm remain failures. Stopped
+  further timestep refinement. Wall times include model creation, native stepping
+  and telemetry and overlap repository tests; they are not isolated compute time.
+- New C++ telemetry loop uses unchanged MuJoCo split stepping. Rigid and DER
+  regression cases match Python stepping bit for bit. Fine DER restart reproduces
+  the original saved trajectory exactly. Four focused tests pass; full optional
+  stack suite **46 tests pass in 158.75 s**. Regression-test simulation is excluded
+  from the benchmark totals above. Native static viewer completes a clean 5 s run.
+- Scientific result plotting: **0.995 s wall**, **0 s additional simulation**.
+  Static rendering/build time was not isolated. Inspected both the actual initial
+  sheet and eight-panel result figure. Source/checkpoint/trajectory hashes,
+  documentation links, portable paths, whitespace and Git LFS integrity pass.
+- Saved [rationale, protocol and results](neural_insertion/CONTACT_ISOLATION.md),
+  complete manifests and PNG/SVG plots. The evidence isolates failures without
+  rod elasticity and demonstrates dynamic unit sensitivity, but does not identify
+  a specific engine defect. Contact accuracy remains unaccepted; next proposed
+  work is a focused contact-solve/reference audit before any engine patch.
+
+## October 5: run the focused contact-solver audit
+
+- Observed interval **21:37:23–21:58:18 UTC**, **20 minutes 55 seconds elapsed**
+  to the verification checkpoint. Stayed on `main`, synchronized fast-forward
+  only, preserved existing work and the installed MuJoCo engine. No commit/push.
+  Robot integration and training **0 s**; no scene/viewer behavior changed.
+- Inspected and hashed MuJoCo 3.12.0 constraint, solver, collision and integration
+  sources and the installed library. Implemented an independent SI normal-impact
+  law for the symmetric rigid capsule, with adaptive continuous-time integration
+  and a separate fixed-step recurrence. The recurrence reproduces MuJoCo within
+  **0.000170 µm**; the continuous reference exposes the existing timestep error.
+  Tightening the reference changes positions by **2.65e−8 µm** on the saved grid.
+- Frozen evaluations: 12 rigid states and seven states for each articulated model
+  across three unit systems, with default and zero solver tolerance for chains.
+  Maximum rigid formula error **1.16e−11** relative; flexible-chain same-state
+  generalized contact-force unit difference **9.49e−10**. No physical integration
+  time is assigned to these scratch state/force queries.
+- Two paired-unit DER traces inspect every physics step: **0.04 s aggregate
+  MuJoCo simulation**, **59.233 s wall**. Saved the first differing contact sets
+  and replayed both states across all units. Picometre-scale signed-gap differences
+  put the evolved trajectories on opposite sides of contact activation; either
+  identical state gives matching contact sets across units.
+- Three predefined planar 1e−12 rad perturbations (seeds 7, 17, 29) and one
+  unperturbed zero-tolerance control: **0.12 s aggregate MuJoCo simulation**,
+  **324.663 s elapsed wall**. Perturbations produce maximum trajectory differences
+  **3.623, 16.466 and 11.761 µm**. Zero tolerance changes the trajectory by
+  **2.332 µm**, takes **186.874 s**, and reaches the 100-iteration cap; it is not
+  treated as a reference or a demonstrated cure.
+- Initial saved reference audit: **0.12 s aggregate independent-reference time**,
+  **4.428 s wall**. Completed reference audit including four independent discrete
+  recurrences: **0.36 s reference time**, **4.535 s wall**. A preceding recurrence
+  pilot covered another **0.24 s reference time**, approximately **1.079 s summed
+  loop wall**. These are scalar reference calculations, not MuJoCo simulation.
+  Wall times include setup/telemetry and overlap other jobs; no isolated compute
+  or RL-throughput claim is made. Regression-test simulation is excluded.
+- Four focused reference tests pass; full optional-stack suite **50 tests pass
+  in 161.33 s**. Existing accuracy failures remain failures. New numerical tests
+  check formula agreement, exact discrete free flight, complete rigid impact and
+  refinement of the independent continuous reference.
+- Two plot/scratch-replay passes: **0.750 s** and **0.747 s wall**, **0 s additional
+  simulation**. Corrected a receipt extension filter, then inspected the actual
+  four-panel PNG. Source/trajectory hashes, plot receipts, documentation links,
+  portable paths, whitespace and Git LFS integrity pass. No video or native-viewer
+  rerun was needed because the inspected fixtures and viewer are unchanged.
+- Saved [audit explanation and decision](neural_insertion/CONTACT_AUDIT.md),
+  independent reference, paired-event and sensitivity manifests, frozen replay,
+  source provenance and PNG/SVG review plots. Contact-event localization/adaptive
+  substepping is the next proposed integration experiment. No specific engine
+  defect or accepted fix is claimed; physical accuracy and release remain gated.
+
+## October 5: find a route through the failed contact gates
+
+- Observed interval **22:06:11–23:35 UTC** to this progress checkpoint, with the
+  recorded matrix still running (its manifest and plots follow separately).
+  Stayed on `main`, preserved existing work and the installed MuJoCo engine.
+  Robot integration and training **0 s**; no scene/viewer behavior changed.
+- Independent SI study of the rigid symmetric drop under the baseline and
+  penetration-ramped laws, Euler and RK4 recurrences, with and without exact
+  entry localization: **1.44 s aggregate reference time** per law across four
+  timesteps, about **157 s wall** including six continuous references. Showed
+  two separable causes: the entry force step (fixed by a ramp or localization)
+  and first-order impact error (fixed by RK4).
+- Development MuJoCo matrix in scratch: 96 rigid cases (**5.76 s simulation**),
+  22 chain cases and 3 perturbation seeds (**1.02 s simulation**), a third DER
+  timestep level, a friction-free control and nine low-velocity settling cases
+  (**0.57 s simulation**). About **45 min elapsed wall** with up to eight
+  parallel processes; not isolated compute. One scratch naming bug overwrote
+  early files and was rerun before any result was used.
+- Implemented `contact_laws.py`, an RK4-capable path in `contact_kernel.cc`
+  (implicitfast path unchanged), `contact_smoothing.py`, the ramped-law and RK4
+  extensions of the independent reference, a report script and five regression
+  tests. Focused neural-contact tests: **13 pass**. Full suite not yet rerun at
+  this checkpoint.
+- Measured: rigid timestep gates pass at **0.025–0.077 µm** with the candidate;
+  DER unit disagreement **0.003–0.051 µm** (from 3–26 µm); DER timestep
+  disagreement **8.0 µm**, then **6.5 µm** at a third halving; seeds
+  **0.55 µm** (from 3.6–16.5 µm); settling fixture **6.6e−5 µm** timestep and
+  about **1e−11 µm** unit disagreement with **0.05 µm** settled penetration.
+  Saved [the explanation and decision](neural_insertion/CONTACT_SMOOTHING.md).
+  Accuracy for the robot remains unaccepted; calibration and clock coupling open.

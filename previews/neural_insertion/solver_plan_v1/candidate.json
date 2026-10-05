@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Proposed Isaac Sim 6.1 surgical backend",
+    "output": "previews/neural_insertion/solver_plan_v1/physics_architecture.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "task",
+      "type": "frontend",
+      "label": "PufferLib task adapter",
+      "sublabel": "Bench controls; RL after PASS",
+      "pos": [
+        60,
+        70
+      ],
+      "size": [
+        245,
+        92
+      ]
+    },
+    {
+      "id": "adapter",
+      "type": "messagebus",
+      "label": "Isaac engine adapter",
+      "sublabel": "USD import / lifecycle / tensors",
+      "tag": "PROPOSED",
+      "pos": [
+        490,
+        70
+      ],
+      "size": [
+        265,
+        92
+      ]
+    },
+    {
+      "id": "solver",
+      "type": "backend",
+      "label": "One physics backend",
+      "sublabel": "Rigid robot + rod + contact",
+      "tag": "VALIDATE FIRST",
+      "pos": [
+        950,
+        70
+      ],
+      "size": [
+        250,
+        92
+      ]
+    },
+    {
+      "id": "render",
+      "type": "frontend",
+      "label": "Isaac scene and cameras",
+      "sublabel": "Fabric state updates for rendering",
+      "pos": [
+        490,
+        355
+      ],
+      "size": [
+        265,
+        92
+      ]
+    },
+    {
+      "id": "quality",
+      "type": "security",
+      "label": "Accuracy gate",
+      "sublabel": "SOFA reference + refinement",
+      "tag": "CURRENT CABLE FAILS",
+      "pos": [
+        950,
+        355
+      ],
+      "size": [
+        250,
+        92
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "actions",
+      "from": "task",
+      "to": "adapter",
+      "label": "bounded commands",
+      "variant": "emphasis"
+    },
+    {
+      "id": "observations",
+      "from": "adapter",
+      "to": "task",
+      "label": "observations",
+      "variant": "dashed"
+    },
+    {
+      "id": "stepping",
+      "from": "adapter",
+      "to": "solver",
+      "label": "step / reset",
+      "variant": "emphasis"
+    },
+    {
+      "id": "physics-state",
+      "from": "solver",
+      "to": "adapter",
+      "label": "state + forces",
+      "variant": "dashed"
+    },
+    {
+      "id": "fabric",
+      "from": "adapter",
+      "to": "render",
+      "label": "synchronized state"
+    },
+    {
+      "id": "measurement",
+      "from": "solver",
+      "to": "quality",
+      "label": "benchmark traces"
+    },
+    {
+      "id": "acceptance",
+      "from": "quality",
+      "to": "solver",
+      "label": "accept after PASS",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Current evidence",
+      "items": [
+        "MuJoCo cable: 34.979 \u00b5m timestep disagreement; the gate is 1 \u00b5m.",
+        "No replacement solver, Isaac port or RL policy is accepted."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "First experiment",
+      "items": [
+        "Benchmark standalone Newton VBD rods against SOFA BeamAdapter and analytics.",
+        "Pin versions and validate time, mesh, units, contact forces and energy.",
+        "Add an Isaac adapter only after physics passes."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Isaac 6.1 constraints",
+      "items": [
+        "Only one engine is active; this is not automatic multi-engine coupling.",
+        "The documented Newton bridge covers rigid tensors; VBD rod integration remains to be established.",
+        "A composite backend must implement and validate its own coupling."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Implementation choice",
+      "items": [
+        "Keep the current MuJoCo robot as the baseline.",
+        "Prefer an existing passing solver; write a custom rod/contact module only if needed.",
+        "Patch MuJoCo only for an isolated, reproducible engine defect."
+      ]
+    }
+  ]
+}

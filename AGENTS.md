@@ -123,3 +123,17 @@ uv run --locked --extra wind python scripts/check_wind_backend.py
 - Update run instructions, assumptions, provenance and measured results with the implementation. Preserve third-party attribution. Cite original papers or official documentation for external technical claims; separate those results from this repo's measurements.
 - Keep public explanations concise and accurate: distinguish learned prediction from programmed control, sensor rendering from perception, physical simulation from replay, and elapsed development time from training time. Do not infer the acting model's version from a user's draft wording.
 - Review `git diff --check` and the staged changes, then commit completed work when requested or already authorized. Keep checkpoints understandable and the working tree clean without discarding user changes. Publishing or messaging others requires its own authorization.
+
+## Neural-thread insertion project
+
+User direction, October 5, 2026: build our own surgical thread-insertion
+robot using MuJoCo and PufferLib 5.0. Read
+[the brief](docs/neural_insertion/BRIEF.md) and
+[project plan](docs/neural_insertion/README.md). The earlier dVRK proposal is
+preserved as historical research.
+
+Work on this project in the primary checkout on `main`, as explicitly requested.
+The stopped fly work is preserved on `feature/fly-brain` in its own workspace;
+do not resume fly training or merge its experimental history into this project.
+Build and inspect the static insertion scene before adding movement. Focus on
+our mechanism, surgery tasks and measured results; keep documentation concise.

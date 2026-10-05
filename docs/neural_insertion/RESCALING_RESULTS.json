@@ -1,0 +1,677 @@
+{
+  "started_utc": "2026-10-05T19:37:03.251444+00:00",
+  "mujoco_version": "3.12.0",
+  "numpy_version": "2.5.3",
+  "backend": "standard MuJoCo CPU",
+  "machine": "arm64",
+  "os": "Darwin",
+  "suite": "all",
+  "source_commit": "4ea7a9a9070bab0fe8913ff07e558b50acfa5640",
+  "source_files_sha256": {
+    "benchmarks.py": "22b87a053fa1036f490bcec9d6623f6bc41d5667e336d2d81c2b54ee364e8506",
+    "rescaling.py": "88e381c4f115784f0119b28790f87d59fc17a6d16f39762d4e83c4925b9235f8",
+    "units.py": "821dabbd22e3d574bf0d35928840680c9191b2f94558d816fbdfd552d588bf41",
+    "scene.py": "e930a6b8bc35b2a831935bb40566c00da1456748dbf6293c1cefb1c4fd056f9c"
+  },
+  "initial_conditions": "Deterministic straight clamped rod; no randomization",
+  "timing_note": "trial wall_s includes compilation, Python stepping and telemetry; not pure physics time",
+  "cases": {
+    "unit_m_kg_s": {
+      "units": {
+        "name": "m_kg_s",
+        "length": 1.0,
+        "mass": 1.0
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.3,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "56ef4cb94d69e8d683b0c5715d0fab3dc573d4b193f1ba895667a93c180e1eff",
+      "compiled": false,
+      "error": "Error: mass and inertia of moving bodies must be larger than mjMINVAL\nElement name 'thread_B_1', id 2",
+      "simulated_s": 0,
+      "wall_s": 0.0010922919027507305,
+      "case": "unit_m_kg_s"
+    },
+    "unit_mm_kg_s": {
+      "units": {
+        "name": "mm_kg_s",
+        "length": 1000,
+        "mass": 1
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.3,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "01f77ac86f5cc4cb3d0ab360e31ec72b46baf1145a90394f7d59e6e80122eb9a",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 0.2999999999999833,
+      "wall_s": 0.09892283333465457,
+      "min_principal_inertia_engine": 2.1811169865562283e-13,
+      "total_cable_mass_kg": 1.7592918860102842e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 3.144186300207963e-18,
+      "final_tip_m": [
+        0.00999639264500004,
+        0.0,
+        -0.00024106626534174582
+      ],
+      "final_tip_quat": [
+        0.9998258406833079,
+        0.0,
+        0.018662483808885345,
+        0.0
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "unit_mm_kg_s",
+      "trajectory_sha256": "5a430cfd1a787ee4428fe392ff96ebc4749dcf46909573e2e14c7c56ce6750a2"
+    },
+    "unit_mm_g_s": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.3,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "241c8a8559a26cce2bcb99508b7bdd679cbc3681c8bf6510388d6468d41d9ba6",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 0.2999999999999833,
+      "wall_s": 0.09761458309367299,
+      "min_principal_inertia_engine": 2.1811169865562286e-10,
+      "total_cable_mass_kg": 1.7592918860102842e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 3.144186300207963e-18,
+      "final_tip_m": [
+        0.00999639264500004,
+        0.0,
+        -0.0002410662653417458
+      ],
+      "final_tip_quat": [
+        0.9998258406833079,
+        0.0,
+        0.01866248380888534,
+        0.0
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "unit_mm_g_s",
+      "trajectory_sha256": "2ece41a667143e4bdde5bab83d15a99ebdb3e54daf042ea8b26bb1e0062b6d1f"
+    },
+    "unit_cm_g_s": {
+      "units": {
+        "name": "cm_g_s",
+        "length": 100,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.3,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "c78044b7c4371854289475eae55335b8421e1c393acbee7d90a02e28e7b10acb",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 0.2999999999999833,
+      "wall_s": 0.09828458400443196,
+      "min_principal_inertia_engine": 2.1811169865562287e-12,
+      "total_cable_mass_kg": 1.7592918860102842e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.8189256484623115e-18,
+      "final_tip_m": [
+        0.00999639264500004,
+        0.0,
+        -0.0002410662653417457
+      ],
+      "final_tip_quat": [
+        0.9998258406833079,
+        0.0,
+        0.018662483808885334,
+        0.0
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "unit_cm_g_s",
+      "trajectory_sha256": "474bea3bbd782b82b9b5d2414cce3e1969ce08fe3628324ff63399a436de3e6b"
+    },
+    "bend_16": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 2,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "241c8a8559a26cce2bcb99508b7bdd679cbc3681c8bf6510388d6468d41d9ba6",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 1.9999999999997962,
+      "wall_s": 0.6481083747930825,
+      "min_principal_inertia_engine": 2.1811169865562286e-10,
+      "total_cable_mass_kg": 1.7592918860102842e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 3.469446951953614e-18,
+      "final_tip_m": [
+        0.009996401796027283,
+        0.0,
+        -0.00024075482642306155
+      ],
+      "final_tip_quat": [
+        0.9998262533998808,
+        0.0,
+        0.01864035977007677,
+        0.0
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "bend_16",
+      "trajectory_sha256": "0200fad7aa3aea8e0c08d8f3e3fa9e53c61900a2b2e4ec50665f82264de1d576"
+    },
+    "bend_32": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 2,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "e279479527e6ddbc1a9fb906140bd4ce02972399fed0d76e50a10c653b6f681b",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 1.9999999999997962,
+      "wall_s": 1.756034916266799,
+      "min_principal_inertia_engine": 1.0822670908103809e-10,
+      "total_cable_mass_kg": 1.7592918860102842e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.8189256484623115e-18,
+      "final_tip_m": [
+        0.009996102372330593,
+        0.0,
+        -0.00025278206229644145
+      ],
+      "final_tip_quat": [
+        0.9998144900408453,
+        0.0,
+        0.019260983992615367,
+        0.0
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "bend_32",
+      "trajectory_sha256": "dbbad4925875bcdca0adb473589cca9d42812c68db00fe80e8da0cd80b332463"
+    },
+    "bend_64": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 64,
+        "dt_s": 0.0001,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 2,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.002,
+      "scene_sha256": "3204dda8c9ea3b8d984c7afce7312a1553d17803059547c061ec054ef4dfece8",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 1.9999999999997962,
+      "wall_s": 9.25192308286205,
+      "min_principal_inertia_engine": 5.337487199726532e-11,
+      "total_cable_mass_kg": 1.759291886010284e-08,
+      "peak_support_penetration_um": 0.0,
+      "final_quarter_support_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.710505431213761e-18,
+      "final_tip_m": [
+        0.009995945376349945,
+        -1.333760385157082e-29,
+        -0.0002588921484950218
+      ],
+      "final_tip_quat": [
+        0.999808464456614,
+        1.1966065399532497e-22,
+        0.0195712646732138,
+        -2.350305129274925e-24
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "completed": true,
+      "case": "bend_64",
+      "trajectory_sha256": "c44a0a1290b8e94d4136571816db32c50767606ce53192f7905056f3659666e6"
+    },
+    "contact_coarse": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 1.5625e-07,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.06,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.0001,
+      "scene_sha256": "58aa3a6d35e2d41360aadf29e7bee3f2f26a077de8c7ce049883bc173e37b485",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 0.06000000000026077,
+      "wall_s": 42.422747124917805,
+      "min_principal_inertia_engine": 4.819643924819731e-10,
+      "total_cable_mass_kg": 7.74088429844525e-08,
+      "peak_support_penetration_um": 1.7158177142255586,
+      "final_quarter_support_penetration_um": 0.4562713459556993,
+      "max_segment_length_error_m": 1.1926223897340549e-17,
+      "final_tip_m": [
+        0.042681665276129134,
+        -4.289662289357676e-17,
+        -0.005978949485180204
+      ],
+      "final_tip_quat": [
+        0.9999999837760242,
+        2.3082413948405716e-15,
+        -0.0001801331493288942,
+        -1.3331786887675614e-15
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 11,
+      "completed": true,
+      "case": "contact_coarse",
+      "trajectory_sha256": "8a2315978c3049d5e9ce5db908b22f89e0c516ec7a47390551db898b2a61608b"
+    },
+    "contact_fine": {
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 7.8125e-08,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "requested_duration_s": 0.06,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "torque_nm": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "sample_interval_s": 0.0001,
+      "scene_sha256": "ad9a7c63bd9e8a68d5c85196ba65319313ec8b1ba9a55c7f46224827af963a54",
+      "compiled": true,
+      "failure": null,
+      "simulated_s": 0.05999999999905016,
+      "wall_s": 82.42532600043342,
+      "min_principal_inertia_engine": 4.819643924819731e-10,
+      "total_cable_mass_kg": 7.74088429844525e-08,
+      "peak_support_penetration_um": 1.7386215119547903,
+      "final_quarter_support_penetration_um": 0.5089474752648475,
+      "max_segment_length_error_m": 1.1709383462843448e-17,
+      "final_tip_m": [
+        0.042681138891398025,
+        2.5536362068199502e-17,
+        -0.005979653527065062
+      ],
+      "final_tip_quat": [
+        0.9999999931961491,
+        -5.609971051984644e-17,
+        -0.00011665205538882233,
+        2.185552156902779e-15
+      ],
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 14,
+      "completed": true,
+      "case": "contact_fine",
+      "trajectory_sha256": "ce844b4348767726c41057eace933600f297006be761bd4b95b4b97a360af737"
+    }
+  },
+  "gates": {
+    "bending_unit_equivalence_um": {
+      "value": 5.204452764587508e-12,
+      "limit_exclusive": 0.01,
+      "passed": true
+    },
+    "cantilever_reference_relative_error": {
+      "value": 0.023999593859153845,
+      "limit_exclusive": 0.03,
+      "passed": true
+    },
+    "cantilever_mesh_relative_change": {
+      "value": 0.023034482297112583,
+      "limit_exclusive": 0.03,
+      "passed": true
+    },
+    "contact_timestep_tip_error_um": {
+      "value": 34.97892117031997,
+      "limit_exclusive": 1,
+      "passed": false
+    },
+    "contact_timestep_shape_error_um": {
+      "value": 34.97892117031997,
+      "limit_exclusive": 1,
+      "passed": false
+    },
+    "peak_contact_penetration_um": {
+      "value": 1.7386215119547903,
+      "limit_exclusive": 2,
+      "passed": true
+    },
+    "numerical_completion": {
+      "passed": true,
+      "note": "SI compilation is an explicit diagnostic, excluded from dynamic completion"
+    },
+    "physical_mass": {
+      "passed": true
+    },
+    "segment_length_error_nm": {
+      "value": 1.1926223897340549e-08,
+      "limit_exclusive": 1,
+      "passed": true
+    }
+  },
+  "status": "quality_gate_failed",
+  "success": false,
+  "cantilever_reference_m": 0.0002652582384864922,
+  "unvalidated": [
+    "Settled contact: the 60 ms window includes rebound",
+    "Contact spatial refinement, calibrated material/contact, tool and tissue interaction"
+  ],
+  "finished_utc": "2026-10-05T19:39:20.292295+00:00",
+  "elapsed_wall_s": 137.04083254234865,
+  "total_simulated_s": 7.0199999999986495,
+  "summed_trial_wall_s": 136.80005379160866
+}

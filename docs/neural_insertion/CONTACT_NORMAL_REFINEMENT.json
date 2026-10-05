@@ -1,0 +1,166 @@
+{
+  "started_utc": "2026-10-05T21:27:11.299397+00:00",
+  "cases": {
+    "normal_dt_39.0625_ns": {
+      "kind": "segment_normal",
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 3.90625e-08,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "duration_s": 0.06,
+      "simulated_s": 0.05999999999838935,
+      "completed": true,
+      "sample_interval_s": 0.0001,
+      "initial_checkpoint_s": 0,
+      "failure": null,
+      "peak_penetration_um": 1.261069121746488,
+      "peak_normal_force_n": 8.314442722919263e-05,
+      "first_contact_s": 0.03497488281183674,
+      "max_solver_iterations": 1,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "contact_impulse_ns": [
+        0.0,
+        0.0,
+        1.4238389056697397e-09
+      ],
+      "max_work_residual_j": 1.5868089432568277e-16,
+      "relative_work_residual": 0.0003343374598696679,
+      "max_energy_gain_fraction": 0.0,
+      "energy_scale_j": 4.746129685484243e-13,
+      "scene_sha256": "518379ccd7a279cfa20cef7d11db91848888b73e1a3b6a4946030221dfa7ed20",
+      "physical_total_mass_kg": 2.4190263432641406e-09,
+      "wall_s": 2.4818643745966256,
+      "linear_impulse_residual_ns": [
+        0.0,
+        0.0,
+        -5.150626199699251e-20
+      ],
+      "relative_linear_impulse_residual": 1.808711006316373e-11,
+      "angular_impulse_residual_nms": [
+        0.0,
+        1.0237711570606727e-30,
+        0.0
+      ],
+      "trajectory_sha256": "9b4a7cc17ad2c38275c4bf4a34d81431bf593dbe2497018281342a1bf74000f2"
+    },
+    "normal_dt_19.5312_ns": {
+      "kind": "segment_normal",
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 1.953125e-08,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "duration_s": 0.06,
+      "simulated_s": 0.059999999998058946,
+      "completed": true,
+      "sample_interval_s": 0.0001,
+      "initial_checkpoint_s": 0,
+      "failure": null,
+      "peak_penetration_um": 1.2581916100873163,
+      "peak_normal_force_n": 8.3022796856547e-05,
+      "first_contact_s": 0.03497486328025634,
+      "max_solver_iterations": 1,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "contact_impulse_ns": [
+        0.0,
+        0.0,
+        1.4238389056856054e-09
+      ],
+      "max_work_residual_j": 7.933818011094595e-17,
+      "relative_work_residual": 0.0001671639533019864,
+      "max_energy_gain_fraction": 0.0,
+      "energy_scale_j": 4.746129685484243e-13,
+      "scene_sha256": "1c05c706fbcc61c1b76e7af43929d5f256ec514e360570751e4116873501dc18",
+      "physical_total_mass_kg": 2.4190263432641406e-09,
+      "wall_s": 4.9475047080777586,
+      "linear_impulse_residual_ns": [
+        0.0,
+        0.0,
+        -6.414764970833416e-20
+      ],
+      "relative_linear_impulse_residual": 2.2526301765645318e-11,
+      "angular_impulse_residual_nms": [
+        0.0,
+        6.572473932751369e-31,
+        0.0
+      ],
+      "trajectory_sha256": "71b892a859df249f6e9cb11ab1ecb42cd9192fc28dbd438223d5ae5c02a00fac"
+    }
+  },
+  "comparisons": {
+    "normal_dt_39.0625_ns": {
+      "difference_um": 4.5023152692533905,
+      "gate_um": 1.0,
+      "passed": false
+    },
+    "normal_dt_19.5312_ns": {
+      "difference_um": 1.1353560046877333,
+      "gate_um": 1.0,
+      "passed": false
+    }
+  },
+  "status": "refinement_comparisons_failed",
+  "baseline_case_trajectory_sha256": "6c32bf2c27e05b2a486880804f09d12a76a4eb82dbb682be118b934aafcc33d4",
+  "source_sha256": {
+    "contact_diagnostics.py": "a5ab368635b7354d167a0b48b1265d116e4da481d759a76052e7ad68d5104c59",
+    "contact_kernel.cc": "559587335e6a0dd4b22585e6b32acb41b99b9488ab980c94e187c3325b404d21",
+    "der.py": "acf01606b5868bfd60896c710f7bba0cf10ea6f4c87288452f2b83172e25a052",
+    "units.py": "821dabbd22e3d574bf0d35928840680c9191b2f94558d816fbdfd552d588bf41"
+  },
+  "script_sha256": "77bd1501e05e18eaff054bc1c2536511e000103c00c73001b33e8f1803a5c790",
+  "protocol": "Selected after initial normal-drop failure; exactly two extra timestep halvings in mm-g-s. No changes to physics or gates.",
+  "success": false,
+  "elapsed_wall_s": 7.434618500061333,
+  "simulated_s": 0.1199999999964483,
+  "finished_utc": "2026-10-05T21:27:18.734065+00:00",
+  "ready_for_robot_or_rl": false
+}

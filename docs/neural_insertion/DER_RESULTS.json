@@ -1,0 +1,1716 @@
+{
+  "started_utc": "2026-10-05T20:49:26.671912+00:00",
+  "suite": "all",
+  "mujoco": "3.12.0",
+  "backend": "MuJoCo CPU + local DER plugin",
+  "machine": "arm64",
+  "os": "Darwin",
+  "source_commit": "4ea7a9a9070bab0fe8913ff07e558b50acfa5640",
+  "source_sha256": {
+    "der.py": "acf01606b5868bfd60896c710f7bba0cf10ea6f4c87288452f2b83172e25a052",
+    "der_benchmarks.py": "10530f7b9c8f847ba2b758a90116565f9bc3304aac5eb1bb4a4899d0e280dbfd",
+    "rescaling.py": "88e381c4f115784f0119b28790f87d59fc17a6d16f39762d4e83c4925b9235f8",
+    "units.py": "821dabbd22e3d574bf0d35928840680c9191b2f94558d816fbdfd552d588bf41"
+  },
+  "plugin": {
+    "source_sha256": {
+      "der_build.py": "ed508636d9926cddb981f1c7ba40ce7815676ca1d5b829b092fc7beced08f1fb",
+      "der_bridge.cc": "1969fee983fde1a6c38f7463d1e865efcd78fa6f84e83a80db73e2203d180103",
+      "LICENSE": "1eb70d5640418da6bff3c0e443a68167556e843ef7c9c509dbc39bae6dc8aa37",
+      "UPSTREAM.json": "1fdac271eb2377204b49b36738b6b7c7939dae4a65be0570f9970d638016fd05",
+      "wire_qst.cc": "5b17a11fb0eb86e71e9fa442b38ee5ca15e5f278e0030fd4c89692fb0d89f23c",
+      "wire_qst.h": "dc2e70e92017d88f24d26046aa6c8b7439d440930d7a4f9b0861ff455529e05a",
+      "wire_utils.cc": "98206d0fb06470b70f1da522148bb9dce183d6654516d316508d50dca367a0a9",
+      "wire_utils.h": "7765e396645643d1b02fd93488d90d881f2749ddeb60424c50a0400706cb1cdb"
+    },
+    "upstream": {
+      "repository": "https://github.com/qj25/adapteddlo_muj",
+      "revision": "71d2d504ef8e6408ccabcba2e05ec3a2b19e0fad",
+      "license": "MIT",
+      "files": {
+        "wire_qst.cc": {
+          "upstream_path": "wire_plugin/src/wire_qst.cc",
+          "sha256": "5b17a11fb0eb86e71e9fa442b38ee5ca15e5f278e0030fd4c89692fb0d89f23c"
+        },
+        "wire_qst.h": {
+          "upstream_path": "wire_plugin/src/wire_qst.h",
+          "sha256": "dc2e70e92017d88f24d26046aa6c8b7439d440930d7a4f9b0861ff455529e05a"
+        },
+        "wire_utils.cc": {
+          "upstream_path": "wire_plugin/src/wire_utils.cc",
+          "sha256": "98206d0fb06470b70f1da522148bb9dce183d6654516d316508d50dca367a0a9"
+        },
+        "wire_utils.h": {
+          "upstream_path": "wire_plugin/src/wire_utils.h",
+          "sha256": "7765e396645643d1b02fd93488d90d881f2749ddeb60424c50a0400706cb1cdb"
+        }
+      }
+    },
+    "mujoco": "3.12.0",
+    "eigen_revision": "464c1d097891a1462ab28bf8bb763c1683883892",
+    "eigen_archive_sha256": "d9a483c02dbe2bee0c003aab550bfa8670f848e3eb8e9c36a9e3c30315bf77df",
+    "library_sha256": "256b319b942e72e773ed8959510f17a9a44c879e2a71647761589dba0d8c22ba",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+    "patches": [
+      "3.12 numeric header rename",
+      "initialize curvature/theta",
+      "current-state curvature before frame transport",
+      "atan2 signed twist angle",
+      "copy constructor",
+      "public plugin lifecycle and state adapter"
+    ],
+    "upstream_source_force_formula_changes": false,
+    "projection_variants": {
+      "published": "upstream lever torques",
+      "direct": "Cartesian Jacobian projection plus end twist moments"
+    }
+  },
+  "gates": {
+    "virtual_work_relative_error": {
+      "value": 2.853197977190723e-09,
+      "limit_exclusive": 0.0001,
+      "passed": true
+    },
+    "repeat_force_error_nm": {
+      "value": 0.0,
+      "limit_exclusive": 1e-15,
+      "passed": true
+    },
+    "copy_force_error_nm": {
+      "value": 0.0,
+      "limit_exclusive": 1e-15,
+      "passed": true
+    },
+    "restore_force_error_nm": {
+      "value": 0.0,
+      "limit_exclusive": 1e-15,
+      "passed": true
+    },
+    "reset_force_error_nm": {
+      "value": 0.0,
+      "limit_exclusive": 1e-15,
+      "passed": true
+    },
+    "unit_force_relative_error": {
+      "value": 1.0106815331728536e-15,
+      "limit_exclusive": 1e-09,
+      "passed": true
+    },
+    "query_plugin_state_error": {
+      "value": 0.0,
+      "limit_exclusive": 1e-15,
+      "passed": true
+    },
+    "mass_difference_kg": {
+      "value": 0.0,
+      "limit_exclusive": 1e-20,
+      "passed": true
+    },
+    "inertia_difference_kg_m2": {
+      "value": 0.0,
+      "limit_exclusive": 1e-25,
+      "passed": true
+    },
+    "cantilever_relative_error": {
+      "value": 0.02399988953767279,
+      "limit_exclusive": 0.03,
+      "passed": true
+    },
+    "cantilever_mesh_relative_change": {
+      "value": 0.023035326012539513,
+      "limit_exclusive": 0.03,
+      "passed": true
+    },
+    "relaxation_energy_relative_drift": {
+      "value": 0.00037988727964939644,
+      "limit_exclusive": 0.001,
+      "passed": true
+    },
+    "relaxation_energy_refines": {
+      "passed": true
+    },
+    "relaxation_timestep_shape_um": {
+      "value": 0.09977744002849603,
+      "limit_exclusive": 1.0,
+      "passed": true
+    },
+    "contact_timestep_shape_um": {
+      "value": 14.378866803138505,
+      "limit_exclusive": 1.0,
+      "passed": false
+    },
+    "contact_timestep_tip_um": {
+      "value": 14.378866803138505,
+      "limit_exclusive": 1.0,
+      "passed": false
+    },
+    "peak_contact_penetration_um": {
+      "value": 1.7436394634322387,
+      "limit_exclusive": 2.0,
+      "passed": true
+    },
+    "numerical_completion": {
+      "passed": true
+    }
+  },
+  "cases": {
+    "bend_16": {
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 2.5e-05,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 2.0,
+      "simulated_s": 1.9999999999986735,
+      "wall_s": 2.811012167017907,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.002,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "peak_penetration_um": 0.0,
+      "final_quarter_penetration_um": 0.0,
+      "max_segment_length_error_m": 3.469446951953614e-18,
+      "physical_mass_kg": 1.7592918860102842e-08,
+      "scene_sha256": "0ac24bf855c8060e4d8219869a5b51d8e0ed761af83ec6ddce7b3a47f04a8d09",
+      "trajectory_sha256": "33f61223bdb9eda55ed1fae77f1f2f7587a07da1fc736d3933f0a9783c87d021"
+    },
+    "bend_32": {
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 2.5e-05,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 2.0,
+      "simulated_s": 1.9999999999986735,
+      "wall_s": 7.550379625055939,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.002,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "peak_penetration_um": 0.0,
+      "final_quarter_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.9815559743351372e-18,
+      "physical_mass_kg": 1.7592918860102842e-08,
+      "scene_sha256": "a12c612c38141e4d295a0464186aa9442f4038038000133e4b1e9e247895ead2",
+      "trajectory_sha256": "9b3730f9abe68821b42b3ef4355d266cf0c01fa7cb0637dc429ea043ae3d608d"
+    },
+    "bend_64": {
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 64,
+        "dt_s": 2.5e-05,
+        "relaxation_s": 0.002,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 2.0,
+      "simulated_s": 1.9999999999986735,
+      "wall_s": 37.61239874968305,
+      "force_n": [
+        0,
+        0,
+        -1e-08
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.002,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "peak_penetration_um": 0.0,
+      "final_quarter_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.791820594150174e-18,
+      "physical_mass_kg": 1.759291886010284e-08,
+      "scene_sha256": "05c9b33d9d2bf1c53ab91a4a0e65da585387eb644bf624f02738ecd8a1dc8c04",
+      "trajectory_sha256": "afcbbf9874fc56bd9009b63657cd556db825cec30c705c8406426ce912d08568"
+    },
+    "relax_coarse": {
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 2e-06,
+        "relaxation_s": 0,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 0.01,
+      "simulated_s": 0.010000000000000678,
+      "wall_s": 0.184838708024472,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.3,
+      "sample_interval_s": 0.0001,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "peak_penetration_um": 0.0,
+      "final_quarter_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.4936649967166602e-18,
+      "physical_mass_kg": 1.7592918860102842e-08,
+      "scene_sha256": "90e4ca3ab403a7b96178440a18a765ae9821592a0c6d1d9ee491ae7c54231fa2",
+      "trajectory_sha256": "d2283394e61b079f2d1111c4954e0b9f399920294620696468058dddbcd125d1"
+    },
+    "relax_fine": {
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 16,
+        "dt_s": 1e-06,
+        "relaxation_s": 0,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 0.01,
+      "simulated_s": 0.009999999999999105,
+      "wall_s": 0.3629714581184089,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.3,
+      "sample_interval_s": 0.0001,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 0,
+      "peak_penetration_um": 0.0,
+      "final_quarter_penetration_um": 0.0,
+      "max_segment_length_error_m": 2.710505431213761e-18,
+      "physical_mass_kg": 1.7592918860102842e-08,
+      "scene_sha256": "e53bb4cd1138fa74731150cd256b6e77da1de9700bee38a7a120b0f304232993",
+      "trajectory_sha256": "4400e61f05d2d30d0249b00a143121d685f52f0d81bf7160211da50f5d0e1733"
+    },
+    "contact_medium": {
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 3.125e-07,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 0.06,
+      "simulated_s": 0.060000000000128464,
+      "wall_s": 22.628069582860917,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.0001,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 13,
+      "peak_penetration_um": 1.6683157357672944,
+      "final_quarter_penetration_um": 0.3845174520455789,
+      "max_segment_length_error_m": 1.1492543028346347e-17,
+      "physical_mass_kg": 7.74088429844525e-08,
+      "scene_sha256": "47bd7735a8591295288dd83b719db4bf3279966504b86e162f095823fdd0f454",
+      "trajectory_sha256": "da900e99f40c39c442f1baf43e8f3ee16691b905068c2574508b6784aea3c553"
+    },
+    "contact_coarse": {
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 1.5625e-07,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 0.06,
+      "simulated_s": 0.06000000000026077,
+      "wall_s": 44.9480934580788,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.0001,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 17,
+      "peak_penetration_um": 1.7436394634322387,
+      "final_quarter_penetration_um": 0.5273332349200293,
+      "max_segment_length_error_m": 1.214306433183765e-17,
+      "physical_mass_kg": 7.74088429844525e-08,
+      "scene_sha256": "a0f0e400a8de2f58f5b949cde816f3b2975fe61e85a89fd6e91daab721a92e94",
+      "trajectory_sha256": "2fca0cce90b586b69a5c03bce78c6f03b91c2d41ab43d7b4fb93166867c2097b"
+    },
+    "contact_fine": {
+      "config": {
+        "length_m": 0.044,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 32,
+        "dt_s": 7.8125e-08,
+        "relaxation_s": 0,
+        "gravity_m_s2": 9.81,
+        "floor_z_m": -0.006,
+        "contact_time_s": 1e-05,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "units": {
+        "name": "mm_g_s",
+        "length": 1000,
+        "mass": 1000
+      },
+      "projection": "direct",
+      "duration_s": 0.06,
+      "simulated_s": 0.05999999999905016,
+      "wall_s": 89.75974704092368,
+      "force_n": [
+        0,
+        0,
+        0
+      ],
+      "release_at_s": null,
+      "initial_bend_rad": 0.0,
+      "sample_interval_s": 0.0001,
+      "failure": null,
+      "completed": true,
+      "warnings": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_solver_iterations": 12,
+      "peak_penetration_um": 1.7397977283954806,
+      "final_quarter_penetration_um": 0.4975652801717349,
+      "max_segment_length_error_m": 1.1709383462843448e-17,
+      "physical_mass_kg": 7.74088429844525e-08,
+      "scene_sha256": "db1c8c320b9d7926673df02a0e2e6d516b058afa10695a6438d74ec05f806ca8",
+      "trajectory_sha256": "c677d65bb2f3d291be4fe2fc42117467a4de3902da4b3a79699c4663d74165b1"
+    }
+  },
+  "status": "quality_gate_failed",
+  "audit": {
+    "published": {
+      "projection": "published",
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 8,
+        "dt_s": 1e-07,
+        "relaxation_s": 0,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "virtual_work": {
+        "bend": {
+          "energy": {
+            "bending_j": 1.3109136637035084e-09,
+            "twisting_j": 0.0,
+            "end_twist_rad": 0.0,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            0.0,
+            0.0,
+            1.8108204011929668e-24,
+            0.0,
+            0.0,
+            1.8108204011929668e-24,
+            0.0,
+            0.0,
+            9.226419814928413e-25,
+            0.0,
+            0.0,
+            -5.468685158158637e-09,
+            0.0,
+            0.0,
+            1.8108204011929668e-24,
+            0.0,
+            0.0,
+            2.6989988208930915e-24,
+            0.0,
+            0.0,
+            1.8108204011929668e-24
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -0.0,
+              -0.0,
+              6.203854594147708e-20,
+              -0.0,
+              -0.0,
+              -9.30578189122156e-20,
+              -0.0,
+              -0.0,
+              6.203854594147708e-20,
+              -0.0,
+              -0.0,
+              -5.468685158445016e-09,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            [
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              -5.468685157917689e-09,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            5.7352057098002614e-11,
+            5.489681150739596e-11
+          ]
+        },
+        "twist": {
+          "energy": {
+            "bending_j": 0.0,
+            "twisting_j": 1.238066070380214e-10,
+            "end_twist_rad": 0.5,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0
+            ],
+            [
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            1.0,
+            1.0
+          ]
+        },
+        "mixed": {
+          "energy": {
+            "bending_j": 1.3109136637035084e-09,
+            "twisting_j": 4.457037853368774e-11,
+            "end_twist_rad": 0.3000000000000001,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            -1.818730518556794e-11,
+            7.122725911435485e-11,
+            1.8108204011929668e-24,
+            -1.818730518556794e-11,
+            7.122725911435485e-11,
+            1.8108204011929668e-24,
+            -1.818730518556794e-11,
+            7.122725911435486e-11,
+            9.226419814928413e-25,
+            -1.818730518556794e-11,
+            4.643981447916234e-12,
+            -5.468685158158637e-09,
+            -1.8187305185567934e-11,
+            -7.122725911435485e-11,
+            1.8108204011929668e-24,
+            -1.8187305185567934e-11,
+            -7.122725911435485e-11,
+            2.6989988208930915e-24,
+            -1.8187305185567937e-11,
+            -6.804599965234702e-11,
+            2.1049094333396663e-11
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -2.971358568981573e-10,
+              -6.338271443687574e-18,
+              6.203854594147708e-20,
+              -2.971358568981573e-10,
+              -8.799133766032832e-18,
+              -9.30578189122156e-20,
+              -2.971358568981573e-10,
+              -4.4667753077863494e-18,
+              5.1698788284564224e-20,
+              -2.971358568981573e-10,
+              7.587125109275817e-11,
+              -5.468685158445016e-09,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0
+            ],
+            [
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              7.587124061858366e-11,
+              -5.468685157917689e-09,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            0.1378551705497571,
+            0.1378551700714334
+          ]
+        },
+        "spatial_seed_7": {
+          "energy": {
+            "bending_j": 8.512422020442878e-10,
+            "twisting_j": 4.678610069986373e-11,
+            "end_twist_rad": -0.30736649098214525,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            1.7441416640200726e-11,
+            -3.0752637337597387e-10,
+            2.848050875817355e-10,
+            1.1202900172962924e-11,
+            5.228314625581832e-10,
+            1.1907679960659691e-09,
+            1.9614870543045947e-11,
+            -1.620934662565824e-09,
+            5.511316117161294e-10,
+            2.5143161535485153e-11,
+            -5.631607228685537e-10,
+            -5.390096098717432e-10,
+            1.624620852943498e-11,
+            1.144854320674175e-09,
+            -5.200532878660635e-11,
+            9.368788129182126e-12,
+            1.6637865656789135e-09,
+            4.4668805903446803e-10,
+            1.7512789160812865e-11,
+            1.2882391323645472e-09,
+            2.439611284324152e-09
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.0443201891292984e-10,
+              -3.5564946068159655e-10,
+              3.364574163437181e-10,
+              3.044320189180997e-10,
+              5.048194211893768e-10,
+              1.2230116104198296e-09,
+              3.044320189025901e-10,
+              -1.6214315735423718e-09,
+              6.300388069966928e-10,
+              3.044320189180997e-10,
+              -5.822195670207626e-10,
+              -4.442367499148507e-10,
+              3.044320189025901e-10,
+              1.127793267789887e-09,
+              1.1281791144635881e-11,
+              3.0443201886640093e-10,
+              1.666135779042944e-09,
+              4.634084483290166e-10,
+              3.044320188250419e-10,
+              1.3560357459867359e-09,
+              2.4189140585056153e-09
+            ],
+            [
+              3.04432019290331e-10,
+              -3.5564946083669296e-10,
+              3.364574163385483e-10,
+              3.044320193420298e-10,
+              5.048194215357586e-10,
+              1.223011609416873e-09,
+              3.044320184631504e-10,
+              -1.6214315738060359e-09,
+              6.300388059523773e-10,
+              3.0443201903183706e-10,
+              -5.822195669121952e-10,
+              -4.4423674981662306e-10,
+              3.0443201944542736e-10,
+              1.1277932677950568e-09,
+              1.1281791470338249e-11,
+              3.044320201175116e-10,
+              1.6661357792859285e-09,
+              4.6340844748115653e-10,
+              3.044320189284395e-10,
+              1.3560357462814192e-09,
+              2.4189140590174333e-09
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            0.18352119007885404,
+            0.18352119024968486
+          ]
+        },
+        "spatial_seed_17": {
+          "energy": {
+            "bending_j": 1.2891375058190349e-09,
+            "twisting_j": 5.770202837469856e-11,
+            "end_twist_rad": -0.3413450689532517,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            4.8171220236864165e-12,
+            -3.974351409275935e-10,
+            6.583812480737826e-10,
+            6.8018956247172244e-12,
+            2.2760611127049297e-09,
+            1.5873235123117224e-10,
+            1.4307788992105085e-11,
+            9.877703754917058e-10,
+            3.753445354524731e-10,
+            4.1410744738068825e-11,
+            2.787469430395663e-09,
+            -1.0285998788572802e-09,
+            1.2419844804597819e-11,
+            -2.2225637068159e-09,
+            -8.790323612355511e-10,
+            3.710251246096974e-12,
+            -1.6682834778419966e-09,
+            -1.856790189996682e-11,
+            1.9070137264458888e-12,
+            -1.9554437539854286e-10,
+            -1.2981195839650543e-09
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.380861986058735e-10,
+              -3.5341438557925376e-10,
+              6.839045385564325e-10,
+              3.380861985541747e-10,
+              2.3207206338407414e-09,
+              1.1498557488565516e-10,
+              3.3808619866791206e-10,
+              1.0468589483149007e-09,
+              3.0231286636470595e-10,
+              3.380861985334952e-10,
+              2.812589841665297e-09,
+              -1.18674595906541e-09,
+              3.380861985334952e-10,
+              -2.190345180024441e-09,
+              -9.600319612310607e-10,
+              3.380861985334952e-10,
+              -1.633859425090401e-09,
+              -4.436040238564447e-11,
+              3.380861985334952e-10,
+              -2.0732947546971798e-10,
+              -1.3205296205199698e-09
+            ],
+            [
+              3.380861979854881e-10,
+              -3.5341438506226593e-10,
+              6.839045373673604e-10,
+              3.3808619819228326e-10,
+              2.320720632713708e-09,
+              1.1498557520618766e-10,
+              3.380861998466445e-10,
+              1.046858948428638e-09,
+              3.0231286719188656e-10,
+              3.3808619870927114e-10,
+              2.8125898419134518e-09,
+              -1.1867459597995328e-09,
+              3.3808619860587357e-10,
+              -2.1903451799210436e-09,
+              -9.600319611586824e-10,
+              3.38086198502476e-10,
+              -1.6338594251007409e-09,
+              -4.4360402437343265e-11,
+              3.3808619860587357e-10,
+              -2.073294755214168e-10,
+              -1.3205296205716688e-09
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            0.17016680065724907,
+            0.17016680069787538
+          ]
+        },
+        "spatial_seed_29": {
+          "energy": {
+            "bending_j": 5.796447476045056e-10,
+            "twisting_j": 6.477486916281626e-11,
+            "end_twist_rad": -0.3616607392402423,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            9.282695728571811e-12,
+            -6.643977465690118e-11,
+            1.4104373040964497e-10,
+            9.977576397881426e-12,
+            -8.677573845721743e-11,
+            2.1224102936778797e-10,
+            9.457141371469933e-12,
+            4.292620536310167e-11,
+            -7.46716460102816e-10,
+            8.016900141573215e-12,
+            3.906662182743212e-10,
+            1.0021161786885577e-09,
+            8.129756026526047e-12,
+            2.729634790329448e-09,
+            2.013577858314407e-10,
+            1.6112071784321587e-11,
+            8.402584445910914e-10,
+            8.063477423559786e-10,
+            8.883883795647807e-12,
+            -7.423309203642013e-10,
+            -7.484787356188192e-10
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.582079122113074e-10,
+              -6.137052378648047e-11,
+              1.989758191091323e-10,
+              3.582079121906279e-10,
+              -7.346028626951607e-11,
+              2.729778621974901e-10,
+              3.582079121647785e-10,
+              3.460096359103671e-11,
+              -6.881142324422594e-10,
+              3.58207912185458e-10,
+              4.1424469939014766e-10,
+              1.0461722928826305e-09,
+              3.582079121906279e-10,
+              2.750869914275513e-09,
+              1.5526022635518924e-10,
+              3.5820791219579777e-10,
+              8.916478974748963e-10,
+              7.324546371523991e-10,
+              3.582079121906279e-10,
+              -7.225954620635591e-10,
+              -8.005735123721384e-10
+            ],
+            [
+              3.582079114461654e-10,
+              -6.137052387436841e-11,
+              1.989758198742744e-10,
+              3.58207912273346e-10,
+              -7.34602866520871e-11,
+              2.729778614892167e-10,
+              3.582079121699484e-10,
+              3.4600963627225864e-11,
+              -6.881142323853908e-10,
+              3.582079123767436e-10,
+              4.1424469935395856e-10,
+              1.046172292774063e-09,
+              3.582079121699484e-10,
+              2.7508699139498113e-09,
+              1.5526022664470245e-10,
+              3.5820791211824964e-10,
+              8.916478971026651e-10,
+              7.32454636904245e-10,
+              3.582079122216472e-10,
+              -7.225954621359375e-10,
+              -8.005735124393469e-10
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            0.2611015547652781,
+            0.26110155473339525
+          ]
+        }
+      },
+      "max_virtual_work_relative_error": 1.0,
+      "repeat_force_error_nm": 0.0,
+      "copy_force_error_nm": 0.0,
+      "restore_force_error_nm": 0.0,
+      "reset_force_error_nm": 0.0,
+      "query_plugin_state_error": 0.0,
+      "unit_force_relative_error": 9.583665629560684e-16,
+      "unit_vertex_difference_m": 1.734723475976807e-18,
+      "native_mass_max_difference_kg": 0.0,
+      "native_inertia_max_difference_kg_m2": 0.0,
+      "audit_simulated_s": 1e-06
+    },
+    "direct": {
+      "projection": "direct",
+      "config": {
+        "length_m": 0.01,
+        "radius_m": 2e-05,
+        "density_kg_m3": 1400,
+        "young_pa": 100000000.0,
+        "poisson": 0.45,
+        "segments": 8,
+        "dt_s": 1e-07,
+        "relaxation_s": 0,
+        "gravity_m_s2": 0,
+        "floor_z_m": -0.02,
+        "contact_time_s": 0.0006,
+        "contact_impedance": 0.9999,
+        "integrator": "implicitfast",
+        "friction": 0.3
+      },
+      "virtual_work": {
+        "bend": {
+          "energy": {
+            "bending_j": 1.3109136637035084e-09,
+            "twisting_j": 0.0,
+            "end_twist_rad": 0.0,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            0.0,
+            0.0,
+            3.6216408023859336e-24,
+            0.0,
+            0.0,
+            3.6216408023859336e-24,
+            0.0,
+            0.0,
+            1.8452839629856827e-24,
+            0.0,
+            0.0,
+            -5.468685158158636e-09,
+            0.0,
+            0.0,
+            6.892712358543227e-26,
+            0.0,
+            0.0,
+            6.892712358543228e-26,
+            0.0,
+            0.0,
+            6.892712358543228e-26
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -0.0,
+              -0.0,
+              6.203854594147708e-20,
+              -0.0,
+              -0.0,
+              -9.30578189122156e-20,
+              -0.0,
+              -0.0,
+              6.203854594147708e-20,
+              -0.0,
+              -0.0,
+              -5.468685158445016e-09,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            [
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              1.0339757656912846e-19,
+              -0.0,
+              -0.0,
+              -5.468685157917689e-09,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            5.735219458772023e-11,
+            5.4896403915522724e-11
+          ]
+        },
+        "twist": {
+          "energy": {
+            "bending_j": 0.0,
+            "twisting_j": 1.238066070380214e-10,
+            "end_twist_rad": 0.5,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            -4.952264281520856e-10,
+            0.0,
+            0.0,
+            -4.952264281520856e-10,
+            0.0,
+            0.0,
+            -4.952264281520856e-10,
+            0.0,
+            0.0,
+            -4.952264281520855e-10,
+            0.0,
+            0.0,
+            -4.952264281520855e-10,
+            0.0,
+            0.0,
+            -4.952264281520855e-10,
+            0.0,
+            0.0,
+            -4.952264281520855e-10,
+            0.0,
+            0.0
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0,
+              -4.952264281532558e-10,
+              -0.0,
+              -0.0
+            ],
+            [
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281894449e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0,
+              -4.952264281635955e-10,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            2.362978615347344e-12,
+            5.241836899502633e-11
+          ]
+        },
+        "mixed": {
+          "energy": {
+            "bending_j": 1.3109136637035084e-09,
+            "twisting_j": 4.457037853368774e-11,
+            "end_twist_rad": 0.3000000000000001,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            -2.9713585689125155e-10,
+            0.0,
+            3.6216408023859336e-24,
+            -2.9713585689125155e-10,
+            0.0,
+            3.6216408023859336e-24,
+            -2.9713585689125155e-10,
+            2.7755575615628915e-26,
+            1.8452839629856827e-24,
+            -2.9713585689125155e-10,
+            7.587124056227104e-11,
+            -5.468685158158636e-09,
+            -2.9713585689125155e-10,
+            -4.0483208904650926e-26,
+            6.892712358543227e-26,
+            -2.9713585689125155e-10,
+            -3.844595402035243e-26,
+            6.892712358543228e-26,
+            -2.9713585689125144e-10,
+            -3.240049395783029e-27,
+            6.918857983307089e-26
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              -2.971358568981573e-10,
+              -6.338271443687574e-18,
+              6.203854594147708e-20,
+              -2.971358568981573e-10,
+              -8.799133766032832e-18,
+              -9.30578189122156e-20,
+              -2.971358568981573e-10,
+              -4.4667753077863494e-18,
+              5.1698788284564224e-20,
+              -2.971358568981573e-10,
+              7.587125109275817e-11,
+              -5.468685158445016e-09,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0,
+              -2.971358568981573e-10,
+              -0.0,
+              -0.0
+            ],
+            [
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              -0.0,
+              1.0339757656912846e-19,
+              -2.971358569291766e-10,
+              7.587124061858366e-11,
+              -5.468685157917689e-09,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0,
+              -2.971358569291766e-10,
+              -0.0,
+              -0.0
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            2.853197977190723e-09,
+            5.8186647811728644e-11
+          ]
+        },
+        "spatial_seed_7": {
+          "energy": {
+            "bending_j": 8.512422020442878e-10,
+            "twisting_j": 4.678610069986373e-11,
+            "end_twist_rad": -0.30736649098214525,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            3.044320189254554e-10,
+            -3.556494606442998e-10,
+            3.3645741625624127e-10,
+            3.044320189254559e-10,
+            5.048194211411392e-10,
+            1.2230116104014335e-09,
+            3.044320189254561e-10,
+            -1.621431573517103e-09,
+            6.300388069051993e-10,
+            3.044320189254562e-10,
+            -5.822195670462231e-10,
+            -4.442367499264887e-10,
+            3.044320189254562e-10,
+            1.127793267724472e-09,
+            1.1281791106963326e-11,
+            3.0443201892545594e-10,
+            1.6661357789974122e-09,
+            4.6340844822360526e-10,
+            3.044320189254561e-10,
+            1.3560357459817633e-09,
+            2.4189140584450855e-09
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.0443201891292984e-10,
+              -3.5564946068159655e-10,
+              3.364574163437181e-10,
+              3.044320189180997e-10,
+              5.048194211893768e-10,
+              1.2230116104198296e-09,
+              3.044320189025901e-10,
+              -1.6214315735423718e-09,
+              6.300388069966928e-10,
+              3.044320189180997e-10,
+              -5.822195670207626e-10,
+              -4.442367499148507e-10,
+              3.044320189025901e-10,
+              1.127793267789887e-09,
+              1.1281791144635881e-11,
+              3.0443201886640093e-10,
+              1.666135779042944e-09,
+              4.634084483290166e-10,
+              3.044320188250419e-10,
+              1.3560357459867359e-09,
+              2.4189140585056153e-09
+            ],
+            [
+              3.04432019290331e-10,
+              -3.5564946083669296e-10,
+              3.364574163385483e-10,
+              3.044320193420298e-10,
+              5.048194215357586e-10,
+              1.223011609416873e-09,
+              3.044320184631504e-10,
+              -1.6214315738060359e-09,
+              6.300388059523773e-10,
+              3.0443201903183706e-10,
+              -5.822195669121952e-10,
+              -4.4423674981662306e-10,
+              3.0443201944542736e-10,
+              1.1277932677950568e-09,
+              1.1281791470338249e-11,
+              3.044320201175116e-10,
+              1.6661357792859285e-09,
+              4.6340844748115653e-10,
+              3.044320189284395e-10,
+              1.3560357462814192e-09,
+              2.4189140590174333e-09
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            5.6986435435529216e-11,
+            5.555103780522489e-10
+          ]
+        },
+        "spatial_seed_17": {
+          "energy": {
+            "bending_j": 1.2891375058190349e-09,
+            "twisting_j": 5.770202837469856e-11,
+            "end_twist_rad": -0.3413450689532517,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            3.3808619853009147e-10,
+            -3.534143855633771e-10,
+            6.839045385540875e-10,
+            3.380861985300916e-10,
+            2.3207206337822055e-09,
+            1.1498557488298289e-10,
+            3.380861985300918e-10,
+            1.046858948269721e-09,
+            3.0231286629916264e-10,
+            3.3808619853009265e-10,
+            2.812589841599362e-09,
+            -1.186745959028317e-09,
+            3.3808619853009224e-10,
+            -2.1903451799532006e-09,
+            -9.600319611922724e-10,
+            3.3808619853009234e-10,
+            -1.6338594250358744e-09,
+            -4.436040239027605e-11,
+            3.3808619853009255e-10,
+            -2.0732947546073622e-10,
+            -1.3205296204775212e-09
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.380861986058735e-10,
+              -3.5341438557925376e-10,
+              6.839045385564325e-10,
+              3.380861985541747e-10,
+              2.3207206338407414e-09,
+              1.1498557488565516e-10,
+              3.3808619866791206e-10,
+              1.0468589483149007e-09,
+              3.0231286636470595e-10,
+              3.380861985334952e-10,
+              2.812589841665297e-09,
+              -1.18674595906541e-09,
+              3.380861985334952e-10,
+              -2.190345180024441e-09,
+              -9.600319612310607e-10,
+              3.380861985334952e-10,
+              -1.633859425090401e-09,
+              -4.436040238564447e-11,
+              3.380861985334952e-10,
+              -2.0732947546971798e-10,
+              -1.3205296205199698e-09
+            ],
+            [
+              3.380861979854881e-10,
+              -3.5341438506226593e-10,
+              6.839045373673604e-10,
+              3.3808619819228326e-10,
+              2.320720632713708e-09,
+              1.1498557520618766e-10,
+              3.380861998466445e-10,
+              1.046858948428638e-09,
+              3.0231286719188656e-10,
+              3.3808619870927114e-10,
+              2.8125898419134518e-09,
+              -1.1867459597995328e-09,
+              3.3808619860587357e-10,
+              -2.1903451799210436e-09,
+              -9.600319611586824e-10,
+              3.38086198502476e-10,
+              -1.6338594251007409e-09,
+              -4.4360402437343265e-11,
+              3.3808619860587357e-10,
+              -2.073294755214168e-10,
+              -1.3205296205716688e-09
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            4.374261745381081e-11,
+            4.912551251625816e-10
+          ]
+        },
+        "spatial_seed_29": {
+          "energy": {
+            "bending_j": 5.796447476045056e-10,
+            "twisting_j": 6.477486916281626e-11,
+            "end_twist_rad": -0.3616607392402423,
+            "twist_length_m": 0.00875
+          },
+          "force_nm": [
+            3.582079121935759e-10,
+            -6.137052382377665e-11,
+            1.9897581911971867e-10,
+            3.582079121935766e-10,
+            -7.34602862639398e-11,
+            2.729778621464033e-10,
+            3.582079121935759e-10,
+            3.46009635201624e-11,
+            -6.881142324086862e-10,
+            3.582079121935759e-10,
+            4.1424469942521614e-10,
+            1.0461722928622126e-09,
+            3.58207912193576e-10,
+            2.7508699141631457e-09,
+            1.5526022643923852e-10,
+            3.5820791219357596e-10,
+            8.916478974021032e-10,
+            7.324546370893698e-10,
+            3.5820791219357596e-10,
+            -7.225954620422344e-10,
+            -8.005735123256688e-10
+          ],
+          "negative_energy_gradient_nm": [
+            [
+              3.582079122113074e-10,
+              -6.137052378648047e-11,
+              1.989758191091323e-10,
+              3.582079121906279e-10,
+              -7.346028626951607e-11,
+              2.729778621974901e-10,
+              3.582079121647785e-10,
+              3.460096359103671e-11,
+              -6.881142324422594e-10,
+              3.58207912185458e-10,
+              4.1424469939014766e-10,
+              1.0461722928826305e-09,
+              3.582079121906279e-10,
+              2.750869914275513e-09,
+              1.5526022635518924e-10,
+              3.5820791219579777e-10,
+              8.916478974748963e-10,
+              7.324546371523991e-10,
+              3.582079121906279e-10,
+              -7.225954620635591e-10,
+              -8.005735123721384e-10
+            ],
+            [
+              3.582079114461654e-10,
+              -6.137052387436841e-11,
+              1.989758198742744e-10,
+              3.58207912273346e-10,
+              -7.34602866520871e-11,
+              2.729778614892167e-10,
+              3.582079121699484e-10,
+              3.4600963627225864e-11,
+              -6.881142323853908e-10,
+              3.582079123767436e-10,
+              4.1424469935395856e-10,
+              1.046172292774063e-09,
+              3.582079121699484e-10,
+              2.7508699139498113e-09,
+              1.5526022664470245e-10,
+              3.5820791211824964e-10,
+              8.916478971026651e-10,
+              7.32454636904245e-10,
+              3.582079122216472e-10,
+              -7.225954621359375e-10,
+              -8.005735124393469e-10
+            ]
+          ],
+          "difference_step_rad": [
+            1e-05,
+            1e-06
+          ],
+          "relative_error": [
+            5.902206825536112e-11,
+            3.963922195772665e-10
+          ]
+        }
+      },
+      "max_virtual_work_relative_error": 2.853197977190723e-09,
+      "repeat_force_error_nm": 0.0,
+      "copy_force_error_nm": 0.0,
+      "restore_force_error_nm": 0.0,
+      "reset_force_error_nm": 0.0,
+      "query_plugin_state_error": 0.0,
+      "unit_force_relative_error": 1.0106815331728536e-15,
+      "unit_vertex_difference_m": 1.734723475976807e-18,
+      "native_mass_max_difference_kg": 0.0,
+      "native_inertia_max_difference_kg_m2": 0.0,
+      "audit_simulated_s": 1e-06
+    }
+  },
+  "cantilever_analytical_m": 0.0002652582384864922,
+  "relaxation_energy_drift_coarse_fine": [
+    0.0007491165281261114,
+    0.00037988727964939644
+  ],
+  "contact_shape_refinement_um": [
+    58.572609001893966,
+    14.378866803138505
+  ],
+  "success": false,
+  "unvalidated": [
+    "Settled support contact",
+    "Contact spatial/unit convergence",
+    "Upstream full buckling experiment reproduction",
+    "Physical tool grasp/release",
+    "Quasistatic twist validity and measured material/contact",
+    "Robot plant and tissue interaction"
+  ],
+  "ready_for_robot_or_rl": false,
+  "finished_utc": "2026-10-05T20:52:52.895282+00:00",
+  "elapsed_wall_s": 206.22506408393383,
+  "simulated_s": 6.20000199999546,
+  "timing_note": "Wall includes compilation, Python stepping and telemetry; not isolated physics compute."
+}
