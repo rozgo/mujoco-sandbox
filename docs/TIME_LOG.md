@@ -1129,3 +1129,5 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - With the user (viewer controls, 15:35 UTC): controls regrouped under labels (replay,
   controller, disturbance, evaluation run; camera, overlays; playback and speed); fixed the mode
   buttons losing their highlight on any click in the viewer.
+- With the user (default camera, 15:42 UTC): the viewer opens on the Workcell camera, also
+  after switching between insertion and alignment; offset magnification capped at x2000.

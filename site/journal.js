@@ -134,7 +134,7 @@ function wire() {
     api.speed(mode === 0 ? tubeSpeed : alignSpeed);
     document.querySelector(".stage").dataset.mode = String(mode);
     setPressed("button[data-mode]", b);
-    setPressed("[data-camera]", document.querySelector('[data-camera="1"]'));
+    setPressed("[data-camera]", document.querySelector('[data-camera="0"]'));
     fillEpisodes();
   }));
   document.querySelectorAll("[data-tspeed]").forEach((b) => (b.onclick = () => {

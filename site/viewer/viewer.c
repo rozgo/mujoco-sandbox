@@ -31,6 +31,7 @@
 #define ARROW_PX_PER_N 7000.0f     // force arrows: 1 mN is 7 screen pixels
 #define ARROW_PX_PER_ACC 15000.0f  // table vibration: 1 mm/s^2 is 15 screen pixels
 #define OFFSET_PX_PER_10UM 80.0f   // micrometre offsets: magnified so 10 um spans about 80 pixels
+#define OFFSET_MAG_MAX 2000.0f     // ...up to this factor, so wide views keep markers near their objects
 #define MAX_CALLOUTS 12
 #define CALLOUT_W 560         // callout texture size, pixels
 #define CALLOUT_H 200
@@ -643,9 +644,9 @@ static float px(void) { return V.distance * 0.0012f; }  // world size of ~1 scre
 
 // Magnification for micrometre offsets (sensing errors, tissue motion) at the current zoom: 10 um spans
 // about OFFSET_PX_PER_10UM pixels, rounded to the nearest 1, 2 or 5 times a power of ten (on a log
-// scale), never below 1.
+// scale), never below 1 or above OFFSET_MAG_MAX.
 static float magnify(void) {
-    float raw = OFFSET_PX_PER_10UM * px() / 10e-6f;
+    float raw = fminf(OFFSET_PX_PER_10UM * px() / 10e-6f, OFFSET_MAG_MAX);
     if (raw <= 1) return 1;
     float p = powf(10.0f, floorf(log10f(raw))), best = p, err = 1e9f;
     const float steps[4] = {1, 2, 5, 10};
@@ -1421,7 +1422,7 @@ EXPORT void ni_mode(int mode) {
     V.mode = mode;
     V.time = 0; V.hold = 0;
     sample(0);
-    camera_preset(1);
+    camera_preset(0);  // the whole workcell by default
 }
 EXPORT int ni_tube_phase(void) { return (int)(V.x[E_PHASE] + 0.5f); }
 EXPORT int ni_tube_bond(void) { return (int)(V.x[E_BOND] + 0.5f); }
@@ -1503,7 +1504,7 @@ static void init(const char* folder, int width, int height) {
     V.autoplay = 1;
     V.overlays = OV_FORCES | OV_SENSING | OV_HUD;
     sample(0);
-    camera_preset(1);
+    camera_preset(0);  // the whole workcell by default
     update_camera();
 }
 
@@ -1518,7 +1519,7 @@ int main(void) {
 int main(int argc, char** argv) {
     const char* folder = "data";
     const char* shot = NULL;
-    int width = 1600, height = 900, select = 0, camera = 1, overlays = OV_FORCES | OV_SENSING | OV_HUD;
+    int width = 1600, height = 900, select = 0, camera = 0, overlays = OV_FORCES | OV_SENSING | OV_HUD;
     float at = -1, zoom = 1;
     int mode = 0;
     for (int i = 1; i < argc; i++) {
