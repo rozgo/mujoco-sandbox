@@ -61,7 +61,10 @@ def build_rl_scene(path=RL_SCENE):
     # MuJoCo 3.12 aborted while parsing one 920-value numeric, so each segment is
     # stored separately as vessel_<index> = (x0, y0, x1, y1, radius).
     custom = ET.SubElement(root, "custom")
-    segments = [(a[0], a[1], b[0], b[1], line["radius_m"]) for line in vessels.values() for a, b in line["segments"]]
+    # Round to the picometre so every platform writes byte-identical model files
+    # (compiled transforms differ across math libraries by ~1e-18 m).
+    segments = [tuple(round(v, 12)+0. for v in (a[0], a[1], b[0], b[1], line["radius_m"]))
+                for line in vessels.values() for a, b in line["segments"]]
     for i, values in enumerate(segments):
         ET.SubElement(custom, "numeric", name=f"vessel_{i:03d}", size="5",
                       data=" ".join(format(v, ".17g") for v in values))

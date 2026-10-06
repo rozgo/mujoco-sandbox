@@ -28,6 +28,8 @@ struct Log {
 struct Env {
     Log log;
     Agent agents[1];
+    int tag;               // trainer bookkeeping (native backend)
+    int boundary_reached;  // trainer bookkeeping (native backend)
     int num_agents;
     unsigned int rng;
     SACore core;
