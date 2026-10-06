@@ -1122,3 +1122,7 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - With the user (journal viewer feedback, 15:13 UTC): zoom rebuilt (page-side wheel and pinch
   input proportional to the scroll distance, a clamped zoom target with soft ends, the camera easing
   toward it) and callout leader lines in one neutral colour so the lime thread stands alone.
+- With the user (viewer feedback, 15:24 UTC): disturbance overlays drawn at screen scale.
+  Force arrows 1 mN = 7 px and vibration 1 mm/s^2 = 15 px at any zoom; micrometre offsets (measured
+  tip, target estimate, tissue-motion trail) magnified about their reference by a 1-2-5 factor
+  chosen so 10 um spans about 80 px; the legend states both scales.

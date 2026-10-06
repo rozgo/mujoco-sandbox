@@ -27,8 +27,10 @@
 #define MAX_MOVING 96
 #define SHADOW_SIZE 4096
 #define NJ 5
-#define FORCE_SCALE 0.50f     // m of arrow per N (5 cm per 0.1 N)
-#define ACC_SCALE 2.0f        // m of arrow per m/s^2 (2 cm per 10 mm/s^2)
+// Disturbance overlays are drawn at screen scale so they read at any zoom; the legend states the scales.
+#define ARROW_PX_PER_N 7000.0f     // force arrows: 1 mN is 7 screen pixels
+#define ARROW_PX_PER_ACC 15000.0f  // table vibration: 1 mm/s^2 is 15 screen pixels
+#define OFFSET_PX_PER_10UM 80.0f   // micrometre offsets: magnified so 10 um spans about 80 pixels
 #define MAX_CALLOUTS 12
 #define CALLOUT_W 560         // callout texture size, pixels
 #define CALLOUT_H 200
@@ -639,6 +641,26 @@ static void draw_trail(void) {
 
 static float px(void) { return V.distance * 0.0012f; }  // world size of ~1 screen pixel at 720p
 
+// Magnification for micrometre offsets (sensing errors, tissue motion) at the current zoom: 10 um spans
+// about OFFSET_PX_PER_10UM pixels, rounded to the nearest 1, 2 or 5 times a power of ten (on a log
+// scale), never below 1.
+static float magnify(void) {
+    float raw = OFFSET_PX_PER_10UM * px() / 10e-6f;
+    if (raw <= 1) return 1;
+    float p = powf(10.0f, floorf(log10f(raw))), best = p, err = 1e9f;
+    const float steps[4] = {1, 2, 5, 10};
+    for (int k = 0; k < 4; k++) {
+        float e = fabsf(logf(raw / (p * steps[k])));
+        if (e < err) { err = e; best = p * steps[k]; }
+    }
+    return best;
+}
+
+// A point drawn `m` times farther from its reference than it is.
+static Vector3 mag(Vector3 ref, Vector3 p, float m) { return Vector3Add(ref, Vector3Scale(Vector3Subtract(p, ref), m)); }
+static float force_scale(void) { return ARROW_PX_PER_N * px(); }
+static float acc_scale(void) { return ARROW_PX_PER_ACC * px(); }
+
 static void arrow(Vector3 from, Vector3 vec, float radius, Color c) {
     float len = Vector3Length(vec);
     if (len < radius) return;
@@ -664,12 +686,22 @@ static void dashed(Vector3 a, Vector3 b, float dash, Color c) {
     }
 }
 
+// A dashed line with thickness (radius in world units), for the offsets the overlays exist to show.
+static void dashed_thick(Vector3 a, Vector3 b, float dash, float radius, Color c) {
+    float len = Vector3Distance(a, b);
+    int n = (int)fminf(len / dash, 200);
+    if (n < 2) { DrawCylinderEx(a, b, radius, radius, 6, c); return; }
+    for (int k = 0; k < n; k += 2) {
+        DrawCylinderEx(Vector3Lerp(a, b, (float)k / n), Vector3Lerp(a, b, fminf((float)(k + 1) / n, 1)), radius, radius, 6, c);
+    }
+}
+
 static Color fade(Color c, float a) { c.a = (unsigned char)(255 * Clamp(a, 0, 1)); return c; }
 
 static Vector3 vibration_anchor(void) { return (Vector3){0.112f, -0.040f, 0.004f}; }
 
 static void draw_forces(void) {
-    float r = px() * 1.6f;
+    float r = px() * 2.2f, fs = force_scale(), as = acc_scale();
     for (int m = 0; m < V.D.nmoving && m < NJ; m++) {
         Vector3 anchor = Vector3Transform(V.D.centroid[m], body_transform(V.D.moving[m]));
         Vector3 ax = V.D.axis[m];
@@ -678,18 +710,18 @@ static void draw_forces(void) {
         Color colors[3] = {C_NOISE, C_FRICTION, C_VIBRATION};
         for (int k = 0; k < 3; k++) {
             Vector3 from = Vector3Add(anchor, Vector3Scale(side, (k - 1) * r * 4.0f));
-            arrow(from, Vector3Scale(ax, comps[k] * FORCE_SCALE), r, colors[k]);
+            arrow(from, Vector3Scale(ax, comps[k] * fs), r, colors[k]);
         }
     }
     // Table vibration: acceleration arrow and the last 0.5 s of recorded samples.
     Episode* e = episode();
     Vector3 base = vibration_anchor();
-    arrow(base, Vector3Scale(xvec(X_ACC), ACC_SCALE), r * 1.2f, C_VIBRATION);
+    arrow(base, Vector3Scale(xvec(X_ACC), as), r * 1.2f, C_VIBRATION);
     int now = 0;
     while (now + 1 < (int)e->frames && e->data[(now + 1) * V.D.stride] <= V.time) now++;
     for (int f = (now > 15 ? now - 15 : 0); f < now; f++) {
-        Vector3 a = Vector3Add(base, Vector3Scale(frame_vec(e, f, X_ACC), ACC_SCALE));
-        Vector3 b = Vector3Add(base, Vector3Scale(frame_vec(e, f + 1, X_ACC), ACC_SCALE));
+        Vector3 a = Vector3Add(base, Vector3Scale(frame_vec(e, f, X_ACC), as));
+        Vector3 b = Vector3Add(base, Vector3Scale(frame_vec(e, f + 1, X_ACC), as));
         DrawLine3D(a, b, fade(C_VIBRATION, 0.1f + 0.5f * (f - now + 15) / 15.0f));
     }
     DrawSphere(base, r * 1.5f, C_VIBRATION);
@@ -699,15 +731,17 @@ static void draw_sensing(void) {
     Episode* e = episode();
     int now = 0;
     while (now + 1 < (int)e->frames && e->data[(now + 1) * V.D.stride] <= V.time) now++;
-    float s = px() * 5.0f;
-    Vector3 goal = xvec(X_GOAL), estimate = xvec(X_MGOAL), measured = xvec(X_MTIP);
-    // True target path over the last 2 s (breathing and pulse), at true scale.
+    float s = px() * 9.0f, m = magnify();
+    Vector3 goal = xvec(X_GOAL), estimate = mag(goal, xvec(X_MGOAL), m), measured = mag(V.tip, xvec(X_MTIP), m);
+    // True target path over the last 2 s (breathing and pulse), magnified about the current target.
     for (int f = (now > 100 ? now - 100 : 0); f < now; f++) {
-        DrawLine3D(frame_vec(e, f, X_GOAL), frame_vec(e, f + 1, X_GOAL), fade(C_TRUTH, 0.15f + 0.6f * (f - now + 100) / 100.0f));
+        DrawLine3D(mag(goal, frame_vec(e, f, X_GOAL), m), mag(goal, frame_vec(e, f + 1, X_GOAL), m),
+                   fade(C_TRUTH, 0.15f + 0.6f * (f - now + 100) / 100.0f));
     }
-    // Recent target estimates as a fading cloud: noise, bias and drift.
+    // Recent target estimates as a fading cloud (noise, bias and drift), each error magnified from its target.
     for (int f = (now > 25 ? now - 25 : 0); f <= now; f++) {
-        cross(frame_vec(e, f, X_MGOAL), s * 0.35f, fade(C_ESTIMATE, 0.2f + 0.6f * (f - now + 25) / 25.0f));
+        Vector3 err = Vector3Subtract(frame_vec(e, f, X_MGOAL), frame_vec(e, f, X_GOAL));
+        cross(Vector3Add(goal, Vector3Scale(err, m)), s * 0.35f, fade(C_ESTIMATE, 0.2f + 0.6f * (f - now + 25) / 25.0f));
     }
     // Success tolerance around the true target: 10 um lateral, 10 um vertical, true scale.
     for (int k = -1; k <= 1; k += 2) {
@@ -721,10 +755,10 @@ static void draw_sensing(void) {
     DrawSphere(goal, s * 0.45f, C_TRUTH);
     cross(estimate, s, C_ESTIMATE);
     DrawSphereWires(estimate, s * 0.6f, 6, 10, C_ESTIMATE);
-    dashed(goal, estimate, s * 0.4f, fade(C_ESTIMATE, 0.8f));
+    dashed_thick(goal, estimate, s * 0.4f, px() * 1.0f, fade(C_ESTIMATE, 0.9f));
     // What the policy is told about its tip: delayed by the latency and noisy.
     DrawSphereWires(measured, s * 0.6f, 6, 10, C_MEASURED);
-    dashed(V.tip, measured, s * 0.4f, fade(C_MEASURED, 0.8f));
+    dashed_thick(V.tip, measured, s * 0.4f, px() * 1.0f, fade(C_MEASURED, 0.9f));
     DrawSphere(V.tip, s * 0.45f, C_TIP);
 }
 
@@ -963,7 +997,7 @@ static void draw_hud(void) {
     Episode* e = episode();
     int w = GetScreenWidth(), h = GetScreenHeight();
     float s = fminf(h / 720.0f, w / 900.0f), size = 14.0f * s, line = size * 1.36f;
-    float pw = 270 * s, chart = 84 * s, ph = line * 9.4f + chart + 16 * s;
+    float pw = 300 * s, chart = 84 * s, ph = line * 9.4f + chart + 16 * s;
     float x = 14 * s, y = h - ph - 14 * s;
     DrawRectangleRounded((Rectangle){x, y, pw, ph}, 0.06f, 8, (Color){24, 22, 44, 190});
     x += 12 * s;
@@ -979,7 +1013,8 @@ static void draw_hud(void) {
     swatch_row(x, y, iw, size, C_MEASURED, "tip as measured (late, noisy)", ""); y += line;
     swatch_row(x, y, iw, size, C_ESTIMATE, "target as estimated", ""); y += line;
     swatch_row(x, y, iw, size, C_TRUTH, "true target (tissue motion)", ""); y += line;
-    DrawTextEx(V.font, "force arrows 5 cm per 0.1 N", (Vector2){x, y}, size * 0.85f, 0, (Color){200, 196, 226, 255});
+    snprintf(buf, sizeof(buf), "drawn larger: offsets \xc3\x97%g, arrows 1 mN = 7 px", magnify());
+    DrawTextEx(V.font, buf, (Vector2){x, y}, size * 0.85f, 0, (Color){200, 196, 226, 255});
     y += line * 1.05f;
     DrawTextEx(V.font, "height vs mean target, \xc2\xb1" "40 \xc2\xb5m", (Vector2){x, y}, size * 0.85f, 0, (Color){200, 196, 226, 255});
     y += line;
@@ -1093,7 +1128,7 @@ static void draw_tube_effects(void) {
 static Vector3 tube_vibration_anchor(void) { return (Vector3){0.112f, -0.040f, 0.004f}; }
 
 static void draw_tube_forces(void) {
-    float r = px() * 1.6f;
+    float r = px() * 2.2f, fs = force_scale(), as = acc_scale();
     for (int m = 0; m < TUBE_SLIDES; m++) {
         Vector3 anchor = Vector3Transform(V.D.centroid[m], body_transform(V.D.moving[m]));
         Vector3 ax = V.D.axis[m];
@@ -1102,16 +1137,16 @@ static void draw_tube_forces(void) {
         Color colors[3] = {C_NOISE, C_FRICTION, C_VIBRATION};
         for (int k = 0; k < 3; k++) {
             Vector3 from = Vector3Add(anchor, Vector3Scale(side, (k - 1) * r * 4.0f));
-            arrow(from, Vector3Scale(ax, comps[k] * FORCE_SCALE), r, colors[k]);
+            arrow(from, Vector3Scale(ax, comps[k] * fs), r, colors[k]);
         }
     }
     Episode* e = episode();
     Vector3 base = tube_vibration_anchor();
-    arrow(base, Vector3Scale(ev(E_ACC), ACC_SCALE), r * 1.2f, C_VIBRATION);
+    arrow(base, Vector3Scale(ev(E_ACC), as), r * 1.2f, C_VIBRATION);
     int now = tube_now(e);
     for (int f = (now > 25 ? now - 25 : 0); f < now; f++) {
-        Vector3 a = Vector3Add(base, Vector3Scale(tube_frame_vec(e, f, E_ACC), ACC_SCALE));
-        Vector3 b = Vector3Add(base, Vector3Scale(tube_frame_vec(e, f + 1, E_ACC), ACC_SCALE));
+        Vector3 a = Vector3Add(base, Vector3Scale(tube_frame_vec(e, f, E_ACC), as));
+        Vector3 b = Vector3Add(base, Vector3Scale(tube_frame_vec(e, f + 1, E_ACC), as));
         DrawLine3D(a, b, fade(C_VIBRATION, 0.1f + 0.5f * (f - now + 25) / 25.0f));
     }
     DrawSphere(base, r * 1.5f, C_VIBRATION);
@@ -1120,24 +1155,27 @@ static void draw_tube_forces(void) {
 static void draw_tube_sensing(void) {
     Episode* e = episode();
     int now = tube_now(e);
-    float s = px() * 5.0f;
+    float s = px() * 9.0f, m = magnify();
     Vector3 goal = ev(E_TARGET);
-    // True target path over the last second (breathing and pulse move the tissue), true scale.
+    // True target path over the last second (breathing and pulse move the tissue), magnified about the
+    // current target. Frames are 2 ms apart during the needle's work and 8 ms between.
     for (int f = (now > 500 ? now - 500 : 0); f < now; f++) {
         if ((int)(e->data[f * V.D.stride + 1 + 7 * V.D.nmoving + E_SITE]) != (int)V.x[E_SITE]) continue;
-        DrawLine3D(tube_frame_vec(e, f, E_TARGET), tube_frame_vec(e, f + 1, E_TARGET), fade(C_TRUTH, 0.15f + 0.6f * (f - now + 500) / 500.0f));
+        if (V.time - e->data[f * V.D.stride] > 1.0f) continue;
+        DrawLine3D(mag(goal, tube_frame_vec(e, f, E_TARGET), m), mag(goal, tube_frame_vec(e, f + 1, E_TARGET), m),
+                   fade(C_TRUTH, 0.15f + 0.6f * (1.0f - (V.time - e->data[f * V.D.stride]))));
     }
     DrawSphere(goal, s * 0.45f, C_TRUTH);
     if (has(E_MTARGET)) {
-        Vector3 estimate = ev(E_MTARGET);
+        Vector3 estimate = mag(goal, ev(E_MTARGET), m);
         cross(estimate, s, C_ESTIMATE);
         DrawSphereWires(estimate, s * 0.6f, 6, 10, C_ESTIMATE);
-        dashed(goal, estimate, s * 0.4f, fade(C_ESTIMATE, 0.8f));
+        dashed_thick(goal, estimate, s * 0.4f, px() * 1.0f, fade(C_ESTIMATE, 0.9f));
     }
     if (has(E_MTIP)) {
-        Vector3 measured = ev(E_MTIP);
+        Vector3 measured = mag(V.tip, ev(E_MTIP), m);
         DrawSphereWires(measured, s * 0.6f, 6, 10, C_MEASURED);
-        dashed(V.tip, measured, s * 0.4f, fade(C_MEASURED, 0.8f));
+        dashed_thick(V.tip, measured, s * 0.4f, px() * 1.0f, fade(C_MEASURED, 0.9f));
     }
     DrawSphere(V.tip, s * 0.45f, C_TIP);
 }
@@ -1212,7 +1250,7 @@ static void draw_tube_hud(void) {
     Episode* e = episode();
     int w = GetScreenWidth(), h = GetScreenHeight();
     float s = fminf(h / 720.0f, w / 900.0f), size = 14.0f * s, line = size * 1.36f;
-    float pw = 300 * s, chart = 84 * s, ph = line * 11.35f + chart + 16 * s;
+    float pw = 300 * s, chart = 84 * s, ph = line * 12.35f + chart + 16 * s;
     float x = 14 * s, y = h - ph - 14 * s;
     DrawRectangleRounded((Rectangle){x, y, pw, ph}, 0.06f, 8, (Color){24, 22, 44, 190});
     x += 12 * s;
@@ -1232,6 +1270,9 @@ static void draw_tube_hud(void) {
     swatch_row(x, y, iw, size, C_MEASURED, "tip as last measured (late, noisy)", ""); y += line;
     swatch_row(x, y, iw, size, C_ESTIMATE, "target as last estimated", ""); y += line;
     swatch_row(x, y, iw, size, C_TRUTH, "true target (tissue motion)", ""); y += line;
+    snprintf(buf, sizeof(buf), "drawn larger: offsets \xc3\x97%g, arrows 1 mN = 7 px", magnify());
+    DrawTextEx(V.font, buf, (Vector2){x, y}, size * 0.85f, 0, (Color){200, 196, 226, 255});
+    y += line;
     DrawTextEx(V.font, "chart: thread depth to 2.5 mm, needle force to 2.5 mN", (Vector2){x, y}, size * 0.85f, 0, (Color){200, 196, 226, 255});
     y += line;
     Rectangle box = {x, y, iw, chart};
