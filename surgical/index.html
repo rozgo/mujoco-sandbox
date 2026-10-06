@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Surgical Thread Robot Journal</title>
+  <meta name="description" content="Building a surgical thread-insertion robot in MuJoCo and training it with PufferLib 5.0: an engineering journal with interactive replays of thread insertion and needle alignment.">
+  <meta name="theme-color" content="#8981af">
+  <link rel="stylesheet" href="style.css?v=21b1ac331c19">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Engineering journal · October 5–6, 2026 · MuJoCo 3.12 · PufferLib 5.0</p>
+    <h1>Building a surgical thread-insertion robot in simulation</h1>
+    <p class="lede">A gantry robot with a needle and a thread tube, a 40 µm thread and a tissue phantom with
+      vessels. This is the record of getting the physics right, teaching the robot to align its needle within
+      10 µm, and then teaching it to insert threads, site after site, while the workcell, the sensors and the
+      tissue all disturb it.</p>
+
+    <div class="stage" data-mode="0">
+      <canvas id="viewer" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+      <div class="controls">
+        <div class="ctl-row">
+          <div class="ctl" role="group" aria-label="Replay">
+            <span class="ctl-label">Replay</span>
+            <div class="seg"><button data-mode="0" aria-pressed="true">Insertion</button><button data-mode="1" aria-pressed="false">Alignment</button></div>
+          </div>
+          <div class="ctl tube-only" role="group" aria-label="Controller">
+            <span class="ctl-label">Controller</span>
+            <div class="seg"><button data-tpolicy="0" aria-pressed="true">Learned</button><button data-tpolicy="1" aria-pressed="false">Scripted yardstick</button></div>
+          </div>
+          <div class="ctl align-only" role="group" aria-label="Policy">
+            <span class="ctl-label">Controller</span>
+            <div class="seg"><button data-policy="0" aria-pressed="true">Robust learned</button><button data-policy="1" aria-pressed="false">Scripted yardstick</button><button data-policy="2" aria-pressed="false">Learned, undisturbed</button></div>
+          </div>
+          <div class="ctl" role="group" aria-label="Disturbance level">
+            <span class="ctl-label">Disturbance</span>
+            <div class="seg"><button data-level="0" aria-pressed="false">None</button><button data-level="1" aria-pressed="true">Nominal</button><button data-level="2" aria-pressed="false">Stress</button></div>
+          </div>
+          <div class="ctl ctl-run">
+            <span class="ctl-label">Evaluation run</span>
+            <div class="run"><button id="prev" aria-label="Previous run">◀</button><select id="episode" aria-label="Evaluation run"></select><button id="next" aria-label="Next run">▶</button></div>
+          </div>
+        </div>
+        <div class="ctl-row">
+          <div class="ctl" role="group" aria-label="Camera">
+            <span class="ctl-label">Camera</span>
+            <div class="seg"><button data-camera="0" aria-pressed="true">Workcell</button><button data-camera="1" aria-pressed="false">Field</button><button data-camera="2" aria-pressed="false">Needle</button><button data-camera="3" aria-pressed="false">Micro</button></div>
+          </div>
+          <div class="ctl" role="group" aria-label="Overlays">
+            <span class="ctl-label">Overlays</span>
+            <div class="toggles"><button data-overlay="1" aria-pressed="true">Forces</button><button data-overlay="2" aria-pressed="true">Sensing</button><button data-overlay="4" aria-pressed="true">Legend</button></div>
+          </div>
+        </div>
+        <div class="ctl-row ctl-playback">
+          <div class="ctl ctl-time">
+            <span class="ctl-label">Playback</span>
+            <div class="timeline"><button id="play" aria-pressed="true">Pause</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Episode time"></div>
+          </div>
+          <div class="ctl tube-only" role="group" aria-label="Playback speed">
+            <span class="ctl-label">Speed</span>
+            <div class="seg"><button data-tspeed="0" aria-pressed="true" title="0.02× for the needle's work, 0.2× between sites">Auto</button><button data-tspeed="0.02" aria-pressed="false">0.02×</button><button data-tspeed="0.2" aria-pressed="false">0.2×</button><button data-tspeed="1" aria-pressed="false">1×</button></div>
+          </div>
+          <div class="ctl align-only" role="group" aria-label="Speed">
+            <span class="ctl-label">Speed</span>
+            <div class="seg"><button data-speed="0.25" aria-pressed="false">0.25×</button><button data-speed="1" aria-pressed="true">1×</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="readout" aria-live="off">
+        <span>t <b id="t">0.00</b> s</span>
+        <span class="tube-only">phase <b id="phase">–</b></span>
+        <span class="tube-only">site <b id="site">–</b></span>
+        <span class="tube-only">thread depth <b id="depth">–</b> mm</span>
+        <span class="tube-only">from target <b id="place">–</b> µm</span>
+        <span class="tube-only">needle force <b id="force">–</b> mN</span>
+        <span class="align-only">lateral <b id="lat">–</b> µm</span>
+        <span class="align-only">vertical <b id="vert">–</b> µm</span>
+        <span class="align-only">target <b id="target">–</b></span>
+        <span>level <b id="level">–</b></span>
+        <span>latency <b id="latency">–</b> ms</span>
+        <span id="status" class="status-moving">loading…</span>
+      </div>
+      <p class="disclaimer">Replays of recorded MuJoCo states; the page does not simulate. <b>Insertion</b>: the learned
+        policy (insert_v2, final, deterministic) or the scripted yardstick placing threads at sites 0, 5 and 1, on the
+        first evaluation seeds of the baseline at each disturbance level; frames every 2 ms during the needle's work and
+        every 8 ms between. The thread is lime, and also drawn as a line where it is thinner than a pixel; the
+        Micro camera shows the tissue translucent. Sticking, release and new threads in the tube are stand-in constraints
+        (chapter 15). <b>Alignment</b>: the first 30 of the 200 predetermined evaluation seeds for each policy and level,
+        recorded at 50 Hz. Overlays show recorded disturbance values, drawn larger so they read at any zoom: force arrows at 1 mN per 7 screen
+        pixels, and micrometre offsets (sensing errors, tissue motion) magnified by the factor shown in the legend. Drag to orbit, right-drag or Shift-drag to pan, scroll or pinch to zoom.</p>
+    </div>
+
+    <div class="metrics" id="metrics">
+      <div class="metric"><div class="value">60 / 60</div><div class="label">threads placed by the learned policy, 21 full-simulation runs</div></div>
+      <div class="metric"><div class="value">8.0 µm</div><div class="label">its median placement at nominal disturbances (approved cycle: 23 µm)</div></div>
+      <div class="metric"><div class="value">84%</div><div class="label">within 10 µm on 200 held-out training-environment episodes</div></div>
+      <div class="metric"><div class="value">0</div><div class="label">contacts with the tissue or a placed thread, full simulation</div></div>
+      <div class="metric"><div class="value">1 h 39 min</div><div class="label">final insertion training run on one RTX 4090</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Chapters">
+  <div class="wrap">
+    <a href="#how">How</a><a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
+    <a href="#contact-model">4 Contact model</a><a href="#thread">5 Thread in the task</a><a href="#motion">6 Motion</a>
+    <a href="#task">7 Learning task</a><a href="#network">8 Network</a><a href="#training">9 Training</a>
+    <a href="#results">10 Results</a><a href="#disturbances">11 Disturbances</a><a href="#robust-training">12 Robust training</a>
+    <a href="#robustness">13 Robustness</a><a href="#compute">14 Compute</a><a href="#insertion">15 Insertion</a>
+    <a href="#fast-thread">16 Fast thread</a><a href="#sites">17 Three sites</a><a href="#disturbed-insertion">18 Disturbed</a>
+    <a href="#insertion-baseline">19 Baseline</a><a href="#insert-env">20 Training env</a>
+    <a href="#insert-training">21 Learning to insert</a><a href="#insert-results">22 Results</a>
+    <a href="#error-budget">23 Error budget</a><a href="#whats-next">24 Next</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="scope"><strong>Where this stands.</strong> A learned policy now drives the insertion: it steers the needle
+    over each site, compensates for where the thread's end actually waits, and decides when to strike. The programmed
+    stroke then sticks the needle to the thread, inserts it 2 mm, releases it and moves on, three sites per run, under
+    workcell, sensing and tissue disturbances. It was trained in a fast C environment and checked in the full thread
+    simulation, where it places every thread and lands a median 8 µm from the target at nominal disturbances. Sticking,
+    release and thread feeding are stand-in constraints, not a modelled cartridge. Every number on this page comes from
+    recorded runs in the repository.</div>
+
+  <section id="how">
+    <h2>How this was built</h2>
+    <p class="when">A harness, a brief, and two coding agents working in a loop</p>
+    <div class="prose">
+      <p>Two things made this possible: a harness and a brief. The harness was in place before this project began. It is
+        a repository set up for simulation and learning work: MuJoCo for physics, PufferLib 5.0 for reinforcement
+        learning, a locked Python environment, Git LFS for assets, a commit-based workflow between a laptop and a remote
+        RTX 4090 workstation, earlier MuJoCo projects to build on, and written engineering rules for how simulations are
+        modelled, tested, recorded and documented here. The brief states what to build and the gates the work must
+        meet.</p>
+      <p>Everything specific to this robot was written by two coding agents working together inside that harness from
+        the brief, one running GPT-6 Astra and one running Claude Opus 5.5. That includes the workcell and needle model,
+        the unit rescaling, the C++ thread model and contact kernel, the C task core shared by training, tests,
+        evaluation and replay, the disturbance layer, the PufferLib environment, the evaluation tools, and this page
+        with its WebAssembly replay. The project's first commit was on October 5.</p>
+    </div>
+    <ol class="loop" aria-label="The AutoResearch loop">
+      <li><strong>Brief and gates</strong><span>what to build, how it is judged</span></li>
+      <li><strong>Plan</strong><span>the next measurable step</span></li>
+      <li><strong>Build</strong><span>code, models, configuration</span></li>
+      <li><strong>Run</strong><span>simulation or training</span></li>
+      <li><strong>Measure</strong><span>against the gates, on held-out seeds</span></li>
+      <li><strong>Record</strong><span>results and failures, committed</span></li>
+      <li><strong>Change one thing</strong><span>then run again</span></li>
+    </ol>
+    <div class="prose">
+      <p>We call this improvement loop AutoResearch. The agents plan a step, implement it, run it, measure the result
+        against the brief's gates, record what failed, and change one variable before the next attempt. The training
+        runs in this journal show the pattern: a diverged run exposed a reward bug, two runs that blew up led to lower
+        learning rates, and a stable but slow run led to a longer training budget. A person sets the brief, reviews the
+        results and corrects course. Their corrections were decisive: train on the GPU workstation rather than fall back
+        to a CPU, make the gates serve the mission rather than the reverse, and pursue robustness under disturbances.
+        Their checks of this page in a browser found four display bugs.</p>
+      <p>"Self-improving" means the work improves, not the agents. The models behind them do not change. The code,
+        the physics, the policies and the process get better through measured iterations, and every mistake stays on the
+        record.</p>
+    </div>
+  </section>
+
+  <section id="workcell">
+    <h2>1 · A static workcell first</h2>
+    <p class="when">October 5 · model, inspect, then move</p>
+    <div class="prose">
+      <p>We built the robot as a static scene before anything moved: an XYZ gantry, a downward insertion slide with a
+        needle, a mounted microscope, and a domed tissue phantom with six targets and vessel markings. Clearance and
+        limits were checked at 120 sampled poses before any dynamics. The first tool also had a thread retainer slide and
+        a cassette of thread samples; the alignment experiments of chapters 7–14 use it. The insertion tool replaces
+        them with a thread tube beside the needle (chapter 15).</p>
+    </div>
+    <div class="grid2">
+      <figure><img data-media="tube_tool" alt="The gantry's tool over the phantom: needle and thread tube"><figcaption>The insertion tool over a 658 × 448 mm deck.</figcaption></figure>
+      <figure><img data-media="tube_waiting" alt="A lime thread in a clear tube, its end under the needle point"><figcaption>The needle and the thread tube: the thread's end waits on the needle's path.</figcaption></figure>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Axis</th><th class="num">Travel (mm)</th><th class="num">Moving mass (kg)</th><th class="num">Force limit (N)</th></tr>
+      <tr><td>X</td><td class="num">−175…175</td><td class="num">2.4</td><td class="num">±100</td></tr>
+      <tr><td>Y</td><td class="num">−75…75</td><td class="num">1.3</td><td class="num">±80</td></tr>
+      <tr><td>Z</td><td class="num">−8…50</td><td class="num">0.65</td><td class="num">±40</td></tr>
+      <tr><td>Insertion (down)</td><td class="num">0…18</td><td class="num">0.025</td><td class="num">±2</td></tr>
+      <tr><td>Retainer (down), first tool only</td><td class="num">0…6</td><td class="num">0.004</td><td class="num">±0.3</td></tr>
+    </table></div>
+    <h3 class="glossary-title">The workcell, part by part</h3>
+    <p class="when">Each view highlights one part against the faded machine, in the insertion workcell at a recorded
+      moment: the thread stuck to the needle as it enters the tissue. Select a part to enlarge it; arrow keys step through.</p>
+    <div class="glossary" id="glossary"></div>
+    <dialog id="glossary-view" aria-label="Workcell part">
+      <img alt="">
+      <div class="glossary-text">
+        <h3></h3>
+        <p class="role"></p>
+        <p class="specs"></p>
+      </div>
+      <div class="glossary-nav">
+        <button data-step="-1" aria-label="Previous part">◀</button>
+        <button data-close>Close</button>
+        <button data-step="1" aria-label="Next part">▶</button>
+      </div>
+    </dialog>
+  </section>
+
+  <section id="units">
+    <h2>2 · A 40 µm thread at SI scale will not compile</h2>
+    <p class="when">October 5 · unit rescaling</p>
+    <div class="prose">
+      <p>A 44 mm thread of 40 µm diameter, split into 32 segments, has rotational inertias near 10<sup>−19</sup> kg m².
+        MuJoCo rejects them at compilation. Rather than inflate the mass or radius, we rescaled the engine's units:
+        millimetres and grams, with seconds unchanged. Every dimensional quantity converts at the model boundary,
+        and results are reported back in SI.</p>
+    </div>
+    <pre><code class="language-python">@dataclass(frozen=True)
+class Units:
+    name: str
+    length: float = 1.0  # engine length units per metre
+    mass: float = 1.0  # engine mass units per kilogram
+
+    @property
+    def force(self):
+        return self.mass * self.length
+
+    @property
+    def torque(self):
+        return self.mass * self.length**2
+
+MM_G = Units("mm_g_s", 1000, 1000)</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/units.py</code>: forces scale by M·L, inertias and torques by M·L², moduli by M/L.</p>
+    <div class="prose"><p>The physical mass and dimensions are unchanged, and bending then matched the analytical
+      cantilever within 2.4%. The same conversion applies to every scene we build, so the robot and the thread share one
+      unit system.</p></div>
+  </section>
+
+  <section id="der">
+    <h2>3 · Porting a published rod model, and correcting it</h2>
+    <p class="when">October 5 · discrete elastic rods inside MuJoCo</p>
+    <div class="prose">
+      <p>We ported the published discrete-elastic-rod (DER) plugin for MuJoCo to version 3.12 as a separate library,
+        leaving the engine untouched. An energy-gradient audit found that the published force mapping produced
+        <strong>zero restoring torque for a purely twisted rod</strong> despite positive twist energy. We kept the
+        original variant and added a corrected one that projects the same Cartesian forces through MuJoCo's own
+        Jacobians, plus the material-frame end moments. Its forces match the energy gradient to 2.85 × 10<sup>−9</sup>.</p>
+    </div>
+    <pre><code class="language-cpp">// Project the same Cartesian elastic forces through MuJoCo's Jacobians,
+// and include material-frame end moments.
+mju_copy(d->qfrc_passive, before.data(), m->nv);
+const mjtNum zero[3] = {0, 0, 0};
+for (int i=0; i&lt;r->nv+2; ++i) {
+  int body = r->i0 + std::min(i, r->nv);
+  mj_applyFT(m, d, r->nodes[i].force.data(), zero, r->nodes[i].pos.data(),
+             body, d->qfrc_passive);
+}
+double moment = r->beta_bar*(r->edges[r->nv].theta-r->edges[0].theta)/r->bigL_bar;
+Eigen::Vector3d first = moment*r->edges[0].e.normalized();
+Eigen::Vector3d last = -moment*r->edges[r->nv].e.normalized();
+mj_applyFT(m, d, zero, first.data(), r->nodes[0].pos.data(), r->i0, d->qfrc_passive);
+mj_applyFT(m, d, zero, last.data(), r->nodes[r->nv+1].pos.data(),
+           r->i0+r->nv, d->qfrc_passive);</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/der_bridge.cc</code>, the corrected <code>direct</code> projection.</p>
+    <div class="prose"><p>Bending stayed within 2.4% of the analytical cantilever, an undamped bent rod relaxed with
+      energy drift falling from 0.075% to 0.038% as the step halved, and forces were identical after copy, restore and
+      reset. For sim-to-real this matters more than any single benchmark: a rod whose twist cannot push back would
+      mislead every later thread-handling result.</p></div>
+  </section>
+
+  <section id="contact-model">
+    <h2>4 · The contact model</h2>
+    <p class="when">October 5 · a continuous contact force and a fourth-order integrator</p>
+    <div class="prose">
+      <p>MuJoCo's soft contact computes a reference acceleration <code>a_ref = −B·v − K·d(r)·pos</code> with an
+        impedance <code>d(r)</code>. With <code>d</code> held constant, as in our first law, the damping force switches on
+        as a <em>step</em> at zero penetration, so a grazing contact receives a finite impulse. A penetration ramp makes the
+        force continuous in the state. And because the default integrator is first order through a contact lasting a few
+        tens of microseconds, we step the thread with MuJoCo's RK4, which evaluates collision and the constraint solve at
+        four stages. Both are standard MuJoCo settings; the engine is unmodified.</p>
+      <p>Before relying on it we checked the engine against an independent calculation that never calls MuJoCo: same-state
+        contact forces match a closed-form solution to 10<sup>−11</sup>, and agree across unit systems to 10<sup>−9</sup>.</p>
+    </div>
+    <pre><code class="language-python">def law_for(tau):
+    return ContactLaw(f"ramp_{tau*1e6:g}us", d0=mujoco.mjMINIMP, power=1., time_constant_s=tau)
+
+law = law_for(2e-5)  # thread contact in the task regime: 20 µs, stepped at 5 µs with RK4
+# solimp = (0.0001, 0.9999, 1 µm width, 0.5, 1): impedance rises linearly over 1 µm</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/task_fixtures.py</code> with <code>contact_laws.ContactLaw</code>.</p>
+    <pre><code class="language-c">if (rk) {                 // same sequence as mj_step for RK4
+  mj_checkPos(m, d);
+  mj_checkVel(m, d);
+  mj_forward(m, d);
+  mj_checkAcc(m, d);
+} else {
+  mj_step1(m, d);
+}
+...
+mj_RungeKutta(m, d, 4);</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/contact_kernel.cc</code>: our batch stepping kernel with per-step contact telemetry; bit-identical to <code>mj_step</code>.</p>
+  </section>
+
+  <section id="thread">
+    <h2>5 · Thread contact in the task regime</h2>
+    <p class="when">October 6 · gates derived from what the robot will actually do</p>
+    <div class="prose">
+      <p>Each phase of the mission touches the thread in its own way, at millimetres per second. We built one fixture per
+        phase, with a rigid 150 µm probe driven only by force-limited actuators, and required the thread's centreline to
+        agree within 1 µm when the timestep is halved and within 0.01 µm across unit systems, with penetration checked at
+        every step over every contact.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Task phase</th><th>Fixture</th><th class="num">Timestep, 5 → 2.5 µs</th><th class="num">Units</th></tr>
+      <tr><td>Transport and align</td><td>Settle on the support</td><td class="num">0.13 µm</td><td class="num">≤ 1.5e−10 µm</td></tr>
+      <tr><td>Insert to depth</td><td>Needle drags across thread (it rolls)</td><td class="num">≤ 5.1e−7 µm</td><td class="num">≤ 6e−7 µm</td></tr>
+      <tr><td>Pick and grasp</td><td>100 µN press, force balance ≤ 6.8e−5</td><td class="num">≤ 2.4e−7 µm</td><td class="num">≤ 9e−11 µm</td></tr>
+      <tr><td>Release</td><td>Hook slides out, 150 µm fall</td><td class="num">0.19 µm</td><td class="num">≤ 7.3e−7 µm</td></tr>
+    </table></div>
+    <div class="prose"><p>Every fixture passes at a <strong>5 µs</strong> RK4 step with a 20 µs contact time constant, for both
+      material presets. Release failed at 10 µs (1.58 µm), because its short fall lands faster than settling does; we refined
+      the step rather than relax the gate, and kept the failure on record.</p></div>
+    <div class="lesson"><strong>Sim-to-real gaps we know about.</strong> Thread materials are presets (100 MPa illustrative,
+      2.5 GPa polyimide), not measurements. Contact compliance under load, about 1 µm per contact at 100 µN, is a property of
+      MuJoCo's soft contact on a 2.4 µg segment, not a calibrated stiffness. The phantom's collision mesh has three rings, so its
+      facets sit up to about 190 µm below the analytic dome. At this stage the phantom could not be punctured (chapter 15
+      adds a puncture model), and observations were exact simulator state rather than sensor readings.</div>
+    <figure><img data-media="task_regime" alt="Task regime plots"><figcaption>Largest passing timestep, penetration against contact time constant, fixture agreement over time and the press force balance.</figcaption></figure>
+  </section>
+
+  <section id="motion">
+    <h2>6 · The robot's first motion</h2>
+    <p class="when">October 6 · programmed servo, gates fixed before the run</p>
+    <div class="prose">
+      <p>A programmed servo adds inertial, gravity, viscous and Coulomb feedforward and a bounded integral term to each
+        force-limited position actuator, by offsetting its command. Two design facts surfaced on the first run: Z reaches
+        only 8 mm down, so the needle slide reaches the surface; and both fine slides hang against gravity at their
+        retracted stops, so they are carried 0.5 mm out.</p>
+    </div>
+    <pre><code class="language-python">ctrl = q_ref + (kv*v_ref + M*a_ref + qfrc_bias + damping*v_ref + coulomb + I) / kp
+# applied force = kp*(q_ref - q) + kv*(v_ref - qdot) + feedforward + I, clipped by the actuator force range</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/motion.py</code></p>
+    <video data-media="approach_tour" controls muted playsinline preload="metadata"></video>
+    <figcaption>Six-target tour, real time. Hover error ≤ 0.50 µm lateral and ≤ 0.09 µm vertical; no contacts; 16.8% peak force.</figcaption>
+  </section>
+
+  <section id="task">
+    <h2>7 · The learning task, exactly</h2>
+    <p class="when">October 6 · trained task: needle alignment (robot only)</p>
+    <div class="prose">
+      <p>One C core (<code>native/surgical_core.h</code>) holds physics stepping, servo, observations and rewards. It is
+        compiled into the PufferLib 5.0 adapter for training and into a local library for tests and evaluation, so they
+        cannot drift apart. Physics runs at 1 ms; the policy acts at 50 Hz (20 physics steps per action).</p>
+    </div>
+    <h3>Episode</h3>
+    <ul class="prose">
+      <li><strong>Start:</strong> gantry at rest, X uniform in ±40 mm and Y in ±30 mm about the field centre; needle tip 3–8 mm above the dome; Z stage at −6 mm, retainer at 0.5 mm.</li>
+      <li><strong>Goal:</strong> one of six targets, uniformly; the hover point 1 mm above it.</li>
+      <li><strong>Success:</strong> lateral and vertical error under 10 µm and tip speed under 0.2 mm/s for 15 consecutive policy steps (0.3 s).</li>
+      <li><strong>Failure:</strong> any contact between robot and environment, or a nonfinite state.</li>
+      <li><strong>Deadline:</strong> 250 policy steps (5 s). Success, failure and deadline all end the episode.</li>
+      <li><strong>Seeds:</strong> training base seed 1 per world; evaluation seeds 1,000,000–1,000,199, never used in training or tuning.</li>
+    </ul>
+    <h3>Observation (16 values, exact simulator state)</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Index</th><th>Quantity</th><th>Scaling</th><th>Clip</th></tr>
+      <tr><td>0–2</td><td>Tip minus goal, x y z</td><td>÷ 5 mm</td><td>±5</td></tr>
+      <tr><td>3–5</td><td>Tip velocity, x y z</td><td>÷ 40 mm/s</td><td>±2</td></tr>
+      <tr><td>6–8</td><td>Previous applied action</td><td>—</td><td>±1</td></tr>
+      <tr><td>9–11</td><td>Tip minus goal, fine scale</td><td>÷ 100 µm</td><td>±1</td></tr>
+      <tr><td>12–13</td><td>Offset to the nearest vessel centreline, x y</td><td>÷ 5 mm</td><td>±1</td></tr>
+      <tr><td>14</td><td>Tip height above the dome</td><td>÷ 10 mm</td><td>−1…2</td></tr>
+      <tr><td>15</td><td>Remaining time fraction</td><td>1 − step/250</td><td>0…1</td></tr>
+    </table></div>
+    <pre><code class="language-c">for (int i = 0; i &lt; 3; i++) {
+    double e = tip[i] - c->goal[i];
+    obs[i] = (float)sa_clip(e / 0.005, -5, 5);
+    obs[3 + i] = (float)sa_clip(vel[i] / SA_VMAX_XY, -2, 2);
+    obs[6 + i] = c->prev_action[i];
+    obs[9 + i] = (float)sa_clip(e / 1e-4, -1, 1);
+}
+double vx, vy;
+sa_vessel(c, tip[0], tip[1], &amp;vx, &amp;vy);
+obs[12] = (float)sa_clip(vx / 0.005, -1, 1);
+obs[13] = (float)sa_clip(vy / 0.005, -1, 1);
+obs[14] = (float)sa_clip((tip[2] - sa_surface(c, tip[0], tip[1])) / 0.01, -1, 2);
+obs[15] = (float)(1.0 - (double)c->tick / SA_HORIZON);</code></pre>
+    <h3>Action (3 continuous values)</h3>
+    <div class="prose"><p>Each output is clipped to [−1, 1] and <em>cubed</em>, then scaled to needle-tip velocity:
+      40 mm/s in X and Y, 20 mm/s vertically. The cube gives 40 µm/s resolution at 0.1. The command drives the X and Y
+      stages and the insertion slide; a 10 ms filter smooths the reference, which the programmed servo tracks.</p></div>
+    <h3>Reward per policy step</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Term</th><th>Value</th></tr>
+      <tr><td>Progress (potential shaping)</td><td>Φ(d′) − Φ(d), with Φ(d) = −log₁₀((d + 2 µm) / 1 mm) and d the tip-to-goal distance</td></tr>
+      <tr><td>Action smoothness</td><td>−0.002 · Σ (aᵢ − aᵢ,prev)² on the clipped actions</td></tr>
+      <tr><td>Vessel proximity</td><td>−0.05 when the tip is under 3 mm above the dome and within the vessel radius + 0.3 mm of a centreline</td></tr>
+      <tr><td>Success</td><td>+2, episode ends</td></tr>
+      <tr><td>Collision</td><td>−2, episode ends</td></tr>
+    </table></div>
+    <div class="prose"><p>The logarithmic potential makes going from 10 mm to 1 mm worth the same as going from 10 µm to 1 µm,
+      so the policy gets useful signal at every scale. There is no curriculum: every episode is the full task.</p></div>
+    <pre><code class="language-c">double potential = sa_potential(distance);
+double r = potential - c->potential;
+c->potential = potential;
+double smooth = 0;
+for (int i = 0; i &lt; SA_ACT; i++) {
+    double applied = sa_clip(action[i], -1, 1);
+    double da = applied - c->prev_action[i];
+    smooth += da * da;
+    c->prev_action[i] = (float)applied;
+}
+r -= 0.002 * smooth;</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/native/surgical_core.h</code>, after the fix described in chapter 9.</p>
+    <h3>Baselines on the evaluation seeds</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Policy</th><th class="num">Success</th><th class="num">Collision</th><th class="num">Mean time</th></tr>
+      <tr><td>Scripted reference (programmed)</td><td class="num">100%</td><td class="num">0%</td><td class="num">2.06 s</td></tr>
+      <tr><td>Zero action</td><td class="num">0%</td><td class="num">0%</td><td class="num">—</td></tr>
+      <tr><td>Uniform random</td><td class="num">0%</td><td class="num">5%</td><td class="num">—</td></tr>
+    </table></div>
+    <div class="failure"><strong>Caught before training:</strong> the scripted reference first failed twice. Descending early
+      cut through the dome, and a 4 s deadline at 20 mm/s could not cover the longest traverse. Both were task-design
+      errors, fixed before any policy was trained, so the learned policy is judged on a task known to be solvable.</div>
+  </section>
+
+  <section id="network" class="network">
+    <h2>8 · The network we train</h2>
+    <p class="when">PufferLib 5.0 default recurrent policy, 128 hidden units, 2 MinGRU layers</p>
+    <div class="prose"><p>Read from PufferLib's own code and the checkpoint's layout: 100,867 parameters, no biases.
+      The same weights run on the GPU during training and on the CPU (deterministic mean action) for evaluation and this replay.</p></div>
+    <svg viewBox="0 0 1100 470" role="img" aria-label="Network diagram: 16 observations, linear encoder, two MinGRU layers, linear decoder to action means and value, learned log-std">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d5f7a"/></marker>
+        <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#d38aaa"/><stop offset="1" stop-color="#af86ac"/></linearGradient>
+        <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#8981af"/><stop offset="1" stop-color="#7378a8"/></linearGradient>
+      </defs>
+      <style>
+        .box{rx:12;stroke:#d6d0e2}.t{font:600 15px system-ui,sans-serif;fill:#23243a}.s{font:13px system-ui,sans-serif;fill:#5d5f7a}
+        .w{font:600 15px system-ui,sans-serif;fill:#fff}.ws{font:12.5px system-ui,sans-serif;fill:#f3f0fa}.m{font:12.5px ui-monospace,Menlo,monospace;fill:#23243a}
+      </style>
+      <rect class="box" x="20" y="150" width="150" height="120" fill="#f3eef8"/>
+      <text class="t" x="95" y="185" text-anchor="middle">Observation</text>
+      <text class="s" x="95" y="207" text-anchor="middle">16 values</text>
+      <text class="s" x="95" y="227" text-anchor="middle">error ×2 scales, velocity,</text>
+      <text class="s" x="95" y="245" text-anchor="middle">action, vessel, height, time</text>
+      <line x1="170" y1="210" x2="215" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="218" y="160" width="140" height="100" fill="url(#g1)"/>
+      <text class="w" x="288" y="198" text-anchor="middle">Encoder</text>
+      <text class="ws" x="288" y="220" text-anchor="middle">Linear 16 → 128</text>
+      <text class="ws" x="288" y="240" text-anchor="middle">2,048 weights</text>
+      <line x1="358" y1="210" x2="398" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="400" y="80" width="300" height="260" fill="url(#g2)"/>
+      <text class="w" x="550" y="110" text-anchor="middle">MinGRU × 2 layers (memory per world)</text>
+      <text class="ws" x="550" y="134" text-anchor="middle">each layer: Linear 128 → 384 = [ h | z | w ]</text>
+      <text class="ws" x="550" y="152" text-anchor="middle">49,152 weights per layer</text>
+      <text class="ws" x="418" y="184">g(h) = h + ½ if h ≥ 0, otherwise σ(h)</text>
+      <text class="ws" x="418" y="208">s<tspan baseline-shift="sub" font-size="10">t</tspan> = s<tspan baseline-shift="sub" font-size="10">t−1</tspan> + σ(z) ⊙ (g(h) − s<tspan baseline-shift="sub" font-size="10">t−1</tspan>)</text>
+      <text class="ws" x="418" y="232">y = σ(w) ⊙ s<tspan baseline-shift="sub" font-size="10">t</tspan> + (1 − σ(w)) ⊙ x   (highway)</text>
+      <text class="ws" x="418" y="262">x: layer input · s: state, zeroed at episode start</text>
+      <path d="M610,340 C610,392 490,392 490,346" fill="none" stroke="#5d5f7a" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+      <text class="s" x="550" y="405" text-anchor="middle">recurrent state s, 2 × 128</text>
+      <line x1="700" y1="210" x2="740" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="742" y="160" width="140" height="100" fill="url(#g1)"/>
+      <text class="w" x="812" y="198" text-anchor="middle">Decoder</text>
+      <text class="ws" x="812" y="220" text-anchor="middle">Linear 128 → 4</text>
+      <text class="ws" x="812" y="240" text-anchor="middle">512 weights</text>
+      <line x1="882" y1="190" x2="925" y2="150" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="882" y1="232" x2="925" y2="290" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="928" y="98" width="155" height="100" fill="#f3eef8"/>
+      <text class="t" x="1005" y="126" text-anchor="middle">Action μ ∈ ℝ³</text>
+      <text class="s" x="1005" y="148" text-anchor="middle">+ learned log σ (3)</text>
+      <text class="s" x="1005" y="168" text-anchor="middle">train: a ~ N(μ, σ)</text>
+      <text class="s" x="1005" y="186" text-anchor="middle">evaluate: a = μ</text>
+      <rect class="box" x="928" y="250" width="155" height="70" fill="#f3eef8"/>
+      <text class="t" x="1005" y="280" text-anchor="middle">Value V(s)</text>
+      <text class="s" x="1005" y="300" text-anchor="middle">PPO critic, training only</text>
+      <text class="m" x="20" y="455">a → clip[−1,1] → a³ → tip velocity (40, 40, 20 mm/s) → 10 ms filter → programmed servo → MuJoCo, 20 × 1 ms</text>
+    </svg>
+    <h3>Training configuration</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Setting</th><th>Value</th></tr>
+      <tr><td>Algorithm</td><td>PufferLib 5.0 PPO (pinned revision 6ffa5b1), clip 0.2, value coefficient 2.0</td></tr>
+      <tr><td>Optimizer</td><td>Muon, learning rate 0.003 cosine-annealed to 0</td></tr>
+      <tr><td>Discount, GAE λ</td><td>0.995, 0.95</td></tr>
+      <tr><td>Entropy coefficient</td><td>5 × 10<sup>−4</sup></td></tr>
+      <tr><td>Batch</td><td>2048 worlds × 64-step horizon, minibatch 16,384</td></tr>
+      <tr><td>Hardware</td><td>RTX 4090 for the network; MuJoCo physics on 28 CPU threads</td></tr>
+      <tr><td>Budget</td><td>100 M steps (99.9 M), 29 minutes, about 59,000 steps/s</td></tr>
+    </table></div>
+    <pre><code class="language-c">void puf_step(Env* env) {
+    SAEpisode e;
+    float reward;
+    int done = sa_step(&amp;env->core, env->agents[0].actions, env->agents[0].observations, &amp;reward, &amp;e);
+    env->agents[0].rewards[0] = reward;
+    env->agents[0].terminals[0] = (float)done;
+    if (done) {
+        env->log.perf += e.success;
+        ...
+        sa_reset(&amp;env->core, env->agents[0].observations);
+    }
+}</code></pre>
+    <p class="codecap"><code>experiments/neural_insertion/puffer/surgical_align/surgical_align.h</code>: the PufferLib adapter is a thin wrapper over the shared core.</p>
+  </section>
+
+  <section id="training">
+    <h2>9 · Training on the RTX 4090: two failures, then success</h2>
+    <p class="when">October 6 · three runs, one change at a time</p>
+    <div class="charts">
+      <div class="chart"><h4>Final lateral error at episode end (training rollouts)</h4><svg id="chart-error" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Success rate (training rollouts, noisy actions)</h4><svg id="chart-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Policy update size (KL divergence)</h4><svg id="chart-kl" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Collision rate</h4><svg id="chart-collision" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="failure"><strong>Run 1 diverged, and it was our bug.</strong> Episode returns reached −46,557 from terms that should
+      never exceed a few units. The smoothness penalty used the policy's raw, unbounded Gaussian samples instead of the clipped
+      actions the robot receives; once action means drifted past ±1 the penalty grew without limit.</div>
+    <pre><code class="language-diff">-        double da = action[i] - c->prev_action[i];
++        double applied = sa_clip(action[i], -1, 1);
++        double da = applied - c->prev_action[i];</code></pre>
+    <div class="failure"><strong>Run 2 learned, then collapsed.</strong> For 12.7 M steps it improved steadily; then, as action
+      noise shrank, each update at the default learning rate moved the policy too far. KL rose from 0.16 to about 300.</div>
+    <pre><code class="language-diff">+learning_rate = 0.003
+ gamma = 0.995</code></pre>
+    <div class="lesson"><strong>Run 3 changed only the learning rate.</strong> It stopped colliding within 10 M steps, closed in
+      through hundreds and then tens of microns, first succeeded at about 52 M steps and reached 100% in training by 69 M.</div>
+  </section>
+
+  <section id="results">
+    <h2>10 · Results on 200 held-out episodes</h2>
+    <p class="when">Deterministic actions, evaluated on CPU with PufferLib's own network code</p>
+    <div class="table-wrap"><table>
+      <tr><th>Policy</th><th class="num">Success</th><th class="num">Collisions</th><th class="num">Mean time</th><th class="num">Worst final error</th><th class="num">Low steps over vessels</th></tr>
+      <tr><td><strong>Learned, final (99.9 M)</strong></td><td class="num">100%</td><td class="num">0%</td><td class="num">1.40 s</td><td class="num">8.6 µm lat., 4.4 µm vert.</td><td class="num">0.25</td></tr>
+      <tr><td>Learned, 65.5 M</td><td class="num">100%</td><td class="num">0%</td><td class="num">1.98 s</td><td class="num">10.0 µm lat., 7.4 µm vert.</td><td class="num">0.39</td></tr>
+      <tr><td>Scripted reference</td><td class="num">100%</td><td class="num">0%</td><td class="num">2.06 s</td><td class="num">3.4 µm lat.</td><td class="num">1.68</td></tr>
+    </table></div>
+    <div class="prose"><p>The learned policy is a third faster and passes low over vessels less often, but settles closer to the
+      tolerance than the scripted controller: an episode ends as soon as the 0.3 s hold is met. Compare both in the replay at the top.</p></div>
+    <video data-media="learned_alignment" controls muted playsinline preload="metadata"></video>
+    <figcaption>Four evaluation episodes chosen before evaluation (the first seeds covering four targets), real time.</figcaption>
+  </section>
+
+  <section id="disturbances">
+    <h2>11 · A perfect world is too easy</h2>
+    <p class="when">October 6 · the brief is rewritten around disturbances</p>
+    <div class="prose">
+      <p>With exact state, no delay and a still target, both the scripted controller and the learned policy succeed every
+        time. A real stage gets none of that. We rewrote the brief: every mission phase is learned under one shared,
+        documented disturbance layer; the programmed servo stays only as the motor drive; scripted controllers become
+        yardsticks. Results are reported on held-out seeds at stated disturbance levels, including full strength.</p>
+      <p>The layer lives in the same C core used for training, evaluation and replay. One number, the level from 0 to 1,
+        scales every magnitude, and in training each episode draws its own level uniformly from that range. The magnitudes
+        are illustrative until replaced by measurements of the real stage, sensors and tissue.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Disturbance</th><th>Model</th><th>Full strength (level 1)</th><th>Enters through</th></tr>
+      <tr><td>Slide force noise</td><td>Low-pass random force, 50 ms correlation time</td><td>std 100, 100, 50, 10, 2 mN on X, Y, Z, insertion, retainer</td><td>Applied joint force</td></tr>
+      <tr><td>Extra friction</td><td>Coulomb, smoothed below 0.1 mm/s</td><td>up to 100, 100, 50, 5, 1 mN, drawn per episode</td><td>Applied joint force</td></tr>
+      <tr><td>Table vibration</td><td>Three sinusoids per axis, 5–60 Hz</td><td>up to 10 mm/s² per component</td><td>Inertial force on each carriage</td></tr>
+      <tr><td>Tip sensing</td><td>Delay, then Gaussian noise</td><td>0–10 ms latency; 0.5 µm and 0.05 mm/s noise</td><td>Observation only</td></tr>
+      <tr><td>Target estimate</td><td>Bias, slow drift and per-step noise</td><td>1 µm bias, 1 µm/√s drift, 3 µm noise per axis</td><td>Observation only</td></tr>
+      <tr><td>Tissue motion</td><td>Breathing 0.2–0.4 Hz, pulse 1–2 Hz</td><td>up to 30 + 10 µm vertical, 10 + 3 µm lateral amplitude</td><td>True target position and velocity</td></tr>
+    </table></div>
+    <pre><code class="language-c">// Every 1 ms physics step: rebuild the external force on each slide from scratch.
+for (int j = 0; j &lt; SA_NJ; j++) {
+    double sigma = SA_FORCE_SIGMA[j] * q-&gt;level;        // low-pass force noise
+    q-&gt;force[j] += -q-&gt;force[j] * dt / SA_FORCE_TAU
+                 + sigma * sqrt(2 * dt / SA_FORCE_TAU) * sa_normal(&amp;c-&gt;drng);
+    double v = d-&gt;qvel[c-&gt;dof[j]];
+    double inertial = -c-&gt;mass[j] * dot(a_base, SA_AXIS[j]);   // table vibration
+    double friction = -q-&gt;friction[j] * tanh(v / 1e-4);       // extra Coulomb friction
+    d-&gt;qfrc_applied[c-&gt;dof[j]] = q-&gt;force[j] + friction + inertial;
+}</code></pre>
+    <div class="note-box"><strong>Scale used later.</strong> Training runs 4–6 used this first scale. With the user, the
+      robot group was then rescaled to a quality workcell (scale v2): level 1 is now a precision stage on an isolation
+      table, a tenth of the robot magnitudes above (force noise 10, 10, 5, 1, 0.2 mN; extra friction up to 20, 20, 10, 1,
+      0.2 mN; vibration 1 mm/s²), and level 2 is the stress setting, twice that. Sensing and tissue are unchanged. The
+      evaluation in chapter 13, the replays at the top and the insertion runs use scale v2.</div>
+    <div class="lesson"><strong>Level 0 changes nothing.</strong> Disturbance parameters come from their own random
+      stream, so at level 0 the new core reproduces all 200 recorded evaluation episodes of the earlier policy and of the
+      scripted controller exactly. Rewards and success use true state, and success now also requires the tip to match the
+      moving target's velocity within 0.2 mm/s.</div>
+    <div class="prose"><p>The replay at the top draws every component in the scene. Each carriage carries force arrows at
+      5 cm per 0.1 N: amber for noise, cyan for friction, lilac for vibration. The table shows its acceleration and recent
+      trace. The Micro camera shows, at true scale, the moving target with its 10 µm tolerance cylinder, the noisy target
+      estimate and the late tip measurement. Values sit in panels beside each object. Airflow is not modelled yet; it
+      matters for the thread, which this task does not carry.</p></div>
+  </section>
+
+  <section id="robust-training">
+    <h2>12 · Training under disturbances</h2>
+    <p class="when">October 6 · runs 4 and 5, one change between them</p>
+    <div class="charts">
+      <div class="chart"><h4>Final lateral error at episode end (training rollouts)</h4><svg id="chart-robust-error" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Policy update size (KL divergence)</h4><svg id="chart-robust-kl" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Success rate (training rollouts, noisy actions)</h4><svg id="chart-robust-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Collision rate</h4><svg id="chart-robust-collision" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-robust"></div>
+    <div id="robust-training-notes"></div>
+  </section>
+
+  <section id="robustness">
+    <h2>13 · Robustness on 200 held-out episodes</h2>
+    <p class="when">Deterministic actions, the same 200 predetermined seeds at every level</p>
+    <div class="charts one">
+      <div class="chart"><h4>Success against disturbance level</h4><svg id="chart-level" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-level"></div>
+    <div class="table-wrap"><table id="robustness-table"></table></div>
+    <div id="robustness-notes"></div>
+  </section>
+
+  <section id="compute">
+    <h2>14 · What the training used</h2>
+    <p class="when">One workstation: RTX 4090 and a 16-core Ryzen 9 5950X</p>
+    <div class="table-wrap"><table id="compute-table"></table></div>
+    <div class="prose"><p>This workload is CPU-bound. PufferLib steps 28 copies of the MuJoCo world on CPU threads, about
+      29 of the machine's 32 hardware threads, while the GPU runs only the 101k-parameter network and its PPO update. It
+      idles near 10% utilisation and about 59 W of its 450 W limit, with under 1 GB of memory for the trainer. Runs 1–3
+      predate the resource logger, so their figures come from PufferLib's own dashboard, which reports device-wide GPU
+      memory including the desktop. From run 4, a logger samples GPU power, temperature, the trainer's GPU memory and host
+      CPU load once a minute.</p></div>
+  </section>
+
+
+  <section id="insertion">
+    <h2>15 · Thread insertion: a thread tube and stand-in handling</h2>
+    <p class="when">October 6 · three mechanisms, then a decision about what to prove</p>
+    <div class="prose">
+      <p>Picking up a 40 µm thread is the hard mechanical part of this machine. We tried it three ways: a slotted needle
+        with a latch over a 44 mm free thread (about 600 times slower than real time, and the eyelet rattled loose on
+        landing); a needle with a ledge and a rotary pincher; then a cartridge with a cannula and a spring latch under the
+        thread's loop. Each attempt was watched on video, and each taught something, but none of it was what this project
+        sets out to prove.</p>
+      <p>After reviewing photos of a current insertion robot, the user set the goal: prove the robot's movements and
+        abstract the thread handling. The thread waits in a tube on an arm beside the needle, angled 15° from vertical,
+        its end on the needle's path. On its way down the needle sticks to that end, carries the thread into the tissue,
+        and lets go at depth. The rest is physical: the robot's dynamics, the thread as an elastic rod, the tube's walls,
+        the puncture and the tissue's grip.</p>
+    </div>
+    <div class="grid2">
+      <figure><img data-media="tube_waiting" alt="The thread's end waits under the needle point"><figcaption>Waiting: the thread's plain end sits 1 mm below the needle point and 1 mm above the tissue.</figcaption></figure>
+      <figure><img data-media="tube_inserted" alt="A lime thread through the translucent tissue surface"><figcaption>Placed: the thread's end 2 mm deep, drawn with the tissue translucent.</figcaption></figure>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Stand-in (a MuJoCo constraint)</th><th>Switched on</th><th>Switched off</th><th>Stands for</th></tr>
+      <tr><td>Tube hold on the thread's back end</td><td>thread ready in the tube</td><td>when the needle has the thread</td><td>a feed brake</td></tr>
+      <tr><td>Needle bond to the thread's end</td><td>needle point within 30 µm of the end</td><td>at depth</td><td>a chemical attachment and release</td></tr>
+      <tr><td>Tissue grip on each segment that enters</td><td>below the surface, near the puncture</td><td>pulled out of the tissue</td><td>tissue holding the thread; slips above 16.7 µN per 0.46 mm segment</td></tr>
+      <tr><td>New thread in the tube</td><td colspan="2">between sites (a spare, straight and at rest)</td><td>feeding the next thread</td></tr>
+    </table></div>
+    <div class="lesson"><strong>What this proves, and what it does not.</strong> These runs test positioning, alignment under
+      disturbances, insertion to depth, release, and moving between sites. They do not test how a real cartridge picks,
+      holds or releases a thread, or whether the thread survives it.</div>
+  </section>
+
+  <section id="fast-thread">
+    <h2>16 · A fast thread</h2>
+    <p class="when">October 6 · coarser settings, as a game engine treats a rope</p>
+    <div class="prose">
+      <p>The first thread ran at a 5 µs step: light, stiff contacts between the thread, the needle and the holding parts
+        settle in microseconds. With the bond replacing those contacts, we coarsened the thread the way rope simulations
+        do: a 50 µs RK4 step, contacts that settle in 200 µs, a looser solver, and added joint inertia and damping that
+        slow the thread's fastest wiggles without changing its shape or sag.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Setting</th><th>First thread</th><th>Fast thread</th></tr>
+      <tr><td>Step</td><td>5 µs</td><td>50 µs</td></tr>
+      <tr><td>Segments</td><td>32 × 1.4 mm (44 mm), later 6 × 1.4 mm</td><td>18 × 0.46 mm (8.25 mm)</td></tr>
+      <tr><td>Contact time constant</td><td>20 µs</td><td>200 µs</td></tr>
+      <tr><td>Joint armature, damping</td><td>none</td><td>3 × 10<sup>−17</sup> kg m², 1 × 10<sup>−12</sup> N m s</td></tr>
+      <tr><td>Tissue grip</td><td>explicit spring-damper</td><td>soft constraint with slip</td></tr>
+      <tr><td>Wall time per simulated second</td><td>about 600 s (44 mm thread)</td><td>about 10 s (one thread), 20 s (three)</td></tr>
+    </table></div>
+    <pre><code class="language-python">for b, eq in grips:                       # each segment that has entered the tissue
+    point = data.xipos[b]
+    if self.surface(point) - point[2] &lt;= 0:  # pulled out: let go
+        data.eq_active[eq] = 0
+        continue
+    force = norm(data.efc_force[rows_of(eq)])
+    if force &gt; p.f_retain:                   # slip: move the pin toward the segment
+        anchor = tissue_origin + m.eq_data[eq, 0:3]
+        m.eq_data[eq, 0:3] = point + (anchor - point) * p.f_retain / force - tissue_origin</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/tube_cycle.py</code>, <code>TubeTissue</code>: the tissue's grip as constraints MuJoCo solves implicitly.</p>
+    <div class="failure"><strong>Each failure was watched live in the viewer.</strong> A thread built on the tube's centreline
+      settled 80 µm onto the bore and the needle missed its end. At 45°, long rigid segments jammed in the tube's mouth;
+      with shorter ones the thread wrapped the needle at insertion speed, so the tube went to 15°. An explicit tissue
+      spring on 0.8 µg segments diverged once the bond let go, and an undamped thread whipped after release.</div>
+  </section>
+
+  <section id="sites">
+    <h2>17 · Three sites in a row</h2>
+    <p class="when">October 6 · a new thread for each site, placed threads stay simulated</p>
+    <div class="prose">
+      <p>A run places threads at sites 0, 5 and 1. After each site the tool lifts 8 mm, clear of the 6 mm of thread left
+        standing; a spare thread appears in the tube; the tool moves over the next site, measures the target, makes one
+        correction from the measured needle tip, and inserts. Placed threads stay simulated and gripped by the tissue, and
+        the run checks that the tool's moves do not disturb them.</p>
+    </div>
+    <video data-media="tube_sites_level0" controls muted playsinline preload="metadata"></video>
+    <figcaption>Three sites without disturbances. The needle's work plays at 0.02× real time, the moves between sites at 0.2×.</figcaption>
+    <figure><img data-media="tube_placed" alt="Three lime threads standing in three target rings"><figcaption>After a run: each thread stands in its target ring, its end 2 mm deep.</figcaption></figure>
+  </section>
+
+  <section id="disturbed-insertion">
+    <h2>18 · Disturbances in the full cycle</h2>
+    <p class="when">October 6 · the same layer as alignment, and the tissue really moves</p>
+    <div class="prose">
+      <p>The insertion runs use the disturbance layer of chapter 11 at scale v2: force noise, extra friction and table
+        vibration on every slide; a late, noisy needle-tip measurement; a target estimate with noise, bias and drift; and
+        breathing and pulse. In alignment only the target point moved. Here the phantom itself is moved, and its surface,
+        the targets, the puncture model and the grip on placed threads move with it. The replay at the top draws all of it:
+        force arrows on the slides, the moving target's path, the estimate and the measurement while the robot measures.</p>
+    </div>
+    <video data-media="tube_sites_level2" controls muted playsinline preload="metadata"></video>
+    <figcaption>Three sites at level 2, the stress setting.</figcaption>
+  </section>
+
+  <section id="insertion-baseline">
+    <h2>19 · The insertion baseline</h2>
+    <p class="when">The scripted yardstick on evaluation seeds fixed before any training</p>
+    <div class="prose"><p>Ten evaluation seeds (1001–1010) at levels 1 and 2, and one undisturbed run, three sites each.
+      Placement is the distance from the thread's end to the target ring's centre. A learned insertion policy will be
+      compared on these same seeds and levels.</p></div>
+    <div class="charts one">
+      <div class="chart"><h4>Placement of every thread, by site and level</h4><svg id="chart-placement" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-placement"></div>
+    <div class="table-wrap"><table id="tube-table"></table></div>
+    <div class="lesson"><strong>Where the misses come from.</strong> At site 0 the tool starts right over the target and the
+      thread has not moved, so its end waits on the needle's axis and lands within a few micrometres. Before every later
+      site the tool lifts and travels, and the thread settles against the tube's bore: its end then waits about 18 µm off
+      the needle's axis (60 runs, 180 sites). The yardstick aims the needle, not the thread's end, so it carries that offset
+      into the tissue; letting go adds a sideways jump (median 3 µm, 90th percentile 16 µm). Sixty runs with random site
+      orders measured both, and they became the thread model of the training environment in chapter 20.</div>
+  </section>
+
+  <section id="insert-env">
+    <h2>20 · A fast environment for learning the insertion</h2>
+    <p class="when">October 6 · millions of episodes need a faster world than the full thread</p>
+    <div class="prose">
+      <p>The full simulation is the reference, but at about 20 s of computing per simulated second it cannot supply the
+        hundreds of millions of steps that PPO needs. The training environment is a C core, <code>insert_core.h</code>,
+        built on the alignment core: the same robot, servo, disturbance layer and needle–tissue force model, at a 1 ms
+        step, with 2,048 copies stepped on 28 CPU threads. It does not simulate the thread. It models the two things about the thread that decide
+        where it lands, both measured in the full simulation: where the thread's end waits relative to the needle's axis,
+        and how far it jumps sideways when the needle lets go.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Every episode is new</h4><p class="count">drawn from the episode's seed</p><ul>
+        <li>The phantom turned by a random angle; its vessels turn with it</li>
+        <li>0 to 5 threads already standing at earlier sites</li>
+        <li>A random site, clear of vessels and of those threads</li>
+        <li>The tool starting anywhere over the field, 4–10 mm up</li>
+        <li>Disturbances from none to stress, and the thread end's offset and release jump</li></ul></div>
+      <div class="card"><h4>What the policy sees</h4><p class="count">24 numbers, 50 times a second, delayed and noisy</p><ul>
+        <li>Needle point to the hover pose, coarse and fine, and its velocity</li>
+        <li>The thread end's offset from the needle's axis, as a camera would measure it</li>
+        <li>The nearest vessel, the height above the dome</li>
+        <li>The two nearest standing threads</li>
+        <li>Its previous actions, phase and time left</li></ul></div>
+      <div class="card"><h4>What it does</h4><p class="count">4 actions</p><ul>
+        <li>X, Y and Z stage velocities</li>
+        <li>Start the stroke. The stroke is the approved programmed motion: 40 ms onto the thread, 25 ms in, 30 ms at depth,
+          release, snap back, with the stages held still</li></ul></div>
+      <div class="card"><h4>What it is rewarded for</h4><p class="count">placement, safety, smoothness</p><ul>
+        <li>Progress toward the pose that puts the thread's end over the target</li>
+        <li>2 × exp(−placement / 10 µm) when the thread is released</li>
+        <li>−2 for touching tissue or a standing thread, dragging the waiting thread, or missing its end</li>
+        <li>Small costs for jerky motion and passing low over vessels</li></ul></div>
+    </div>
+    <div class="note-box"><strong>Checked against the full simulation before training.</strong> A scripted controller
+      that compensates for the measured thread-end offset, given the same 24 inputs built from the full simulation's own
+      sensing, placed three threads at 7.8, 6.2 and 6.3 µm (level 1, seed 1001), close to the 5.6 µm median the C model
+      predicts for it. The same
+      harness, <code>policy_cycle.py</code>, later runs every learned checkpoint in the full simulation.</div>
+  </section>
+
+  <section id="insert-training">
+    <h2>21 · Learning to insert</h2>
+    <p class="when">October 6 · two runs on the RTX 4090, about two hours in all</p>
+    <div class="prose">
+      <p>Run 1 learned within minutes to approach before striking, and showed a gap in the environment: after the stroke
+        started, the stages still took velocity commands, which on the real machine would drag the needle sideways through
+        tissue. Run 2 holds the stages still from the start of the stroke and times the stroke exactly as the full cycle
+        does. It ran to 300 M steps, and its success on training episodes climbed from zero to 72%.</p>
+    </div>
+    <div class="charts">
+      <div class="chart"><h4>Threads within 10 µm (training rollouts, with exploration noise)</h4><svg id="chart-insert-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Mean placement error of placed threads (training rollouts)</h4><svg id="chart-insert-error" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert"></div>
+    <h3>Checkpoints on 200 held-out episodes</h3>
+    <div class="charts one">
+      <div class="chart"><h4>Within 10 µm, deterministic policy, training environment</h4><svg id="chart-insert-checkpoints" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert-checkpoints"></div>
+    <div class="lesson"><strong>The moment to strike is learned too.</strong> The fourth action starts the stroke when it
+      exceeds 0.5. In run 1 the policy's average output stayed just below that, and its exploration noise fired the stroke:
+      it had learned where to be, with the output rising from −2.6 far away to +0.17 within 10 µm of the hover pose, but the
+      exact moment was left to chance. In run 2 the noise-free policy strikes on its own from the first checkpoint. Results
+      are reported both ways.</div>
+    <div class="table-wrap"><table id="insert-compute-table"></table></div>
+  </section>
+
+  <section id="insert-results">
+    <h2>22 · Results in two simulations</h2>
+    <p class="when">Seeds fixed before training; the same seeds and sites for every controller</p>
+    <div class="result-strip">
+      <div class="tile"><div class="big">60<small>/ 60</small></div><div class="what">threads placed in 21 full-simulation runs</div>
+        <div class="vs">no tissue or thread contact, no failed run</div></div>
+      <div class="tile"><div class="big">8.0<small>µm</small></div><div class="what">median placement, nominal disturbances</div>
+        <div class="vs">approved cycle 23 µm on the same seeds</div></div>
+      <div class="tile"><div class="big">20<small>/ 30</small></div><div class="what">within 10 µm, nominal, full simulation</div>
+        <div class="vs">approved cycle 11, compensating script 19</div></div>
+      <div class="tile"><div class="big">84<small>%</small></div><div class="what">within 10 µm, 200 held-out episodes, nominal</div>
+        <div class="vs">compensating script 80.5%, needle-aiming 3%</div></div>
+    </div>
+    <div class="prose">
+      <p>Two yardsticks frame the result. The approved cycle aims the needle at the target, as chapter 19 did. A second
+        scripted controller, written for this comparison, reads the measured thread-end offset and aims the thread's end
+        instead; it is the strongest hand-written controller we have. At nominal disturbances the learned policy places
+        nearly twice as many threads within 10 µm as the approved cycle (20 against 11 of 30) and cuts the median from 23 to
+        8 µm; at the stress level the medians are 12 and 25 µm. Against the compensating script it is level in the full
+        simulation at nominal disturbances, ahead in the training environment, and behind in the full simulation at the stress
+        level.</p>
+    </div>
+    <div class="charts">
+      <div class="chart"><h4>Threads within 10 µm, full simulation (bar labels: medians)</h4><svg id="chart-insert-full" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Every placed thread, full simulation</h4><svg id="chart-insert-dots" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert-full"></div>
+    <div class="video-card"><video data-media="insert_learned" data-poster="insert_learned_poster" controls muted playsinline preload="metadata"></video></div>
+    <figcaption>The final policy, deterministic, at nominal disturbances (seed 1001): approach, strike, three threads at 1.8,
+      9.7 and 30.8 µm. The needle's work plays at 0.02× real time, the moves between sites at 0.2×. The replay at the top of
+      the page has all seven runs of each controller.</figcaption>
+    <h3>Full simulation, 30 threads per level</h3>
+    <div class="table-wrap"><table id="insert-full-table"></table></div>
+    <h3>Training environment, 200 held-out episodes per level</h3>
+    <div class="table-wrap"><table id="insert-c-table"></table></div>
+  </section>
+
+  <section id="error-budget">
+    <h2>23 · Where the remaining micrometres come from</h2>
+    <p class="when">The final policy's 63 threads in the full simulation, followed through the stroke</p>
+    <div class="prose">
+      <p>Following each thread's end from the moment the policy strikes separates what the policy controls from what it
+        does not. The policy's part is the aim: when the stroke starts, the thread's end is a median 6 µm from the target. The
+        programmed stroke carries it into the tissue and moves it about 3 µm. The release usually adds another 3 µm, but now
+        and then the end jumps: 8 of the 63 threads moved more than 15 µm sideways when the needle let go, and those set the
+        90th percentile.</p>
+    </div>
+    <div class="charts one"><div class="chart wide"><h4>Thread end to target at three moments</h4><svg id="chart-budget" viewBox="0 0 640 320"></svg></div></div>
+    <div class="note-box"><strong>The release is the next lever.</strong> While the thread is held at depth, the needle's
+      contact with the thread it carries works against the bond, and the gripped segments jitter. With that contact off,
+      the jitter fell about eightfold in a test. Calmer threads should mean smaller release jumps for every controller.</div>
+  </section>
+
+  <section id="whats-next">
+    <h2>24 · What comes next</h2>
+    <p class="when">Each step is measured on the same seeds as everything above</p>
+    <ol class="next-steps">
+      <li><strong>Calm the thread at depth</strong>Turn off the needle's contact with the thread while the needle carries it,
+        re-measure the release jumps over the same 60 runs, refit the training environment's thread model, and retrain.
+        <span class="evidence">Test: jitter at depth fell from up to 515 rad/s to 63 rad/s with that contact off.</span></li>
+      <li><strong>Close the stress-level gap between the simulations</strong>The policy is ahead of the compensating script
+        in the training environment at level 2 and behind it in the full simulation. Finding what the C model misses under
+        stronger disturbances will make training transfer better.
+        <span class="evidence">Level 2: 69% vs 64.5% in C; 12 vs 18 of 30 in the full simulation.</span></li>
+      <li><strong>Harder conditions, more seeds</strong>Raise the disturbances to where hand-written compensation breaks
+        down, cover sites across the whole dome, and train three independent seeds per policy, as the brief asks.</li>
+      <li><strong>Learn more of the cycle</strong>The stroke and the release are programmed today. Learning the stroke's
+        timing, depth and release moment is the natural next phase for the policy.</li>
+      <li><strong>Then the real handling</strong>A cartridge mechanism instead of stand-in constraints, a calibrated tissue
+        model with a dura layer, threads as thin ribbons, and camera images instead of simulator measurements.</li>
+    </ol>
+    <div class="prose"><p>Materials and tissue parameters are presets, not measurements, and the controllers read simulator
+      measurements rather than camera images.</p></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>,
+    <code>docs/neural_insertion/</code>. Viewer: raylib 6.0 compiled to WebAssembly with Emscripten 6.0.9, replaying exported
+    MuJoCo states (alignment at 50 Hz, insertion every 2 ms). Build provenance: <a href="build.json">build.json</a>.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/diff.min.js"></script>
+<script src="journal.js?v=224018a3c2ab"></script>
+</body>
+</html>
