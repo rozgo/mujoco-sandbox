@@ -1104,3 +1104,8 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   of 30 within 10 µm (median 9.6 µm), compensating yardstick 19 of 30
   (7.7 µm), approved yardstick 11 of 30 (23 µm); 60 of 60 placed, all runs
   complete.
+- 11:00-11:25 UTC: insert_v2 at 196.6M steps evaluated in both simulations,
+  sampled and deterministic (about 5 min wall each). Split of the
+  full-simulation error: the deterministic policy has the thread end 5.6 µm
+  (median) from the target when it starts the stroke; the programmed stroke and
+  release bring the 90th percentile from about 11 to 20 µm.
