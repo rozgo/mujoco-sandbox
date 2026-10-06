@@ -8,7 +8,7 @@ docs/neural_insertion/TUBE_BASELINE.json. Writes docs/neural_insertion/policy/NA
 directory under outputs/neural_insertion/policy_eval/NAME/.
 
 Usage: uv run --locked python scripts/evaluate_insert_policy.py NAME (--weights W.bin | --scripted compensate)
-           [--workers 10] [--skip-full]
+           [--workers 10] [--skip-full] [--skip-c] [--deterministic]
 """
 
 import argparse
@@ -103,6 +103,8 @@ def main():
     agent.add_argument("--scripted", choices=("aim", "compensate"))
     parser.add_argument("--workers", type=int, default=10)
     parser.add_argument("--skip-full", action="store_true")
+    parser.add_argument("--skip-c", action="store_true")
+    parser.add_argument("--deterministic", action="store_true", help="full simulation: the policy mean")
     args = parser.parse_args()
     started = datetime.now(timezone.utc).isoformat()
     t0 = time.time()
@@ -113,10 +115,12 @@ def main():
         result.update(weights=str(args.weights), weights_sha256=hashlib.sha256(args.weights.read_bytes()).hexdigest())
     else:
         result["controller"] = f"scripted ({args.scripted}), insert_core.h si_scripted"
-    result["c_environment"] = c_evaluation(args.weights, args.scripted)
+    if not args.skip_c:
+        result["c_environment"] = c_evaluation(args.weights, args.scripted)
     if not args.skip_full:
         out = ROOT/"outputs/neural_insertion/policy_eval"/args.name
-        agent = ["--weights", str(args.weights.resolve())] if args.weights else ["--scripted", args.scripted]
+        agent = (["--weights", str(args.weights.resolve())]+(["--deterministic"] if args.deterministic else [])
+                 if args.weights else ["--scripted", args.scripted])
         jobs = [(out/f"L{level}_s{seed}", level, seed, agent) for level, seed in
                 [(0, 1001)]+[(level, seed) for level in (1, 2) for seed in SEEDS]]
         rows = []
@@ -126,7 +130,8 @@ def main():
                 print(f"full L{row['level']} seed {row['seed']}: {row['status']}  "
                       + "  ".join(f"site {s['site']}: {s['placement_lateral_um']:.1f} um" for s in row["sites"]), flush=True)
         result["full_simulation"] = {"seeds": list(SEEDS), "sites": list(SITES), "summary": summarize(rows), "runs": rows,
-                                     "actions": "learned noise, seeded per run (policy_cycle.py)" if args.weights else "scripted"}
+                                     "actions": ("scripted" if not args.weights else "deterministic mean" if args.deterministic
+                                                 else "learned noise, seeded per run (policy_cycle.py)")}
     result["wall_s_total"] = round(time.time()-t0, 1)
     path = ROOT/"docs/neural_insertion/policy"/f"{args.name}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
