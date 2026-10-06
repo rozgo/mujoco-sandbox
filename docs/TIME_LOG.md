@@ -1113,3 +1113,9 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   4090, 09:55-11:34). Final evaluations in both simulations, sampled and
   deterministic, about 15 min wall; video, checkpoint asset and results
   document by 11:50 UTC (docs/neural_insertion/INSERT_TRAINING.md).
+- With the user (14:38 UTC): publish the insertion results to the
+  journal. Results summary (scripts/summarize_insert_training.py), learned
+  runs in the 3D viewer beside the scripted ones (replay format NIT2),
+  chapters 20-24, the corrected chapter-19 explanation, data fetches versioned
+  against caching; checked in the browser at desktop and phone width by
+  14:53 UTC. Not pushed or deployed.

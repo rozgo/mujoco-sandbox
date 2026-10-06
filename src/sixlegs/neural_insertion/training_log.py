@@ -13,7 +13,8 @@ from pathlib import Path
 import re
 
 METRIC = re.compile(r"(SPS|Steps|Epoch|entropy|old_kl|kl|clipfrac|perf|collision|timeout|final_lateral_um|"
-                    r"final_vertical_um|level|episode_return|episode_length|vessel_steps)\s+(-?[0-9.]+[KMB]?)\b")
+                    r"final_vertical_um|level|episode_return|episode_length|vessel_steps|placed|placement_um|thread_touch|"
+                    r"dragged|missed)\s+(-?[0-9.]+[KMB]?)\b")
 DASH = re.compile(r"GPU:\s*(\d+)%\s+VRAM:\s*([0-9.]+)/([0-9.]+)G\s+RAM:\s*([0-9.]+)G")
 UPTIME = re.compile(r"Uptime\s+((?:\d+(?:ms|[dhms])\s*)+)")
 UNITS = {"d": 86400, "h": 3600, "m": 60, "s": 1, "ms": 1e-3}
@@ -43,7 +44,8 @@ def boxes(text):
 
 def history(rows, every=4):
     """Learning curves for the journal: one record every `every` epochs, plus the last."""
-    keep = ("Steps", "entropy", "kl", "clipfrac", "perf", "collision", "final_lateral_um", "final_vertical_um", "level")
+    keep = ("Steps", "entropy", "kl", "clipfrac", "perf", "collision", "final_lateral_um", "final_vertical_um", "level",
+            "placed", "placement_um", "thread_touch", "episode_length")
     picked = [r for i, r in enumerate(rows) if i % every == 0 or i == len(rows)-1]
     return [{k: r[k] for k in keep if k in r} for r in picked]
 

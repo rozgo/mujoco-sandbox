@@ -38,10 +38,15 @@ STATES = ROOT/"outputs/neural_insertion/site/states"
 LEVELS = (0.0, 1.0, 2.0)  # disturbance scale v2: undisturbed, nominal, stress
 SITE_SEEDS = EVALUATION_SEEDS[:30]
 FONT = Path(__import__("matplotlib").get_data_path())/"fonts/ttf"
-# Insertion replays: thread-tube runs over sites 0, 5, 1 (the yardstick, recorded by tube_cycle.py); the
-# first evaluation seeds of the baseline (docs/neural_insertion/TUBE_BASELINE.json) at each level.
-TUBE_RUNS = ((0, 1001), (1, 1001), (1, 1002), (1, 1003), (2, 1001), (2, 1002), (2, 1003))
-TUBE_OUT = ROOT/"outputs/neural_insertion/site_tube"
+# Insertion replays: thread-tube runs over sites 0, 5, 1 on the first evaluation seeds of the baseline
+# (docs/neural_insertion/TUBE_BASELINE.json) at each level, for two controllers: 0 the final learned policy
+# (deterministic; recorded by scripts/evaluate_insert_policy.py with policy_cycle.py) and 1 the scripted
+# yardstick (tube_cycle.py).
+TUBE_SEEDS = ((0, 1001), (1, 1001), (1, 1002), (1, 1003), (2, 1001), (2, 1002), (2, 1003))
+TUBE_RUNS = tuple((c, level, seed) for c in (0, 1) for level, seed in TUBE_SEEDS)
+TUBE_OUT = {0: ROOT/"outputs/neural_insertion/policy_eval/insert_v2_300M_deterministic",
+            1: ROOT/"outputs/neural_insertion/site_tube"}
+INSERT_WEIGHTS = ROOT/"assets/neural_insertion/insert_v2_policy.bin"
 
 
 def outcome(info):
@@ -86,20 +91,24 @@ def tube_runs():
     import mujoco
     from sixlegs.neural_insertion.der import plugin
     plugin()
-    missing = [(level, seed) for level, seed in TUBE_RUNS if not (TUBE_OUT/f"L{level}_s{seed}"/"report.json").exists()]
-    procs = [subprocess.Popen([sys.executable, "-m", "sixlegs.neural_insertion.tube_cycle", "--level", str(level),
-                               "--seed", str(seed), "--output", str(TUBE_OUT/f"L{level}_s{seed}")], cwd=ROOT,
-                              stdout=subprocess.DEVNULL) for level, seed in missing]
+    missing = [(c, level, seed) for c, level, seed in TUBE_RUNS
+               if not (TUBE_OUT[c]/f"L{level}_s{seed}"/"report.json").exists()]
+    module = {0: ["sixlegs.neural_insertion.policy_cycle", "--weights", str(INSERT_WEIGHTS), "--deterministic"],
+              1: ["sixlegs.neural_insertion.tube_cycle"]}
+    procs = [subprocess.Popen([sys.executable, "-m", *module[c], "--level", str(level), "--seed", str(seed),
+                               "--output", str(TUBE_OUT[c]/f"L{level}_s{seed}")], cwd=ROOT,
+                              stdout=subprocess.DEVNULL) for c, level, seed in missing]
     for p in procs:
         p.wait()
     runs = []
-    for level, seed in TUBE_RUNS:
-        run = TUBE_OUT/f"L{level}_s{seed}"
+    for c, level, seed in TUBE_RUNS:
+        run = TUBE_OUT[c]/f"L{level}_s{seed}"
         model = mujoco.MjModel.from_xml_path(str(run/"scene.xml"))
         data = mujoco.MjData(model)
         mujoco.mj_forward(model, data)
         runs.append({"model": model, "data": data, "trace": dict(np.load(run/"trace.npz", allow_pickle=True)),
-                     "report": json.loads((run/"report.json").read_text()), "seed": seed, "level": float(level)})
+                     "report": json.loads((run/"report.json").read_text()), "seed": seed, "level": float(level),
+                     "controller": c})
     return runs
 
 
@@ -189,6 +198,7 @@ IMAGES = {
     "approach_frame": "previews/neural_insertion/approach_v1/frame_0063.png",
     "learned_frame": "previews/neural_insertion/align_v3/seed1000009_01.13s.png",
     "learned_card": "previews/neural_insertion/align_v3/results_card.png",
+    "insert_learned_poster": "previews/neural_insertion/policy/insert_v2_final_poster.png",
 }
 VIDEOS = {
     "tube_sites_level0": "previews/neural_insertion/tube_design/three_sites_level0.mp4",
@@ -196,6 +206,7 @@ VIDEOS = {
     "tube_sites_level2": "previews/neural_insertion/tube_design/three_sites_level2.mp4",
     "approach_tour": "previews/neural_insertion/approach_v1/approach_tour.mp4",
     "learned_alignment": "previews/neural_insertion/align_v3/learned_alignment.mp4",
+    "insert_learned": "previews/neural_insertion/policy/insert_v2_final_deterministic_full_sim_L1_s1001.mp4",
 }
 
 
@@ -216,15 +227,7 @@ def glossary(data):
 
 def assemble(media_paths):
     shutil.copy2(ROOT/"site/style.css", SITE/"style.css")
-    viewer = hashlib.sha256(b"".join((SITE/"viewer"/n).read_bytes() for n in ("viewer.js", "viewer.wasm", "viewer.data")))
     tube = json.loads((ROOT/"docs/neural_insertion/TUBE_BASELINE.json").read_text())
-    (SITE/"journal.js").write_text((ROOT/"site/journal.js").read_text().replace("__VIEWER_BUILD__", viewer.hexdigest()[:12]))
-    # Version the page's own script and stylesheet too, so a rebuild is never served from cache.
-    page = (ROOT/"site/index.html").read_text()
-    for name in ("journal.js", "style.css"):
-        tag = hashlib.sha256((SITE/name).read_bytes()).hexdigest()[:12]
-        page = page.replace(f'"{name}"', f'"{name}?v={tag}"')
-    (SITE/"index.html").write_text(page)
     data = SITE/"data"
     data.mkdir(exist_ok=True)
     results = json.loads((ROOT/"docs/neural_insertion/ALIGN_RESULTS.json").read_text())
@@ -247,9 +250,20 @@ def assemble(media_paths):
                                                for c in clock["comparisons"].values() if not c.get("units")])+"\n")
     (data/"tube_baseline.json").write_text(json.dumps({"summary": tube["summary"], "runs": tube["runs"],
                                                        "seeds": tube["seeds"]})+"\n")
+    shutil.copy2(ROOT/"docs/neural_insertion/INSERT_RESULTS.json", data/"insert_results.json")
     glossary(data)
     (SITE/"media.json").write_text(json.dumps(media_paths, indent=1)+"\n")
     (SITE/".nojekyll").write_text("")
+    # Version the viewer, the page's data, its script and its stylesheet, so a rebuild is never served from cache.
+    viewer = hashlib.sha256(b"".join((SITE/"viewer"/n).read_bytes() for n in ("viewer.js", "viewer.wasm", "viewer.data")))
+    content = hashlib.sha256(b"".join(p.read_bytes() for p in sorted([SITE/"media.json", *data.glob("*.json")])))
+    (SITE/"journal.js").write_text((ROOT/"site/journal.js").read_text().replace("__VIEWER_BUILD__", viewer.hexdigest()[:12])
+                                   .replace("__DATA_BUILD__", content.hexdigest()[:12]))
+    page = (ROOT/"site/index.html").read_text()
+    for name in ("journal.js", "style.css"):
+        tag = hashlib.sha256((SITE/name).read_bytes()).hexdigest()[:12]
+        page = page.replace(f'"{name}"', f'"{name}?v={tag}"')
+    (SITE/"index.html").write_text(page)
 
 
 def manifest():
@@ -257,7 +271,8 @@ def manifest():
              for p in sorted(SITE.rglob("*")) if p.is_file() and p.name != "build.json"}
     dirty = bool(subprocess.check_output(["git", "status", "--porcelain", "--", "site", "scripts/build_site.py",
                                           "src/sixlegs/neural_insertion/site_export.py",
-                                          "src/sixlegs/neural_insertion/tube_cycle.py"], cwd=ROOT))
+                                          "src/sixlegs/neural_insertion/tube_cycle.py",
+                                          "src/sixlegs/neural_insertion/policy_cycle.py"], cwd=ROOT))
     report = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "source_dirty": dirty, "raylib": "6.0", "emscripten": "6.0.9", "files": files,
               "note": "Replays recorded MuJoCo states; the page does not simulate."}

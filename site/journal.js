@@ -2,14 +2,21 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-// Replaced at build time with a hash of the viewer files, so a rebuilt viewer is never served from cache.
+// Replaced at build time with hashes of the viewer files and of the page's data, so a rebuild is never
+// served from cache.
 const BUILD = "__VIEWER_BUILD__";
+const DATA = "__DATA_BUILD__";
+const load = (path) => fetch(`${path}?v=${DATA}`).then((r) => r.json());
 
 // ------------------------------------------------------------------ media
-fetch("media.json").then((r) => r.json()).then((media) => {
+load("media.json").then((media) => {
   document.querySelectorAll("[data-media]").forEach((el) => {
     const src = media[el.dataset.media];
     if (src) el.src = src;
+  });
+  document.querySelectorAll("[data-poster]").forEach((el) => {
+    const src = media[el.dataset.poster];
+    if (src) el.poster = src;
   });
 });
 if (window.hljs) hljs.highlightAll();
@@ -19,17 +26,20 @@ const canvas = $("viewer");
 let api = null;
 let mode = 0;   // 0 insertion (thread tube), 1 alignment
 let policy = 0; // alignment: 0 robust learned, 1 scripted yardstick, 2 learned without disturbances
+let tubePolicy = 0; // insertion: 0 learned policy (insert_v2), 1 scripted yardstick
 let level = 1;
 let alignSpeed = 1, tubeSpeed = 0;  // tube 0: automatic (0.02x for the needle's work, 0.2x between sites)
 const OUTCOME = ["timeout", "success", "collision"];
 const POLICY = ["robust learned policy", "scripted yardstick", "learned, undisturbed"];
-const PHASE = ["ready", "reload", "move", "descend", "correct", "needle down", "insert", "release", "snap back", "lift"];
+const PHASE = ["ready", "reload", "move", "descend", "correct", "needle down", "insert", "release", "snap back", "lift",
+  "learned approach"];
+const TUBE_POLICY = ["learned policy insert_v2", "scripted yardstick"];
 
 function episodesFor(p) {
   const list = [];
   for (let i = 0; i < api.count(); i++) {
     if (Math.abs(api.level(i) - level) > 1e-3) continue;
-    if (mode === 1 && api.policy(i) !== p) continue;
+    if (api.policy(i) !== (mode === 0 ? tubePolicy : p)) continue;
     list.push(i);
   }
   return list;
@@ -112,6 +122,11 @@ function wire() {
     api.speed(tubeSpeed);
     setPressed("[data-tspeed]", b);
   }));
+  document.querySelectorAll("[data-tpolicy]").forEach((b) => (b.onclick = () => {
+    tubePolicy = Number(b.dataset.tpolicy);
+    setPressed("[data-tpolicy]", b);
+    fillEpisodes();
+  }));
   document.querySelectorAll("[data-policy]").forEach((b) => (b.onclick = () => {
     policy = Number(b.dataset.policy);
     setPressed("[data-policy]", b);
@@ -172,7 +187,7 @@ function wire() {
       $("depth").textContent = (api.depth() * 1e3).toFixed(2);
       $("place").textContent = (api.place() * 1e6).toFixed(1);
       $("force").textContent = (api.force() * 1e3).toFixed(2);
-      status.textContent = done ? `${api.placed(i)} OF 3 THREADS PLACED` : "scripted yardstick";
+      status.textContent = done ? `${api.placed(i)} OF 3 THREADS PLACED` : TUBE_POLICY[tubePolicy];
       status.className = done && api.placed(i) === 3 ? "status-success" : "status-moving";
     } else {
       $("lat").textContent = api.lateral().toFixed(1);
@@ -214,7 +229,7 @@ function steps(text) {
 }
 
 function chart(svg, data, key, { log = false, min, max, unit = "", gate, runs = RUNS, xmax = 100e6 } = {}) {
-  const W = 520, H = 300, L = 58, R = 12, T = 12, B = 38;
+  const W = 520, H = 300, L = 58, R = 20, T = 12, B = 38;
   const ns = "http://www.w3.org/2000/svg";
   const el = (tag, attrs, text) => {
     const e = document.createElementNS(ns, tag);
@@ -248,7 +263,7 @@ function chart(svg, data, key, { log = false, min, max, unit = "", gate, runs = 
   }
 }
 
-fetch("data/training.json").then((r) => r.json()).then((data) => {
+load("data/training.json").then((data) => {
   chart($("chart-error"), data, "final_lateral_um", { log: true, min: 1, max: 1e5, unit: " µm", gate: 10 });
   chart($("chart-success"), data, "perf", { min: 0, max: 1 });
   chart($("chart-kl"), data, "kl", { log: true, min: 1e-3, max: 1e4 });
@@ -280,7 +295,7 @@ const svgEl = (svg, tag, attrs, text) => {
 const legend = (el, items, extra = "") =>
   (el.innerHTML = items.map(([, label, color]) => `<span><i class="swatch" style="background:${color}"></i>${label}</span>`).join("") + extra);
 
-fetch("data/robust_training.json").then((r) => r.json()).then((data) => {
+load("data/robust_training.json").then((data) => {
   const runs = ROBUST_RUNS.filter(([n]) => data[n]);
   const xmax = Math.max(100e6, ...runs.map(([n]) => steps(data[n].history.at(-1)?.Steps ?? 0)));
   const o = { runs, xmax: Math.ceil(xmax / 50e6) * 50e6 };
@@ -291,7 +306,7 @@ fetch("data/robust_training.json").then((r) => r.json()).then((data) => {
   legend($("legend-robust"), runs, '<span><i class="swatch" style="background:#3c8f78"></i>10 µm tolerance</span>');
 });
 
-fetch("data/robustness.json").then((r) => r.json()).then((ev) => {
+load("data/robustness.json").then((ev) => {
   const svg = $("chart-level");
   const W = 520, H = 300, L = 58, R = 12, T = 12, B = 38;
   const x = (v) => L + (W - L - R) * v, y = (v) => T + (H - T - B) * (1 - v);
@@ -323,7 +338,7 @@ fetch("data/robustness.json").then((r) => r.json()).then((ev) => {
   $("robustness-table").innerHTML = html;
 });
 
-fetch("data/compute.json").then((r) => r.json()).then(({ compute, runs }) => {
+load("data/compute.json").then(({ compute, runs }) => {
   const f = (v, d = 0) => (v === null || v === undefined ? "–" : Number(v).toFixed(d));
   const mins = (s) => (s ? `${Math.round(s / 60)} min` : "–");
   let html = "<tr><th>Run</th><th>Change and outcome</th><th class=\"num\">Steps</th><th class=\"num\">Wall time</th>" +
@@ -347,7 +362,7 @@ fetch("data/compute.json").then((r) => r.json()).then(({ compute, runs }) => {
 });
 
 // ------------------------------------------------------------------ parts glossary
-fetch("data/glossary.json").then((r) => r.json()).then(({ parts }) => {
+load("data/glossary.json").then(({ parts }) => {
   const grid = $("glossary"), view = $("glossary-view");
   let at = 0;
   const show = (i) => {
@@ -382,7 +397,7 @@ fetch("data/glossary.json").then((r) => r.json()).then(({ parts }) => {
 
 // ------------------------------------------------------------------ insertion baseline
 const TUBE_LEVELS = [["0", "No disturbances", "#3c8f78"], ["1", "Nominal (level 1)", "#646da0"], ["2", "Stress (level 2)", "#b2456b"]];
-fetch("data/tube_baseline.json").then((r) => r.json()).then(({ summary, runs }) => {
+load("data/tube_baseline.json").then(({ summary, runs }) => {
   const sites = [0, 5, 1];
   const svg = $("chart-placement");
   const W = 520, H = 300, L = 58, R = 12, T = 12, B = 38, ymax = 80;
@@ -392,7 +407,7 @@ fetch("data/tube_baseline.json").then((r) => r.json()).then(({ summary, runs }) 
     svgEl(svg, "line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "#eee9f3" });
     svgEl(svg, "text", { x: L - 6, y: y(v) + 4, "text-anchor": "end", "font-size": 12, fill: "#5d5f7a" }, `${v} µm`);
   }
-  const where = { 0: "top of the dome", 5: "on the slope", 1: "on the slope" };
+  const where = { 0: "first site, thread centred", 5: "thread settled off-axis", 1: "thread settled off-axis" };
   sites.forEach((site, g) => {
     const cx = L + group * (g + 0.5);
     svgEl(svg, "text", { x: cx, y: H - B + 18, "text-anchor": "middle", "font-size": 12, fill: "#23243a" }, `site ${site}`);
@@ -427,8 +442,198 @@ fetch("data/tube_baseline.json").then((r) => r.json()).then(({ summary, runs }) 
       `<td class="num">${s.end_depth_mm_range.map((v) => v.toFixed(2)).join("–")} mm</td><td class="num">${s.prohibited_contacts}</td></tr>`;
   }
   $("tube-table").innerHTML = html;
-  const placed = Object.values(summary).reduce((a, s) => a + s.threads_placed, 0);
-  const tried = Object.values(summary).reduce((a, s) => a + s.sites_attempted, 0);
-  $("m-placed").textContent = `${placed} / ${tried}`;
-  $("m-median").textContent = um(summary.level_1.placement_um_median);
+});
+
+// ------------------------------------------------------------------ learned insertion
+const INSERT_RUNS = [
+  ["insert_v1", "Run 1 · stages free during the stroke (stopped)", "#d38aaa"],
+  ["insert_v2", "Run 2 · stages held, stroke as the full cycle", "#646da0"],
+];
+const CONTROLLERS = [
+  ["approved", "Approved cycle (aims the needle)", "#3c8f78"],
+  ["compensating", "Scripted, compensating for the thread end", "#e0a458"],
+  ["learned_deterministic", "Learned policy insert_v2", "#646da0"],
+];
+
+function frame(svg, { W = 520, H = 300, L = 58, R = 20, T = 12, B = 38 } = {}) {
+  return { W, H, L, R, T, B, iw: W - L - R, ih: H - T - B };
+}
+
+function median(v) {
+  const s = [...v].sort((a, b) => a - b);
+  return s.length ? (s[Math.floor((s.length - 1) / 2)] + s[Math.ceil((s.length - 1) / 2)]) / 2 : null;
+}
+
+load("data/insert_results.json").then((res) => {
+  // Learning curves (training rollouts).
+  chart($("chart-insert-success"), res.runs, "perf", { min: 0, max: 1, runs: INSERT_RUNS, xmax: 300e6 });
+  chart($("chart-insert-error"), res.runs, "placement_um", { log: true, min: 1, max: 1e5, unit: " µm", gate: 10,
+    runs: INSERT_RUNS, xmax: 300e6 });
+  legend($("legend-insert"), INSERT_RUNS, '<span><i class="swatch" style="background:#3c8f78"></i>10 µm tolerance</span>');
+
+  // Checkpoint evaluations in the C environment against both yardsticks.
+  {
+    const svg = $("chart-insert-checkpoints"), f = frame(svg);
+    const steps = { "65.5M": 65.5e6, "131M": 131e6, "196.6M": 196.6e6, "299.9M": 299.9e6 };
+    const x = (s) => f.L + f.iw * s / 300e6, y = (v) => f.T + f.ih * (1 - v);
+    for (let s = 0; s <= 300e6; s += 60e6) {
+      svgEl(svg, "line", { x1: x(s), x2: x(s), y1: f.T, y2: f.H - f.B, stroke: "#eee9f3" });
+      svgEl(svg, "text", { x: x(s), y: f.H - f.B + 18, "text-anchor": "middle", "font-size": 12, fill: "#5d5f7a" }, `${s / 1e6}M`);
+    }
+    for (let v = 0; v <= 1.001; v += 0.25) {
+      svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: "#eee9f3" });
+      svgEl(svg, "text", { x: f.L - 6, y: y(v) + 4, "text-anchor": "end", "font-size": 12, fill: "#5d5f7a" }, `${Math.round(v * 100)}%`);
+    }
+    svgEl(svg, "text", { x: f.L + f.iw / 2, y: f.H - 4, "text-anchor": "middle", "font-size": 12, fill: "#5d5f7a" }, "training steps at the checkpoint");
+    const c = res.c_environment, share = (v) => `${+(v * 100).toFixed(1)}%`;
+    [["1", "#e0a458", "6 3", -5], ["2", "#e0a458", "2 3", -5]].forEach(([lv, color, dash, dy]) => {
+      const v = c.compensating[lv].success;
+      svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: color, "stroke-width": 1.8, "stroke-dasharray": dash });
+      svgEl(svg, "text", { x: f.L + 6, y: y(v) + dy, "font-size": 11, fill: "#a8742e" },
+        `compensating, level ${lv}: ${share(v)}`);
+    });
+    const v = c.aiming["1"].success;
+    svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: "#3c8f78", "stroke-width": 1.8, "stroke-dasharray": "6 3" });
+    svgEl(svg, "text", { x: f.W - f.R - 4, y: y(v) - 5, "text-anchor": "end", "font-size": 11, fill: "#2f7360" },
+      `aiming the needle, level 1: ${share(v)}`);
+    [["c_deterministic_level1", "#646da0", 1], ["c_deterministic_level2", "#af86ac", 2]].forEach(([key, color]) => {
+      const pts = res.checkpoints.map((k) => [x(steps[k.checkpoint]), y(k[key])]);
+      svgEl(svg, "polyline", { points: pts.map((p) => p.join(",")).join(" "), fill: "none", stroke: color, "stroke-width": 2.6 });
+      pts.forEach(([px, py]) => svgEl(svg, "circle", { cx: px, cy: py, r: 4.2, fill: color, stroke: "#fff", "stroke-width": 1.5 }));
+    });
+    legend($("legend-insert-checkpoints"), [[, "Learned, level 1", "#646da0"], [, "Learned, level 2", "#af86ac"],
+      [, "Compensating yardstick (dashed)", "#e0a458"], [, "Aiming yardstick (dashed)", "#3c8f78"]]);
+  }
+
+  // Full simulation: threads within 10 µm of 30, by level and controller.
+  const full = res.full_simulation;
+  {
+    const svg = $("chart-insert-full"), f = frame(svg), ymax = 30;
+    const y = (v) => f.T + f.ih * (1 - v / ymax);
+    for (let v = 0; v <= ymax; v += 10) {
+      svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: "#eee9f3" });
+      svgEl(svg, "text", { x: f.L - 6, y: y(v) + 4, "text-anchor": "end", "font-size": 12, fill: "#5d5f7a" }, `${v}`);
+    }
+    svgEl(svg, "text", { x: 14, y: f.T + f.ih / 2, "text-anchor": "middle", "font-size": 12, fill: "#5d5f7a",
+      transform: `rotate(-90 14 ${f.T + f.ih / 2})` }, "threads within 10 µm, of 30");
+    const levels = [["1", "Nominal (level 1)"], ["2", "Stress (level 2)"]];
+    const group = f.iw / levels.length, bw = group * 0.2;
+    levels.forEach(([lv, label], g) => {
+      const cx = f.L + group * (g + 0.5);
+      svgEl(svg, "text", { x: cx, y: f.H - f.B + 20, "text-anchor": "middle", "font-size": 12.5, fill: "#23243a" }, label);
+      CONTROLLERS.forEach(([key, , color], k) => {
+        const s = full.summary[key][`level_${lv}`];
+        const v = s.within_10um, x0 = cx + (k - 1) * (bw + 8) - bw / 2;
+        svgEl(svg, "rect", { x: x0, y: y(v), width: bw, height: y(0) - y(v), rx: 5, fill: color });
+        svgEl(svg, "text", { x: x0 + bw / 2, y: y(v) - 6, "text-anchor": "middle", "font-size": 13, "font-weight": 650, fill: "#23243a" }, `${v}`);
+        svgEl(svg, "text", { x: x0 + bw / 2, y: y(0) - 8, "text-anchor": "middle", "font-size": 10.5, fill: "#fff" },
+          `${s.placement_um_median.toFixed(1)} µm`);
+      });
+    });
+  }
+
+  // Every placed thread in the full simulation, by controller and level.
+  {
+    const svg = $("chart-insert-dots"), f = frame(svg), ymax = 70;
+    const y = (v) => f.T + f.ih * (1 - Math.min(v, ymax) / ymax);
+    for (let v = 0; v <= ymax; v += 10) {
+      svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: v === 10 ? "#bfe0d4" : "#eee9f3",
+        "stroke-width": v === 10 ? 2 : 1 });
+      svgEl(svg, "text", { x: f.L - 6, y: y(v) + 4, "text-anchor": "end", "font-size": 12, fill: "#5d5f7a" }, `${v} µm`);
+    }
+    const levels = ["1", "2"], group = f.iw / levels.length;
+    levels.forEach((lv, g) => {
+      const cx = f.L + group * (g + 0.5);
+      svgEl(svg, "text", { x: cx, y: f.H - f.B + 20, "text-anchor": "middle", "font-size": 12.5, fill: "#23243a" },
+        lv === "1" ? "Nominal (level 1)" : "Stress (level 2)");
+      CONTROLLERS.forEach(([key, , color], k) => {
+        const vals = [...full.placements_um[key][lv]].sort((a, b) => a - b);
+        const x = cx + (k - 1) * group * 0.28;
+        vals.forEach((v, j) => svgEl(svg, "circle", { cx: x + ((j % 6) - 2.5) * 3.6, cy: y(v), r: 3.3, fill: color, "fill-opacity": 0.78 }));
+        const m = median(vals);
+        if (m !== null) svgEl(svg, "line", { x1: x - 14, x2: x + 14, y1: y(m), y2: y(m), stroke: "#23243a", "stroke-width": 2.5 });
+      });
+    });
+  }
+  legend($("legend-insert-full"), CONTROLLERS, '<span>bars and lines: medians; dots: every placed thread</span>');
+
+  // Tables.
+  const pct = (v) => `${(100 * v).toFixed(v === 0 || v === 1 ? 0 : 1)}%`;
+  const um = (v) => (v === null || v === undefined ? "–" : `${v.toFixed(1)} µm`);
+  {
+    const rows = [["approved", "Approved cycle (aims the needle)"], ["compensating", "Scripted, compensating"],
+      ["learned_sampled", "Learned, with its training noise"], ["learned_deterministic", "Learned, deterministic"]];
+    let html = '<tr><th>Controller</th><th class="num">Level</th><th class="num">Placed</th><th class="num">Within 10 µm</th>' +
+      '<th class="num">Median</th><th class="num">90th pct</th><th class="num">Max</th></tr>';
+    for (const [key, label] of rows) {
+      for (const lv of ["1", "2"]) {
+        const s = full.summary[key][`level_${lv}`];
+        html += `<tr${key.startsWith("learned_d") ? ' class="hl"' : ""}><td>${lv === "1" ? label : ""}</td><td class="num">${lv}</td>` +
+          `<td class="num">${s.threads_placed} / ${s.sites_attempted}</td><td class="num">${s.within_10um} / 30</td>` +
+          `<td class="num">${um(s.placement_um_median)}</td><td class="num">${um(s.placement_um_p90)}</td><td class="num">${um(s.placement_um_max)}</td></tr>`;
+      }
+    }
+    $("insert-full-table").innerHTML = html;
+  }
+  {
+    const c = res.c_environment;
+    const rows = [["aiming", "Scripted, aims the needle"], ["compensating", "Scripted, compensating"],
+      ["learned_sampled", "Learned, with its training noise"], ["learned_deterministic", "Learned, deterministic"]];
+    let html = '<tr><th>Controller</th>' + ["0", "1", "2"].map((lv) => `<th class="num">level ${lv}</th>`).join("") +
+      '<th class="num">Touched a placed thread</th></tr>';
+    for (const [key, label] of rows) {
+      const touch = Math.max(...["0", "1", "2"].map((lv) => c[key][lv].thread_touch));
+      html += `<tr${key === "learned_deterministic" ? ' class="hl"' : ""}><td>${label}</td>` + ["0", "1", "2"].map((lv) =>
+        `<td class="num">${pct(c[key][lv].success)}<br><small>median ${um(c[key][lv].placement_um_median)}</small></td>`).join("") +
+        `<td class="num">up to ${pct(touch)}</td></tr>`;
+    }
+    $("insert-c-table").innerHTML = html;
+  }
+  {
+    const f = (v, d = 0) => (v === null || v === undefined ? "–" : Number(v).toFixed(d));
+    let html = '<tr><th>Run</th><th>Change and outcome</th><th class="num">Steps</th><th class="num">Wall time</th>' +
+      '<th class="num">Steps/s</th><th class="num">GPU use</th><th class="num">GPU power</th><th class="num">CPU threads busy</th></tr>';
+    for (const [name, label] of INSERT_RUNS) {
+      const c = res.compute[name], r = res.runs[name], s = c.sampled || {};
+      html += `<tr><td><strong>${label.split(" · ")[0]}</strong></td><td>${r.change}<br><small>${r.outcome}</small></td>` +
+        `<td class="num">${f(c.steps / 1e6, 1)} M</td><td class="num">${Math.round(c.wall_s / 60)} min</td>` +
+        `<td class="num">${f(c.steps_per_s / 1e3, 1)}k</td>` +
+        `<td class="num">${s.gpu_util_pct ? `${f(s.gpu_util_pct.mean)}%` : "–"}</td>` +
+        `<td class="num">${s.gpu_power_w ? `${f(s.gpu_power_w.mean)} W` : "–"}</td>` +
+        `<td class="num">${s.trainer_cpu_pct ? f(s.trainer_cpu_pct.mean / 100, 1) : "–"}</td></tr>`;
+    }
+    $("insert-compute-table").innerHTML = html;
+  }
+
+  // Error budget: the thread end's distance from the target at three moments, median and 90th percentile.
+  {
+    const svg = $("chart-budget"), f = frame(svg, { W: 640, H: 320, L: 64, R: 150, T: 20, B: 52 }), b = res.error_budget;
+    const ymax = 25, y = (v) => f.T + f.ih * (1 - v / ymax);
+    const stages = [["aim", "stroke starts", "the policy's aim"], ["after_stroke", "held at depth", "after the stroke"],
+      ["placed", "placed", "after the release"]];
+    const x = (k) => f.L + f.iw * (k + 0.5) / stages.length;
+    for (let v = 0; v <= ymax; v += 5) {
+      svgEl(svg, "line", { x1: f.L, x2: f.W - f.R, y1: y(v), y2: y(v), stroke: v === 10 ? "#bfe0d4" : "#eee9f3",
+        "stroke-width": v === 10 ? 2 : 1 });
+      svgEl(svg, "text", { x: f.L - 8, y: y(v) + 4, "text-anchor": "end", "font-size": 12, fill: "#5d5f7a" }, `${v} µm`);
+    }
+    svgEl(svg, "text", { x: (x(0) + x(1)) / 2, y: y(10) + 14, "text-anchor": "middle", "font-size": 11, fill: "#2f7360" },
+      "10 µm tolerance");
+    const band = stages.map(([k], i) => [x(i), y(b[k].p90)]).concat(stages.map(([k], i) => [x(i), y(b[k].median)]).reverse());
+    svgEl(svg, "polygon", { points: band.map((p) => p.join(",")).join(" "), fill: "#646da0", "fill-opacity": 0.1 });
+    stages.forEach(([, title, sub], i) => {
+      svgEl(svg, "text", { x: x(i), y: f.H - f.B + 20, "text-anchor": "middle", "font-size": 13, "font-weight": 650, fill: "#23243a" }, title);
+      svgEl(svg, "text", { x: x(i), y: f.H - f.B + 37, "text-anchor": "middle", "font-size": 11, fill: "#5d5f7a" }, sub);
+    });
+    [["p90", "#b2456b", "90th percentile"], ["median", "#646da0", "median"]].forEach(([key, color, label]) => {
+      const pts = stages.map(([k], i) => [x(i), y(b[k][key])]);
+      svgEl(svg, "polyline", { points: pts.map((p) => p.join(",")).join(" "), fill: "none", stroke: color, "stroke-width": 3 });
+      pts.forEach(([px, py], i) => {
+        svgEl(svg, "circle", { cx: px, cy: py, r: 5.5, fill: color, stroke: "#fff", "stroke-width": 2 });
+        svgEl(svg, "text", { x: px, y: py - 11, "text-anchor": "middle", "font-size": 13, "font-weight": 650, fill: color },
+          `${b[stages[i][0]][key].toFixed(1)}`);
+      });
+      svgEl(svg, "text", { x: f.W - f.R + 10, y: pts[2][1] + 4, "font-size": 12.5, "font-weight": 650, fill: color }, label);
+    });
+  }
 });

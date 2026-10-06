@@ -16,8 +16,8 @@
     <h1>Building a surgical thread-insertion robot in simulation</h1>
     <p class="lede">A gantry robot with a needle and a thread tube, a 40 µm thread and a tissue phantom with
       vessels. This is the record of getting the physics right, teaching the robot to align its needle within
-      10 µm, and inserting threads at site after site while the workcell, the sensors and the tissue all
-      disturb it.</p>
+      10 µm, and then teaching it to insert threads, site after site, while the workcell, the sensors and the
+      tissue all disturb it.</p>
 
     <div class="stage" data-mode="0">
       <canvas id="viewer" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
@@ -25,6 +25,10 @@
         <div class="group" role="group" aria-label="Replay">
           <button data-mode="0" aria-pressed="true">Insertion</button>
           <button data-mode="1" aria-pressed="false">Alignment</button>
+        </div>
+        <div class="group tube-only" role="group" aria-label="Controller">
+          <button data-tpolicy="0" aria-pressed="true">Learned insertion</button>
+          <button data-tpolicy="1" aria-pressed="false">Scripted yardstick</button>
         </div>
         <div class="group align-only" role="group" aria-label="Policy">
           <button data-policy="0" aria-pressed="true">Robust learned</button>
@@ -80,9 +84,10 @@
         <span>latency <b id="latency">–</b> ms</span>
         <span id="status" class="status-moving">loading…</span>
       </div>
-      <p class="disclaimer">Replays of recorded MuJoCo states; the page does not simulate. <b>Insertion</b>: the scripted
-        yardstick placing threads at sites 0, 5 and 1, on the first evaluation seeds of its baseline at each disturbance
-        level, recorded every 2 ms. The thread is lime, and also drawn as a line where it is thinner than a pixel; the
+      <p class="disclaimer">Replays of recorded MuJoCo states; the page does not simulate. <b>Insertion</b>: the learned
+        policy (insert_v2, final, deterministic) or the scripted yardstick placing threads at sites 0, 5 and 1, on the
+        first evaluation seeds of the baseline at each disturbance level; frames every 2 ms during the needle's work and
+        every 8 ms between. The thread is lime, and also drawn as a line where it is thinner than a pixel; the
         Micro camera shows the tissue translucent. Sticking, release and new threads in the tube are stand-in constraints
         (chapter 15). <b>Alignment</b>: the first 30 of the 200 predetermined evaluation seeds for each policy and level,
         recorded at 50 Hz. Overlays show recorded disturbance values: force arrows at 5 cm per 0.1 N, micrometre quantities
@@ -90,11 +95,11 @@
     </div>
 
     <div class="metrics" id="metrics">
-      <div class="metric"><div class="value" id="m-placed">63 / 63</div><div class="label">threads placed, 21 three-site insertion runs</div></div>
-      <div class="metric"><div class="value" id="m-median">23 µm</div><div class="label">median placement, nominal disturbances</div></div>
-      <div class="metric"><div class="value">0</div><div class="label">robot contacts with the tissue</div></div>
-      <div class="metric"><div class="value">100%</div><div class="label">learned alignment, 200 held-out episodes</div></div>
-      <div class="metric"><div class="value">29 min</div><div class="label">alignment training on one RTX 4090</div></div>
+      <div class="metric"><div class="value">60 / 60</div><div class="label">threads placed by the learned policy, 21 full-simulation runs</div></div>
+      <div class="metric"><div class="value">8.0 µm</div><div class="label">its median placement at nominal disturbances (approved cycle: 23 µm)</div></div>
+      <div class="metric"><div class="value">84%</div><div class="label">within 10 µm on 200 held-out training-environment episodes</div></div>
+      <div class="metric"><div class="value">0</div><div class="label">contacts with the tissue or a placed thread, full simulation</div></div>
+      <div class="metric"><div class="value">1 h 39 min</div><div class="label">final insertion training run on one RTX 4090</div></div>
     </div>
   </div>
 </header>
@@ -107,16 +112,20 @@
     <a href="#results">10 Results</a><a href="#disturbances">11 Disturbances</a><a href="#robust-training">12 Robust training</a>
     <a href="#robustness">13 Robustness</a><a href="#compute">14 Compute</a><a href="#insertion">15 Insertion</a>
     <a href="#fast-thread">16 Fast thread</a><a href="#sites">17 Three sites</a><a href="#disturbed-insertion">18 Disturbed</a>
-    <a href="#insertion-baseline">19 Baseline</a><a href="#next">20 Next</a>
+    <a href="#insertion-baseline">19 Baseline</a><a href="#insert-env">20 Training env</a>
+    <a href="#insert-training">21 Learning to insert</a><a href="#insert-results">22 Results</a>
+    <a href="#error-budget">23 Error budget</a><a href="#whats-next">24 Next</a>
   </div>
 </nav>
 
 <main class="wrap">
-  <div class="scope"><strong>Where this stands.</strong> A learned policy aligns the needle 1 mm above any of six
-    targets within 10 µm. The full insertion cycle runs with a scripted yardstick: the needle sticks to a waiting thread,
-    inserts it 2 mm through a puncture, releases it and moves on, three sites per run, under workcell, sensing and
-    tissue disturbances. Sticking, release and thread feeding are stand-in constraints, not a modelled cartridge.
-    Learning the insertion is next. Every number on this page comes from recorded runs in the repository.</div>
+  <div class="scope"><strong>Where this stands.</strong> A learned policy now drives the insertion: it steers the needle
+    over each site, compensates for where the thread's end actually waits, and decides when to strike. The programmed
+    stroke then sticks the needle to the thread, inserts it 2 mm, releases it and moves on, three sites per run, under
+    workcell, sensing and tissue disturbances. It was trained in a fast C environment and checked in the full thread
+    simulation, where it places every thread and lands a median 8 µm from the target at nominal disturbances. Sticking,
+    release and thread feeding are stand-in constraints, not a modelled cartridge. Every number on this page comes from
+    recorded runs in the repository.</div>
 
   <section id="how">
     <h2>How this was built</h2>
@@ -721,30 +730,155 @@ for (int j = 0; j &lt; SA_NJ; j++) {
     </div>
     <div class="legend" id="legend-placement"></div>
     <div class="table-wrap"><table id="tube-table"></table></div>
-    <div class="lesson"><strong>The first thing to improve.</strong> Site 0, on top of the dome, is placed within a few
-      micrometres. Sites 5 and 1 lie on its slope, and the yardstick misses them by about 30 µm even without disturbances,
-      more than the disturbances add. The cause is not established yet; the first suspect is that the needle enters a
-      sloped surface vertically.</div>
+    <div class="lesson"><strong>Where the misses come from.</strong> At site 0 the tool starts right over the target and the
+      thread has not moved, so its end waits on the needle's axis and lands within a few micrometres. Before every later
+      site the tool lifts and travels, and the thread settles against the tube's bore: its end then waits about 18 µm off
+      the needle's axis (60 runs, 180 sites). The yardstick aims the needle, not the thread's end, so it carries that offset
+      into the tissue; letting go adds a sideways jump (median 3 µm, 90th percentile 16 µm). Sixty runs with random site
+      orders measured both, and they became the thread model of the training environment in chapter 20.</div>
   </section>
 
-  <section id="next">
-    <h2>20 · What comes next</h2>
-    <p class="when">Training comes back, on the insertion</p>
+  <section id="insert-env">
+    <h2>20 · A fast environment for learning the insertion</h2>
+    <p class="when">October 6 · millions of episodes need a faster world than the full thread</p>
     <div class="prose">
-      <ol>
-        <li><strong>A fast training environment.</strong> The full cycle runs about 20 times slower than real time on one core. Training
-          needs either a C core with the thread as a load on the needle, or MuJoCo Warp on the RTX 4090, checked against this
-          simulation before it is trusted.</li>
-        <li><strong>Learn the insertion.</strong> The approach, the final correction and the insertion stroke, from the measured needle
-          tip and target, under the disturbance layer, with the stand-in handling unchanged.</li>
-        <li><strong>Beat the yardstick on the slope.</strong> Every thread placed at 2 mm with no tissue contact, closer to its target
-          than chapter 19's baseline on the same seeds, at levels 1 and 2.</li>
-        <li><strong>Then the real handling.</strong> A cartridge mechanism, a calibrated tissue model with a dura layer, and threads as thin
-          ribbons rather than 40 µm rods.</li>
-      </ol>
-      <p>Materials and tissue parameters are presets, not measurements, and the controllers read simulator measurements rather
-        than camera images. The brief's learning gate also asks for three independently trained seeds per policy.</p>
+      <p>The full simulation is the reference, but at about 20 s of computing per simulated second it cannot supply the
+        hundreds of millions of steps that PPO needs. The training environment is a C core, <code>insert_core.h</code>,
+        built on the alignment core: the same robot, servo, disturbance layer and needle–tissue force model, at a 1 ms
+        step, with 2,048 copies stepped on 28 CPU threads. It does not simulate the thread. It models the two things about the thread that decide
+        where it lands, both measured in the full simulation: where the thread's end waits relative to the needle's axis,
+        and how far it jumps sideways when the needle lets go.</p>
     </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Every episode is new</h4><p class="count">drawn from the episode's seed</p><ul>
+        <li>The phantom turned by a random angle; its vessels turn with it</li>
+        <li>0 to 5 threads already standing at earlier sites</li>
+        <li>A random site, clear of vessels and of those threads</li>
+        <li>The tool starting anywhere over the field, 4–10 mm up</li>
+        <li>Disturbances from none to stress, and the thread end's offset and release jump</li></ul></div>
+      <div class="card"><h4>What the policy sees</h4><p class="count">24 numbers, 50 times a second, delayed and noisy</p><ul>
+        <li>Needle point to the hover pose, coarse and fine, and its velocity</li>
+        <li>The thread end's offset from the needle's axis, as a camera would measure it</li>
+        <li>The nearest vessel, the height above the dome</li>
+        <li>The two nearest standing threads</li>
+        <li>Its previous actions, phase and time left</li></ul></div>
+      <div class="card"><h4>What it does</h4><p class="count">4 actions</p><ul>
+        <li>X, Y and Z stage velocities</li>
+        <li>Start the stroke. The stroke is the approved programmed motion: 40 ms onto the thread, 25 ms in, 30 ms at depth,
+          release, snap back, with the stages held still</li></ul></div>
+      <div class="card"><h4>What it is rewarded for</h4><p class="count">placement, safety, smoothness</p><ul>
+        <li>Progress toward the pose that puts the thread's end over the target</li>
+        <li>2 × exp(−placement / 10 µm) when the thread is released</li>
+        <li>−2 for touching tissue or a standing thread, dragging the waiting thread, or missing its end</li>
+        <li>Small costs for jerky motion and passing low over vessels</li></ul></div>
+    </div>
+    <div class="note-box"><strong>Checked against the full simulation before training.</strong> A scripted controller
+      that compensates for the measured thread-end offset, given the same 24 inputs built from the full simulation's own
+      sensing, placed three threads at 7.8, 6.2 and 6.3 µm (level 1, seed 1001), close to the 5.6 µm median the C model
+      predicts for it. The same
+      harness, <code>policy_cycle.py</code>, later runs every learned checkpoint in the full simulation.</div>
+  </section>
+
+  <section id="insert-training">
+    <h2>21 · Learning to insert</h2>
+    <p class="when">October 6 · two runs on the RTX 4090, about two hours in all</p>
+    <div class="prose">
+      <p>Run 1 learned within minutes to approach before striking, and showed a gap in the environment: after the stroke
+        started, the stages still took velocity commands, which on the real machine would drag the needle sideways through
+        tissue. Run 2 holds the stages still from the start of the stroke and times the stroke exactly as the full cycle
+        does. It ran to 300 M steps, and its success on training episodes climbed from zero to 72%.</p>
+    </div>
+    <div class="charts">
+      <div class="chart"><h4>Threads within 10 µm (training rollouts, with exploration noise)</h4><svg id="chart-insert-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Mean placement error of placed threads (training rollouts)</h4><svg id="chart-insert-error" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert"></div>
+    <h3>Checkpoints on 200 held-out episodes</h3>
+    <div class="charts one">
+      <div class="chart"><h4>Within 10 µm, deterministic policy, training environment</h4><svg id="chart-insert-checkpoints" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert-checkpoints"></div>
+    <div class="lesson"><strong>The moment to strike is learned too.</strong> The fourth action starts the stroke when it
+      exceeds 0.5. In run 1 the policy's average output stayed just below that, and its exploration noise fired the stroke:
+      it had learned where to be, with the output rising from −2.6 far away to +0.17 within 10 µm of the hover pose, but the
+      exact moment was left to chance. In run 2 the noise-free policy strikes on its own from the first checkpoint. Results
+      are reported both ways.</div>
+    <div class="table-wrap"><table id="insert-compute-table"></table></div>
+  </section>
+
+  <section id="insert-results">
+    <h2>22 · Results in two simulations</h2>
+    <p class="when">Seeds fixed before training; the same seeds and sites for every controller</p>
+    <div class="result-strip">
+      <div class="tile"><div class="big">60<small>/ 60</small></div><div class="what">threads placed in 21 full-simulation runs</div>
+        <div class="vs">no tissue or thread contact, no failed run</div></div>
+      <div class="tile"><div class="big">8.0<small>µm</small></div><div class="what">median placement, nominal disturbances</div>
+        <div class="vs">approved cycle 23 µm on the same seeds</div></div>
+      <div class="tile"><div class="big">20<small>/ 30</small></div><div class="what">within 10 µm, nominal, full simulation</div>
+        <div class="vs">approved cycle 11, compensating script 19</div></div>
+      <div class="tile"><div class="big">84<small>%</small></div><div class="what">within 10 µm, 200 held-out episodes, nominal</div>
+        <div class="vs">compensating script 80.5%, needle-aiming 3%</div></div>
+    </div>
+    <div class="prose">
+      <p>Two yardsticks frame the result. The approved cycle aims the needle at the target, as chapter 19 did. A second
+        scripted controller, written for this comparison, reads the measured thread-end offset and aims the thread's end
+        instead; it is the strongest hand-written controller we have. At nominal disturbances the learned policy places
+        nearly twice as many threads within 10 µm as the approved cycle (20 against 11 of 30) and cuts the median from 23 to
+        8 µm; at the stress level the medians are 12 and 25 µm. Against the compensating script it is level in the full
+        simulation at nominal disturbances, ahead in the training environment, and behind in the full simulation at the stress
+        level.</p>
+    </div>
+    <div class="charts">
+      <div class="chart"><h4>Threads within 10 µm, full simulation (bar labels: medians)</h4><svg id="chart-insert-full" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Every placed thread, full simulation</h4><svg id="chart-insert-dots" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-insert-full"></div>
+    <div class="video-card"><video data-media="insert_learned" data-poster="insert_learned_poster" controls muted playsinline preload="metadata"></video></div>
+    <figcaption>The final policy, deterministic, at nominal disturbances (seed 1001): approach, strike, three threads at 1.8,
+      9.7 and 30.8 µm. The needle's work plays at 0.02× real time, the moves between sites at 0.2×. The replay at the top of
+      the page has all seven runs of each controller.</figcaption>
+    <h3>Full simulation, 30 threads per level</h3>
+    <div class="table-wrap"><table id="insert-full-table"></table></div>
+    <h3>Training environment, 200 held-out episodes per level</h3>
+    <div class="table-wrap"><table id="insert-c-table"></table></div>
+  </section>
+
+  <section id="error-budget">
+    <h2>23 · Where the remaining micrometres come from</h2>
+    <p class="when">The final policy's 63 threads in the full simulation, followed through the stroke</p>
+    <div class="prose">
+      <p>Following each thread's end from the moment the policy strikes separates what the policy controls from what it
+        does not. The policy's part is the aim: when the stroke starts, the thread's end is a median 6 µm from the target. The
+        programmed stroke carries it into the tissue and moves it about 3 µm. The release usually adds another 3 µm, but now
+        and then the end jumps: 8 of the 63 threads moved more than 15 µm sideways when the needle let go, and those set the
+        90th percentile.</p>
+    </div>
+    <div class="charts one"><div class="chart wide"><h4>Thread end to target at three moments</h4><svg id="chart-budget" viewBox="0 0 640 320"></svg></div></div>
+    <div class="note-box"><strong>The release is the next lever.</strong> While the thread is held at depth, the needle's
+      contact with the thread it carries works against the bond, and the gripped segments jitter. With that contact off,
+      the jitter fell about eightfold in a test. Calmer threads should mean smaller release jumps for every controller.</div>
+  </section>
+
+  <section id="whats-next">
+    <h2>24 · What comes next</h2>
+    <p class="when">Each step is measured on the same seeds as everything above</p>
+    <ol class="next-steps">
+      <li><strong>Calm the thread at depth</strong>Turn off the needle's contact with the thread while the needle carries it,
+        re-measure the release jumps over the same 60 runs, refit the training environment's thread model, and retrain.
+        <span class="evidence">Test: jitter at depth fell from up to 515 rad/s to 63 rad/s with that contact off.</span></li>
+      <li><strong>Close the stress-level gap between the simulations</strong>The policy is ahead of the compensating script
+        in the training environment at level 2 and behind it in the full simulation. Finding what the C model misses under
+        stronger disturbances will make training transfer better.
+        <span class="evidence">Level 2: 69% vs 64.5% in C; 12 vs 18 of 30 in the full simulation.</span></li>
+      <li><strong>Harder conditions, more seeds</strong>Raise the disturbances to where hand-written compensation breaks
+        down, cover sites across the whole dome, and train three independent seeds per policy, as the brief asks.</li>
+      <li><strong>Learn more of the cycle</strong>The stroke and the release are programmed today. Learning the stroke's
+        timing, depth and release moment is the natural next phase for the policy.</li>
+      <li><strong>Then the real handling</strong>A cartridge mechanism instead of stand-in constraints, a calibrated tissue
+        model with a dura layer, threads as thin ribbons, and camera images instead of simulator measurements.</li>
+    </ol>
+    <div class="prose"><p>Materials and tissue parameters are presets, not measurements, and the controllers read simulator
+      measurements rather than camera images.</p></div>
   </section>
 </main>
 

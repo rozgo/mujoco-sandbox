@@ -269,7 +269,8 @@ def write_replays(path, model, data, episodes):
 TUBE_SLIDES = ("stage_x", "stage_y", "stage_z", "insertion")
 TUBE_FIXED_MOVING = TUBE_SLIDES+("thread_tube", "specimen_support")
 TUBE_OVERRIDE = {"tube_glass": "glass"}
-PHASES = ("ready", "reload", "move to", "descend", "correct", "needle down", "insert", "release", "snap back", "lift")
+PHASES = ("ready", "reload", "move to", "descend", "correct", "needle down", "insert", "release", "snap back", "lift",
+          "policy approach")
 # Per-frame floats after time and the moving-body poses (position 3 + quaternion w x y z 4, metres):
 # needle point (3), current thread end (3), phase id, bond (0 waiting, 1 stuck, 2 released), thread index,
 # thread end depth below the tissue surface (m), needle axial tissue force (N), punctured flag, tissue
@@ -295,17 +296,20 @@ def phase_id(name):
     return next((k for k, p in enumerate(PHASES) if str(name).startswith(p)), 0)
 
 
-def write_tube_replays(path, runs, units_length=1000., every_s=2e-3):
-    """runs: dicts with model, data, trace (tube_cycle trace), report, seed and level.
+def write_tube_replays(path, runs, units_length=1000., every_s=2e-3, travel_every_s=8e-3):
+    """runs: dicts with model, data, trace (tube_cycle or policy_cycle trace), report, seed, level and
+    controller (0 learned policy, 1 scripted yardstick).
 
-    Format NIT1. Poses come from MuJoCo forward kinematics of the recorded joint positions with the
+    Frames every `every_s` during the needle's work (needle down, insert, release, snap back) and every
+    `travel_every_s` otherwise, always including the first frame of each phase.
+    Format NIT2. Poses come from MuJoCo forward kinematics of the recorded joint positions with the
     tissue (a mocap body) displaced by its recorded offset; replay of recorded states, not simulation.
     """
     L = units_length
     first = runs[0]["model"]
     moving = tube_moving(first)
     with open(path, "wb") as f:
-        f.write(b"NIT1")
+        f.write(b"NIT2")
         f.write(struct.pack("<III", len(runs), len(moving), TUBE_EXTRA))
         f.write(struct.pack(f"<{len(moving)}i", *[first.body(n).id for n in moving]))
         mujoco.mj_kinematics(first, runs[0]["data"])
@@ -319,13 +323,16 @@ def write_tube_replays(path, runs, units_length=1000., every_s=2e-3):
             spec0 = m.body_pos[spec].copy()
             times = tr["time"]
             keep = [0]
+            phases = [phase_id(name) for name in tr["phase"]]
             for k in range(1, len(times)):
-                if times[k]-times[keep[-1]] >= every_s-1e-9 or k == len(times)-1:
+                step = every_s if 5 <= phases[k] <= 8 else travel_every_s
+                if times[k]-times[keep[-1]] >= step-1e-9 or phases[k] != phases[k-1] or k == len(times)-1:
                     keep.append(k)
             placed = [e for e in rep["events"] if str(e.get("check", "")).endswith("thread left in tissue")]
             sites = [int(e["check"].split()[1].rstrip(":")) for e in placed]
             dist = rep.get("disturbances") or {}
-            f.write(struct.pack("<IfffII", run["seed"], run["level"], dist.get("latency_ms", 0.)/1e3 if dist != "none" else 0.,
+            f.write(struct.pack("<IIfffII", run["seed"], run.get("controller", 1), run["level"],
+                                dist.get("latency_ms", 0.)/1e3 if dist != "none" else 0.,
                                 float(rep["simulated_s"]), int(rep["status"] == "completed"), len(placed)))
             for k in range(3):
                 e = placed[k] if k < len(placed) else None

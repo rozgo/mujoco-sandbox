@@ -106,8 +106,10 @@ enum { E_TIP = 0, E_END = 3, E_PHASE = 6, E_BOND = 7, E_THREAD = 8, E_DEPTH = 9,
        E_TISSUE = 12, E_TARGET = 15, E_MTARGET = 18, E_MTIP = 21, E_ACC = 24, E_NOISE = 27, E_FRICTION = 31,
        E_INERTIAL = 35, E_PLACE = 39, E_SITE = 40, E_COUNT = 41 };
 #define TUBE_SLIDES 4
-static const char* PHASE_NAMES[10] = {"ready", "reload", "move", "descend", "correct", "needle down", "insert",
-                                      "release", "snap back", "lift"};
+static const char* PHASE_NAMES[11] = {"ready", "reload", "move", "descend", "correct", "needle down", "insert",
+                                      "release", "snap back", "lift", "learned approach"};
+#define PHASE_LEARNED 10
+static const char* CONTROLLER_NAMES[2] = {"LEARNED POLICY insert_v2", "SCRIPTED YARDSTICK"};
 static int needle_phase(int phase) { return phase >= 5 && phase <= 8; }
 
 static struct {
@@ -308,9 +310,10 @@ static void load_replays(const char* path) {
     V.D.loaded = 1;
 }
 
-// Insertion runs (NIT1): poses with quaternions for every moving body, threads included.
+// Insertion runs (NIT2): poses with quaternions for every moving body, threads included, and the
+// controller of each run (0 learned policy, 1 scripted yardstick).
 static void load_tube_replays(const char* path) {
-    Reader r = open_file(path, "NIT1");
+    Reader r = open_file(path, "NIT2");
     V.D.nepisode = (int)u32(&r);
     V.D.nmoving = (int)u32(&r);
     V.D.extra = (int)u32(&r);
@@ -326,6 +329,7 @@ static void load_tube_replays(const char* path) {
     for (int e = 0; e < V.D.nepisode; e++) {
         Episode* ep = &V.D.episodes[e];
         ep->seed = u32(&r);
+        ep->policy = u32(&r);
         ep->level = f32(&r);
         ep->latency = f32(&r);
         f32(&r);  // simulated seconds
@@ -739,7 +743,7 @@ static const char* length(char* buf, float metres, int sign) {
 
 static const Color C_INK = {236, 232, 246, 255};
 #define VALUE_TEMPLATE "\xe2\x88\x92" "000.0 \xc2\xb5m"  // widest number any callout shows
-#define WORD_TEMPLATE "on the needle"                     // widest word any callout shows
+#define WORD_TEMPLATE "learned approach"                  // widest word any callout shows
 
 static void collect_callouts(void) {
     NC = 0;
@@ -981,9 +985,9 @@ static int has(int k) {
     if (isnan(V.x[k]) || isnan(V.x[k + 1]) || isnan(V.x[k + 2])) return 0;
     int phase = (int)(V.x[E_PHASE] + 0.5f);
     // The target estimate counts once it refers to the current site; the tip measurement only while the
-    // robot measures (descend, correct). Otherwise they are stale and not drawn.
+    // robot measures (the yardstick's descend and correct; every step of the learned approach).
     if (k == E_MTARGET) return Vector3Distance(ev(E_MTARGET), ev(E_TARGET)) < 1e-3f;
-    if (k == E_MTIP) return phase == 3 || phase == 4;
+    if (k == E_MTIP) return phase == 3 || phase == 4 || phase == PHASE_LEARNED;
     return 1;
 }
 
@@ -1177,13 +1181,16 @@ static void draw_tube_hud(void) {
     Episode* e = episode();
     int w = GetScreenWidth(), h = GetScreenHeight();
     float s = fminf(h / 720.0f, w / 900.0f), size = 14.0f * s, line = size * 1.36f;
-    float pw = 280 * s, chart = 84 * s, ph = line * 10.2f + chart + 16 * s;
+    float pw = 300 * s, chart = 84 * s, ph = line * 11.35f + chart + 16 * s;
     float x = 14 * s, y = h - ph - 14 * s;
     DrawRectangleRounded((Rectangle){x, y, pw, ph}, 0.06f, 8, (Color){24, 22, 44, 190});
     x += 12 * s;
     y += 10 * s;
     float iw = pw - 24 * s;
     char buf[64];
+    DrawTextEx(V.bold, CONTROLLER_NAMES[e->policy ? 1 : 0], (Vector2){x, y}, size, 0,
+               e->policy ? (Color){226, 222, 246, 255} : (Color){201, 255, 233, 255});
+    y += line * 1.15f;
     snprintf(buf, sizeof(buf), "DISTURBANCE LEVEL %.2f", e->level);
     DrawTextEx(V.bold, buf, (Vector2){x, y}, size, 0, (Color){255, 214, 232, 255});
     y += line * 1.15f;
