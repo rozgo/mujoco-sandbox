@@ -421,6 +421,11 @@ static inline void sa_reset(SACore* c, float* obs) {
     double x = sa_uniform(&c->rng, -0.04, 0.04), y = sa_uniform(&c->rng, -0.03, 0.03);
     double wx = c->tip0[0] + x, wy = c->tip0[1] + y;
     double tip_z = sa_surface(c, wx, wy) + sa_uniform(&c->rng, 0.003, 0.008);
+    // Keep the needle carriage at least the carry margin from its retracted stop: at the
+    // fixed working Z height, a start this high would otherwise sit at or past the stop,
+    // where the drive cannot hold the carriage against gravity (6 of 200 evaluation seeds).
+    double highest = c->tip0[2] + SA_WORK_Z - SA_CARRY;
+    if (tip_z > highest) tip_z = highest;
     double q[SA_NJ] = {x, y, SA_WORK_Z, SA_WORK_Z - (tip_z - c->tip0[2]), SA_CARRY};
     for (int j = 0; j < SA_NJ; j++) {
         d->qpos[c->qadr[j]] = q[j];
