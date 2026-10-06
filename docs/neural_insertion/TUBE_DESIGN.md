@@ -33,8 +33,9 @@ All are MuJoCo `connect` constraints switched on and off by the cycle:
 Discrete elastic rod, 18 segments of 0.46 mm, 50 µs RK4 step (was 5 µs),
 contacts settling in 200 µs (was 20 µs), solver tolerance 1e-8, and an
 armature of 3e-17 kg m² per thread joint that slows the thread's fastest
-wiggles (shape and sag unchanged). One cycle runs about 10 times slower than
-real time on one Mac core.
+wiggles (shape and sag unchanged), and internal damping of 1e-12 N m s/rad per
+joint (about half of critical for a segment's bending). One site runs about 10
+times slower than real time on one Mac core; three threads, about 20.
 
 ## First cycle (`tube_cycle.py`, scripted, no disturbances)
 
@@ -55,3 +56,25 @@ How it got there, each failure seen live in the viewer:
    sharp corner and wrapped against the needle; tube at 15° instead.
 4. An explicit tissue spring-damper on the 0.8 µg segments diverged at the
    50 µs step once the bond let go: the grip became a soft constraint.
+
+## Three sites (`tube_cycle.py --sites 0 5 1`)
+
+Three threads: one in the tube, two spares parked weightless off to the side.
+After each site the tool lifts 8 mm (clear of the 6 mm of thread left
+standing), a spare is reloaded into the tube (an explicit reset, a stand-in for
+feeding), and the tool moves over the next site. Placed threads stay simulated
+and gripped by the tissue.
+
+| Site | End depth | Placement from target |
+| --- | ---: | ---: |
+| 0 | 2.03 mm | 12 µm |
+| 5 | 2.01 mm | 26 µm |
+| 1 | 2.01 mm | 33 µm |
+
+Placed threads shifted by nanometres during the tool's moves and stayed in the
+tissue after every lift; no robot contact with the tissue. 1.8 s simulated in
+about 41 s. Without thread damping the thread whipped in the tube and diverged
+after release, and settling 30 ms at depth before release also helped; damping
+also cut the placement error at site 0 from 83 µm to 12 µm. Video:
+`previews/neural_insertion/tube_design/three_sites.mp4` (needle work at 0.02×,
+moves at 0.2×).

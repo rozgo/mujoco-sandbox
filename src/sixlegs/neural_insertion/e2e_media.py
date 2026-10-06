@@ -37,7 +37,11 @@ def card(title, lines):
     return np.asarray(canvas)
 
 
-def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.):
+SLOW_PHASES = ("needle down", "insert", "release", "snap back")
+
+
+def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3., travel_speed=None):
+    """travel_speed: if given, phases other than the needle's work (SLOW_PHASES) play at this speed."""
     run = Path(run)
     trace = dict(np.load(run/"trace.npz", allow_pickle=True))
     report = json.loads((run/"report.json").read_text())
@@ -56,14 +60,21 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
     renderer = mujoco.Renderer(m, PANEL_H, PANEL_W)
     see_through = [m.geom("tissue_phantom").id]+[g for g in range(m.ngeom) if m.geom(g).name.startswith("tube_")]
     wide_distance, wide_drop = (22., 2.) if modern else (70., 8.)
-    left = "Context: tool, thread and implant, about 9 mm across" if modern else "Wide: tool and thread"
+    left = ("Context: needle, thread tube and thread, about 9 mm across" if report.get("variant") == "tube" else
+            "Context: tool, thread and implant, about 9 mm across" if modern else "Wide: tool and thread")
     ring, detail = (("thread end", "thread end, needle and thread tube, side view about 1.5 mm across")
                     if report.get("variant") == "tube" else
                     ("loop", "loop, needle, cannula and latch, side view about 1.5 mm across") if modern else
                     ("eyelet", "eyelet and slotted needle, about 2 mm across"))
     opaque = m.geom_rgba[see_through].copy()
     times = trace["time"]
-    frames_t = np.arange(times[0], times[-1], speed/fps)
+    frames_t, speeds, t = [], [], times[0]
+    while t < times[-1]:
+        phase = str(trace["phase"][min(int(np.searchsorted(times, t)), len(times)-1)])
+        sp = speed if travel_speed is None or phase.startswith(SLOW_PHASES) else travel_speed
+        frames_t.append(t)
+        speeds.append(sp)
+        t += sp/fps
     output = Path(output or run/"cycle.mp4")
     output.parent.mkdir(parents=True, exist_ok=True)
     writer = imageio_ffmpeg.write_frames(str(output), (W, H), fps=fps, codec="libx264", quality=8,
@@ -102,7 +113,7 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
         phase = str(trace["phase"][i])
         draw.text((24, 20), title or "END-TO-END CYCLE  /  SCRIPTED YARDSTICK, NO DISTURBANCES", font=font(28),
                   fill="#f1ecfa")
-        draw.text((24, 64), f"t = {trace['time'][i]:.3f} s    phase: {phase}    playback {speed:g}x    "
+        draw.text((24, 64), f"t = {trace['time'][i]:.3f} s    phase: {phase}    playback {speeds[n]:g}x    "
                   f"{ring} depth {trace['depth'][i]:+.2f} mm    needle axial {trace['needle_axial'][i]/1e3:+.2f} mN",
                   font=font(22), fill="#d9b8ff")
         draw.text((24, 1000), f"{left}   |   Detail: {detail}. Tissue drawn translucent in the detail "

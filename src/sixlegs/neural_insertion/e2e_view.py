@@ -45,7 +45,7 @@ def live(args):
     from . import e2e
     if args.tube:
         from .tube_cycle import TubeCycle
-        cycle = TubeCycle(args.target)
+        cycle = TubeCycle()
     elif args.modern:
         from .modern import ModernCycle
         cycle = ModernCycle(args.target, fast=args.fast)

@@ -35,8 +35,12 @@ THREAD_R = .02
 # armature keeps them stable at the 50 µs step (slower fine wiggles, same shape and sag).
 SEGMENTS, SEGMENT = 18, 8.25/18
 THREAD_ARMATURE = 3e-17     # kg m² per thread joint
+THREAD_DAMPING = 1e-12      # N m s/rad per thread joint: internal damping, about half of critical for a
+                            # segment's bending; with none the thread whipped after release (sites_check)
 INSERTED = 9                # thread end segments that pass the tissue surface (tissue force model)
 GRIP_TIME_S = 1e-3          # tissue grip constraint time constant
+THREADS = 3                 # thread 0 in the tube, spares parked weightless off to the side
+PARK_OFFSET = np.array((70., 0., 20.))  # mm between parked threads (world), clear of the robot and tissue
 ARM_X = 8.
 
 
@@ -93,47 +97,66 @@ def build_tube_scene(stage_z, path=TUBE_SCENE, units=UNITS):
         add(tool, "geom", name=name, type="capsule", fromto=_vec((*a, *b)), size=repr(r), material="steel",
             density=repr(STEEL))
 
-    # Thread inside the tube, world frame at the review pose; free root (it pays out of the tube).
+    # Threads, world frame at the review pose; free roots (they pay out of the tube). Thread 0 waits in the
+    # tube; the spares wait off to the side, weightless (gravcomp), until the cycle reloads one into the tube.
     law = law_for(FAST["contact_s"])
     config = replace(fixture_config("drag", FAST["dt"], MATERIAL, law), length_m=SEGMENTS*SEGMENT/1e3,
                      segments=SEGMENTS)
-    rod = ET.fromstring(der_xml(config, units))
-    root.insert(1, rod.find("extension"))
-    first = rod.find("worldbody").find("body")
     start = end+SEGMENTS*SEGMENT*up
     world = origin+np.array((0., 0., stage_z))
-    first.set("pos", _vec(world+start))
     th = math.pi/2+TUBE_ANGLE                        # rotate the rod's +x to point down the tube
-    first.set("quat", _vec((math.cos(th/2), 0., math.sin(th/2), 0.)))
-    first.insert(0, ET.Element("freejoint", name="thread_root"))
-    root.find("worldbody").append(first)
-    bodies = [b for b in first.iter("body") if b.get("name", "").startswith("thread_B")]
-    for b in bodies:
-        j = b.find("joint")
-        if j is not None:
-            j.set("armature", repr(THREAD_ARMATURE*units.mass*units.length**2))
-    for b in bodies[-INSERTED:]:  # segments that may follow the needle into the tissue (tissue.py acts on them)
-        b.find("geom").set("conaffinity", "1")
     contact = root.find("contact")
     if contact is None:
         contact = add(root, "contact")
-    for e in rod.find("contact"):
-        contact.append(e)
-    # The needle meets the thread's end through the bond, not through contact.
-    add(contact, "exclude", body1="insertion", body2=bodies[-1].get("name"))
-    # Abstracted handling (stand-ins, set and switched at run time by tube_cycle.py):
-    # the tube holds the thread's back end until the needle picks it; the needle's bond holds its end.
     equality = add(root, "equality")
-    add(equality, "connect", name="tube_hold", body1="thread_tube", body2=bodies[0].get("name"),
-        anchor="0 0 0", active="false", solref=_vec(law.solref()), solimp=_vec(law.solimp(units)))
-    add(equality, "connect", name="needle_bond", body1="insertion", body2=bodies[-1].get("name"),
-        anchor="0 0 0", active="false", solref=_vec(law.solref()), solimp=_vec(law.solimp(units)))
-    # Tissue grip as soft constraints (solved implicitly, stable at the 50 µs step): each segment that enters
-    # the tissue is pinned where it is and slips past the grip force (tube_cycle.TubeTissue). An explicit
-    # spring-damper on these 0.8 µg segments overshot and diverged (tube_design/check_v5).
-    for b in bodies[-INSERTED:]:
-        add(equality, "connect", name=f"grip_{b.get('name')}", body1="world", body2=b.get("name"), anchor="0 0 0",
-            active="false", solref=_vec((GRIP_TIME_S, 1.)), solimp=_vec(law.solimp(units)))
+    threads, plugin = [], None
+    for k in range(THREADS):
+        rod = ET.fromstring(der_xml(config, units))
+        for e in rod.iter():  # unique names per thread: thread_* -> thread_*_k, plugin instance rod -> rodk
+            for attr in ("name", "body1", "body2", "site", "joint", "geom"):
+                v = e.get(attr)
+                if v and v.startswith("thread_"):
+                    e.set(attr, f"{v}_{k}")
+            if e.tag in ("plugin", "instance") and "rod" in (e.get("instance"), e.get("name")):
+                e.set("instance" if e.get("instance") else "name", f"rod{k}")
+        if plugin is None:
+            root.insert(1, rod.find("extension"))
+            plugin = root.find("extension").find("plugin")
+        else:
+            plugin.append(rod.find("extension").find("plugin").find("instance"))
+        first = rod.find("worldbody").find("body")
+        first.set("pos", _vec(world+start+k*PARK_OFFSET))
+        first.set("quat", _vec((math.cos(th/2), 0., math.sin(th/2), 0.)))
+        first.insert(0, ET.Element("freejoint", name=f"thread_root_{k}"))
+        root.find("worldbody").append(first)
+        bodies = [b for b in first.iter("body") if b.get("name", "").startswith("thread_B")]
+        for b in bodies:
+            j = b.find("joint")
+            if j is not None:
+                j.set("armature", repr(THREAD_ARMATURE*units.mass*units.length**2))
+                j.set("damping", repr(THREAD_DAMPING*units.mass*units.length**2))
+            if k:
+                b.set("gravcomp", "1")
+        for b in bodies[-INSERTED:]:  # segments that may follow the needle into the tissue
+            b.find("geom").set("conaffinity", "1")
+        for e in rod.find("contact"):
+            contact.append(e)
+        names = [b.get("name") for b in bodies]
+        threads.append(names)
+        # The needle meets the thread's end through the bond, not through contact.
+        add(contact, "exclude", body1="insertion", body2=names[-1])
+        # Abstracted handling (stand-ins, switched at run time by tube_cycle.py): the tube holds the thread's
+        # back end until the needle picks it; the needle's bond holds its end.
+        add(equality, "connect", name=f"tube_hold_{k}", body1="thread_tube", body2=names[0], anchor="0 0 0",
+            active="false", solref=_vec(law.solref()), solimp=_vec(law.solimp(units)))
+        add(equality, "connect", name=f"needle_bond_{k}", body1="insertion", body2=names[-1], anchor="0 0 0",
+            active="false", solref=_vec(law.solref()), solimp=_vec(law.solimp(units)))
+        # Tissue grip as soft constraints (solved implicitly, stable at the 50 µs step): each segment that
+        # enters the tissue is pinned where it is and slips past the grip force (tube_cycle.TubeTissue). An
+        # explicit spring-damper on these 0.8 µg segments overshot and diverged (tube_design/check_v5).
+        for n in names[-INSERTED:]:
+            add(equality, "connect", name=f"grip_{n}", body1="world", body2=n, anchor="0 0 0", active="false",
+                solref=_vec((GRIP_TIME_S, 1.)), solimp=_vec(law.solimp(units)))
     _theme(root)
     option = root.find("option")
     for k, v in {"timestep": format(FAST["dt"], "g"), "integrator": "RK4", "solver": "Newton",
@@ -149,7 +172,7 @@ def build_tube_scene(stage_z, path=TUBE_SCENE, units=UNITS):
     path.parent.mkdir(parents=True, exist_ok=True)
     ET.indent(root, space="  ")
     ET.ElementTree(root).write(path, encoding="unicode")
-    return path, [b.get("name") for b in bodies]
+    return path, threads
 
 
 def review_pose(target=0):
@@ -160,13 +183,13 @@ def review_pose(target=0):
     surface = surface_z(0., FIELD_Y)*UNITS.length
     origin = _frame_origin()
     stage_z = surface+1.0-(origin[2]+TIP-Q_READY-END_BELOW_POINT)
-    path, names = build_tube_scene(stage_z)
+    path, threads = build_tube_scene(stage_z)
     m = mujoco.MjModel.from_xml_path(str(path))
     d = mujoco.MjData(m)
     d.qpos[m.jnt_qposadr[m.joint("stage_z").id]] = stage_z  # initialization of the review pose
     d.qpos[m.jnt_qposadr[m.joint("insertion").id]] = Q_READY
     mujoco.mj_forward(m, d)
-    meta = {"variant": "tube", "tube": None, "thread_bodies": names, "xml_path": str(path),
+    meta = {"variant": "tube", "tube": None, "thread_bodies": threads[0], "threads": threads, "xml_path": str(path),
             "xml_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(), "stage_z_mm": stage_z}
     return m, d, meta
 
@@ -178,7 +201,7 @@ def view():
     m, d, _ = review_pose()
     with mujoco.viewer.launch_passive(m, d, show_left_ui=False, show_right_ui=False) as viewer:
         viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-        viewer.cam.lookat[:] = d.site("thread_S_last").xpos+np.array((.4, 0., .6))
+        viewer.cam.lookat[:] = d.site("thread_S_last_0").xpos+np.array((.4, 0., .6))
         viewer.cam.distance, viewer.cam.azimuth, viewer.cam.elevation = 4.0, 120, -12
         viewer.set_texts((None, None, "THREAD-TUBE DESIGN | static review pose, nothing simulated | "
                           "needle above, thread in the tube, its end on the needle's path", None))

@@ -1050,3 +1050,10 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   08:06 (needle missed the settled thread), jam at 45°, wrap at 45° with 18
   segments, the 15° tube, then the tissue grip as constraints. **First complete
   thread-tube cycle at 08:13 UTC**, 0.43 s simulated in about 5 s wall.
+- With the user (about 08:17 UTC): three sites before improving. Three-thread
+  scene, reloads, moves between sites; release diverged until the thread got
+  internal damping and 30 ms to settle. **Three sites completed headless at
+  08:21 UTC and live in the viewer at 08:23 UTC** (1.8 s simulated
+  in about 41 s). The first live attempt stopped when the state was reset from
+  outside the runner mid-run; the runner now stops with a clear message on
+  that.

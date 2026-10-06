@@ -64,7 +64,7 @@ def test_modern_scene_has_a_physical_cartridge_without_initial_contact():
 def test_tube_scene_presents_the_thread_end_on_the_needle_path():
     from sixlegs.neural_insertion.tube_scene import END_BELOW_POINT, review_pose
     m, d, meta = review_pose()
-    point, end = d.site("needle_tip").xpos, d.site("thread_S_last").xpos
+    point, end = d.site("needle_tip").xpos, d.site("thread_S_last_0").xpos
     assert np.linalg.norm(end[:2]-point[:2]) < 1e-3  # on the needle's axis (mm)
     assert point[2]-end[2] == pytest.approx(END_BELOW_POINT, abs=1e-3)
     assert d.ncon == 0
