@@ -109,3 +109,14 @@ footer { padding: 30px 0 60px; color: var(--muted); font-size: 14px; }
 @media (max-width: 760px) { .charts { grid-template-columns: 1fr; } }
 .charts.one { grid-template-columns: minmax(0, 640px); }
 #compute-table td:first-child, #compute-table .num, #robustness-table .num { white-space: nowrap; }
+.loop { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 10px; padding: 0; margin: 18px 0; }
+.loop li { counter-increment: step; position: relative; background: var(--card); border: 1px solid var(--line);
+  border-top: 4px solid var(--slate); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.loop li::before { content: counter(step); font-size: 12px; color: var(--muted); display: block; }
+.loop li:first-child { border-top-color: var(--rose); }
+.loop li strong { display: block; }
+.loop li span { color: var(--muted); font-size: 13px; }
+.loop li:not(:last-child)::after { content: "\2192"; position: absolute; right: -9px; top: 50%; transform: translateY(-50%);
+  color: var(--slate); font-weight: 700; }
+.loop li:last-child::after { content: "\21BA  back to Plan"; display: block; margin-top: 6px; font-size: 12px; color: var(--slate); }

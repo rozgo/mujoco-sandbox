@@ -82,7 +82,7 @@
 
 <nav class="toc" aria-label="Chapters">
   <div class="wrap">
-    <a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
+    <a href="#how">How</a><a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
     <a href="#contact-model">4 Contact model</a><a href="#thread">5 Thread in the task</a><a href="#motion">6 Motion</a>
     <a href="#task">7 Learning task</a><a href="#network">8 Network</a><a href="#training">9 Training</a>
     <a href="#results">10 Results</a><a href="#disturbances">11 Disturbances</a><a href="#robust-training">12 Robust training</a>
@@ -95,6 +95,45 @@
     within 10 µm, without touching anything. It does not yet pick up thread, enter tissue or release thread: the
     phantom is a rigid solid with no puncture model, and thread handling is the next milestone. Every number on this
     page comes from recorded runs in the repository.</div>
+
+  <section id="how">
+    <h2>How this was built</h2>
+    <p class="when">A harness, a brief, and two coding agents working in a loop</p>
+    <div class="prose">
+      <p>Two things made this possible: a harness and a brief. The harness was in place before this project began. It is
+        a repository set up for simulation and learning work: MuJoCo for physics, PufferLib 5.0 for reinforcement
+        learning, a locked Python environment, Git LFS for assets, a commit-based workflow between a laptop and a remote
+        RTX 4090 workstation, earlier MuJoCo projects to build on, and written engineering rules for how simulations are
+        modelled, tested, recorded and documented here. The brief states what to build and the gates the work must
+        meet.</p>
+      <p>Everything specific to this robot was written by two coding agents working together inside that harness from
+        the brief, one running GPT-6 Astra and one running Claude Opus 5.5. That includes the workcell and needle model,
+        the unit rescaling, the C++ thread model and contact kernel, the C task core shared by training, tests,
+        evaluation and replay, the disturbance layer, the PufferLib environment, the evaluation tools, and this page
+        with its WebAssembly replay. The project's first commit was on October 5.</p>
+    </div>
+    <ol class="loop" aria-label="The AutoResearch loop">
+      <li><strong>Brief and gates</strong><span>what to build, how it is judged</span></li>
+      <li><strong>Plan</strong><span>the next measurable step</span></li>
+      <li><strong>Build</strong><span>code, models, configuration</span></li>
+      <li><strong>Run</strong><span>simulation or training</span></li>
+      <li><strong>Measure</strong><span>against the gates, on held-out seeds</span></li>
+      <li><strong>Record</strong><span>results and failures, committed</span></li>
+      <li><strong>Change one thing</strong><span>then run again</span></li>
+    </ol>
+    <div class="prose">
+      <p>We call this improvement loop AutoResearch. The agents plan a step, implement it, run it, measure the result
+        against the brief's gates, record what failed, and change one variable before the next attempt. The training
+        runs in this journal show the pattern: a diverged run exposed a reward bug, two runs that blew up led to lower
+        learning rates, and a stable but slow run led to a longer training budget. A person sets the brief, reviews the
+        results and corrects course. Their corrections were decisive: train on the GPU workstation rather than fall back
+        to a CPU, make the gates serve the mission rather than the reverse, and pursue robustness under disturbances.
+        Their checks of this page in a browser found four display bugs.</p>
+      <p>"Self-improving" means the work improves, not the agents. The models behind them do not change. The code,
+        the physics, the policies and the process get better through measured iterations, and every mistake stays on the
+        record.</p>
+    </div>
+  </section>
 
   <section id="workcell">
     <h2>1 · A static workcell first</h2>
