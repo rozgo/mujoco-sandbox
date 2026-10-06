@@ -969,3 +969,9 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Checked in Chrome and fixed four issues before committing: episodes requested
   before the C `main` loaded them, canvas sizing, raylib overwriting the page
   title, and diagram text overflow. Nothing published.
+
+## October 6: brief v2
+
+- Started 03:06:38 UTC. With the user, rewrote the brief around mission metrics
+  and robustness: learn every phase under a shared disturbance layer, scripted
+  controllers as yardsticks only. Original kept as `BRIEF_V1.md`.

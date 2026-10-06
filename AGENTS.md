@@ -132,6 +132,11 @@ robot using MuJoCo and PufferLib 5.0. Read
 [project plan](docs/neural_insertion/README.md). The earlier dVRK proposal is
 preserved as historical research.
 
+Brief v2 (October 6, with the user): learn every mission phase under a shared,
+documented disturbance layer (sensing noise, latency, actuator variation,
+vibration, tissue motion, airflow); scripted controllers are yardsticks only;
+measure mission metrics on held-out seeds at stated disturbance levels.
+
 Work on this project in the primary checkout on `main`, as explicitly requested.
 The stopped fly work is preserved on `feature/fly-brain` in its own workspace;
 do not resume fly training or merge its experimental history into this project.

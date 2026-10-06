@@ -1,34 +1,56 @@
-# Surgical insertion robot brief
+# Surgical thread-insertion robot brief (v2)
 
-October 5, 2026: build our own surgical robot simulation in MuJoCo, with
-PufferLib 5.0 for subsequent task learning. Work on `main` in the primary
-checkout; the stopped fly project has its own workspace.
+October 6, 2026. Revised with the user after the first learned policy, to match
+what we now know we can simulate, train and measure. The original brief is kept
+as [BRIEF_V1.md](BRIEF_V1.md).
 
-The task is to acquire a fine thread, align with a target while avoiding vessels,
-insert to a prescribed depth, release, withdraw, and repeat at several sites.
-Later exercises add surface motion and recovery from missed pickups.
+## Goal
 
-First deliverable: a static robot and work area for visual inspection, including
-an XYZ gantry, insertion/retainer mechanism, microscope, thread cassette, supported
-tissue phantom, target sites and visible vessels. Show overview, mechanism,
-work-area, tool-clearance, microscope and cassette views before adding motion.
+A simulated robot that completes the full insertion cycle at several sites,
+robustly, under realistic disturbances: pick a thread, align with a target while
+avoiding vessels, insert to a prescribed depth, release, withdraw, and repeat.
+Later: tissue surface motion at clinical amplitudes, multi-site sequences and
+recovery from missed pickups. MuJoCo for physics, PufferLib 5.0 for learning.
 
-Static acceptance: model compiles; no unintended initial penetration; sampled
-approach poses remain clear; cameras show the mechanism and task; dimensions,
-moving masses and actuator bounds are recorded. User follow-up: bring in the
-flexible thread first; test consistent internal unit rescaling while keeping source
-parameters and results in SI. Document conversions, special settings, pros/cons
-and failed tests. Accuracy takes priority over runtime. Then validate a stable
-hold and one approach primitive, start alignment/tracking RL, and develop physical
-pickup/insertion/release progressively. Stop at unresolved resolution/accuracy
-limits rather than hiding them with altered physics.
+## Principles
 
-Solver preference after literature review: MuJoCo first (published DER model),
-Isaac Sim second, a coupled approach third, then other solvers. Keep the same
-accuracy gates across candidates; use independent references when needed.
+- **Learn every phase under disturbance.** A perfect simulated world makes any
+  phase look easy to program. Real sensing noise, latency, actuator variation,
+  vibration, tissue motion and airflow do not. Policies learn the mission; the
+  programmed servo remains only as the motor drive, as on a real stage. Scripted
+  controllers are yardsticks for measuring learning, not deployed components.
+- **One disturbance layer for every task.** Each disturbance is a documented
+  physical model with stated magnitudes, applied in the shared C core, so
+  training, evaluation and replay see the same world. Magnitudes are
+  illustrative until replaced by measured hardware and tissue data.
+- **Measure the mission.** Success is judged on true simulator state: depth and
+  placement error, vessel clearance, thread retention, peak tool and thread
+  loads, and completed cycles. Report results on held-out seeds at stated
+  disturbance levels, including full strength. Use more training seeds when
+  comparing changes, not as a ritual gate.
+- **Physics checks follow the task.** Numerical gates apply to the contact
+  regimes the task uses. Calibration against the real thread, tissue and
+  environment takes priority over further numerical refinement once targets are
+  chosen.
 
-Full-task measurements will include alignment and depth error, peak tool/thread
-loads, vessel clearance, retained thread placement and complete-cycle success.
-Freeze numerical task thresholds after physical characterization. The proposed
-learning gate is 90/100 complete missions for each of three predetermined training
-seeds, with failed cases retained and a separate stress evaluation.
+## Stages
+
+1. **Robust alignment** (current). Disturbance layer, then alignment under it,
+   compared with the undisturbed policy and the scripted yardstick.
+2. **Insertion into tissue.** A validated needle insertion model (puncture,
+   insertion resistance, retention) on a moving tissue body; learn
+   align-and-insert to depth while avoiding vessels.
+3. **The full cycle with the full thread, offline.** Run pick, insert, release
+   and withdraw end to end with the full elastic-rod thread to expose failure
+   modes and define metrics; slow to simulate, but only needed a few times.
+4. **A thread fast enough to learn with.** A reduced thread model validated
+   against the full one on exactly the phases being learned, including contact
+   and air drag, targeting about real time per environment.
+5. **Learn the thread phases**, then multi-site sequences and recovery, and
+   confirm on the full thread.
+
+## Inputs needed
+
+The real thread (material, cross-section, length), the tissue the phantom stands
+for, and the hardware specifications (encoders, camera, stages, vibration
+environment). Until then, presets and literature values are used and labelled.

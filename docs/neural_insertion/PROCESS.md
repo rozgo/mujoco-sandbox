@@ -145,3 +145,15 @@ Asked what this shows, the honest answer is that it is only the first step:
 the needle reaches the spot, but no thread is carried and the rigid phantom
 cannot be entered. The next work is a tissue insertion model, then the
 programmed thread cycle, then learning on it. [Learning](LEARNING.md).
+
+## 13. Rewriting the brief around what we learned (October 6)
+
+With the first policy trained, we reviewed the brief against what we can now
+simulate, train and measure. Two corrections came from the user. Process gates
+such as "three seeds at 90%" should not drive the work; mission metrics should.
+And a scripted controller succeeding in a perfect world is not evidence that a
+phase is easy: with sensing noise, latency, actuator variation, vibration,
+tissue motion and airflow, nothing is. The revised brief makes learning own
+every phase under one shared disturbance layer, keeps scripted controllers as
+yardsticks, and stages the work so the thread's simulation cost is addressed
+before thread learning. [Brief v2](BRIEF.md), [original](BRIEF_V1.md).
