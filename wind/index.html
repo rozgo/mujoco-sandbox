@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neural Wind Journal</title>
+  <meta name="description" content="A MuJoCo quadrotor delivers a cable-slung parcel through simulated Navier–Stokes wind; learned FNO and PINO wind forecasts cut its mean tracking error from 10.89 cm to 4.28–4.42 cm, with all 24 standard deliveries completed.">
+  <meta name="theme-color" content="#10202b">
+  <link rel="stylesheet" href="journal.css?v=7e311b4a0c41">
+  <style>:root { color-scheme: dark; --bg: #0b1620; --text: #e6f0f4; --muted: #93aab6; --card: #112230; --line: #1f3646; --link: #65e2d2; --chip: #16293a; --soft: #10293a; --bad: #f08a6c; --bad-soft: #2b1c1c; --accent: #65e2d2; --accent-2: #ff8c28; --accent-3: #91b3e7; --on-accent: #08151d; --hero: linear-gradient(125deg, #09101a 0%, #10202b 40%, #1d4a63 75%, #2a6f86 100%); --hero-text: #eef6f8; --film: #050b10; --metric: rgba(255, 255, 255, .07); --toc: rgba(11, 22, 32, .9); --tile-1: linear-gradient(135deg, #1f8f86, #145a5a); --tile-2: linear-gradient(135deg, #3d6aa6, #24406b); --tile-3: linear-gradient(135deg, #e07a22, #9c4d12); --tile-4: linear-gradient(135deg, #6f5aa0, #43356a); --tile-text: #f5fafb; }</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <a class="home-link" href="../">&larr; MuJoCo Sandbox</a>
+    <p class="eyebrow">Engineering journal · September 9, 2026 · MuJoCo 3.12 · NeuralOperator FNO and PINO · PyTorch 2.14</p>
+    <h1>Flying a slung parcel through simulated wind with learned forecasts</h1>
+    <p class="lede">A 2.0 kg quadrotor carries a 0.20 kg parcel on a 0.65 m cable that can go slack, through two gates, while an independent Navier–Stokes solver blows gusting crosswinds across its path. The same programmed predictive controller flies every run; only its 2 s wind forecast changes: held frozen, or advanced by an FNO or PINO neural operator trained for this project. The forecasts are the only learned part.</p>
+    <figure class="hero-film">
+      <video src="media/film_v2.mp4" poster="media/film_v2_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Version 2, seed 400: the same programmed controller with a frozen-wind forecast (left) and the learned PINO forecast (right), in identical 1.5× simulated wind. The full 31 s flight plays at real time, then a 10 s results card. Rendered from saved states of the physical MuJoCo runs; the forecast panel compares PINO with the solver's future wind for evaluation only.</figcaption>
+    </figure>
+    <div class="metrics"><div class="metric"><div class="value">24 / 24</div><div class="label">standard deliveries: six held-out winds × four forecasts</div></div><div class="metric"><div class="value">4.28 cm</div><div class="label">mean parcel tracking error with the FNO forecast, vs 10.89 cm with frozen wind (PINO 4.42 cm)</div></div><div class="metric"><div class="value">4.34 cm</div><div class="label">the same in version 2's 1.5× wind, vs 19.59 cm frozen (PINO 4.51 cm), five complete paired windows</div></div><div class="metric"><div class="value">5 / 6</div><div class="label">version 2 missions per method; seed 404 failed for all four and stays on record</div></div><div class="metric"><div class="value">73.4 s · 82.3 s</div><div class="label">FNO and PINO training, 64 epochs each on one RTX 4090</div></div></div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Chapters">
+  <div class="wrap"><a href="#scene">1 A static scene first</a><a href="#wind">2 The wind is its own simulation</a><a href="#controller">3 One controller, four forecasts</a><a href="#training">4 Training the forecasters</a><a href="#fft">5 CUDA and Metal disagreed</a><a href="#standard">6 Standard flights: 24 of 24</a><a href="#aggressive">7 Version 2: stronger wind, faster crossing</a><a href="#seed-404">8 Seed 404, kept on record</a><a href="#next">9 Next steps</a></div>
+</nav>
+
+<main class="wrap">
+  <div class="scope"><strong>Where this stands.</strong> Finished on September 9, 2026, in two versions, both kept. MuJoCo simulates the aircraft, the cable, the rotors and every contact; an independent 2D Navier–Stokes solver supplies the wind, applied as drag forces; FNO and PINO networks trained here forecast that wind 2 s ahead. The predictive controller and the delivery sequence are programmed, not learned, and they read exact simulator state and the full current wind field, not camera images or wind sensors. The wind is two-dimensional and one-way coupled: the aircraft does not disturb the air. Every number on this page comes from files in the repository.</div>
+  <section id="scene">
+    <h2>1 · A static scene first</h2>
+    <p class="when">September 9 · a research brief, then a scene that does not move</p>
+    <div class="prose">
+      <p>The project began with a neural-operator research brief and one question: what could we build in simulation
+        that would make a strong video? The answer we accepted was a quadrotor carrying a parcel on a cable through
+        changing crosswinds, flown side by side with and without a learned wind forecast. MuJoCo keeps the rigid
+        bodies, the cable, the rotors and the contacts. The neural operator only forecasts the air. The brief was a
+        starting point. This project does not reproduce any published benchmark.</p>
+      <p>Before anything moved we built the static scene and checked it from several cameras: a generic quadrotor made
+        of geometric primitives, a foam parcel, pickup and delivery platforms 5.4 m apart, two gates, and onboard and
+        external cameras.</p>
+    </div>
+    <figure><img src="media/overview.webp" alt="The course: pickup platform with quadrotor and parcel, two gates, delivery platform" loading="lazy">
+      <figcaption>The course before any motion: the quadrotor and parcel on the pickup platform, two gates, and the
+        delivery platform 5.4 m away.</figcaption></figure>
+    <div class="grid3">
+      <figure><img src="media/detail.webp" alt="Quadrotor hovering over the parcel on its cable" loading="lazy"><figcaption>The aircraft, the cable and the 26 × 26 × 20 cm parcel. Rotor disks are visual only. Thrust comes from four site actuators.</figcaption></figure>
+      <figure><img src="media/front.webp" alt="View through the gates toward the delivery platform" loading="lazy"><figcaption>Looking down the route through both gates.</figcaption></figure>
+      <figure><img src="media/loadcam.webp" alt="Downward camera looking at the parcel on the platform" loading="lazy"><figcaption>The downward payload camera. Cameras are for the viewer. The controller never sees their images.</figcaption></figure>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Part</th><th>Value and reason</th></tr>
+      <tr><td>Aircraft</td><td>2.0 kg; diagonal inertia 0.035, 0.035, 0.055 kg m²; a compact inspection drone, not a vendor model</td></tr>
+      <tr><td>Parcel</td><td>0.20 kg, 26 × 26 × 20 cm; a light foam box with a large area facing the wind</td></tr>
+      <tr><td>Rotors</td><td>Four sites at ±0.24 m; 0–10 N each, so 40 N against a 21.58 N loaded weight; 0.03 s first-order lag</td></tr>
+      <tr><td>Cable</td><td>Unilateral spatial tendon, 0.65 m between attachments; it can go slack and never pushes</td></tr>
+      <tr><td>Contact</td><td>Friction 0.8; compliant MuJoCo contact; the parcel is never welded to anything</td></tr>
+      <tr><td>Integration</td><td>Standard CPU MuJoCo, 2 ms step (500 Hz), <code>implicitfast</code>, gravity 9.81 m/s²</td></tr>
+      <tr><td>Route</td><td>Lift, a 5.4 m crossing at 1.90 m cruise height through two gates, then lower and release: a 43 s flight</td></tr>
+    </table></div>
+    <div class="note-box"><strong>Release has to be earned.</strong> The controller releases the cable only after the
+      parcel touches the delivery platform and is moving slower than 0.15 m/s. The tendon then goes slack. No flight
+      code writes positions or velocities to make a delivery happen. The videos replay saved poses from the physical runs.</div>
+  </section>
+
+  <section id="wind">
+    <h2>2 · The wind is its own simulation</h2>
+    <p class="when">September 9 · an independent Navier–Stokes solver, applied as drag</p>
+    <div class="prose">
+      <p>Every flight flies through the output of an independent numerical solver, including the flights that use
+        neural forecasts. No flight ever flies through a network's prediction. The solver handles the forced,
+        incompressible 2D vorticity equation on a periodic 12 × 12 m domain, with viscosity 0.04 m²/s, Fourier
+        derivatives, 2/3 dealiasing and third-order SSP Runge–Kutta. Its internal step is at most 0.01 s at 64²,
+        0.005 s at 128² and 0.0025 s at 256². Tests check exact Taylor–Green vortex decay and the divergence without
+        involving any learned model.</p>
+      <p>Each seed draws its own mix of 12 low Fourier modes, with an initial vorticity RMS of 2 s⁻¹, random phases and
+        steady forcing. These modes sit on top of a mean wind of 1.4–2.2 m/s across the route and −0.4 to 0.4 m/s along
+        it. The evolving vortices add gusts that change in space and time.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Drag at five points</h4><ul>
+        <li>F = c ‖u − v‖ (u − v) at each rotor and at the parcel's centre</li>
+        <li>Aircraft c = 0.14 kg/m, split over four rotors; parcel c = 0.045 kg/m</li>
+        <li>v is the actual velocity of each point, so swinging and tilting change the drag</li>
+        <li><code>mj_applyFT</code> adds each force and its moment, rebuilt from zero every 2 ms step</li>
+      </ul></div>
+      <div class="card"><h4>One-way coupling</h4><ul>
+        <li>Air moves horizontally; the aircraft and gates do not change it</li>
+        <li>Drag dissipates energy relative to the air, but moving air can still do work on the aircraft</li>
+        <li>The same wind drives every method within a seed</li>
+      </ul></div>
+      <div class="card"><h4>Not modelled</h4><ul>
+        <li>Rotor wash, obstacle wakes and pressure integration</li>
+        <li>Vertical turbulence; cable mass and cable drag</li>
+        <li>Calibration against a real aircraft or real wind</li>
+      </ul></div>
+    </div>
+    <div class="lesson"><strong>Keep the subsystems apart.</strong> MuJoCo supplies rigid-body dynamics and contact.
+      The solver supplies the air. The networks only predict the air. Because of that separation, a forecast can be
+      judged against the solver's actual wind, and a flight can be judged against MuJoCo's physics.</div>
+  </section>
+
+  <section id="controller">
+    <h2>3 · One controller, four forecasts</h2>
+    <p class="when">September 9 · the controller is written by hand; only the forecast changes</p>
+    <div class="prose">
+      <p>The controller is programmed, not learned. At 10 Hz it plans 2 s ahead with a linearized model of the aircraft
+        and its swinging parcel. The model tracks position, speed, swing angle, swing rate and the lag of horizontal
+        rotor force, and a quadratic cost over the horizon penalizes parcel error, aircraft error, swing, effort and
+        slew. The controller solves the unconstrained problem and then clips horizontal force to ±6 N per axis. A
+        geometric attitude loop at 100 Hz turns that force into an orientation and four rotor commands. This is an
+        approximate predictive controller, not a constrained nonlinear MPC, and the route is fixed rather than planned.</p>
+      <p>Wind enters the plan as predicted drag along the reference path. The four methods differ only in where those
+        2 s of future wind come from:</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Method</th><th>Wind over the 2 s horizon</th><th>Deployable</th></tr>
+      <tr><td>Frozen field</td><td>The last observed field, held fixed</td><td>Yes</td></tr>
+      <tr><td>FNO</td><td>The observation advanced by the data-only neural operator</td><td>Yes</td></tr>
+      <tr><td>PINO</td><td>The observation advanced by the operator that was also trained on a PDE residual</td><td>Yes</td></tr>
+      <tr><td>True future</td><td>The solver's actual future wind</td><td>No; a diagnostic, not an optimum</td></tr>
+    </table></div>
+    <figure><img src="media/crosswinds_v1.webp" alt="Side-by-side frozen and PINO flights entering the crosswinds, with forecast panels" loading="lazy">
+      <figcaption>Standard flight, seed 300, at 6.0 s: frozen field (left) and PINO (right). Bottom row: the one-second
+        PINO forecast beside the solver's future field (shown for evaluation only), the downward payload camera, and
+        tracking error.</figcaption></figure>
+    <div class="note-box"><strong>Matched by construction.</strong> Within each seed, the reference path, controller
+      matrices, gains, actuator limits, initial conditions and solver wind are identical. Every controller sees the
+      same full current wind field every 0.25 s, plus exact aircraft and parcel state. That is privileged simulator
+      state, not perception. Forecasts are cached before each flight, and each entry depends only on the observation
+      at its timestamp, the known forcing and the model weights. A test corrupts the future reference arrays and
+      confirms the forecasts do not change. Checkpoint hashes are stored in every flight report.</div>
+  </section>
+
+  <section id="training">
+    <h2>4 · Training the forecasters</h2>
+    <p class="when">September 9 · 48 training winds, one RTX 4090, 64 epochs per model</p>
+    <div class="prose">
+      <p>Both predictors are the official NeuralOperator FNO: four Fourier layers, width 32, 16 × 16 retained modes,
+        and 603,041 parameter elements counting complex spectral weights. Each takes the current vorticity, the steady
+        forcing and the mean wind, and predicts a mean-preserving update for the next 0.25 s. Chained eight times, that
+        covers the controller's 2 s horizon. The same weights also run on other grid sizes.</p>
+      <p>PINO here is an FNO trained with one extra loss term. The two runs share the initialization, data, minibatch
+        order and learning-rate schedule for 64 epochs. From epoch 33, every fourth PINO minibatch adds a Navier–Stokes
+        residual at weight 0.03, computed on 128² inputs that are Fourier-interpolated from the coarse data. There are
+        no 128² labels. The residual uses a trapezoidal time step, so it acts as a soft regularizer and does not
+        guarantee physical consistency.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Partition</th><th>Seeds</th><th>Use</th></tr>
+      <tr><td>Training</td><td>0–47</td><td>48 trajectories × 64 steps: 3,072 supervised pairs on 64²</td></tr>
+      <tr><td>Checkpoint selection</td><td>100–107</td><td>One-step error on independent trajectories</td></tr>
+      <tr><td>Flow evaluation</td><td>200–203</td><td>64² and 128² from 2, 12 and 28 s; 256² from 12 s; leads 0.25, 1 and 2 s</td></tr>
+      <tr><td>Flight development</td><td>200</td><td>Controller tuning before any held-out flight</td></tr>
+      <tr><td>Flight evaluation</td><td>300–305</td><td>All four methods on all six winds (version 2: 400–405)</td></tr>
+    </table></div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">73.4<small>s</small></div><div class="what">FNO training, 64 epochs</div><div class="vs">RTX 4090; excludes setup, data generation and validation</div></div>
+      <div class="tile"><div class="big">82.3<small>s</small></div><div class="what">PINO training, 64 epochs</div><div class="vs">Same data and schedule, plus the residual</div></div>
+      <div class="tile"><div class="big">0.096</div><div class="what">FNO one-step error relative to the frozen field (PINO 0.097)</div><div class="vs">Vorticity, 0.25 s ahead, selection seeds; both chose epoch 64</div></div>
+      <div class="tile"><div class="big">0.064<small>m/s</small></div><div class="what">FNO velocity RMSE at a 2 s lead (PINO 0.065)</div><div class="vs">Held-out seeds 200–203, three start times, 64²</div></div>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Grid and start times</th><th class="num">FNO, 2 s velocity RMSE</th><th class="num">PINO</th></tr>
+      <tr><td>64², starts at 2, 12 and 28 s</td><td class="num">0.0643 m/s</td><td class="num">0.0650 m/s</td></tr>
+      <tr><td>128², the same starts</td><td class="num">0.0643 m/s</td><td class="num">0.0650 m/s</td></tr>
+      <tr><td>64² or 128², 12 s start only</td><td class="num">0.0413 m/s</td><td class="num">0.0434 m/s</td></tr>
+      <tr class="hl"><td>256², 12 s start, unseen by both losses</td><td class="num">0.0413 m/s</td><td class="num">0.0434 m/s</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>At a 2 s lead, the forecast velocity error is 2–5% of the frozen field's error, depending on the start time.
+        The 256² row looks better only because it uses the 12 s start alone, and at that same start the coarser grids
+        give the identical error. A direct 128² PINO rollout has a relative vorticity error of 0.057133. Fourier
+        interpolation of the 64² rollout gives the same 0.057133.</p>
+      <p>Training ran on an RTX 4090. Evaluation and every flight ran on an Apple M3 Max, with forecasts on Metal and
+        MuJoCo on the CPU. Optimization can follow different paths on different devices, so the checkpoints are
+        committed and evaluation does not depend on retraining.</p>
+    </div>
+    <div class="lesson"><strong>A finer grid is not finer accuracy.</strong> The same weights run at 128² and 256² and
+      match the coarse result. That shows the operator transfers across grids. It does not show that the operator
+      recovers detail it never learned.</div>
+  </section>
+
+  <section id="fft">
+    <h2>5 · CUDA and Metal disagreed</h2>
+    <p class="when">September 9 · a portability bug, a pinned upstream fix, then retraining</p>
+    <div class="failure"><strong>Same weights, different answers.</strong> With the released NeuralOperator 2.0.0, the
+      same model produced different 128² inverse-FFT outputs on CUDA than on Metal and the CPU. Training had finished
+      without error and every shape matched, so neither check revealed the problem. The repository records the
+      discrepancy and the fix, but not the size of the original disagreement.</div>
+    <div class="prose">
+      <p>An FNO layer multiplies Fourier modes by learned complex weights and returns to a real field through a real
+        inverse FFT. That transform assumes the spectrum is Hermitian-symmetric, as the spectrum of any real field is.
+        The transform leaves any part that breaks the symmetry undefined, and different FFT backends handled that part
+        differently. NeuralOperator fixed this upstream: commit <code>00b7d86</code> explicitly enforces Hermitian
+        symmetry before the real inverse FFT. We pinned the dependency to that commit in <code>uv.lock</code>, turned
+        off TF32 so CUDA arithmetic stays comparable with the CPU and Metal, and retrained both models. The committed
+        weights are the retrained ones.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Model</th><th>Grid</th><th class="num">CPU vs CUDA</th><th class="num">CPU vs Metal</th></tr>
+      <tr><td>FNO</td><td>64²</td><td class="num">4.8 × 10⁻⁶</td><td class="num">5.1 × 10⁻⁶</td></tr>
+      <tr><td>FNO</td><td>128²</td><td class="num">6.8 × 10⁻⁶</td><td class="num">6.0 × 10⁻⁶</td></tr>
+      <tr><td>FNO</td><td>256²</td><td class="num">7.0 × 10⁻⁶</td><td class="num">9.1 × 10⁻⁶</td></tr>
+      <tr><td>PINO</td><td>64²</td><td class="num">5.1 × 10⁻⁶</td><td class="num">5.4 × 10⁻⁶</td></tr>
+      <tr><td>PINO</td><td>128²</td><td class="num">6.2 × 10⁻⁶</td><td class="num">6.9 × 10⁻⁶</td></tr>
+      <tr><td>PINO</td><td>256²</td><td class="num">8.2 × 10⁻⁶</td><td class="num">9.5 × 10⁻⁶</td></tr>
+    </table></div>
+    <div class="prose"><p>Values are the largest absolute vorticity difference, in s⁻¹, after eight chained 0.25 s
+      steps (2 s), with the fixed models. For scale, the initial vorticity RMS is 2 s⁻¹. When the repository was later
+      set up on the GPU machine, both committed models passed the CPU/CUDA check again, with a largest difference of
+      8.23 × 10⁻⁶ s⁻¹.</p></div>
+    <div class="lesson"><strong>A clean training run is not a cross-device check.</strong> The comparison is now a
+      script (<code>scripts/check_wind_backend.py</code>). A regression test checks the Hermitian setting and that
+      gradients stay finite. The repository's guidelines keep the pinned revision until a replacement passes the same
+      checks.</div>
+  </section>
+
+  <section id="standard">
+    <h2>6 · Standard flights: 24 of 24</h2>
+    <p class="when">September 9 · six held-out winds, four forecasts, one controller</p>
+    <figure class="film"><video src="media/film_v1.mp4" poster="media/film_v1_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Standard profile, seed 300, the first evaluation seed, chosen before the final results: frozen field
+        (left) and PINO (right) in identical wind. The film has a 4 s opening hold, the full 43 s flight at real time,
+        a 5 s hold on the final frame, then the results card, 62 s in all. It is rendered from saved states of the
+        physical runs. Tracers follow the solver's wind, arrows show applied forces, and coloured paths show
+        controller predictions.</figcaption></figure>
+    <div class="result-strip">
+      <div class="tile"><div class="big">24<small>/ 24</small></div><div class="what">deliveries across all methods and winds</div><div class="vs">Every release after platform contact; no gate collisions, no MuJoCo warnings</div></div>
+      <div class="tile"><div class="big">10.89<small>cm</small></div><div class="what">frozen field: mean crossing tracking RMSE</div><div class="vs">Horizontal parcel error, t = 6–32 s; peak swing 28.81°</div></div>
+      <div class="tile"><div class="big">4.28<small>cm</small></div><div class="what">FNO forecast</div><div class="vs">60.7% lower; peak swing 25.36°</div></div>
+      <div class="tile"><div class="big">4.42<small>cm</small></div><div class="what">PINO forecast</div><div class="vs">59.4% lower; true-future diagnostic 4.30 cm</div></div>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Wind seed</th><th class="num">Frozen field</th><th class="num">FNO</th><th class="num">PINO</th><th class="num">True future</th></tr>
+      <tr><td>300</td><td class="num">9.90 cm</td><td class="num">3.88 cm</td><td class="num">3.88 cm</td><td class="num">3.65 cm</td></tr>
+      <tr><td>301</td><td class="num">13.33 cm</td><td class="num">6.02 cm</td><td class="num">6.39 cm</td><td class="num">6.31 cm</td></tr>
+      <tr><td>302</td><td class="num">8.26 cm</td><td class="num">3.03 cm</td><td class="num">2.96 cm</td><td class="num">2.99 cm</td></tr>
+      <tr><td>303</td><td class="num">9.36 cm</td><td class="num">2.70 cm</td><td class="num">2.76 cm</td><td class="num">2.43 cm</td></tr>
+      <tr><td>304</td><td class="num">13.43 cm</td><td class="num">3.71 cm</td><td class="num">3.73 cm</td><td class="num">3.72 cm</td></tr>
+      <tr><td>305</td><td class="num">11.07 cm</td><td class="num">6.34 cm</td><td class="num">6.79 cm</td><td class="num">6.72 cm</td></tr>
+      <tr class="hl"><td>Mean</td><td class="num">10.89 cm</td><td class="num">4.28 cm</td><td class="num">4.42 cm</td><td class="num">4.30 cm</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>The forecast is what helps. Both learned forecasts cut the error by about 60% compared with holding the wind
+        fixed, and they land within 0.14 cm of each other and of the true-future diagnostic. FNO is lower than PINO on
+        four of the six winds and PINO on one, and they tie on seed 300. On three winds (301, 304 and 305), FNO even
+        beats the true future. The controller's model is approximate, so a perfect forecast does not guarantee the
+        lowest error.</p>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/delivered_v1.webp" alt="PINO parcel delivered while the frozen-field parcel is still lowering" loading="lazy"><figcaption>36.4 s: the PINO side has released after contact (at 36.32 s). The frozen-field release on this seed came at 36.36 s. All 24 releases fell between 36.30 and 36.47 s.</figcaption></figure>
+      <figure><img src="media/results_v1.webp" alt="Results card: mean tracking RMSE for the four forecasts" loading="lazy"><figcaption>The film's results card. The bars average all six held-out winds, not only the seed shown.</figcaption></figure>
+    </div>
+    <div class="lesson"><strong>PINO did not beat FNO.</strong> The physics residual is a soft constraint added to
+      the same network, and on these six winds it neither helped nor hurt measurably. The finding is the value of a
+      forecast, not of the physics loss.</div>
+    <div class="note-box"><strong>Physical checks.</strong> Every run stayed under the 10 N rotor limit; the highest
+      was 9.734 N, in a frozen-field run. The largest cable constraint extension was 0.400 mm. There were no gate
+      collisions and no MuJoCo numerical warnings. The whole goal, from brief to committed video, took 54 min 21 s
+      of elapsed time. That covers GPU setup, the FFT fix, training, 27 passing tests and rendering. The two final
+      training runs took 2 min 36 s of it.</div>
+  </section>
+
+  <section id="aggressive">
+    <h2>7 · Version 2: stronger wind, faster crossing</h2>
+    <p class="when">September 9 · a follow-up, kept separate from the original</p>
+    <div class="prose">
+      <p>After the first version we were asked for more aggressive dynamics, and then to keep the original intact.
+        Version 2 is a separate <code>aggressive</code> preset with fresh seeds 400–405 and its own output folders. The
+        original video, checkpoints and standard preset are unchanged. Rerunning the standard trajectory reproduced it
+        exactly.</p>
+      <p>To make the wind 1.5× stronger while keeping the same physics, version 2 uses the Navier–Stokes similarity
+        transform u<sub>new</sub>(x, t) = s·u<sub>base</sub>(x, s·t) with s = 1.5. Viscosity becomes 0.06 m²/s,
+        vorticity scales by s and forcing by s². Wind speed and the rate of gust evolution both rise 1.5×, the
+        Reynolds number stays the same, and the aircraft's mass, gravity and actuator time constants are unchanged.
+        The trained models needed no retraining. They forecast 3 native seconds for each 2 s physical horizon, and the
+        output is rescaled. The observation clock scales too, to 6 Hz.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Parameter</th><th>Original</th><th>Version 2</th></tr>
+      <tr><td>Wind speed and evolution rate</td><td>1×</td><td>1.5×</td></tr>
+      <tr><td>5.4 m crossing</td><td>24 s</td><td>12 s</td></tr>
+      <tr><td>Peak commanded cruise speed</td><td>0.3375 m/s</td><td>0.675 m/s</td></tr>
+      <tr><td>Crossing acceleration scale</td><td>1×</td><td>4×</td></tr>
+      <tr><td>Tracking window</td><td>6–32 s</td><td>6–20 s</td></tr>
+      <tr><td>Complete flight</td><td>43 s</td><td>31 s</td></tr>
+      <tr><td>Wind seeds</td><td>300–305</td><td>400–405</td></tr>
+      <tr><td>Masses, cable, contact, controller gains, 0–10 N rotors</td><td colspan="2">Unchanged</td></tr>
+    </table></div>
+    <div class="lesson"><strong>Test the identity, not the integrator.</strong> The first scaling test compared runs
+      that used unmatched time steps. It failed on ordinary Runge–Kutta discretization error, not on the physics.
+      Once the dimensionless steps were matched, the test isolated the scaling identity, and the scaled solver now
+      agrees with the transformed original to below 10⁻⁵ in vorticity.</div>
+    <div class="grid2">
+      <figure><img src="media/align_v2.webp" alt="Version 2 at 18 s: both parcels swinging past the second gate, with motion trails" loading="lazy"><figcaption>18.0 s, seed 400: trails show each parcel's last three seconds of actual motion. The white cross marks the horizontal target.</figcaption></figure>
+      <figure><img src="media/delivered_v2.webp" alt="Version 2 at 24.4 s: PINO parcel delivered, frozen-field parcel still swinging" loading="lazy"><figcaption>24.4 s: PINO released at 24.32 s, while the frozen-field parcel is still swinging onto the platform. It released at 24.62 s.</figcaption></figure>
+    </div>
+    <div class="prose">
+      <p>The film at the top of the page is seed 400, the first new evaluation seed, chosen before the final results.
+        Both flights deliver. The frozen-field parcel strays up to 47.7 cm from its target, against 11.4 cm for PINO,
+        and the crossing RMSE is 20.17 cm against 5.99 cm. Peak sling angles are close, 46.2° against 43.4°, and peak
+        aircraft tilt is 21.2° against 16.9°. The forecast keeps the parcel on its path. It does not stop the wind from
+        swinging it.</p>
+      <p>The first version 2 cut ran 50 s, with a 4 s frozen opening and a 5 s frozen end. Both holds were removed the
+        same evening, leaving the 31 s flight at real time and the 10 s results card: 41 s and 1,025 frames, all of
+        which decoded without error.</p>
+    </div>
+  </section>
+
+  <section id="seed-404">
+    <h2>8 · Seed 404, kept on record</h2>
+    <p class="when">September 9 · one wind beyond this controller and these rotors</p>
+    <div class="failure"><strong>Seed 404 failed for all four methods.</strong> All four runs hit the 10 N rotor limit.
+      These were physical and control failures, and MuJoCo reported no numerical warnings. The reports keep each
+      termination reason and partial trajectory, and the comparison command exits with an error status when any
+      mission fails.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Method</th><th>What happened</th><th class="num">Run ended</th></tr>
+      <tr><td>Frozen field</td><td>Struck a gate and dropped below the flight envelope</td><td class="num">15.67 s</td></tr>
+      <tr><td>FNO</td><td>Drifted past the lateral envelope during the lift, before the crossing began</td><td class="num">5.58 s</td></tr>
+      <tr><td>PINO</td><td>The same lateral drift during the lift</td><td class="num">5.54 s</td></tr>
+      <tr><td>True future</td><td>Flew all 31 s and set the parcel on the platform, but contacted a gate, so the mission failed</td><td class="num">31.00 s</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>The seed 404 runs met winds of 8.09–8.33 m/s at the aircraft and parcel, among the strongest of the six seeds.
+        Wind speed alone does not explain the failure, though. On seed 403 the wind reached 8.13 m/s and every method
+        also hit the rotor limit, yet all four delivered.</p>
+      <p>The failure also changes how the error is measured. The failed FNO and PINO runs ended before the crossing
+        began, so their reports hold no tracking samples. Counting them would have entered zero error for the two
+        worst flights. The RMSE comparison therefore uses only the five windows that every method completed (seeds
+        400, 401, 402, 403 and 405).</p>
+    </div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">5<small>/ 6</small></div><div class="what">missions completed, for every method</div><div class="vs">The same success rate; seed 404 failed for all four</div></div>
+      <div class="tile"><div class="big">19.59<small>cm</small></div><div class="what">frozen field: mean tracking RMSE</div><div class="vs">Five shared complete windows, t = 6–20 s</div></div>
+      <div class="tile"><div class="big">4.34<small>cm</small></div><div class="what">FNO forecast</div><div class="vs">77.8% lower on those five windows</div></div>
+      <div class="tile"><div class="big">4.51<small>cm</small></div><div class="what">PINO forecast</div><div class="vs">77.0% lower; true-future diagnostic 4.47 cm</div></div>
+    </div>
+    <figure><img src="media/results_v2.webp" alt="Version 2 results card with failures retained" loading="lazy">
+      <figcaption>Version 2's results card names the failed wind and leaves incomplete windows out of the bars.</figcaption></figure>
+    <div class="note-box"><strong>What the 77% means.</strong> The 77% applies only to the five completed windows. It
+      is not a better success rate, since every method completed 5 of 6. FNO was again lower than PINO on four of the
+      five winds, and PINO was lower on seed 405, by 0.01 cm. Versions 1 and 2 are different experiments, so their
+      percentages are not a controlled comparison. The follow-up took 24 min 29 s and ended with 32 passing tests.
+      Removing the holds took another 2 min 43 s.</div>
+  </section>
+
+  <section id="next">
+    <h2>9 · Next steps</h2>
+    <p class="when">What would make the claim stronger</p>
+    <ol class="next-steps">
+      <li><strong>Forecast live, inside the loop</strong>Forecasts are now cached before each flight from causal
+        inputs. Running the operator inside the 10 Hz loop, and timing it there, would turn cached playback into a
+        deployable measurement.</li>
+      <li><strong>Partial, noisy observations</strong>Every controller sees the full current field every 0.25 s. A real
+        aircraft would sense the wind at a few points, late and with noise, and forecasting from that is the harder,
+        more useful problem.</li>
+      <li><strong>Find the edge, not one case</strong>Seed 404 shows where this controller and 10 N rotors stop coping.
+        A predictive controller that respects rotor limits, plus more seeds at graded wind strengths, would map that
+        boundary.</li>
+      <li><strong>Test the physics loss where it could matter</strong>With plenty of data from one flow family, PINO
+        matched FNO. Fewer labels, longer horizons or winds outside the training family are where a PDE residual might
+        make a measurable difference, measured with several training seeds per model.</li>
+      <li><strong>Richer air</strong>Two-way coupling, rotor wash, obstacle wakes, vertical gusts and cable
+        aerodynamics, with flow data beyond this synthetic 2D family, and then validation against a real system.</li>
+    </ol>
+    <div class="prose"><p>Nothing here is calibrated to a real aircraft or real wind. The result is the value of
+      forecasting the wind within this simulated test family, flown by a programmed controller.</p></div>
+  </section>
+
+</main>
+
+<footer class="wrap"><p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>, <a href="https://github.com/rozgo/mujoco-sandbox/tree/main/docs/wind"><code>docs/wind/</code></a> (version 2 in <code>docs/wind/aggressive/</code>). Rigid bodies, cable and contact: <a href="https://mujoco.org">MuJoCo</a> 3.12 (Apache 2.0). Wind forecasts: the official <a href="https://github.com/neuraloperator/neuraloperator">NeuralOperator</a> library (MIT licence), pinned to upstream commit <code>00b7d86f8d74ff0af55da53eb585fe26df9c71f0</code>, implementing FNO (<a href="https://arxiv.org/abs/2010.08895">Li et al.</a>) and PINO (<a href="https://arxiv.org/abs/2111.03794">Li et al.</a>). The model weights were trained for this project; this is an independent robotics illustration, not a result of those authors. Videos are re-encoded for the web from the rendered MP4s in <code>previews/wind/</code>.</p></footer>
+</body>
+</html>
