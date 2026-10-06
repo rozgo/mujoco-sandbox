@@ -33,7 +33,7 @@ STATES = ROOT/"outputs/neural_insertion/site/states"
 # Viewer policies: 0 robust learned (trained under disturbances), 1 scripted
 # yardstick, 2 learned without disturbances. Each at three disturbance levels on
 # the first SITE_SEEDS predetermined evaluation seeds (results use all 200).
-LEVELS = (0.0, 0.5, 1.0)
+LEVELS = (0.0, 1.0, 2.0)  # disturbance scale v2: undisturbed, nominal, stress
 SITE_SEEDS = EVALUATION_SEEDS[:30]
 FONT = Path(__import__("matplotlib").get_data_path())/"fonts/ttf"
 
@@ -44,7 +44,8 @@ def outcome(info):
 
 def learned_episodes(name, policy, level):
     weights = WEIGHTS[name]
-    tag = hashlib.sha256(weights.read_bytes()).hexdigest()[:12]
+    core = (ROOT/"src/sixlegs/neural_insertion/native/surgical_core.h").read_bytes()
+    tag = hashlib.sha256(weights.read_bytes()+core).hexdigest()[:12]  # replays depend on weights and core
     folder = STATES/f"{name}_{tag}_level{level:.2f}"
     if not (folder/"episodes.json").exists():
         evaluate_checkpoint(weights, folder, record=SITE_SEEDS, level=level)
@@ -158,11 +159,31 @@ VIDEOS = {
 }
 
 
+GLOSSARY = ROOT/"previews/neural_insertion/glossary_v1"
+
+
+def glossary(data):
+    """Parts gallery: rendered views (Git LFS PNG) to WebP, captions from glossary.json."""
+    from PIL import Image
+    spec = json.loads((GLOSSARY/"glossary.json").read_text())
+    folder = SITE/"media/glossary"
+    folder.mkdir(parents=True, exist_ok=True)
+    for part in spec["parts"]:
+        Image.open(GLOSSARY/part["image"]).convert("RGB").save(folder/f"{part['id']}.webp", quality=84, method=6)
+        part["media"] = f"media/glossary/{part['id']}.webp"
+    (data/"glossary.json").write_text(json.dumps(spec)+"\n")
+
+
 def assemble(media_paths):
-    for name in ("index.html", "style.css"):
-        shutil.copy2(ROOT/"site"/name, SITE/name)
+    shutil.copy2(ROOT/"site/style.css", SITE/"style.css")
     viewer = hashlib.sha256(b"".join((SITE/"viewer"/n).read_bytes() for n in ("viewer.js", "viewer.wasm", "viewer.data")))
     (SITE/"journal.js").write_text((ROOT/"site/journal.js").read_text().replace("__VIEWER_BUILD__", viewer.hexdigest()[:12]))
+    # Version the page's own script and stylesheet too, so a rebuild is never served from cache.
+    page = (ROOT/"site/index.html").read_text()
+    for name in ("journal.js", "style.css"):
+        tag = hashlib.sha256((SITE/name).read_bytes()).hexdigest()[:12]
+        page = page.replace(f'"{name}"', f'"{name}?v={tag}"')
+    (SITE/"index.html").write_text(page)
     data = SITE/"data"
     data.mkdir(exist_ok=True)
     results = json.loads((ROOT/"docs/neural_insertion/ALIGN_RESULTS.json").read_text())
@@ -183,6 +204,7 @@ def assemble(media_paths):
     (data/"clock.json").write_text(json.dumps([{k: c[k] for k in ("material", "integrator", "time_constant_s", "dt_s",
                                                                   "difference_um", "passed")}
                                                for c in clock["comparisons"].values() if not c.get("units")])+"\n")
+    glossary(data)
     (SITE/"media.json").write_text(json.dumps(media_paths, indent=1)+"\n")
     (SITE/".nojekyll").write_text("")
 

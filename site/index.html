@@ -28,9 +28,9 @@
         </div>
         <div class="group" role="group" aria-label="Disturbance level">
           <span class="group-label">disturbance</span>
-          <button data-level="0" aria-pressed="false">0</button>
-          <button data-level="0.5" aria-pressed="false">0.5</button>
-          <button data-level="1" aria-pressed="true">1.0</button>
+          <button data-level="0" aria-pressed="false">none</button>
+          <button data-level="1" aria-pressed="true">nominal</button>
+          <button data-level="2" aria-pressed="false">stress</button>
         </div>
         <div class="group">
           <button id="prev" aria-label="Previous episode">◀</button>
@@ -156,6 +156,23 @@
       <tr><td>Insertion (down)</td><td class="num">0…18</td><td class="num">0.025</td><td class="num">±2</td></tr>
       <tr><td>Retainer (down)</td><td class="num">0…6</td><td class="num">0.004</td><td class="num">±0.3</td></tr>
     </table></div>
+    <h3 class="glossary-title">The workcell, part by part</h3>
+    <p class="when">Each view highlights one part against the faded machine, in the end-to-end scene with a thread
+      picked up. Select a part to enlarge it; arrow keys step through.</p>
+    <div class="glossary" id="glossary"></div>
+    <dialog id="glossary-view" aria-label="Workcell part">
+      <img alt="">
+      <div class="glossary-text">
+        <h3></h3>
+        <p class="role"></p>
+        <p class="specs"></p>
+      </div>
+      <div class="glossary-nav">
+        <button data-step="-1" aria-label="Previous part">◀</button>
+        <button data-close>Close</button>
+        <button data-step="1" aria-label="Next part">▶</button>
+      </div>
+    </dialog>
   </section>
 
   <section id="units">

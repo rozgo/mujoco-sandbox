@@ -304,3 +304,37 @@ fetch("data/compute.json").then((r) => r.json()).then(({ compute, runs }) => {
   }
   $("compute-table").innerHTML = html;
 });
+
+// ------------------------------------------------------------------ parts glossary
+fetch("data/glossary.json").then((r) => r.json()).then(({ parts }) => {
+  const grid = $("glossary"), view = $("glossary-view");
+  let at = 0;
+  const show = (i) => {
+    at = (i + parts.length) % parts.length;
+    const p = parts[at];
+    view.querySelector("img").src = p.media;
+    view.querySelector("img").alt = p.title;
+    view.querySelector("h3").textContent = p.title;
+    view.querySelector(".role").textContent = p.role;
+    view.querySelector(".specs").textContent = p.specs;
+    if (!view.open) view.showModal();
+  };
+  parts.forEach((p, i) => {
+    const card = document.createElement("button");
+    card.className = "part";
+    card.innerHTML = `<img loading="lazy" alt=""><span class="part-title"></span><span class="part-specs"></span>`;
+    card.querySelector("img").src = p.media;
+    card.querySelector("img").alt = p.title;
+    card.querySelector(".part-title").textContent = p.title;
+    card.querySelector(".part-specs").textContent = p.specs;
+    card.onclick = () => show(i);
+    grid.appendChild(card);
+  });
+  view.querySelector("[data-close]").onclick = () => view.close();
+  view.querySelectorAll("[data-step]").forEach((b) => (b.onclick = () => show(at + Number(b.dataset.step))));
+  view.addEventListener("click", (e) => { if (e.target === view) view.close(); });  // backdrop
+  view.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") show(at + 1);
+    if (e.key === "ArrowLeft") show(at - 1);
+  });
+});

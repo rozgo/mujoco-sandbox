@@ -1,0 +1,150 @@
+{
+ "source": "end-to-end scene (tube variant), recorded state with the eyelet clamped above the cassette",
+ "scene_sha256": "bc19fe42d855f08cee1d93ee28e738165833277d2efa1c32baa78d93a59e17f4",
+ "parts": [
+  {
+   "id": "workcell",
+   "title": "The workcell",
+   "role": "A five-axis gantry robot that picks a thread, carries it to a tissue phantom and inserts it.",
+   "specs": "Deck 658 \u00d7 448 mm. Simulated in MuJoCo; this view is the end-to-end scene.",
+   "image": "00_workcell.png",
+   "geoms": 888
+  },
+  {
+   "id": "base",
+   "title": "Base and deck",
+   "role": "The rigid table everything mounts to. Disturbance models treat it as an isolation table that can still vibrate.",
+   "specs": "Nominal table vibration 1 mm/s\u00b2 per component, 5\u201360 Hz.",
+   "image": "01_base.png",
+   "geoms": 16
+  },
+  {
+   "id": "gantry",
+   "title": "Gantry frame",
+   "role": "Two towers and a beam carry the X rail high above the work area.",
+   "specs": "Beam centre 465 mm above the deck.",
+   "image": "02_gantry.png",
+   "geoms": 19
+  },
+  {
+   "id": "stage_x",
+   "title": "X stage",
+   "role": "Carriage running along the beam: moves the whole tool left and right.",
+   "specs": "Travel \u00b1175 mm \u00b7 moving mass 2.4 kg \u00b7 force limit 100 N.",
+   "image": "03_stage_x.png",
+   "geoms": 3
+  },
+  {
+   "id": "stage_y",
+   "title": "Y stage",
+   "role": "Boom hanging from the X carriage: moves the tool toward and away from the viewer.",
+   "specs": "Travel \u00b175 mm \u00b7 1.3 kg \u00b7 80 N.",
+   "image": "04_stage_y.png",
+   "geoms": 6
+  },
+  {
+   "id": "stage_z",
+   "title": "Z stage (tool head)",
+   "role": "Raises and lowers the whole tool head; it lifts the 44 mm thread clear during transport.",
+   "specs": "Travel \u22128 to +50 mm \u00b7 0.65 kg \u00b7 40 N.",
+   "image": "05_stage_z.png",
+   "geoms": 4
+  },
+  {
+   "id": "microscope",
+   "title": "Microscope",
+   "role": "Optical head beside the needle with an oblique view of the work point. In these experiments its camera is for observers only; the controllers do not use pixels.",
+   "specs": "Camera field of view 23\u00b0.",
+   "image": "06_microscope.png",
+   "geoms": 4
+  },
+  {
+   "id": "carriage",
+   "title": "Needle carriage",
+   "role": "Fine vertical slide that drives the needle; it supplies the last millimetres down to the tissue and the insertion stroke.",
+   "specs": "Travel 0\u201318 mm \u00b7 25 g \u00b7 2 N.",
+   "image": "07_carriage.png",
+   "geoms": 3
+  },
+  {
+   "id": "needle",
+   "title": "Needle with slotted tip",
+   "role": "A 150 \u00b5m needle. Two small lips near the tip form a side slot that captures the thread's eyelet rim: lifting carries it up, inserting pushes it down, sliding sideways releases it.",
+   "specs": "\u00d8 150 \u00b5m \u00b7 lips 40 \u00b5m wire reaching 200 \u00b5m \u00b7 slot opening 140 \u00b5m.",
+   "image": "08_needle.png",
+   "geoms": 3
+  },
+  {
+   "id": "keeper",
+   "title": "Keeper",
+   "role": "Rides on the needle carriage. During transport two prongs lower beside the slot and their pads clamp the eyelet rim onto the slot's lower lip; it lifts away before insertion.",
+   "specs": "Travel 0\u20136 mm \u00b7 prongs and pads 40 \u00b5m wire \u00b7 clamp about 1 mN.",
+   "image": "09_keeper.png",
+   "geoms": 9
+  },
+  {
+   "id": "thread",
+   "title": "Thread",
+   "role": "The implant: a flexible 40 \u00b5m thread simulated as a discrete elastic rod, so it bends, drapes and snags like a real filament.",
+   "specs": "\u00d8 40 \u00b5m \u00b7 44 mm \u00b7 32 segments \u00b7 illustrative 100 MPa material. Shown up close: at the scale of the machine it is thinner than a pixel.",
+   "image": "10_thread.png",
+   "geoms": 32
+  },
+  {
+   "id": "eyelet",
+   "title": "Eyelet",
+   "role": "A small rigid ring on the thread's free end, the handle the needle picks up and pushes into tissue.",
+   "specs": "Ring radius 180 \u00b5m \u00b7 wire \u00d8 40 \u00b5m.",
+   "image": "11_eyelet.png",
+   "geoms": 12
+  },
+  {
+   "id": "cassette",
+   "title": "Thread cassette",
+   "role": "Presents threads for pickup. A shallow trench under each eyelet lets the needle's lower lip pass beneath the rim.",
+   "specs": "Trench 0.2 mm wide, 0.6 mm deep.",
+   "image": "12_cassette.png",
+   "geoms": 274
+  },
+  {
+   "id": "support",
+   "title": "Specimen support",
+   "role": "Tray and clamps that hold the tissue phantom still on the deck.",
+   "specs": "Tray 114 \u00d7 94 mm.",
+   "image": "13_support.png",
+   "geoms": 8
+  },
+  {
+   "id": "phantom",
+   "title": "Tissue phantom",
+   "role": "A domed block standing in for tissue. Its surface is a real collision surface for the robot and the thread.",
+   "specs": "92 \u00d7 72 mm, dome 3 mm high.",
+   "image": "14_phantom.png",
+   "geoms": 1
+  },
+  {
+   "id": "targets",
+   "title": "Target sites",
+   "role": "Six marked insertion sites. Alignment learns to bring the needle 1 mm above any of them within 10 \u00b5m.",
+   "specs": "Six sites, ring markers 2.5 mm across (markings, no collision).",
+   "image": "15_targets.png",
+   "geoms": 288
+  },
+  {
+   "id": "vessels",
+   "title": "Vessels",
+   "role": "Blood-vessel markings on the surface. The robot must not pass low over them; they are markings, scored by the task, not obstacles.",
+   "specs": "Main vessel \u00d8 1 mm, branches \u00d8 0.56 mm.",
+   "image": "16_vessels.png",
+   "geoms": 184
+  },
+  {
+   "id": "tube",
+   "title": "Insertion tube",
+   "role": "A pre-formed tube at the target with real collision: it guides the needle and holds the thread by contact. Used in the end-to-end cycle instead of a puncture model.",
+   "specs": "Bore radius 0.28 mm \u00b7 3 mm deep \u00b7 skin around the opening.",
+   "image": "17_tube.png",
+   "geoms": 21
+  }
+ ]
+}
