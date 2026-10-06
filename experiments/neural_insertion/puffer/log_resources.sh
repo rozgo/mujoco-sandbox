@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Sample GPU and host resources every INTERVAL seconds while a PufferLib trainer
+# Sample GPU and host resources every INTERVAL seconds (default 60) while a PufferLib trainer
 # runs, then stop. Usage: log_resources.sh OUT.csv [INTERVAL]
 set -euo pipefail
 OUT=$1
-INTERVAL=${2:-5}
+INTERVAL=${2:-60}
 echo "utc,gpu_util_pct,gpu_mem_util_pct,gpu_mem_used_mib,gpu_mem_total_mib,gpu_power_w,gpu_temp_c,gpu_sm_clock_mhz,load1,cpu_cores,trainer_cpu_pct,trainer_rss_mib" > "$OUT"
 CORES=$(nproc)
 # Wait up to a minute for the trainer to start, then sample until it exits.
