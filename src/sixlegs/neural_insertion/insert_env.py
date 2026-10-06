@@ -65,7 +65,7 @@ class InsertEnv:
     def __init__(self, seed, xml=RL_SCENE, level=0., mode=0):
         if not Path(xml).exists():
             build_rl_scene(xml)
-        self.lib = library()
+        self.lib, self.seed = library(), seed
         self.handle = self.lib.si_create(str(xml).encode(), seed)
         self.lib.si_disturbance_c(self.handle, level, mode)
         self.obs = np.zeros(OBS, np.float32)

@@ -1084,3 +1084,10 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   flaw in the C environment: the stages kept moving after the stroke started.
   insert_v2 environment: stages held during the stroke, stroke timed as the
   full cycle; C yardstick re-evaluated (16 s wall).
+- 09:54 UTC: insert_v1 stopped by hand after its first checkpoint (65.5M
+  steps, about 20 min of training). **insert_v2 launched at 09:55:13 UTC.**
+  The v1 checkpoint, sampled as trained, in the C environment: 17.5% within
+  10 µm, median 18.5 µm (level 1, 200 evaluation seeds); its deterministic mean
+  never starts the stroke. In the full simulation (level 1, seed 1001) it
+  placed 3 of 3 threads at 13.3, 24.3 and 7.2 µm (about 90 s wall). Videos
+  rendered and committed by 10:05 UTC.
