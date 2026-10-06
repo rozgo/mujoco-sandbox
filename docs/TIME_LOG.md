@@ -919,3 +919,15 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Follow-up: drag and press at 5/2.5 µs, 16 cases, **2.24 s aggregate
   simulation**, **145 s wall**; all gates pass (≤ 5.1e−7 µm timestep), so every
   fixture now has a direct 5 µs comparison.
+
+## October 6: alignment learning environment
+
+- Built the shared C core, the PufferLib 5.0 adapter and installer, and the
+  local evaluation library. Puffer's CPU evaluation build compiled and ran 20
+  untrained episodes on the Mac; two portability shims (bash 3.2, framework
+  rpath) live in the installer, the pinned Puffer source is unchanged.
+- Scripted-reference checks exposed and fixed two task-design errors before
+  training. Baselines on 200 evaluation seeds: scripted 100%, zero 0%, random
+  0% success; about **17 s wall**, **~260 s aggregate simulation** across the
+  three policies. No training yet; the GPU host became reachable through the
+  user's tunnel at about 00:53 UTC.

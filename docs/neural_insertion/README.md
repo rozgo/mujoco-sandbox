@@ -24,7 +24,8 @@ in the chain. Same-state force calculations agree across units. Contact-event
 localization/adaptive substepping is the next proposed experiment; accuracy remains
 unaccepted and no engine defect or successful patch has been established.
 The robot now moves: it holds without drift and reaches all six targets with
-sub-micrometre settled error ([first motion](MOTION.md)).
+sub-micrometre settled error ([first motion](MOTION.md)). The alignment
+learning environment is built for PufferLib 5.0 ([learning](LEARNING.md)).
 Gates now follow the task phases ([acceptance](ACCEPTANCE.md)), and every
 task-regime thread fixture passes at a 5 µs step ([task regime](TASK_REGIME.md)).
 [How we got here](PROCESS.md) records the reasoning and corrections.

@@ -107,3 +107,17 @@ with the needle slide. The first approach then showed a 265 µm tracking peak,
 which turned out to be the needle hanging 0.2 mm past its retracted stop at
 t = 0. Carrying both slides 0.5 mm out fixed it. Every gate then passed with
 large margins. [First motion](MOTION.md).
+
+## 10. A learning environment, checked by a scripted reference (October 6)
+
+We wrote one C core for physics, servo, observations and rewards, so training,
+tests and evaluation cannot drift apart. Before any training, a scripted
+reference controller ran the task on predetermined evaluation seeds. It failed
+twice, and both failures were task-design errors rather than controller bugs:
+descending early cut through the dome, and the deadline was too short for the
+longest traverse at the original speed limit. Fixing the task first means a
+learned policy is judged against a task that is known to be solvable.
+
+The GPU machine was unreachable over SSH at first. When asked, the user stated
+that training must use PufferLib on the RTX 4090, not a CPU fallback, and
+opened the tunnel. [Learning](LEARNING.md).
