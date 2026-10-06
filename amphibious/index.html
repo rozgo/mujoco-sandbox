@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amphibious Quadruped Journal</title>
+  <meta name="description" content="A MuJoCo Go2 stand-in with four thigh-mounted float capsules walks into a basin, floats 10.8 s unsupported on sampled-volume buoyancy and climbs out on a scripted crawl.">
+  <meta name="theme-color" content="#135466">
+  <link rel="stylesheet" href="journal.css?v=7e311b4a0c41">
+  <style>:root { color-scheme: light; --bg: #f3f7f6; --text: #10262d; --muted: #5a7178; --card: #ffffff; --line: #d9e6e5; --link: #1f6f8b; --chip: #e3efee; --soft: #e2f0ef; --bad: #b8502c; --bad-soft: #f7e4dc; --accent: #1f7a94; --accent-2: #d9800f; --accent-3: #a88f62; --on-accent: #ffffff; --hero: linear-gradient(125deg, #0e2a33 0%, #135466 45%, #1f7a94 75%, #c9b28a 100%); --hero-text: #f2fbfa; --film: #0b1d23; --metric: rgba(255, 255, 255, .13); --toc: rgba(243, 247, 246, .94); --tile-1: linear-gradient(135deg, #1f7a94, #135466); --tile-2: linear-gradient(135deg, #e8901f, #b0640e); --tile-3: linear-gradient(135deg, #2f9e8f, #1d6b61); --tile-4: linear-gradient(135deg, #a88f62, #75603c); --tile-text: #ffffff; }</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <a class="home-link" href="../">&larr; MuJoCo Sandbox</a>
+    <p class="eyebrow">Engineering journal · September 9, 2026 · MuJoCo 3.12 · Unitree Go2 model from MuJoCo Menagerie</p>
+    <h1>A quadruped with leg-mounted floats walks into a basin, floats across and climbs out</h1>
+    <p class="lede">An unarmed Unitree Go2 model, used as a stand-in, carries four float capsules on its thighs. It walks down a smooth ramp into a calm basin, reaches its front legs forward so the floats point ahead, floats across on two idealised thrusters and climbs out on the far bank. The gait is a scripted crawl written for this one course; nothing is learned.</p>
+    <figure class="hero-film">
+      <video src="media/crossing.mp4" poster="media/crossing_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The complete crossing, replayed from the saved simulation in three synchronised views: following, side and overview. Walking plays at 8×; from 2 s before floating until 6 s after the exit begins it slows to 2×, and the current speed is labelled on screen. It opens on a 2 s still and holds the last frame for 3 s. Panels show buoyancy, weight, foot contacts and thrust from the run.</figcaption>
+    </figure>
+    <div class="metrics"><div class="metric"><div class="value">10.8 s</div><div class="label">longest continuous unsupported float, no ground contact</div></div><div class="metric"><div class="value">166.84 N</div><div class="label">still-water buoyancy against 166.83 N weight; with buoyancy off it sinks 10.6 cm</div></div><div class="metric"><div class="value">4 / 4</div><div class="label">feet on the far bank at the end, 0 N buoyancy, no MuJoCo warnings</div></div><div class="metric"><div class="value">446.0 s</div><div class="label">simulated for the whole crossing, in 67.4 s of wall time</div></div><div class="metric"><div class="value">40 min 5 s</div><div class="label">from new goal to a validated, recorded crossing</div></div></div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Chapters">
+  <div class="wrap"><a href="#brief">1 The brief</a><a href="#attachments">2 Four floats on the thighs</a><a href="#water">3 A water model from sampled volume</a><a href="#gait">4 A scripted crawl and a float posture</a><a href="#thrusters">5 Idealised thrusters</a><a href="#fixes">6 What went wrong on the way</a><a href="#results">7 Results</a><a href="#next">8 Next steps</a></div>
+</nav>
+
+<main class="wrap">
+  <div class="scope"><strong>Where it stands:</strong> one complete crossing of one known course, validated and recorded on September 9, 2026. <strong>Simulated:</strong> rigid bodies and contact in MuJoCo, plus our own buoyancy and drag on each float and on an assumed sealed hull. <strong>Scripted:</strong> the crawl gait, the float posture and the thrust feedback, all written for this scene. <strong>Idealised:</strong> the two water thrusters, which are applied forces rather than simulated propellers. <strong>Not claimed:</strong> that a real Go2 is amphibious, that the float sizes match any product, or that one crossing shows robustness.</div>
+  <section id="brief">
+    <h2>1 · The brief</h2>
+    <p class="when">September 9, 2026, 12:50 PDT · a new goal, from a static scene to a finished video</p>
+    <div class="prose">
+      <p>The request was for the smallest MuJoCo simulation that shows a legged robot walking into water and out again,
+        and how leg-mounted float attachments work. It needed no radio links and no autonomy: just the route in and out,
+        the attachments doing their job, and a video of the whole crossing.</p>
+      <p>Two pieces of steering from the user shaped the result. Rock-like obstacles were added to the banks and then
+        removed at the user's request, so the scene would show what it is really about; the banks became smooth 15.2°
+        ramps. The user also asked two direct questions. Was the robot using walking dynamics already programmed for it?
+        And did the front legs reach forward so the floats pointed ahead with them? The second question led to a
+        correction: the float posture was changed so that both front legs, and their floats, extend forward. Chapter 4
+        covers both answers.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Robot</h4><ul>
+        <li>Unitree Go2 physical model from MuJoCo Menagerie, used as a stand-in</li>
+        <li>Unarmed; vendor mass 15.206 kg</li>
+        <li>Four float capsules add 1.8 kg, for 17.006 kg in total</li>
+      </ul></div>
+      <div class="card"><h4>Course</h4><ul>
+        <li>Start at x = −2.55 m on a level bank, finish at x = 3.95 m</li>
+        <li>Two 1.4 m ramps at 15.2°, bed at −0.38 m</li>
+        <li>Waterline at −0.14 m: 0.24 m of water in the middle</li>
+      </ul></div>
+      <div class="card"><h4>Not in scope</h4><ul>
+        <li>Radio, perception or autonomy</li>
+        <li>Waves, CFD or a fluid mesh</li>
+        <li>A calibrated replica of any real hardware</li>
+      </ul></div>
+    </div>
+    <figure><img src="media/overview.webp" alt="The basin from above: two sand banks, ramps down to a blue basin, the robot with floats on the near bank" loading="lazy">
+      <figcaption>The static scene, rendered and inspected before anything moved: level banks, two ramps, a calm basin and
+        the robot at its start. Orange posts stand at each end of the course.</figcaption></figure>
+    <div class="grid2">
+      <figure><img src="media/side.webp" alt="Side view of the basin with the robot standing on the left bank" loading="lazy">
+        <figcaption>The side camera: the robot on the start bank, the finish bank across the basin.</figcaption></figure>
+      <figure><img src="media/front.webp" alt="View from the robot's body camera down the basin toward the far bank" loading="lazy">
+        <figcaption>The body-mounted front camera at the start. It renders images for the video, can dip below the
+          waterline, and is not an input to the controller.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="attachments">
+    <h2>2 · Four floats on the thighs</h2>
+    <p class="when">September 9 · rigid attachments; the vendor model left as shipped</p>
+    <div class="prose">
+      <p>Each thigh carries one capsule float: radius 0.085 m, a 0.20 m straight section, 0.37 m overall, about 7.11 L.
+        It is a rigid child body of the thigh, mounted 0.14 m outward and 0.07 m below the thigh joint, so it turns with
+        the upper leg. There is no separate deployment joint: the floats point forward when the legs do. Each capsule
+        has a mass of 0.45 kg and its own capsule inertia. The straps, brackets and thruster shells are drawn with zero
+        mass; their mass is counted inside that allowance.</p>
+      <p>The Go2 model stays as Menagerie ships it: inertias, joint limits and meshes are untouched, and all 22 vendor
+        files match a SHA-256 manifest. Our changes are made where the scene is assembled: the floats, a stiffer foot
+        contact (chapter 6), and actuator force limits that enforce the motor torque caps. The floats are real
+        collision shapes, not decoration.</p>
+    </div>
+    <figure><img src="media/detail.webp" alt="Close-up of the Go2 model standing on sand with four dark teal float capsules strapped to its thighs" loading="lazy">
+      <figcaption>The attachments: one 0.37 m capsule per thigh, held by a bracket 0.14 m out from the leg.</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Vendor Go2 mass</td><td>15.206408 kg</td></tr>
+      <tr><td>Floats</td><td>4 × 0.45 kg = 1.8 kg</td></tr>
+      <tr class="hl"><td>Total mass</td><td>17.006408 kg, weight 166.83 N</td></tr>
+      <tr><td>Capsule</td><td>radius 0.085 m, straight section 0.20 m, overall 0.37 m, about 7.11 L</td></tr>
+      <tr><td>Mount</td><td>rigid on the thigh, 0.14 m lateral, 0.07 m below the thigh origin</td></tr>
+      <tr><td>Torque caps</td><td>abduction and thigh ±23.7 N·m, knee ±45.43 N·m, in both the control range and the actuator force limit</td></tr>
+      <tr><td>Joint limits</td><td>inherited from the Go2: abduction ±1.0472 rad, knee −2.7227 to −0.83776 rad</td></tr>
+      <tr><td>Integration</td><td>2 ms <code>implicitfast</code>; control at 100 Hz; water forces every step (500 Hz)</td></tr>
+    </table></div>
+    <div class="lesson"><strong>A vendor model is not a vendor gait.</strong> Menagerie supplies the Go2's bodies, joints
+      and actuators. It does not supply a walking controller, so everything that moves the robot here was written for
+      this scene.</div>
+    <div class="note-box"><strong>Design assumptions.</strong> Float mass and size are illustrative design choices, not a
+      product specification. The sealed hull assumed in chapter 3 does not claim that a real Go2 is waterproof or
+      amphibious.</div>
+  </section>
+
+  <section id="water">
+    <h2>3 · A water model from sampled volume</h2>
+    <p class="when">September 9 · buoyancy and drag on each float, rebuilt and applied every physics step</p>
+    <div class="prose">
+      <p>MuJoCo supplies rigid-body dynamics and contact, but no water. Its built-in
+        <a href="https://mujoco.readthedocs.io/en/stable/computation/fluid.html">fluid models</a> act as a medium filling
+        the whole scene, so we added localised forces instead. Each capsule is filled with sample points on a 25 mm
+        grid, weighted to the capsule's exact volume. A sample counts as wet below the waterline at −0.14 m, with a
+        25 mm smooth transition, and only inside the basin. The wet fraction gives the buoyancy,
+        <strong>F = ρ g V<sub>submerged</sub></strong> with fresh water at 1,000 kg/m³, applied at the centre of the
+        submerged volume. A float riding lower than the others therefore also rolls or pitches the body. The central
+        body is treated as a sealed hull of about 4.01 L, matching the base collision box.</p>
+      <p>Drag acts at the same point: linear plus quadratic, <code>−f(7v + 12|v|v)</code>, and rotational,
+        <code>−f(0.20ω + 0.10|ω|ω)</code>, where f is the submerged fraction. The coefficients are chosen to dissipate
+        energy; they are not tank measurements. The five contributions (four floats and the hull) and the thrusters are
+        cleared and rebuilt at every 2 ms step and applied with <code>mj_applyFT</code>, so no stale force carries over
+        from one step to the next.</p>
+    </div>
+    <h3>The still-water check</h3>
+    <div class="prose">
+      <p>Before any wading, an isolated test places the robot in its float posture over the middle of the basin and
+        runs 7,000 steps of 2 ms. Then it runs again with buoyancy switched off.</p>
+    </div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">166.84<small>N</small></div><div class="what">buoyancy at rest in still water</div>
+        <div class="vs">weight 166.83 N; no contact with the bottom</div></div>
+      <div class="tile"><div class="big">10.6<small>cm</small></div><div class="what">how far it sinks with buoyancy off</div>
+        <div class="vs">down onto the basin floor</div></div>
+      <div class="tile"><div class="big">170.99<small>N</small></div><div class="what">peak buoyancy during the full crossing</div>
+        <div class="vs">from the run report</div></div>
+      <div class="tile"><div class="big">0.0<small>W</small></div><div class="what">highest drag power over the crossing</div>
+        <div class="vs">drag only ever removed energy</div></div>
+    </div>
+    <div class="prose">
+      <p>Another test pins the model down. Fully submerged, the total buoyancy equals ρ g times the summed volume of the
+        four capsules and the hull, and with the body moving the drag power is negative.</p>
+    </div>
+    <div class="note-box"><strong>What is not modelled.</strong> There is no fluid mesh, CFD, waves, wakes, splashes,
+      water ingress or deformable float. The model is a calm basin with buoyancy and drag applied at points.</div>
+  </section>
+
+  <section id="gait">
+    <h2>4 · A scripted crawl and a float posture</h2>
+    <p class="when">September 9 · programmed control on a known course; nothing is learned</p>
+    <div class="prose">
+      <p>The walking is a slow crawl written for this scene, with one leg in the air at a time, in the order rear-left,
+        front-left, rear-right, front-right. Before each step the body shifts its centre of mass over the three
+        supporting feet (to within 4.5 cm, or for at most 2 s). The swing leg then moves 12 cm forward in 0.65 s with a
+        7 cm lift. The next step waits until that foot reports contact, after at least 0.2 s and at most 0.9 s.
+        Inverse kinematics turns foot targets into joint targets. Each motor applies 120 N·m/rad stiffness and
+        4 N·m·s/rad damping plus gravity and contact-force feedforward, clipped to its torque cap. The body pitches to
+        follow the ramp, and as the robot wades deeper, the feedforward subtracts the current buoyancy from the weight
+        the feet must carry.</p>
+      <p>The course is known in advance. The controller reads exact ramp heights from the scene definition and walks a
+        fixed lane. That is a scripted terrain fixture, not perception.</p>
+    </div>
+    <div class="note-box"><strong>Whose gait is this?</strong> It isn't Unitree's and it isn't learned. Menagerie's Go2
+      comes without a controller, so the crawl, the float posture and the thrust feedback were all written here and
+      tuned for this one course. That answers the user's question: the robot is not running walking dynamics
+      programmed by its maker.</div>
+    <h3>Front legs forward</h3>
+    <div class="prose">
+      <p>When the body passes x = 0.10 m, in the deep middle of the basin, the controller stops stepping and moves the
+        joints, at up to 0.8 rad/s, to the float posture. The front thighs go to −1.50 rad and the knees to −0.90 rad, so
+        the front legs reach forward; the rear legs fold at 1.30 and −2.50 rad. The floats turn with the thighs. In this
+        pose the front floats point about 99.7% forward and 7.1% downward relative to the body. A test checks the pose
+        against the joint limits and checks the float direction. At x = 1.60 m the exit phase begins: the feet are placed
+        back under the hips and the stepping order restarts.</p>
+    </div>
+    <figure class="film"><video src="media/float_clip.mp4" poster="media/float_clip_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The slowed section of the main film, all at 2×: from 2 s before the float posture until 6 s after the
+        exit phase begins. Watch the buoyancy bar reach the weight, the feet lift off and the ground-contact flag clear.
+        Rendered from the simulated trajectory.</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>Phase</th><th class="num">Starts at (s, simulated)</th><th class="num">Body x (m)</th><th>Switch</th></tr>
+      <tr><td>Approach</td><td class="num">2.00</td><td class="num">−2.57</td><td>after a 2 s settle</td></tr>
+      <tr><td>Water entry</td><td class="num">75.79</td><td class="num">−1.60</td><td>top of the entry ramp</td></tr>
+      <tr class="hl"><td>Floating</td><td class="num">225.59</td><td class="num">0.10</td><td>deep middle of the basin</td></tr>
+      <tr><td>Exit</td><td class="num">238.22</td><td class="num">1.60</td><td>near the exit ramp</td></tr>
+      <tr><td>Complete</td><td class="num">443.01</td><td class="num">3.96</td><td>past the 3.95 m finish, nearly stopped</td></tr>
+    </table></div>
+    <div class="prose"><p>Phases switch on the measured body position along the known course. The thrusters (next
+      chapter) are gated by measured float immersion instead.</p></div>
+  </section>
+
+  <section id="thrusters">
+    <h2>5 · Idealised thrusters</h2>
+    <p class="when">September 9 · forces applied by feedback, with nothing simulated behind them</p>
+    <div class="prose">
+      <p>Floating needs propulsion, and the robot has no propellers. Two thrust points sit at the rear of the body,
+        0.21 m behind its centre and 0.10 m to each side. Each applies a force along the body's forward axis, capped at
+        ±6 N. That is all they are: <strong>idealised applied forces</strong>. No propeller, paddling leg, wake or
+        reaction flow is simulated.</p>
+      <p>A feedback loop sets them, with a forward-speed target of 0.17 m/s while floating and 0.055 m/s while wading, and
+        a differential term that holds heading and lane. They act only inside the basin and only when the floats are
+        wet: the force scales with mean float immersion and reaches full strength at 25%. On dry land no propulsion is
+        applied at all. A test commands 6 N on both thrusters with the robot standing on the bank and checks that no
+        force reaches the chassis.</p>
+    </div>
+    <figure><img src="media/floating.webp" alt="Video frame: the robot floating with front legs forward, panels reading buoyancy 167 N, weight 167 N, no ground contact" loading="lazy">
+      <figcaption>A frame of the main film at 229.6 s simulated, 2× replay: buoyancy 167 N against 167 N weight, no ground
+        contact, 0 of 4 feet touching, 5.0 N of thrust.</figcaption></figure>
+    <div class="lesson"><strong>Gate actions on physical evidence.</strong> Thrust follows measured immersion rather than
+      a phase label, so it cannot push a dry robot along the bank.</div>
+  </section>
+
+  <section id="fixes">
+    <h2>6 · What went wrong on the way</h2>
+    <p class="when">September 9 · four failures fixed during the build, and one change of scope</p>
+    <div class="prose">
+      <p>Several failed runs came before the crossing completed. Each fix changed physics settings or control. No test
+        threshold was relaxed.</p>
+    </div>
+    <div class="failure"><strong>Soft feet sank.</strong> The vendor's foot contacts are soft, and under this robot the
+      feet sank too far into the ground. The scene now sets foot contact to <code>solref</code> 0.01/1 and
+      <code>solimp</code> 0.95/0.99/0.001 with no margin. The deepest ground penetration in the final crossing is
+      6.9 mm.</div>
+    <div class="failure"><strong>Two answers for the ramp height.</strong> The controller's ramp-height calculation
+      disagreed with the ramp geometry, and the mismatch disrupted the climb out. A test now casts rays at 60 points
+      along the course against the actual ramp meshes and requires the controller's height map to agree within
+      10<sup>−6</sup> m.</div>
+    <div class="failure"><strong>Feet that walked on without the body.</strong> The foot targets ran open loop. When
+      feet slipped, the script kept advancing, recording forward progress the body never made. The gait reference is
+      now re-anchored to the measured body on every control update and is never more than 3.5 cm away from it. After
+      swimming, the stepping order restarts with the feet placed under the hips.</div>
+    <div class="failure"><strong>A stall at the wet exit.</strong> After floating, the robot could not regain enough
+      traction to climb out. Its weight had to pass from the floats back to the feet, and the feet were not reaching
+      the bed firmly enough to take it. The fix asks for 0.34 m of leg clearance instead of the 0.30 m walking height
+      until the body passes x = 2.4 m, so the legs reach down to the bed and take load, then returns to 0.30 m. In the
+      final run the climb out, from 238.22 s to the finish at 443.01 s, is the longest phase of the crossing.</div>
+    <div class="note-box"><strong>Rocks removed at the user's request.</strong> Rock-like obstacles were added to the
+      banks, then removed so the scene would focus on the attachments and the change from walking to floating and back.
+      The banks are smooth ramps.</div>
+    <div class="lesson"><strong>These fixes fit this scene.</strong> The exit clearance and the restart sequence were
+      tuned for this basin. They do not show that the controller can handle unfamiliar terrain or disturbances.</div>
+  </section>
+
+  <section id="results">
+    <h2>7 · Results</h2>
+    <p class="when">September 9, 13:30 PDT · one complete crossing, validated twice and recorded</p>
+    <div class="result-strip">
+      <div class="tile"><div class="big">10.8<small>s</small></div><div class="what">longest continuous unsupported float</div>
+        <div class="vs">11.01 s in total; no ground contact, buoyancy above 80% of weight</div></div>
+      <div class="tile"><div class="big">4<small>/ 4</small></div><div class="what">feet on the far bank at the end</div>
+        <div class="vs">buoyancy 0 N; finish line crossed at 443.0 s</div></div>
+      <div class="tile"><div class="big">6.9<small>mm</small></div><div class="what">deepest ground penetration</div>
+        <div class="vs">test limit 10 mm</div></div>
+      <div class="tile"><div class="big">16.9<small>°</small></div><div class="what">largest body tilt, about</div>
+        <div class="vs">zero MuJoCo warnings over the run</div></div>
+    </div>
+    <figure class="film"><video src="media/exit_clip.mp4" poster="media/exit_clip_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The climb out, from the start of the exit phase to the far bank. The first 3 s of the clip play at 2×,
+        the rest at 8×; the speed and simulated time are labelled on screen. Rendered from the simulated
+        trajectory.</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>Measured in the final crossing</th><th class="num">Value</th></tr>
+      <tr class="hl"><td>Success: finished, floated over 2 s unsupported, 4 feet down, buoyancy under 1 N at the end</td><td class="num">yes</td></tr>
+      <tr><td>Simulated time, including a 3 s final settle</td><td class="num">446.0 s</td></tr>
+      <tr><td>Wall time for the run</td><td class="num">67.4 s</td></tr>
+      <tr><td>Longest / total unsupported float</td><td class="num">10.816 s / 11.010 s</td></tr>
+      <tr><td>Peak buoyancy (weight 166.83 N)</td><td class="num">170.99 N</td></tr>
+      <tr><td>Final buoyancy; feet touching</td><td class="num">0 N; 4 / 4</td></tr>
+      <tr><td>Finish line x = 3.95 m crossed at</td><td class="num">443.01 s</td></tr>
+      <tr><td>Final body x, after settling back about 4 cm</td><td class="num">3.92 m</td></tr>
+      <tr><td>Deepest ground penetration</td><td class="num">6.9 mm</td></tr>
+      <tr><td>Lowest body up-vector (largest tilt about 16.9°)</td><td class="num">0.957</td></tr>
+      <tr><td>Peak motor torque, fraction of cap</td><td class="num">100%</td></tr>
+      <tr><td>Float contact with terrain</td><td class="num">rear-left float, entry ramp</td></tr>
+      <tr><td>MuJoCo warnings</td><td class="num">0</td></tr>
+    </table></div>
+    <div class="grid3">
+      <figure><img src="media/entry.webp" alt="Video frame at water entry: robot at the top of the ramp, all four feet down" loading="lazy">
+        <figcaption>Water entry at 75.8 s: four feet down, no buoyancy yet.</figcaption></figure>
+      <figure><img src="media/exit.webp" alt="Video frame at the start of the exit phase: robot still floating near the exit ramp" loading="lazy">
+        <figcaption>Exit begins at 238.2 s: still afloat at 162 N buoyancy, no feet down yet.</figcaption></figure>
+      <figure><img src="media/complete.webp" alt="Video frame at completion: robot standing on the far bank beside the finish posts" loading="lazy">
+        <figcaption>Complete at 443.3 s: on the far bank, four feet down, 0 N buoyancy.</figcaption></figure>
+    </div>
+    <div class="failure"><strong>Kept on record.</strong> Peak motor torque reached the caps, so the gait has no torque
+      margin at its hardest moments. The rear-left float touched the entry ramp; the floats stay collision shapes and
+      that contact is part of the run. After crossing the finish line the robot settled about 4 cm back, ending at
+      x = 3.92 m, behind the 3.95 m line.</div>
+    <div class="prose">
+      <p>On Apple Silicon macOS, all 20 tests passed (16 from the earlier demos plus 4 new), the native viewer smoke test
+        passed, and all 22 vendor file hashes matched. The final video is 1920 × 1080 at 25 fps, 1,712 frames and
+        68.48 s; its full stream decoded without errors, and the entry, floating, climb and final frames were checked by
+        eye. This page plays a web re-encode of that video.</p>
+      <p>The goal took 40 min 5 s of elapsed time, from 12:50:04 to 13:30:09 PDT, including the user's steering,
+        development, failed experiments, tests, rendering and communication. MuJoCo ran on the CPU, and nothing was
+        trained.</p>
+    </div>
+  </section>
+
+  <section id="next">
+    <h2>8 · Next steps</h2>
+    <p class="when">What one scripted crossing on one known course does not yet show</p>
+    <ol class="next-steps">
+      <li><strong>Many crossings, not one</strong>Vary the start position, ramp angle, water depth and float mass, and
+        report success over every attempt, failures included.</li>
+      <li><strong>Rough banks again</strong>Bring back the rocks set aside during the build, with the gait sensing the
+        terrain instead of reading an exact height map.</li>
+      <li><strong>Simulated propulsion</strong>Replace the idealised thrusters with paddling legs or propellers whose
+        forces come from the water model.</li>
+      <li><strong>Calibrated water and disturbances</strong>Fit the drag coefficients to tank measurements, and add waves
+        or a current as a documented disturbance.</li>
+      <li><strong>A learned gait, measured against this one</strong>Learn the crawl and the float transitions under
+        disturbances, keeping this scripted controller as the yardstick on held-out seeds.</li>
+    </ol>
+    <div class="prose"><p>Float sizes, drag coefficients and the sealed hull are assumptions. This is a concept
+      demonstration in simulation, not a calibrated replica of any hardware.</p></div>
+  </section>
+
+</main>
+
+<footer class="wrap"><p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>, <code>docs/amphibious/</code>. The robot is the Unitree Go2 model from <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> (revision <code>8161bba</code>), copyright Unitree Robotics, used under its BSD-3-Clause licence with the original licence file and a SHA-256 manifest kept in the repository. The floats, basin, water model, controller and video are this project's own. Videos are rendered from the simulated trajectory and re-encoded for the web; nothing on this page is generated video.</p></footer>
+</body>
+</html>
