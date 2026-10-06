@@ -1,0 +1,1224 @@
+{
+ "name": "compensating_yardstick",
+ "started_utc": "2026-10-06T10:48:34.834919+00:00",
+ "source_commit": "8a3184a60f2d0ff49737dffa421625f0b03bb09c",
+ "controller": "scripted (compensate), insert_core.h si_scripted",
+ "c_environment": {
+  "scripted_level0": {
+   "episodes": 200,
+   "success": 0.835,
+   "placed": 195,
+   "placement_um_median": 5.232501983642578,
+   "placement_um_p90": 11.594567108154294,
+   "collision": 0.0,
+   "thread_touch": 0.025,
+   "dragged": 0.0,
+   "missed": 0.0,
+   "timeout": 0.0,
+   "mean_length_s": 1.7080000000000002
+  },
+  "scripted_level1": {
+   "episodes": 200,
+   "success": 0.805,
+   "placed": 195,
+   "placement_um_median": 5.626649379730225,
+   "placement_um_p90": 11.814575386047363,
+   "collision": 0.0,
+   "thread_touch": 0.025,
+   "dragged": 0.0,
+   "missed": 0.0,
+   "timeout": 0.0,
+   "mean_length_s": 1.6828
+  },
+  "scripted_level2": {
+   "episodes": 200,
+   "success": 0.645,
+   "placed": 195,
+   "placement_um_median": 7.556989669799805,
+   "placement_um_p90": 15.222442626953121,
+   "collision": 0.0,
+   "thread_touch": 0.025,
+   "dragged": 0.0,
+   "missed": 0.0,
+   "timeout": 0.0,
+   "mean_length_s": 1.8185
+  }
+ },
+ "full_simulation": {
+  "seeds": [
+   1001,
+   1002,
+   1003,
+   1004,
+   1005,
+   1006,
+   1007,
+   1008,
+   1009,
+   1010
+  ],
+  "sites": [
+   0,
+   5,
+   1
+  ],
+  "summary": {
+   "level_0": {
+    "runs": 1,
+    "runs_completed": 1,
+    "sites_attempted": 3,
+    "threads_placed": 3,
+    "within_10um": 1,
+    "placement_um_median": 14.09627659630273,
+    "placement_um_p90": 22.350812273284383,
+    "placement_um_max": 24.414446192529798,
+    "stops": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   "level_1": {
+    "runs": 10,
+    "runs_completed": 10,
+    "sites_attempted": 30,
+    "threads_placed": 30,
+    "within_10um": 19,
+    "placement_um_median": 7.737861179591887,
+    "placement_um_p90": 15.179829672742473,
+    "placement_um_max": 33.87385600171808,
+    "stops": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   "level_2": {
+    "runs": 10,
+    "runs_completed": 10,
+    "sites_attempted": 30,
+    "threads_placed": 30,
+    "within_10um": 18,
+    "placement_um_median": 6.78788075072373,
+    "placement_um_p90": 19.302350976725958,
+    "placement_um_max": 22.94306200132848,
+    "stops": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   }
+  },
+  "runs": [
+   {
+    "level": 0,
+    "seed": 1001,
+    "status": "completed",
+    "wall_s": 118.1,
+    "simulated_s": 4.909999999995226,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0177181485639863,
+      "placement_lateral_um": 3.6389377904779727
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0206702073881786,
+      "placement_lateral_um": 14.09627659630273
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.015841567893858,
+      "placement_lateral_um": 24.414446192529798
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 50,
+      "trigger_end_to_target_lateral_um": 2.1963702464128896,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 57,
+      "trigger_end_to_target_lateral_um": 3.3693783879908517,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 70,
+      "trigger_end_to_target_lateral_um": 6.992010572371113,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1001,
+    "status": "completed",
+    "wall_s": 139.1,
+    "simulated_s": 5.6499999999935016,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0190654688813936,
+      "placement_lateral_um": 7.833361537776537
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0042089886999293,
+      "placement_lateral_um": 6.186512038088476
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0192113753614507,
+      "placement_lateral_um": 6.327161749328845
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 49,
+      "trigger_end_to_target_lateral_um": 6.381590955622125,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 65,
+      "trigger_end_to_target_lateral_um": 1.9266885191061072,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 100,
+      "trigger_end_to_target_lateral_um": 0.8069419063021489,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1002,
+    "status": "completed",
+    "wall_s": 117.7,
+    "simulated_s": 4.889999999995273,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0114775821354414,
+      "placement_lateral_um": 2.58590033052384
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0241362319567457,
+      "placement_lateral_um": 8.433143177248226
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0199980087628973,
+      "placement_lateral_um": 15.026276063990645
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 52,
+      "trigger_end_to_target_lateral_um": 2.1742738590212705,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 56,
+      "trigger_end_to_target_lateral_um": 5.597187396530859,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 68,
+      "trigger_end_to_target_lateral_um": 5.472628917588925,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1003,
+    "status": "completed",
+    "wall_s": 124.1,
+    "simulated_s": 5.069999999994853,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0264249984822413,
+      "placement_lateral_um": 2.504766626424387
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.012426476191308,
+      "placement_lateral_um": 33.87385600171808
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0124098060421716,
+      "placement_lateral_um": 2.976477564747499
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 47,
+      "trigger_end_to_target_lateral_um": 2.217559831201388,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 64,
+      "trigger_end_to_target_lateral_um": 1.2203651931598136,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 74,
+      "trigger_end_to_target_lateral_um": 5.885420606081873,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1004,
+    "status": "completed",
+    "wall_s": 119.4,
+    "simulated_s": 4.92999999999518,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0142701848237294,
+      "placement_lateral_um": 6.558234389169663
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0201310580889213,
+      "placement_lateral_um": 18.244831937350934
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.014348951861308,
+      "placement_lateral_um": 14.799129033963462
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 50,
+      "trigger_end_to_target_lateral_um": 6.069689269521979,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 57,
+      "trigger_end_to_target_lateral_um": 1.569073680317738,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 71,
+      "trigger_end_to_target_lateral_um": 5.378349273134532,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1005,
+    "status": "completed",
+    "wall_s": 115.1,
+    "simulated_s": 4.789999999995506,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.013726187586016,
+      "placement_lateral_um": 3.4028609990489014
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0151787515124795,
+      "placement_lateral_um": 7.615139689853297
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.015740036133309,
+      "placement_lateral_um": 10.621948701723223
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 47,
+      "trigger_end_to_target_lateral_um": 5.033651755232563,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 57,
+      "trigger_end_to_target_lateral_um": 1.007693521424492,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 67,
+      "trigger_end_to_target_lateral_um": 6.793871389721084,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1006,
+    "status": "completed",
+    "wall_s": 119.7,
+    "simulated_s": 4.849999999995366,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0246495625219296,
+      "placement_lateral_um": 10.458314705576388
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.007982570512496,
+      "placement_lateral_um": 4.343430377862085
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0090120652339607,
+      "placement_lateral_um": 7.997977634669558
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 46,
+      "trigger_end_to_target_lateral_um": 4.419260030657665,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 57,
+      "trigger_end_to_target_lateral_um": 2.8415817286381713,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 71,
+      "trigger_end_to_target_lateral_um": 6.769135650116342,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1007,
+    "status": "completed",
+    "wall_s": 126.9,
+    "simulated_s": 5.189999999994574,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0326438404215565,
+      "placement_lateral_um": 7.791397373967121
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0134963751319077,
+      "placement_lateral_um": 3.229293462893723
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.015706562401988,
+      "placement_lateral_um": 7.684324985216653
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 55,
+      "trigger_end_to_target_lateral_um": 3.7752939142580173,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 59,
+      "trigger_end_to_target_lateral_um": 3.6837801157517744,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 77,
+      "trigger_end_to_target_lateral_um": 3.831234504840209,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1008,
+    "status": "completed",
+    "wall_s": 118.7,
+    "simulated_s": 4.909999999995226,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0159694792667437,
+      "placement_lateral_um": 4.511966420114203
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0153079346370646,
+      "placement_lateral_um": 14.308124444200732
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.019851592531367,
+      "placement_lateral_um": 7.682979815884572
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 48,
+      "trigger_end_to_target_lateral_um": 1.6141039575502654,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 58,
+      "trigger_end_to_target_lateral_um": 6.09157059019713,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 71,
+      "trigger_end_to_target_lateral_um": 7.2436395912294165,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1009,
+    "status": "completed",
+    "wall_s": 119.4,
+    "simulated_s": 5.009999999994993,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0229975252771624,
+      "placement_lateral_um": 13.71927616199393
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0279794390898616,
+      "placement_lateral_um": 5.04308884591382
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0279580337694796,
+      "placement_lateral_um": 16.56181215150891
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 54,
+      "trigger_end_to_target_lateral_um": 3.210314319578568,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 58,
+      "trigger_end_to_target_lateral_um": 1.1267016285781823,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 70,
+      "trigger_end_to_target_lateral_um": 1.03463202056118,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 1,
+    "seed": 1010,
+    "status": "completed",
+    "wall_s": 155.1,
+    "simulated_s": 6.34999999999187,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0298251351301957,
+      "placement_lateral_um": 6.876163573611917
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.023142468632628,
+      "placement_lateral_um": 11.128577319710615
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0109484424066153,
+      "placement_lateral_um": 14.368509942153572
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 49,
+      "trigger_end_to_target_lateral_um": 0.28649602941960867,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 129,
+      "trigger_end_to_target_lateral_um": 2.594690311140699,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 71,
+      "trigger_end_to_target_lateral_um": 6.557004424137023,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1001,
+    "status": "completed",
+    "wall_s": 183.6,
+    "simulated_s": 7.889999999988281,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.015798137837564,
+      "placement_lateral_um": 12.679272141181412
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0169664211753826,
+      "placement_lateral_um": 2.5887863961150743
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 1.9997455318966644,
+      "placement_lateral_um": 5.957203781743002
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 103,
+      "trigger_end_to_target_lateral_um": 14.003148712219467,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 153,
+      "trigger_end_to_target_lateral_um": 2.9337566019203005,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 70,
+      "trigger_end_to_target_lateral_um": 2.1744944100238497,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1002,
+    "status": "completed",
+    "wall_s": 176.3,
+    "simulated_s": 7.509999999989167,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0217886404946768,
+      "placement_lateral_um": 4.815878160762725
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0088631383857916,
+      "placement_lateral_um": 21.769267910217657
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0325810769325443,
+      "placement_lateral_um": 11.46845907649078
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 133,
+      "trigger_end_to_target_lateral_um": 2.561396528467896,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 79,
+      "trigger_end_to_target_lateral_um": 9.791392903009047,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 95,
+      "trigger_end_to_target_lateral_um": 6.293327589053174,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1003,
+    "status": "completed",
+    "wall_s": 126.0,
+    "simulated_s": 5.209999999994527,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0281974085437184,
+      "placement_lateral_um": 4.984739676679547
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0301089019247485,
+      "placement_lateral_um": 4.623480458084199
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0275408723861688,
+      "placement_lateral_um": 6.024436355228695
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 47,
+      "trigger_end_to_target_lateral_um": 1.0736210195552596,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 69,
+      "trigger_end_to_target_lateral_um": 3.809326417072484,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 76,
+      "trigger_end_to_target_lateral_um": 8.715278285380155,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1004,
+    "status": "completed",
+    "wall_s": 126.0,
+    "simulated_s": 5.289999999994341,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0097233964143015,
+      "placement_lateral_um": 6.0678420472314665
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.027866331167715,
+      "placement_lateral_um": 12.931860128529614
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0051161950988075,
+      "placement_lateral_um": 13.729369137614787
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 70,
+      "trigger_end_to_target_lateral_um": 3.4427874223491455,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 64,
+      "trigger_end_to_target_lateral_um": 4.093962567675848,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 62,
+      "trigger_end_to_target_lateral_um": 10.829676893924013,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1005,
+    "status": "completed",
+    "wall_s": 136.8,
+    "simulated_s": 5.549999999993735,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.005639198077631,
+      "placement_lateral_um": 4.06583457302592
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0101416185233916,
+      "placement_lateral_um": 6.582507392333344
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.013276676342116,
+      "placement_lateral_um": 6.803298347439159
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 47,
+      "trigger_end_to_target_lateral_um": 6.378622840095572,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 57,
+      "trigger_end_to_target_lateral_um": 2.5714381885260065,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 105,
+      "trigger_end_to_target_lateral_um": 2.5175254254141413,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1006,
+    "status": "completed",
+    "wall_s": 155.7,
+    "simulated_s": 6.669999999991124,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0102931738734355,
+      "placement_lateral_um": 7.208887398591112
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.02311383713257,
+      "placement_lateral_um": 19.08133226380438
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0230434643064825,
+      "placement_lateral_um": 6.7724631540083005
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 98,
+      "trigger_end_to_target_lateral_um": 8.899021984820243,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 81,
+      "trigger_end_to_target_lateral_um": 2.914452637672544,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 86,
+      "trigger_end_to_target_lateral_um": 5.7776693793125835,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1007,
+    "status": "completed",
+    "wall_s": 146.4,
+    "simulated_s": 5.989999999992709,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0334703528755966,
+      "placement_lateral_um": 22.94306200132848
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0230660837369214,
+      "placement_lateral_um": 4.665488837028721
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.004953781408915,
+      "placement_lateral_um": 21.291519393020124
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 47,
+      "trigger_end_to_target_lateral_um": 13.442164915794432,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 79,
+      "trigger_end_to_target_lateral_um": 7.680200289132622,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 105,
+      "trigger_end_to_target_lateral_um": 16.806205532309033,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1008,
+    "status": "completed",
+    "wall_s": 250.4,
+    "simulated_s": 9.869999999983667,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0273954243835846,
+      "placement_lateral_um": 16.910630710858193
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0257933148278653,
+      "placement_lateral_um": 4.898556678440294
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0113776980523994,
+      "placement_lateral_um": 8.723289743674973
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 45,
+      "trigger_end_to_target_lateral_um": 2.3456771970157924,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 90,
+      "trigger_end_to_target_lateral_um": 4.688826498261926,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 290,
+      "trigger_end_to_target_lateral_um": 10.739659201043883,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1009,
+    "status": "completed",
+    "wall_s": 174.4,
+    "simulated_s": 7.569999999989027,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.041353470621445,
+      "placement_lateral_um": 4.9501876957582915
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.0309071353896115,
+      "placement_lateral_um": 3.8855635077899797
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.0430130584688584,
+      "placement_lateral_um": 15.912953395824742
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 151,
+      "trigger_end_to_target_lateral_um": 1.8633032379958392,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 74,
+      "trigger_end_to_target_lateral_um": 7.978401669491817,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 85,
+      "trigger_end_to_target_lateral_um": 10.878760744304854,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   },
+   {
+    "level": 2,
+    "seed": 1010,
+    "status": "completed",
+    "wall_s": 170.8,
+    "simulated_s": 6.909999999990565,
+    "sites": [
+     {
+      "site": 0,
+      "passed": true,
+      "end_depth_mm": 2.0394008991905963,
+      "placement_lateral_um": 10.4849422385932
+     },
+     {
+      "site": 5,
+      "passed": true,
+      "end_depth_mm": 2.038873949223955,
+      "placement_lateral_um": 2.9222493270099954
+     },
+     {
+      "site": 1,
+      "passed": true,
+      "end_depth_mm": 2.022305211937649,
+      "placement_lateral_um": 13.187872507558849
+     }
+    ],
+    "approaches": [
+     {
+      "site": 0,
+      "outcome": "triggered",
+      "policy_steps": 49,
+      "trigger_end_to_target_lateral_um": 3.5137045076751243,
+      "vessel_steps": 0
+     },
+     {
+      "site": 5,
+      "outcome": "triggered",
+      "policy_steps": 92,
+      "trigger_end_to_target_lateral_um": 5.751300055288276,
+      "vessel_steps": 0
+     },
+     {
+      "site": 1,
+      "outcome": "triggered",
+      "policy_steps": 136,
+      "trigger_end_to_target_lateral_um": 13.567429045176937,
+      "vessel_steps": 0
+     }
+    ],
+    "failed_checks": [],
+    "prohibited_contacts": 0,
+    "thread_touches": 0
+   }
+  ],
+  "actions": "scripted"
+ },
+ "wall_s_total": 508.5
+}

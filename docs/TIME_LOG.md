@@ -1098,3 +1098,9 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   MuJoCo instability while the thread was held at depth. 10:25-10:40 UTC:
   traced it to jitter of the gripped thread segments during the hold, present
   in the yardstick runs too (and at level 0); not yet fixed.
+- 10:41 UTC: insert_v2 at 131M steps (about 46 min of training). Evaluated in
+  both simulations by 10:47 (about 5 min wall); compensating yardstick on the
+  same 21 full-simulation runs by 10:55. Full simulation, level 1: learned 19
+  of 30 within 10 µm (median 9.6 µm), compensating yardstick 19 of 30
+  (7.7 µm), approved yardstick 11 of 30 (23 µm); 60 of 60 placed, all runs
+  complete.
