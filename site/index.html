@@ -85,7 +85,8 @@
     <a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
     <a href="#contact-model">4 Contact model</a><a href="#thread">5 Thread in the task</a><a href="#motion">6 Motion</a>
     <a href="#task">7 Learning task</a><a href="#network">8 Network</a><a href="#training">9 Training</a>
-    <a href="#results">10 Results</a><a href="#next">11 Next</a>
+    <a href="#results">10 Results</a><a href="#disturbances">11 Disturbances</a><a href="#robust-training">12 Robust training</a>
+    <a href="#robustness">13 Robustness</a><a href="#compute">14 Compute</a><a href="#next">15 Next</a>
   </div>
 </nav>
 
@@ -453,8 +454,86 @@ r -= 0.002 * smooth;</code></pre>
     <figcaption>Four evaluation episodes chosen before evaluation (the first seeds covering four targets), real time.</figcaption>
   </section>
 
+  <section id="disturbances">
+    <h2>11 · A perfect world is too easy</h2>
+    <p class="when">October 6 · the brief is rewritten around disturbances</p>
+    <div class="prose">
+      <p>With exact state, no delay and a still target, both the scripted controller and the learned policy succeed every
+        time. A real stage gets none of that. We rewrote the brief: every mission phase is learned under one shared,
+        documented disturbance layer; the programmed servo stays only as the motor drive; scripted controllers become
+        yardsticks. Results are reported on held-out seeds at stated disturbance levels, including full strength.</p>
+      <p>The layer lives in the same C core used for training, evaluation and replay. One number, the level from 0 to 1,
+        scales every magnitude, and in training each episode draws its own level uniformly from that range. The magnitudes
+        are illustrative until replaced by measurements of the real stage, sensors and tissue.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Disturbance</th><th>Model</th><th>Full strength (level 1)</th><th>Enters through</th></tr>
+      <tr><td>Slide force noise</td><td>Low-pass random force, 50 ms correlation time</td><td>std 100, 100, 50, 10, 2 mN on X, Y, Z, insertion, retainer</td><td>Applied joint force</td></tr>
+      <tr><td>Extra friction</td><td>Coulomb, smoothed below 0.1 mm/s</td><td>up to 100, 100, 50, 5, 1 mN, drawn per episode</td><td>Applied joint force</td></tr>
+      <tr><td>Table vibration</td><td>Three sinusoids per axis, 5–60 Hz</td><td>up to 10 mm/s² per component</td><td>Inertial force on each carriage</td></tr>
+      <tr><td>Tip sensing</td><td>Delay, then Gaussian noise</td><td>0–10 ms latency; 0.5 µm and 0.05 mm/s noise</td><td>Observation only</td></tr>
+      <tr><td>Target estimate</td><td>Bias, slow drift and per-step noise</td><td>1 µm bias, 1 µm/√s drift, 3 µm noise per axis</td><td>Observation only</td></tr>
+      <tr><td>Tissue motion</td><td>Breathing 0.2–0.4 Hz, pulse 1–2 Hz</td><td>up to 30 + 10 µm vertical, 10 + 3 µm lateral amplitude</td><td>True target position and velocity</td></tr>
+    </table></div>
+    <pre><code class="language-c">// Every 1 ms physics step: rebuild the external force on each slide from scratch.
+for (int j = 0; j &lt; SA_NJ; j++) {
+    double sigma = SA_FORCE_SIGMA[j] * q-&gt;level;        // low-pass force noise
+    q-&gt;force[j] += -q-&gt;force[j] * dt / SA_FORCE_TAU
+                 + sigma * sqrt(2 * dt / SA_FORCE_TAU) * sa_normal(&amp;c-&gt;drng);
+    double v = d-&gt;qvel[c-&gt;dof[j]];
+    double inertial = -c-&gt;mass[j] * dot(a_base, SA_AXIS[j]);   // table vibration
+    double friction = -q-&gt;friction[j] * tanh(v / 1e-4);       // extra Coulomb friction
+    d-&gt;qfrc_applied[c-&gt;dof[j]] = q-&gt;force[j] + friction + inertial;
+}</code></pre>
+    <div class="lesson"><strong>Level 0 changes nothing.</strong> Disturbance parameters come from their own random
+      stream, so at level 0 the new core reproduces all 200 recorded evaluation episodes of the earlier policy and of the
+      scripted controller exactly. Rewards and success use true state, and success now also requires the tip to match the
+      moving target's velocity within 0.2 mm/s.</div>
+    <div class="prose"><p>The replay at the top draws every component in the scene. Each carriage carries force arrows at
+      5 cm per 0.1 N: amber for noise, cyan for friction, lilac for vibration. The table shows its acceleration and recent
+      trace. The Micro camera shows, at true scale, the moving target with its 10 µm tolerance cylinder, the noisy target
+      estimate and the late tip measurement. Values sit in panels beside each object. Airflow is not modelled yet; it
+      matters for the thread, which this task does not carry.</p></div>
+  </section>
+
+  <section id="robust-training">
+    <h2>12 · Training under disturbances</h2>
+    <p class="when">October 6 · runs 4 and 5, one change between them</p>
+    <div class="charts">
+      <div class="chart"><h4>Final lateral error at episode end (training rollouts)</h4><svg id="chart-robust-error" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Policy update size (KL divergence)</h4><svg id="chart-robust-kl" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Success rate (training rollouts, noisy actions)</h4><svg id="chart-robust-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Collision rate</h4><svg id="chart-robust-collision" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-robust"></div>
+    <div id="robust-training-notes"></div>
+  </section>
+
+  <section id="robustness">
+    <h2>13 · Robustness on 200 held-out episodes</h2>
+    <p class="when">Deterministic actions, the same 200 predetermined seeds at every level</p>
+    <div class="charts one">
+      <div class="chart"><h4>Success against disturbance level</h4><svg id="chart-level" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend-level"></div>
+    <div class="table-wrap"><table id="robustness-table"></table></div>
+    <div id="robustness-notes"></div>
+  </section>
+
+  <section id="compute">
+    <h2>14 · What the training used</h2>
+    <p class="when">One workstation: RTX 4090 and a 16-core Ryzen 9 5950X</p>
+    <div class="table-wrap"><table id="compute-table"></table></div>
+    <div class="prose"><p>This workload is CPU-bound. PufferLib steps 28 copies of the MuJoCo world on CPU threads, about
+      29 of the machine's 32 hardware threads, while the GPU runs only the 101k-parameter network and its PPO update. It
+      idles near 10% utilisation and about 59 W of its 450 W limit, with under 1 GB of memory for the trainer. Runs 1–3
+      predate the resource logger, so their figures come from PufferLib's own dashboard, which reports device-wide GPU
+      memory including the desktop. From run 4, a logger samples GPU power, temperature, the trainer's GPU memory and host
+      CPU load once a minute.</p></div>
+  </section>
+
   <section id="next">
-    <h2>11 · What comes next</h2>
+    <h2>15 · What comes next</h2>
     <p class="when">The full mission is still ahead</p>
     <div class="prose">
       <ol>

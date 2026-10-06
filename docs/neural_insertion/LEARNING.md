@@ -115,6 +115,39 @@ uv run --locked python -m sixlegs.neural_insertion.align_policy \
 Both need the pinned PufferLib checkout under `build/` (run the installer with
 `--cpu` once) and the evaluator from `puffer/build_eval.sh`.
 
+## Robust alignment under the disturbance layer (brief v2)
+
+The disturbance layer (documented in `native/surgical_core.h` and the journal)
+scales force noise, extra friction, table vibration, tip sensing noise and
+latency, target estimate errors and tissue motion by one level from 0 to 1.
+Training draws each episode's level uniformly in [0, 1]; evaluation uses the
+same 200 seeds at fixed levels 0, 0.25, 0.5, 0.75 and 1. At level 0 the core
+reproduces the undisturbed results exactly.
+[Manifest](ROBUST_ALIGN_RESULTS.json) with learning curves, compute and every
+evaluation.
+
+| Run | Change | Outcome |
+| --- | --- | --- |
+| `align_v4` | disturbances on, rate 0.003 | about 50 µm mean error by 35 M steps, then KL 0.1 to 14; stopped at 48.5 M |
+| `align_v5` | rate 0.001 | stable, no collisions; still improving when the schedule reached zero at 99.9 M |
+| `align_v6` | 300 M step budget | running |
+
+Success on the 200 evaluation seeds (deterministic actions; collisions 0% for
+every policy and level):
+
+| Policy | Level 0 | 0.25 | 0.5 | 0.75 | 1 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `align_v5`, 99.9 M steps | 62.5% | 50.5% | 26.5% | 3.5% | 0.5% |
+| `align_v3`, trained without disturbances | 100% | 100% | 93.0% | 22.0% | 1.5% |
+| Scripted yardstick | 100% | 100% | 85.5% | 11.0% | 1.0% |
+
+`align_v5` is not yet robust: it trails the undisturbed policy at every level,
+and its successes take about 4.4 s of the 5 s allowed (1.4 s for `align_v3` at
+level 0). Its 65.5 M checkpoint scored 31.5%, 20.0% and 0% at levels 0, 0.5 and
+1, so it was still improving. The checkpoint is kept as
+[`align_v5_policy.bin`](../../assets/neural_insertion/align_v5_policy.bin) with
+its [run configuration](../../assets/neural_insertion/align_v5_run.ini).
+
 ## What this does and does not show
 
 It shows that the robot, servo and environment support learning a precise,

@@ -169,6 +169,16 @@ def assemble(media_paths):
     clock = json.loads((ROOT/"docs/neural_insertion/THREAD_CLOCK_RESULTS.json").read_text())
     (data/"training.json").write_text(json.dumps({k: {"outcome": v["outcome"], "history": v["history"]}
                                                   for k, v in results["runs"].items()})+"\n")
+    robust_path = ROOT/"docs/neural_insertion/ROBUST_ALIGN_RESULTS.json"
+    if robust_path.exists():
+        robust = json.loads(robust_path.read_text())
+        runs = {"align_v3": {"history": results["runs"]["align_v3"]["history"]}}
+        runs.update({k: {"history": v["history"]} for k, v in robust["runs"].items() if k >= "align_v4"})
+        (data/"robust_training.json").write_text(json.dumps(runs)+"\n")
+        (data/"robustness.json").write_text(json.dumps(robust["evaluation"])+"\n")
+        (data/"compute.json").write_text(json.dumps({"compute": robust["compute"], "hardware": robust["hardware"],
+                                                     "runs": {k: {"change": v["change"], "outcome": v["outcome"]}
+                                                              for k, v in robust["runs"].items()}})+"\n")
     (data/"evaluation.json").write_text(json.dumps({k: v["summary"] for k, v in results["evaluation"].items()})+"\n")
     (data/"clock.json").write_text(json.dumps([{k: c[k] for k in ("material", "integrator", "time_constant_s", "dt_s",
                                                                   "difference_um", "passed")}

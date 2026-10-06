@@ -995,3 +995,9 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   and panning through 03:40:48 UTC after the user's checks in the browser), plus
   a dashboard log parser and per-run compute summary. Site rebuilds took about
   1 min wall each; no new simulation beyond recording replays.
+- `align_v5` completed **99.9 M steps in 31.7 min training wall** (52 K steps/s;
+  GPU near 10% use and 59 W, trainer under 1.4 GB GPU memory; 28.8 CPU threads
+  busy). Evaluation on the Mac CPU, all policies at five levels: **about 2 min
+  wall**. Not yet robust (62.5%, 26.5%, 0.5% at levels 0, 0.5, 1).
+- `align_v6` (commit `041071a`, 04:05:37 UTC): only the step budget changes,
+  to 300 M; about 1 h 45 min expected.

@@ -107,3 +107,5 @@ footer { padding: 30px 0 60px; color: var(--muted); font-size: 14px; }
 }
 .charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 760px) { .charts { grid-template-columns: 1fr; } }
+.charts.one { grid-template-columns: minmax(0, 640px); }
+#compute-table td:first-child, #compute-table .num, #robustness-table .num { white-space: nowrap; }

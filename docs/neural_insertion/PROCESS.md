@@ -187,3 +187,16 @@ data panel joined to it by a leader line. The user's checks in the browser
 caught four problems we fixed in turn: panels resized with their text, panels
 overlapped when zoomed out, the browser served a stale viewer after rebuilds,
 and horizontal panning was inverted.
+
+## 15. Learning under disturbances is slower (October 6)
+
+The first disturbed run used the learning rate that had worked without
+disturbances. It improved quickly, to about 50 µm mean final error by 35 M
+steps, then diverged the same way the second undisturbed run had: KL rose from
+about 0.1 to 14 and collisions returned. We stopped it and changed only the rate,
+to a third. That run was stable throughout and never collided, but the cosine
+schedule reached zero while it was still improving. Evaluated on the 200 seeds,
+it was worse than the policy trained without disturbances at every level (62.5%
+against 100% undisturbed, 26.5% against 93.0% at level 0.5), succeeding slowly,
+in about 4.4 of the 5 s allowed. Training under disturbances had not yet paid
+off. The next run changes only the step budget, from 100 M to 300 M steps.

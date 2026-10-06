@@ -25,7 +25,9 @@ from sixlegs.neural_insertion.training_log import boxes, history, summary  # noq
 
 LEVELS = (0.0, 0.25, 0.5, 0.75, 1.0)
 LOGS = ROOT/"outputs/neural_insertion/puffer"
-WEIGHTS = {"robust": ROOT/"assets/neural_insertion/align_v5_policy.bin",
+# Learned checkpoints evaluated, by name: the final policy of each completed run.
+WEIGHTS = {"robust": ROOT/"assets/neural_insertion/align_v6_policy.bin",
+           "run5": ROOT/"assets/neural_insertion/align_v5_policy.bin",
            "undisturbed": ROOT/"assets/neural_insertion/align_v3_policy.bin"}
 # Run -> (dashboard log, resource samples, what changed, outcome). Runs 1-3 predate the logger.
 RUNS = {
@@ -35,7 +37,9 @@ RUNS = {
     "align_v3": ("align_v3.log", None, "learning rate 0.003", "completed; 100% success without disturbances"),
     "align_v4": ("align_v4.log", "align_v4_resources.csv", "disturbance layer on, level drawn in [0, 1] per episode",
                  "stopped at 48.5 M steps: KL rose from about 0.1 to 14 and collisions returned"),
-    "align_v5": ("align_v5.log", "align_v5_resources.csv", "learning rate 0.001", None),
+    "align_v5": ("align_v5.log", "align_v5_resources.csv", "learning rate 0.001",
+                 "completed 99.9 M steps; stable, still improving when the learning rate reached zero"),
+    "align_v6": ("align_v6.log", "align_v6_resources.csv", "300 M step budget", None),
 }
 HARDWARE = {"gpu": "NVIDIA GeForce RTX 4090, 24 GiB", "driver": "595.91.07", "cuda": "13.0",
             "cpu": "AMD Ryzen 9 5950X, 16 cores / 32 threads", "host_memory_gib": 62,
@@ -63,7 +67,7 @@ def main():
               "pufferlib_revision": "6ffa5b10dbbbe4d1e8288367c7d9d3acd3bad4a2", "hardware": HARDWARE,
               "core_sha256": hashlib.sha256((NATIVE/"surgical_core.h").read_bytes()).hexdigest(),
               "evaluation_seeds": [EVALUATION_SEEDS[0], EVALUATION_SEEDS[-1]], "levels": list(LEVELS),
-              "weights_sha256": {k: hashlib.sha256(v.read_bytes()).hexdigest() for k, v in WEIGHTS.items()},
+              "weights_sha256": {k: hashlib.sha256(v.read_bytes()).hexdigest() for k, v in WEIGHTS.items() if v.exists()},
               "runs": {}, "compute": {}, "evaluation": {}}
     for run, (log, res, change, outcome) in RUNS.items():
         path = LOGS/log
@@ -78,6 +82,9 @@ def main():
     scratch = ROOT/"outputs/neural_insertion/robust_eval"
     for level in LEVELS:
         for name, weights in WEIGHTS.items():
+            if not weights.exists():
+                print("missing", weights)
+                continue
             s, _ = evaluate_checkpoint(weights, scratch/f"{name}_level{level:.2f}", level=level)
             report["evaluation"].setdefault(name, {})[f"{level:.2f}"] = condense(s)
         s, _ = evaluate(scripted, level=level)
