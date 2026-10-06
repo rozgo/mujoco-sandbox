@@ -1,0 +1,1333 @@
+{
+ "controller": "scripted yardstick (tube_cycle.py): measured target, one correction from the measured tip, fixed insertion stroke; no learning",
+ "cycle": "thread-tube design, sites 0, 5, 1; stand-in constraints for sticking, release, tube hold and tissue grip; fast thread physics",
+ "seeds": {
+  "evaluation": [
+   1001,
+   1002,
+   1003,
+   1004,
+   1005,
+   1006,
+   1007,
+   1008,
+   1009,
+   1010
+  ],
+  "note": "fixed before any training; level 0 is deterministic"
+ },
+ "levels": {
+  "0": "undisturbed",
+  "1": "nominal quality workcell",
+  "2": "stress, twice nominal"
+ },
+ "started_utc": "2026-10-06T08:35:38.203758+00:00",
+ "wall_s_total": 158.6,
+ "source_commit": "966a2ffeb7602ff9a5924bce006206b6d0fcdb30",
+ "summary": {
+  "level_0": {
+   "runs": 1,
+   "runs_completed": 1,
+   "sites_attempted": 3,
+   "threads_placed": 3,
+   "placement_um_median": 16.70278470107446,
+   "placement_um_p90": 29.553050229192113,
+   "placement_um_max": 32.765616611221525,
+   "end_depth_mm_range": [
+    2.013375151917117,
+    2.0314467625055244
+   ],
+   "prohibited_contacts": 0
+  },
+  "level_1": {
+   "runs": 10,
+   "runs_completed": 10,
+   "sites_attempted": 30,
+   "threads_placed": 30,
+   "placement_um_median": 23.32074942074481,
+   "placement_um_p90": 40.46211034752114,
+   "placement_um_max": 49.20085035487521,
+   "end_depth_mm_range": [
+    2.0058887336071365,
+    2.042770429331995
+   ],
+   "prohibited_contacts": 0
+  },
+  "level_2": {
+   "runs": 10,
+   "runs_completed": 10,
+   "sites_attempted": 30,
+   "threads_placed": 30,
+   "placement_um_median": 24.67030834014588,
+   "placement_um_p90": 50.464276241674625,
+   "placement_um_max": 69.4685437539104,
+   "end_depth_mm_range": [
+    2.0006404706169434,
+    2.0534355662610437
+   ],
+   "prohibited_contacts": 0
+  }
+ },
+ "runs": [
+  {
+   "level": 0,
+   "seed": 1001,
+   "status": "completed",
+   "wall_s": 55.0,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0314467625055244,
+     "placement_lateral_um": 3.6348535621864992
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.014588455745127,
+     "placement_lateral_um": 32.765616611221525
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.013375151917117,
+     "placement_lateral_um": 16.70278470107446
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 0.0,
+    "seed": 1001,
+    "robot": 0.0,
+    "sensing": 0.0,
+    "tissue": 0.0,
+    "latency_ms": 0.0,
+    "breathing_amp_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "breathing_hz": 0.2800211593962133,
+    "pulse_amp_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pulse_hz": 1.4355240615447258,
+    "target_bias_um": [
+     0.0,
+     -0.0,
+     -0.0
+    ],
+    "friction_uN": {
+     "stage_x": 0.0,
+     "stage_y": 0.0,
+     "stage_z": 0.0,
+     "insertion": 0.0
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1001,
+   "status": "completed",
+   "wall_s": 55.8,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.023614971040658,
+     "placement_lateral_um": 2.5488001990740323
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.016380246205827,
+     "placement_lateral_um": 49.20085035487521
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.019878839708369,
+     "placement_lateral_um": 15.469868977034423
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1001,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 7.0,
+    "breathing_amp_um": [
+     0.62,
+     0.61,
+     8.13
+    ],
+    "breathing_hz": 0.2800211593962133,
+    "pulse_amp_um": [
+     0.7,
+     2.38,
+     2.3
+    ],
+    "pulse_hz": 1.4355240615447258,
+    "target_bias_um": [
+     0.49,
+     -0.24,
+     -0.23
+    ],
+    "friction_uN": {
+     "stage_x": 1524.0,
+     "stage_y": 4021.8,
+     "stage_z": 6301.0,
+     "insertion": 98.6
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1002,
+   "status": "completed",
+   "wall_s": 55.8,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.023525899320987,
+     "placement_lateral_um": 5.10293107556725
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.018245433904653,
+     "placement_lateral_um": 5.560909581180233
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0162693721867555,
+     "placement_lateral_um": 36.02519591854188
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1002,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 2.0,
+    "breathing_amp_um": [
+     2.0,
+     2.25,
+     22.42
+    ],
+    "breathing_hz": 0.28253471064121266,
+    "pulse_amp_um": [
+     -1.29,
+     -0.55,
+     8.68
+    ],
+    "pulse_hz": 1.6764411887888997,
+    "target_bias_um": [
+     -0.56,
+     0.24,
+     -1.04
+    ],
+    "friction_uN": {
+     "stage_x": 6742.6,
+     "stage_y": 11097.9,
+     "stage_z": 1872.2,
+     "insertion": 119.7
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1003,
+   "status": "completed",
+   "wall_s": 55.7,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0335387746139872,
+     "placement_lateral_um": 5.049157434201308
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0085827769270708,
+     "placement_lateral_um": 35.76034785596323
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.015464384004872,
+     "placement_lateral_um": 24.367344198144394
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1003,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 8.0,
+    "breathing_amp_um": [
+     3.6,
+     4.71,
+     5.55
+    ],
+    "breathing_hz": 0.34095097640567074,
+    "pulse_amp_um": [
+     -0.33,
+     0.86,
+     3.3
+    ],
+    "pulse_hz": 1.5917289903828613,
+    "target_bias_um": [
+     -0.93,
+     -0.82,
+     -0.74
+    ],
+    "friction_uN": {
+     "stage_x": 15042.3,
+     "stage_y": 14462.0,
+     "stage_z": 3404.4,
+     "insertion": 597.5
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1004,
+   "status": "completed",
+   "wall_s": 55.5,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0388279778015743,
+     "placement_lateral_um": 2.1088784254819952
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.013692989590325,
+     "placement_lateral_um": 36.53322072181978
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.015408849497902,
+     "placement_lateral_um": 40.842896149225446
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1004,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 7.0,
+    "breathing_amp_um": [
+     -0.28,
+     0.17,
+     25.98
+    ],
+    "breathing_hz": 0.3486114014664669,
+    "pulse_amp_um": [
+     -0.98,
+     -0.18,
+     5.26
+    ],
+    "pulse_hz": 1.5985027159958456,
+    "target_bias_um": [
+     -0.22,
+     -1.03,
+     -0.65
+    ],
+    "friction_uN": {
+     "stage_x": 12413.5,
+     "stage_y": 16741.9,
+     "stage_z": 1254.9,
+     "insertion": 560.5
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1005,
+   "status": "completed",
+   "wall_s": 55.4,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0367675445987743,
+     "placement_lateral_um": 3.6540743113232663
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.013601322076255,
+     "placement_lateral_um": 4.927896296099176
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0181864544194923,
+     "placement_lateral_um": 22.274154643345227
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1005,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 2.0,
+    "breathing_amp_um": [
+     0.17,
+     -0.78,
+     12.89
+    ],
+    "breathing_hz": 0.34677102543664334,
+    "pulse_amp_um": [
+     0.2,
+     0.25,
+     3.89
+    ],
+    "pulse_hz": 1.3202355647477424,
+    "target_bias_um": [
+     -0.15,
+     0.44,
+     1.31
+    ],
+    "friction_uN": {
+     "stage_x": 16695.9,
+     "stage_y": 19534.4,
+     "stage_z": 1622.3,
+     "insertion": 496.8
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1006,
+   "status": "completed",
+   "wall_s": 56.1,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.027045628033065,
+     "placement_lateral_um": 5.494405964063819
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0129384808277706,
+     "placement_lateral_um": 20.08740310833747
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0186723119460908,
+     "placement_lateral_um": 21.932716355896265
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1006,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 8.0,
+    "breathing_amp_um": [
+     -3.06,
+     0.42,
+     7.57
+    ],
+    "breathing_hz": 0.24162115046128677,
+    "pulse_amp_um": [
+     -0.05,
+     0.04,
+     7.63
+    ],
+    "pulse_hz": 1.539512059690061,
+    "target_bias_um": [
+     0.3,
+     0.92,
+     -0.28
+    ],
+    "friction_uN": {
+     "stage_x": 15995.4,
+     "stage_y": 6700.9,
+     "stage_z": 4057.7,
+     "insertion": 356.4
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1007,
+   "status": "completed",
+   "wall_s": 56.1,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0338972539226603,
+     "placement_lateral_um": 3.65261070090051
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.018541322147499,
+     "placement_lateral_um": 27.21136500497248
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0128928910250465,
+     "placement_lateral_um": 39.34547236374703
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1007,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 9.000000000000002,
+    "breathing_amp_um": [
+     6.23,
+     -0.14,
+     27.83
+    ],
+    "breathing_hz": 0.3505527759370298,
+    "pulse_amp_um": [
+     -0.2,
+     0.17,
+     6.18
+    ],
+    "pulse_hz": 1.4213786395379717,
+    "target_bias_um": [
+     0.24,
+     0.98,
+     -0.23
+    ],
+    "friction_uN": {
+     "stage_x": 11776.4,
+     "stage_y": 17906.7,
+     "stage_z": 4511.8,
+     "insertion": 197.6
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1008,
+   "status": "completed",
+   "wall_s": 54.9,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.027800913947374,
+     "placement_lateral_um": 4.631207165387655
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0144314498953833,
+     "placement_lateral_um": 40.419800813998435
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0161870955496113,
+     "placement_lateral_um": 38.04772048345773
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1008,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 9.000000000000002,
+    "breathing_amp_um": [
+     8.55,
+     2.49,
+     2.0
+    ],
+    "breathing_hz": 0.26105018293865895,
+    "pulse_amp_um": [
+     2.37,
+     0.52,
+     1.85
+    ],
+    "pulse_hz": 1.0468933826993265,
+    "target_bias_um": [
+     0.24,
+     0.21,
+     -1.12
+    ],
+    "friction_uN": {
+     "stage_x": 19663.8,
+     "stage_y": 16885.5,
+     "stage_z": 3988.7,
+     "insertion": 22.7
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1009,
+   "status": "completed",
+   "wall_s": 55.2,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.03682128453282,
+     "placement_lateral_um": 6.2405704211729445
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.019299205011336,
+     "placement_lateral_um": 24.73356801318631
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0058887336071365,
+     "placement_lateral_um": 34.39445366720233
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1009,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 6.0,
+    "breathing_amp_um": [
+     -5.74,
+     -6.36,
+     28.43
+    ],
+    "breathing_hz": 0.3092391009756567,
+    "pulse_amp_um": [
+     -0.25,
+     -1.83,
+     8.71
+    ],
+    "pulse_hz": 1.8493788526971353,
+    "target_bias_um": [
+     -0.79,
+     0.3,
+     -1.21
+    ],
+    "friction_uN": {
+     "stage_x": 16516.9,
+     "stage_y": 12179.5,
+     "stage_z": 5623.2,
+     "insertion": 498.0
+    }
+   }
+  },
+  {
+   "level": 1,
+   "seed": 1010,
+   "status": "completed",
+   "wall_s": 58.9,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.042770429331995,
+     "placement_lateral_um": 26.16807497099763
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0140382569444455,
+     "placement_lateral_um": 38.502238638574816
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0147253000347263,
+     "placement_lateral_um": 46.1039171336221
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 1.0,
+    "seed": 1010,
+    "robot": 1.0,
+    "sensing": 1.0,
+    "tissue": 1.0,
+    "latency_ms": 3.0,
+    "breathing_amp_um": [
+     1.77,
+     1.41,
+     4.0
+    ],
+    "breathing_hz": 0.2501060739566327,
+    "pulse_amp_um": [
+     -0.43,
+     2.89,
+     5.85
+    ],
+    "pulse_hz": 1.9177451799156093,
+    "target_bias_um": [
+     0.94,
+     -0.99,
+     -1.45
+    ],
+    "friction_uN": {
+     "stage_x": 16976.4,
+     "stage_y": 14922.9,
+     "stage_z": 4094.2,
+     "insertion": 564.9
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1001,
+   "status": "completed",
+   "wall_s": 59.7,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0186155511902655,
+     "placement_lateral_um": 5.223468633334258
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.018589348057702,
+     "placement_lateral_um": 50.09266213052743
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.026864440986486,
+     "placement_lateral_um": 13.934899263989976
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1001,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 14.0,
+    "breathing_amp_um": [
+     1.23,
+     1.22,
+     16.26
+    ],
+    "breathing_hz": 0.2800211593962133,
+    "pulse_amp_um": [
+     1.4,
+     4.76,
+     4.61
+    ],
+    "pulse_hz": 1.4355240615447258,
+    "target_bias_um": [
+     0.98,
+     -0.47,
+     -0.47
+    ],
+    "friction_uN": {
+     "stage_x": 3047.9,
+     "stage_y": 8043.6,
+     "stage_z": 12602.0,
+     "insertion": 197.1
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1002,
+   "status": "completed",
+   "wall_s": 59.3,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.016414073274561,
+     "placement_lateral_um": 6.259939323613825
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.024035956111547,
+     "placement_lateral_um": 6.820900791502888
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.020748007524517,
+     "placement_lateral_um": 32.26420232693379
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1002,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 5.0,
+    "breathing_amp_um": [
+     4.01,
+     4.51,
+     44.85
+    ],
+    "breathing_hz": 0.28253471064121266,
+    "pulse_amp_um": [
+     -2.58,
+     -1.09,
+     17.36
+    ],
+    "pulse_hz": 1.6764411887888997,
+    "target_bias_um": [
+     -1.12,
+     0.49,
+     -2.08
+    ],
+    "friction_uN": {
+     "stage_x": 13485.2,
+     "stage_y": 22195.8,
+     "stage_z": 3744.4,
+     "insertion": 239.3
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1003,
+   "status": "completed",
+   "wall_s": 59.2,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.034482307770503,
+     "placement_lateral_um": 9.90324068292104
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0052404419990495,
+     "placement_lateral_um": 32.499730003141785
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0175255308630966,
+     "placement_lateral_um": 23.11784478137774
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1003,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 15.0,
+    "breathing_amp_um": [
+     7.21,
+     9.41,
+     11.09
+    ],
+    "breathing_hz": 0.34095097640567074,
+    "pulse_amp_um": [
+     -0.66,
+     1.72,
+     6.59
+    ],
+    "pulse_hz": 1.5917289903828613,
+    "target_bias_um": [
+     -1.87,
+     -1.63,
+     -1.48
+    ],
+    "friction_uN": {
+     "stage_x": 30084.5,
+     "stage_y": 28923.9,
+     "stage_z": 6808.7,
+     "insertion": 1195.1
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1004,
+   "status": "completed",
+   "wall_s": 58.9,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0467659403905287,
+     "placement_lateral_um": 5.726455533171133
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.013139986517629,
+     "placement_lateral_um": 35.130155083924194
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0178068435534584,
+     "placement_lateral_um": 35.243401099521456
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1004,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 14.0,
+    "breathing_amp_um": [
+     -0.55,
+     0.34,
+     51.96
+    ],
+    "breathing_hz": 0.3486114014664669,
+    "pulse_amp_um": [
+     -1.95,
+     -0.36,
+     10.53
+    ],
+    "pulse_hz": 1.5985027159958456,
+    "target_bias_um": [
+     -0.44,
+     -2.06,
+     -1.29
+    ],
+    "friction_uN": {
+     "stage_x": 24827.0,
+     "stage_y": 33483.7,
+     "stage_z": 2509.8,
+     "insertion": 1121.0
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1005,
+   "status": "completed",
+   "wall_s": 58.4,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0428311614253545,
+     "placement_lateral_um": 6.329720237286405
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0156680890626575,
+     "placement_lateral_um": 27.736407742560825
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.022755910296837,
+     "placement_lateral_um": 30.159845786558222
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1005,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 4.0,
+    "breathing_amp_um": [
+     0.34,
+     -1.57,
+     25.77
+    ],
+    "breathing_hz": 0.34677102543664334,
+    "pulse_amp_um": [
+     0.4,
+     0.5,
+     7.77
+    ],
+    "pulse_hz": 1.3202355647477424,
+    "target_bias_um": [
+     -0.29,
+     0.89,
+     2.61
+    ],
+    "friction_uN": {
+     "stage_x": 33391.7,
+     "stage_y": 39068.9,
+     "stage_z": 3244.7,
+     "insertion": 993.6
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1006,
+   "status": "completed",
+   "wall_s": 58.9,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.022838290302886,
+     "placement_lateral_um": 8.386868830626016
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0124611473961522,
+     "placement_lateral_um": 6.879361454078092
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.025190734654714,
+     "placement_lateral_um": 15.20226862103082
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1006,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 16.0,
+    "breathing_amp_um": [
+     -6.13,
+     0.83,
+     15.14
+    ],
+    "breathing_hz": 0.24162115046128677,
+    "pulse_amp_um": [
+     -0.1,
+     0.09,
+     15.26
+    ],
+    "pulse_hz": 1.539512059690061,
+    "target_bias_um": [
+     0.6,
+     1.84,
+     -0.55
+    ],
+    "friction_uN": {
+     "stage_x": 31990.8,
+     "stage_y": 13401.8,
+     "stage_z": 8115.5,
+     "insertion": 712.9
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1007,
+   "status": "completed",
+   "wall_s": 58.7,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0382472420051556,
+     "placement_lateral_um": 22.638446775705212
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.026209403159669,
+     "placement_lateral_um": 53.80880324199936
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0108573201865454,
+     "placement_lateral_um": 54.519136249191675
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1007,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 17.0,
+    "breathing_amp_um": [
+     12.47,
+     -0.27,
+     55.67
+    ],
+    "breathing_hz": 0.3505527759370298,
+    "pulse_amp_um": [
+     -0.4,
+     0.35,
+     12.36
+    ],
+    "pulse_hz": 1.4213786395379717,
+    "target_bias_um": [
+     0.48,
+     1.96,
+     -0.46
+    ],
+    "friction_uN": {
+     "stage_x": 23552.8,
+     "stage_y": 35813.5,
+     "stage_z": 9023.6,
+     "insertion": 395.2
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1008,
+   "status": "completed",
+   "wall_s": 58.4,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.024440059713669,
+     "placement_lateral_um": 8.668264851018435
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.0174359745503665,
+     "placement_lateral_um": 44.622895845777634
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0190436321827008,
+     "placement_lateral_um": 69.4685437539104
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1008,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 18.000000000000004,
+    "breathing_amp_um": [
+     17.1,
+     4.98,
+     4.0
+    ],
+    "breathing_hz": 0.26105018293865895,
+    "pulse_amp_um": [
+     4.73,
+     1.04,
+     3.7
+    ],
+    "pulse_hz": 1.0468933826993265,
+    "target_bias_um": [
+     0.48,
+     0.42,
+     -2.23
+    ],
+    "friction_uN": {
+     "stage_x": 39327.5,
+     "stage_y": 33771.0,
+     "stage_z": 7977.5,
+     "insertion": 45.5
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1009,
+   "status": "completed",
+   "wall_s": 59.4,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0436219609094763,
+     "placement_lateral_um": 9.431327769735356
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.023876609755746,
+     "placement_lateral_um": 39.37965346605426
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.0006404706169434,
+     "placement_lateral_um": 24.1571633450344
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1009,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 12.0,
+    "breathing_amp_um": [
+     -11.48,
+     -12.71,
+     56.87
+    ],
+    "breathing_hz": 0.3092391009756567,
+    "pulse_amp_um": [
+     -0.5,
+     -3.66,
+     17.42
+    ],
+    "pulse_hz": 1.8493788526971353,
+    "target_bias_um": [
+     -1.57,
+     0.6,
+     -2.42
+    ],
+    "friction_uN": {
+     "stage_x": 33033.8,
+     "stage_y": 24359.1,
+     "stage_z": 11246.5,
+     "insertion": 995.9
+    }
+   }
+  },
+  {
+   "level": 2,
+   "seed": 1010,
+   "status": "completed",
+   "wall_s": 44.7,
+   "simulated_s": 1.915000000001829,
+   "sites": [
+    {
+     "site": 0,
+     "passed": true,
+     "end_depth_mm": 2.0534355662610437,
+     "placement_lateral_um": 25.183453335257354
+    },
+    {
+     "site": 5,
+     "passed": true,
+     "end_depth_mm": 2.01511733977307,
+     "placement_lateral_um": 47.891677186363395
+    },
+    {
+     "site": 1,
+     "passed": true,
+     "end_depth_mm": 2.015438600607297,
+     "placement_lateral_um": 39.81858034125527
+    }
+   ],
+   "failed_checks": [],
+   "prohibited_contacts": 0,
+   "disturbances": {
+    "level": 2.0,
+    "seed": 1010,
+    "robot": 2.0,
+    "sensing": 2.0,
+    "tissue": 2.0,
+    "latency_ms": 7.0,
+    "breathing_amp_um": [
+     3.55,
+     2.82,
+     8.0
+    ],
+    "breathing_hz": 0.2501060739566327,
+    "pulse_amp_um": [
+     -0.86,
+     5.78,
+     11.7
+    ],
+    "pulse_hz": 1.9177451799156093,
+    "target_bias_um": [
+     1.88,
+     -1.97,
+     -2.9
+    ],
+    "friction_uN": {
+     "stage_x": 33952.8,
+     "stage_y": 29845.8,
+     "stage_z": 8188.4,
+     "insertion": 1129.8
+    }
+   }
+  }
+ ]
+}

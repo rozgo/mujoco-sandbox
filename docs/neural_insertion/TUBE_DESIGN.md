@@ -78,3 +78,30 @@ after release, and settling 30 ms at depth before release also helped; damping
 also cut the placement error at site 0 from 83 µm to 12 µm. Video:
 `previews/neural_insertion/tube_design/three_sites.mp4` (needle work at 0.02×,
 moves at 0.2×).
+
+## Disturbances
+
+`disturbance.py` carries the alignment core's disturbance layer (scale v2) into
+this cycle with the same magnitudes: robot force noise, extra friction and table
+vibration on each slide; needle-tip latency and noise; target estimate noise,
+bias and drift; breathing and pulse. The phantom is a mocap body here, so the
+tissue surface, targets, puncture model and the grip on placed threads move
+together. The yardstick measures the target before descending and makes one
+correction from the measured tip before inserting.
+
+## Baseline for training (`scripts/evaluate_tube_baseline.py`)
+
+Scripted yardstick, three sites per run, evaluation seeds 1001-1010 (fixed before
+any training) at levels 1 and 2, plus one undisturbed run. All 63 threads placed
+at 2.00-2.05 mm; no robot contact with the tissue.
+
+| Level | Median | 90th pct | Max | Site 0 median | Sites 5, 1 medians |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 17 µm | 30 µm | 33 µm | 4 µm | 33, 17 µm |
+| 1 | 23 µm | 40 µm | 49 µm | 5 µm | 31, 35 µm |
+| 2 | 25 µm | 50 µm | 69 µm | 9 µm | 37, 31 µm |
+
+Sites 5 and 1 lie on the dome's slope and are about 30 µm off even undisturbed;
+that gap is the first target for improvement. Full results:
+`TUBE_BASELINE.json` (source commit 966a2ff). The journal (`site/`, built by
+`scripts/build_site.py`) was rewritten around this setup; thread drawn in lime.

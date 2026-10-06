@@ -1057,3 +1057,8 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   in about 41 s). The first live attempt stopped when the state was reset from
   outside the runner mid-run; the runner now stops with a clear message on
   that.
+- With the user (about 08:27 UTC): lime thread, disturbances, journal. Lime
+  thread at 08:29; disturbance layer in the cycle, seed-1 runs at levels 0, 1, 2
+  at 08:33; yardstick baseline on evaluation seeds 1001-1010 at 08:38 (21 runs,
+  10 in parallel, 159 s wall); journal rebuilt at 08:39 and checked in the
+  browser at 08:40 UTC.
