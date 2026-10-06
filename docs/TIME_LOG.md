@@ -1001,3 +1001,29 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   wall**. Not yet robust (62.5%, 26.5%, 0.5% at levels 0, 0.5, 1).
 - `align_v6` (commit `041071a`, 04:05:37 UTC): only the step budget changes,
   to 300 M; about 1 h 45 min expected.
+
+## October 6: first end-to-end cycle
+
+- About 04:28 UTC, user direction: validate the whole cycle (pick, align,
+  insert, release, withdraw) as soon as possible before refining any phase.
+  `align_v6` keeps training on the GPU meanwhile.
+- Built a separate end-to-end scene variant in millimetre-gram units: the
+  workcell, the free 32-segment DER thread with a pickup eyelet, a slotted
+  needle, a keeper on the needle carriage and a trenched cassette bed; plus a
+  provisional tissue force model and a phase runner with measured checks.
+  Static geometry rendered and checked for penetration by about 04:36 UTC. Physics
+  cost on the Mac CPU: 3.0 ms per 5 µs step (about 600 s per simulated second).
+- `align_v6` completed **299.9 M steps in 1 h 31 min training wall** (05:37 UTC).
+  Evaluated on the current core (all policies, five levels, about 3 min wall on
+  the Mac): 95.0% at none and nominal, 73.5% at stress, with 5% collisions.
+- With the user: disturbance scale v2 (nominal quality workcell, stress 2x),
+  drive gain 4 and capped start heights, each tested (hold drift at nominal
+  under 1 µm on all 200 seeds after the start fix). `align_v7` (commit
+  `3c480f1`, 05:44:04 UTC) trains on them, 300 M steps.
+- End-to-end pass, mechanism iterations on the Mac CPU (each pick-to-lift test
+  about 10 min wall for 1.15 s simulated; full-thread physics about 600 s per
+  simulated second): passive hold, clamp pads, squeeze, cage, 5 mN and 100 µN
+  force clamps all lost or ejected the eyelet; a latch (one bar closing the
+  slot into an eye) held it through the 44 mm lift (06:10 UTC). Full cycle with
+  the latch running from the lift checkpoint. Review videos of three
+  instructive failures and the latch kept locally; parts gallery added.
