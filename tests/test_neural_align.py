@@ -53,3 +53,13 @@ def test_scripted_reference_succeeds_on_evaluation_seeds():
     summary, results = evaluate(scripted, seeds=EVALUATION_SEEDS[:10])
     assert summary["success"] == 1 and summary["collision"] == 0
     assert max(r["final_lateral_um"] for r in results) < 10
+
+
+def test_out_of_range_actions_are_clipped_before_any_reward_term():
+    a, b = AlignEnv(5), AlignEnv(5)
+    a.reset(), b.reset()
+    for scale in (1., 50., 1e4):
+        ra = a.step(np.array([scale, -scale, .5], np.float32))
+        rb = b.step(np.array([1., -1., .5], np.float32))
+        assert ra[1] == rb[1] and np.array_equal(ra[0], rb[0])
+        assert abs(ra[1]) < 5

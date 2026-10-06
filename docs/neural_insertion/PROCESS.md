@@ -121,3 +121,14 @@ learned policy is judged against a task that is known to be solvable.
 The GPU machine was unreachable over SSH at first. When asked, the user stated
 that training must use PufferLib on the RTX 4090, not a CPU fallback, and
 opened the tunnel. [Learning](LEARNING.md).
+
+## 11. The first training run diverged, and it was our bug (October 6)
+
+`align_v1` learned quickly to stop colliding, then headed away from its
+targets and diverged. The dashboard showed the cause: episode returns of
+−46,557 from a reward term that should never exceed a few units. The
+action-smoothness penalty was computed on the policy's raw, unbounded samples
+rather than on the clipped actions the robot actually receives. We stopped the
+run, fixed the penalty with a regression test, verified that baselines are
+unchanged, and restarted with nothing else changed, so the next result is
+attributable to the fix.

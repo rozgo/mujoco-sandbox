@@ -38,6 +38,36 @@ for training and into a local library for tests and evaluation. The model is
 the physics-only scene, with vessel and dome data embedded. One policy step
 takes 0.155 ms on one Apple M3 Max core.
 
+## Training setup
+
+Run `align_v1` started 2026-10-06 01:08:47 UTC on the RTX 4090 (driver 595.91,
+CUDA 13.0, 32 CPU cores) from repository commit `35b67e2`, synchronized from the
+Mac by a Git bundle. PufferLib 5.0 at the pinned revision, its default
+recurrent PufferNet (128 hidden, 2 MinGRU layers, 100.9 K parameters) and its
+default optimizer settings, except γ = 0.995, λ = 0.95 and entropy 5e−4.
+2048 worlds on 28 CPU threads; MuJoCo physics stays on the CPU and only
+the network trains on the GPU. 100 M steps; throughput about 60 K steps/s.
+
+Getting the trainer to build took four fixes, all in our installer or
+adapter; the pinned PufferLib source is unchanged. The native trainer needs two
+bookkeeping fields the CPU build does not. nvcc rejects a versioned `.so` as an
+input. The macOS CPU build needs a bash 3.2 shim for one expansion and a
+framework-style rpath. The model file also differed between machines by about
+1e−18 m in vessel coordinates; rounding to the picometre made both byte-identical.
+
+The first run, `align_v1`, diverged after about 18 M steps (KL ≈ 13,500, clip
+fraction 1.0, episode return −46,557). The action-change penalty used the raw
+Gaussian samples instead of the clipped actions the robot receives; once the
+action means drifted past ±1 the penalty grew without bound. We stopped it at
+20.8 M steps, kept its log, fixed the penalty with a regression test and
+restarted unchanged otherwise as `align_v2`. Baseline outcomes are identical
+under the fix because they never leave ±1; seven random-policy returns differ
+by at most 1.2e−7 from float rounding.
+
+Evaluation runs a checkpoint with Puffer's own CPU network code and
+deterministic mean actions on the shared core, over the 200 predetermined seeds
+([evaluator](../../experiments/neural_insertion/puffer/align_eval.c)).
+
 ## Baselines on the evaluation seeds
 
 [Manifest](ALIGN_BASELINES.json).

@@ -337,11 +337,14 @@ static inline int sa_step(SACore* c, const float* action, float* obs, float* rew
     double potential = sa_potential(distance);
     double r = potential - c->potential;
     c->potential = potential;
+    // Penalize changes of the applied (clipped) action. Raw policy outputs are
+    // unbounded Gaussian samples; penalizing them diverged the first run.
     double smooth = 0;
     for (int i = 0; i < SA_ACT; i++) {
-        double da = action[i] - c->prev_action[i];
+        double applied = sa_clip(action[i], -1, 1);
+        double da = applied - c->prev_action[i];
         smooth += da * da;
-        c->prev_action[i] = (float)sa_clip(action[i], -1, 1);
+        c->prev_action[i] = (float)applied;
     }
     r -= 0.002 * smooth;
     double vx, vy;
