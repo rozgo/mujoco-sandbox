@@ -865,3 +865,24 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   about **1e−11 µm** unit disagreement with **0.05 µm** settled penetration.
   Saved [the explanation and decision](neural_insertion/CONTACT_SMOOTHING.md).
   Accuracy for the robot remains unaccepted; calibration and clock coupling open.
+
+## October 6: close the recorded contact-smoothing matrix
+
+- Recorded run **22:43:09–00:07:52 UTC**, **5082 s elapsed wall** with eight
+  parallel workers, **4.44 s aggregate MuJoCo simulation** over 88 cases
+  (rigid cases 119 s summed wall; chain and settling cases 19306 s summed wall,
+  overlapping). Waited for the complete matrix at the user's request rather
+  than stopping the slowest control. Full optional-stack suite **55 tests pass
+  in 170.23 s** during the run.
+- Every recorded comparison reproduced the development numbers. Candidate
+  gates: rigid timestep **0.077/0.025 µm**, rigid units ≤ 3.1e−7 µm; DER drop
+  timestep **8.03 µm** and **6.52 µm** at the third halving (fail), DER units
+  **0.0031–0.051 µm** (three of four pass); settling fixture **6.6e−5 µm**
+  timestep, **≤ 4.9e−11 µm** units, **0.046 µm** settled penetration (pass).
+  Exit status 1 because the gated chain drop fails; `ready_for_robot_or_rl`
+  remains false.
+- Plots **1.50 s wall**, **0 s additional simulation**; inspected the actual
+  eight-panel PNG. Copied the manifest to
+  [the results file](neural_insertion/CONTACT_SMOOTHING_RESULTS.json) and
+  finalized [the write-up](neural_insertion/CONTACT_SMOOTHING.md). Second
+  checkpoint commit follows the first progress commit `4a3760c`.

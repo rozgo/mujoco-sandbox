@@ -14,7 +14,8 @@ involved and no physical calibration has been established.**
 This follows the [contact audit](CONTACT_AUDIT.md). Fixtures, pre-impact
 checkpoint, masses, dimensions, inertia, friction, solver tolerance and unit
 systems are unchanged; the variant audit confirms that only `solimp`,
-`solref` and the integrator differ from the baseline models. CPU MuJoCo 3.12.0.
+`solref` and the integrator differ from the baseline models. CPU MuJoCo 3.12.0;
+all numbers below are from the [recorded 88-case manifest](CONTACT_SMOOTHING_RESULTS.json).
 
 ## Mechanism
 
@@ -102,14 +103,18 @@ with the support 50 µm below its lower surface, so the tip lands near
 
 | Settling comparison | Result | Gate |
 | --- | ---: | --- |
-| Mass-unit and length-unit disagreement, coarse step | about 1e−11 µm | < 0.01 µm, pass |
-| Timestep 156.25 → 78.125 ns | 6.6e−5 µm in the development run; recorded value follows | < 1 µm, pass |
+| Mass-unit and length-unit disagreement, both steps | 3.5e−11 to 4.9e−11 µm | < 0.01 µm, pass |
+| Timestep 156.25 → 78.125 ns, all three unit systems | 6.6e−5 µm | < 1 µm, pass |
 | Peak penetration | 0.227 µm | < 2 µm, pass |
-| Settled penetration after 60 ms | 0.04–0.05 µm, no rebound | < 0.2 µm, pass |
+| Settled penetration after 60 ms | 0.046 µm, no rebound | < 0.2 µm, pass |
 
 This is the first fixture in which the settled-penetration gate could be
 measured at all. Maximum centerline speed decays from 9.5 mm/s at 10 ms to
-1.9 mm/s at 60 ms; the rod is settling, not yet at rest.
+1.9 mm/s at 60 ms; the rod is settling, not yet at rest. At this speed the
+baseline law also converges (0.077 µm with `implicitfast`, 0.042 µm with RK4;
+ramp with `implicitfast` 0.017 µm) and settles faster (0.3 mm/s at 60 ms) with
+0.18 µm peak penetration, so the scenario, not the solver, decided the earlier
+failures; the candidate is still three orders of magnitude tighter.
 
 ## Decision
 
@@ -141,8 +146,10 @@ uv run --locked --extra wind pytest -q tests/test_neural_contact_smoothing.py
 ```
 
 Use a fresh output directory; the run exits 1 if any gated candidate comparison
-fails, which the 6 mm chain drop currently does. Numbers above come from the
-development runs that preceded the recorded matrix; the recorded manifest
-(`CONTACT_SMOOTHING_RESULTS.json`) and inspected plots
-(`previews/neural_insertion/contact_smoothing_v1/`) are added by the follow-up
-checkpoint once that run completes, with any differences noted there.
+fails, which the 6 mm chain drop currently does. The recorded run took
+**5082 s elapsed** with eight workers for **4.44 s aggregate simulation**;
+wall per case is not isolated compute. Development runs that preceded it
+reproduced every recorded number exactly. [Results manifest](CONTACT_SMOOTHING_RESULTS.json),
+[inspected plots](../../previews/neural_insertion/contact_smoothing_v1/quality_review.png).
+
+![Inspected contact-smoothing plots](../../previews/neural_insertion/contact_smoothing_v1/quality_review.png)
