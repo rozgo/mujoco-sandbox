@@ -27,11 +27,18 @@ def camera(lookat, distance, azimuth, elevation):
     return cam
 
 
+def fitted(draw, text, size, width):
+    """The largest font up to `size` at which `text` fits in `width` pixels."""
+    while size > 12 and draw.textlength(text, font=font(size)) > width:
+        size -= 1
+    return font(size)
+
+
 def card(title, lines):
     """Closing card: what this attempt was and how it ended."""
     canvas = Image.new("RGB", (W, H), "#17152b")
     draw = ImageDraw.Draw(canvas)
-    draw.text((120, 300), title, font=font(46), fill="#f1ecfa")
+    draw.text((120, 300), title, font=fitted(draw, title, 46, W-240), fill="#f1ecfa")
     for k, line in enumerate(lines):
         draw.text((120, 400+k*52), line, font=font(30), fill="#d9b8ff" if k == 0 else "#b9b3d6")
     return np.asarray(canvas)
@@ -116,9 +123,9 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
         draw.text((24, 64), f"t = {trace['time'][i]:.3f} s    phase: {phase}    playback {speeds[n]:g}x    "
                   f"{ring} depth {trace['depth'][i]:+.2f} mm    needle axial {trace['needle_axial'][i]/1e3:+.2f} mN",
                   font=font(22), fill="#d9b8ff")
-        draw.text((24, 1000), f"{left}   |   Detail: {detail}. Tissue drawn translucent in the detail "
-                  "view. Replay of recorded MuJoCo states; DER thread, provisional tissue model.", font=font(20),
-                  fill="#b9b3d6")
+        footer = (f"{left}   |   Detail: {detail}. Tissue drawn translucent in the detail view. "
+                  "Replay of recorded MuJoCo states; DER thread, provisional tissue model.")
+        draw.text((24, 1000), footer, font=fitted(draw, footer, 20, W-48), fill="#b9b3d6")
         frame = np.asarray(canvas)
         writer.send(np.ascontiguousarray(frame))
         if phase != last_phase:

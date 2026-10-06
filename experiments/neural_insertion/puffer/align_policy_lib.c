@@ -31,3 +31,9 @@ void policy_act(void* p, float* obs, float terminal, float* action) {
     PolicyHandle* h = (PolicyHandle*)p;
     forward_puffernet(h->net, obs, action, NULL, &terminal);
 }
+
+// The learned, state-independent action noise (log standard deviation per action).
+void policy_log_std(void* p, float* out) {
+    PolicyHandle* h = (PolicyHandle*)p;
+    for (int i = 0; i < h->net->num_actions; i++) out[i] = h->net->log_std[i];
+}

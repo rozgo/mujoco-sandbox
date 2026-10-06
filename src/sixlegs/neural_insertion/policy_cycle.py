@@ -71,13 +71,19 @@ class Scripted:
 
 
 class Learned:
-    def __init__(self, weights, hidden=128, layers=2):
+    """A trained checkpoint. sample_seed: act with the learned Gaussian noise, as in training (the stroke
+    trigger is a thresholded action, so the noise is part of when it fires); None: the deterministic mean."""
+
+    def __init__(self, weights, sample_seed=None, hidden=128, layers=2):
         self.policy = Policy(weights, hidden, layers, obs=24, actions=4)
-        self.label = "learned policy (approach and stroke trigger) with the programmed stroke"
+        self.rng = None if sample_seed is None else np.random.default_rng(sample_seed)
+        self.label = ("learned policy (approach and stroke trigger), "
+                      f"{'sampled actions, seed '+str(sample_seed) if self.rng else 'deterministic mean'}, "
+                      "with the programmed stroke")
         self.weights, self.weights_sha256 = str(weights), self.policy.weights_sha256
 
     def act(self, obs, first):
-        return self.policy.act(obs, first)
+        return self.policy.act(obs, first, self.rng)
 
 
 class PolicyCycle(TubeCycle):
@@ -284,13 +290,15 @@ def main():
     agent = parser.add_mutually_exclusive_group(required=True)
     agent.add_argument("--weights", type=Path)
     agent.add_argument("--scripted", choices=("aim", "compensate"), help="insert_core.h yardstick instead")
+    parser.add_argument("--deterministic", action="store_true", help="policy mean instead of sampled actions")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--sites", type=int, nargs="+", default=list(SITES))
     parser.add_argument("--level", type=float, default=0.)
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
     started = datetime.now(timezone.utc).isoformat()
-    agent = Learned(args.weights) if args.weights else Scripted(args.scripted == "compensate")
+    agent = (Learned(args.weights, None if args.deterministic else 7_000_000+args.seed) if args.weights
+             else Scripted(args.scripted == "compensate"))
     cycle = PolicyCycle(agent, args.sites, args.level, args.seed)
     status = "completed"
     try:

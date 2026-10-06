@@ -58,10 +58,17 @@ class Policy:
         if not self.handle:
             raise ValueError(f"Checkpoint does not match a {obs}-input, {actions}-action network")
         self.weights_sha256 = hashlib.sha256(Path(weights).read_bytes()).hexdigest()
+        self.lib.policy_log_std.argtypes = [ctypes.c_void_p, f32]
+        log_std = np.zeros(actions, np.float32)
+        self.lib.policy_log_std(self.handle, log_std)
+        self.std = np.exp(log_std)
 
-    def act(self, obs, first):
+    def act(self, obs, first, rng=None):
+        """Gaussian mean; with rng, a sample with the learned noise (the policy as it acted in training)."""
         action = np.zeros(self.actions, np.float32)
         self.lib.policy_act(self.handle, np.ascontiguousarray(obs, np.float32), 1. if first else 0., action)
+        if rng is not None:
+            action = (action+self.std*rng.normal(size=self.actions)).astype(np.float32)
         return action
 
 
