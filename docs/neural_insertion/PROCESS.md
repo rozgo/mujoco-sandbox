@@ -157,3 +157,33 @@ tissue motion and airflow, nothing is. The revised brief makes learning own
 every phase under one shared disturbance layer, keeps scripted controllers as
 yardsticks, and stages the work so the thread's simulation cost is addressed
 before thread learning. [Brief v2](BRIEF.md), [original](BRIEF_V1.md).
+
+## 14. A disturbance layer, and making it visible (October 6)
+
+The layer went into the shared C core so that training, evaluation and replay
+see one world. One level from 0 to 1 scales low-pass force noise and extra
+Coulomb friction on every slide, table vibration applied as inertial forces
+through each carriage's effective mass, tip measurement noise and latency,
+target estimate noise, bias and drift, and breathing and pulse motion of the
+true target. Rewards and success stay on true state; success also requires the
+tip to match the moving target's velocity. Disturbance parameters draw from
+their own random stream, so level 0 reproduced every recorded evaluation episode
+of the earlier policy and the scripted controller exactly. That check is what
+lets later comparisons attribute changes to the disturbances alone.
+
+At full strength both existing controllers collapsed: 1.5% success for the
+policy trained without disturbances, 1.0% for the scripted controller (93.0% and
+85.5% at level 0.5). Holding still under the same disturbances wanders the
+needle by several micrometres, so full-strength success may have a ceiling below
+100% with these illustrative magnitudes; we report success against level rather
+than tune magnitudes to make a number look good.
+
+The user asked for the disturbances to be visible in the scene, with data in 3D
+rather than on the side. Replays now carry every recorded component, and the
+viewer draws force arrows on each carriage, the table's acceleration and trace,
+and, in a new micro camera at true scale, the moving target with its tolerance
+cylinder, the noisy target estimate and the late tip measurement, each with a
+data panel joined to it by a leader line. The user's checks in the browser
+caught four problems we fixed in turn: panels resized with their text, panels
+overlapped when zoomed out, the browser served a stale viewer after rebuilds,
+and horizontal panning was inverted.

@@ -975,3 +975,23 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Started 03:06:38 UTC. With the user, rewrote the brief around mission metrics
   and robustness: learn every phase under a shared disturbance layer, scripted
   controllers as yardsticks only. Original kept as `BRIEF_V1.md`.
+- Disturbance layer in the shared C core, committed 03:13:52 UTC. Level 0
+  reproduces all 200 recorded evaluation episodes of `align_v3` and the scripted
+  controller exactly. At full level both collapse (1.5% and 1.0% success).
+
+## October 6: robust alignment, overlays and compute records
+
+- `align_v4` (commit `3e8b2a9`, 03:15:00 UTC): first run under the disturbance
+  layer, level drawn per episode in [0, 1], learning rate 0.003. Closed to about
+  50 µm mean final error by 35 M steps, then diverged (KL 0.1 to 14); stopped at
+  **48.5 M steps, 14.8 min training wall** (03:29:55 UTC). Physics on 28 CPU
+  threads, network on the GPU; GPU near 11% use and 59 W, trainer about 1 GB host
+  memory. Log and per-minute resource samples retained.
+- `align_v5` (commit `1ab03f5`, 03:30:36 UTC): only the learning rate changes,
+  to 0.001. 100 M steps planned at about 57 K steps/s.
+- User direction during the runs: make disturbances visible as 3D overlays with
+  data in the scene, and record GPU resources per run. Built in the replay
+  viewer (committed 03:28:55 UTC, with fixes to callout sizing, layout, caching
+  and panning through 03:40:48 UTC after the user's checks in the browser), plus
+  a dashboard log parser and per-run compute summary. Site rebuilds took about
+  1 min wall each; no new simulation beyond recording replays.
