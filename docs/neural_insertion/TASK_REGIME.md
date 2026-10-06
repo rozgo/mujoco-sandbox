@@ -1,9 +1,9 @@
 # Thread physics in the task regime
 
 October 6, 2026. **Every task-regime thread fixture passes the unchanged pointwise
-gates with RK4 and a 20 µs contact time constant: settling, drag and press at
-10 µs, release at 5 µs.** We adopt 5 µs for all thread phases, 64× larger than
-the 78 ns the 6 mm drop required. Gates come from
+gates at a 5 µs RK4 step with a 20 µs contact time constant; settling, drag and
+press also pass at 10 µs.** That step is 64× larger than the 78 ns the 6 mm drop
+required. Gates come from
 [the task-derived criteria](ACCEPTANCE.md); the drop remains a labelled stress
 test. Both material presets pass; neither is a measured thread.
 
@@ -41,8 +41,8 @@ Penetration is checked over every contact at every step.
 
 | Fixture | Timestep, 10 → 5 µs | Timestep, 5 → 2.5 µs | Units (worst) | Peak penetration |
 | --- | ---: | ---: | ---: | ---: |
-| Drag | 8.6e−7 | — | 9.6e−7 | 0.73 |
-| Press | 8.1e−7 | — | 4.5e−11 | 0.92 |
+| Drag | 8.6e−7 | 5.1e−7 | 9.6e−7 | 0.73 |
+| Press | 8.1e−7 | 2.4e−7 | 9.2e−11 | 0.92 |
 | Release, illustrative | 0.89 | 0.21 | 7.3e−7 | 1.08 |
 | Release, polyimide | **1.58, fail** | 0.19 | 1.2e−7 | 1.13 |
 
@@ -78,10 +78,10 @@ uv run --locked python -m sixlegs.neural_insertion.thread_clock run \
 uv run --locked python -m sixlegs.neural_insertion.task_fixtures run \
   --output outputs/neural_insertion/task_fixtures/recheck_v1 --tau 2e-5 --dt 1e-5 --jobs 10
 uv run --locked python -m sixlegs.neural_insertion.task_fixtures run \
-  --output outputs/neural_insertion/task_fixtures/release_recheck_v1 --tau 2e-5 --dt 5e-6 --jobs 8 --fixtures release
+  --output outputs/neural_insertion/task_fixtures/dt5us_recheck_v1 --tau 2e-5 --dt 5e-6 --jobs 8
 uv run --locked --extra wind python scripts/report_neural_task_regime.py \
   outputs/neural_insertion/thread_clock/recheck_v1 outputs/neural_insertion/task_fixtures/recheck_v1 \
-  outputs/neural_insertion/task_fixtures/release_recheck_v1 previews/neural_insertion/task_regime_recheck_v1
+  outputs/neural_insertion/task_fixtures/dt5us_recheck_v1 previews/neural_insertion/task_regime_recheck_v1
 ```
 
 The 10 µs fixture run exits 1 because of the recorded release failure. Use

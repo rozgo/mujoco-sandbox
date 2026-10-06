@@ -16,9 +16,9 @@ Its record and sensitivity result stay in [the smoothing study](CONTACT_SMOOTHIN
 | Release and withdraw | Hook slides away, short fall, relaxation | Release (`release`) | Timestep < 1 µm; units < 0.01 µm |
 | Missed-pickup recovery | Falls 5–13 mm, 0.3–0.5 m/s | 6 mm drop (stress test) | Statistical only, see below |
 
-Status, October 6: with RK4 and a 20 µs contact time constant, settling, drag
-and press pass at 10 µs and release passes at 5 µs, for both material presets.
-Thread phases use 5 µs. See [the results](TASK_REGIME.md).
+Status, October 6: with RK4 and a 20 µs contact time constant, all four
+fixtures pass at 5 µs for both material presets; settling, drag and press also
+pass at 10 µs. Thread phases use 5 µs. See [the results](TASK_REGIME.md).
 
 All fixtures also require finite state, no MuJoCo warnings, actual contact and
 peak penetration below 2 µm. Settled penetration below 0.2 µm applies to an

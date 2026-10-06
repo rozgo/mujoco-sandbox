@@ -916,3 +916,6 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   simulation; decoded all 613 frames (1920×1080, 30 fps, 20.43 s) and inspected
   the opening, first hover, a transit and the results card. Native viewer
   5 s smoke test passed. Physics-only scene reproduces the full tour bit for bit.
+- Follow-up: drag and press at 5/2.5 µs, 16 cases, **2.24 s aggregate
+  simulation**, **145 s wall**; all gates pass (≤ 5.1e−7 µm timestep), so every
+  fixture now has a direct 5 µs comparison.

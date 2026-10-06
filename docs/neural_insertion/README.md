@@ -26,7 +26,7 @@ unaccepted and no engine defect or successful patch has been established.
 The robot now moves: it holds without drift and reaches all six targets with
 sub-micrometre settled error ([first motion](MOTION.md)).
 Gates now follow the task phases ([acceptance](ACCEPTANCE.md)), and every
-task-regime thread fixture passes at 5–10 µs steps ([task regime](TASK_REGIME.md)).
+task-regime thread fixture passes at a 5 µs step ([task regime](TASK_REGIME.md)).
 [How we got here](PROCESS.md) records the reasoning and corrections.
 The [contact-smoothing experiment](CONTACT_SMOOTHING.md) then changed only two
 numerical settings, a penetration-ramped contact impedance and RK4 stepping: the
