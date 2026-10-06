@@ -4,7 +4,7 @@
 const $ = (id) => document.getElementById(id);
 // Replaced at build time with hashes of the viewer files and of the page's data, so a rebuild is never
 // served from cache.
-const BUILD = "9b73bc738b29";
+const BUILD = "a5619c7c8e9b";
 const DATA = "bbd24e6d3af5";
 const load = (path) => fetch(`${path}?v=${DATA}`).then((r) => r.json());
 
