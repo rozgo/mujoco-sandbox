@@ -1109,3 +1109,7 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   full-simulation error: the deterministic policy has the thread end 5.6 µm
   (median) from the target when it starts the stroke; the programmed stroke and
   release bring the 90th percentile from about 11 to 20 µm.
+- 11:34 UTC: insert_v2 finished (299.9M steps; 1 h 39 min training on the RTX
+  4090, 09:55-11:34). Final evaluations in both simulations, sampled and
+  deterministic, about 15 min wall; video, checkpoint asset and results
+  document by 11:50 UTC (docs/neural_insertion/INSERT_TRAINING.md).
