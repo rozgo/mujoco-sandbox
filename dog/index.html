@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adaptive Dog Journal</title>
+  <meta name="description" content="One PPO policy walks a simulated Unitree Go2 on nine bodies, healthy or missing a leg, then learns to stand and balance, with every training minute and every failed gate on record.">
+  <meta name="theme-color" content="#08090b">
+  <link rel="stylesheet" href="journal.css?v=7e311b4a0c41">
+  <style>:root { color-scheme: dark; --bg: #0d0f12; --text: #e8eaed; --muted: #9aa1a9; --card: #15181c; --line: #262a30; --link: #49d6c5; --chip: #1f2328; --soft: #132523; --bad: #ff7a45; --bad-soft: #2a1a14; --accent: #49d6c5; --accent-2: #ff6b23; --accent-3: #929aa3; --on-accent: #08090b; --hero: linear-gradient(120deg, #08090b 0%, #131518 45%, #13302d 100%); --hero-text: #edeff1; --film: #050607; --metric: rgba(255, 255, 255, .06); --toc: rgba(13, 15, 18, .9); --tile-1: linear-gradient(135deg, #1b5f58, #13302d); --tile-2: linear-gradient(135deg, #2b3036, #15181c); --tile-3: linear-gradient(135deg, #b24a17, #6e2e10); --tile-4: linear-gradient(135deg, #3a4148, #1f2328); --tile-text: #f3f5f6; }</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <a class="home-link" href="../">&larr; MuJoCo Sandbox</a>
+    <p class="eyebrow">Engineering journal · September 10–12, 2026 · MuJoCo, MuJoCo Warp, PPO, RTX 4090</p>
+    <h1>One learned controller for a robot dog, whole or missing a leg</h1>
+    <p class="lede">A simulated Unitree Go2 loses a lower leg or a whole leg, and the same neural network has to keep it walking. PPO learns twelve joint targets at 50 Hz through torque-limited servos, with no gait script; only the route commands are scripted. The same network then learned to stop and stand on uneven supports and to balance on a moving deck, and one RTX 4090 replayed the whole curriculum from random weights in 22 minutes.</p>
+    <figure class="hero-film">
+      <video src="media/complete.mp4" poster="media/complete_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The complete showcase, 2 min 04 s at 1×: walking on all nine bodies, walk–stop–walk, pads, slopes, gaps and steps, then a moving deck. Recorded MuJoCo trajectories re-rendered in the native graphite theme, from three successive accepted checkpoints (walking v1, standing, moving), one shared actor within each stage. Strict misses stay labelled; cameras are observers, not policy inputs.</figcaption>
+    </figure>
+    <div class="metrics"><div class="metric"><div class="value">9 bodies</div><div class="label">one frozen policy: healthy, four lower-leg and four whole-leg removals</div></div><div class="metric"><div class="value">288/288</div><div class="label">v1 audit trials completed on allowed supports, reserved seed</div></div><div class="metric"><div class="value">22 min 05 s</div><div class="label">RTX 4090 training from random weights to walk, stand and balance; 71.76 M experiences</div></div><div class="metric"><div class="value">136/144</div><div class="label">strict balance checks for that final policy; walking 36/36, moving deck 24/24</div></div><div class="metric"><div class="value">3.23×</div><div class="label">faster training with MuJoCo Warp physics at matched updates</div></div></div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Chapters">
+  <div class="wrap"><a href="#brief">1 Minutes, not hours</a><a href="#knee">2 The dog was walking on its knee</a><a href="#limbs">3 From shortened calves to missing legs</a><a href="#v1">4 v1: one policy, nine bodies</a><a href="#gpu">5 Moving the physics onto the GPU</a><a href="#standing">6 Learning to stand still</a><a href="#moving">7 A deck that moves</a><a href="#replay">8 The whole curriculum from random weights, timed</a><a href="#looks">9 Native looks, and one generated trial</a><a href="#next">10 What comes next</a></div>
+</nav>
+
+<main class="wrap">
+  <div class="scope"><strong>Where this stands.</strong> Three accepted releases are tagged: walking on nine bodies (v1), standing on static supports, and balancing on a moving deck. A replay on one RTX 4090 then trained a single policy for all three from random weights in 22 min 05 s. Everything is simulated in MuJoCo. Joint control is learned; the lane and velocity commands are scripted; the policy is told which joints are missing rather than diagnosing it; the deck policy reads ideal platform state. Damaged bodies on a moving deck, unseen terrain and real hardware are not established. Every number on this page comes from recorded runs in the repository.</div>
+  <section id="brief">
+    <h2>1 · Minutes, not hours</h2>
+    <p class="when">September 10 · the brief, the body, and the first pilot</p>
+    <div class="prose">
+      <p>The goal was one learned controller for a four-legged robot whose body has changed: a shortened or missing leg,
+        a weak motor, or both. The user wanted a general controller that adapts whatever the state of the dog's legs, and
+        set a hard limit on how it could be trained: "anything longer than a few minutes is not acceptable". Training time
+        became an acceptance gate, starting at five minutes per final policy with every ancestor stage counted. The user
+        later allowed more when a learning curve justified it.</p>
+      <p>The robot is the Unitree Go2 model from MuJoCo Menagerie. It is a free body, moved only by its own torque-limited
+        joints and real ground contact. Damage is physical: removing a calf deletes its body, mass, collision geometry and
+        joint. Before anything moved, we rendered the bodies and the course as static scenes and checked them.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>The body (simulated)</h4><ul>
+        <li>Unitree Go2, 15.206 kg when healthy</li>
+        <li>12 position servos, Kp 20 N·m/rad; torque caps 23.7 N·m at hip and thigh, 45.43 N·m at the calf</li>
+        <li>2 ms <code>implicitfast</code> physics; trunk, leg and stump contacts all enabled</li>
+      </ul></div>
+      <div class="card"><h4>The policy (learned)</h4><ul>
+        <li>PPO actor 86 → 128 → 128 → 12 with ELU, 29,196 parameters; the same shape in every release</li>
+        <li>Reads joint angles and velocities, gyro, gravity direction, its previous action, the velocity command, 12
+          missing-joint bits and 9 range rays: it is told about damage, not left to diagnose it</li>
+        <li>Writes 12 joint-position offsets at 50 Hz; no gait clock, foot trajectory or added propulsive force</li>
+      </ul></div>
+      <div class="card"><h4>Training and scripting</h4><ul>
+        <li>512 CPU MuJoCo worlds through mjbatch; network updates on the Mac's Apple GPU</li>
+        <li>A critic (90 → 128 → 128 → 1) also sees exact body velocity, height and damage, during training only</li>
+        <li>Scripted: a lane follower with ideal localization sends velocity commands; cameras are observers</li>
+      </ul></div>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/bodies.webp" alt="Four static Go2 bodies: healthy, shortened front-left calf, missing front-left calf, mixed damage" loading="lazy">
+        <figcaption>The first static check: healthy, shortened front-left calf, missing front-left calf and a mixed body,
+          with masses from the compiled models. Yellow lines are the body-mounted range rays.</figcaption></figure>
+      <figure><img src="media/course.webp" alt="The Go2 at the start of a course with three low teal steps" loading="lazy">
+        <figcaption>The low-step course, rendered static before any motion.</figcaption></figure>
+    </div>
+
+    <h3>First traction</h3>
+    <div class="prose">
+      <p>The first pilot trained on shortened calves, weakened motors and low steps. Its selected reactive policy had
+        329.05 s of training in total, including a 59.81 s pretraining stage. The whole pilot, environment included, reached its
+        validated checkpoint 51 min 45 s after the first implementation timestamp. At equal wall time we compared it
+        with a history variant that adds a learned estimator over the last 0.5 s of feedback. The cases were frozen
+        before the comparison, with 32 starting conditions each.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Frozen case, 32 trials each</th><th class="num">Reactive, 329.05 s</th><th class="num">History, 329.35 s</th></tr>
+      <tr><td>Healthy</td><td class="num">32/32</td><td class="num">32/32</td></tr>
+      <tr><td>Unseen front-right calf at 62% length</td><td class="num">32/32</td><td class="num">32/32</td></tr>
+      <tr><td>Two left calves at 78% and 86%</td><td class="num">32/32</td><td class="num">32/32</td></tr>
+      <tr><td>Short rear-right calf, rear-left hip dropping to 35% torque</td><td class="num">32/32</td><td class="num">32/32</td></tr>
+      <tr class="hl"><td>New 3.5/5/4.5 cm steps with two shortened calves</td><td class="num">32/32</td><td class="num">0/32</td></tr>
+      <tr><td>Rear-right calf and its joint removed</td><td class="num">0/32</td><td class="num">0/32</td></tr>
+    </table></div>
+    <div class="prose"><p>Completion means reaching 5 m within 12 s and staying controlled in the goal lane for a second.
+      These scores measure progress. The stricter support test of chapter 2 came later and was not applied to them. The
+      comparison is an engineering test at equal wall time, not a clean ablation of memory: the simpler actor collected
+      more transitions.</p></div>
+    <figure class="film"><video src="media/pilot.mp4" poster="media/pilot_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The 329-second reactive policy, 48 s at 1×, one checkpoint for four 12-second cases: front-left calf at
+        70% length, two shortened calves (75% and 65%), front-right thigh torque dropping to 25% at 3 s, and a shortened
+        calf over 4/6/4 cm steps. All four reach 5 m. Recorded CPU MuJoCo rollouts; following, head and overview cameras
+        are observers; lane commands are scripted.</figcaption></figure>
+    <div class="failure"><strong>Ten minutes made it forget.</strong> One approved extension resumed the reactive policy for
+      269.54 s (598.60 s in total) on healthy, shortened and missing front-left calves. Average missing-calf progress rose
+      from 0.67 m to 3.92 m, but neither policy completed the 5 m task. The longer run lost all 32 two-shortened-calf
+      completions and all 32 low-step completions, and its inspected missing-calf run leaned on the trunk in 50 of 600
+      sampled frames. It was not promoted. Keeping old skills while learning new ones became the next problem.</div>
+  </section>
+
+  <section id="knee">
+    <h2>2 · The dog was walking on its knee</h2>
+    <p class="when">September 10 · 15:02 UTC · the user saw what the checks missed</p>
+    <div class="prose">
+      <p>A healthy-only walker had passed our checks: four feet touched the ground and the trunk did not. Watching its
+        video, the user wrote: "the healthy dog is walking, his back right leg on the elbow, instead of foot/paw". The
+        measurement agreed. The rear-right knee housing was resting on the ground in 155 of 600 sampled frames. Scored
+        with a force-based test, the policy still reached 5 m in 32 of 32 trials and walked validly in none.</p>
+      <p>The fix measures what carries the weight. Every robot collision geometry got a native MuJoCo contact-force
+        sensor against the ground, and the allowed supports follow the actual body.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Physical leg</th><th>Allowed ground support</th></tr>
+      <tr><td>Intact calf and foot</td><td>The foot</td></tr>
+      <tr><td>Shortened calf</td><td>Its modelled end surface</td></tr>
+      <tr><td>Calf and its joint removed</td><td>A designated stump at the thigh tip</td></tr>
+      <tr><td>Weak motor, unchanged leg</td><td>The same foot as before</td></tr>
+    </table></div>
+    <div class="prose"><p>Knees, shafts, thighs, hips and the chassis are penalized in the reward (weight 2), and evaluation
+      fails a trial if any of them carries more than 1 N at any 2 ms physics step. The policy's inputs did not change: the
+      sensors feed only the reward and the validator. No gait, foot path or posture was added.</p></div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">0<small>/ 32</small></div><div class="what">valid walks by the original healthy policy</div><div class="vs">it still reached 5 m in 32/32</div></div>
+      <div class="tile"><div class="big">64<small>/ 64</small></div><div class="what">valid walks after the support cost, fresh seed</div><div class="vs">16/16 at a 1 ms step; forbidden forces 0 N</div></div>
+      <div class="tile"><div class="big">89.4<small>s</small></div><div class="what">of fine-tuning, 512 CPU worlds</div><div class="vs">208.6 s from random weights in total</div></div>
+      <div class="tile"><div class="big">19<small>min 59 s</small></div><div class="what">from the report to a verified fix</div><div class="vs">elapsed, including training and video</div></div>
+    </div>
+    <figure class="film"><video src="media/knee.mp4" poster="media/knee_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Same start, same physics, 12 s at 1×. Left: the original walk (119.2 s of training), flagged INVALID
+        SUPPORT. Right: the support-cost policy (208.6 s) on its feet. The right side also had more training, so this is
+        not an equal-budget comparison.</figcaption></figure>
+    <div class="lesson"><strong>Count load, not touch.</strong> Contact checks said the gait was fine; contact forces said it
+      was not. From here on, every acceptance test checks support force at every physics step against a list of allowed
+      surfaces for each body: intact feet or modelled stumps, never a knee.</div>
+  </section>
+
+  <section id="limbs">
+    <h2>3 · From shortened calves to missing legs</h2>
+    <p class="when">September 10–11 · even out the gait, then remove whole limbs</p>
+    <div class="prose">
+      <p>Short rounds followed, each one measured before the next. Two gait-balance terms adapted from Isaac Lab's Spot task
+        evened out the healthy gait: 61% less stance-timing imbalance and 64/64 support-valid trials, after 403 s of
+        training in total. A paired-damage stage then took four bodies with two shortened calves from 33/128 to 127/128
+        support-valid completions with 89.4 s more training.</p>
+      <p>Then the user approved dropping shortened legs to focus on complete removals: the entire calf and foot, or the
+        entire hip, thigh and calf. A lower-leg removal leaves a modelled 15 mm stump at the thigh tip as an allowed
+        support. A whole-leg removal leaves three feet and nothing else.</p>
+    </div>
+    <figure><img src="media/limbs.webp" alt="Static Go2 bodies: healthy, front-right lower leg removed with an orange stump, front-right entire leg removed" loading="lazy">
+      <figcaption>The removal bodies, static: healthy (15.206 kg, 12 actuators), front-right lower leg removed (14.965 kg,
+        11; orange marks the stump) and front-right entire leg removed (13.135 kg, 9). The other three positions mirror
+        these.</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>Condition, 32 fresh starts each</th><th class="num">Healthy parent</th><th class="num">Selected policy</th></tr>
+      <tr><td>Healthy</td><td class="num">32/32</td><td class="num">32/32</td></tr>
+      <tr><td>Lower leg removed: FL, FR, RL, RR, each</td><td class="num">0/32</td><td class="num">32/32</td></tr>
+      <tr><td>Entire leg removed: FL, RL, RR, each</td><td class="num">0/32</td><td class="num">32/32</td></tr>
+      <tr><td>Entire leg removed: FR</td><td class="num">0/32</td><td class="num">30/32</td></tr>
+      <tr class="hl"><td>All eight removals</td><td class="num">0/256</td><td class="num">254/256</td></tr>
+    </table></div>
+    <div class="prose"><p>Five runs used 597.2 s (9 min 57 s) of new training on the Mac. The selected policy's full ancestry
+      is 764.7 s, including its healthy parent. All 288 trials survived on allowed supports. The two front-right misses
+      crossed 5 m too late to hold the goal lane for a full second, so they count as failures.</p></div>
+    <div class="note-box"><strong>An input the network had never seen move.</strong> During healthy training the
+      missing-joint bits never changed, so the weights reading them were never trained. An absent joint then arrived as an
+      input clipped at 10 standard deviations. Zeroing only the newly used hip and thigh weights before the whole-leg stage
+      gave it a neutral start; PPO still learns them.</div>
+    <div class="failure"><strong>Front-right removals stood still.</strong> After about 298 s of new training, six removal
+      conditions passed 8/8, but both front-right bodies stayed put with valid support (0/8 each). A focused extension
+      learned them (16/16) but lost lower-FL and whole-RL, and its final checkpoint lost whole-RR survival. A last
+      consolidation round, using reference actions during training only, brought every removal back: 254/256.</div>
+  </section>
+
+  <section id="v1">
+    <h2>4 · v1: one policy, nine bodies</h2>
+    <p class="when">September 11 · the gait the user accepted · tag <code>adaptive-dog-v1</code></p>
+    <div class="prose">
+      <p>The last rounds were steered by watching. Smoothness rewards cut abrupt command changes by 32% and roll and pitch
+        rates by 54% (RMS, averaged over the eight removals), and a minimum-support term cut time in the air by 41%. The user then rejected a gait that
+        passed its numbers because all its feet still appeared to drag. A visible-step reward made every intact foot lift,
+        with mean swing peaks of 5.5–10.8 cm and 288/288 completions. With a front-right leg missing, the rear legs swung
+        almost together, 6.5% and 10.6% of a cycle apart, against 58.7% and 58.2% in the front-left cases. A small rear-overlap
+        cost, trained for 2 min 59 s, reduced that. The user called the result organic and realistic and asked for it to
+        become the official release.</p>
+    </div>
+    <figure class="film"><video src="media/v1.mp4" poster="media/v1_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The official v1 video, 12 s at 1× (4K source shown at 1600 px): the same frozen checkpoint in all nine
+        panels, independent rollouts on one clock. Orange spheres mark the removals. Learned joint control, scripted lane
+        commands; runtime physics 0.5 ms, control 20 ms (training used 2 ms).</figcaption></figure>
+    <div class="result-strip">
+      <div class="tile"><div class="big">288<small>/ 288</small></div><div class="what">fresh audit trials completed on allowed supports</div><div class="vs">seed reserved until after selection; 72/72 at a 0.25 ms step</div></div>
+      <div class="tile"><div class="big">32<small>min 03 s</small></div><div class="what">selected training ancestry, 38.4 M transitions</div><div class="vs">512 CPU MuJoCo worlds, Apple GPU learner</div></div>
+      <div class="tile"><div class="big">9</div><div class="what">bodies, one frozen checkpoint</div><div class="vs">no switching, no learning during deployment</div></div>
+    </div>
+    <div class="failure"><strong>Rear-leg timing missed its gate.</strong> In the front-right cases the rear legs end up
+      17.6% and 11.0% of a cycle apart, short of the 25% target. The user preferred the natural gait; the release record
+      keeps that gate as failed rather than relabelling it.</div>
+    <div class="failure"><strong>Penetration above target.</strong> The accepted video's lower-FR rollout reaches 8.889 mm
+      of sampled contact penetration, against an unchanged 8 mm target. Torque caps hold and every task uses allowed
+      support.</div>
+    <div class="note-box"><strong>Scope.</strong> Single removals on flat ground, present from the start of each episode.
+      The policy is told which joints are missing; diagnosing damage by itself is not demonstrated. 84 tests pass, and the
+      viewer command checks the checkpoint's hash before running.</div>
+  </section>
+
+  <section id="gpu">
+    <h2>5 · Moving the physics onto the GPU</h2>
+    <p class="when">September 11 · same network and rewards, MuJoCo Warp on an RTX 4090</p>
+    <div class="prose">
+      <p>v1's physics ran on the CPU, so a GPU could speed up only the network updates. MuJoCo Warp runs the batched
+        rigid-body and contact physics on the GPU, with one CUDA stream for each of the nine physically different body
+        batches. Observations and rewards are still computed in NumPy on the CPU. Before any new training we fixed the
+        rules: the same actor, critic, rewards, bodies, contacts, torque limits and clocks; minibatches independent of the
+        number of worlds; paired runs with equal experience and optimizer steps; final checkpoints evaluated on CPU
+        physics.</p>
+    </div>
+    <div class="failure"><strong>The first matched test failed.</strong> At 512 worlds and identical updates, Warp trained
+      1.71× faster but its policies completed 183/216 tasks against the CPU's 198/216, with the gap at the front-right
+      removals. The predeclared gates failed and the result is kept. The same weights covered almost identical distances
+      on both engines, which pointed to drift during training rather than a difference at run time.</div>
+    <div class="table-wrap"><table>
+      <tr><th>4,096 worlds, same updates</th><th class="num">CPU training</th><th class="num">Warp training</th><th class="num">Speedup</th><th class="num">CPU tasks</th><th class="num">Warp tasks</th></tr>
+      <tr><td>Seed 2</td><td class="num">46.740 s</td><td class="num">15.286 s</td><td class="num">3.06×</td><td class="num">67/72</td><td class="num">70/72</td></tr>
+      <tr><td>Seed 3</td><td class="num">45.269 s</td><td class="num">13.542 s</td><td class="num">3.34×</td><td class="num">65/72</td><td class="num">71/72</td></tr>
+      <tr><td>Seed 4</td><td class="num">44.763 s</td><td class="num">13.493 s</td><td class="num">3.32×</td><td class="num">68/72</td><td class="num">64/72</td></tr>
+      <tr class="hl"><td>Pooled</td><td class="num">136.772 s</td><td class="num">42.321 s</td><td class="num">3.23×</td><td class="num">200/216</td><td class="num">205/216</td></tr>
+    </table></div>
+    <div class="prose"><p>With 4,096 worlds and the same number of updates, the two backends fell within the declared
+      margins. Throughput rose from 12,937 to 41,811 transitions per second, and all 432 trials stayed upright on allowed supports.
+      This continues a pretrained walker; it is not learning to walk in 42 seconds.</p></div>
+    <figure><img src="media/warp.webp" alt="Side-by-side panels of CPU-trained and Warp-trained policies walking with lower legs removed" loading="lazy">
+      <figcaption>The matched pair for seed 2: the CPU-trained policy (left, 46.7 s) and the Warp-trained one (right,
+        15.3 s), from the same parent and the same 768 optimizer steps, both run in CPU MuJoCo for validation. A still
+        from the 36 s comparison film, whose Warp lower-FR trial reaches 8.090 mm of penetration, over the 8 mm target;
+        that miss stays on record.</figcaption></figure>
+    <div class="lesson"><strong>Faster sampling is not a better policy.</strong> Given an equal 90 s, Warp collected 3.64×
+      more experience but scored 59/72 against the CPU's 70/72. A CPU control run with the same 40 rounds took 301.9 s and
+      scored 60/72: longer continuation regresses on both backends. Backends are compared at matched updates, and further
+      fine-tuning is evaluated before it is adopted.</div>
+  </section>
+
+  <section id="standing">
+    <h2>6 · Learning to stand still</h2>
+    <p class="when">September 11–12 · walk, stop and balance on pads, slopes, gaps and steps · tag <code>adaptive-standing-v1</code></p>
+    <div class="prose">
+      <p>Standing was a skill v1 lacked: frozen, it passed 0 of 18 gentle standing checks. A zero velocity command now
+        means hold position. Inputs that had been reserved now carry four foot-contact bits, four downward ray distances,
+        and ideal body velocity and hold-position error; they are zeroed while walking. The user extended the terrain to
+        19 surfaces: pads, slopes of 6° to 24° on both axes, steps up to 28 cm, and a missing support under one foot. A
+        frozen walker and recorded walking examples kept the gait from being overwritten during training; neither runs
+        at deployment.</p>
+      <p>Seven rounds on 4,096 MuJoCo Warp worlds took 536.7 s (8 min 57 s) of new training and 26.8 million transitions.
+        This was fine-tuning v1, not training a dog from scratch in nine minutes: the ancestry totals 40 min 59 s.</p>
+    </div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">144<small>/ 144</small></div><div class="what">holdout trials upright, on each backend</div><div class="vs">CPU and Warp, seed 9307</div></div>
+      <div class="tile"><div class="big">94<small>/ 144</small></div><div class="what">strict passes on CPU (Warp 96/144)</div><div class="vs">support, drift ≤ 15 cm, tilt ≤ 20°, penetration ≤ 8 mm</div></div>
+      <div class="tile"><div class="big">36<small>/ 36</small></div><div class="what">walking tasks retained</div><div class="vs">every original gait gate</div></div>
+      <div class="tile"><div class="big">8<small>min 57 s</small></div><div class="what">new training on 4,096 Warp worlds</div><div class="vs">ancestry 40 min 59 s</div></div>
+    </div>
+    <div class="prose"><p>Flat holds, flat walk–stand–walk, ordinary pads, 6° and 12° slopes, the 18° side slope, high
+      pads, 12 cm steps and both front missing-support cases pass 4/4 each. On the front gaps the lifted foot stays unsupported for the whole hold.</p></div>
+    <div class="lesson"><strong>New skills compete with old ones.</strong> Training only the healthy body to stand made
+      damaged walking drift. Mixing in all nine bodies on flat ground, 18 terrain groups and v1 walking rehearsal restored
+      every walking gate. A contact-window kernel inside the Warp graphs then summed reactions at every 2 ms step, so the
+      reward could see brief unintended support.</div>
+    <div class="failure"><strong>What still fails.</strong> The rear-left gap often finds a fourth support on the next pad;
+      the rear-right gap uses unintended links and tilts too far; extreme pads and steep slopes drift past 15 cm; 20 and
+      28 cm steps lean on links or tilt too far. Some damaged transitions reach 10.318 mm (CPU) and 9.492 mm (Warp) of
+      sampled penetration. A reset-only pose solver starts the gap-side foot raised: the learned part is keeping balance
+      from there, not discovering how to lift the leg.</div>
+    <figure class="film"><video src="media/standing.mp4" poster="media/standing_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The accepted standing release, 67 s at 1×: walk–stop–walk with three cameras, ordinary supports, harder
+        terrain, eight reviewed terrain trials (0:32–0:52), damaged-body holds and a results card. 25/25 trials stay
+        upright and 10/25 meet every strict gate; misses are labelled. Same frozen weights throughout; the main footage
+        was captured in MuJoCo Warp, the reviewed terrain in CPU MuJoCo.</figcaption></figure>
+    <div class="note-box"><strong>Accepted by eye, flags unchanged.</strong> After a film of every failing condition, the
+      user accepted the eight hard terrain cases as natural corrections, and that acceptance is recorded separately from the
+      measured flags. A friction sweep of 0.8, 1.0 and 1.2 moved reviewed-terrain strict passes from 0/32 to 0/32 to 1/32,
+      so the original friction stayed.</div>
+  </section>
+
+  <section id="moving">
+    <h2>7 · A deck that moves</h2>
+    <p class="when">September 12 · translate, yaw, heave and rock · tag <code>adaptive-moving-v1</code></p>
+    <div class="prose">
+      <p>The deck is a 1.6 × 1.2 × 0.1 m, 35 kg table on six servo joints with force limits of ±3,000 N on the slides and
+        ±1,000 N·m on the rotations. It travels ±0.55 m on both horizontal axes, ±0.20 m vertically, ±1.4 rad in yaw and ±0.45 rad in pitch
+        and roll. The dog stays a free body and is never repositioned during a run. "Hold still" now refers to the deck:
+        position, height and velocity are measured in its frame, while tilt is still measured against gravity, so a rocking
+        deck does not tell the dog to tip with it. The policy reads ideal platform state from the simulator and never sees
+        the future motion command.</p>
+      <p>Three variants separate coordinates from learning: the frozen standing policy, the same weights with
+        deck-relative inputs, and newly trained weights. Two rounds took 118.6 s of new GPU training, with half the worlds
+        on moving decks and half rehearsing static tasks on all nine bodies.</p>
+    </div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">22<small>/ 24</small></div><div class="what">strict holdout passes after training</div><div class="vs">frozen 16/24; relative inputs only 16/24; CPU and Warp agree</div></div>
+      <div class="tile"><div class="big">24<small>/ 24</small></div><div class="what">holdout trials upright</div><div class="vs">four stationary-deck controls included</div></div>
+      <div class="tile"><div class="big">0<small>/ 8</small></div><div class="what">strict passes, damaged bodies on the deck</div><div class="vs">untrained transfer; 6/8 survive on each backend</div></div>
+      <div class="tile"><div class="big">118.6<small>s</small></div><div class="what">new training, 5.5 M transitions</div><div class="vs">ancestry 42 min 58 s</div></div>
+    </div>
+    <div class="failure"><strong>The first round broke standing.</strong> It improved the moving checks but stopped
+      staying upright on two static conditions it had not rehearsed. The corrective round added every static surface and a
+      training-only rehearsal of the frozen standing policy; it is the one selected. The two remaining holdout misses are
+      brief unintended link support during combined motion.</div>
+    <figure class="film"><video src="media/moving.mp4" poster="media/moving_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The accepted comparison, 64 s at 1×: five ten-second motions with frozen standing, relative inputs
+        only and trained (left to right), then a three-camera replay of the trained combined motion and a results card.
+        On the video seed, strict passes are 15/20, 14/20 and 20/20, and all 60 trials stay upright. Captured in MuJoCo
+        Warp; cameras are observers.</figcaption></figure>
+  </section>
+
+  <section id="replay">
+    <h2>8 · The whole curriculum from random weights, timed</h2>
+    <p class="when">September 12 · 05:14 UTC · one RTX 4090, 4,096 worlds throughout</p>
+    <div class="prose">
+      <p>A summary had shown walking learned in "42 seconds". That number added up three benchmarks that continued an
+        already trained walker; it never measured learning to walk. The user asked to "run it for real and really time
+        it". We replayed the recorded curriculum from random weights: 30 stages (21 walking, 7 standing, 2 moving), one
+        evolving actor, 4,096 worlds in every stage, and every training reference rebuilt from this run's own
+        checkpoints.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Phase, each continuing the last</th><th class="num">Learning time</th><th class="num">New experiences</th><th class="num">Experiences/s</th></tr>
+      <tr><td>Healthy walking from random weights</td><td class="num">1 min 54 s</td><td class="num">9.63 M</td><td class="num">84,658</td></tr>
+      <tr><td>Adapt walking to missing limbs</td><td class="num">9 min 39 s</td><td class="num">29.79 M</td><td class="num">51,463</td></tr>
+      <tr><td>Standing on static supports</td><td class="num">8 min 23 s</td><td class="num">26.84 M</td><td class="num">53,318</td></tr>
+      <tr><td>Moving platforms</td><td class="num">2 min 09 s</td><td class="num">5.51 M</td><td class="num">42,643</td></tr>
+      <tr class="hl"><td>Complete shared policy</td><td class="num">22 min 05 s</td><td class="num">71.76 M</td><td class="num">54,159</td></tr>
+    </table></div>
+    <div class="prose"><p>That is 398.68 hours of simulated experience summed across worlds, 717.6 million physics steps at
+      500 Hz, 730 rollouts and 93,440 optimizer steps. The timer covers physics, CPU observations and rewards, transfers,
+      PPO updates and the rehearsal losses. Setup (187.8 s) and the final evaluation (50.1 s, on the Mac) are timed
+      separately.</p></div>
+    <div class="result-strip">
+      <div class="tile"><div class="big">36<small>/ 36</small></div><div class="what">walking tasks, all nine bodies</div><div class="vs">healthy stride 32.22 cm, speed 0.558 m/s</div></div>
+      <div class="tile"><div class="big">136<small>/ 144</small></div><div class="what">strict static-balance checks</div><div class="vs">pads, slopes, gaps, steps, walk–hold–walk</div></div>
+      <div class="tile"><div class="big">24<small>/ 24</small></div><div class="what">moving-deck checks, healthy body</div><div class="vs">stationary controls included</div></div>
+      <div class="tile"><div class="big">204<small>/ 204</small></div><div class="what">trials upright, one frozen checkpoint</div><div class="vs">holdout seed, run in CPU MuJoCo</div></div>
+    </div>
+    <div class="failure"><strong>Eight static misses.</strong> All four 24° fore/aft-slope trials put weight on a link;
+      one front-right lower-leg walk–hold–walk also uses unintended support; three rear-left lower-leg transitions drift
+      16.4–16.8 cm against a 15 cm limit. None falls, and no threshold or reward changed after these results.</div>
+    <div class="note-box"><strong>What the timing is not.</strong> Walking sample counts were rounded up to whole GPU
+      rollouts (39.4 M against 38.4 M historically, 2.66% more), so this is not an exact CPU-versus-GPU speed comparison.
+      Two abandoned starts, 328.9 s and 158.0 s of learning, are kept outside the selected policy's time.</div>
+    <figure class="film"><video src="media/replay.mp4" poster="media/replay_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The final shared policy in all 51 evaluated conditions, in the 87 s cut of the 2 min 54 s film, at 1×:
+        walking on nine bodies, walk–hold–walk, static terrain and moving decks, then training and results cards. One
+        predetermined trial per condition, captured fresh in CPU MuJoCo: 51/51 upright and 49/51 strict, with both misses
+        labelled. Ember is an observer-only colour theme.</figcaption></figure>
+  </section>
+
+  <section id="looks">
+    <h2>9 · Native looks, and one generated trial</h2>
+    <p class="when">September 12 · presentation only; no physics or policy changed</p>
+    <div class="prose">
+      <p>The Go2 and Unitree names are part of the robot's mesh, so hiding the white lettering would leave the letter shapes
+        recessed in the shell. The graphite theme instead draws thin curved covers in MuJoCo's observer scene. They follow
+        the measured body and add no mass, collision or support. Tests that run themed and original models for 500 physics
+        steps find every pose, velocity and sensor reading identical. The complete film at the top of this page replays the
+        recorded trajectories in that theme at 1×; an earlier 2× edit is archived, since the user preferred normal speed.</p>
+      <p>Before that, one short paid trial ($1.98) sent five seconds of the accepted moving-deck film to Seedance 2.5 Video
+        Edit through the WaveSpeed SDK, asking for brushed metal and a studio lab. It returned a metallic robot in a softly lit
+        lab, but the legs, foot contacts and deck pose drifted from the original. The user paused generative styling and asked
+        for better native MuJoCo rendering.</p>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/graphite.webp" alt="Graphite theme preview: unbranded shell, orange limb-cut marker, teal moving deck" loading="lazy">
+        <figcaption>The static graphite preview, rendered natively in MuJoCo: unbranded curved panels, vendor assets
+          preserved, orange for a physical cut, teal for the task surface.</figcaption></figure>
+      <figure class="film"><video src="media/styling.mp4" poster="media/styling_poster.webp" controls muted playsinline preload="metadata"></video>
+        <figcaption><strong>Generated video, not physics evidence.</strong> Left: the original MuJoCo render. Right: the
+          Seedance 2.5 restyle, matched by elapsed time over the common 4.68 s at 1×. Limb and contact details and the
+          deck pose diverge in the generated half.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="next">
+    <h2>10 · What comes next</h2>
+    <p class="when">Each step is measured with the same gates, seeds and support checks as above</p>
+    <ol class="next-steps">
+      <li><strong>Damaged bodies on a moving deck</strong>Moving-deck training has used only the healthy dog. Adding the
+        eight removal bodies is the direct next round; untrained, they pass 0/8 strict and survive 6/8.</li>
+      <li><strong>Infer the damage instead of being told</strong>The brief asked the controller to infer its body from
+        recent interaction. Today it reads missing-joint bits. Replacing them with an estimator over recent feedback is the
+        original objective, now on a much stronger base than the pilot's.</li>
+      <li><strong>Realistic sensing</strong>Add sensor noise, encoder dropouts and latency, and estimate deck motion from
+        the robot's own sensors instead of ideal platform state.</li>
+      <li><strong>Close the recorded gaps</strong>Rear-leg timing in front-right removals, contact penetration above 8 mm,
+        24° slopes and the rear gaps; then terrain for the damaged bodies, which have stood only on flat ground.</li>
+      <li><strong>A fully GPU-side environment</strong>Observations and rewards still run in NumPy on the CPU, which limits
+        throughput. Moving them to the GPU is the next speed step after the 22-minute replay.</li>
+      <li><strong>More seeds, harder tests</strong>Three training seeds and larger held-out sets per condition, unseen
+        terrain and multiple missing limbs, before any step toward hardware.</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="wrap"><p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>, <code>docs/locomotion/</code>; the isolated package is <code>experiments/adaptive_locomotion/</code>. Robot: the Unitree Go2 model from MuJoCo Menagerie (BSD-3-Clause, Unitree Robotics), vendor meshes unchanged; the panels that hide its branding in the graphite and Ember films are observer-only. CPU batching: vendored mjbatch (Apache-2.0). Two gait-balance reward terms are adapted from Isaac Lab's Spot task (BSD-3-Clause). Physics: MuJoCo 3.13.0 and MuJoCo Warp 3.13.0; learning: PyTorch PPO.</p></footer>
+</body>
+</html>
