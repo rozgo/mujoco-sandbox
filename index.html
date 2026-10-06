@@ -1,5 +1,91 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MuJoCo Sandbox Journals</title><meta http-equiv="refresh" content="0; url=surgical/">
-<style>body{margin:0;background:#f7f5fa;color:#23243a;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;min-height:100vh}a{color:#646da0}</style>
-</head><body><p><a href="surgical/">Surgical Thread Robot Journal</a></p></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MuJoCo Sandbox</title>
+  <meta name="description" content="Robots built and tested in MuJoCo: a surgical thread-insertion robot, a dog that walks on a damaged body, a drone flying through forecast wind, radio-linked rovers, an amphibious quadruped and a six-legged transporter. Each has an engineering journal.">
+  <meta name="theme-color" content="#14161c">
+  <link rel="stylesheet" href="hub.css?v=2c80d954bf45">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">MuJoCo Sandbox · engineering journals · 2026</p>
+    <h1>Robots built, broken and measured in simulation</h1>
+    <p class="lede">Six projects in MuJoCo, from a needle placing 40 µm threads to a dog walking on three legs. Each journal
+      tells what was built, what failed and what was measured, with the films of the recorded runs. Motion always comes
+      from the physics; each journal says which parts are learned and which are programmed.</p>
+  </div>
+</header>
+<main class="wrap">
+  <div class="grid">
+    <a class="card" href="surgical/" style="--card-accent: #8981af; --card-band: linear-gradient(115deg, #d38aaa, #af86ac 30%, #8981af 55%, #7378a8 78%, #646da0);">
+      <div class="poster"><img src="hub_media/surgical.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">Learned · PufferLib 5.0 · RTX 4090</p>
+        <h2>Surgical thread robot</h2>
+        <p class="line">A gantry needle places 40 µm threads at site after site under workcell, sensing and tissue disturbances; a learned policy lands them a median 8 µm from target.</p>
+        <p class="tags"><span>reinforcement learning</span><span>elastic rod</span><span>interactive replay</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+    <a class="card" href="dog/" style="--card-accent: #49d6c5; --card-band: linear-gradient(120deg, #08090b 0%, #131518 45%, #13302d 100%);">
+      <div class="poster"><img src="hub_media/dog.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">Learned · PPO · MuJoCo Warp · RTX 4090</p>
+        <h2>Adaptive dog</h2>
+        <p class="line">One PPO policy walks a Unitree Go2 healthy or missing a leg, then stands and balances; one GPU relearned it all from random weights in 22 min 05 s.</p>
+        <p class="tags"><span>reinforcement learning</span><span>limb loss</span><span>GPU physics</span><span>balance</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+    <a class="card" href="wind/" style="--card-accent: #65e2d2; --card-band: linear-gradient(125deg, #09101a 0%, #10202b 40%, #1d4a63 75%, #2a6f86 100%);">
+      <div class="poster"><img src="hub_media/wind.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">Learned forecasts · NeuralOperator · RTX 4090</p>
+        <h2>Neural wind delivery</h2>
+        <p class="line">A quadrotor carries a slung parcel through simulated Navier–Stokes wind; learned wind forecasts cut its tracking error from 10.89 cm to 4.28–4.42 cm, and all 24 standard deliveries land.</p>
+        <p class="tags"><span>neural operators</span><span>predictive control</span><span>cable payload</span><span>fluid simulation</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+    <a class="card" href="rovers/" style="--card-accent: #3be2ac; --card-band: linear-gradient(120deg, #0f141c 0%, #101b24 45%, #133a33 100%);">
+      <div class="poster"><img src="hub_media/rovers.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">RC rovers · simulated LoRa · Reticulum</p>
+        <h2>Radio-linked rovers</h2>
+        <p class="line">Six rovers share what they find over a simulated radio: no duplicate inspections with a healthy link, and no faster finish.</p>
+        <p class="tags"><span>MuJoCo</span><span>LoRa packet model</span><span>Reticulum 1.5.2</span><span>rule-based agents</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+    <a class="card" href="amphibious/" style="--card-accent: #1f7a94; --card-band: linear-gradient(125deg, #0e2a33 0%, #135466 45%, #1f7a94 75%, #c9b28a 100%);">
+      <div class="poster"><img src="hub_media/amphibious.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">Scripted · MuJoCo · Go2 stand-in</p>
+        <h2>Amphibious quadruped</h2>
+        <p class="line">A Go2 model with four thigh-mounted floats walks into a basin, floats 10.8 s with no ground contact and climbs out on the far bank.</p>
+        <p class="tags"><span>buoyancy model</span><span>scripted crawl</span><span>idealised thrusters</span><span>land to water to land</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+    <a class="card" href="hexapod/" style="--card-accent: #d0640f; --card-band: linear-gradient(120deg, #3a2a1c 0%, #6b4a2f 45%, #b8743a 80%, #e59a4d 100%);">
+      <div class="poster"><img src="hub_media/hexapod.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">Scripted · MuJoCo Menagerie · ripple gait</p>
+        <h2>Hexapod transporter</h2>
+        <p class="line">Six legs and two Kinova arms: grasps a mug and a block by finger contact, walks around a barrier and places both 6.2 and 16.5 mm from their marks in 112.9 simulated seconds.</p>
+        <p class="tags"><span>scripted control</span><span>mobile manipulation</span><span>contact grasping</span><span>six camera views</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
+  </div>
+</main>
+<footer class="wrap">
+  <p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>.
+    Videos are renders of recorded MuJoCo simulations. Robot models from MuJoCo Menagerie keep their own licences,
+    listed in each journal.</p>
+</footer>
+</body>
+</html>
