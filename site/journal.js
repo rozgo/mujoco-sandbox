@@ -2,6 +2,8 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
+// Replaced at build time with a hash of the viewer files, so a rebuilt viewer is never served from cache.
+const BUILD = "__VIEWER_BUILD__";
 
 // ------------------------------------------------------------------ media
 fetch("media.json").then((r) => r.json()).then((media) => {
@@ -147,13 +149,13 @@ function wire() {
 
 window.Module = {
   canvas,
-  locateFile: (path) => "viewer/" + path,
+  locateFile: (path) => `viewer/${path}?v=${BUILD}`,
   onRuntimeInitialized: wire,
   print: (text) => console.log(text),
   printErr: (text) => console.warn(text),
 };
 const viewerScript = document.createElement("script");
-viewerScript.src = "viewer/viewer.js";
+viewerScript.src = `viewer/viewer.js?v=${BUILD}`;
 viewerScript.async = true;
 document.body.appendChild(viewerScript);
 

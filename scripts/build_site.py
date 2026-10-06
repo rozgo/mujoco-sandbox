@@ -159,8 +159,10 @@ VIDEOS = {
 
 
 def assemble(media_paths):
-    for name in ("index.html", "style.css", "journal.js"):
+    for name in ("index.html", "style.css"):
         shutil.copy2(ROOT/"site"/name, SITE/name)
+    viewer = hashlib.sha256(b"".join((SITE/"viewer"/n).read_bytes() for n in ("viewer.js", "viewer.wasm", "viewer.data")))
+    (SITE/"journal.js").write_text((ROOT/"site/journal.js").read_text().replace("__VIEWER_BUILD__", viewer.hexdigest()[:12]))
     data = SITE/"data"
     data.mkdir(exist_ok=True)
     results = json.loads((ROOT/"docs/neural_insertion/ALIGN_RESULTS.json").read_text())

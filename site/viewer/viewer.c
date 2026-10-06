@@ -624,27 +624,64 @@ static void render_callouts(void) {
     }
 }
 
+#define CALLOUT_ZOOM_CAP 1.4f  // orbit distance beyond which panels shrink with the scene
+
 static void draw_callouts(void) {
     Matrix view = GetCameraMatrix(V.camera);
     Vector3 right = {view.m0, view.m4, view.m8}, up = {view.m1, view.m5, view.m9};
+    float scale = fminf(V.distance, CALLOUT_ZOOM_CAP);
+    float fov = tanf(V.camera.fovy * DEG2RAD * 0.5f), sh = (float)GetScreenHeight();
+    Vector3 at[MAX_CALLOUTS];
+    float w[MAX_CALLOUTS], h[MAX_CALLOUTS], wpp[MAX_CALLOUTS];
+    Rectangle r[MAX_CALLOUTS];
     for (int k = 0; k < NC; k++) {
         Callout* c = &C[k];
-        Vector3 at = Vector3Add(c->anchor, Vector3Add(Vector3Scale(right, c->dx * V.distance), Vector3Scale(up, c->dy * V.distance)));
-        // Partial perspective: distant panels shrink, but only by the square root of the depth ratio.
-        float depth = Vector3Distance(V.camera.position, at);
-        float unit = sqrtf(V.distance * fmaxf(depth, V.distance * 0.2f)) * 0.00050f;
-        float w = c->w * unit, h = c->h * unit;
+        at[k] = Vector3Add(c->anchor, Vector3Add(Vector3Scale(right, c->dx * scale), Vector3Scale(up, c->dy * scale)));
+        // Partial perspective: distant panels shrink by the square root of the depth ratio.
+        float depth = Vector3Distance(V.camera.position, at[k]);
+        float unit = sqrtf(scale * fmaxf(depth * scale / V.distance, scale * 0.2f)) * 0.00050f;
+        w[k] = c->w * unit;
+        h[k] = c->h * unit;
+        wpp[k] = 2.0f * depth * fov / sh;  // world size of one screen pixel at the panel
+        Vector2 p = GetWorldToScreen(at[k], V.camera);
+        float pw = w[k] / wpp[k], ph = h[k] / wpp[k];
+        r[k] = (Rectangle){c->dx < 0 ? p.x - pw : p.x, p.y - ph * 0.5f, pw, ph};
+    }
+    // Keep panels from overlapping on screen: push overlapping pairs apart vertically.
+    float shift[MAX_CALLOUTS] = {0};
+    for (int pass = 0; pass < 8; pass++) {
+        int moved = 0;
+        for (int i = 0; i < NC; i++) {
+            for (int j = i + 1; j < NC; j++) {
+                Rectangle a = r[i], b = r[j];
+                a.y += shift[i]; b.y += shift[j];
+                float gap = 6.0f;
+                if (a.x + a.width + gap <= b.x || b.x + b.width + gap <= a.x) continue;
+                if (a.y + a.height + gap <= b.y || b.y + b.height + gap <= a.y) continue;
+                int lower = a.y + a.height * 0.5f > b.y + b.height * 0.5f ? i : j, upper = lower == i ? j : i;
+                Rectangle L = lower == i ? a : b, U = lower == i ? b : a;
+                float overlap = U.y + U.height + gap - L.y;
+                shift[lower] += overlap * 0.5f;
+                shift[upper] -= overlap * 0.5f;
+                moved = 1;
+            }
+        }
+        if (!moved) break;
+    }
+    for (int k = 0; k < NC; k++) {
+        Callout* c = &C[k];
+        Vector3 pos = Vector3Subtract(at[k], Vector3Scale(up, shift[k] * wpp[k]));
         // The leader line meets the panel edge nearest the object.
-        Vector3 bl = c->dx < 0 ? Vector3Subtract(at, Vector3Scale(right, w)) : at;
-        bl = Vector3Subtract(bl, Vector3Scale(up, h * 0.5f));
-        DrawLine3D(c->anchor, at, fade(c->color[0], 0.9f));
-        DrawSphere(c->anchor, V.distance * 0.0016f, c->color[0]);
+        Vector3 bl = c->dx < 0 ? Vector3Subtract(pos, Vector3Scale(right, w[k])) : pos;
+        bl = Vector3Subtract(bl, Vector3Scale(up, h[k] * 0.5f));
+        DrawLine3D(c->anchor, pos, fade(c->color[0], 0.9f));
+        DrawSphere(c->anchor, scale * 0.0016f, c->color[0]);
         float u = c->w / CALLOUT_W, v = c->h / CALLOUT_H;
         rlSetTexture(V.callout[k].texture.id);
         rlBegin(RL_QUADS);
         rlColor4ub(255, 255, 255, 255);
         rlNormal3f(0, 0, 1);
-        Vector3 p1 = Vector3Add(bl, Vector3Scale(right, w)), p2 = Vector3Add(p1, Vector3Scale(up, h)), p3 = Vector3Add(bl, Vector3Scale(up, h));
+        Vector3 p1 = Vector3Add(bl, Vector3Scale(right, w[k])), p2 = Vector3Add(p1, Vector3Scale(up, h[k])), p3 = Vector3Add(bl, Vector3Scale(up, h[k]));
         rlTexCoord2f(0, 1 - v); rlVertex3f(bl.x, bl.y, bl.z);
         rlTexCoord2f(u, 1 - v); rlVertex3f(p1.x, p1.y, p1.z);
         rlTexCoord2f(u, 1); rlVertex3f(p2.x, p2.y, p2.z);
@@ -905,7 +942,7 @@ int main(int argc, char** argv) {
     const char* folder = "data";
     const char* shot = NULL;
     int width = 1600, height = 900, select = 0, camera = 1, overlays = OV_FORCES | OV_SENSING | OV_HUD;
-    float at = -1;
+    float at = -1, zoom = 1;
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--data") && i + 1 < argc) folder = argv[++i];
         else if (!strcmp(argv[i], "--screenshot") && i + 1 < argc) shot = argv[++i];
@@ -913,6 +950,7 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--time") && i + 1 < argc) at = (float)atof(argv[++i]);
         else if (!strcmp(argv[i], "--camera") && i + 1 < argc) camera = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--overlays") && i + 1 < argc) overlays = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--zoom") && i + 1 < argc) zoom = (float)atof(argv[++i]);
         else if (!strcmp(argv[i], "--size") && i + 2 < argc) { width = atoi(argv[++i]); height = atoi(argv[++i]); }
     }
     init(folder, width, height);
@@ -921,6 +959,7 @@ int main(int argc, char** argv) {
     if (at >= 0) { ni_seek(at); ni_play(0); }
     sample(V.time);
     camera_preset(camera);
+    V.distance *= zoom;
     if (shot) {
         for (int f = 0; f < 3; f++) { update_camera(); draw_frame(); }
         Image image = LoadImageFromScreen();
