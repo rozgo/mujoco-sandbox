@@ -886,3 +886,21 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   [the results file](neural_insertion/CONTACT_SMOOTHING_RESULTS.json) and
   finalized [the write-up](neural_insertion/CONTACT_SMOOTHING.md). Second
   checkpoint commit follows the first progress commit `4a3760c`.
+
+## October 6: task-derived gates and the thread clock
+
+- Observed interval **00:17:55–00:43 UTC** to this checkpoint, on `main` after
+  confirming origin was behind local. User direction: complete all next steps,
+  focus on delivery, document the process, commit logical successes often.
+- Wrote [task-derived acceptance](neural_insertion/ACCEPTANCE.md) and the
+  [process account](neural_insertion/PROCESS.md). Added material presets
+  (illustrative 100 MPa; polyimide 2.5 GPa from typical film data).
+- Clock study: 80 settling cases, **4.8 s aggregate simulation**, **547 s
+  elapsed wall** with 10 workers. Largest passing step 10–20 µs; unit
+  disagreement ≤ 4.7e−10 µm.
+- Probe fixtures (drag, press, release): 24 cases at 10/5 µs, **100 s wall**;
+  release rerun at 5/2.5 µs, 8 cases, **94 s wall**; **4.32 s aggregate
+  simulation**. Release failed at 10 µs (1.58 µm) and passed at 5 µs (0.19 µm);
+  all other gates passed. A first drag design jammed and was replaced before
+  the recorded run. Plots **< 2 s**, no additional simulation.
+- No training. Wall times overlap other work on this machine; not isolated compute.

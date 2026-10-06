@@ -28,6 +28,7 @@ from .contact_diagnostics import (CHECKPOINT, UNIT_SYSTEMS, centerline, checkpoi
                                   energy, kernel, model_xml, physical_signature)
 from .contact_laws import INTEGRATORS, LAWS
 from .der import build_provenance, numbers
+from .materials import DEFAULT_MATERIAL, MATERIALS
 from .rescaling import CableConfig
 from .scene import ROOT
 from .units import MM_G
@@ -47,11 +48,20 @@ SEEDS = (7, 17, 29)
 GATES_UM = {"timestep": 1., "units": .01, "penetration": 2.}
 
 
-def fixture_config(kind, dt, friction=.3, law=LAWS["flat"], integrator="implicitfast"):
-    """Base fixture kind and configuration; der_settle only moves the support."""
+def fixture_config(kind, dt, friction=.3, law=LAWS["flat"], integrator="implicitfast", material=None):
+    """Base fixture kind and configuration; der_settle only moves the support.
+
+    A material preset changes modulus, Poisson ratio and density only. The
+    pre-impact checkpoint belongs to the illustrative material, so a preset is
+    accepted only for fixtures that start from the compiled rest state.
+    """
     case, state = checkpoint()
     c = replace(CableConfig(**case["config"]), dt_s=dt, friction=friction,
                 contact_time_s=law.time_constant_s, integrator=integrator)
+    if material is not None and material != DEFAULT_MATERIAL:
+        if kind != "der_settle":
+            raise ValueError("Material presets apply to rest-start fixtures only")
+        c = replace(c, **MATERIALS[material])
     if kind == "der_settle":
         return "der", replace(c, floor_z_m=-(c.radius_m+SETTLE_CLEARANCE_M)), state
     return kind, c, state
@@ -71,8 +81,8 @@ def variant_xml(kind, config, units, law, integrator):
     return ET.tostring(root, encoding="unicode")
 
 
-def load_variant(kind, dt, units=MM_G, law=LAWS["flat"], integrator="implicitfast", friction=.3):
-    _, c, state = fixture_config(kind, dt, friction, law, integrator)
+def load_variant(kind, dt, units=MM_G, law=LAWS["flat"], integrator="implicitfast", friction=.3, material=None):
+    _, c, state = fixture_config(kind, dt, friction, law, integrator, material)
     xml = variant_xml(kind, c, units, law, integrator)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
@@ -154,10 +164,10 @@ def frozen_law(law):
             "passed": bool(maximum < 1e-8)}
 
 
-def trial(kind, dt, units, law, integrator, duration=None, seed=None, epsilon=1e-12):
+def trial(kind, dt, units, law, integrator, duration=None, seed=None, epsilon=1e-12, material=None):
     """Live stepping only. A seed applies an initialization-only planar perturbation."""
     started = time.perf_counter()
-    c, m, d, xml = load_variant(kind, dt, units, law, integrator)
+    c, m, d, xml = load_variant(kind, dt, units, law, integrator, material=material)
     initial_change = 0.
     if seed is not None:
         before = centerline(kind, m, d, units)
@@ -205,6 +215,7 @@ def trial(kind, dt, units, law, integrator, duration=None, seed=None, epsilon=1e
     # Positive normalization: largest recorded |kinetic|+|gravity|+|elastic| (zero at a straight rest start).
     scale = max(float(np.abs(trace["energy_j"]).sum(axis=1).max()), 1e-30)
     report = {"kind": kind, "config": asdict(c), "units": asdict(units), "law": asdict(law), "integrator": integrator,
+              "material": material or DEFAULT_MATERIAL,
               "seed": seed, "perturbation_norm_rad": epsilon if seed is not None else 0.,
               "initial_shape_change_um": initial_change, "duration_s": duration, "simulated_s": float(d.time),
               "completed": bool(not summary[14] and int(summary[0]) == n), "sample_interval_s": sample_dt,

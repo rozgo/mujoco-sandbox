@@ -23,6 +23,9 @@ with an independent fixed-step calculation and identifies contact-entry sensitiv
 in the chain. Same-state force calculations agree across units. Contact-event
 localization/adaptive substepping is the next proposed experiment; accuracy remains
 unaccepted and no engine defect or successful patch has been established.
+Gates now follow the task phases ([acceptance](ACCEPTANCE.md)), and every
+task-regime thread fixture passes at 5–10 µs steps ([task regime](TASK_REGIME.md)).
+[How we got here](PROCESS.md) records the reasoning and corrections.
 The [contact-smoothing experiment](CONTACT_SMOOTHING.md) then changed only two
 numerical settings, a penetration-ramped contact impedance and RK4 stepping: the
 rigid gates pass by 10–100×, chain unit invariance improves about 1000×, and a

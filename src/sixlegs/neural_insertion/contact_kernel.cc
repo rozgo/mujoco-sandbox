@@ -2,6 +2,7 @@
 // implicit/Euler: mj_step1 + mj_step2 (identical to the repository kernel).
 // RK4: the same sequence mj_step performs (checks, mj_forward, mj_RungeKutta),
 // with telemetry taken at the stage-0 evaluation, since mj_step2 ignores RK4.
+// support < 0 inspects every contact (penetration/force telemetry only).
 #include <mujoco/mujoco.h>
 #include <algorithm>
 #include <cmath>
@@ -33,7 +34,7 @@ extern "C" void contact_chunk(const mjModel* m, mjData* d, int steps,
       bool touching = false;
       for (int i=0; i<d->ncon; ++i) {
         const mjContact& c = d->contact[i];
-        if (c.geom[0] != support && c.geom[1] != support) continue;
+        if (support >= 0 && c.geom[0] != support && c.geom[1] != support) continue;
         out[1] = std::max(out[1], -c.dist);
         mjtNum local[6], force[3], torque[3], moment[3];
         mj_contactForce(m, d, i, local);
@@ -66,7 +67,7 @@ extern "C" void contact_chunk(const mjModel* m, mjData* d, int steps,
       bool touching = false;
       for (int i=0; i<d->ncon; ++i) {
         const mjContact& c = d->contact[i];
-        if (c.geom[0] != support && c.geom[1] != support) continue;
+        if (support >= 0 && c.geom[0] != support && c.geom[1] != support) continue;
         out[1] = std::max(out[1], -c.dist);
         mjtNum local[6], force[3], torque[3], moment[3];
         mj_contactForce(m, d, i, local);
