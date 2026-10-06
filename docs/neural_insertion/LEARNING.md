@@ -64,6 +64,13 @@ restarted unchanged otherwise as `align_v2`. Baseline outcomes are identical
 under the fix because they never leave ±1; seven random-policy returns differ
 by at most 1.2e−7 from float rounding.
 
+`align_v2` learned well for 12.7 M steps: no collisions and a final error
+falling to 0.48 mm. Then, as the action noise shrank, the per-update KL rose
+from 0.16 to about 300 by 15.9 M steps and the policy collapsed. The clip
+fraction near 0.5 throughout already indicated oversized updates at PufferLib's
+default learning rate of 0.015. We stopped it at about 19 M steps (log kept)
+and started `align_v3` with one change: learning rate 0.003.
+
 Evaluation runs a checkpoint with Puffer's own CPU network code and
 deterministic mean actions on the shared core, over the 200 predetermined seeds
 ([evaluator](../../experiments/neural_insertion/puffer/align_eval.c)).

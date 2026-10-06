@@ -931,3 +931,21 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   0% success; about **17 s wall**, **~260 s aggregate simulation** across the
   three policies. No training yet; the GPU host became reachable through the
   user's tunnel at about 00:53 UTC.
+
+## October 6: alignment training on the RTX 4090
+
+- The user rejected a CPU training fallback before any was written and opened
+  the RustDesk tunnel. Synchronized commits by Git bundle,
+  without pushing; the GPU checkout was clean and fast-forwarded. A plain
+  `uv sync` removed the GPU machine's optional extras; restored at once with the
+  documented `--extra wind --extra reticulum` sync and verified imports.
+- Built the CUDA trainer after four installer/adapter fixes; made the model file
+  byte-identical across machines. Smoke run: **2.9 M steps**, **~72 s**.
+- `align_v1` (commit `35b67e2`, 01:08:47 UTC): diverged from a reward bug
+  (penalty on unclipped actions); stopped at **20.8 M steps**, about **6 min
+  training wall**, log retained. MuJoCo physics on CPU, network on GPU.
+- Fixed with a regression test (commit `2f851cc`); `align_v2` started
+  01:16:11 UTC, 100 M steps planned at about 60 K steps/s.
+- `align_v2` diverged from oversized updates (KL 0.16 to ~300 between 12.7 M and
+  15.9 M steps); stopped at about 19 M steps, about **5.5 min training wall**.
+  `align_v3` lowers only the learning rate, 0.015 to 0.003.
