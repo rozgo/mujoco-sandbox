@@ -45,7 +45,7 @@ def live(args):
     from . import e2e
     if args.tube:
         from .tube_cycle import TubeCycle
-        cycle = TubeCycle()
+        cycle = TubeCycle(level=args.level, seed=args.seed)
     elif args.modern:
         from .modern import ModernCycle
         cycle = ModernCycle(args.target, fast=args.fast)
@@ -144,6 +144,8 @@ def main():
     a.add_argument("--modern", action="store_true", help="design v3 cycle (cannula, latch)")
     a.add_argument("--fast", action="store_true", help="fast thread settings (with --modern)")
     a.add_argument("--tube", action="store_true", help="thread-tube design (tube_cycle.py)")
+    a.add_argument("--level", type=float, default=0., help="disturbance level with --tube: 0, 1 nominal, 2 stress")
+    a.add_argument("--seed", type=int, default=0)
     a.add_argument("--stop-after")
     a.add_argument("--resume", type=Path)
     b = sub.add_parser("replay")

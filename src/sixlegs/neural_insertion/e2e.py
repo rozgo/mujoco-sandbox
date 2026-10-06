@@ -126,6 +126,8 @@ class Cycle:
                     self.clamp_command()
                 if self.aux is not None:
                     self.aux(t)
+            if getattr(self, "pre_step", None) is not None:
+                self.pre_step()
             self.tissue.step(self.d)
             before = self.d.time
             mujoco.mj_step(self.m, self.d)
@@ -336,7 +338,7 @@ def save(cycle, output, status, started):
               "peak_needle_lateral_uN": cycle.tissue.state.peak_lateral,
               "prohibited_contacts": cycle.prohibited[:50], "prohibited_count": len(cycle.prohibited),
               "events": cycle.events, "controller": "scripted yardstick (minimum-jerk joint references, programmed servo)",
-              "disturbances": "none"}
+              "disturbances": getattr(cycle, "disturbance_summary", "none")}
     (output/"report.json").write_text(json.dumps(report, indent=1)+"\n")
     return report
 

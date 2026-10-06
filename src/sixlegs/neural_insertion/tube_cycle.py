@@ -8,9 +8,11 @@ At each site:
 4. The tool lifts clear of the thread it left standing.
 Between sites a spare thread is reloaded into the tube (an explicit reset: it appears there, straight and at
 rest), and the tool moves over the next site and descends. Placed threads stay simulated in the tissue.
-Scripted yardstick motions, no disturbances, fast thread settings (modern_scene.FAST).
+Scripted yardstick motions with the disturbance layer (disturbance.py; --level 0 is undisturbed): the
+yardstick measures the target before descending and makes one correction from the measured needle tip before
+inserting; the tissue moves with breathing and pulse. Fast thread settings (modern_scene.FAST).
 
-Usage: uv run --locked python -m sixlegs.neural_insertion.tube_cycle --output DIR [--sites 0 5 1]
+Usage: uv run --locked python -m sixlegs.neural_insertion.tube_cycle --output DIR [--sites 0 5 1] [--level 1 --seed 1]
 """
 
 import argparse
@@ -22,6 +24,7 @@ import mujoco
 import numpy as np
 
 from . import e2e
+from .disturbance import Disturbance
 from .motion import Servo
 from .tissue import Tissue, TissueParams, TissueState
 from .tube_scene import END_BELOW_POINT, INSERTED, Q_READY, SEGMENT, review_pose
@@ -45,6 +48,7 @@ class TubeTissue(Tissue):
 
     def __init__(self, model, threads, params, anchored):
         super().__init__(model, threads[0], params, end_site="thread_S_last_0", anchored=anchored, grip=False)
+        self.spec = model.body("specimen_support").id
         self.grips = [[(model.body(n).id, model.equality(f"grip_{n}").id) for n in names[-anchored:]]
                       for names in threads]
         self.current = 0
@@ -63,24 +67,36 @@ class TubeTissue(Tissue):
                 if self.surface(point)-point[2] <= 0:
                     data.eq_active[eq] = 0
                     continue
+                tissue_origin = data.xpos[self.spec]
                 if not data.eq_active[eq]:
-                    near = s.entry is not None and np.linalg.norm(point[:2]-s.entry[:2]) < p.track_radius
+                    rel = point-self.offset  # tissue frame, like the needle's entry
+                    near = s.entry is not None and np.linalg.norm(rel[:2]-s.entry[:2]) < p.track_radius
                     if k == self.current and near:
-                        m.eq_data[eq, 0:3] = point
+                        m.eq_data[eq, 0:3] = point-tissue_origin  # pinned in the (moving) tissue
                         m.eq_data[eq, 3:6] = data.xmat[b].reshape(3, 3).T@(point-data.xpos[b])
                         data.eq_active[eq] = 1
                     continue
                 force = float(np.linalg.norm(data.efc_force[:data.nefc][rows & (data.efc_id[:data.nefc] == eq)]))
                 self.peak_grip = max(self.peak_grip, force)
                 if force > p.f_retain:  # slip: move the pin toward the segment
-                    anchor = m.eq_data[eq, 0:3].copy()
-                    m.eq_data[eq, 0:3] = point+(anchor-point)*p.f_retain/force
+                    anchor = tissue_origin+m.eq_data[eq, 0:3]
+                    m.eq_data[eq, 0:3] = point+(anchor-point)*p.f_retain/force-tissue_origin
         return depth
 
 
 class TubeCycle(e2e.Cycle):
-    def __init__(self, sites=SITES):
+    def __init__(self, sites=SITES, level=0., seed=0):
         self.m, self.d, meta = review_pose(sites[0])
+        self.dist = Disturbance(level, seed)
+        self.disturbance_summary = self.dist.summary()
+        self.spec = self.m.body("specimen_support").id
+        self.spec_mocap = self.m.body_mocapid[self.spec]
+        self.spec0 = self.d.mocap_pos[self.spec_mocap].copy()
+        self.dofs = {n: self.m.jnt_dofadr[self.m.joint(n).id] for n in JOINTS}
+        self.carried = {n: float(self.m.body_subtreemass[self.m.jnt_bodyid[self.m.joint(n).id]]) for n in JOINTS}
+        self.pre_step = self.disturb
+        self.last_target_t = 0.
+        self.site_lift = {}
         self.meta, self.sites, self.target = meta, tuple(sites), sites[0]
         self.threads = meta["threads"]
         self.qadr = np.array([self.m.jnt_qposadr[self.m.joint(n).id] for n in JOINTS])
@@ -105,6 +121,7 @@ class TubeCycle(e2e.Cycle):
         self.tube = self.m.body("thread_tube").id
         self.k, self.bonded_at = 0, None
         self.placed = []  # (site, thread) inserted so far
+        self.results = []  # per-site measurements
 
     # ------------------------------------------------------------ thread bookkeeping
     def eq(self, name, k=None):
@@ -134,7 +151,27 @@ class TubeCycle(e2e.Cycle):
         return np.array((self.tip0[0]+q[0], self.tip0[1]+q[1], self.tip0[2]+q[2]-q[3]))
 
     def site(self, i):
+        """True target position (moves with the tissue)."""
         return self.d.site(f"target_{i}").xpos.copy()
+
+    def measured_site(self, i):
+        """Target as the robot's sensing reports it (noise, bias, drift)."""
+        dt = self.d.time-self.last_target_t
+        self.last_target_t = self.d.time
+        return self.dist.measure_target(self.site(i), dt)
+
+    def disturb(self):
+        """Each physics step: move the tissue, apply robot disturbance forces, record the tip for latency."""
+        t, m, d = self.d.time, self.m, self.d
+        off = self.dist.tissue_offset(t)
+        d.mocap_pos[self.spec_mocap] = self.spec0+off  # prescribed tissue motion
+        self.tissue.offset = off
+        axes = {n: d.xaxis[self.m.joint(n).id].copy() for n in JOINTS}
+        qvel = {n: d.qvel[a] for n, a in self.dofs.items()}
+        forces = self.dist.robot_forces(m.opt.timestep, t, qvel, self.carried, axes)
+        for n, a in self.dofs.items():
+            d.qfrc_applied[a] = forces[n]
+        self.dist.record_tip(t, self.tip)
 
     # ------------------------------------------------------------ cycle
     def start(self):
@@ -148,6 +185,8 @@ class TubeCycle(e2e.Cycle):
                        for k in range(len(self.threads))]
         self.connect(self.eq("tube_hold"), self.d.xpos[self.m.body(self.threads[0][0]).id].copy())
         mujoco.mj_forward(self.m, self.d)
+        for i in self.sites:  # target markings sit just above the surface; known from the phantom's model
+            self.site_lift[i] = float(self.site(i)[2]-self.tissue.surface(self.site(i)))
         self.q_ref = self.q_start.copy()
         return self.q_ref
 
@@ -196,20 +235,29 @@ class TubeCycle(e2e.Cycle):
 
             def move_over(i=i):
                 # Lateral at the lifted height, then down to the ready pose over the next site.
-                before = [self.end_of(j) for _, j in self.placed]
+                # Placed thread ends relative to the tissue (which breathes and pulses under them).
+                before = [self.end_of(j)-self.tissue.offset for _, j in self.placed]
                 tip = self.tip_of(self.q_ref)
-                site = self.site(i)
+                site = self.measured_site(i)
                 self.move(f"move to site {i}", self.joints((site[0], site[1], tip[2])), .20, .01)
-                moved = max((float(np.linalg.norm(self.end_of(j)-e)) for (_, j), e in zip(self.placed, before)),
-                            default=0.)
+                moved = max((float(np.linalg.norm(self.end_of(j)-self.tissue.offset-e))
+                             for (_, j), e in zip(self.placed, before)), default=0.)
                 self.check(f"placed threads undisturbed by the move to site {i}", moved < .01,
                            {"largest_end_shift_mm": moved})
 
             def descend(i=i):
-                site = self.site(i)
-                surface = self.tissue.surface(site)
+                site = self.measured_site(i)
+                surface = site[2]-self.site_lift[i]  # surface estimated from the measured target marking
                 self.tissue.new_site()
                 self.move(f"descend at site {i}", self.joints((site[0], site[1], surface+1.+END_BELOW_POINT)), .10, .01)
+
+            def correct(i=i):
+                # One correction from measurement: measured tip (delayed, noisy) against the measured target.
+                site, tip = self.measured_site(i), self.dist.measure_tip(self.d.time)
+                q = self.q_ref.copy()
+                q[0] += site[0]-tip[0]
+                q[1] += site[1]-tip[1]
+                self.move(f"correct over site {i}", q, .02, .005)
 
             def pick(i=i):
                 q = self.q_ref.copy()
@@ -221,11 +269,11 @@ class TubeCycle(e2e.Cycle):
                            {"bonded_at_s": self.bonded_at, "point_to_end_mm": float(np.linalg.norm(self.tip-self.eyelet))})
 
             def insert(i=i):
-                surface = self.tissue.surface(self.site(i))
+                surface = self.measured_site(i)[2]-self.site_lift[i]  # stroke planned from the measured surface
                 q = self.q_ref.copy()
                 q[3] = q[2]-(surface-DEPTH-self.tip0[2])
                 self.move(f"insert {i}", q, .025, .03, carried=True)  # 30 ms at depth to settle
-                depth = surface-self.eyelet[2]
+                depth = self.tissue.surface(self.eyelet)-self.eyelet[2]
                 self.check(f"site {i}: thread end at depth", depth > 1.8,
                            {"end_depth_mm": float(depth), "punctured": self.tissue.state.punctured,
                             "peak_needle_axial_uN": self.tissue.state.peak_axial})
@@ -245,12 +293,15 @@ class TubeCycle(e2e.Cycle):
                 self.check(f"site {i}: thread left in tissue", depth > 1.5 and gap > 1.5,
                            {"end_depth_mm": float(depth), "end_to_point_mm": gap, "placement_lateral_mm": lateral})
                 self.placed.append((i, k))
+                self.results.append({"site": i, "thread": k, "end_depth_mm": float(depth),
+                                     "placement_lateral_um": lateral*1e3,
+                                     "peak_needle_axial_uN": float(self.tissue.state.peak_axial)})
 
             def lift(i=i):
                 q = self.q_ref.copy()
                 q[2] += LIFT
                 self.move(f"lift at site {i}", q, .15, .05)
-                worst = min(self.tissue.surface(self.site(s))-self.end_of(j)[2] for s, j in self.placed)
+                worst = min(self.tissue.surface(self.end_of(j))-self.end_of(j)[2] for s, j in self.placed)
                 self.check(f"after site {i}: every placed thread still in the tissue", worst > 1.5,
                            {"shallowest_end_depth_mm": float(worst)})
 
@@ -260,7 +311,7 @@ class TubeCycle(e2e.Cycle):
                 named(reload, f"reload_{k}")
                 named(move_over, f"move_to_{i}")
                 named(descend, f"descend_{i}")
-            for fn, name in ((pick, "pick"), (insert, "insert"), (release, "release"), (retract, "retract"),
+            for fn, name in ((correct, "correct"), (pick, "pick"), (insert, "insert"), (release, "release"), (retract, "retract"),
                              (lift, "lift")):
                 named(fn, f"{name}_{i}")
         return steps
@@ -270,9 +321,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--sites", type=int, nargs="+", default=list(SITES))
+    parser.add_argument("--level", type=float, default=0., help="disturbance level: 0 none, 1 nominal, 2 stress")
+    parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
     started = datetime.now(timezone.utc).isoformat()
-    cycle = TubeCycle(args.sites)
+    cycle = TubeCycle(args.sites, args.level, args.seed)
     status = "completed"
     try:
         cycle.run(checkpoints=args.output/"checkpoints")

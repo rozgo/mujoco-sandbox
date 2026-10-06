@@ -65,10 +65,13 @@ class Tissue:
         self.mass = {b: model.body_subtreemass[b] if b == self.bodies[-1] else model.body_mass[b] for b in self.bodies}
         self.state = TissueState()
         self.grip = grip  # False: the caller holds the thread (for example with constraints)
+        self.offset = np.zeros(3)  # tissue displacement (breathing, pulse); the needle entry is kept in tissue frame
         self._vel = np.zeros(6)
 
     def surface(self, p):
-        return surface_z(p[0]/self.L, p[1]/self.L)*self.L
+        """Tissue surface height under world point p, with the tissue displaced by self.offset."""
+        o = self.offset
+        return surface_z((p[0]-o[0])/self.L, (p[1]-o[1])/self.L)*self.L+o[2]
 
     def _apply(self, data, body, point, force):
         data.xfrc_applied[body, :3] += force
@@ -80,8 +83,9 @@ class Tissue:
         data.xfrc_applied[self.needle] = 0
         for b in self.bodies:
             data.xfrc_applied[b] = 0
-        tip = data.site_xpos[self.tip]
-        depth = self.surface(tip)-tip[2]
+        tip_world = data.site_xpos[self.tip]
+        tip = tip_world-self.offset  # tissue frame
+        depth = self.surface(tip_world)-tip_world[2]
         mujoco.mj_objectVelocity(self.m, data, mujoco.mjtObj.mjOBJ_SITE, self.tip, self._vel, 0)
         v = self._vel[3:].copy()
         axial = 0.
@@ -95,7 +99,7 @@ class Tissue:
                 s.punctured = True
                 friction = p.f_shaft*depth*np.tanh(-v[2]/p.v_smooth)
                 axial = (p.f_cut if v[2] < 0 else 0.)*np.tanh(-v[2]/p.v_smooth)+friction
-                self._apply(data, self.needle, tip, np.array((0, 0, axial)))
+                self._apply(data, self.needle, tip_world, np.array((0, 0, axial)))
                 s.peak_axial = max(s.peak_axial, abs(axial))
             return depth
         if depth > 0:
@@ -112,7 +116,7 @@ class Tissue:
             lateral = np.zeros(3)
             lateral[:2] = -p.k_lateral*(tip[:2]-s.entry[:2])-p.c_lateral*v[:2]
             force = lateral+np.array((0, 0, axial))
-            self._apply(data, self.needle, tip, force)
+            self._apply(data, self.needle, tip_world, force)
             s.peak_axial = max(s.peak_axial, abs(axial))
             s.peak_lateral = max(s.peak_lateral, float(np.linalg.norm(lateral)))
         elif s.entry is not None and not s.punctured:

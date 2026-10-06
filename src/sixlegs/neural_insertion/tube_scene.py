@@ -10,6 +10,7 @@ the tube for the next site. Engine units: mm, g, s.
 
 import hashlib
 import math
+import os
 from dataclasses import replace
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -40,13 +41,14 @@ THREAD_DAMPING = 1e-12      # N m s/rad per thread joint: internal damping, abou
 INSERTED = 9                # thread end segments that pass the tissue surface (tissue force model)
 GRIP_TIME_S = 1e-3          # tissue grip constraint time constant
 THREADS = 3                 # thread 0 in the tube, spares parked weightless off to the side
+THREAD_RGBA = "0.36 1 0.08 1"  # neon lime
 PARK_OFFSET = np.array((70., 0., 20.))  # mm between parked threads (world), clear of the robot and tissue
 ARM_X = 8.
 
 
 def _frame_origin():
     """World position of the tool frame (insertion body at zero) with all joints at zero."""
-    m = mujoco.MjModel.from_xml_path(str(build_scene(TUBE_SCENE.with_suffix(".probe.xml"))))
+    m = mujoco.MjModel.from_xml_path(str(build_scene(TUBE_SCENE.with_name(f"tube_probe_{os.getpid()}.xml"))))
     d = mujoco.MjData(m)
     mujoco.mj_kinematics(m, d)
     return d.xpos[m.body("insertion").id]*UNITS.length
@@ -65,6 +67,9 @@ def build_tube_scene(stage_z, path=TUBE_SCENE, units=UNITS):
     _find(root, "geom", "tissue_phantom").set("contype", "2")
     _find(root, "geom", "tissue_phantom").set("conaffinity", "2")
     _remove_first_design(root)
+    # The phantom, its markings and targets move together (breathing and pulse, disturbance.py), driven as a
+    # mocap body: prescribed motion, not simulated.
+    _find(root, "body", "specimen_support").set("mocap", "true")
     _scale_si(root, units)
     _needle(root)
     s, c = math.sin(TUBE_ANGLE), math.cos(TUBE_ANGLE)
@@ -155,9 +160,16 @@ def build_tube_scene(stage_z, path=TUBE_SCENE, units=UNITS):
         # enters the tissue is pinned where it is and slips past the grip force (tube_cycle.TubeTissue). An
         # explicit spring-damper on these 0.8 µg segments overshot and diverged (tube_design/check_v5).
         for n in names[-INSERTED:]:
-            add(equality, "connect", name=f"grip_{n}", body1="world", body2=n, anchor="0 0 0", active="false",
+            add(equality, "connect", name=f"grip_{n}", body1="specimen_support", body2=n, anchor="0 0 0", active="false",
                 solref=_vec((GRIP_TIME_S, 1.)), solimp=_vec(law.solimp(units)))
     _theme(root)
+    # Thread in neon lime with a slight glow: high contrast against the pink tissue, magenta vessels, grey
+    # robot and purple backdrop (colours only).
+    add(root.find("asset"), "material", name="thread_lime", rgba=THREAD_RGBA, emission=".45", specular=".2")
+    for geom in root.iter("geom"):
+        if geom.get("name", "").startswith("thread_G"):
+            geom.attrib.pop("rgba", None)
+            geom.set("material", "thread_lime")
     option = root.find("option")
     for k, v in {"timestep": format(FAST["dt"], "g"), "integrator": "RK4", "solver": "Newton",
                  "tolerance": FAST["tolerance"], "iterations": FAST["iterations"], "cone": "elliptic",
@@ -183,7 +195,7 @@ def review_pose(target=0):
     surface = surface_z(0., FIELD_Y)*UNITS.length
     origin = _frame_origin()
     stage_z = surface+1.0-(origin[2]+TIP-Q_READY-END_BELOW_POINT)
-    path, threads = build_tube_scene(stage_z)
+    path, threads = build_tube_scene(stage_z, TUBE_SCENE.with_name(f"tube_v1_{os.getpid()}.xml"))  # per process
     m = mujoco.MjModel.from_xml_path(str(path))
     d = mujoco.MjData(m)
     d.qpos[m.jnt_qposadr[m.joint("stage_z").id]] = stage_z  # initialization of the review pose
