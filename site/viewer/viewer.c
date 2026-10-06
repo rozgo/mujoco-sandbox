@@ -124,6 +124,7 @@ static struct {
     Matrix lightVP;
     Camera3D camera;
     float yaw, pitch, distance;
+    float zoomTo;  // orbit distance the camera eases toward (zoom input moves this, clamped)
     Vector3 target;
     int follow;
     Vector3 tip;
@@ -473,7 +474,29 @@ static int hidden(int body) {
 
 // ---------------------------------------------------------------- camera
 
+// Zoom: input changes a target orbit distance in log space; the camera eases toward it each frame.
+// Steps toward a limit shrink as the target nears it (a soft end, no overshoot), and the target
+// itself is clamped, so nothing accumulates past a limit and reversing responds at once.
+#define ZOOM_MIN 0.0003f      // m: 0.3 mm from the target
+#define ZOOM_MAX 3.0f
+#define ZOOM_MARGIN 0.7f      // log-distance range over which the ends resist
+#define ZOOM_EASE_S 0.07f     // time constant of the camera following the target
+
+static void zoom_by(float du) {
+    const float lo = logf(ZOOM_MIN), hi = logf(ZOOM_MAX);
+    float u = logf(V.zoomTo);
+    float room = du > 0 ? hi - u : u - lo;
+    du *= Clamp(room / ZOOM_MARGIN, 0.0f, 1.0f);
+    V.zoomTo = expf(Clamp(u + du, lo, hi));
+}
+
+static void camera_preset_set(int preset);
 static void camera_preset(int preset) {
+    camera_preset_set(preset);
+    V.zoomTo = V.distance;
+}
+
+static void camera_preset_set(int preset) {
     V.follow = preset == 2;
     V.camPreset = preset;
     if (V.D.kind == KIND_TUBE && preset > 0) {
@@ -516,8 +539,13 @@ static void update_camera(void) {
         V.target = Vector3Add(V.target, Vector3Add(Vector3Scale(right, -delta.x * s), Vector3Scale(up, delta.y * s)));
         V.follow = 0;
     }
-    float wheel = GetMouseWheelMove();
-    if (wheel != 0) V.distance = Clamp(V.distance * expf(-wheel * 0.12f), 0.0003f, 3.0f);
+#ifndef PLATFORM_WEB
+    float wheel = GetMouseWheelMove();  // the web page sends wheel and pinch input through ni_zoom instead
+    if (wheel != 0) zoom_by(-wheel * 0.12f);
+#endif
+    if (V.zoomTo <= 0) V.zoomTo = V.distance;
+    float ease = 1.0f - expf(-fminf(GetFrameTime(), 0.1f) / ZOOM_EASE_S);
+    V.distance = expf(logf(V.distance) + (logf(V.zoomTo) - logf(V.distance)) * ease);
     if (V.follow == 3) {
         Vector3 end = {V.x[E_END], V.x[E_END + 1], V.x[E_END + 2]};
         V.target = Vector3Lerp(V.tip, end, 0.5f);
@@ -839,6 +867,7 @@ static void render_callouts(void) {
 }
 
 #define CALLOUT_ZOOM_CAP 1.4f  // orbit distance beyond which panels shrink with the scene
+static const Color C_LEADER = {206, 200, 232, 255};  // callout leader lines and anchors
 
 static void draw_callouts(void) {
     Matrix view = GetCameraMatrix(V.camera);
@@ -888,8 +917,10 @@ static void draw_callouts(void) {
         // The leader line meets the panel edge nearest the object.
         Vector3 bl = c->dx < 0 ? Vector3Subtract(pos, Vector3Scale(right, w[k])) : pos;
         bl = Vector3Subtract(bl, Vector3Scale(up, h[k] * 0.5f));
-        DrawLine3D(c->anchor, pos, fade(c->color[0], 0.9f));
-        DrawSphere(c->anchor, scale * 0.0016f, c->color[0]);
+        // Leaders in one neutral colour, so no line in the scene can be mistaken for the lime thread;
+        // the panel's stripe and title carry the callout's colour.
+        DrawLine3D(c->anchor, pos, fade(C_LEADER, 0.85f));
+        DrawSphere(c->anchor, scale * 0.0016f, C_LEADER);
         float u = c->w / CALLOUT_W, v = c->h / CALLOUT_H;
         rlSetTexture(V.callout[k].texture.id);
         rlBegin(RL_QUADS);
@@ -1332,6 +1363,9 @@ EXPORT int ni_playing(void) { return V.playing; }
 EXPORT void ni_speed(float s) { V.speed = s; }
 EXPORT void ni_autoplay(int on) { V.autoplay = on; }
 EXPORT void ni_camera(int preset) { camera_preset(preset); }
+EXPORT void ni_zoom(float du) { zoom_by(du); }  // du: change of log orbit distance, positive zooms out
+EXPORT float ni_distance(void) { return V.distance; }
+EXPORT float ni_zoom_target(void) { return V.zoomTo; }
 EXPORT int ni_camera_preset(void) { return V.camPreset; }
 EXPORT float ni_lateral(void) { return V.lateral; }
 EXPORT float ni_vertical(void) { return V.vertical; }
@@ -1465,6 +1499,7 @@ int main(int argc, char** argv) {
     sample(V.time);
     camera_preset(camera);
     V.distance *= zoom;
+    V.zoomTo = V.distance;
     if (shot) {
         for (int f = 0; f < 3; f++) { update_camera(); draw_frame(); }
         Image image = LoadImageFromScreen();

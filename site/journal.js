@@ -97,6 +97,7 @@ function wire() {
     phase: c("ni_tube_phase", "number", []), site: c("ni_tube_site", "number", []),
     depth: c("ni_tube_depth", "number", []), place: c("ni_tube_place", "number", []),
     force: c("ni_tube_force", "number", []), placed: c("ni_tube_placed", "number", ["number"]),
+    zoom: c("ni_zoom", null, ["number"]),
   };
   // onRuntimeInitialized fires before the C main() loads the replays; wait for them.
   if (api.count() === 0) { setTimeout(() => wire(), 50); return; }
@@ -107,6 +108,25 @@ function wire() {
   fillEpisodes();
   resize();
   window.addEventListener("resize", resize);
+
+  // Zoom from the wheel and from trackpad pinch, proportional to how far the input moved: a trackpad's many
+  // small events and a mouse's notches give the same feel. Taken before the canvas sees the event (the
+  // WebAssembly runtime would count every small trackpad event as a full notch).
+  const PX = [1, 33, 800];  // deltaMode: pixels, lines, pages
+  document.querySelector(".stage").addEventListener("wheel", (e) => {
+    if (e.target !== canvas) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const dy = Math.max(-120, Math.min(120, e.deltaY * PX[e.deltaMode]));
+    api.zoom(dy * (e.ctrlKey ? 0.008 : 0.0012));  // ctrl: pinch on a trackpad
+  }, { capture: true, passive: false });
+  let pinch = 1;  // Safari's pinch gestures
+  canvas.addEventListener("gesturestart", (e) => { e.preventDefault(); pinch = 1; });
+  canvas.addEventListener("gesturechange", (e) => {
+    e.preventDefault();
+    api.zoom(-Math.log(e.scale / pinch));
+    pinch = e.scale;
+  });
 
   document.querySelectorAll("[data-mode]").forEach((b) => (b.onclick = () => {
     mode = Number(b.dataset.mode);

@@ -1119,3 +1119,6 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   chapters 20-24, the corrected chapter-19 explanation, data fetches versioned
   against caching; checked in the browser at desktop and phone width by
   14:53 UTC. Not pushed or deployed.
+- With the user (journal viewer feedback, 15:13 UTC): zoom rebuilt (page-side wheel and pinch
+  input proportional to the scroll distance, a clamped zoom target with soft ends, the camera easing
+  toward it) and callout leader lines in one neutral colour so the lime thread stands alone.
