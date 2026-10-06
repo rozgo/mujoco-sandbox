@@ -97,3 +97,13 @@ failed comparison and adopted 5 µs for every thread phase, 64× larger than the
 step the drop needed. The press fixture also showed that contact compliance
 under load is a solver property, about 1 µm at 100 µN, which calibration must
 address before forces are trusted.
+
+## 9. The robot's first motion (October 6)
+
+With gates fixed beforehand, we gave the gantry a programmed servo and asked
+it to hold, then hover 1 mm above each target. The first inverse kinematics
+failed immediately: Z travels only 8 mm down, so the design reaches the surface
+with the needle slide. The first approach then showed a 265 µm tracking peak,
+which turned out to be the needle hanging 0.2 mm past its retracted stop at
+t = 0. Carrying both slides 0.5 mm out fixed it. Every gate then passed with
+large margins. [First motion](MOTION.md).

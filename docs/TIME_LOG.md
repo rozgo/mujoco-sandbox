@@ -904,3 +904,15 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   all other gates passed. A first drag design jammed and was replaced before
   the recorded run. Plots **< 2 s**, no additional simulation.
 - No training. Wall times overlap other work on this machine; not isolated compute.
+
+## October 6: first robot motion
+
+- Implemented the programmed servo, hold and approach primitives, the
+  six-target tour, video recording, CLI commands and a live viewer path, plus
+  the physics-only learning scene. Two first-run issues (Z travel, needle sag at
+  its stop) were fixed before the recorded run.
+- Recorded suite: hold, six single approaches and the tour, **36.2 s aggregate
+  simulation**, **3.7 s wall**. Video render **36.0 s wall**, 0 s additional
+  simulation; decoded all 613 frames (1920×1080, 30 fps, 20.43 s) and inspected
+  the opening, first hover, a transit and the results card. Native viewer
+  5 s smoke test passed. Physics-only scene reproduces the full tour bit for bit.

@@ -23,6 +23,8 @@ with an independent fixed-step calculation and identifies contact-entry sensitiv
 in the chain. Same-state force calculations agree across units. Contact-event
 localization/adaptive substepping is the next proposed experiment; accuracy remains
 unaccepted and no engine defect or successful patch has been established.
+The robot now moves: it holds without drift and reaches all six targets with
+sub-micrometre settled error ([first motion](MOTION.md)).
 Gates now follow the task phases ([acceptance](ACCEPTANCE.md)), and every
 task-regime thread fixture passes at 5–10 µs steps ([task regime](TASK_REGIME.md)).
 [How we got here](PROCESS.md) records the reasoning and corrections.
@@ -35,6 +37,7 @@ roundoff-level differences; that limit is now measured rather than unexplained.
 
 ```sh
 uv run --locked neural-insertion view --static
+uv run --locked neural-insertion view --task tour
 uv run --locked neural-insertion preview
 uv run --locked neural-insertion inspect
 ```
