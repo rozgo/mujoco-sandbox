@@ -63,3 +63,15 @@ def test_out_of_range_actions_are_clipped_before_any_reward_term():
         rb = b.step(np.array([1., -1., .5], np.float32))
         assert ra[1] == rb[1] and np.array_equal(ra[0], rb[0])
         assert abs(ra[1]) < 5
+
+
+def test_trained_checkpoint_succeeds_on_held_out_seeds():
+    from sixlegs.neural_insertion.align_policy import PUFFER, Policy
+    from sixlegs.neural_insertion.scene import ROOT
+    weights = ROOT/"assets/neural_insertion/align_v3_policy.bin"
+    if not (PUFFER/"src/puffercpu.c").exists() or weights.read_bytes()[:7] == b"version":
+        pytest.skip("needs the pinned PufferLib checkout and the LFS checkpoint")
+    policy = Policy(weights)
+    # A fresh episode starts at tick 0, which also zeroes the recurrent state.
+    summary, _ = evaluate(lambda env, obs: policy.act(obs, env.state()["tick"] == 0), seeds=EVALUATION_SEEDS[:10])
+    assert summary["success"] == 1 and summary["collision"] == 0

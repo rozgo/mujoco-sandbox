@@ -26,7 +26,42 @@ from .scene import ROOT, load_scene
 from .visuals import font, options
 
 EVALUATOR = ROOT/"build/neural_insertion/align_eval"
+PUFFER = ROOT/"build/neural_insertion/pufferlib"
+PUFFER_REVISION = "6ffa5b10dbbbe4d1e8288367c7d9d3acd3bad4a2"
 FPS = 30
+
+
+class Policy:
+    """A trained checkpoint run by PufferLib's own CPU network code (deterministic mean)."""
+
+    def __init__(self, weights, hidden=128, layers=2):
+        import ctypes
+        import platform
+        source = ROOT/"experiments/neural_insertion/puffer/align_policy_lib.c"
+        revision = subprocess.check_output(["git", "-C", str(PUFFER), "rev-parse", "HEAD"], text=True).strip()
+        if revision != PUFFER_REVISION:
+            raise RuntimeError("PufferLib checkout must be at the pinned revision; run puffer/install.sh")
+        key = hashlib.sha256(source.read_bytes()+(PUFFER/"src/puffercpu.c").read_bytes()).hexdigest()[:16]
+        lib = ROOT/f"build/neural_insertion/align_policy/{key}/libpolicy.{'dylib' if platform.system() == 'Darwin' else 'so'}"
+        if not lib.exists():
+            lib.parent.mkdir(parents=True, exist_ok=True)
+            raylib = next(PUFFER.glob("raylib-5.5_*"))
+            subprocess.run(["clang", "-O2", "-std=gnu11", "-w", "-shared", "-fPIC", f"-I{PUFFER/'src'}",
+                            f"-I{PUFFER/'vendor'}", f"-I{raylib/'include'}", str(source), "-lm", "-o", str(lib)], check=True)
+        self.lib = ctypes.CDLL(str(lib))
+        f32 = np.ctypeslib.ndpointer(np.float32, flags="C")
+        self.lib.policy_create.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        self.lib.policy_create.restype = ctypes.c_void_p
+        self.lib.policy_act.argtypes = [ctypes.c_void_p, f32, ctypes.c_float, f32]
+        self.handle = self.lib.policy_create(str(weights).encode(), 16, hidden, layers, 3)
+        if not self.handle:
+            raise ValueError("Checkpoint does not match the alignment network")
+        self.weights_sha256 = hashlib.sha256(Path(weights).read_bytes()).hexdigest()
+
+    def act(self, obs, first):
+        action = np.zeros(3, np.float32)
+        self.lib.policy_act(self.handle, np.ascontiguousarray(obs, np.float32), 1. if first else 0., action)
+        return action
 
 
 def evaluate_checkpoint(weights, output, hidden=128, layers=2, record=()):
@@ -65,7 +100,8 @@ def panel(states, i, seed, episode, index, total, baseline):
     vertical = (tip[2]-goal[2])*1e6
     done = i == len(states["time"])-1
     draw.text((28, 22), "LEARNED ALIGNMENT POLICY  /  PUFFERLIB 5.0", font=font(24), fill=INK)
-    draw.text((28, 58), "Policy commands tip velocity at 50 Hz; programmed servo; real time 1.0x", font=font(16), fill=MUTED)
+    draw.text((28, 58), "Alignment only: hover 1 mm above the target. No thread, no insertion. Real time 1.0x",
+              font=font(16), fill=MUTED)
     draw.text((28, 100), f"Episode {index+1} of {total}   seed {seed}   target {states['target']}", font=font(22), fill=INK)
     draw.text((28, 140), f"t = {t:5.2f} s", font=font(34), fill=INK)
     status = ("SUCCESS" if episode["success"] else "COLLISION" if episode["collision"] else "TIMEOUT") if done \

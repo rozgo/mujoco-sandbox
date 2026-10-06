@@ -942,10 +942,17 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - Built the CUDA trainer after four installer/adapter fixes; made the model file
   byte-identical across machines. Smoke run: **2.9 M steps**, **~72 s**.
 - `align_v1` (commit `35b67e2`, 01:08:47 UTC): diverged from a reward bug
-  (penalty on unclipped actions); stopped at **20.8 M steps**, about **6 min
+  (penalty on unclipped actions); stopped at about **22 M steps**, about **6 min
   training wall**, log retained. MuJoCo physics on CPU, network on GPU.
 - Fixed with a regression test (commit `2f851cc`); `align_v2` started
   01:16:11 UTC, 100 M steps planned at about 60 K steps/s.
 - `align_v2` diverged from oversized updates (KL 0.16 to ~300 between 12.7 M and
-  15.9 M steps); stopped at about 19 M steps, about **5.5 min training wall**.
+  15.9 M steps); stopped at about 21 M steps, about **5.5 min training wall**.
   `align_v3` lowers only the learning rate, 0.015 to 0.003.
+- `align_v3` (commit `f1c7bb3`, 01:22:22 UTC): **99.9 M steps in 29 min training
+  wall**; physics on 28 CPU threads, network on the GPU. Evaluation of both
+  checkpoints on 200 seeds: **2.4–3.7 s wall** each on the Mac CPU. Final
+  checkpoint: 100% success, 0% collisions, 1.40 s mean, worst 8.6 µm lateral.
+  Video render **11 s wall**, 0 s additional simulation; decoded all 260 frames.
+  Native viewer ran the final checkpoint live (two episodes before the window
+  was closed).

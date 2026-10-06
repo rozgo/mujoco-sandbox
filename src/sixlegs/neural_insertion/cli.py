@@ -34,6 +34,8 @@ def view(args):
         viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FIXED
         viewer.cam.fixedcamid = model.camera(CAMERAS[selected]).id
         start = time.monotonic()
+        if args.task == "learned":
+            learned_view(model, data, viewer, args, start)
         if args.task == "tour":
             # Same stepping/servo loop as headless runs; the callback only syncs the view.
             from .motion import run, start_ready, tour_reference
@@ -73,6 +75,50 @@ def view(args):
             time.sleep(.01)
 
 
+def learned_view(model, data, viewer, args, start):
+    """Live: physics in the shared C core, actions from the checkpoint; the viewer mirrors joint state."""
+    import numpy as np
+    from .align_env import AlignEnv
+    from .align_policy import Policy
+    from .motion import JOINT_NAMES
+    if args.weights is None:
+        raise SystemExit("--task learned needs --weights")
+    policy = Policy(args.weights)
+    qadr = [model.jnt_qposadr[model.joint(n).id] for n in JOINT_NAMES]
+    viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
+    viewer.cam.distance, viewer.cam.azimuth, viewer.cam.elevation = .07, 118, -20
+    seed, results = args.first_seed, []
+    while viewer.is_running() and (args.seconds is None or time.monotonic() - start < args.seconds):
+        env = AlignEnv(seed)
+        obs, first, done, info = env.reset(), True, False, None
+        clock = time.monotonic()
+        while not done and viewer.is_running():
+            obs, _, done, info = env.step(policy.act(obs, first))
+            first = False
+            state = env.state()
+            data.qpos[qadr] = state["qpos"]
+            mujoco.mj_forward(model, data)
+            viewer.cam.lookat[:] = state["tip"] + (0, 0, .003)
+            lateral = np.linalg.norm(state["tip"][:2] - state["goal"][:2]) * 1e6
+            vertical = (state["tip"][2] - state["goal"][2]) * 1e6
+            status = ("SUCCESS" if info["success"] else "COLLISION" if info["collision"] else "TIMEOUT") if done else "moving"
+            done_count = sum(r["success"] for r in results)
+            viewer.set_texts((None, None,
+                              f"LEARNED POLICY (PufferLib 5.0) | seed {seed} | target {state['target']} | {status}",
+                              f"lateral {lateral:9.1f} um | vertical {vertical:9.1f} um | tol 10 um | "
+                              f"successes {done_count}/{len(results)} | 1.0x real time"))
+            viewer.sync()
+            clock += .02  # 50 Hz policy steps shown in real time
+            time.sleep(max(0., clock - time.monotonic()))
+        if info is not None:
+            results.append(info)
+            print(f"seed {seed}: success={info['success']:.0f} time={info['episode_length']*.02:.2f}s "
+                  f"lateral={info['final_lateral_um']:.2f}um vertical={info['final_vertical_um']:.2f}um", flush=True)
+        env.close()
+        time.sleep(1.)
+        seed += 1
+
+
 def approach(args):
     import hashlib
     import numpy as np
@@ -101,7 +147,10 @@ def approach(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("preview", "view", "inspect", "approach", "record"), nargs="?", default="view")
-    parser.add_argument("--task", choices=("tour",), help="Run the measured six-target approach in the viewer.")
+    parser.add_argument("--task", choices=("tour", "learned"),
+                        help="tour: programmed six-target approach; learned: a trained alignment checkpoint.")
+    parser.add_argument("--weights", type=Path, help="PufferLib checkpoint for --task learned.")
+    parser.add_argument("--first-seed", type=int, default=1_000_000, help="First evaluation seed for --task learned.")
     parser.add_argument("--run-output", type=Path, default=ROOT / "outputs/neural_insertion/approach/latest",
                         help="Telemetry directory for approach/record.")
     parser.add_argument("--output", type=Path, default=ROOT / "previews/neural_insertion/static_v1")

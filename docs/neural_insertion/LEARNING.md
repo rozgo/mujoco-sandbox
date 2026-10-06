@@ -1,7 +1,10 @@
-# Alignment learning environment
+# Alignment learning
 
-October 6, 2026. The first learning task is robot-only needle alignment, as the
-brief sequences it: no thread, 1 ms robot clock. Training uses PufferLib 5.0 at
+October 6, 2026. **A PufferLib 5.0 policy trained on the RTX 4090 aligns the
+needle on all 200 predetermined evaluation episodes, with no collisions, in
+1.40 s on average, faster than the scripted reference.** This is the first
+learning task as the brief sequences it: robot-only needle alignment, with no
+thread and no insertion yet, at the 1 ms robot clock. Training uses PufferLib 5.0 at
 the pinned revision `6ffa5b10dbbbe4d1e8288367c7d9d3acd3bad4a2` on the RTX 4090.
 
 ## Task, fixed before training
@@ -59,7 +62,7 @@ The first run, `align_v1`, diverged after about 18 M steps (KL ≈ 13,500, clip
 fraction 1.0, episode return −46,557). The action-change penalty used the raw
 Gaussian samples instead of the clipped actions the robot receives; once the
 action means drifted past ±1 the penalty grew without bound. We stopped it at
-20.8 M steps, kept its log, fixed the penalty with a regression test and
+about 22 M steps, kept its log, fixed the penalty with a regression test and
 restarted unchanged otherwise as `align_v2`. Baseline outcomes are identical
 under the fix because they never leave ±1; seven random-policy returns differ
 by at most 1.2e−7 from float rounding.
@@ -68,12 +71,63 @@ by at most 1.2e−7 from float rounding.
 falling to 0.48 mm. Then, as the action noise shrank, the per-update KL rose
 from 0.16 to about 300 by 15.9 M steps and the policy collapsed. The clip
 fraction near 0.5 throughout already indicated oversized updates at PufferLib's
-default learning rate of 0.015. We stopped it at about 19 M steps (log kept)
+default learning rate of 0.015. We stopped it at about 21 M steps (log kept)
 and started `align_v3` with one change: learning rate 0.003.
 
 Evaluation runs a checkpoint with Puffer's own CPU network code and
 deterministic mean actions on the shared core, over the 200 predetermined seeds
 ([evaluator](../../experiments/neural_insertion/puffer/align_eval.c)).
+
+## Results
+
+`align_v3` trained 99.9 M steps in 29 minutes (about 59 K steps/s). Training
+rollouts first succeeded at about 52 M steps and reached 100% by 69 M. Both
+saved checkpoints were evaluated with deterministic actions on the 200
+predetermined seeds. [Manifest](ALIGN_RESULTS.json), with the metric histories
+of all three runs.
+
+| Policy | Success | Collisions | Mean time | Worst final error | Low steps over vessels |
+| --- | ---: | ---: | ---: | --- | ---: |
+| **Learned, final (99.9 M steps)** | **100%** | **0%** | **1.40 s** | 8.6 µm lateral, 4.4 µm vertical | 0.25 |
+| Learned, 65.5 M steps | 100% | 0% | 1.98 s | 10.0 µm lateral, 7.4 µm vertical | 0.39 |
+| Scripted reference | 100% | 0% | 2.06 s | 3.4 µm lateral, — | 1.68 |
+
+The learned policy is 32% faster and passes low over vessels less often, but it
+settles closer to the tolerance than the scripted controller: an episode ends
+as soon as the 0.3 s hold is met. The checkpoint is
+[`align_v3_policy.bin`](../../assets/neural_insertion/align_v3_policy.bin)
+(SHA-256 `5e6ee612…2a`), with Puffer's saved
+[run configuration](../../assets/neural_insertion/align_v3_run.ini).
+
+[Video](../../previews/neural_insertion/align_v3/learned_alignment.mp4): four
+evaluation episodes chosen before evaluation (the first seeds covering four
+targets), real time, then a results card.
+
+![Learned policy holding at target 0](../../previews/neural_insertion/align_v3/seed1000009_01.13s.png)
+
+```sh
+uv run --locked neural-insertion view --task learned \
+  --weights assets/neural_insertion/align_v3_policy.bin
+uv run --locked python -m sixlegs.neural_insertion.align_policy \
+  assets/neural_insertion/align_v3_policy.bin --output outputs/neural_insertion/align/recheck_v3
+```
+
+Both need the pinned PufferLib checkout under `build/` (run the installer with
+`--cpu` once) and the evaluator from `puffer/build_eval.sh`.
+
+## What this does and does not show
+
+It shows that the robot, servo and environment support learning a precise,
+collision-free alignment from scratch, reproducibly on held-out seeds. It does
+not yet show: three independent training seeds (the brief's gate), sensing
+(observations are exact simulator state), tissue motion, or any part of the
+thread mission. The phantom is a rigid solid, so nothing can enter it yet.
+
+Next, in order: a tissue insertion model (puncture, insertion resistance,
+retention), then a programmed pick, insert and release cycle with the thread on
+the needle, measured against gates as the approach was, then learning on that
+cycle with a curriculum. Thread simulation costs about 350 s per simulated
+second, so learning with the thread needs a cheaper thread model first.
 
 ## Baselines on the evaluation seeds
 

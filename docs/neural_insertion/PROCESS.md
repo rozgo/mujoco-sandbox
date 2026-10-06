@@ -132,3 +132,16 @@ rather than on the clipped actions the robot actually receives. We stopped the
 run, fixed the penalty with a regression test, verified that baselines are
 unchanged, and restarted with nothing else changed, so the next result is
 attributable to the fix.
+
+## 12. The third run learned the task (October 6)
+
+Lowering only the learning rate kept updates small through the low-noise phase
+where the second run collapsed. The policy stopped colliding within 10 M steps,
+closed in through hundreds and then tens of microns, first succeeded at about
+52 M steps and reached 100% in training by 69 M. On the 200 held-out seeds it
+succeeds every time, faster than the scripted reference.
+
+Asked what this shows, the honest answer is that it is only the first step:
+the needle reaches the spot, but no thread is carried and the rigid phantom
+cannot be entered. The next work is a tissue insertion model, then the
+programmed thread cycle, then learning on it. [Learning](LEARNING.md).

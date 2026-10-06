@@ -25,7 +25,9 @@ localization/adaptive substepping is the next proposed experiment; accuracy rema
 unaccepted and no engine defect or successful patch has been established.
 The robot now moves: it holds without drift and reaches all six targets with
 sub-micrometre settled error ([first motion](MOTION.md)). The alignment
-learning environment is built for PufferLib 5.0 ([learning](LEARNING.md)).
+learning task is solved: a PufferLib 5.0 policy aligns the needle on all 200
+held-out episodes, faster than the scripted reference ([learning](LEARNING.md)).
+No thread is carried and the phantom cannot yet be entered.
 Gates now follow the task phases ([acceptance](ACCEPTANCE.md)), and every
 task-regime thread fixture passes at a 5 µs step ([task regime](TASK_REGIME.md)).
 [How we got here](PROCESS.md) records the reasoning and corrections.
