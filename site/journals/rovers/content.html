@@ -1,0 +1,370 @@
+  <section id="yard">
+    <h2>1 · The yard and the rovers</h2>
+    <p class="when">September 7, 2026 · the static scene was built and previewed before any motion control</p>
+    <div class="prose">
+      <p>The yard is 20 × 16 m and fenced, with two buildings, a long low wall and a shallow ramp. Eight yellow
+        inspection markers stand around it. They are visual posts with no collision geometry. Six rovers start in a
+        column at one end, 2 m apart. The ramp is solid geometry, but the mission routes avoid it.</p>
+      <p>Each rover is a 4.18 kg RC vehicle built from MuJoCo primitives: a chassis, a battery pack, a sensor housing, an
+        antenna, four sprung wheel carriers and two steering knuckles at the front. All four wheels are driven and the
+        front two steer. A rover moves only through its tyre contacts: the controller sets wheel speeds and steering
+        angles, and MuJoCo computes the motion. A live run never writes a chassis pose, pushes a body or moves
+        anything kinematically. Recorded poses are written only to render a run that has already finished.</p>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/overview.webp" alt="Overview of the inspection yard with two buildings, a wall, an orange ramp, eight yellow markers and six rovers in a starting column" loading="lazy">
+        <figcaption>Overview camera before motion: buildings, wall, ramp (orange), eight markers and the six rovers in
+          their starting column.</figcaption></figure>
+      <figure><img src="media/overhead.webp" alt="Overhead view of the yard showing the rover column on the left, buildings in the centre and markers around the edges" loading="lazy">
+        <figcaption>Overhead camera, x to the right. The marker positions exist only in the simulator. The rovers'
+          map shows the buildings but not the markers.</figcaption></figure>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Body</h4><ul>
+        <li>4.18 kg in total: chassis 2.20, battery 0.60, sensor housing 0.12, antenna and lights 0.04 kg</li>
+        <li>Four suspension carriers at 0.08 kg, two steering carriers at 0.03 kg, four wheels at 0.21 kg</li>
+        <li>Wheel radius 0.09 m, wheelbase 0.38 m, track 0.48 m</li>
+      </ul></div>
+      <div class="card"><h4>Drive and steering</h4><ul>
+        <li>Four velocity-controlled wheels: command ±12 rad/s, torque limit ±1.2 N·m, gain 0.35 N·m·s/rad</li>
+        <li>Front steering ±0.65 rad (±37.2°): position gain 35 N·m/rad, damping 2 N·m·s/rad, torque limit ±2 N·m</li>
+        <li>Ackermann wheel angles, different inner and outer wheel speeds, forward command up to 0.65 m/s</li>
+      </ul></div>
+      <div class="card"><h4>Suspension, tyres, clocks</h4><ul>
+        <li>Passive suspension: ±0.025 m travel, 1700 N/m spring, 24 N·s/m damping</li>
+        <li>Tyre friction 1.1 sliding, 0.01 m torsional, 0.001 m rolling, four-dimensional contact</li>
+        <li>Physics at 250 Hz (implicit-fast integration), control at 10 Hz</li>
+      </ul></div>
+    </div>
+    <div class="prose">
+      <p>Across the fleet that makes 24 wheel-velocity actuators and 12 steering actuators, all of them force-limited.
+        There are nine cameras: overview, overhead, a detail view and a front camera on each rover's nose.</p>
+    </div>
+    <figure><img src="media/detail.webp" alt="Close view of the six coloured rovers in their starting column, with antennas, four wheels each and yellow markers nearby" loading="lazy">
+      <figcaption>Detail camera on the starting column, R0 nearest. The antennas and lights have no collision
+        geometry. The tyres are 0.09 m cylinders.</figcaption></figure>
+    <div class="note-box"><strong>Measured, not assumed.</strong> In every one of the 18 comparison runs, at least one
+      actuator reached its force limit (peak fraction 1.0) and none exceeded it. Every rover stayed upright, the state
+      stayed finite and MuJoCo raised no warnings.</div>
+  </section>
+
+  <section id="radio">
+    <h2>2 · A packet-level radio</h2>
+    <p class="when">radio.py: a discrete packet channel running beside MuJoCo; it does not simulate radio waves</p>
+    <div class="prose">
+      <p>MuJoCo knows where each antenna is. A separate model decides whether a message arrives, and it steps with
+        the physics every 4 ms. Every application message is 14 bytes, and the channel charges airtime for the
+        bytes actually sent.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Field</th><th class="num">Bytes</th><th>Content</th></tr>
+      <tr><td>Kind</td><td class="num">1</td><td><code>seen</code>, <code>claim</code> or <code>done</code></td></tr>
+      <tr><td>Marker, origin rover, relay TTL</td><td class="num">3</td><td>one byte each</td></tr>
+      <tr><td>Sequence</td><td class="num">2</td><td>with the origin, the key used for deduplication</td></tr>
+      <tr><td>Observation time</td><td class="num">4</td><td>milliseconds</td></tr>
+      <tr><td>X, Y</td><td class="num">4</td><td>centimetres; the marker for <code>seen</code> and <code>done</code>, the claimant's own position for <code>claim</code></td></tr>
+      <tr class="hl"><td>Total</td><td class="num">14</td><td>46.336 ms on air</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>The radio settings are SF7, 125 kHz bandwidth, coding rate 4/5, an explicit header, a CRC and an
+        eight-symbol preamble. With those, a 14-byte message spends 46.336 ms on air (Semtech SX1276 formula).
+        Received power follows a log-distance law (31.7 dB at 1 m, exponent 2.7) from a 14 dBm transmitter, minus
+        12 dB for every building footprint the straight line crosses.</p>
+      <p>A packet fails at a receiver if:</p>
+      <ul>
+        <li>either radio is off;</li>
+        <li>the receiver is transmitting itself (the radios are half duplex);</li>
+        <li>the signal is below −123 dBm, or more than 7.5 dB under the noise;</li>
+        <li>another transmission reaches the receiver within 6 dB of its strength at any moment of its airtime.</li>
+      </ul>
+      <p>Each rover holds up to 16 packets in its queue. It waits a random backoff before sending, checks roughly
+        whether the channel is busy, and may use at most 0.08 s of airtime per second, with 0.2 s of burst credit. On
+        top of all this, a seeded 2% of deliveries are dropped at random.</p>
+    </div>
+    <div class="note-box"><strong>Assumptions, not a calibration.</strong> The airtime budget is an engineering limit,
+      not a regional regulation. There is no frequency-dependent propagation, diffraction or multipath. There is one
+      shared channel and one modulation setting. There is no LoRaWAN, no acknowledgement or retransmission, and no
+      hardware.</div>
+    <h3>The degraded case</h3>
+    <div class="prose">
+      <p>R0's radio is off from 8 to 28 s and R3's from 36 to 64 s. From 18 to 76 s, receiver noise rises to
+        −54 dBm within 7 m of the yard centre and −74 dBm outside it, and random loss rises to 30% everywhere. This is
+        a set stress test, not a model of any real interference source. Recovery uses the same queues and gossip as
+        normal operation.</p>
+    </div>
+    <figure class="film"><video src="media/outage.mp4" poster="media/outage_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The degraded Reticulum run from simulated second 6 to 46, at 2× (20 s). A rover's dot on the map
+        turns grey while its radio is off: R0 first, then R3 from 36 s. The orange ellipse is the noise zone. Each
+        trail shows a delivered (green) or lost (red) packet and stays on screen for 0.6 s. The trails show which
+        packets arrived; they are not drawings of radio waves.</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>Direct transport, radio seed 0</th><th class="num">Healthy</th><th class="num">Degraded</th></tr>
+      <tr><td>Delivered to a receiver</td><td class="num">4,502</td><td class="num">3,039</td></tr>
+      <tr><td>Lost: random loss</td><td class="num">101</td><td class="num">384</td></tr>
+      <tr><td>Lost: radio off</td><td class="num">0</td><td class="num">197</td></tr>
+      <tr><td>Lost: noise</td><td class="num">0</td><td class="num">157</td></tr>
+      <tr><td>Lost: collision</td><td class="num">22</td><td class="num">70</td></tr>
+      <tr><td>Lost: half duplex</td><td class="num">10</td><td class="num">28</td></tr>
+      <tr><td>Queue overflows (never sent)</td><td class="num">9</td><td class="num">0</td></tr>
+      <tr class="hl"><td>Delivery ratio</td><td class="num">97.1%</td><td class="num">78.4%</td></tr>
+    </table></div>
+    <div class="lesson"><strong>Healthy links always had enough signal.</strong> No healthy-radio run, on either
+      transport, lost a delivery to weak signal or noise. In a yard this size, losses come from timing (collisions and
+      half duplex) and the random loss, while the airtime budget limits what gets sent at all. The delivery ratio counts five receivers per broadcast and
+      leaves out frames that never left a queue.</div>
+  </section>
+
+  <section id="reticulum">
+    <h2>3 · What is real Reticulum</h2>
+    <p class="when">--reticulum: six genuine network stacks on one simulated channel</p>
+    <div class="prose">
+      <p>With <code>--reticulum</code>, each rover runs its own Reticulum 1.5.2 stack in a separate local process.
+        Each stack has one custom interface, connected only to the simulation. Shared-instance connections, transport
+        routing and external interfaces are switched off. When a rover sends, its stack builds a real frame and the
+        simulation puts that frame's bytes on the same simulated LoRa channel. Only frames the channel delivers reach
+        the receiving stack. That stack decodes the frame and passes the 14-byte payload to the application through
+        its endpoint callback.</p>
+      <p>Reticulum wraps the 14-byte message in a 33-byte frame, which takes 71.936 ms on air instead of 46.336 ms.
+        The channel charges all of that overhead.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>Exercised</h4><ul>
+        <li>Reticulum PLAIN broadcast framing</li>
+        <li>Frame construction and decoding by the real stack</li>
+        <li>Delivery through the endpoint callback</li>
+        <li>Duplicate deliveries, which PLAIN destinations allow and the application filters out</li>
+      </ul></div>
+      <div class="card"><h4>Not exercised</h4><ul>
+        <li>Encrypted sessions and identity discovery</li>
+        <li>Reticulum's multi-hop routing: relaying is the application's own one-hop TTL</li>
+        <li>RNode or any radio hardware</li>
+        <li>LAN or Internet links</li>
+      </ul></div>
+      <div class="card"><h4>Always simulated</h4><ul>
+        <li>Signal loss over distance, building attenuation and noise</li>
+        <li>Collisions, half duplex, queues and the airtime budget</li>
+        <li>Outages, the noise zone and random loss</li>
+      </ul></div>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Healthy radio, seeds 0–2</th><th class="num">Direct</th><th class="num">Reticulum</th></tr>
+      <tr><td>Bytes on air per message</td><td class="num">14</td><td class="num">33</td></tr>
+      <tr><td>Airtime per message</td><td class="num">46.336 ms</td><td class="num">71.936 ms</td></tr>
+      <tr><td>Mean delivery latency (airtime plus the 4 ms tick)</td><td class="num">48 ms</td><td class="num">72 ms</td></tr>
+      <tr><td>Frames sent per run</td><td class="num">910–930</td><td class="num">643–659</td></tr>
+      <tr><td>Bytes on air per run</td><td class="num">12,740–13,020</td><td class="num">21,219–21,747</td></tr>
+      <tr><td>Queue overflows per run</td><td class="num">0–9</td><td class="num">72–198</td></tr>
+      <tr class="hl"><td>Mean delivery ratio</td><td class="num">96.3%</td><td class="num">86.4%</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>The larger frames use up the airtime budget sooner. In every healthy Reticulum run, each scout used 12.16 s
+        of airtime: 169 frames, within one frame of the maximum the budget allows in 150 s. With fewer frames getting
+        out, more messages overflowed the 16-packet queues. The latency figure covers only airtime and tick rounding;
+        it leaves out time spent waiting in the queue and the wait for the next 10 Hz agent update. The lower
+        Reticulum mean comes from one seed (chapter 8).</p>
+    </div>
+  </section>
+
+  <section id="agents">
+    <h2>4 · Rules, not learning</h2>
+    <p class="when">agent.py: local observations and delivered bytes in; speed, steering and messages out</p>
+    <div class="prose">
+      <p>Nothing in this project is learned. Every rover runs the same short program, and its role follows from its
+        number. Scouts R0, R2 and R4 drive fixed survey routes and report what they see. Inspectors R1, R3 and R5 go to
+        markers they know about and inspect them. An inspection counts only when the inspector holds still for one
+        second within 0.8 m of the marker, with the marker in view.</p>
+      <p>The agent code has no access to MuJoCo. On each 10 Hz control tick it receives a read-only observation and the
+        bytes delivered to it since the last tick. It returns a speed, a steering angle and its outgoing messages.
+        The dashboard's rover positions and inspection count belong to the observer and never reach the agents.</p>
+    </div>
+    <div class="spec-cards">
+      <div class="card"><h4>What a rover senses</h4><ul>
+        <li>Perfect odometry (position, heading, speed) with no noise</li>
+        <li>A marker detector: 2.5 m range, ±65° field of view, blocked by obstacles (checked with MuJoCo ray casts)</li>
+        <li>Unlabelled positions of other rovers within 2 m, in every direction, ignoring obstacles</li>
+        <li>A public map of the buildings, with no marker positions</li>
+      </ul></div>
+      <div class="card"><h4>What it believes</h4><ul>
+        <li>A marker belief records when it was observed, who sent it, the packet ID and when it was delivered</li>
+        <li>Newer observations replace older ones</li>
+        <li>Lost or still-queued messages change nothing</li>
+        <li>A rover can know a marker is done without knowing where it is</li>
+      </ul></div>
+      <div class="card"><h4>How it decides</h4><ul>
+        <li>Go to the nearest known marker that is not yet done</li>
+        <li>Send a claim every 6 s; a claim lasts 15 s. Give way to a claimant more than 0.6 m closer; near ties go to the lower ID</li>
+        <li>Scouts relay each message once; a sighting is re-sent at most every 8 s; one completion record is re-shared every 5.5 s</li>
+        <li>Plan paths with A* on a 0.5 m grid; keep patrolling through radio outages</li>
+      </ul></div>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/r0_front.webp" alt="View from R0's front camera at the start, a yellow marker straight ahead and buildings to the left" loading="lazy">
+        <figcaption>R0's front camera at the start, with marker M0 straight ahead. The detector does not read these
+          pixels. It is purely geometric: range, field of view and a ray-cast check for obstacles.</figcaption></figure>
+      <figure><img src="media/r1_front.webp" alt="View from R1's front camera at the start, with buildings ahead and several yellow markers at different distances" loading="lazy">
+        <figcaption>R1's front camera at the start. A marker in the picture is not necessarily a detection: it must
+          also be within 2.5 m and in the field of view, with nothing blocking the ray.</figcaption></figure>
+    </div>
+    <div class="note-box"><strong>Deliberately simple.</strong> The policy can choose poor routes, the sensors are
+      ideal, and the controller is a demonstration, not a fleet planner that guarantees no collisions. The camera
+      images are rendered for people watching and use no radio bandwidth.</div>
+  </section>
+
+  <section id="fixes">
+    <h2>5 · Three fixes from testing</h2>
+    <p class="when">September 7, 21:57–22:33 PDT · found and fixed during testing, before the validation runs</p>
+    <div class="failure"><strong>Tyres hit the chassis at full steering lock.</strong> Steering tests found the front
+      tyres interfering with the chassis. The track was widened to its current 0.48 m. A test now sweeps both front
+      wheels through ±0.65 rad in 13 steps and fails if any contact other than with the floor penetrates.</div>
+    <div class="failure"><strong>Rovers deadlocked when they met.</strong> Local avoidance could leave nearby rovers
+      stuck. The rules after the fix: when a rover senses another within 1.8 m and within 0.75 rad of its heading, it
+      steers for a point 1 m to its right and 0.25 m ahead, and keeps that detour for 3.5 s, so it does not swing back and forth between its route and the
+      other rover. It reverses for 1.5 s if the other rover is closer than 0.95 m, and stops if one is within 0.72 m
+      in its direction of travel.</div>
+    <div class="failure"><strong>Inspectors overshot their markers.</strong> The camera is on the nose, so a rover
+      swerving around another could drive over its marker and lose sight of it. Now an inspector within 0.8 m of its
+      target that cannot see it backs up at 0.18 m/s until the marker is in front again. Being close never counts as
+      an inspection on its own.</div>
+    <div class="failure"><strong>Mild bumps remain.</strong> In each of the 18 runs, at least two pairs of rovers
+      bumped (overlapping by more than 1 mm in contact). The deepest overlap was 5.6 mm, in the direct, degraded,
+      seed 2 run.</div>
+    <div class="note-box"><strong>Validation at the commit.</strong> 16 tests passed (the rover tests and the
+      existing hexapod tests), all 18 comparison runs completed, and both the direct and the Reticulum viewers passed
+      native macOS smoke tests. The project took 35 minutes 50 seconds from goal to commit, including development,
+      experiments, tests, rendering and communication.</div>
+  </section>
+
+  <section id="results">
+    <h2>6 · Complete, not faster</h2>
+    <p class="when">18 runs of 150 simulated seconds: 2 transports × 3 radio cases × radio seeds 0, 1 and 2</p>
+    <div class="result-strip">
+      <div class="tile"><div class="big">18<small>/ 18</small></div><div class="what">runs inspected all 8 markers</div>
+        <div class="vs">both transports, all three radio cases</div></div>
+      <div class="tile"><div class="big">0<small>duplicates</small></div><div class="what">per run with healthy radio, both transports</div>
+        <div class="vs">1.0–1.3 degraded, 9.0 with the radio off</div></div>
+      <div class="tile"><div class="big">100<small>%</small></div><div class="what">completion records known across the fleet at 150 s</div>
+        <div class="vs">35.4% with the radio off</div></div>
+      <div class="tile"><div class="big">38.4<small>s</small></div><div class="what">fastest mean completion: radio off</div>
+        <div class="vs">48.3 s direct healthy, 47.1 s Reticulum healthy</div></div>
+    </div>
+    <div class="prose">
+      <p>Geometry, starting poses, routes, physics and policy were the same in every run. The radio seed changes only
+        backoff timing and which deliveries the random loss drops; it does not represent a different site. With the
+        radio off, randomness has no way to affect motion, so the three repeats are identical.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Transport / case</th><th class="num">8 / 8</th><th class="num">Completion, seeds 0 · 1 · 2</th><th class="num">Mean</th><th class="num">Duplicates</th><th class="num">Delivery</th><th class="num">Completion known</th></tr>
+      <tr><td>Direct / healthy</td><td class="num">3 / 3</td><td class="num">57.9 · 46.6 · 40.5 s</td><td class="num">48.3 s</td><td class="num">0.0</td><td class="num">96.3%</td><td class="num">100%</td></tr>
+      <tr><td>Direct / degraded</td><td class="num">3 / 3</td><td class="num">39.5 · 53.1 · 37.6 s</td><td class="num">43.4 s</td><td class="num">1.3</td><td class="num">79.2%</td><td class="num">100%</td></tr>
+      <tr><td>Reticulum / healthy</td><td class="num">3 / 3</td><td class="num">47.3 · 39.5 · 54.5 s</td><td class="num">47.1 s</td><td class="num">0.0</td><td class="num">86.4%</td><td class="num">100%</td></tr>
+      <tr><td>Reticulum / degraded</td><td class="num">3 / 3</td><td class="num">47.8 · 38.4 · 52.7 s</td><td class="num">46.3 s</td><td class="num">1.0</td><td class="num">79.8%</td><td class="num">100%</td></tr>
+      <tr class="hl"><td>Radio off (each transport)</td><td class="num">3 / 3</td><td class="num">38.4 · 38.4 · 38.4 s</td><td class="num">38.4 s</td><td class="num">9.0</td><td class="num">nothing sent</td><td class="num">35.4%</td></tr>
+    </table></div>
+    <div class="prose">
+      <p><em>Completion</em> means every marker has been inspected at least once. <em>Duplicates</em> are extra
+        inspections of an already inspected marker by another inspector, over the full 150 s. <em>Completion known</em>
+        is the share of the 48 rover-and-marker completion records that the rovers hold locally at 150 s. Means are
+        over the three seeds.</p>
+    </div>
+    <div class="failure"><strong>The radio did not make the fleet faster.</strong> With the radio off, each inspector
+      inspects whatever it passes on its own patrol, and the job is done in 38.4 s. R1 and R5 each inspected all
+      eight markers themselves and R3 one more: 17 inspections for 8 markers. With the radio on, inspectors turn
+      toward reported markers, give way to closer claimants and drive further. The six rovers covered 277 m in total
+      with the radio off and 290–425 m with it on (per-rover distances summed from the comparison files). With this
+      policy and layout, coordination removed the duplicate work but cost time.</div>
+    <div class="note-box"><strong>Small samples.</strong> On average, direct degraded finished sooner than direct
+      healthy (43.4 against 48.3 s), but completion times within a single case spread over as much as 17.4 s (direct
+      healthy: 40.5 to 57.9 s). Three seeds cannot rank the radio cases, and one uncalibrated layout says nothing
+      general about network performance.</div>
+  </section>
+
+  <section id="evidence">
+    <h2>7 · Packets changed decisions</h2>
+    <p class="when">CAUSAL_EVIDENCE.json · every remote route change checked against the receiver's delivery log</p>
+    <div class="prose">
+      <p>A rover can act on a remote report only if the channel actually delivered it. The logs make that checkable.
+        Every route change records the packet behind the belief and when it was delivered, and the simulation records
+        when the receiving rover first saw that marker with its own detector. A route change counts as remote if its
+        belief came from a delivered packet and the receiver had not yet seen the marker itself. Each one was then
+        matched against the channel's delivery record for that receiver.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Transport / case</th><th class="num">Remote route changes, seeds 0 · 1 · 2</th><th class="num">Receiver never saw the marker</th><th class="num">First inspections chosen from a report</th></tr>
+      <tr><td>Direct / healthy</td><td class="num">20 · 15 · 13</td><td class="num">7</td><td class="num">13 / 24</td></tr>
+      <tr><td>Direct / degraded</td><td class="num">18 · 13 · 11</td><td class="num">4</td><td class="num">10 / 24</td></tr>
+      <tr><td>Reticulum / healthy</td><td class="num">6 · 8 · 17</td><td class="num">7</td><td class="num">4 / 24</td></tr>
+      <tr><td>Reticulum / degraded</td><td class="num">10 · 5 · 11</td><td class="num">3</td><td class="num">0 / 24</td></tr>
+      <tr><td>Radio off</td><td class="num">0 · 0 · 0</td><td class="num">–</td><td class="num">0 / 24</td></tr>
+      <tr class="hl"><td>All 12 radio runs</td><td class="num">147</td><td class="num">21</td><td class="num">27 / 96</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>Here is one remote decision, from the direct, healthy, seed 0 run. Scout R2's packet 8 was on air from
+        0.644 to 0.690 s and reached inspector R5 on the next 4 ms tick, at 0.692 s, received at −38.7 dBm. At its
+        next control tick, 0.8 s, R5 turned toward marker M7. R5 did not see M7 with its own detector until 127.8 s.</p>
+      <p>The film at the top of the page shows another, about 6 s into the video. At simulated 11.6 s, inspector R3 turns toward M1 after R1's packet 61 arrived at
+        11.56 s. R3 never saw M1 itself in that run; R1 inspected it at 15.6 s. A unit test checks the same boundary
+        in isolation. One agent receives a delivered report and another receives nothing: only the recipient changes
+        its target, and an older report from a third rover cannot overwrite the newer belief.</p>
+    </div>
+    <figure><img src="media/dashboard.webp" alt="Rover dashboard at 11.8 simulated seconds: 3D overview with packet trails, six front cameras, a radio map and a panel naming the latest delivery-driven route change" loading="lazy">
+      <figcaption>The dashboard at simulated 11.8 s (2× replay). The panel at the lower right names the latest route
+        change and the packet behind it. The map shows R1's local beliefs only. The rover positions and the inspected
+        count are observer data and never reach the agents.</figcaption></figure>
+    <div class="note-box"><strong>A route change is not an inspection.</strong> The last column counts first
+      inspections of markers that the inspector had chosen from a delivered report. In the Reticulum degraded runs, 26
+      route changes came from delivered reports, yet every first inspection was made by a rover that had found the
+      marker itself, as R1 did with M1. Delivered reports moved rovers; they did not always decide who got there
+      first. This column is tallied from the comparison files.</div>
+  </section>
+
+  <section id="outlier">
+    <h2>8 · The Reticulum outlier</h2>
+    <p class="when">Reticulum, healthy radio, seed 0: the lowest delivery ratio of all 12 radio runs</p>
+    <div class="prose">
+      <p>One run delivered far less than the runs around it. The Reticulum healthy run with seed 0 delivered 66.7% of
+        receiver opportunities, lower than any degraded run (77.8% to 81.0%). On its own it pulls the Reticulum
+        healthy mean down to 86.4%; seeds 1 and 2 delivered 96.6% and 96.0%. The extra losses are collisions and
+        half-duplex misses. Random loss was ordinary, and the queues overflowed less often than in the other seeds.
+        So the difference lies in transmissions overlapping in time, not in fuller queues.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Healthy radio</th><th class="num">Reticulum, seed 0</th><th class="num">Reticulum, seed 1</th><th class="num">Reticulum, seed 2</th><th class="num">Direct, seed 0</th></tr>
+      <tr><td>Frames sent</td><td class="num">649</td><td class="num">643</td><td class="num">659</td><td class="num">927</td></tr>
+      <tr><td>Delivered to a receiver</td><td class="num">2,165</td><td class="num">3,104</td><td class="num">3,164</td><td class="num">4,502</td></tr>
+      <tr class="hl"><td>Lost: collision</td><td class="num">704</td><td class="num">27</td><td class="num">40</td><td class="num">22</td></tr>
+      <tr class="hl"><td>Lost: half duplex</td><td class="num">322</td><td class="num">10</td><td class="num">16</td><td class="num">10</td></tr>
+      <tr><td>Lost: random loss</td><td class="num">54</td><td class="num">74</td><td class="num">75</td><td class="num">101</td></tr>
+      <tr><td>Queue overflows</td><td class="num">72</td><td class="num">148</td><td class="num">198</td><td class="num">9</td></tr>
+      <tr><td>Delivery ratio</td><td class="num">66.7%</td><td class="num">96.6%</td><td class="num">96.0%</td><td class="num">97.1%</td></tr>
+      <tr><td>Remote route changes</td><td class="num">6</td><td class="num">8</td><td class="num">17</td><td class="num">20</td></tr>
+      <tr><td>Completion / duplicates</td><td class="num">47.3 s / 0</td><td class="num">39.5 s / 0</td><td class="num">54.5 s / 0</td><td class="num">57.9 s / 0</td></tr>
+    </table></div>
+    <div class="prose">
+      <p>The mission itself got through. All eight markers were inspected in 47.3 s with no duplicates, and at 150 s
+        every rover held all eight completion records. It made only 6 remote route changes, against 8 and 17 in the other two healthy Reticulum seeds.</p>
+    </div>
+    <div class="failure"><strong>Not yet explained.</strong> The radio seed sets only backoff timing and the
+      random-loss draws. Why this seed's timing led to so many overlapping transmissions has not been diagnosed. The
+      run stays in every average on this page.</div>
+  </section>
+
+  <section id="next">
+    <h2>9 · Next steps</h2>
+    <p class="when">Each step is measured against the 18 runs above, on the same layout and seeds</p>
+    <ol class="next-steps">
+      <li><strong>Diagnose the outlier</strong>Replay the packet log of Reticulum healthy seed 0. Find when and where
+        its 704 collisions and 322 half-duplex losses cluster, and test whether backoff timing lines the scouts up.</li>
+      <li><strong>Make coordination pay</strong>Try target assignment that weighs travel time and claims together.
+        Check whether completion can beat the 38.4 s radio-off baseline without bringing duplicates back.</li>
+      <li><strong>Spend airtime better</strong>Scouts run into the airtime budget and Reticulum queues overflow
+        72–198 times per healthy run. Measure delivery and overflow with fewer re-sends, priority by message kind or
+        selective relaying.</li>
+      <li><strong>More seeds, more layouts</strong>Run enough seeds to separate healthy from degraded, and vary the
+        marker and building layouts before drawing any general conclusion.</li>
+      <li><strong>Closer to real hardware</strong>Add odometry and detection noise, detect markers from camera images,
+        calibrate the propagation model, and then try the Reticulum features this demo leaves out: encrypted links,
+        multi-hop transport, RNode hardware.</li>
+    </ol>
+    <div class="prose"><p>The radio parameters are assumptions, not measurements. The controllers read ideal simulator
+      observations, not camera images. The rovers still bump each other by a few millimetres.</p></div>
+  </section>

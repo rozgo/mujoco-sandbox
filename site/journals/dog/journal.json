@@ -1,0 +1,133 @@
+{
+ "title": "Adaptive Dog Journal",
+ "heading": "One learned controller for a robot dog, whole or missing a leg",
+ "eyebrow": "Engineering journal · September 10–12, 2026 · MuJoCo, MuJoCo Warp, PPO, RTX 4090",
+ "lede": "A simulated Unitree Go2 loses a lower leg or a whole leg, and the same neural network has to keep it walking. PPO learns twelve joint targets at 50 Hz through torque-limited servos, with no gait script; only the route commands are scripted. The same network then learned to stop and stand on uneven supports and to balance on a moving deck, and one RTX 4090 replayed the whole curriculum from random weights in 22 minutes.",
+ "description": "One PPO policy walks a simulated Unitree Go2 on nine bodies, healthy or missing a leg, then learns to stand and balance, with every training minute and every failed gate on record.",
+ "hero": {
+  "media": "complete",
+  "caption": "The complete showcase, 2 min 04 s at 1×: walking on all nine bodies, walk–stop–walk, pads, slopes, gaps and steps, then a moving deck. Recorded MuJoCo trajectories re-rendered in the native graphite theme, from three successive accepted checkpoints (walking v1, standing, moving), one shared actor within each stage. Strict misses stay labelled; cameras are observers, not policy inputs."
+ },
+ "metrics": [
+  {
+   "value": "9 bodies",
+   "label": "one frozen policy: healthy, four lower-leg and four whole-leg removals"
+  },
+  {
+   "value": "288/288",
+   "label": "v1 audit trials completed on allowed supports, reserved seed"
+  },
+  {
+   "value": "22 min 05 s",
+   "label": "RTX 4090 training from random weights to walk, stand and balance; 71.76 M experiences"
+  },
+  {
+   "value": "136/144",
+   "label": "strict balance checks for that final policy; walking 36/36, moving deck 24/24"
+  },
+  {
+   "value": "3.23×",
+   "label": "faster training with MuJoCo Warp physics at matched updates"
+  }
+ ],
+ "scope": "<strong>Where this stands.</strong> Three accepted releases are tagged: walking on nine bodies (v1), standing on static supports, and balancing on a moving deck. A replay on one RTX 4090 then trained a single policy for all three from random weights in 22 min 05 s. Everything is simulated in MuJoCo. Joint control is learned; the lane and velocity commands are scripted; the policy is told which joints are missing rather than diagnosing it; the deck policy reads ideal platform state. Damaged bodies on a moving deck, unseen terrain and real hardware are not established. Every number on this page comes from recorded runs in the repository.",
+ "footer": "<p>Source, documentation and recorded results: <a href=\"https://github.com/rozgo/mujoco-sandbox\">rozgo/mujoco-sandbox</a>, <code>docs/locomotion/</code>; the isolated package is <code>experiments/adaptive_locomotion/</code>. Robot: the Unitree Go2 model from MuJoCo Menagerie (BSD-3-Clause, Unitree Robotics), vendor meshes unchanged; the panels that hide its branding in the graphite and Ember films are observer-only. CPU batching: vendored mjbatch (Apache-2.0). Two gait-balance reward terms are adapted from Isaac Lab's Spot task (BSD-3-Clause). Physics: MuJoCo 3.13.0 and MuJoCo Warp 3.13.0; learning: PyTorch PPO.</p>",
+ "card": {
+  "kicker": "Learned · PPO · MuJoCo Warp · RTX 4090",
+  "line": "One PPO policy walks a Unitree Go2 healthy or missing a leg, then stands and balances; one GPU relearned it all from random weights in 22 min 05 s.",
+  "tags": [
+   "reinforcement learning",
+   "limb loss",
+   "GPU physics",
+   "balance"
+  ],
+  "poster": "previews/locomotion/graphite/adaptive_dog_complete_v2.png"
+ },
+ "media": {
+  "complete": {
+   "src": "previews/locomotion/graphite/adaptive_dog_complete_v2.mp4",
+   "crf": 24,
+   "poster_t": 30
+  },
+  "bodies": {
+   "src": "previews/locomotion/static/bodies.png",
+   "max_width": 1200
+  },
+  "course": {
+   "src": "previews/locomotion/static/course.png",
+   "max_width": 1200
+  },
+  "pilot": {
+   "src": "previews/locomotion/reactive_5m30s.mp4",
+   "poster_t": 40
+  },
+  "knee": {
+   "src": "previews/locomotion/healthy_support_fix.mp4",
+   "poster_t": 6
+  },
+  "limbs": {
+   "src": "previews/locomotion/limb_loss_static.png",
+   "max_width": 1600
+  },
+  "v1": {
+   "src": "previews/locomotion/adaptive_dog_v1.mp4",
+   "max_width": 1600,
+   "crf": 24,
+   "poster_t": 6
+  },
+  "warp": {
+   "src": "previews/locomotion/warp_scaled_comparison.png",
+   "max_width": 1400
+  },
+  "standing": {
+   "src": "previews/locomotion/standing/adaptive_standing_v3.mp4",
+   "poster_t": 20
+  },
+  "moving": {
+   "src": "previews/locomotion/moving/moving_supports_v1.mp4",
+   "poster_t": 45
+  },
+  "replay": {
+   "src": "previews/locomotion/ember/adaptive_dog_short_v1.mp4",
+   "poster_t": 5
+  },
+  "graphite": {
+   "src": "previews/locomotion/graphite/style_preview_v1.png",
+   "max_width": 1600
+  },
+  "styling": {
+   "src": "previews/video_styling/moving_brushed_metal_comparison_v1.mp4",
+   "poster_t": 2
+  }
+ },
+ "theme": {
+  "scheme": "dark",
+  "theme_color": "#08090b",
+  "tokens": {
+   "bg": "#0d0f12",
+   "text": "#e8eaed",
+   "muted": "#9aa1a9",
+   "card": "#15181c",
+   "line": "#262a30",
+   "link": "#49d6c5",
+   "chip": "#1f2328",
+   "soft": "#132523",
+   "bad": "#ff7a45",
+   "bad-soft": "#2a1a14",
+   "accent": "#49d6c5",
+   "accent-2": "#ff6b23",
+   "accent-3": "#929aa3",
+   "on-accent": "#08090b",
+   "hero": "linear-gradient(120deg, #08090b 0%, #131518 45%, #13302d 100%)",
+   "hero-text": "#edeff1",
+   "film": "#050607",
+   "metric": "rgba(255, 255, 255, .06)",
+   "toc": "rgba(13, 15, 18, .9)",
+   "tile-1": "linear-gradient(135deg, #1b5f58, #13302d)",
+   "tile-2": "linear-gradient(135deg, #2b3036, #15181c)",
+   "tile-3": "linear-gradient(135deg, #b24a17, #6e2e10)",
+   "tile-4": "linear-gradient(135deg, #3a4148, #1f2328)",
+   "tile-text": "#f3f5f6"
+  }
+ }
+}

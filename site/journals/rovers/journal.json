@@ -1,0 +1,106 @@
+{
+ "title": "RC Rovers Journal",
+ "heading": "Six RC rovers inspecting a yard and talking over simulated LoRa",
+ "eyebrow": "Engineering journal · September 7, 2026 · MuJoCo 3.12 · Reticulum 1.5.2",
+ "lede": "Six suspended RC rovers drive on tyre contact in MuJoCo, look for eight inspection markers in a 20 × 16 m yard and share what they find over a packet-level LoRa model, optionally framed by six real Reticulum stacks. The rovers follow hand-written rules; nothing is learned. With the radio on there were no duplicate inspections and every rover knew the job was done, but the fleet did not finish any sooner.",
+ "description": "Six RC rovers in MuJoCo inspect a yard and share findings over a simulated LoRa channel, optionally through real Reticulum stacks: an engineering journal with 18 measured runs and their trade-offs.",
+ "hero": {
+  "media": "film",
+  "caption": "The complete 150-second degraded run with real Reticulum framing (radio seed 0), played at 2× with a 3-second hold on the last frame. Overview with packet trails (green delivered, red lost, held 0.6 s so they can be seen), the six front cameras, and inspector R1's local marker beliefs. Rendered from the recorded MuJoCo trajectory. The camera images are for people watching; no controller reads them."
+ },
+ "metrics": [
+  {
+   "value": "18 / 18",
+   "label": "runs inspected all 8 markers (2 transports × 3 radio cases × 3 seeds)"
+  },
+  {
+   "value": "0 vs 9",
+   "label": "duplicate inspections per run, healthy radio vs radio off"
+  },
+  {
+   "value": "100% vs 35.4%",
+   "label": "completion records known across the fleet at 150 s, radio vs radio off"
+  },
+  {
+   "value": "48.3 s vs 38.4 s",
+   "label": "mean time to inspect all 8, healthy direct radio vs radio off: not faster"
+  },
+  {
+   "value": "147",
+   "label": "route changes made on a delivered report before the receiver saw the marker itself"
+  }
+ ],
+ "scope": "<strong>Where this stands.</strong> A finished demonstration, built on September 7, 2026. MuJoCo simulates the vehicles and their tyre contacts. A separate packet model decides which radio messages arrive. Optional real Reticulum 1.5.2 processes build and decode the frames, but the radio channel beneath them is always simulated, with assumed, uncalibrated parameters. The rovers are rule-based programs with ideal odometry and a geometric marker detector; nothing is learned. Every number on this page comes from the 18 recorded comparison runs and the documentation in the repository.",
+ "footer": "<p>Source, documentation and recorded results: <a href=\"https://github.com/rozgo/mujoco-sandbox\">rozgo/mujoco-sandbox</a>, <code>docs/rovers/</code> (<code>README.md</code>, <code>DIRECT_COMPARISON.json</code>, <code>RETICULUM_COMPARISON.json</code>, <code>CAUSAL_EVIDENCE.json</code>); code in <code>src/sixlegs/rovers/</code>. Physics: MuJoCo 3.12.0, with vehicles and yard built from primitive geometry in this repository. Optional transport: <a href=\"https://reticulum.network/\">Reticulum</a> 1.5.2 by Mark Qvist (Reticulum License), installed from PyPI as an optional extra and not redistributed here. LoRa airtime follows the Semtech SX1276 datasheet formula (§4.1.1.7). Videos are rendered from recorded simulation states and play at 2×.</p>",
+ "card": {
+  "kicker": "RC rovers · simulated LoRa · Reticulum",
+  "line": "Six rovers share what they find over a simulated radio: no duplicate inspections with a healthy link, and no faster finish.",
+  "tags": [
+   "MuJoCo",
+   "LoRa packet model",
+   "Reticulum 1.5.2",
+   "rule-based agents"
+  ],
+  "poster": "previews/rovers/detail.png"
+ },
+ "media": {
+  "film": {
+   "src": "previews/rovers/reticulum_degraded.mp4",
+   "poster_t": 12
+  },
+  "outage": {
+   "src": "previews/rovers/reticulum_degraded.mp4",
+   "start": 3,
+   "duration": 20,
+   "poster_t": 16
+  },
+  "overview": {
+   "src": "previews/rovers/overview.png"
+  },
+  "overhead": {
+   "src": "previews/rovers/overhead.png"
+  },
+  "detail": {
+   "src": "previews/rovers/detail.png"
+  },
+  "r0_front": {
+   "src": "previews/rovers/r0_front.png"
+  },
+  "r1_front": {
+   "src": "previews/rovers/r1_front.png"
+  },
+  "dashboard": {
+   "src": "previews/rovers/reticulum_degraded.png"
+  }
+ },
+ "theme": {
+  "scheme": "dark",
+  "theme_color": "#101b24",
+  "tokens": {
+   "bg": "#0c1419",
+   "text": "#e4eef0",
+   "muted": "#8fa5ab",
+   "card": "#122028",
+   "line": "#1e323b",
+   "link": "#3be2ac",
+   "chip": "#172a33",
+   "soft": "#10271f",
+   "bad": "#e0756d",
+   "bad-soft": "#2a1817",
+   "accent": "#3be2ac",
+   "accent-2": "#f9bf2d",
+   "accent-3": "#608cf4",
+   "on-accent": "#06130e",
+   "hero": "linear-gradient(120deg, #0f141c 0%, #101b24 45%, #133a33 100%)",
+   "hero-text": "#eff6f8",
+   "film": "#060a0d",
+   "metric": "rgba(255, 255, 255, .06)",
+   "toc": "rgba(12, 20, 25, .9)",
+   "tile-1": "linear-gradient(135deg, #1d9c76, #135c47)",
+   "tile-2": "linear-gradient(135deg, #c9951f, #7a5a12)",
+   "tile-3": "linear-gradient(135deg, #4f74d0, #2c4482)",
+   "tile-4": "linear-gradient(135deg, #b8564f, #6e302c)",
+   "tile-text": "#f6fbfa"
+  }
+ }
+}

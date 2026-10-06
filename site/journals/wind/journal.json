@@ -1,0 +1,123 @@
+{
+ "title": "Neural Wind Journal",
+ "heading": "Flying a slung parcel through simulated wind with learned forecasts",
+ "eyebrow": "Engineering journal · September 9, 2026 · MuJoCo 3.12 · NeuralOperator FNO and PINO · PyTorch 2.14",
+ "lede": "A 2.0 kg quadrotor carries a 0.20 kg parcel on a 0.65 m cable that can go slack, through two gates, while an independent Navier–Stokes solver blows gusting crosswinds across its path. The same programmed predictive controller flies every run; only its 2 s wind forecast changes: held frozen, or advanced by an FNO or PINO neural operator trained for this project. The forecasts are the only learned part.",
+ "description": "A MuJoCo quadrotor delivers a cable-slung parcel through simulated Navier–Stokes wind; learned FNO and PINO wind forecasts cut its mean tracking error from 10.89 cm to 4.28–4.42 cm, with all 24 standard deliveries completed.",
+ "hero": {
+  "media": "film_v2",
+  "caption": "Version 2, seed 400: the same programmed controller with a frozen-wind forecast (left) and the learned PINO forecast (right), in identical 1.5× simulated wind. The full 31 s flight plays at real time, then a 10 s results card. Rendered from saved states of the physical MuJoCo runs; the forecast panel compares PINO with the solver's future wind for evaluation only."
+ },
+ "metrics": [
+  {
+   "value": "24 / 24",
+   "label": "standard deliveries: six held-out winds × four forecasts"
+  },
+  {
+   "value": "4.28 cm",
+   "label": "mean parcel tracking error with the FNO forecast, vs 10.89 cm with frozen wind (PINO 4.42 cm)"
+  },
+  {
+   "value": "4.34 cm",
+   "label": "the same in version 2's 1.5× wind, vs 19.59 cm frozen (PINO 4.51 cm), five complete paired windows"
+  },
+  {
+   "value": "5 / 6",
+   "label": "version 2 missions per method; seed 404 failed for all four and stays on record"
+  },
+  {
+   "value": "73.4 s · 82.3 s",
+   "label": "FNO and PINO training, 64 epochs each on one RTX 4090"
+  }
+ ],
+ "scope": "<strong>Where this stands.</strong> Finished on September 9, 2026, in two versions, both kept. MuJoCo simulates the aircraft, the cable, the rotors and every contact; an independent 2D Navier–Stokes solver supplies the wind, applied as drag forces; FNO and PINO networks trained here forecast that wind 2 s ahead. The predictive controller and the delivery sequence are programmed, not learned, and they read exact simulator state and the full current wind field, not camera images or wind sensors. The wind is two-dimensional and one-way coupled: the aircraft does not disturb the air. Every number on this page comes from files in the repository.",
+ "footer": "<p>Source, documentation and recorded results: <a href=\"https://github.com/rozgo/mujoco-sandbox\">rozgo/mujoco-sandbox</a>, <a href=\"https://github.com/rozgo/mujoco-sandbox/tree/main/docs/wind\"><code>docs/wind/</code></a> (version 2 in <code>docs/wind/aggressive/</code>). Rigid bodies, cable and contact: <a href=\"https://mujoco.org\">MuJoCo</a> 3.12 (Apache 2.0). Wind forecasts: the official <a href=\"https://github.com/neuraloperator/neuraloperator\">NeuralOperator</a> library (MIT licence), pinned to upstream commit <code>00b7d86f8d74ff0af55da53eb585fe26df9c71f0</code>, implementing FNO (<a href=\"https://arxiv.org/abs/2010.08895\">Li et al.</a>) and PINO (<a href=\"https://arxiv.org/abs/2111.03794\">Li et al.</a>). The model weights were trained for this project; this is an independent robotics illustration, not a result of those authors. Videos are re-encoded for the web from the rendered MP4s in <code>previews/wind/</code>.</p>",
+ "card": {
+  "kicker": "Learned forecasts · NeuralOperator · RTX 4090",
+  "line": "A quadrotor carries a slung parcel through simulated Navier–Stokes wind; learned wind forecasts cut its tracking error from 10.89 cm to 4.28–4.42 cm, and all 24 standard deliveries land.",
+  "tags": [
+   "neural operators",
+   "predictive control",
+   "cable payload",
+   "fluid simulation"
+  ],
+  "poster": "previews/wind/aggressive/comparison.png"
+ },
+ "media": {
+  "film_v2": {
+   "src": "previews/wind/aggressive/comparison.mp4",
+   "poster_t": 14.8,
+   "max_width": 1920,
+   "crf": 23
+  },
+  "film_v1": {
+   "src": "previews/wind/comparison.mp4",
+   "poster_t": 24,
+   "max_width": 1920,
+   "crf": 23
+  },
+  "overview": {
+   "src": "previews/wind/overview.png"
+  },
+  "detail": {
+   "src": "previews/wind/detail.png",
+   "max_width": 1200
+  },
+  "front": {
+   "src": "previews/wind/front.png",
+   "max_width": 1200
+  },
+  "loadcam": {
+   "src": "previews/wind/loadcam.png",
+   "max_width": 1200
+  },
+  "crosswinds_v1": {
+   "src": "previews/wind/frame-crosswinds.png"
+  },
+  "delivered_v1": {
+   "src": "previews/wind/frame-delivered.png"
+  },
+  "results_v1": {
+   "src": "previews/wind/results.png"
+  },
+  "align_v2": {
+   "src": "previews/wind/aggressive/frame-align.png"
+  },
+  "delivered_v2": {
+   "src": "previews/wind/aggressive/frame-delivered.png"
+  },
+  "results_v2": {
+   "src": "previews/wind/aggressive/results.png"
+  }
+ },
+ "theme": {
+  "scheme": "dark",
+  "theme_color": "#10202b",
+  "tokens": {
+   "bg": "#0b1620",
+   "text": "#e6f0f4",
+   "muted": "#93aab6",
+   "card": "#112230",
+   "line": "#1f3646",
+   "link": "#65e2d2",
+   "chip": "#16293a",
+   "soft": "#10293a",
+   "bad": "#f08a6c",
+   "bad-soft": "#2b1c1c",
+   "accent": "#65e2d2",
+   "accent-2": "#ff8c28",
+   "accent-3": "#91b3e7",
+   "on-accent": "#08151d",
+   "hero": "linear-gradient(125deg, #09101a 0%, #10202b 40%, #1d4a63 75%, #2a6f86 100%)",
+   "hero-text": "#eef6f8",
+   "film": "#050b10",
+   "metric": "rgba(255, 255, 255, .07)",
+   "toc": "rgba(11, 22, 32, .9)",
+   "tile-1": "linear-gradient(135deg, #1f8f86, #145a5a)",
+   "tile-2": "linear-gradient(135deg, #3d6aa6, #24406b)",
+   "tile-3": "linear-gradient(135deg, #e07a22, #9c4d12)",
+   "tile-4": "linear-gradient(135deg, #6f5aa0, #43356a)",
+   "tile-text": "#f5fafb"
+  }
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "title": "Amphibious Quadruped Journal",
+ "heading": "A quadruped with leg-mounted floats walks into a basin, floats across and climbs out",
+ "eyebrow": "Engineering journal · September 9, 2026 · MuJoCo 3.12 · Unitree Go2 model from MuJoCo Menagerie",
+ "lede": "An unarmed Unitree Go2 model, used as a stand-in, carries four float capsules on its thighs. It walks down a smooth ramp into a calm basin, reaches its front legs forward so the floats point ahead, floats across on two idealised thrusters and climbs out on the far bank. The gait is a scripted crawl written for this one course; nothing is learned.",
+ "description": "A MuJoCo Go2 stand-in with four thigh-mounted float capsules walks into a basin, floats 10.8 s unsupported on sampled-volume buoyancy and climbs out on a scripted crawl.",
+ "hero": {
+  "media": "crossing",
+  "caption": "The complete crossing, replayed from the saved simulation in three synchronised views: following, side and overview. Walking plays at 8×; from 2 s before floating until 6 s after the exit begins it slows to 2×, and the current speed is labelled on screen. It opens on a 2 s still and holds the last frame for 3 s. Panels show buoyancy, weight, foot contacts and thrust from the run."
+ },
+ "metrics": [
+  {
+   "value": "10.8 s",
+   "label": "longest continuous unsupported float, no ground contact"
+  },
+  {
+   "value": "166.84 N",
+   "label": "still-water buoyancy against 166.83 N weight; with buoyancy off it sinks 10.6 cm"
+  },
+  {
+   "value": "4 / 4",
+   "label": "feet on the far bank at the end, 0 N buoyancy, no MuJoCo warnings"
+  },
+  {
+   "value": "446.0 s",
+   "label": "simulated for the whole crossing, in 67.4 s of wall time"
+  },
+  {
+   "value": "40 min 5 s",
+   "label": "from new goal to a validated, recorded crossing"
+  }
+ ],
+ "scope": "<strong>Where it stands:</strong> one complete crossing of one known course, validated and recorded on September 9, 2026. <strong>Simulated:</strong> rigid bodies and contact in MuJoCo, plus our own buoyancy and drag on each float and on an assumed sealed hull. <strong>Scripted:</strong> the crawl gait, the float posture and the thrust feedback, all written for this scene. <strong>Idealised:</strong> the two water thrusters, which are applied forces rather than simulated propellers. <strong>Not claimed:</strong> that a real Go2 is amphibious, that the float sizes match any product, or that one crossing shows robustness.",
+ "footer": "<p>Source, documentation and recorded results: <a href=\"https://github.com/rozgo/mujoco-sandbox\">rozgo/mujoco-sandbox</a>, <code>docs/amphibious/</code>. The robot is the Unitree Go2 model from <a href=\"https://github.com/google-deepmind/mujoco_menagerie\">MuJoCo Menagerie</a> (revision <code>8161bba</code>), copyright Unitree Robotics, used under its BSD-3-Clause licence with the original licence file and a SHA-256 manifest kept in the repository. The floats, basin, water model, controller and video are this project's own. Videos are rendered from the simulated trajectory and re-encoded for the web; nothing on this page is generated video.</p>",
+ "card": {
+  "kicker": "Scripted · MuJoCo · Go2 stand-in",
+  "line": "A Go2 model with four thigh-mounted floats walks into a basin, floats 10.8 s with no ground contact and climbs out on the far bank.",
+  "tags": [
+   "buoyancy model",
+   "scripted crawl",
+   "idealised thrusters",
+   "land to water to land"
+  ],
+  "poster": "previews/amphibious/detail.png"
+ },
+ "media": {
+  "crossing": {
+   "src": "previews/amphibious/crossing.mp4",
+   "poster_t": 34.5
+  },
+  "float_clip": {
+   "src": "previews/amphibious/crossing.mp4",
+   "start": 30.0,
+   "duration": 10.2,
+   "poster_t": 1.2
+  },
+  "exit_clip": {
+   "src": "previews/amphibious/crossing.mp4",
+   "start": 37.0,
+   "duration": 28.4,
+   "poster_t": 13.0
+  },
+  "overview": {
+   "src": "previews/amphibious/overview.png"
+  },
+  "side": {
+   "src": "previews/amphibious/side.png"
+  },
+  "front": {
+   "src": "previews/amphibious/front.png"
+  },
+  "detail": {
+   "src": "previews/amphibious/detail.png"
+  },
+  "floating": {
+   "src": "previews/amphibious/frame-floating.png"
+  },
+  "entry": {
+   "src": "previews/amphibious/frame-water-entry.png"
+  },
+  "exit": {
+   "src": "previews/amphibious/frame-exit.png"
+  },
+  "complete": {
+   "src": "previews/amphibious/frame-complete.png"
+  }
+ },
+ "theme": {
+  "scheme": "light",
+  "theme_color": "#135466",
+  "tokens": {
+   "bg": "#f3f7f6",
+   "text": "#10262d",
+   "muted": "#5a7178",
+   "card": "#ffffff",
+   "line": "#d9e6e5",
+   "link": "#1f6f8b",
+   "chip": "#e3efee",
+   "soft": "#e2f0ef",
+   "bad": "#b8502c",
+   "bad-soft": "#f7e4dc",
+   "accent": "#1f7a94",
+   "accent-2": "#d9800f",
+   "accent-3": "#a88f62",
+   "on-accent": "#ffffff",
+   "hero": "linear-gradient(125deg, #0e2a33 0%, #135466 45%, #1f7a94 75%, #c9b28a 100%)",
+   "hero-text": "#f2fbfa",
+   "film": "#0b1d23",
+   "metric": "rgba(255, 255, 255, .13)",
+   "toc": "rgba(243, 247, 246, .94)",
+   "tile-1": "linear-gradient(135deg, #1f7a94, #135466)",
+   "tile-2": "linear-gradient(135deg, #e8901f, #b0640e)",
+   "tile-3": "linear-gradient(135deg, #2f9e8f, #1d6b61)",
+   "tile-4": "linear-gradient(135deg, #a88f62, #75603c)",
+   "tile-text": "#ffffff"
+  }
+ }
+}

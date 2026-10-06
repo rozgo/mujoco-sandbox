@@ -1,0 +1,126 @@
+{
+ "title": "Hexapod Transfer Journal",
+ "heading": "A six-legged robot with two arms carries a mug and a block between tables",
+ "eyebrow": "Engineering journal · September 7, 2026 · MuJoCo 3.12 · MuJoCo Menagerie",
+ "lede": "A 58.8 kg hexapod with two Kinova Gen3 arms and Robotiq 2F-85 grippers walks to a cluttered table, grasps a mug and a block by finger contact, carries both around a barrier and sets them down on a second table. The gait and the grasps are programmed, not learned: every movement comes from bounded joint commands, leg contact and MuJoCo physics.",
+ "description": "A scripted MuJoCo hexapod with two Kinova Gen3 arms grasps a mug and a block by finger contact, walks around a barrier and places both on a second table in 112.9 simulated seconds.",
+ "hero": {
+  "media": "allviews",
+  "caption": "The complete validated run in six synchronized views at real time (1×): 112.9 simulated seconds, then a four-second hold on the verified final state. Rendered from the recorded physical trajectory; the control is scripted."
+ },
+ "metrics": [
+  {
+   "value": "112.9 s",
+   "label": "simulated time for the complete transfer"
+  },
+  {
+   "value": "6.2 · 16.5 mm",
+   "label": "placement error, mug · block (tolerance 60 mm)"
+  },
+  {
+   "value": "0 · 0",
+   "label": "MuJoCo warnings · robot penetrations of tables or barrier over 1 mm"
+  },
+  {
+   "value": "58.8 kg",
+   "label": "robot mass, carried on five of six feet while walking"
+  },
+  {
+   "value": "35 min 48 s",
+   "label": "brief to validated demo, elapsed wall-clock time"
+  }
+ ],
+ "scope": "<strong>Where this stands.</strong> One nominal, deterministic run in a known scene, and it passed every check. MuJoCo simulates the floating base, the leg contacts, the arms, the gripper linkages and the free objects. A programmed state machine, analytic leg inverse kinematics and damped arm inverse kinematics turn simulator state and known table coordinates into bounded joint targets; nothing is learned, and the cameras are watched, not used for control. Robustness to moved objects, other friction or masses, and pushes has not been tested. Every number on this page comes from the repository's reports and documentation.",
+ "footer": "<p>Source, documentation and recorded results: <a href=\"https://github.com/rozgo/mujoco-sandbox\">rozgo/mujoco-sandbox</a>, <code>docs/hexapod/</code>, <code>docs/DESIGN.md</code>, <code>docs/VALIDATION.md</code> and <code>docs/TRANSFER_REPORT.json</code>; code in <code>src/sixlegs/</code>. Simulated with MuJoCo 3.12.0 on Apple Silicon macOS.</p><p>Arm and gripper models from <a href=\"https://github.com/google-deepmind/mujoco_menagerie\">MuJoCo Menagerie</a> at a pinned commit, files unchanged: Kinova Gen3 under BSD-3-Clause and Robotiq 2F-85 under BSD-2-Clause, with their licences kept alongside the models in <code>assets/menagerie/</code>. The hexapod body, tables, barrier and objects are built from primitive shapes in this repository.</p>",
+ "card": {
+  "kicker": "Scripted · MuJoCo Menagerie · ripple gait",
+  "line": "Six legs and two Kinova arms: grasps a mug and a block by finger contact, walks around a barrier and places both 6.2 and 16.5 mm from their marks in 112.9 simulated seconds.",
+  "tags": [
+   "scripted control",
+   "mobile manipulation",
+   "contact grasping",
+   "six camera views"
+  ],
+  "poster": "previews/robot_detail.png"
+ },
+ "media": {
+  "allviews": {
+   "src": "previews/transfer_all_views.mp4",
+   "max_width": 1920,
+   "crf": 25,
+   "poster_t": 28.5
+  },
+  "grasp": {
+   "src": "previews/transfer_all_views.mp4",
+   "start": 18,
+   "duration": 14,
+   "max_width": 1920,
+   "crf": 26,
+   "poster_t": 10.5
+  },
+  "walk": {
+   "src": "previews/transfer_all_views.mp4",
+   "start": 44,
+   "duration": 16,
+   "max_width": 1920,
+   "crf": 27,
+   "poster_t": 12
+  },
+  "place": {
+   "src": "previews/transfer_all_views.mp4",
+   "start": 100,
+   "duration": 16.9,
+   "max_width": 1920,
+   "crf": 26,
+   "poster_t": 4.5
+  },
+  "overview": {
+   "src": "previews/transfer.mp4",
+   "max_width": 1280,
+   "crf": 26,
+   "poster_t": 14
+  },
+  "scene_preview": {
+   "src": "previews/preview.png"
+  },
+  "robot": {
+   "src": "previews/robot_detail.png"
+  },
+  "overhead": {
+   "src": "previews/overhead.png"
+  },
+  "checkpoints": {
+   "src": "previews/transfer_checkpoints.png"
+  }
+ },
+ "theme": {
+  "scheme": "light",
+  "theme_color": "#6b4a2f",
+  "tokens": {
+   "bg": "#f6f1e8",
+   "text": "#1e1a16",
+   "muted": "#6e6257",
+   "card": "#fffdf9",
+   "line": "#e6dccd",
+   "link": "#2f63c9",
+   "chip": "#efe6d8",
+   "soft": "#f1e7d6",
+   "bad": "#b4432c",
+   "bad-soft": "#f8e3dc",
+   "accent": "#d0640f",
+   "accent-2": "#3b7bef",
+   "accent-3": "#6b4a2f",
+   "on-accent": "#ffffff",
+   "hero": "linear-gradient(120deg, #3a2a1c 0%, #6b4a2f 45%, #b8743a 80%, #e59a4d 100%)",
+   "hero-text": "#fff8ef",
+   "film": "#1e1a16",
+   "metric": "rgba(255, 255, 255, .14)",
+   "toc": "rgba(246, 241, 232, .94)",
+   "tile-1": "linear-gradient(135deg, #e07a22, #b5561a)",
+   "tile-2": "linear-gradient(135deg, #3b7bef, #2852a8)",
+   "tile-3": "linear-gradient(135deg, #7a5536, #4e3420)",
+   "tile-4": "linear-gradient(135deg, #5f8a55, #3d5e37)",
+   "tile-text": "#ffffff"
+  }
+ }
+}

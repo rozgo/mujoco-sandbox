@@ -1134,3 +1134,9 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - With the user (publish, 15:53 UTC): the surgical journal approved for publishing. Removed
   a machine connection detail from the unpushed history, pushed main (54 commits, 109 LFS objects,
   146 MB), added scripts/publish_pages.sh and deployed the journal to GitHub Pages under surgical/.
+- With the user (sandbox pages, 17:36 UTC): story journals (videos and story, no simulator)
+  for the adaptive dog, neural wind, RC rovers, hexapod transfer and amphibious projects, each with its
+  own palette, plus a MuJoCo Sandbox home page linking all six. Framework (site/journals,
+  scripts/build_journals.py) written first; the five journals drafted in parallel from the project
+  docs, then checked (numbers spot-checked against source files, public-safety scan, every page and
+  the home page reviewed in the browser).

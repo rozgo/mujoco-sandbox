@@ -1,0 +1,304 @@
+  <section id="brief">
+    <h2>1 · A brief, and a static scene before motion</h2>
+    <p class="when">September 7, 2026 · 20:01–20:20 PDT · nothing moved until the scene was approved</p>
+    <div class="prose">
+      <p>The brief asked for a six-legged, spider-like robot with two independent arms that moves objects between
+        tables: approach a cluttered source table from an offset start, pick up a small mug with one gripper and a block
+        with the other, carry both around a barrier to a second table, then place and release them. The body could be
+        built from primitives; the arms and grippers had to be the Kinova Gen3 and Robotiq 2F-85 models from MuJoCo
+        Menagerie. It asked for documented masses, joint limits and torque limits, head, wrist and third-person cameras,
+        and a preview of the scene before any movement.</p>
+      <p>So the scene came first. Two tables with 1.30 × 1.40 m tops at 0.84 m stand 3.6 m apart, with a barrier
+        2.4 m wide and 1.24 m high between them. The robot starts at (−2.15, −1.35) m, offset from the source table.
+        On the source table sit an orange hollow mug, a blue block and four loose clutter blocks, all free bodies. Green
+        squares on the destination mark where the two objects belong; they have no collision.</p>
+      <p>Five tests guarded the static scene: vendored asset hashes, model structure with two independent grippers,
+        initial contacts on the six feet only, leg clearance over 150 sampled leg configurations, and a five-second
+        physics hold. The checkpoint was ready 12 minutes 55 seconds into the session, with six camera renders inspected
+        and the native macOS viewer tested. The user approved the preview six minutes later, and only then did movement
+        work begin.</p>
+    </div>
+    <figure><img src="media/scene_preview.webp" alt="Static scene preview: the hexapod beside the source table, the barrier and the destination, with head and wrist camera views" loading="lazy">
+      <figcaption>The static design checkpoint the user approved: the whole scene, the robot, and the head and wrist
+        cameras, rendered before any controller existed.</figcaption></figure>
+    <div class="lesson"><strong>Fix the world while it stands still.</strong> Geometry, clearance and cameras are cheap
+      to change before anything moves. The leg clearance sample covers a conservative swing envelope (yaw ±0.25, hip
+      ±0.15, knee ±0.20 rad), not every combination of the full joint limits; that limit is kept on record.</div>
+  </section>
+
+  <section id="robot">
+    <h2>2 · The robot</h2>
+    <p class="when">September 7 · a primitive-shape body, Menagerie arms and grippers, documented limits</p>
+    <div class="prose">
+      <p>The body is boxes, capsules and spheres: a 1.14 × 0.62 × 0.23 m hull, a low belly for stability and a deck for
+        the arms. Each leg has a yaw, a hip and a knee joint: a 0.22 m coxa, a femur and a long tibia ending in a 40 mm
+        rubber foot. The front, middle and rear legs fan out at 45°, 90° and 135° on each side. Standing, the belly
+        clears the floor by 0.61 m and the feet span about 2.10 × 2.36 m.</p>
+      <p>The two Gen3 arms stand on pedestals 0.47 m apart on the forward deck, above the leg plane. Their files are
+        vendored unchanged from a pinned Menagerie commit with a SHA-256 hash for every file. The scene assembly
+        namespaces each instance, adds travel bounds, damping and armature, and mounts the gripper the way Kinova's
+        Menagerie instructions specify. Each 2F-85 keeps
+        its two four-bar linkages, its tendon split and its three equality constraints, so the fingers move as a real
+        linkage driven by one actuator.</p>
+    </div>
+    <div class="grid2">
+      <figure><img src="media/robot.webp" alt="The hexapod with two white Kinova arms on its deck, next to the source table" loading="lazy">
+        <figcaption>Primitive body, Menagerie arms and grippers. MuJoCo computes the primitive links' inertias from
+          their shape and mass; the Menagerie inertias are kept.</figcaption></figure>
+      <div class="table-wrap"><table>
+        <tr><th>Component</th><th class="num">Mass (kg)</th></tr>
+        <tr><td>Chassis hull</td><td class="num">16</td></tr>
+        <tr><td>Belly · deck · head</td><td class="num">4 · 1.2 · 0.38</td></tr>
+        <tr><td>Each leg (coxa 0.75, femur 1.15, cover 0.12, tibia 0.85, foot 0.15), × 6</td><td class="num">3.02</td></tr>
+        <tr><td>Each arm pedestal, × 2</td><td class="num">0.45</td></tr>
+        <tr><td>Each Kinova Gen3 (upstream inertials), × 2</td><td class="num">8.1879</td></tr>
+        <tr><td>Each Robotiq 2F-85 as attached, × 2</td><td class="num">≈ 0.9026</td></tr>
+        <tr><td>Trim strips</td><td class="num">0.05</td></tr>
+        <tr class="hl"><td>Complete robot (MuJoCo compiled)</td><td class="num">≈ 58.831</td></tr>
+        <tr><td>Mug · block · each clutter block</td><td class="num">0.21 · 0.12 · 0.15</td></tr>
+      </table></div>
+    </div>
+    <h3>Joint travel and torque caps</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Joint group</th><th>Travel (rad)</th><th class="num">Torque cap</th><th class="num">Kp / Kv</th></tr>
+      <tr><td>Leg yaw, × 6</td><td>−0.65 … +0.65</td><td class="num">±65 N·m</td><td class="num">400 / 35</td></tr>
+      <tr><td>Leg hip, × 6</td><td>−0.75 … +0.70</td><td class="num">±120 N·m</td><td class="num">650 / 45</td></tr>
+      <tr><td>Leg knee, × 6</td><td>−0.65 … +0.85</td><td class="num">±100 N·m</td><td class="num">600 / 40</td></tr>
+      <tr><td>Gen3 J1–J4, × 2 arms</td><td>J1, J3 ±π · J2 ±2.24 · J4 ±2.57</td><td class="num">±105 N·m</td><td class="num">2000 / 100</td></tr>
+      <tr><td>Gen3 J5–J7, × 2 arms</td><td>J5, J7 ±π · J6 ±2.09</td><td class="num">±52 N·m</td><td class="num">500 / 50</td></tr>
+      <tr><td>Robotiq actuator, × 2</td><td>control 0 (open) … 255 (closed)</td><td class="num">±5 N·m (tendon)</td><td class="num">upstream</td></tr>
+    </table></div>
+    <div class="note-box"><strong>Why five feet stay down.</strong> 58.8 kg on six feet is about 96 N per foot, on three
+      feet about 192 N. At roughly 0.6 m of horizontal hip leverage, three-foot support could need about 115 N·m, close
+      to the 120 N·m hip cap. So the gait lifts one foot at a time. Every one of the 34 actuators has a force range as
+      well as a command range, and the simulation stops if any actuator exceeds its cap. These are simulation design
+      limits, not hardware specifications; the Gen3 caps and gains come from the Menagerie model, and the ±π limits on
+      its continuous joints are software bounds against unlimited winding.</div>
+  </section>
+
+  <section id="task">
+    <h2>3 · Eighteen phases</h2>
+    <p class="when">September 7 · a fixed route and a programmed state machine</p>
+    <div class="prose">
+      <p>The task is a state machine of 18 phases. Timed phases end after a fixed duration; walking phases end when the
+        base is within 15 mm of its waypoint and has almost stopped. The route is fixed for this scene:
+        (−0.95, 0) → (−2.7, 0) → (−2.7, 3.6) → (−0.95, 3.6) m. The robot is never commanded to turn. It keeps facing the tables and
+        walks forward, backward or sideways toward each waypoint, so its long footprint of arms and legs never swings near the fixtures. The
+        footprint, not the chassis centre, sets how far west it must pass: the base needs X ≤ −2.5 m, and the route
+        uses −2.7 m.</p>
+    </div>
+    <div class="grid2">
+      <div class="table-wrap"><table>
+        <tr><th>#</th><th>Phase</th><th class="num">Starts (s)</th><th>Ends when</th></tr>
+        <tr><td>1</td><td>Approach source</td><td class="num">0.00</td><td>at (−0.95, 0)</td></tr>
+        <tr><td>2</td><td>Settle at source</td><td class="num">15.37</td><td>3 s</td></tr>
+        <tr><td>3</td><td>Align open grippers</td><td class="num">18.38</td><td>3 s</td></tr>
+        <tr><td>4</td><td>Lower beside objects</td><td class="num">21.39</td><td>2 s</td></tr>
+        <tr><td>5</td><td>Reach around mug and block</td><td class="num">23.40</td><td>2 s</td></tr>
+        <tr class="hl"><td>6</td><td>Close both grippers</td><td class="num">25.41</td><td>2 s and both pads touching, on both grippers</td></tr>
+        <tr><td>7</td><td>Lift both objects</td><td class="num">27.42</td><td>3 s</td></tr>
+        <tr><td>8</td><td>Tuck arms for carrying</td><td class="num">30.43</td><td>3 s</td></tr>
+        <tr><td>9</td><td>Back away from source</td><td class="num">33.43</td><td>at (−2.7, 0)</td></tr>
+        <tr><td>10</td><td>Walk around barrier</td><td class="num">48.22</td><td>at (−2.7, 3.6)</td></tr>
+        <tr><td>11</td><td>Approach destination</td><td class="num">79.81</td><td>at (−0.95, 3.6)</td></tr>
+        <tr><td>12</td><td>Settle at destination</td><td class="num">94.84</td><td>3 s</td></tr>
+        <tr><td>13</td><td>Extend above placement marks</td><td class="num">97.85</td><td>3 s</td></tr>
+        <tr><td>14</td><td>Lower onto destination</td><td class="num">100.86</td><td>3 s</td></tr>
+        <tr><td>15</td><td>Release both objects</td><td class="num">103.87</td><td>2 s</td></tr>
+        <tr><td>16</td><td>Withdraw open grippers</td><td class="num">105.88</td><td>2 s</td></tr>
+        <tr><td>17</td><td>Raise clear of table</td><td class="num">107.89</td><td>2 s</td></tr>
+        <tr class="hl"><td>18</td><td>Verify placement</td><td class="num">109.90</td><td>3 s, then the success check at 112.91 s</td></tr>
+      </table></div>
+      <figure><img src="media/overhead.webp" alt="Overhead view: the hexapod at its start, the source table, the barrier and the destination table with two green marks" loading="lazy">
+        <figcaption>The overhead camera at the start. The robot walks to the source table (bottom right), backs out
+          west (left), walks sideways north past the barrier (yellow) and forward to the destination (top), whose green
+          marks are the targets. Phase start times are from the recorded run.</figcaption></figure>
+    </div>
+    <div class="note-box"><strong>What counts as success.</strong> Each object must end within 60 mm of its mark,
+      upright, nearly still, touching the destination top and touching no gripper. All 18 phases must complete with no
+      MuJoCo warnings and no robot penetration of the tables or barrier beyond 1 mm, checked at every 2 ms physics step.
+      The run aborts if either object's origin drops below 1 m while being carried, or if a walking phase takes longer
+      than 80 s. Reaching the last phase is not enough.</div>
+  </section>
+
+  <section id="gait">
+    <h2>4 · One foot at a time</h2>
+    <p class="when">September 7 · a five-foot ripple gait, anchored to measured touchdowns</p>
+    <div class="prose">
+      <p>The floating base has no motor. It moves only because the feet push on the floor, so walking is entirely leg
+        control. Each foot swings for 0.36 s while the other five carry the robot, in the order left front, right rear,
+        left middle, right front, left rear, right middle; a full cycle takes 2.16 s. A swing lifts the foot 85 mm on a
+        smooth arc and aims it ahead of its neutral spot in the direction of travel. Commanded speed is capped
+        at 0.12 m/s and acceleration at 0.25 m/s². Closed-form inverse kinematics turns each foot target into yaw, hip
+        and knee angles; a test checks it against MuJoCo's own forward kinematics to 10<sup>−7</sup> rad on 60 random
+        leg poses.</p>
+      <p>The controller runs at 100 Hz against 500 Hz physics, and its only output is joint targets. The transfer test
+        enforces that: it checks that a controller update never changes the robot's position or the objects', and that
+        no external forces are applied at any step.</p>
+    </div>
+    <div class="failure"><strong>The first gait walked off its map.</strong> The initial version moved the feet on an
+      open-loop schedule and never checked where each foot had actually landed. Body-position error accumulated to about
+      half a metre.</div>
+    <div class="lesson"><strong>Anchor the gait to what the feet actually did.</strong> When a foot lands, its target is
+      replaced by its measured position, and stance feet hold those measured spots. The body reference, where the
+      controller wants the base to be, advances at the commanded speed but is never allowed more than 35 mm from the
+      measured base. With that feedback the robot reaches every waypoint. Before manipulation, a stop finishes one more
+      six-step cycle to recentre the feet.</div>
+    <figure class="film"><video src="media/walk.mp4" poster="media/walk_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Backing away from the source, then turning the route's corner into the sideways walk around the
+        barrier, at real time (1×), simulated seconds 44 to 60. In the following-detail panel (top centre) the legs step one
+        at a time. Scripted gait, recorded physical run.</figcaption></figure>
+    <div class="prose"><p>Walking took 76.8 of the 112.9 simulated seconds. The longest stretch, 3.6 m sideways past the barrier,
+      took 31.6 s, an average of 0.11 m/s against the 0.12 m/s cap.</p></div>
+  </section>
+
+  <section id="grasp">
+    <h2>5 · Holding by finger contact only</h2>
+    <p class="when">September 7 · no welds, no pose writes; both pads must touch before lifting</p>
+    <div class="prose">
+      <p>Each arm solves damped Jacobian inverse kinematics on a scratch copy of the simulation state, 15 iterations per
+        controller update, starting from its previous answer. Only the resulting joint targets reach the simulated arm.
+        Gravity compensation is added to those targets, and the original torque caps still apply.</p>
+      <p>Both grippers approach horizontally. They align beside the objects with open fingers, lower to pinch height,
+        slide 16 cm forward around the mug and the block, and close. The right gripper takes the mug, a hollow cup of
+        64 mm diameter built from a floor, 20 wall segments and 12 handle segments, all of which collide; the left takes
+        the 50 mm block. Both fit the gripper's 85 mm opening.</p>
+      <p>The lift has to be earned. After closing, the state machine counts the object's contacts with each gripper's
+        two pads, and unless both pads touch on both grippers the run stops with an error. In the recorded run both grasps
+        were confirmed at 27.42 s. The model has no mocap bodies and no weld constraints; its only six equality
+        constraints are the grippers' own linkages. The mug and the block stay free bodies, held by friction at the pads,
+        and while carried they stayed above 1.10 m, well clear of the 1 m abort line.</p>
+    </div>
+    <div class="failure"><strong>The wrist camera went through the table.</strong> The first horizontal grasp orientation
+      put the Gen3's wrist vision housing through the table edge. The housing's collision geometry was kept; instead the
+      tool frame was rolled so the housing rides above the table, and both grasps then worked.</div>
+    <figure class="film"><video src="media/grasp.mp4" poster="media/grasp_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Align, lower, reach, close, confirm, lift and tuck, at real time (1×), simulated seconds 18 to 32. The
+        bottom centre and right panels are the two wrist cameras, each looking along its own fingers. Scripted control, recorded
+        physical run.</figcaption></figure>
+  </section>
+
+  <section id="fixes">
+    <h2>6 · What broke, and the clock</h2>
+    <p class="when">September 7 · four problems, each fixed at its cause</p>
+    <div class="prose">
+      <p>Four things went wrong while the demo was built. Each was fixed where it arose: no collision geometry was
+        removed and no object was attached to a hand.</p>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Problem</th><th>What happened</th><th>Fix</th></tr>
+      <tr><td>macOS viewer launch</td><td>Running <code>mjpython</code> through uv could not find <code>libpython3.12.dylib</code></td>
+        <td>The launcher passes the interpreter's library directory to the official macOS trampoline in a subprocess
+          environment; no system libraries or shell settings changed</td></tr>
+      <tr><td>Open-loop foot schedule</td><td>About 0.5 m of accumulated body-position error</td>
+        <td>Measured touchdowns and a body reference held within 35 mm of the measured base (chapter 4)</td></tr>
+      <tr><td>First horizontal grasp</td><td>The Gen3 wrist vision housing went through the table edge</td>
+        <td>Roll the tool frame; collision geometry unchanged (chapter 5)</td></tr>
+      <tr><td>Gripper mounting</td><td>A redundant Robotiq coupling was stacked on the Kinova wrist interface</td>
+        <td>Follow the Kinova-specific Menagerie instructions: drop the base mount and attach the gripper directly</td></tr>
+    </table></div>
+    <h3>The clock</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Milestone</th><th class="num">Local time (PDT)</th><th>Note</th></tr>
+      <tr><td>Session start (approximate)</td><td class="num">20:01:31</td><td>Workspace creation time</td></tr>
+      <tr><td>Static scene checkpoint</td><td class="num">20:14:26</td><td>Five tests pass, six renders inspected</td></tr>
+      <tr><td>Scene approved, movement work begins</td><td class="num">20:20:32</td><td>Review pause of about 6 min 6 s</td></tr>
+      <tr><td>First complete transfer</td><td class="num">by 20:29:04</td><td>Next recorded clock reading, an upper bound</td></tr>
+      <tr><td>Tests and recording inspected</td><td class="num">20:36:09</td><td>Seven tests pass</td></tr>
+      <tr class="hl"><td>Demo implemented and validated</td><td class="num">20:37:19</td><td>35 min 48 s after the session start</td></tr>
+      <tr><td>Six-view film verified</td><td class="num">20:46:29</td><td>A 4 min 40 s follow-up</td></tr>
+    </table></div>
+    <div class="note-box"><strong>Wall time is not compute time.</strong> The 35 minutes 48 seconds are elapsed development
+      time, including the user's review pause, tests, rendering and communication. The finished task itself runs
+      headless in 23.5 s of wall time for 112.9 simulated seconds.</div>
+  </section>
+
+  <section id="results">
+    <h2>7 · Results</h2>
+    <p class="when">The nominal run: one deterministic transfer, checked at every 2 ms physics step</p>
+    <div class="result-strip">
+      <div class="tile"><div class="big">2<small>/ 2</small></div><div class="what">objects placed, released, upright and resting on the destination</div><div class="vs">transfer complete at 112.91 simulated s</div></div>
+      <div class="tile"><div class="big">6.2<small>mm</small></div><div class="what">mug placement error, right gripper</div><div class="vs">tolerance 60 mm</div></div>
+      <div class="tile"><div class="big">16.5<small>mm</small></div><div class="what">block placement error, left gripper</div><div class="vs">tolerance 60 mm</div></div>
+      <div class="tile"><div class="big">0<small>· 0</small></div><div class="what">MuJoCo warnings · robot penetrations of tables or barrier over 1 mm</div><div class="vs">checked at every physics step</div></div>
+    </div>
+    <div class="grid2">
+      <div class="table-wrap"><table>
+        <tr><th>Result</th><th class="num">Mug, right</th><th class="num">Block, left</th></tr>
+        <tr><td>Final position (m)</td><td class="num">(0.124, 3.369, 0.840)</td><td class="num">(0.141, 3.808, 0.870)</td></tr>
+        <tr class="hl"><td>Placement error</td><td class="num">6.2 mm</td><td class="num">16.5 mm</td></tr>
+        <tr><td>Resting on the destination</td><td class="num">yes</td><td class="num">yes</td></tr>
+        <tr><td>Released by the gripper</td><td class="num">yes</td><td class="num">yes</td></tr>
+        <tr><td>Upright</td><td class="num">yes</td><td class="num">yes</td></tr>
+        <tr><td>Lowest object-origin height while carried</td><td class="num">1.107 m</td><td class="num">1.138 m</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>Whole run</th><th class="num">Measured</th></tr>
+        <tr><td>Simulated time</td><td class="num">112.912 s</td></tr>
+        <tr><td>Headless wall time</td><td class="num">23.5 s</td></tr>
+        <tr><td>Largest arm IK position residual</td><td class="num">16.9 mm</td></tr>
+        <tr><td>Peak actuator torque / cap</td><td class="num">1.0</td></tr>
+        <tr><td>Robot penetration of tables or barrier over 1 mm</td><td class="num">none</td></tr>
+        <tr><td>Robot self-penetration over 1 mm (20 Hz trajectory)</td><td class="num">none</td></tr>
+        <tr><td>Tests</td><td class="num">7 passed</td></tr>
+      </table></div>
+    </div>
+    <div class="prose"><p>A peak torque fraction of 1.0 means at least one actuator reached its cap during the run; no cap
+      was ever exceeded. The seven tests cover the vendored asset hashes, the model structure, the initial
+      contacts, sampled leg clearance, a stationary physics hold, the leg inverse kinematics against MuJoCo, and the
+      complete transfer.</p></div>
+    <figure class="film"><video src="media/place.mp4" poster="media/place_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>Lower, release, withdraw, raise and verify, at real time (1×), simulated seconds 100 to 112.9, then the
+        four-second hold on the verified final state. Recorded physical run.</figcaption></figure>
+    <figure><img src="media/checkpoints.webp" alt="Four frames: both objects lifted, carrying around the barrier, release at the destination, objects upright and released" loading="lazy">
+      <figcaption>Checkpoints rendered from the run: both objects lifted, carried around the barrier, released, and
+        resting upright on their marks.</figcaption></figure>
+    <div class="note-box"><strong>What this does and does not show.</strong> It is one deterministic run with fixed task
+      coordinates and simulator-state feedback, in the scene it was designed for. Robustness to moved objects, other
+      friction or masses, external pushes and new routes is not claimed. The frictions, gains and limits pass this task;
+      they have not been swept.</div>
+  </section>
+
+  <section id="film">
+    <h2>8 · Cameras, the film, and next steps</h2>
+    <p class="when">Six synchronized views rendered from the recorded run; the cameras are observer output</p>
+    <div class="spec-cards">
+      <div class="card"><h4>Scene cameras</h4><ul>
+        <li><code>third_person</code>: the source, the barrier and the destination</li>
+        <li>Following detail: a tracking view that follows the chassis in the film (<code>robot_detail</code> is its fixed counterpart)</li>
+        <li><code>overhead</code>: layout and route clearance</li></ul></div>
+      <div class="card"><h4>Robot cameras</h4><ul>
+        <li><code>head</code>: on the head, panned 0.4 rad toward the source, 75° vertical field of view</li>
+        <li><code>left_wrist</code>, <code>right_wrist</code>: the Menagerie Gen3 bracelet cameras, 41.84°, showing their own fingers and the objects</li></ul></div>
+      <div class="card"><h4>What they are for</h4><ul>
+        <li>Watching and recording; the controller never reads a pixel</li>
+        <li>It uses simulator state and known table coordinates</li>
+        <li>No object detection or visual localization is implemented</li></ul></div>
+    </div>
+    <div class="prose">
+      <p>The headless run saves the positions of every body and the joint commands at 20 Hz. The film is rendered from that recording: for
+        each frame the saved state is restored, MuJoCo recomputes the geometry, and all six panels are drawn from the same
+        simulated instant. Nothing in the film is animated separately from the physics. The six-view film is
+        1920 × 1080 at 20 frames per second, 2,338 frames and 116.9 s long, at real time, with the phase and the
+        simulated clock on screen. The shorter overview below is the same run at twice real time.</p>
+    </div>
+    <figure class="film"><video src="media/overview.mp4" poster="media/overview_poster.webp" controls muted playsinline preload="metadata"></video>
+      <figcaption>The whole transfer in 56 s at 2× playback: third-person view above, head and both wrist cameras below.
+        Rendered from the same recorded physical run.</figcaption></figure>
+    <h3>Next steps</h3>
+    <ol class="next-steps">
+      <li><strong>Many runs, not one</strong>Move the objects, change friction and masses, and push the robot, over
+        predetermined seeds, and report the success rate across all attempts alongside this single nominal run.</li>
+      <li><strong>Check what carries the weight</strong>Record which robot surfaces touch the floor at every physics step.
+        The run checked body height and penetration of the tables and barrier, and the start pose rests on the six feet,
+        but floor contact by leg links during walking was not logged.</li>
+      <li><strong>Clearance over the whole envelope</strong>Extend the 150-configuration leg clearance sample beyond the
+        conservative swing envelope to the full joint limits, and add self-collision planning for the arms.</li>
+      <li><strong>Let the cameras see</strong>Locate the mug and the block from the head and wrist images instead of known
+        coordinates, so the scene no longer has to be the one the route was designed for.</li>
+      <li><strong>Plan the route</strong>Replace the four fixed waypoints with a planner that accounts for the 2.10 × 2.36 m
+        footprint and the carried objects, for arbitrary fixtures.</li>
+      <li><strong>Learn a piece, keep the yardstick</strong>Replace the scripted gait or grasp with a learned controller and
+        compare it with this one under the same success checks.</li>
+    </ol>
+  </section>

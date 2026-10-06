@@ -128,6 +128,7 @@ static struct {
     Camera3D camera;
     float yaw, pitch, distance;
     float zoomTo;  // orbit distance the camera eases toward (zoom input moves this, clamped)
+    int clean;     // native screenshots: no callouts
     Vector3 target;
     int follow;
     Vector3 tip;
@@ -905,6 +906,7 @@ static void render_callouts(void) {
 static const Color C_LEADER = {206, 200, 232, 255};  // callout leader lines and anchors
 
 static void draw_callouts(void) {
+    if (V.clean) return;
     Matrix view = GetCameraMatrix(V.camera);
     Vector3 right = {view.m0, view.m4, view.m8}, up = {view.m1, view.m5, view.m9};
     float scale = fminf(V.distance, CALLOUT_ZOOM_CAP);
@@ -1531,6 +1533,7 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--overlays") && i + 1 < argc) overlays = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--zoom") && i + 1 < argc) zoom = (float)atof(argv[++i]);
         else if (!strcmp(argv[i], "--mode") && i + 1 < argc) mode = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--clean")) V.clean = 1;
         else if (!strcmp(argv[i], "--size") && i + 2 < argc) { width = atoi(argv[++i]); height = atoi(argv[++i]); }
     }
     init(folder, width, height);

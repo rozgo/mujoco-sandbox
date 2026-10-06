@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Publish a built journal to the gh-pages branch under its own folder, keeping the other folders there.
+# FOLDER "." publishes the sandbox home page at the site root (its files only; folders are kept).
 # The branch holds plain files (no Git LFS), because GitHub Pages serves LFS pointers, not their content.
 # Usage: scripts/publish_pages.sh [SITE_DIR] [FOLDER]    (defaults: build/site surgical)
-# Build first: uv run --locked python scripts/build_site.py
+# Build first: uv run --locked python scripts/build_site.py (surgical) or scripts/build_journals.py (the rest)
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 SITE=$(cd "${1:-$ROOT/build/site}" && pwd)
 FOLDER=${2:-surgical}
 REMOTE=$(git -C "$ROOT" remote get-url origin)
 SOURCE=$(git -C "$ROOT" rev-parse --short HEAD)
-if [ -n "$(git -C "$ROOT" status --porcelain -- site scripts src)" ]; then
+if [ -n "$(git -C "$ROOT" status --porcelain -- site scripts src previews)" ]; then
     echo "Commit the site sources before publishing; the build records the source commit." >&2
     exit 1
 fi
@@ -21,9 +22,13 @@ else
     git -C "$STAGE" init --quiet -b gh-pages
     git -C "$STAGE" remote add origin "$REMOTE"
 fi
-rm -rf "${STAGE:?}/$FOLDER"
-mkdir -p "$STAGE/$FOLDER"
-cp -R "$SITE"/. "$STAGE/$FOLDER/"
+if [ "$FOLDER" = "." ]; then
+    cp -R "$SITE"/. "$STAGE/"
+else
+    rm -rf "${STAGE:?}/$FOLDER"
+    mkdir -p "$STAGE/$FOLDER"
+    cp -R "$SITE"/. "$STAGE/$FOLDER/"
+fi
 touch "$STAGE/.nojekyll"
 if [ ! -f "$STAGE/index.html" ]; then
     # Until a journals index exists, the site root points to the first journal.
@@ -41,6 +46,6 @@ if git -C "$STAGE" diff --cached --quiet; then
     exit 0
 fi
 git -C "$STAGE" -c user.name="$(git -C "$ROOT" config user.name)" -c user.email="$(git -C "$ROOT" config user.email)" \
-    commit --quiet -m "Publish $FOLDER from $SOURCE"
+    commit --quiet -m "Publish ${FOLDER/#./home page} from $SOURCE"
 git -C "$STAGE" push --quiet origin gh-pages
-echo "published $FOLDER from $SOURCE"
+echo "published ${FOLDER/#./home page} from $SOURCE"
