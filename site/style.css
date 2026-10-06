@@ -40,15 +40,31 @@ h1 { font-size: clamp(30px, 4.4vw, 50px); line-height: 1.08; margin: 8px 0 10px;
 
 .stage { background: rgba(20, 20, 40, .22); border-radius: 16px; padding: 12px; backdrop-filter: blur(4px); }
 #viewer { width: 100%; aspect-ratio: 16 / 9; display: block; border-radius: 10px; background: #8981af; touch-action: none; }
-.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-top: 10px; font-size: 14px; }
-.controls button, .controls select {
-  font: inherit; color: var(--ink); background: rgba(255, 255, 255, .92); border: 0; border-radius: 8px;
-  padding: 6px 11px; cursor: pointer;
-}
-.controls button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-.controls .group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-.controls .group-label { font-size: 12px; opacity: .85; margin-right: 2px; }
-.controls input[type=range] { flex: 1 1 220px; accent-color: #fff; }
+.controls { display: grid; gap: 12px; margin-top: 12px; font-size: 14px; }
+.ctl-row { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: flex-start; }
+.ctl-playback { padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, .18); }
+.ctl { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.ctl-label { font-size: 11px; letter-spacing: .13em; text-transform: uppercase; opacity: .78; padding-left: 3px; }
+.controls button, .controls select { font: inherit; cursor: pointer; border: 0; }
+/* Single choice: one joined control, the selected option filled. */
+.seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 11px; background: rgba(23, 21, 43, .28); }
+.seg button { color: #fff; background: transparent; padding: 0 12px; height: 30px; border-radius: 8px; white-space: nowrap; }
+.seg button:hover { background: rgba(255, 255, 255, .14); }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(23, 21, 43, .25); }
+/* On/off switches: separate pills with an indicator dot. */
+.toggles { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.toggles button { color: #fff; background: rgba(23, 21, 43, .28); padding: 0 14px 0 11px; height: 36px; border-radius: 999px; white-space: nowrap; }
+.toggles button::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%;
+  border: 1.5px solid currentColor; vertical-align: 0; }
+.toggles button[aria-pressed="true"] { background: rgba(255, 255, 255, .92); color: var(--ink); }
+.toggles button[aria-pressed="true"]::before { background: var(--slate); border-color: var(--slate); }
+.run { display: flex; gap: 4px; }
+.run button, .run select { color: var(--ink); background: rgba(255, 255, 255, .92); border-radius: 8px; padding: 0 11px; height: 36px; }
+.run select { max-width: 100%; }
+.ctl-time { flex: 1 1 420px; }
+.timeline { display: flex; gap: 12px; align-items: center; height: 36px; }
+.timeline #play { min-width: 74px; height: 36px; color: var(--ink); background: #fff; border-radius: 8px; padding: 0 12px; font-weight: 600; }
+.timeline input[type=range] { flex: 1; min-width: 120px; accent-color: #fff; }
 .readout { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 8px; font: 14px/1.4 ui-monospace, Menlo, monospace; }
 .readout b { font-weight: 600; }
 .status-success { color: #c9ffe9; }

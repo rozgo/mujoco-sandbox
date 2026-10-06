@@ -22,53 +22,52 @@
     <div class="stage" data-mode="0">
       <canvas id="viewer" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
       <div class="controls">
-        <div class="group" role="group" aria-label="Replay">
-          <button data-mode="0" aria-pressed="true">Insertion</button>
-          <button data-mode="1" aria-pressed="false">Alignment</button>
+        <div class="ctl-row">
+          <div class="ctl" role="group" aria-label="Replay">
+            <span class="ctl-label">Replay</span>
+            <div class="seg"><button data-mode="0" aria-pressed="true">Insertion</button><button data-mode="1" aria-pressed="false">Alignment</button></div>
+          </div>
+          <div class="ctl tube-only" role="group" aria-label="Controller">
+            <span class="ctl-label">Controller</span>
+            <div class="seg"><button data-tpolicy="0" aria-pressed="true">Learned</button><button data-tpolicy="1" aria-pressed="false">Scripted yardstick</button></div>
+          </div>
+          <div class="ctl align-only" role="group" aria-label="Policy">
+            <span class="ctl-label">Controller</span>
+            <div class="seg"><button data-policy="0" aria-pressed="true">Robust learned</button><button data-policy="1" aria-pressed="false">Scripted yardstick</button><button data-policy="2" aria-pressed="false">Learned, undisturbed</button></div>
+          </div>
+          <div class="ctl" role="group" aria-label="Disturbance level">
+            <span class="ctl-label">Disturbance</span>
+            <div class="seg"><button data-level="0" aria-pressed="false">None</button><button data-level="1" aria-pressed="true">Nominal</button><button data-level="2" aria-pressed="false">Stress</button></div>
+          </div>
+          <div class="ctl ctl-run">
+            <span class="ctl-label">Evaluation run</span>
+            <div class="run"><button id="prev" aria-label="Previous run">◀</button><select id="episode" aria-label="Evaluation run"></select><button id="next" aria-label="Next run">▶</button></div>
+          </div>
         </div>
-        <div class="group tube-only" role="group" aria-label="Controller">
-          <button data-tpolicy="0" aria-pressed="true">Learned insertion</button>
-          <button data-tpolicy="1" aria-pressed="false">Scripted yardstick</button>
+        <div class="ctl-row">
+          <div class="ctl" role="group" aria-label="Camera">
+            <span class="ctl-label">Camera</span>
+            <div class="seg"><button data-camera="0" aria-pressed="false">Workcell</button><button data-camera="1" aria-pressed="true">Field</button><button data-camera="2" aria-pressed="false">Needle</button><button data-camera="3" aria-pressed="false">Micro</button></div>
+          </div>
+          <div class="ctl" role="group" aria-label="Overlays">
+            <span class="ctl-label">Overlays</span>
+            <div class="toggles"><button data-overlay="1" aria-pressed="true">Forces</button><button data-overlay="2" aria-pressed="true">Sensing</button><button data-overlay="4" aria-pressed="true">Legend</button></div>
+          </div>
         </div>
-        <div class="group align-only" role="group" aria-label="Policy">
-          <button data-policy="0" aria-pressed="true">Robust learned</button>
-          <button data-policy="1" aria-pressed="false">Scripted yardstick</button>
-          <button data-policy="2" aria-pressed="false">Learned, undisturbed</button>
+        <div class="ctl-row ctl-playback">
+          <div class="ctl ctl-time">
+            <span class="ctl-label">Playback</span>
+            <div class="timeline"><button id="play" aria-pressed="true">Pause</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Episode time"></div>
+          </div>
+          <div class="ctl tube-only" role="group" aria-label="Playback speed">
+            <span class="ctl-label">Speed</span>
+            <div class="seg"><button data-tspeed="0" aria-pressed="true" title="0.02× for the needle's work, 0.2× between sites">Auto</button><button data-tspeed="0.02" aria-pressed="false">0.02×</button><button data-tspeed="0.2" aria-pressed="false">0.2×</button><button data-tspeed="1" aria-pressed="false">1×</button></div>
+          </div>
+          <div class="ctl align-only" role="group" aria-label="Speed">
+            <span class="ctl-label">Speed</span>
+            <div class="seg"><button data-speed="0.25" aria-pressed="false">0.25×</button><button data-speed="1" aria-pressed="true">1×</button></div>
+          </div>
         </div>
-        <div class="group" role="group" aria-label="Disturbance level">
-          <span class="group-label">disturbance</span>
-          <button data-level="0" aria-pressed="false">none</button>
-          <button data-level="1" aria-pressed="true">nominal</button>
-          <button data-level="2" aria-pressed="false">stress</button>
-        </div>
-        <div class="group">
-          <button id="prev" aria-label="Previous episode">◀</button>
-          <select id="episode" aria-label="Evaluation episode"></select>
-          <button id="next" aria-label="Next episode">▶</button>
-        </div>
-        <button id="play" aria-pressed="true">Pause</button>
-        <div class="group align-only" role="group" aria-label="Speed">
-          <button data-speed="0.25" aria-pressed="false">0.25×</button>
-          <button data-speed="1" aria-pressed="true">1×</button>
-        </div>
-        <div class="group tube-only" role="group" aria-label="Playback speed">
-          <button data-tspeed="0" aria-pressed="true" title="0.02× for the needle's work, 0.2× between sites">Auto</button>
-          <button data-tspeed="0.02" aria-pressed="false">0.02×</button>
-          <button data-tspeed="0.2" aria-pressed="false">0.2×</button>
-          <button data-tspeed="1" aria-pressed="false">1×</button>
-        </div>
-        <div class="group" role="group" aria-label="Camera">
-          <button data-camera="0" aria-pressed="false">Workcell</button>
-          <button data-camera="1" aria-pressed="true">Field</button>
-          <button data-camera="2" aria-pressed="false">Needle</button>
-          <button data-camera="3" aria-pressed="false">Micro</button>
-        </div>
-        <div class="group" role="group" aria-label="Overlays">
-          <button data-overlay="1" aria-pressed="true">Forces</button>
-          <button data-overlay="2" aria-pressed="true">Sensing</button>
-          <button data-overlay="4" aria-pressed="true">Legend</button>
-        </div>
-        <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Episode time">
       </div>
       <div class="readout" aria-live="off">
         <span>t <b id="t">0.00</b> s</span>

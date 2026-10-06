@@ -104,7 +104,7 @@ function wire() {
   document.title = "Surgical Thread Robot Journal";  // raylib sets the window title
   mode = api.modeGet();
   document.querySelector(".stage").dataset.mode = String(mode);
-  setPressed("[data-mode]", document.querySelector(`[data-mode="${mode}"]`));
+  setPressed("button[data-mode]", document.querySelector(`button[data-mode="${mode}"]`));
   fillEpisodes();
   resize();
   window.addEventListener("resize", resize);
@@ -128,12 +128,12 @@ function wire() {
     pinch = e.scale;
   });
 
-  document.querySelectorAll("[data-mode]").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll("button[data-mode]").forEach((b) => (b.onclick = () => {
     mode = Number(b.dataset.mode);
     api.mode(mode);
     api.speed(mode === 0 ? tubeSpeed : alignSpeed);
     document.querySelector(".stage").dataset.mode = String(mode);
-    setPressed("[data-mode]", b);
+    setPressed("button[data-mode]", b);
     setPressed("[data-camera]", document.querySelector('[data-camera="1"]'));
     fillEpisodes();
   }));

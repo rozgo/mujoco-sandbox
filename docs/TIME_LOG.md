@@ -1126,3 +1126,6 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   Force arrows 1 mN = 7 px and vibration 1 mm/s^2 = 15 px at any zoom; micrometre offsets (measured
   tip, target estimate, tissue-motion trail) magnified about their reference by a 1-2-5 factor
   chosen so 10 um spans about 80 px; the legend states both scales.
+- With the user (viewer controls, 15:35 UTC): controls regrouped under labels (replay,
+  controller, disturbance, evaluation run; camera, overlays; playback and speed); fixed the mode
+  buttons losing their highlight on any click in the viewer.
