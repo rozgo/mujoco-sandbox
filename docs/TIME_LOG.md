@@ -1091,3 +1091,10 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   never starts the stroke. In the full simulation (level 1, seed 1001) it
   placed 3 of 3 threads at 13.3, 24.3 and 7.2 µm (about 90 s wall). Videos
   rendered and committed by 10:05 UTC.
+- 10:17 UTC: insert_v2's first checkpoint (65.5M steps). Evaluation in both
+  simulations (C, 1200 episodes; full simulation, 21 three-site runs, 10 in
+  parallel) took 280 s wall. Full simulation: on par with the approved
+  yardstick (level 1 median 22.8 µm, 27 of 30 placed); one run stopped on a
+  MuJoCo instability while the thread was held at depth. 10:25-10:40 UTC:
+  traced it to jitter of the gripped thread segments during the hold, present
+  in the yardstick runs too (and at level 0); not yet fixed.
