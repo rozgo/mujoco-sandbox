@@ -23,6 +23,7 @@ from .scene import ROOT
 
 NATIVE = Path(__file__).with_name("native")
 OBS, ACT = 16, 3
+ROW = 40  # surgical_core.h SA_ROW
 EPISODE_FIELDS = ("success", "collision", "timeout", "vessel_steps", "final_lateral_um", "final_vertical_um",
                   "episode_return", "episode_length", "level")
 # Predetermined, never used for training or tuning.
@@ -60,6 +61,7 @@ def library():
     lib.sa_scripted_c.argtypes = [f32, f32]
     lib.sa_state.argtypes = [ctypes.c_void_p, f64]
     lib.sa_rollout_scripted.argtypes = [ctypes.c_void_p, ctypes.c_int, f32]
+    lib.sa_replay_row_c.argtypes = [ctypes.c_void_p, ctypes.c_double, f64]
     _lib = lib
     return lib
 
@@ -93,6 +95,12 @@ class AlignEnv:
         self.lib.sa_state(self.handle, out)
         return {"tip": out[:3], "goal": out[3:6], "qpos": out[6:11], "q_ref": out[11:16],
                 "target": int(out[16]), "tick": int(out[17])}
+
+    def replay_row(self, action_norm=0.):
+        """Replay row (surgical_core.h SA_ROW): true and measured state plus every disturbance component."""
+        out = np.zeros(ROW)
+        self.lib.sa_replay_row_c(self.handle, action_norm, out)
+        return out
 
     def scripted_action(self, obs):
         action = np.zeros(ACT, np.float32)
@@ -129,6 +137,21 @@ def evaluate(policy, seeds=EVALUATION_SEEDS, record=None, level=0.):
                    mean_success_time_s=float(np.mean([r["episode_length"] for r in successes])*.02) if successes else None,
                    max_success_lateral_um=float(max(r["final_lateral_um"] for r in successes)) if successes else None)
     return summary, results
+
+
+def record_episode(policy, seed, level=0.):
+    """One episode with a replay row per policy step, as align_eval records for checkpoints."""
+    env = AlignEnv(seed, level=level)
+    obs, done, norm, rows = env.reset(), False, 0., []
+    while not done:
+        rows.append(env.replay_row(norm))
+        action = np.asarray(policy(env, obs), np.float32)
+        norm = float(np.linalg.norm(action))
+        obs, _, done, info = env.step(action)
+    rows.append(env.replay_row(norm))
+    info["seed"], info["target"] = seed, int(rows[0][12])
+    env.close()
+    return info, np.array(rows)
 
 
 def scripted(env, obs):

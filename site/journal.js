@@ -15,12 +15,14 @@ if (window.hljs) hljs.highlightAll();
 // ------------------------------------------------------------------ viewer
 const canvas = $("viewer");
 let api = null;
-let policy = 0; // 0 learned, 1 scripted
+let policy = 0; // 0 robust learned, 1 scripted yardstick, 2 learned without disturbances
+let level = 1;
 const OUTCOME = ["timeout", "success", "collision"];
+const POLICY = ["robust learned policy", "scripted yardstick", "learned, undisturbed"];
 
 function episodesFor(p) {
   const list = [];
-  for (let i = 0; i < api.count(); i++) if (api.policy(i) === p) list.push(i);
+  for (let i = 0; i < api.count(); i++) if (api.policy(i) === p && Math.abs(api.level(i) - level) < 1e-3) list.push(i);
   return list;
 }
 
@@ -35,8 +37,10 @@ function fillEpisodes() {
     o.textContent = `seed ${api.seed(i)} · target ${api.target(i)} · ${OUTCOME[api.outcome(i)]}`;
     select.appendChild(o);
   }
-  const same = episodesFor(policy).find((i) => api.seed(i) === seed);
-  if (same !== undefined) { api.select(same); select.value = same; }
+  const list = episodesFor(policy);
+  const same = list.find((i) => api.seed(i) === seed);
+  const pick = same !== undefined ? same : list[0];
+  if (pick !== undefined) { api.select(pick); select.value = pick; }
 }
 
 function setPressed(selector, active) {
@@ -66,6 +70,8 @@ function wire() {
     speed: c("ni_speed", null, ["number"]), camera: c("ni_camera", null, ["number"]),
     lateral: c("ni_lateral", "number", []), vertical: c("ni_vertical", "number", []),
     resize: c("ni_resize", null, ["number", "number"]),
+    level: c("ni_level", "number", ["number"]), latency: c("ni_latency", "number", ["number"]),
+    overlays: c("ni_overlays", null, ["number"]), overlayMask: c("ni_overlay_mask", "number", []),
   };
   // onRuntimeInitialized fires before the C main() loads the replays; wait for them.
   if (api.count() === 0) { setTimeout(() => wire(), 50); return; }
@@ -74,8 +80,22 @@ function wire() {
   resize();
   window.addEventListener("resize", resize);
 
-  $("policy-learned").onclick = (e) => { policy = 0; setPressed("[id^=policy-]", e.target); fillEpisodes(); };
-  $("policy-scripted").onclick = (e) => { policy = 1; setPressed("[id^=policy-]", e.target); fillEpisodes(); };
+  document.querySelectorAll("[data-policy]").forEach((b) => (b.onclick = () => {
+    policy = Number(b.dataset.policy);
+    setPressed("[data-policy]", b);
+    fillEpisodes();
+  }));
+  document.querySelectorAll("[data-level]").forEach((b) => (b.onclick = () => {
+    level = Number(b.dataset.level);
+    setPressed("[data-level]", b);
+    fillEpisodes();
+  }));
+  document.querySelectorAll("[data-overlay]").forEach((b) => (b.onclick = () => {
+    const bit = Number(b.dataset.overlay);
+    const mask = api.overlayMask() ^ bit;
+    api.overlays(mask);
+    b.setAttribute("aria-pressed", String(!!(mask & bit)));
+  }));
   $("episode").onchange = (e) => api.select(Number(e.target.value));
   const step = (d) => {
     const list = episodesFor(policy);
@@ -111,10 +131,12 @@ function wire() {
     $("vert").textContent = api.vertical().toFixed(1);
     const i = api.selected();
     $("target").textContent = String(api.target(i));
+    $("level").textContent = api.level(i).toFixed(1);
+    $("latency").textContent = Math.round(api.latency(i) * 1000);
     if ($("episode").value !== String(i)) $("episode").value = i;
     const done = t >= d - 1e-6;
     const status = $("status");
-    status.textContent = done ? OUTCOME[api.outcome(i)].toUpperCase() : (policy ? "scripted reference" : "learned policy");
+    status.textContent = done ? OUTCOME[api.outcome(i)].toUpperCase() : POLICY[policy];
     status.className = done && api.outcome(i) === 1 ? "status-success" : "status-moving";
     if (!scrubbing) $("scrub").value = d > 0 ? Math.round(1000 * t / d) : 0;
     requestAnimationFrame(tick);

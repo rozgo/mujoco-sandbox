@@ -46,7 +46,8 @@ h1 { font-size: clamp(30px, 4.4vw, 50px); line-height: 1.08; margin: 8px 0 10px;
   padding: 6px 11px; cursor: pointer;
 }
 .controls button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-.controls .group { display: flex; gap: 4px; align-items: center; }
+.controls .group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.controls .group-label { font-size: 12px; opacity: .85; margin-right: 2px; }
 .controls input[type=range] { flex: 1 1 220px; accent-color: #fff; }
 .readout { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 8px; font: 14px/1.4 ui-monospace, Menlo, monospace; }
 .readout b { font-weight: 600; }

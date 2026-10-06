@@ -22,8 +22,15 @@
       <canvas id="viewer" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
       <div class="controls">
         <div class="group" role="group" aria-label="Policy">
-          <button id="policy-learned" aria-pressed="true">Learned policy</button>
-          <button id="policy-scripted" aria-pressed="false">Scripted reference</button>
+          <button data-policy="0" aria-pressed="true">Robust learned</button>
+          <button data-policy="1" aria-pressed="false">Scripted yardstick</button>
+          <button data-policy="2" aria-pressed="false">Learned, undisturbed</button>
+        </div>
+        <div class="group" role="group" aria-label="Disturbance level">
+          <span class="group-label">disturbance</span>
+          <button data-level="0" aria-pressed="false">0</button>
+          <button data-level="0.5" aria-pressed="false">0.5</button>
+          <button data-level="1" aria-pressed="true">1.0</button>
         </div>
         <div class="group">
           <button id="prev" aria-label="Previous episode">◀</button>
@@ -39,6 +46,12 @@
           <button data-camera="0" aria-pressed="false">Workcell</button>
           <button data-camera="1" aria-pressed="true">Field</button>
           <button data-camera="2" aria-pressed="false">Needle</button>
+          <button data-camera="3" aria-pressed="false">Micro</button>
+        </div>
+        <div class="group" role="group" aria-label="Overlays">
+          <button data-overlay="1" aria-pressed="true">Forces</button>
+          <button data-overlay="2" aria-pressed="true">Sensing</button>
+          <button data-overlay="4" aria-pressed="true">Legend</button>
         </div>
         <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Episode time">
       </div>
@@ -47,11 +60,14 @@
         <span>lateral <b id="lat">–</b> µm</span>
         <span>vertical <b id="vert">–</b> µm</span>
         <span>target <b id="target">–</b></span>
+        <span>level <b id="level">–</b></span>
+        <span>latency <b id="latency">–</b> ms</span>
         <span id="status" class="status-moving">loading…</span>
       </div>
-      <p class="disclaimer">Replay of recorded MuJoCo states from the 200 predetermined evaluation episodes; the page
-        does not simulate. Drag to orbit, right-drag or Shift-drag to pan, scroll to zoom. Display interpolates between
-        recorded 50 Hz states.</p>
+      <p class="disclaimer">Replay of recorded MuJoCo states: the first 30 of the 200 predetermined evaluation seeds for
+        each policy and disturbance level; the page does not simulate. Overlays show the recorded disturbance values: force
+        arrows at 5 cm per 0.1 N, micrometre quantities at true scale in the Micro camera. Drag to orbit, right-drag or
+        Shift-drag to pan, scroll to zoom. Display interpolates between recorded 50 Hz states.</p>
     </div>
 
     <div class="metrics" id="metrics">

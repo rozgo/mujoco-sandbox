@@ -18,7 +18,7 @@ import mujoco
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .align_env import EPISODE_FIELDS, EVALUATION_SEEDS
+from .align_env import EPISODE_FIELDS, EVALUATION_SEEDS, ROW
 from .motion import JOINT_NAMES
 from .motion_media import ACCENT, BG, INK, MUTED, WARN, H, W, caption, follow_camera
 from .rl_scene import RL_SCENE, build_rl_scene
@@ -85,11 +85,11 @@ def evaluate_checkpoint(weights, output, hidden=128, layers=2, record=(), level=
     return summary, episodes
 
 
-ROW = 40  # surgical_core.h SA_ROW
-
-
 def load_states(folder, seed):
-    rows = np.fromfile(Path(folder)/f"states_{seed}.bin", dtype=np.float64).reshape(-1, ROW)
+    return states_from_rows(np.fromfile(Path(folder)/f"states_{seed}.bin", dtype=np.float64).reshape(-1, ROW))
+
+
+def states_from_rows(rows):
     return {"tip": rows[:, :3], "goal": rows[:, 3:6], "qpos": rows[:, 6:11], "time": rows[:, 11],
             "target": int(rows[0, 12]), "action_norm": rows[:, 13], "level": rows[:, 14],
             "measured_tip": rows[:, 15:18], "measured_goal": rows[:, 18:21], "base_acc": rows[:, 21:24],

@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from sixlegs.neural_insertion.align_env import AlignEnv, EVALUATION_SEEDS, evaluate, scripted
+from sixlegs.neural_insertion.align_env import AlignEnv, EVALUATION_SEEDS, evaluate, record_episode, scripted
 
 
 def test_same_seed_and_actions_reproduce_exactly():
@@ -99,14 +99,20 @@ def test_disturbances_keep_start_states_and_change_the_world():
 
 
 def test_replay_rows_record_the_disturbance_components():
-    import ctypes
     env = AlignEnv(1000001, level=1.)
     env.reset()
     for _ in range(10):
         env.step(np.zeros(3, np.float32))
-    row = np.zeros(40)
-    env.lib.sa_replay_row_c.argtypes = [ctypes.c_void_p, ctypes.c_double, np.ctypeslib.ndpointer(np.float64, flags="C")]
-    env.lib.sa_replay_row_c(env.handle, 0., row)
+    row = env.replay_row()
     assert row[14] == 1.0 and 0 <= row[39] <= .01  # level and latency
     assert np.abs(row[24:29]).max() > 0 and np.abs(row[21:24]).max() > 0  # force noise, table acceleration
     np.testing.assert_allclose(row[:3], env.state()["tip"], atol=0)
+
+
+def test_recorded_episodes_match_evaluation():
+    """Replay recording must not change the episode it records."""
+    info, rows = record_episode(scripted, 1000003, level=1.)
+    _, (reference,) = evaluate(scripted, seeds=[1000003], level=1.)
+    assert len(rows) == info["episode_length"] + 1
+    for key in ("success", "final_lateral_um", "final_vertical_um", "episode_return"):
+        assert info[key] == reference[key]

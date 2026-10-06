@@ -1,9 +1,9 @@
 """Build the project website pilot into build/site (ignored). Publishes nothing.
 
-Steps: record the 200 evaluation episodes for the trained policy and the scripted
-reference, export scene and replays for the raylib viewer, compile the viewer
-natively (inspection) and with Emscripten (web), and assemble the journal page
-with converted media. Usage: uv run --locked python scripts/build_site.py [--native-only]
+Steps: record evaluation episodes for each policy at each disturbance level,
+export scene and replays for the raylib viewer, compile the viewer natively
+(inspection) and with Emscripten (web), and assemble the journal page with
+converted media. Usage: uv run --locked python scripts/build_site.py [--native-only]
 """
 
 import argparse
@@ -20,59 +20,74 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/"src"))
 
-from sixlegs.neural_insertion.align_env import AlignEnv, EVALUATION_SEEDS, scripted  # noqa: E402
-from sixlegs.neural_insertion.align_policy import evaluate_checkpoint, load_states  # noqa: E402
+from sixlegs.neural_insertion.align_env import EVALUATION_SEEDS, record_episode, scripted  # noqa: E402
+from sixlegs.neural_insertion.align_policy import evaluate_checkpoint, load_states, states_from_rows  # noqa: E402
 from sixlegs.neural_insertion.scene import load_scene  # noqa: E402
 from sixlegs.neural_insertion.site_export import write_replays, write_scene  # noqa: E402
 
 SITE, NATIVE = ROOT/"build/site", ROOT/"build/site_native"
 DEPS = ROOT/"build/site_deps"
-WEIGHTS = ROOT/"assets/neural_insertion/align_v3_policy.bin"
-STATES = ROOT/"outputs/neural_insertion/site/learned_states"
-OUTCOME = {"success": 1, "collision": 2, "timeout": 0}
+WEIGHTS = {"robust": ROOT/"assets/neural_insertion/align_v4_policy.bin",
+           "undisturbed": ROOT/"assets/neural_insertion/align_v3_policy.bin"}
+STATES = ROOT/"outputs/neural_insertion/site/states"
+# Viewer policies: 0 robust learned (trained under disturbances), 1 scripted
+# yardstick, 2 learned without disturbances. Each at three disturbance levels on
+# the first SITE_SEEDS predetermined evaluation seeds (results use all 200).
+LEVELS = (0.0, 0.5, 1.0)
+SITE_SEEDS = EVALUATION_SEEDS[:30]
+FONT = Path(__import__("matplotlib").get_data_path())/"fonts/ttf"
 
 
 def outcome(info):
     return 1 if info["success"] else 2 if info["collision"] else 0
 
 
-def learned_episodes():
-    if not (STATES/"episodes.json").exists():
-        evaluate_checkpoint(WEIGHTS, STATES, record=EVALUATION_SEEDS)
-    infos = {e["seed"]: e for e in json.loads((STATES/"episodes.json").read_text())}
+def learned_episodes(name, policy, level):
+    weights = WEIGHTS[name]
+    tag = hashlib.sha256(weights.read_bytes()).hexdigest()[:12]
+    folder = STATES/f"{name}_{tag}_level{level:.2f}"
+    if not (folder/"episodes.json").exists():
+        evaluate_checkpoint(weights, folder, record=SITE_SEEDS, level=level)
+    infos = {e["seed"]: e for e in json.loads((folder/"episodes.json").read_text())}
+    return [{"seed": seed, "policy": policy, "outcome": outcome(infos[seed]), "states": load_states(folder, seed)}
+            for seed in SITE_SEEDS]
+
+
+def scripted_episodes(level):
     episodes = []
-    for seed in EVALUATION_SEEDS:
-        s = load_states(STATES, seed)
-        episodes.append({"seed": seed, "target": s["target"], "policy": 0, "outcome": outcome(infos[seed]),
-                         "time": s["time"], "qpos": s["qpos"], "goal": s["goal"][0]})
+    for seed in SITE_SEEDS:
+        info, rows = record_episode(scripted, seed, level)
+        episodes.append({"seed": seed, "policy": 1, "outcome": outcome(info), "states": states_from_rows(rows)})
     return episodes
 
 
-def scripted_episodes():
-    episodes = []
-    for seed in EVALUATION_SEEDS:
-        env = AlignEnv(seed)
-        obs, done = env.reset(), False
-        rows = [env.state()]
-        while not done:
-            obs, _, done, info = env.step(scripted(env, obs))
-            rows.append(env.state())
-        episodes.append({"seed": seed, "target": rows[0]["target"], "policy": 1, "outcome": outcome(info),
-                         "time": np.array([r["tick"]*.02 for r in rows]), "qpos": np.array([r["qpos"] for r in rows]),
-                         "goal": rows[0]["goal"]})
-        env.close()
-    return episodes
+def fonts(folder):
+    """DejaVu Sans (from matplotlib; free licence, copied alongside), subset to the viewer's characters."""
+    from fontTools import subset
+    text = "".join(map(chr, range(32, 127)))+"\u00b5\u00b2\u00b1\u00d7"
+    for source, name in (("DejaVuSans.ttf", "font.ttf"), ("DejaVuSans-Bold.ttf", "font_bold.ttf")):
+        font = subset.load_font(str(FONT/source), subset.Options())
+        subsetter = subset.Subsetter()
+        subsetter.populate(text=text)
+        subsetter.subset(font)
+        font.save(str(folder/name))
+    shutil.copy2(FONT/"LICENSE_DEJAVU", folder/"LICENSE_DEJAVU")
 
 
 def export_data(folder):
     folder.mkdir(parents=True, exist_ok=True)
     model, data = load_scene()
     scene = write_scene(folder/"scene.bin", model, data)
-    episodes = learned_episodes()+scripted_episodes()
+    episodes = []
+    for level in LEVELS:
+        episodes += learned_episodes("robust", 0, level)+scripted_episodes(level)+learned_episodes("undisturbed", 2, level)
     write_replays(folder/"replays.bin", model, data, episodes)
-    summary = {"scene": scene, "episodes": len(episodes),
-               "learned_success": float(np.mean([e["outcome"] == 1 for e in episodes if e["policy"] == 0])),
-               "scripted_success": float(np.mean([e["outcome"] == 1 for e in episodes if e["policy"] == 1]))}
+    fonts(folder)
+    summary = {"scene": scene, "episodes": len(episodes), "seeds": [SITE_SEEDS[0], SITE_SEEDS[-1]],
+               "replay_bytes": (folder/"replays.bin").stat().st_size,
+               "success_on_site_seeds": {f"policy{p}_level{level}": float(np.mean(
+                   [e["outcome"] == 1 for e in episodes if e["policy"] == p and e["states"]["level"][0] == level]))
+                   for p in (0, 1, 2) for level in LEVELS}}
     (folder/"export.json").write_text(json.dumps(summary, indent=1)+"\n")
     return summary
 
@@ -175,7 +190,10 @@ def manifest():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native-only", action="store_true")
+    parser.add_argument("--robust", type=Path, help="robust policy weights (default: the committed align_v4 asset)")
     args = parser.parse_args()
+    if args.robust:
+        WEIGHTS["robust"] = args.robust
     data_folder = ROOT/"build/site_data"
     print(json.dumps(export_data(data_folder), indent=1))
     print("native viewer:", build_native())

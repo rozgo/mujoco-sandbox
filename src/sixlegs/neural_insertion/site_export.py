@@ -218,20 +218,37 @@ def episode_frames(model, data, qpos_rows):
     return np.array(poses), np.array(tips)
 
 
+# Per-frame floats after time, moving-body positions and tip: lateral and vertical
+# error (um, to the true moving goal), true goal (3), measured tip (3), target
+# estimate (3), table acceleration (3), force noise, extra friction and vibration
+# inertial force on each slide (3 x 5, N along the joint axis), |action|.
+EXTRA = 2+3+3+3+3+3*len(JOINT_NAMES)+1
+
+
 def write_replays(path, model, data, episodes):
-    """episodes: dicts with seed, target, policy, outcome, time, qpos, goal."""
+    """episodes: dicts with seed, policy, outcome and states (align_policy.states_from_rows).
+
+    Format NIR2. The goal moves with modeled tissue motion, so it is stored per
+    frame; disturbance components are the core's recorded values at the 50 Hz
+    policy rate (vibration content above 25 Hz is aliased in this record).
+    """
+    mujoco.mj_kinematics(model, data)
+    axes = [data.xaxis[model.joint(n).id].copy() for n in JOINT_NAMES]
     with open(path, "wb") as f:
-        f.write(b"NIR1")
-        f.write(struct.pack("<II", len(episodes), len(MOVING)))
+        f.write(b"NIR2")
+        f.write(struct.pack("<III", len(episodes), len(MOVING), EXTRA))
         f.write(struct.pack(f"<{len(MOVING)}i", *[model.body(n).id for n in MOVING]))
+        for axis in axes:
+            f.write(struct.pack("<3f", *axis))
         for e in episodes:
-            poses, tips = episode_frames(model, data, e["qpos"])
-            goal = np.asarray(e["goal"])
-            lateral = np.linalg.norm(tips[:, :2]-goal[:2], axis=1)*1e6
-            vertical = (tips[:, 2]-goal[2])*1e6
-            f.write(struct.pack("<IIIII3f", e["seed"], e["target"], e["policy"], e["outcome"], len(poses), *goal))
-            for t, p, tip, lat, vert in zip(e["time"], poses, tips, lateral, vertical):
-                f.write(struct.pack("<f", t))
-                f.write(p.astype("<f4").tobytes())
-                f.write(tip.astype("<f4").tobytes())
-                f.write(struct.pack("<2f", lat, vert))
+            s = e["states"]
+            poses, tips = episode_frames(model, data, s["qpos"])
+            goal = s["goal"]
+            lateral = np.linalg.norm(tips[:, :2]-goal[:, :2], axis=1)*1e6
+            vertical = (tips[:, 2]-goal[:, 2])*1e6
+            f.write(struct.pack("<IIIII", e["seed"], s["target"], e["policy"], e["outcome"], len(poses)))
+            f.write(struct.pack("<2f", s["level"][0], s["latency_s"][0]))
+            extra = np.column_stack([lateral, vertical, goal, s["measured_tip"], s["measured_goal"], s["base_acc"],
+                                     s["force_noise"], s["friction"], s["vibration_force"], s["action_norm"]])
+            frames = np.column_stack([s["time"], poses.reshape(len(poses), -1), tips, extra])
+            f.write(frames.astype("<f4").tobytes())
