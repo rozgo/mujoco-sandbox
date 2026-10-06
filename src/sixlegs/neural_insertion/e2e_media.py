@@ -41,9 +41,15 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
     run = Path(run)
     trace = dict(np.load(run/"trace.npz", allow_pickle=True))
     report = json.loads((run/"report.json").read_text())
-    m, d, _ = load_e2e(tubes=report.get("variant") == "tubes")
+    modern = report.get("variant") == "modern"
+    if modern:
+        from .modern_scene import load_modern
+        m, d, _ = load_modern()
+    else:
+        m, d, _ = load_e2e(tubes=report.get("variant") == "tubes")
     renderer = mujoco.Renderer(m, PANEL_H, PANEL_W)
     see_through = [m.geom("tissue_phantom").id]+[g for g in range(m.ngeom) if m.geom(g).name.startswith("tube_")]
+    wide_distance, wide_drop = (22., 2.) if modern else (70., 8.)
     opaque = m.geom_rgba[see_through].copy()
     times = trace["time"]
     frames_t = np.arange(times[0], times[-1], speed/fps)
@@ -61,7 +67,7 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
         d.qpos[:] = trace["qpos"][i]
         mujoco.mj_kinematics(m, d)
         tip, eyelet = trace["tip"][i], trace["eyelet"][i]
-        wide = camera((tip+eyelet)/2+np.array((0, 0, -8)), 70, 135, -22)
+        wide = camera((tip+eyelet)/2+np.array((0, 0, -wide_drop)), wide_distance, 135, -22)
         near = camera(eyelet, 2.2, 205, -18)
         canvas = Image.new("RGB", (W, H), "#17152b")
         for k, cam in enumerate((wide, near)):

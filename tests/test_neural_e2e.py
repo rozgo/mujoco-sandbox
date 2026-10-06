@@ -51,3 +51,12 @@ def test_tissue_dimples_then_punctures():
     assert not tissue.state.punctured
     p = TissueParams()
     assert p.k_dimple*p.d_puncture == pytest.approx(2000.)  # 2 mN puncture force in uN
+
+
+def test_modern_scene_anchors_a_short_thread_without_initial_contact():
+    from sixlegs.neural_insertion.modern_scene import load_modern
+    m, d, meta = load_modern()
+    assert len(meta["thread_bodies"]) == 6 and m.nv == 21  # 5 robot slides, pincher, 5 ball joints
+    assert not [c for c in d.contact[:d.ncon] if c.dist < -1e-4]
+    pairs = {(m.geom(m.pair_geom1[i]).name, m.geom(m.pair_geom2[i]).name) for i in range(m.npair)}
+    assert ("needle", "pincher_jaw") in pairs  # the jaw must meet the needle it rides on

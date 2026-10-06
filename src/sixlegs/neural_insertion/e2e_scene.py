@@ -301,7 +301,11 @@ def _theme(root):
             geom.set("rgba", thread)
 
 
-def build_e2e_scene(path=E2E_SCENE, units=UNITS, tubes=False):
+AIR_DENSITY = 1.204          # kg/m^3, air at 20 C
+AIR_VISCOSITY = 1.81e-5      # Pa s
+
+
+def build_e2e_scene(path=E2E_SCENE, units=UNITS, tubes=False, air=True):
     si = build_scene(Path(path).with_suffix(".si.xml"))
     root = ET.parse(si).getroot()
     root.set("model", "surgical_insertion_e2e_v0")
@@ -324,6 +328,11 @@ def build_e2e_scene(path=E2E_SCENE, units=UNITS, tubes=False):
     for k, v in {"timestep": format(DT_S, "g"), "integrator": "RK4", "solver": "Newton", "tolerance": "1e-12",
                  "iterations": "100", "cone": "elliptic", "jacobian": "sparse"}.items():
         option.set(k, v)
+    if air:
+        # Still air at room temperature (1.204 kg/m^3, 1.81e-5 Pa s) through MuJoCo's inertia-based fluid model.
+        # Drag on a thread segment at 0.1 m/s is about a quarter of its weight; it damps whipping and ringing.
+        option.set("density", format(AIR_DENSITY*units.mass/units.length**3, ".6g"))
+        option.set("viscosity", format(AIR_VISCOSITY*units.mass/units.length, ".6g"))
     solimp, solref = _vec(law.solimp(units)), _vec(law.solref())
     for geom in root.iter("geom"):
         geom.set("solimp", solimp)

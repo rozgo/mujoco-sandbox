@@ -38,6 +38,7 @@ WORK_Z = -6.
 CARRY_Z = 49.5             # mm: Z stage during transport (travel limit 50); the 44 mm thread hangs clear
 LAY_OFFSET = 40.           # mm: descent starts this far -X of the target and lays the thread out behind
 LOST_MM = 1.0              # eyelet farther than this from the tip while carried: thread lost
+LOWER_S = 1.5              # duration of the laying descent
 KEEPER_OPEN = .5
 CLAMP_FORCE = 100.         # uN net keeper force on the rim: the validated press-fixture load (100 uN);
                            # 5 mN made the clamped few-microgram ring numerically stiff and it blew up (run_v4)
@@ -261,7 +262,7 @@ class Cycle:
         def lower():
             # Diagonal descent: the thread's free end lands first and the thread lies out behind
             # the needle instead of piling up under it (a straight plunge buckled it; run_v0).
-            self.move("lower", at((*tip_xy, surface+.5), keeper=KEEPER_CLOSED*L), 1.5, .10, carried=True)
+            self.move("lower", at((*tip_xy, surface+.5), keeper=KEEPER_CLOSED*L), LOWER_S, .10, carried=True)
             gap = np.linalg.norm(self.eyelet-self.tip)
             lateral = np.linalg.norm(self.eyelet[:2]-site[:2])
             self.check("aligned over target with eyelet", gap < .6 and lateral < .1,
@@ -337,7 +338,9 @@ def main():
     parser.add_argument("--resume", type=Path, help="checkpoint to continue from")
     parser.add_argument("--stop-after", help="step name to stop after")
     parser.add_argument("--tubes", action="store_true", help="pre-formed tissue channel variant")
+    parser.add_argument("--lower-seconds", type=float, default=LOWER_S, help="duration of the laying descent")
     args = parser.parse_args()
+    globals()["LOWER_S"] = args.lower_seconds
     started = datetime.now(timezone.utc).isoformat()
     cycle = Cycle(args.target, tubes=args.tubes)
     if args.resume:
