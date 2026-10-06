@@ -34,7 +34,7 @@ FPS = 30
 class Policy:
     """A trained checkpoint run by PufferLib's own CPU network code (deterministic mean)."""
 
-    def __init__(self, weights, hidden=128, layers=2):
+    def __init__(self, weights, hidden=128, layers=2, obs=16, actions=3):
         import ctypes
         import platform
         source = ROOT/"experiments/neural_insertion/puffer/align_policy_lib.c"
@@ -53,13 +53,14 @@ class Policy:
         self.lib.policy_create.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
         self.lib.policy_create.restype = ctypes.c_void_p
         self.lib.policy_act.argtypes = [ctypes.c_void_p, f32, ctypes.c_float, f32]
-        self.handle = self.lib.policy_create(str(weights).encode(), 16, hidden, layers, 3)
+        self.actions = actions
+        self.handle = self.lib.policy_create(str(weights).encode(), obs, hidden, layers, actions)
         if not self.handle:
-            raise ValueError("Checkpoint does not match the alignment network")
+            raise ValueError(f"Checkpoint does not match a {obs}-input, {actions}-action network")
         self.weights_sha256 = hashlib.sha256(Path(weights).read_bytes()).hexdigest()
 
     def act(self, obs, first):
-        action = np.zeros(3, np.float32)
+        action = np.zeros(self.actions, np.float32)
         self.lib.policy_act(self.handle, np.ascontiguousarray(obs, np.float32), 1. if first else 0., action)
         return action
 

@@ -126,28 +126,35 @@ class Cycle:
                     self.clamp_command()
                 if self.aux is not None:
                     self.aux(t)
-            if getattr(self, "pre_step", None) is not None:
-                self.pre_step()
-            self.tissue.step(self.d)
-            before = self.d.time
-            mujoco.mj_step(self.m, self.d)
-            unstable = any(self.d.warning[w].number for w in (mujoco.mjtWarning.mjWARN_BADQACC,
-                                                              mujoco.mjtWarning.mjWARN_BADQVEL,
-                                                              mujoco.mjtWarning.mjWARN_BADQPOS))
-            if self.d.time < before and not unstable:  # reset from outside (Backspace in the native viewer)
-                raise RuntimeError(f"simulation state was reset externally at t={before:.5f} s in {name}")
-            if unstable:
-                # MuJoCo resets the state after this warning; stop rather than continue from the reset.
-                raise FloatingPointError(f"MuJoCo instability (bad qacc) at t={before:.5f} s in {name}")
-            if self.on_step is not None and k % 50 == 0:
-                self.on_step(name)
-            if k % getattr(self, "record_every", RECORD_EVERY) == 0:
-                self.record(name)
-                if not np.isfinite(self.d.qpos).all():
-                    raise FloatingPointError("nonfinite state")
-                if carried and np.linalg.norm(self.eyelet-self.tip) > LOST_MM:
-                    raise RuntimeError(f"thread lost from the needle at t={self.d.time:.4f} s in {name}")
+            self.advance(name, k, carried)
         self.q_ref = q1
+        self.finish(name, started)
+
+    def advance(self, name, k, carried=False):
+        """One physics step after the servo command: disturbances, tissue forces, mj_step, checks, record."""
+        if getattr(self, "pre_step", None) is not None:
+            self.pre_step()
+        self.tissue.step(self.d)
+        before = self.d.time
+        mujoco.mj_step(self.m, self.d)
+        unstable = any(self.d.warning[w].number for w in (mujoco.mjtWarning.mjWARN_BADQACC,
+                                                          mujoco.mjtWarning.mjWARN_BADQVEL,
+                                                          mujoco.mjtWarning.mjWARN_BADQPOS))
+        if self.d.time < before and not unstable:  # reset from outside (Backspace in the native viewer)
+            raise RuntimeError(f"simulation state was reset externally at t={before:.5f} s in {name}")
+        if unstable:
+            # MuJoCo resets the state after this warning; stop rather than continue from the reset.
+            raise FloatingPointError(f"MuJoCo instability (bad qacc) at t={before:.5f} s in {name}")
+        if self.on_step is not None and k % 50 == 0:
+            self.on_step(name)
+        if k % getattr(self, "record_every", RECORD_EVERY) == 0:
+            self.record(name)
+            if not np.isfinite(self.d.qpos).all():
+                raise FloatingPointError("nonfinite state")
+            if carried and np.linalg.norm(self.eyelet-self.tip) > LOST_MM:
+                raise RuntimeError(f"thread lost from the needle at t={self.d.time:.4f} s in {name}")
+
+    def finish(self, name, started):
         self.record(name)
         warnings = [int(w.number) for w in self.d.warning]
         self.events.append({"phase": name, "end_s": float(self.d.time), "wall_s": time.perf_counter()-started,

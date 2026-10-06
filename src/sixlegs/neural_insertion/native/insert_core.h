@@ -5,9 +5,11 @@
 // One site per episode. The phantom is turned about its dome centre by a random angle (the vessel layout
 // turns with it; the dome shape is kept); the site is random on the dome, clear of vessels and of 0-5
 // threads already standing at earlier sites. The policy steers the needle point (stage X, Y and Z
-// velocities, as in alignment) and has a fourth action that starts the programmed stroke: the insertion
-// slide drives the needle onto the waiting thread end, which sticks to it (a stand-in for a chemical
-// bond), on to 2 mm below the measured surface, waits 10 ms, lets go, and snaps back.
+// velocities, as in alignment) and has a fourth action that starts the programmed stroke of the approved
+// cycle (tube_cycle.py), with the stages held still from then on: the insertion slide drives the needle
+// 1.02 mm down onto the waiting thread end in 40 ms, which sticks to it (a stand-in for a chemical bond),
+// waits 5 ms, drives on to 2 mm below the measured surface in 25 ms, waits 30 ms, lets go, waits 10 ms
+// and snaps back in 30 ms.
 //
 // The thread is not simulated here (it is in the MuJoCo cycle, tube_cycle.py, used to validate). Its end
 // waits 1 mm below the needle point, offset from the needle's axis by an amount drawn per episode from the
@@ -31,8 +33,14 @@
 #define SI_DEPTH 0.002            // the thread end's depth at full stroke
 #define SI_MARK 0.00016           // target markings sit this far above the surface
 #define SI_STICK 30e-6            // the end sticks if it is within this of the needle's axis
-#define SI_STROKE_S 0.050         // stroke duration (minimum jerk)
-#define SI_SETTLE_S 0.010         // at depth before release
+// Programmed stroke, minimum-jerk segments timed as in tube_cycle.py (pick, insert, release, snap back).
+#define SI_PICK_S 0.040           // needle down onto the thread end
+#define SI_PICK_PAST 20e-6        // the pick ends this far below the thread end
+#define SI_PICK_HOLD_S 0.005
+#define SI_INSERT_S 0.025         // on to depth
+#define SI_STROKE_S (SI_PICK_S + SI_PICK_HOLD_S + SI_INSERT_S)
+#define SI_SETTLE_S 0.030         // at depth before release
+#define SI_RELEASE_S 0.010        // after release, before the snap back
 #define SI_RETRACT_S 0.030
 #define SI_TOL 10e-6              // success: thread end within 10 µm of the target
 #define SI_MAX_PLACED 5
@@ -392,9 +400,14 @@ static inline void si_command(SICore* c, const float* action) {
         a[i] = sa_clip(action[i], -1, 1);
         a[i] = a[i] * a[i] * a[i];
     }
-    // X, Y and the Z stage (approach); the insertion slide is reserved for the programmed stroke.
-    double vz = c->phase == SI_APPROACH ? a[2] * SA_VMAX_Z : 0;
-    double v[SA_NJ] = {a[0] * SA_VMAX_XY, a[1] * SA_VMAX_XY, vz, 0, 0};
+    // X, Y and the Z stage during the approach; the insertion slide is reserved for the programmed stroke,
+    // and the stages hold still from its start (no sideways motion with the needle in the tissue).
+    double v[SA_NJ] = {0};
+    if (c->phase == SI_APPROACH) {
+        v[0] = a[0] * SA_VMAX_XY;
+        v[1] = a[1] * SA_VMAX_XY;
+        v[2] = a[2] * SA_VMAX_Z;
+    }
     memcpy(c->a.v_cmd, v, sizeof(v));
 }
 
@@ -410,7 +423,8 @@ static inline int si_step(SICore* c, const float* action, float* obs, float* rew
         c->phase_t = 0;
         c->triggered = 1;
         c->stroke_from = c->a.q_ref[3];
-        c->stroke_len = fmax(tip[2] - (surface_meas - SI_DEPTH), 0.0);
+        c->stroke_len = fmax(tip[2] - (surface_meas - SI_DEPTH), SI_END_BELOW + SI_PICK_PAST);
+        for (int j = 0; j < 3; j++) c->a.v_ref[j] = 0;  // stage references held where they are
     }
     si_command(c, action);
     int contact = 0;
@@ -429,11 +443,21 @@ static inline int si_step(SICore* c, const float* action, float* obs, float* rew
         // Insertion slide: hold, stroke, settle, retract (programmed motion, as a stage controller runs it).
         double v = 0, acc = 0, q3 = c->a.q_ref[3];
         if (c->phase == SI_STROKE) {
-            q3 = c->stroke_from + c->stroke_len * si_mj(c->phase_t / SI_STROKE_S, &v, &acc, SI_STROKE_S);
-            v *= c->stroke_len; acc *= c->stroke_len;
-        } else if (c->phase == SI_RETRACT) {
-            q3 = c->retract_from + (SI_Q_READY - c->retract_from) * si_mj(c->phase_t / SI_RETRACT_S, &v, &acc, SI_RETRACT_S);
-            v *= SI_Q_READY - c->retract_from; acc *= SI_Q_READY - c->retract_from;
+            double pick = SI_END_BELOW + SI_PICK_PAST, t = c->phase_t;
+            if (t < SI_PICK_S) {
+                q3 = c->stroke_from + pick * si_mj(t / SI_PICK_S, &v, &acc, SI_PICK_S);
+                v *= pick; acc *= pick;
+            } else if (t < SI_PICK_S + SI_PICK_HOLD_S) {
+                q3 = c->stroke_from + pick;
+            } else {
+                double rest = c->stroke_len - pick;
+                q3 = c->stroke_from + pick + rest * si_mj((t - SI_PICK_S - SI_PICK_HOLD_S) / SI_INSERT_S, &v, &acc, SI_INSERT_S);
+                v *= rest; acc *= rest;
+            }
+        } else if (c->phase == SI_RETRACT && c->phase_t >= SI_RELEASE_S) {
+            double back = SI_Q_READY - c->retract_from;
+            q3 = c->retract_from + back * si_mj((c->phase_t - SI_RELEASE_S) / SI_RETRACT_S, &v, &acc, SI_RETRACT_S);
+            v *= back; acc *= back;
         }
         a_ref[3] = acc; c->a.v_ref[3] = v; c->a.q_ref[3] = q3;
         a_ref[4] = 0; c->a.v_ref[4] = 0;
@@ -457,7 +481,7 @@ static inline int si_step(SICore* c, const float* action, float* obs, float* rew
             c->depth = si_surface(c, c->end[0], c->end[1]) - c->end[2];
             c->retract_from = c->a.q_ref[3];
             c->phase = SI_RETRACT; c->phase_t = 0;
-        } else if (c->phase == SI_RETRACT && c->phase_t >= SI_RETRACT_S) { c->phase = SI_DONE; }
+        } else if (c->phase == SI_RETRACT && c->phase_t >= SI_RELEASE_S + SI_RETRACT_S) { c->phase = SI_DONE; }
         if (c->missed || c->dragged || c->thread_touch) break;
     }
     c->tick++;
@@ -474,7 +498,7 @@ static inline int si_step(SICore* c, const float* action, float* obs, float* rew
     double smooth = 0;
     for (int i = 0; i < SI_ACT; i++) {
         double applied = sa_clip(action[i], -1, 1), da = applied - c->prev_action[i];
-        if (i < 3) smooth += da * da;
+        if (i < 3 && c->phase == SI_APPROACH) smooth += da * da;
         c->prev_action[i] = (float)applied;
     }
     r -= 0.002 * smooth;

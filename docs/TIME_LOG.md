@@ -1071,3 +1071,16 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   20. Seven replay runs re-recorded with display fields by 08:57 (identical
   placements to the baseline); first native viewer screenshots at 09:01; full
   site built and checked in the browser by 09:08 UTC.
+- With the user (09:12 UTC): move to RL training. Option 1 chosen at 09:20
+  (fast C environment; random sites, phantom rotation, threads already placed).
+  Thread-end statistics from 60 full-simulation runs and the C yardstick
+  baseline on 200 evaluation seeds by 09:31; committed at 09:32. **insert_v1
+  launched on the RTX 4090 at 09:33:22 UTC** (55K steps/s; CPU MuJoCo for the
+  environments, CUDA for the network).
+- 09:40-09:50 UTC: full-simulation harness for the policy (policy_cycle.py).
+  The C environment's compensating yardstick, on the policy's 24 inputs built
+  from the full simulation, placed 3 of 3 threads at 7.8, 6.2 and 6.3 µm
+  (level 1, seed 1001; 4.5 s simulated in about 70 s wall). insert_v1 showed a
+  flaw in the C environment: the stages kept moving after the stroke started.
+  insert_v2 environment: stages held during the stroke, stroke timed as the
+  full cycle; C yardstick re-evaluated (16 s wall).
