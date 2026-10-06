@@ -165,6 +165,29 @@ evaluation seeds start the needle carriage outside its travel and drift about
 first 50 seeds succeeds in 100% (level 0), 100% (nominal) and 92% (stress).
 Results above this section use scale v1.
 
+### Run 6 and scale v2 results
+
+`align_v6` (rate 0.001, 300 M steps, 1 h 31 min on the RTX 4090; trained on
+scale v1 with the old drive and start states) first succeeded in training
+around 79 M steps and reached 62.4% training success with 7.7% collisions.
+Evaluated on the current core (scale v2, drive gain 4, start heights capped)
+on the 200 seeds, as a transfer test ([manifest](ROBUST_ALIGN_RESULTS.json);
+scale-v1 results kept in [ROBUST_ALIGN_RESULTS_SCALE_V1.json](ROBUST_ALIGN_RESULTS_SCALE_V1.json)):
+
+| Policy | None | 0.5 | Nominal | 1.5 | Stress |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `align_v6` | 95.0% | 95.0% | 95.0% | 91.5% | 73.5% |
+| `align_v3`, no disturbances in training | 100% | 99.5% | 98.0% | 88.0% | 64.5% |
+| Scripted yardstick | 100% | 100% | 100% | 99.0% | 85.5% |
+| `align_v5` | 63.5% | 56.5% | 60.0% | 59.5% | 43.0% |
+
+`align_v6` is the first disturbance-trained policy to hold up under
+disturbance (it beats `align_v3` at 1.5 and stress, and reaches a 1.6 s mean
+success time at nominal against 2.05 s scripted), but it collides in the same
+10 episodes at every level, all starting 20–40 mm out on the domed phantom: a
+learned behaviour, likely holding height while moving inward over the rising
+dome. `align_v7` trains on the current core.
+
 ## What this does and does not show
 
 It shows that the robot, servo and environment support learning a precise,
