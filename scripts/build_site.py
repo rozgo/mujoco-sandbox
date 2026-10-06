@@ -1,0 +1,200 @@
+"""Build the project website pilot into build/site (ignored). Publishes nothing.
+
+Steps: record the 200 evaluation episodes for the trained policy and the scripted
+reference, export scene and replays for the raylib viewer, compile the viewer
+natively (inspection) and with Emscripten (web), and assemble the journal page
+with converted media. Usage: uv run --locked python scripts/build_site.py [--native-only]
+"""
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT/"src"))
+
+from sixlegs.neural_insertion.align_env import AlignEnv, EVALUATION_SEEDS, scripted  # noqa: E402
+from sixlegs.neural_insertion.align_policy import evaluate_checkpoint, load_states  # noqa: E402
+from sixlegs.neural_insertion.scene import load_scene  # noqa: E402
+from sixlegs.neural_insertion.site_export import write_replays, write_scene  # noqa: E402
+
+SITE, NATIVE = ROOT/"build/site", ROOT/"build/site_native"
+DEPS = ROOT/"build/site_deps"
+WEIGHTS = ROOT/"assets/neural_insertion/align_v3_policy.bin"
+STATES = ROOT/"outputs/neural_insertion/site/learned_states"
+OUTCOME = {"success": 1, "collision": 2, "timeout": 0}
+
+
+def outcome(info):
+    return 1 if info["success"] else 2 if info["collision"] else 0
+
+
+def learned_episodes():
+    if not (STATES/"episodes.json").exists():
+        evaluate_checkpoint(WEIGHTS, STATES, record=EVALUATION_SEEDS)
+    infos = {e["seed"]: e for e in json.loads((STATES/"episodes.json").read_text())}
+    episodes = []
+    for seed in EVALUATION_SEEDS:
+        s = load_states(STATES, seed)
+        episodes.append({"seed": seed, "target": s["target"], "policy": 0, "outcome": outcome(infos[seed]),
+                         "time": s["time"], "qpos": s["qpos"], "goal": s["goal"][0]})
+    return episodes
+
+
+def scripted_episodes():
+    episodes = []
+    for seed in EVALUATION_SEEDS:
+        env = AlignEnv(seed)
+        obs, done = env.reset(), False
+        rows = [env.state()]
+        while not done:
+            obs, _, done, info = env.step(scripted(env, obs))
+            rows.append(env.state())
+        episodes.append({"seed": seed, "target": rows[0]["target"], "policy": 1, "outcome": outcome(info),
+                         "time": np.array([r["tick"]*.02 for r in rows]), "qpos": np.array([r["qpos"] for r in rows]),
+                         "goal": rows[0]["goal"]})
+        env.close()
+    return episodes
+
+
+def export_data(folder):
+    folder.mkdir(parents=True, exist_ok=True)
+    model, data = load_scene()
+    scene = write_scene(folder/"scene.bin", model, data)
+    episodes = learned_episodes()+scripted_episodes()
+    write_replays(folder/"replays.bin", model, data, episodes)
+    summary = {"scene": scene, "episodes": len(episodes),
+               "learned_success": float(np.mean([e["outcome"] == 1 for e in episodes if e["policy"] == 0])),
+               "scripted_success": float(np.mean([e["outcome"] == 1 for e in episodes if e["policy"] == 1]))}
+    (folder/"export.json").write_text(json.dumps(summary, indent=1)+"\n")
+    return summary
+
+
+def build_native():
+    NATIVE.mkdir(parents=True, exist_ok=True)
+    raylib = DEPS/"raylib-6.0_macos"
+    subprocess.run(["clang", "-O2", "-std=c11", "-Wall", "-DPLATFORM_DESKTOP", f"-I{raylib/'include'}",
+                    str(ROOT/"site/viewer/viewer.c"), str(raylib/"lib/libraylib.a"),
+                    "-framework", "Cocoa", "-framework", "IOKit", "-framework", "CoreVideo",
+                    "-framework", "OpenGL", "-lm", "-o", str(NATIVE/"viewer")], check=True)
+    return NATIVE/"viewer"
+
+
+def emsdk_env():
+    env = os.environ.copy()
+    emsdk = ROOT/".local/emsdk"
+    out = subprocess.check_output(["bash", "-c", f"source {emsdk}/emsdk_env.sh >/dev/null 2>&1; env"], text=True)
+    env.update(line.split("=", 1) for line in out.splitlines() if "=" in line)
+    return env
+
+
+def build_web(data_folder):
+    out = SITE/"viewer"
+    out.mkdir(parents=True, exist_ok=True)
+    raylib = DEPS/"raylib-6.0_webassembly"
+    subprocess.run(["emcc", str(ROOT/"site/viewer/viewer.c"), "-o", str(out/"viewer.js"), "-std=c11", "-O3",
+                    f"-I{raylib/'include'}", str(raylib/"lib/libraylib.web.a"),
+                    "-DPLATFORM_WEB", "-DGRAPHICS_API_OPENGL_ES3",
+                    "-sUSE_GLFW=3", "-sUSE_WEBGL2=1", "-sMIN_WEBGL_VERSION=2", "-sMAX_WEBGL_VERSION=2",
+                    "-sALLOW_MEMORY_GROWTH=1", "-sINITIAL_MEMORY=64MB", "-sSTACK_SIZE=1MB", "-sENVIRONMENT=web",
+                    "-sEXPORTED_RUNTIME_METHODS=ccall,cwrap", "--preload-file", f"{data_folder}@data"],
+                   check=True, env=emsdk_env())
+    return out
+
+
+def media(images, videos):
+    """Convert repository figures (Git LFS PNG) to WebP and copy videos for the page."""
+    from PIL import Image
+    folder = SITE/"media"
+    folder.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for name, source in images.items():
+        image = Image.open(ROOT/source).convert("RGB")
+        if image.width > 1800:
+            image = image.resize((1800, round(image.height*1800/image.width)), Image.Resampling.LANCZOS)
+        image.save(folder/f"{name}.webp", quality=84, method=6)
+        out[name] = f"media/{name}.webp"
+    for name, source in videos.items():
+        shutil.copy2(ROOT/source, folder/f"{name}.mp4")
+        out[name] = f"media/{name}.mp4"
+    return out
+
+
+IMAGES = {
+    "workcell": "previews/neural_insertion/static_v1/overview.png",
+    "mechanism": "previews/neural_insertion/static_v1/mechanism.png",
+    "tool": "previews/neural_insertion/static_v1/tool_clearance.png",
+    "cassette": "previews/neural_insertion/static_v1/thread_fixture.png",
+    "rescaling": "previews/neural_insertion/rescaling/quality_review.png",
+    "der": "previews/neural_insertion/der_v2/quality_review.png",
+    "isolation": "previews/neural_insertion/contact_isolation_v1/quality_review.png",
+    "isolation_fixtures": "previews/neural_insertion/contact_isolation_v1/initial.png",
+    "audit": "previews/neural_insertion/contact_audit_v1/quality_review.png",
+    "smoothing": "previews/neural_insertion/contact_smoothing_v1/quality_review.png",
+    "task_regime": "previews/neural_insertion/task_regime_v1/quality_review.png",
+    "approach_frame": "previews/neural_insertion/approach_v1/frame_0063.png",
+    "learned_frame": "previews/neural_insertion/align_v3/seed1000009_01.13s.png",
+    "learned_card": "previews/neural_insertion/align_v3/results_card.png",
+}
+VIDEOS = {
+    "approach_tour": "previews/neural_insertion/approach_v1/approach_tour.mp4",
+    "learned_alignment": "previews/neural_insertion/align_v3/learned_alignment.mp4",
+}
+
+
+def assemble(media_paths):
+    for name in ("index.html", "style.css", "journal.js"):
+        shutil.copy2(ROOT/"site"/name, SITE/name)
+    data = SITE/"data"
+    data.mkdir(exist_ok=True)
+    results = json.loads((ROOT/"docs/neural_insertion/ALIGN_RESULTS.json").read_text())
+    clock = json.loads((ROOT/"docs/neural_insertion/THREAD_CLOCK_RESULTS.json").read_text())
+    (data/"training.json").write_text(json.dumps({k: {"outcome": v["outcome"], "history": v["history"]}
+                                                  for k, v in results["runs"].items()})+"\n")
+    (data/"evaluation.json").write_text(json.dumps({k: v["summary"] for k, v in results["evaluation"].items()})+"\n")
+    (data/"clock.json").write_text(json.dumps([{k: c[k] for k in ("material", "integrator", "time_constant_s", "dt_s",
+                                                                  "difference_um", "passed")}
+                                               for c in clock["comparisons"].values() if not c.get("units")])+"\n")
+    (SITE/"media.json").write_text(json.dumps(media_paths, indent=1)+"\n")
+    (SITE/".nojekyll").write_text("")
+
+
+def manifest():
+    files = {str(p.relative_to(SITE)): hashlib.sha256(p.read_bytes()).hexdigest()
+             for p in sorted(SITE.rglob("*")) if p.is_file() and p.name != "build.json"}
+    dirty = bool(subprocess.check_output(["git", "status", "--porcelain", "--", "site", "scripts/build_site.py",
+                                          "src/sixlegs/neural_insertion/site_export.py"], cwd=ROOT))
+    report = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+              "source_dirty": dirty, "raylib": "6.0", "emscripten": "6.0.9", "files": files,
+              "note": "Replays recorded MuJoCo states; the page does not simulate."}
+    (SITE/"build.json").write_text(json.dumps(report, indent=1)+"\n")
+    return report
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--native-only", action="store_true")
+    args = parser.parse_args()
+    data_folder = ROOT/"build/site_data"
+    print(json.dumps(export_data(data_folder), indent=1))
+    print("native viewer:", build_native())
+    if args.native_only:
+        return
+    if SITE.exists():
+        shutil.rmtree(SITE)
+    SITE.mkdir(parents=True)
+    print("web viewer:", build_web(data_folder))
+    assemble(media(IMAGES, VIDEOS))
+    report = manifest()
+    print(f"site: {SITE} ({len(report['files'])} files)")
+
+
+if __name__ == "__main__":
+    main()

@@ -956,3 +956,16 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   Video render **11 s wall**, 0 s additional simulation; decoded all 260 frames.
   Native viewer ran the final checkpoint live (two episodes before the window
   was closed).
+
+## October 6: website pilot
+
+- User direction: a journal web page with an interactive raylib replay instead
+  of video, realistic materials in the given palette, the exact task
+  specification and a network diagram; build a pilot to review. Compared with
+  the AlienWars Gym web pipeline first and adopted its shader approach.
+- Built locally only: raylib 6.0 WebAssembly replay viewer, scene and replay
+  exporter, journal page, build script. Recorded 400 episodes (200 learned,
+  200 scripted) for replay; no training, no new physics claims.
+- Checked in Chrome and fixed four issues before committing: episodes requested
+  before the C `main` loaded them, canvas sizing, raylib overwriting the page
+  title, and diagram text overflow. Nothing published.

@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Surgical Thread Robot Journal</title>
+  <meta name="description" content="Building a surgical thread-insertion robot in MuJoCo and training it with PufferLib 5.0: an engineering journal with an interactive replay.">
+  <meta name="theme-color" content="#8981af">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Engineering journal · October 5–6, 2026 · MuJoCo 3.12 · PufferLib 5.0</p>
+    <h1>Building a surgical thread-insertion robot in simulation</h1>
+    <p class="lede">A five-axis gantry, a 150 µm needle, a 40 µm thread and a tissue phantom with vessels.
+      This is the record of getting the physics right and teaching the robot its first task:
+      aligning the needle within 10 µm of a target.</p>
+
+    <div class="stage">
+      <canvas id="viewer" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+      <div class="controls">
+        <div class="group" role="group" aria-label="Policy">
+          <button id="policy-learned" aria-pressed="true">Learned policy</button>
+          <button id="policy-scripted" aria-pressed="false">Scripted reference</button>
+        </div>
+        <div class="group">
+          <button id="prev" aria-label="Previous episode">◀</button>
+          <select id="episode" aria-label="Evaluation episode"></select>
+          <button id="next" aria-label="Next episode">▶</button>
+        </div>
+        <button id="play" aria-pressed="true">Pause</button>
+        <div class="group" role="group" aria-label="Speed">
+          <button data-speed="0.25" aria-pressed="false">0.25×</button>
+          <button data-speed="1" aria-pressed="true">1×</button>
+        </div>
+        <div class="group" role="group" aria-label="Camera">
+          <button data-camera="0" aria-pressed="false">Workcell</button>
+          <button data-camera="1" aria-pressed="true">Field</button>
+          <button data-camera="2" aria-pressed="false">Needle</button>
+        </div>
+        <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Episode time">
+      </div>
+      <div class="readout" aria-live="off">
+        <span>t <b id="t">0.00</b> s</span>
+        <span>lateral <b id="lat">–</b> µm</span>
+        <span>vertical <b id="vert">–</b> µm</span>
+        <span>target <b id="target">–</b></span>
+        <span id="status" class="status-moving">loading…</span>
+      </div>
+      <p class="disclaimer">Replay of recorded MuJoCo states from the 200 predetermined evaluation episodes; the page
+        does not simulate. Drag to orbit, right-drag or Shift-drag to pan, scroll to zoom. Display interpolates between
+        recorded 50 Hz states.</p>
+    </div>
+
+    <div class="metrics" id="metrics">
+      <div class="metric"><div class="value">100%</div><div class="label">success, 200 held-out episodes</div></div>
+      <div class="metric"><div class="value">1.40 s</div><div class="label">mean time to a 10 µm hold (scripted 2.06 s)</div></div>
+      <div class="metric"><div class="value">0</div><div class="label">collisions with phantom or fixtures</div></div>
+      <div class="metric"><div class="value">8.6 µm</div><div class="label">worst final lateral error</div></div>
+      <div class="metric"><div class="value">29 min</div><div class="label">training on one RTX 4090, 99.9 M steps</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Chapters">
+  <div class="wrap">
+    <a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
+    <a href="#contact">4 Contact</a><a href="#fixes">5 Two fixes</a><a href="#gates">6 The correction</a>
+    <a href="#motion">7 Motion</a><a href="#task">8 Learning task</a><a href="#network">9 Network</a>
+    <a href="#training">10 Training</a><a href="#results">11 Results</a><a href="#next">12 Next</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="scope"><strong>Where this stands.</strong> The robot aligns its needle 1 mm above any of six targets,
+    within 10 µm, without touching anything. It does not yet pick up thread, enter tissue or release thread: the
+    phantom is a rigid solid with no puncture model, and thread handling is the next milestone. Every number on this
+    page comes from recorded runs in the repository.</div>
+
+  <section id="workcell">
+    <h2>1 · A static workcell first</h2>
+    <p class="when">October 5 · model, inspect, then move</p>
+    <div class="prose">
+      <p>We built the robot as a static scene before anything moved: an XYZ gantry, a downward insertion slide with a
+        150 µm needle, a thread retainer, a mounted microscope, a domed tissue phantom with six targets and vessel
+        markings, and a cassette of 40 µm thread samples. Clearance and limits were checked at 120 sampled poses before
+        any dynamics.</p>
+    </div>
+    <div class="grid2">
+      <figure><img data-media="workcell" alt="Overview of the gantry, phantom and cassette"><figcaption>Five actuated slides over a 658 × 448 mm deck.</figcaption></figure>
+      <figure><img data-media="tool" alt="Needle and retainer above the phantom"><figcaption>Needle, retainer and the target field.</figcaption></figure>
+    </div>
+    <div class="table-wrap"><table>
+      <tr><th>Axis</th><th class="num">Travel (mm)</th><th class="num">Moving mass (kg)</th><th class="num">Force limit (N)</th></tr>
+      <tr><td>X</td><td class="num">−175…175</td><td class="num">2.4</td><td class="num">±100</td></tr>
+      <tr><td>Y</td><td class="num">−75…75</td><td class="num">1.3</td><td class="num">±80</td></tr>
+      <tr><td>Z</td><td class="num">−8…50</td><td class="num">0.65</td><td class="num">±40</td></tr>
+      <tr><td>Insertion (down)</td><td class="num">0…18</td><td class="num">0.025</td><td class="num">±2</td></tr>
+      <tr><td>Retainer (down)</td><td class="num">0…6</td><td class="num">0.004</td><td class="num">±0.3</td></tr>
+    </table></div>
+  </section>
+
+  <section id="units">
+    <h2>2 · A 40 µm thread at SI scale will not compile</h2>
+    <p class="when">October 5 · unit rescaling</p>
+    <div class="prose">
+      <p>A 44 mm thread of 40 µm diameter, split into 32 segments, has rotational inertias near 10<sup>−19</sup> kg m².
+        MuJoCo rejects them at compilation. Rather than inflate the mass or radius, we rescaled the engine's units:
+        millimetres and grams, with seconds unchanged. Every dimensional quantity converts at the model boundary,
+        and results are reported back in SI.</p>
+    </div>
+    <pre><code class="language-python">@dataclass(frozen=True)
+class Units:
+    name: str
+    length: float = 1.0  # engine length units per metre
+    mass: float = 1.0  # engine mass units per kilogram
+
+    @property
+    def force(self):
+        return self.mass * self.length
+
+    @property
+    def torque(self):
+        return self.mass * self.length**2
+
+MM_G = Units("mm_g_s", 1000, 1000)</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/units.py</code>: forces scale by M·L, inertias and torques by M·L², moduli by M/L.</p>
+    <div class="prose"><p>Bending then matched the analytical cantilever within 2.4%. But a 6 mm drop onto a support changed by
+      <strong>35 µm</strong> when the timestep was halved, against a 1 µm convergence gate.</p></div>
+    <figure><img data-media="rescaling" alt="Rescaling study plots"><figcaption>Bending agrees across unit systems; contact rebound does not converge.</figcaption></figure>
+  </section>
+
+  <section id="der">
+    <h2>3 · Porting a published rod model, and correcting it</h2>
+    <p class="when">October 5 · discrete elastic rods inside MuJoCo</p>
+    <div class="prose">
+      <p>We ported the published discrete-elastic-rod (DER) plugin for MuJoCo to version 3.12 as a separate library,
+        leaving the engine untouched. An energy-gradient audit found that the published force mapping produced
+        <strong>zero restoring torque for a purely twisted rod</strong> despite positive twist energy. We kept the
+        original variant and added a corrected one that projects the same Cartesian forces through MuJoCo's own
+        Jacobians, plus the material-frame end moments. Its forces match the energy gradient to 2.85 × 10<sup>−9</sup>.</p>
+    </div>
+    <pre><code class="language-cpp">// Project the same Cartesian elastic forces through MuJoCo's Jacobians,
+// and include material-frame end moments.
+mju_copy(d->qfrc_passive, before.data(), m->nv);
+const mjtNum zero[3] = {0, 0, 0};
+for (int i=0; i&lt;r->nv+2; ++i) {
+  int body = r->i0 + std::min(i, r->nv);
+  mj_applyFT(m, d, r->nodes[i].force.data(), zero, r->nodes[i].pos.data(),
+             body, d->qfrc_passive);
+}
+double moment = r->beta_bar*(r->edges[r->nv].theta-r->edges[0].theta)/r->bigL_bar;
+Eigen::Vector3d first = moment*r->edges[0].e.normalized();
+Eigen::Vector3d last = -moment*r->edges[r->nv].e.normalized();
+mj_applyFT(m, d, zero, first.data(), r->nodes[0].pos.data(), r->i0, d->qfrc_passive);
+mj_applyFT(m, d, zero, last.data(), r->nodes[r->nv+1].pos.data(),
+           r->i0+r->nv, d->qfrc_passive);</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/der_bridge.cc</code>, the corrected <code>direct</code> projection.</p>
+    <div class="failure"><strong>Still failing:</strong> contact refinement. Halving the step changed the drop by 14 µm, and
+      halving again by 42 µm. A better rod model did not fix contact.</div>
+    <figure><img data-media="der" alt="DER validation plots"><figcaption>Bending, relaxation and energy checks pass; contact refinement does not.</figcaption></figure>
+  </section>
+
+  <section id="contact">
+    <h2>4 · Finding out why contact would not converge</h2>
+    <p class="when">October 5 · remove ingredients, then check the engine independently</p>
+    <div class="prose">
+      <p>We removed ingredients one at a time. A single rigid segment also failed, and a chain with no elastic
+        forces failed worse (165 µm), so elasticity was not the cause. Changing only the mass or length unit changed
+        chain trajectories by 3–12 µm, although the compiled physics agreed to 10<sup>−16</sup>.</p>
+      <p>Then we checked the engine against an independent calculation that never calls MuJoCo. Same-state contact
+        forces matched a closed-form solution to 10<sup>−11</sup>. An independent fixed-step recurrence reproduced
+        MuJoCo's rigid rebound error to 0.0002 µm. The engine was computing exactly what it was asked to; the problem was
+        what it was asked. In the chain, the first divergence was two trajectories landing
+        <strong>5.7 pm above and 2.6 pm below</strong> the contact activation threshold.</p>
+    </div>
+    <div class="grid2">
+      <figure><img data-media="isolation_fixtures" alt="Rigid, chain and rod contact fixtures"><figcaption>Controls: rigid segments, a chain without elasticity, the flexible rod.</figcaption></figure>
+      <figure><img data-media="audit" alt="Contact audit plots"><figcaption>Independent reference and picometre-scale divergence at contact entry.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="fixes">
+    <h2>5 · Two causes, two standard fixes</h2>
+    <p class="when">October 5 · contact impedance ramp and RK4</p>
+    <div class="prose">
+      <p>MuJoCo's soft contact computes a reference acceleration <code>a_ref = −B·v − K·d(r)·pos</code> with an
+        impedance <code>d(r)</code>. Our original law held <code>d</code> constant at 0.9999, so the damping force switched
+        on as a <em>step</em> at zero penetration: a grazing contact received a finite impulse. A penetration ramp makes
+        the force continuous. Separately, the default integrator is first order through a 5–10 µs impact; MuJoCo's RK4
+        evaluates collision and the constraint solve at four stages.</p>
+    </div>
+    <pre><code class="language-python">ContactLaw("ramp_5us", d0=mujoco.mjMINIMP, power=1., time_constant_s=5e-6)
+# solimp = (0.0001, 0.9999, 1 µm width, 0.5, 1): impedance rises linearly over 1 µm</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/contact_laws.py</code></p>
+    <pre><code class="language-c">if (rk) {                 // same sequence as mj_step for RK4
+  mj_checkPos(m, d);
+  mj_checkVel(m, d);
+  mj_forward(m, d);
+  mj_checkAcc(m, d);
+} else {
+  mj_step1(m, d);
+}
+...
+mj_RungeKutta(m, d, 4);</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/contact_kernel.cc</code>: our batch stepping kernel with per-step contact telemetry; bit-identical to <code>mj_step</code>.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Comparison (µm)</th><th class="num">Baseline</th><th class="num">Ramp + RK4</th><th class="num">Gate</th></tr>
+      <tr><td>Rigid drop, timestep</td><td class="num">2.234</td><td class="num">0.077</td><td class="num">&lt; 1</td></tr>
+      <tr><td>Rod drop, mass units</td><td class="num">3.502</td><td class="num">0.0031</td><td class="num">&lt; 0.01</td></tr>
+      <tr><td>Rod drop, timestep</td><td class="num">52.03</td><td class="num">8.03</td><td class="num">&lt; 1</td></tr>
+      <tr><td>Rod, 10<sup>−12</sup> rad perturbations</td><td class="num">3.6–16.5</td><td class="num">0.55</td><td class="num">—</td></tr>
+    </table></div>
+    <figure><img data-media="smoothing" alt="Contact smoothing plots"><figcaption>Rigid gates pass by 10–100×; the 6 mm rod drop still amplifies roundoff after impact.</figcaption></figure>
+  </section>
+
+  <section id="gates">
+    <h2>6 · The correction: a stress test had become a gate</h2>
+    <p class="when">October 6 · derive gates from the task</p>
+    <div class="prose">
+      <p>The rod drop still failed. Its error grew exponentially after impact whatever the timestep, and
+        perturbations of 10<sup>−12</sup> rad grew the same way: it measured the scenario's sensitivity, not solver error.
+        When asked whether that gate was real, we traced it back. It had been chosen as a convenient stress test and carried
+        through four studies as if it were a requirement. No task phase drops the thread 6 mm and needs a repeatable 1 µm landing.</p>
+    </div>
+    <div class="lesson"><strong>What changed in our process:</strong> derive gates from task phases first; when a gate fails
+      after refinement, test whether it measures error or sensitivity; change one numerical choice at a time; keep an
+      independent reference that never calls the engine under test.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Task phase</th><th>Fixture</th><th class="num">Timestep, 5 → 2.5 µs</th><th class="num">Units</th></tr>
+      <tr><td>Transport and align</td><td>Settle on the support</td><td class="num">0.13 µm</td><td class="num">≤ 1.5e−10 µm</td></tr>
+      <tr><td>Insert to depth</td><td>Needle drags across thread (it rolls)</td><td class="num">≤ 5.1e−7 µm</td><td class="num">≤ 6e−7 µm</td></tr>
+      <tr><td>Pick and grasp</td><td>100 µN press, force balance ≤ 6.8e−5</td><td class="num">≤ 2.4e−7 µm</td><td class="num">≤ 9e−11 µm</td></tr>
+      <tr><td>Release</td><td>Hook slides out, 150 µm fall</td><td class="num">0.19 µm</td><td class="num">≤ 7.3e−7 µm</td></tr>
+    </table></div>
+    <div class="prose"><p>Every task-regime fixture passes at a <strong>5 µs</strong> step, 64× larger than the drop
+      required. Release failed at 10 µs (1.58 µm); we refined the step rather than relax the gate, and kept the failure on record.</p></div>
+    <figure><img data-media="task_regime" alt="Task regime plots"><figcaption>Clock ladder, penetration against contact time constant, probe fixtures and force balance.</figcaption></figure>
+  </section>
+
+  <section id="motion">
+    <h2>7 · The robot's first motion</h2>
+    <p class="when">October 6 · programmed servo, gates fixed before the run</p>
+    <div class="prose">
+      <p>A programmed servo adds inertial, gravity, viscous and Coulomb feedforward and a bounded integral term to each
+        force-limited position actuator, by offsetting its command. Two design facts surfaced on the first run: Z reaches
+        only 8 mm down, so the needle slide reaches the surface; and both fine slides hang against gravity at their
+        retracted stops, so they are carried 0.5 mm out.</p>
+    </div>
+    <pre><code class="language-python">ctrl = q_ref + (kv*v_ref + M*a_ref + qfrc_bias + damping*v_ref + coulomb + I) / kp
+# applied force = kp*(q_ref - q) + kv*(v_ref - qdot) + feedforward + I, clipped by the actuator force range</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/motion.py</code></p>
+    <video data-media="approach_tour" controls muted playsinline preload="metadata"></video>
+    <figcaption>Six-target tour, real time. Hover error ≤ 0.50 µm lateral and ≤ 0.09 µm vertical; no contacts; 16.8% peak force.</figcaption>
+  </section>
+
+  <section id="task">
+    <h2>8 · The learning task, exactly</h2>
+    <p class="when">October 6 · trained task: needle alignment (robot only)</p>
+    <div class="prose">
+      <p>One C core (<code>native/surgical_core.h</code>) holds physics stepping, servo, observations and rewards. It is
+        compiled into the PufferLib 5.0 adapter for training and into a local library for tests and evaluation, so they
+        cannot drift apart. Physics runs at 1 ms; the policy acts at 50 Hz (20 physics steps per action).</p>
+    </div>
+    <h3>Episode</h3>
+    <ul class="prose">
+      <li><strong>Start:</strong> gantry at rest, X uniform in ±40 mm and Y in ±30 mm about the field centre; needle tip 3–8 mm above the dome; Z stage at −6 mm, retainer at 0.5 mm.</li>
+      <li><strong>Goal:</strong> one of six targets, uniformly; the hover point 1 mm above it.</li>
+      <li><strong>Success:</strong> lateral and vertical error under 10 µm and tip speed under 0.2 mm/s for 15 consecutive policy steps (0.3 s).</li>
+      <li><strong>Failure:</strong> any contact between robot and environment, or a nonfinite state.</li>
+      <li><strong>Deadline:</strong> 250 policy steps (5 s). Success, failure and deadline all end the episode.</li>
+      <li><strong>Seeds:</strong> training base seed 1 per world; evaluation seeds 1,000,000–1,000,199, never used in training or tuning.</li>
+    </ul>
+    <h3>Observation (16 values, exact simulator state)</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Index</th><th>Quantity</th><th>Scaling</th><th>Clip</th></tr>
+      <tr><td>0–2</td><td>Tip minus goal, x y z</td><td>÷ 5 mm</td><td>±5</td></tr>
+      <tr><td>3–5</td><td>Tip velocity, x y z</td><td>÷ 40 mm/s</td><td>±2</td></tr>
+      <tr><td>6–8</td><td>Previous applied action</td><td>—</td><td>±1</td></tr>
+      <tr><td>9–11</td><td>Tip minus goal, fine scale</td><td>÷ 100 µm</td><td>±1</td></tr>
+      <tr><td>12–13</td><td>Offset to the nearest vessel centreline, x y</td><td>÷ 5 mm</td><td>±1</td></tr>
+      <tr><td>14</td><td>Tip height above the dome</td><td>÷ 10 mm</td><td>−1…2</td></tr>
+      <tr><td>15</td><td>Remaining time fraction</td><td>1 − step/250</td><td>0…1</td></tr>
+    </table></div>
+    <pre><code class="language-c">for (int i = 0; i &lt; 3; i++) {
+    double e = tip[i] - c->goal[i];
+    obs[i] = (float)sa_clip(e / 0.005, -5, 5);
+    obs[3 + i] = (float)sa_clip(vel[i] / SA_VMAX_XY, -2, 2);
+    obs[6 + i] = c->prev_action[i];
+    obs[9 + i] = (float)sa_clip(e / 1e-4, -1, 1);
+}
+double vx, vy;
+sa_vessel(c, tip[0], tip[1], &amp;vx, &amp;vy);
+obs[12] = (float)sa_clip(vx / 0.005, -1, 1);
+obs[13] = (float)sa_clip(vy / 0.005, -1, 1);
+obs[14] = (float)sa_clip((tip[2] - sa_surface(c, tip[0], tip[1])) / 0.01, -1, 2);
+obs[15] = (float)(1.0 - (double)c->tick / SA_HORIZON);</code></pre>
+    <h3>Action (3 continuous values)</h3>
+    <div class="prose"><p>Each output is clipped to [−1, 1] and <em>cubed</em>, then scaled to needle-tip velocity:
+      40 mm/s in X and Y, 20 mm/s vertically. The cube gives 40 µm/s resolution at 0.1. The command drives the X and Y
+      stages and the insertion slide; a 10 ms filter smooths the reference, which the programmed servo tracks.</p></div>
+    <h3>Reward per policy step</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Term</th><th>Value</th></tr>
+      <tr><td>Progress (potential shaping)</td><td>Φ(d′) − Φ(d), with Φ(d) = −log₁₀((d + 2 µm) / 1 mm) and d the tip-to-goal distance</td></tr>
+      <tr><td>Action smoothness</td><td>−0.002 · Σ (aᵢ − aᵢ,prev)² on the clipped actions</td></tr>
+      <tr><td>Vessel proximity</td><td>−0.05 when the tip is under 3 mm above the dome and within the vessel radius + 0.3 mm of a centreline</td></tr>
+      <tr><td>Success</td><td>+2, episode ends</td></tr>
+      <tr><td>Collision</td><td>−2, episode ends</td></tr>
+    </table></div>
+    <div class="prose"><p>The logarithmic potential makes going from 10 mm to 1 mm worth the same as going from 10 µm to 1 µm,
+      so the policy gets useful signal at every scale. There is no curriculum: every episode is the full task.</p></div>
+    <pre><code class="language-c">double potential = sa_potential(distance);
+double r = potential - c->potential;
+c->potential = potential;
+double smooth = 0;
+for (int i = 0; i &lt; SA_ACT; i++) {
+    double applied = sa_clip(action[i], -1, 1);
+    double da = applied - c->prev_action[i];
+    smooth += da * da;
+    c->prev_action[i] = (float)applied;
+}
+r -= 0.002 * smooth;</code></pre>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/native/surgical_core.h</code>, after the fix described in chapter 10.</p>
+    <h3>Baselines on the evaluation seeds</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Policy</th><th class="num">Success</th><th class="num">Collision</th><th class="num">Mean time</th></tr>
+      <tr><td>Scripted reference (programmed)</td><td class="num">100%</td><td class="num">0%</td><td class="num">2.06 s</td></tr>
+      <tr><td>Zero action</td><td class="num">0%</td><td class="num">0%</td><td class="num">—</td></tr>
+      <tr><td>Uniform random</td><td class="num">0%</td><td class="num">5%</td><td class="num">—</td></tr>
+    </table></div>
+    <div class="failure"><strong>Caught before training:</strong> the scripted reference first failed twice. Descending early
+      cut through the dome, and a 4 s deadline at 20 mm/s could not cover the longest traverse. Both were task-design
+      errors, fixed before any policy was trained, so the learned policy is judged on a task known to be solvable.</div>
+  </section>
+
+  <section id="network" class="network">
+    <h2>9 · The network we train</h2>
+    <p class="when">PufferLib 5.0 default recurrent policy, 128 hidden units, 2 MinGRU layers</p>
+    <div class="prose"><p>Read from PufferLib's own code and the checkpoint's layout: 100,867 parameters, no biases.
+      The same weights run on the GPU during training and on the CPU (deterministic mean action) for evaluation and this replay.</p></div>
+    <svg viewBox="0 0 1100 470" role="img" aria-label="Network diagram: 16 observations, linear encoder, two MinGRU layers, linear decoder to action means and value, learned log-std">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d5f7a"/></marker>
+        <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#d38aaa"/><stop offset="1" stop-color="#af86ac"/></linearGradient>
+        <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#8981af"/><stop offset="1" stop-color="#7378a8"/></linearGradient>
+      </defs>
+      <style>
+        .box{rx:12;stroke:#d6d0e2}.t{font:600 15px system-ui,sans-serif;fill:#23243a}.s{font:13px system-ui,sans-serif;fill:#5d5f7a}
+        .w{font:600 15px system-ui,sans-serif;fill:#fff}.ws{font:12.5px system-ui,sans-serif;fill:#f3f0fa}.m{font:12.5px ui-monospace,Menlo,monospace;fill:#23243a}
+      </style>
+      <rect class="box" x="20" y="150" width="150" height="120" fill="#f3eef8"/>
+      <text class="t" x="95" y="185" text-anchor="middle">Observation</text>
+      <text class="s" x="95" y="207" text-anchor="middle">16 values</text>
+      <text class="s" x="95" y="227" text-anchor="middle">error ×2 scales, velocity,</text>
+      <text class="s" x="95" y="245" text-anchor="middle">action, vessel, height, time</text>
+      <line x1="170" y1="210" x2="215" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="218" y="160" width="140" height="100" fill="url(#g1)"/>
+      <text class="w" x="288" y="198" text-anchor="middle">Encoder</text>
+      <text class="ws" x="288" y="220" text-anchor="middle">Linear 16 → 128</text>
+      <text class="ws" x="288" y="240" text-anchor="middle">2,048 weights</text>
+      <line x1="358" y1="210" x2="398" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="400" y="80" width="300" height="260" fill="url(#g2)"/>
+      <text class="w" x="550" y="110" text-anchor="middle">MinGRU × 2 layers (memory per world)</text>
+      <text class="ws" x="550" y="134" text-anchor="middle">each layer: Linear 128 → 384 = [ h | z | w ]</text>
+      <text class="ws" x="550" y="152" text-anchor="middle">49,152 weights per layer</text>
+      <text class="ws" x="418" y="184">g(h) = h + ½ if h ≥ 0, otherwise σ(h)</text>
+      <text class="ws" x="418" y="208">s<tspan baseline-shift="sub" font-size="10">t</tspan> = s<tspan baseline-shift="sub" font-size="10">t−1</tspan> + σ(z) ⊙ (g(h) − s<tspan baseline-shift="sub" font-size="10">t−1</tspan>)</text>
+      <text class="ws" x="418" y="232">y = σ(w) ⊙ s<tspan baseline-shift="sub" font-size="10">t</tspan> + (1 − σ(w)) ⊙ x   (highway)</text>
+      <text class="ws" x="418" y="262">x: layer input · s: state, zeroed at episode start</text>
+      <path d="M610,340 C610,392 490,392 490,346" fill="none" stroke="#5d5f7a" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+      <text class="s" x="550" y="405" text-anchor="middle">recurrent state s, 2 × 128</text>
+      <line x1="700" y1="210" x2="740" y2="210" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="742" y="160" width="140" height="100" fill="url(#g1)"/>
+      <text class="w" x="812" y="198" text-anchor="middle">Decoder</text>
+      <text class="ws" x="812" y="220" text-anchor="middle">Linear 128 → 4</text>
+      <text class="ws" x="812" y="240" text-anchor="middle">512 weights</text>
+      <line x1="882" y1="190" x2="925" y2="150" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="882" y1="232" x2="925" y2="290" stroke="#5d5f7a" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect class="box" x="928" y="98" width="155" height="100" fill="#f3eef8"/>
+      <text class="t" x="1005" y="126" text-anchor="middle">Action μ ∈ ℝ³</text>
+      <text class="s" x="1005" y="148" text-anchor="middle">+ learned log σ (3)</text>
+      <text class="s" x="1005" y="168" text-anchor="middle">train: a ~ N(μ, σ)</text>
+      <text class="s" x="1005" y="186" text-anchor="middle">evaluate: a = μ</text>
+      <rect class="box" x="928" y="250" width="155" height="70" fill="#f3eef8"/>
+      <text class="t" x="1005" y="280" text-anchor="middle">Value V(s)</text>
+      <text class="s" x="1005" y="300" text-anchor="middle">PPO critic, training only</text>
+      <text class="m" x="20" y="455">a → clip[−1,1] → a³ → tip velocity (40, 40, 20 mm/s) → 10 ms filter → programmed servo → MuJoCo, 20 × 1 ms</text>
+    </svg>
+    <h3>Training configuration</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Setting</th><th>Value</th></tr>
+      <tr><td>Algorithm</td><td>PufferLib 5.0 PPO (pinned revision 6ffa5b1), clip 0.2, value coefficient 2.0</td></tr>
+      <tr><td>Optimizer</td><td>Muon, learning rate 0.003 cosine-annealed to 0</td></tr>
+      <tr><td>Discount, GAE λ</td><td>0.995, 0.95</td></tr>
+      <tr><td>Entropy coefficient</td><td>5 × 10<sup>−4</sup></td></tr>
+      <tr><td>Batch</td><td>2048 worlds × 64-step horizon, minibatch 16,384</td></tr>
+      <tr><td>Hardware</td><td>RTX 4090 for the network; MuJoCo physics on 28 CPU threads</td></tr>
+      <tr><td>Budget</td><td>100 M steps (99.9 M), 29 minutes, about 59,000 steps/s</td></tr>
+    </table></div>
+    <pre><code class="language-c">void puf_step(Env* env) {
+    SAEpisode e;
+    float reward;
+    int done = sa_step(&amp;env->core, env->agents[0].actions, env->agents[0].observations, &amp;reward, &amp;e);
+    env->agents[0].rewards[0] = reward;
+    env->agents[0].terminals[0] = (float)done;
+    if (done) {
+        env->log.perf += e.success;
+        ...
+        sa_reset(&amp;env->core, env->agents[0].observations);
+    }
+}</code></pre>
+    <p class="codecap"><code>experiments/neural_insertion/puffer/surgical_align/surgical_align.h</code>: the PufferLib adapter is a thin wrapper over the shared core.</p>
+  </section>
+
+  <section id="training">
+    <h2>10 · Training on the RTX 4090: two failures, then success</h2>
+    <p class="when">October 6 · three runs, one change at a time</p>
+    <div class="charts">
+      <div class="chart"><h4>Final lateral error at episode end (training rollouts)</h4><svg id="chart-error" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Success rate (training rollouts, noisy actions)</h4><svg id="chart-success" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Policy update size (KL divergence)</h4><svg id="chart-kl" viewBox="0 0 520 300"></svg></div>
+      <div class="chart"><h4>Collision rate</h4><svg id="chart-collision" viewBox="0 0 520 300"></svg></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="failure"><strong>Run 1 diverged, and it was our bug.</strong> Episode returns reached −46,557 from terms that should
+      never exceed a few units. The smoothness penalty used the policy's raw, unbounded Gaussian samples instead of the clipped
+      actions the robot receives; once action means drifted past ±1 the penalty grew without limit.</div>
+    <pre><code class="language-diff">-        double da = action[i] - c->prev_action[i];
++        double applied = sa_clip(action[i], -1, 1);
++        double da = applied - c->prev_action[i];</code></pre>
+    <div class="failure"><strong>Run 2 learned, then collapsed.</strong> For 12.7 M steps it improved steadily; then, as action
+      noise shrank, each update at the default learning rate moved the policy too far. KL rose from 0.16 to about 300.</div>
+    <pre><code class="language-diff">+learning_rate = 0.003
+ gamma = 0.995</code></pre>
+    <div class="lesson"><strong>Run 3 changed only the learning rate.</strong> It stopped colliding within 10 M steps, closed in
+      through hundreds and then tens of microns, first succeeded at about 52 M steps and reached 100% in training by 69 M.</div>
+  </section>
+
+  <section id="results">
+    <h2>11 · Results on 200 held-out episodes</h2>
+    <p class="when">Deterministic actions, evaluated on CPU with PufferLib's own network code</p>
+    <div class="table-wrap"><table>
+      <tr><th>Policy</th><th class="num">Success</th><th class="num">Collisions</th><th class="num">Mean time</th><th class="num">Worst final error</th><th class="num">Low steps over vessels</th></tr>
+      <tr><td><strong>Learned, final (99.9 M)</strong></td><td class="num">100%</td><td class="num">0%</td><td class="num">1.40 s</td><td class="num">8.6 µm lat., 4.4 µm vert.</td><td class="num">0.25</td></tr>
+      <tr><td>Learned, 65.5 M</td><td class="num">100%</td><td class="num">0%</td><td class="num">1.98 s</td><td class="num">10.0 µm lat., 7.4 µm vert.</td><td class="num">0.39</td></tr>
+      <tr><td>Scripted reference</td><td class="num">100%</td><td class="num">0%</td><td class="num">2.06 s</td><td class="num">3.4 µm lat.</td><td class="num">1.68</td></tr>
+    </table></div>
+    <div class="prose"><p>The learned policy is a third faster and passes low over vessels less often, but settles closer to the
+      tolerance than the scripted controller: an episode ends as soon as the 0.3 s hold is met. Compare both in the replay at the top.</p></div>
+    <video data-media="learned_alignment" controls muted playsinline preload="metadata"></video>
+    <figcaption>Four evaluation episodes chosen before evaluation (the first seeds covering four targets), real time.</figcaption>
+  </section>
+
+  <section id="next">
+    <h2>12 · What comes next</h2>
+    <p class="when">The full mission is still ahead</p>
+    <div class="prose">
+      <ol>
+        <li><strong>Pick:</strong> hook a thread loop from the cassette with the needle.</li>
+        <li><strong>Align:</strong> done, as above.</li>
+        <li><strong>Insert:</strong> carry the thread to a prescribed depth. Needs a tissue model with puncture, insertion resistance and retention; the phantom is currently rigid.</li>
+        <li><strong>Release and withdraw:</strong> the retainer holds the thread while the needle withdraws.</li>
+        <li><strong>Repeat</strong> at several sites, then with tissue motion and recovery from missed pickups.</li>
+      </ol>
+      <p>Thread physics passes its task-regime gates but costs about 350 s per simulated second, too slow to train with directly.
+        The brief's learning gate also asks for three independently trained seeds; this page shows one. Materials are presets, not
+        measurements, and observations are exact simulator state rather than camera images.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>,
+    <code>docs/neural_insertion/</code>. Viewer: raylib 6.0 compiled to WebAssembly with Emscripten 6.0.9, replaying exported
+    MuJoCo states. Build provenance: <a href="build.json">build.json</a>.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/diff.min.js"></script>
+<script src="journal.js"></script>
+</body>
+</html>
