@@ -105,10 +105,10 @@ static struct {
 typedef struct {
     Vector3 anchor;  // object of interest
     float dx, dy;    // panel offset: camera-right and screen-up, in orbit distances
-    int lines;
-    char text[5][64];
+    int lines;       // line 0 is the title
+    char label[5][48], value[5][32];
     Color color[5];
-    float w, h;      // panel size in texture pixels
+    float w, h;      // panel size in texture pixels, fixed per callout layout
 } Callout;
 
 static Callout C[MAX_CALLOUTS];
@@ -494,93 +494,131 @@ static Callout* callout(Vector3 anchor, float dx, float dy, const char* title, C
     Callout* c = &C[NC++];
     memset(c, 0, sizeof(*c));
     c->anchor = anchor; c->dx = dx; c->dy = dy;
-    snprintf(c->text[0], sizeof(c->text[0]), "%s", title);
+    snprintf(c->label[0], sizeof(c->label[0]), "%s", title);
     c->color[0] = color;
     c->lines = 1;
     return c;
 }
 
-static void callout_line(Callout* c, Color color, const char* fmt, ...) {
+// A row: a fixed label and a value right-aligned in a fixed column. Panels are
+// sized from the labels and a worst-case value, never from the current value, so
+// they do not resize as numbers change (digits in DejaVu Sans share one width).
+static void row(Callout* c, Color color, const char* label, const char* value) {
     if (!c || c->lines >= 5) return;
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(c->text[c->lines], sizeof(c->text[0]), fmt, args);
-    va_end(args);
+    snprintf(c->label[c->lines], sizeof(c->label[0]), "%s", label);
+    snprintf(c->value[c->lines], sizeof(c->value[0]), "%s", value);
     c->color[c->lines++] = color;
 }
 
+// Signed number with a typographic minus (same advance as plus) and fixed decimals.
+static const char* num(char* buf, float v, int decimals, int sign) {
+    char tmp[32];
+    double scale = pow(10, decimals), r = round((double)v * scale) / scale;
+    if (r == 0) r = 0;  // no "-0.0"
+    snprintf(tmp, sizeof(tmp), sign ? "%+.*f" : "%.*f", decimals, r);
+    if (tmp[0] == '-') snprintf(buf, 32, "\xe2\x88\x92%s", tmp + 1);
+    else snprintf(buf, 32, "%s", tmp);
+    return buf;
+}
+
+// Lengths in micrometres below 1 mm, millimetres above, so the digit count stays bounded.
+static const char* length(char* buf, float metres, int sign) {
+    char n[32];
+    if (fabsf(metres) < 1e-3f) snprintf(buf, 32, "%s \xc2\xb5m", num(n, metres * 1e6f, 1, sign));
+    else snprintf(buf, 32, "%s mm", num(n, metres * 1e3f, 2, sign));
+    return buf;
+}
+
 static const Color C_INK = {236, 232, 246, 255};
+#define VALUE_TEMPLATE "\xe2\x88\x92" "000.0 \xc2\xb5m"  // widest value any callout shows
 
 static void collect_callouts(void) {
     NC = 0;
     Episode* e = episode();
     float d = V.distance;
+    char b[32];
     const char* names[NJ] = {"X slide", "Y slide", "Z slide", "insertion slide", "retainer slide"};
-    const float off[NJ][2] = {{0.16f, 0.07f}, {-0.22f, 0.05f}, {0.17f, -0.02f}, {-0.20f, -0.07f}, {0.15f, -0.11f}};
+    const float off[NJ][2] = {{0.16f, 0.07f}, {-0.22f, 0.05f}, {0.17f, -0.02f}, {-0.20f, -0.07f}, {0.15f, -0.24f}};
     if ((V.overlays & OV_FORCES) && d > 0.5f) {
         for (int m = 0; m < V.nmoving && m < NJ; m++) {
             Vector3 anchor = Vector3Transform(V.centroid[m], body_transform(V.moving[m]));
             Callout* c = callout(anchor, off[m][0], off[m][1], names[m], WHITE);
-            callout_line(c, C_NOISE, "noise      %+6.1f mN", V.x[X_FORCE + m] * 1e3f);
-            callout_line(c, C_FRICTION, "friction   %+6.1f mN", V.x[X_FRICTION + m] * 1e3f);
-            callout_line(c, C_VIBRATION, "vibration  %+6.1f mN", V.x[X_INERTIAL + m] * 1e3f);
+            char n[32];
+            snprintf(b, sizeof(b), "%s mN", num(n, V.x[X_FORCE + m] * 1e3f, 1, 1));
+            row(c, C_NOISE, "noise", b);
+            snprintf(b, sizeof(b), "%s mN", num(n, V.x[X_FRICTION + m] * 1e3f, 1, 1));
+            row(c, C_FRICTION, "friction", b);
+            snprintf(b, sizeof(b), "%s mN", num(n, V.x[X_INERTIAL + m] * 1e3f, 1, 1));
+            row(c, C_VIBRATION, "vibration", b);
         }
     }
     if ((V.overlays & OV_FORCES) && d > 0.12f) {
         Vector3 acc = xvec(X_ACC);
+        char n[32];
         Callout* c = callout(vibration_anchor(), 0.10f, 0.05f, "table vibration", WHITE);
-        callout_line(c, C_VIBRATION, "|a| %.1f mm/s\xc2\xb2", Vector3Length(acc) * 1e3f);
-        callout_line(c, C_VIBRATION, "x %+.1f  y %+.1f  z %+.1f", acc.x * 1e3f, acc.y * 1e3f, acc.z * 1e3f);
+        snprintf(b, sizeof(b), "%s mm/s\xc2\xb2", num(n, Vector3Length(acc) * 1e3f, 1, 0));
+        row(c, C_VIBRATION, "acceleration", b);
+        snprintf(b, sizeof(b), "%s mm/s\xc2\xb2", num(n, acc.z * 1e3f, 1, 1));
+        row(c, C_VIBRATION, "vertical", b);
     }
     if (!(V.overlays & OV_SENSING)) return;
     Vector3 goal = xvec(X_GOAL), mean = {e->goal[0], e->goal[1], e->goal[2]};
-    float meas = Vector3Distance(xvec(X_MTIP), V.tip) * 1e6f, est = Vector3Distance(xvec(X_MGOAL), goal) * 1e6f;
-    float moved = Vector3Distance(goal, mean) * 1e6f;
+    float meas = Vector3Distance(xvec(X_MTIP), V.tip), est = Vector3Distance(xvec(X_MGOAL), goal);
+    float moved = Vector3Distance(goal, mean);
+    char late[32];
+    snprintf(late, sizeof(late), "%.0f ms", e->latency * 1e3f);
     if (d < 0.01f) {
         Callout* c = callout(V.tip, -0.30f, 0.17f, "needle tip (true)", C_TIP);
-        callout_line(c, C_INK, "lateral   %.1f \xc2\xb5m", V.lateral);
-        callout_line(c, C_INK, "vertical %+.1f \xc2\xb5m", V.vertical);
+        row(c, C_INK, "lateral", length(b, V.lateral * 1e-6f, 0));
+        row(c, C_INK, "vertical", length(b, V.vertical * 1e-6f, 1));
         c = callout(xvec(X_MTIP), 0.26f, 0.17f, "measured tip", C_MEASURED);
-        callout_line(c, C_INK, "%.0f ms late", e->latency * 1e3f);
-        callout_line(c, C_INK, "off by %.1f \xc2\xb5m", meas);
+        row(c, C_INK, "late by", late);
+        row(c, C_INK, "off by", length(b, meas, 0));
         c = callout(goal, 0.34f, -0.02f, "true target", WHITE);
-        callout_line(c, C_INK, "tissue motion %.1f \xc2\xb5m", moved);
-        callout_line(c, C_INK, "tolerance \xc2\xb1" "10 \xc2\xb5m");
+        row(c, C_INK, "tissue motion", length(b, moved, 0));
+        row(c, C_INK, "tolerance", "\xc2\xb1" "10.0 \xc2\xb5m");
         c = callout(xvec(X_MGOAL), 0.22f, -0.22f, "target estimate", C_ESTIMATE);
-        callout_line(c, C_INK, "off by %.1f \xc2\xb5m", est);
+        row(c, C_INK, "off by", length(b, est, 0));
         Matrix view = GetCameraMatrix(V.camera);
         Vector3 right = {view.m0, view.m4, view.m8};
         Vector3 ruler = Vector3Add((Vector3){mean.x, mean.y, mean.z + 25e-6f}, Vector3Scale(right, -d * 0.42f));
         callout(ruler, -0.04f, 0.0f, "50 \xc2\xb5m", C_INK);
     } else if (d < 0.5f) {
         Callout* c = callout(V.tip, -0.22f, 0.10f, "needle tip", C_TIP);
-        callout_line(c, C_INK, "lateral   %.1f \xc2\xb5m", V.lateral);
-        callout_line(c, C_INK, "vertical %+.1f \xc2\xb5m", V.vertical);
-        callout_line(c, C_MEASURED, "measured %.0f ms late, off %.1f \xc2\xb5m", e->latency * 1e3f, meas);
+        row(c, C_INK, "lateral", length(b, V.lateral * 1e-6f, 0));
+        row(c, C_INK, "vertical", length(b, V.vertical * 1e-6f, 1));
+        row(c, C_MEASURED, "measured, late by", late);
+        row(c, C_MEASURED, "measured, off by", length(b, meas, 0));
         Vector3 site = Vector3Add(goal, (Vector3){0, 0, -0.001f});
         c = callout(site, 0.16f, -0.08f, "target", WHITE);
-        callout_line(c, C_INK, "hover point 1 mm above");
-        callout_line(c, C_INK, "tissue motion %.1f \xc2\xb5m", moved);
-        callout_line(c, C_ESTIMATE, "estimate off %.1f \xc2\xb5m", est);
+        row(c, C_INK, "hover height", "1.00 mm");
+        row(c, C_INK, "tissue motion", length(b, moved, 0));
+        row(c, C_ESTIMATE, "estimate off by", length(b, est, 0));
     }
 }
 
 static void render_callouts(void) {
+    float tw = MeasureTextEx(V.font, VALUE_TEMPLATE, CALLOUT_FONT, 0).x;
     for (int k = 0; k < NC; k++) {
         Callout* c = &C[k];
-        float w = 0;
-        for (int i = 0; i < c->lines; i++) {
-            Vector2 m = MeasureTextEx(i ? V.font : V.bold, c->text[i], CALLOUT_FONT, 0);
-            w = fmaxf(w, m.x);
-        }
-        c->w = fminf(w + 28, CALLOUT_W);
+        // Width from the title, the (constant) labels and the template value only.
+        float w = MeasureTextEx(V.bold, c->label[0], CALLOUT_FONT, 0).x;
+        for (int i = 1; i < c->lines; i++) w = fmaxf(w, MeasureTextEx(V.font, c->label[i], CALLOUT_FONT, 0).x + 24 + tw);
+        c->w = fminf(w + 30, CALLOUT_W);
         c->h = fminf(c->lines * CALLOUT_FONT * 1.25f + 18, CALLOUT_H);
         BeginTextureMode(V.callout[k]);
         ClearBackground(BLANK);
         DrawRectangleRounded((Rectangle){0, 0, c->w, c->h}, 0.18f, 8, (Color){22, 20, 42, 214});
         DrawRectangleRounded((Rectangle){0, 0, 6, c->h}, 0.5f, 4, c->color[0]);
         for (int i = 0; i < c->lines; i++) {
-            DrawTextEx(i ? V.font : V.bold, c->text[i], (Vector2){16, 9 + i * CALLOUT_FONT * 1.25f}, CALLOUT_FONT, 0, c->color[i]);
+            float y = 9 + i * CALLOUT_FONT * 1.25f;
+            DrawTextEx(i ? V.font : V.bold, c->label[i], (Vector2){16, y}, CALLOUT_FONT, 0, i ? fade(c->color[i], 0.85f) : c->color[0]);
+            if (i && c->value[i][0]) {
+                float vw = MeasureTextEx(V.font, c->value[i], CALLOUT_FONT, 0).x;
+                BeginScissorMode(16, (int)y, (int)(c->w - 30), (int)(CALLOUT_FONT * 1.25f));  // clip, never grow
+                DrawTextEx(V.font, c->value[i], (Vector2){c->w - 14 - vw, y}, CALLOUT_FONT, 0, c->color[i]);
+                EndScissorMode();
+            }
         }
         EndTextureMode();
     }
@@ -830,6 +868,7 @@ static void init(const char* folder, int width, int height) {
     codepoints[n++] = 0xB2;  // squared
     codepoints[n++] = 0xB1;  // plus-minus
     codepoints[n++] = 0xD7;  // times
+    codepoints[n++] = 0x2212;  // minus
     const char* faces[2] = {"font.ttf", "font_bold.ttf"};
     Font* fonts[2] = {&V.font, &V.bold};
     for (int k = 0; k < 2; k++) {

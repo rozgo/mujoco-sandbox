@@ -64,7 +64,7 @@ def scripted_episodes(level):
 def fonts(folder):
     """DejaVu Sans (from matplotlib; free licence, copied alongside), subset to the viewer's characters."""
     from fontTools import subset
-    text = "".join(map(chr, range(32, 127)))+"\u00b5\u00b2\u00b1\u00d7"
+    text = "".join(map(chr, range(32, 127)))+"\u00b5\u00b2\u00b1\u00d7\u2212"
     for source, name in (("DejaVuSans.ttf", "font.ttf"), ("DejaVuSans-Bold.ttf", "font_bold.ttf")):
         font = subset.load_font(str(FONT/source), subset.Options())
         subsetter = subset.Subsetter()
