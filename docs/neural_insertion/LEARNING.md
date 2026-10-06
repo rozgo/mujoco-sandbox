@@ -148,6 +148,23 @@ level 0). Its 65.5 M checkpoint scored 31.5%, 20.0% and 0% at levels 0, 0.5 and
 [`align_v5_policy.bin`](../../assets/neural_insertion/align_v5_policy.bin) with
 its [run configuration](../../assets/neural_insertion/align_v5_run.ini).
 
+### Disturbance scale v2 and the drive (October 6, with the user)
+
+Full strength on the first scale made the robot itself worse than the plant's
+own hold gate: holding still under level-1 robot disturbances drifted 7–15 µm.
+Scale v2 sets level 1 to a nominal quality workcell (a precision stage on an
+isolation table: robot-group magnitudes a tenth of v1) and keeps sensing and
+tissue motion as before; level 2 is the stress setting. Robot, sensing and
+tissue groups can be scaled separately. The programmed drive gains a feedback
+stiffness of four times the actuator's own (damping scaled to keep its ratio).
+At nominal, holding still drifts at most 0.45, 0.64 and 0.91 µm (X, Y, Z tip)
+over 54 evaluation seeds; tests on a 0.25 ms timestep and on altered friction
+models changed nothing, so this is the plant, not numerics. Six of the 200
+evaluation seeds start the needle carriage outside its travel and drift about
+2 µm, a start-state flaw found by the same test. The scripted yardstick on the
+first 50 seeds succeeds in 100% (level 0), 100% (nominal) and 92% (stress).
+Results above this section use scale v1.
+
 ## What this does and does not show
 
 It shows that the robot, servo and environment support learning a precise,

@@ -23,7 +23,7 @@ from sixlegs.neural_insertion.align_env import EVALUATION_SEEDS, NATIVE, evaluat
 from sixlegs.neural_insertion.align_policy import evaluate_checkpoint  # noqa: E402
 from sixlegs.neural_insertion.training_log import boxes, history, summary  # noqa: E402
 
-LEVELS = (0.0, 0.25, 0.5, 0.75, 1.0)
+LEVELS = (0.0, 0.5, 1.0, 1.5, 2.0)  # scale v2: 1 nominal, 2 stress
 LOGS = ROOT/"outputs/neural_insertion/puffer"
 # Learned checkpoints evaluated, by name: the final policy of each completed run.
 WEIGHTS = {"robust": ROOT/"assets/neural_insertion/align_v6_policy.bin",

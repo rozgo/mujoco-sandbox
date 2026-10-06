@@ -15,6 +15,10 @@ void sa_disturbance_c(void* p, double level, int mode) {
     sa_set_disturbance(&((SAHandle*)p)->core, level, mode);
 }
 
+void sa_groups_c(void* p, double robot, double sensing, double tissue) {
+    sa_set_groups(&((SAHandle*)p)->core, robot, sensing, tissue);
+}
+
 void sa_destroy(void* p) {
     SAHandle* h = (SAHandle*)p;
     sa_free(&h->core);

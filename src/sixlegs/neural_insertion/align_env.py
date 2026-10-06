@@ -55,6 +55,7 @@ def library():
     f64 = np.ctypeslib.ndpointer(np.float64, flags="C")
     lib.sa_create.argtypes, lib.sa_create.restype = [ctypes.c_char_p, ctypes.c_ulonglong], ctypes.c_void_p
     lib.sa_disturbance_c.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_int]
+    lib.sa_groups_c.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_double, ctypes.c_double]
     lib.sa_destroy.argtypes = [ctypes.c_void_p]
     lib.sa_reset_c.argtypes = [ctypes.c_void_p, f32]
     lib.sa_step_c.argtypes, lib.sa_step_c.restype = [ctypes.c_void_p, f32, f32, f32, f32], ctypes.c_int
@@ -69,13 +70,15 @@ def library():
 class AlignEnv:
     """One native world. Observations and rewards come from the shared C core."""
 
-    def __init__(self, seed, xml=RL_SCENE, level=0., mode=0):
-        """level in [0, 1] scales the disturbance layer; mode 1 draws each episode's level in [0, level]."""
+    def __init__(self, seed, xml=RL_SCENE, level=0., mode=0, groups=(1., 1., 1.)):
+        """level in [0, 2] scales the disturbance layer (1 nominal, 2 stress); mode 1 draws each
+        episode's level in [0, level]; groups multiply the robot, sensing and tissue groups."""
         if not Path(xml).exists():
             build_rl_scene(xml)
         self.lib = library()
         self.handle = self.lib.sa_create(str(xml).encode(), seed)
         self.lib.sa_disturbance_c(self.handle, level, mode)
+        self.lib.sa_groups_c(self.handle, *groups)
         self.obs = np.zeros(OBS, np.float32)
         self.reward = np.zeros(1, np.float32)
         self.episode = np.zeros(len(EPISODE_FIELDS), np.float32)
@@ -116,11 +119,11 @@ class AlignEnv:
         self.close()
 
 
-def evaluate(policy, seeds=EVALUATION_SEEDS, record=None, level=0.):
+def evaluate(policy, seeds=EVALUATION_SEEDS, record=None, level=0., groups=(1., 1., 1.)):
     """One episode per predetermined seed at a fixed disturbance level. `policy(env, obs)` returns an action."""
     results, started = [], time.perf_counter()
     for seed in seeds:
-        env = AlignEnv(seed, level=level)
+        env = AlignEnv(seed, level=level, groups=groups)
         obs, done, states = env.reset(), False, [env.state()]
         while not done:
             obs, _, done, info = env.step(policy(env, obs))

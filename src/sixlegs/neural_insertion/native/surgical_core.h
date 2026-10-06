@@ -8,16 +8,19 @@
 // Observations are simulator measurements corrupted by the disturbance layer;
 // rewards and success use true simulator state. No camera pixels are used.
 //
-// Disturbance layer (brief v2), all magnitudes scaled by a level in [0, 1] and
-// illustrative until replaced by measured hardware and tissue data:
-//   forces    low-pass force noise and extra Coulomb friction on each slide;
+// Disturbance layer (brief v2), illustrative until replaced by measured hardware
+// and tissue data, in three groups:
+//   robot     low-pass force noise and extra Coulomb friction on each slide;
 //             table vibration as inertial forces through each carriage's mass
 //   sensing   needle-tip measurement noise and latency; target estimate noise,
 //             per-episode bias and slow drift
 //   tissue    breathing and pulse motion of the true target (the rigid phantom's
 //             collision surface is not moved in this stage)
-// Level 0 reproduces the undisturbed task exactly: disturbance parameters come
-// from a separate random stream, so start states and targets are unchanged.
+// Scale (v2, with the user): level 1 is the nominal quality workcell, a precision
+// stage on an isolation table (robot group) with realistic sensing and tissue
+// motion; level 2 is the stress setting, twice nominal. Each group can be scaled
+// separately for ablations. Level 0 reproduces the undisturbed task exactly:
+// disturbance parameters come from a separate random stream.
 #pragma once
 #include <math.h>
 #include <stdint.h>
@@ -46,18 +49,24 @@
 #define SA_SPEED_TOL 2e-4      // 0.2 mm/s, relative to the (moving) target
 #define SA_HOLD_STEPS 15       // 0.3 s sustained
 #define SA_INTEGRAL_TIME 0.05
+#ifndef SA_DRIVE_GAIN
+#define SA_DRIVE_GAIN 4.0      // feedback stiffness multiple of the actuator's kp
+#endif
 #define SA_MAX_SEGMENTS 256
 #define SA_VESSEL_HEIGHT 0.003 // vessel proximity applies when the tip is this low
 #define SA_VESSEL_MARGIN 0.0003
-#define SA_HISTORY 16          // physics steps of measurement history (latency)
+#define SA_HISTORY 32          // physics steps of measurement history (latency)
 
-// Full-strength (level 1) disturbance magnitudes.
+// Nominal (level 1) disturbance magnitudes. Robot group: a precision stage on an
+// isolation table, chosen so a held position drifts under the 1 um plant gate
+// (scale v1 used ten times these). Sensing and tissue groups: unchanged from v1.
+#define SA_LEVEL_MAX 2.0       // stress setting
 #define SA_FORCE_TAU 0.05      // force-noise correlation time, s
-static const double SA_FORCE_SIGMA[SA_NJ] = {0.10, 0.10, 0.05, 0.01, 0.002};   // N, stationary std
-static const double SA_FRICTION_MAX[SA_NJ] = {0.10, 0.10, 0.05, 0.005, 0.001}; // N, extra Coulomb
+static const double SA_FORCE_SIGMA[SA_NJ] = {0.010, 0.010, 0.005, 0.001, 0.0002};  // N, stationary std
+static const double SA_FRICTION_MAX[SA_NJ] = {0.020, 0.020, 0.010, 0.001, 0.0002}; // N, extra Coulomb
 static const double SA_AXIS[SA_NJ][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, -1}, {0, 0, -1}};
 #define SA_VIB_COMPONENTS 3
-#define SA_VIB_AMP 0.01        // m/s^2 per component and axis
+#define SA_VIB_AMP 0.001       // m/s^2 per component and axis
 #define SA_VIB_FMIN 5.0
 #define SA_VIB_FMAX 60.0
 #define SA_TIP_NOISE 0.5e-6    // m
@@ -80,6 +89,7 @@ typedef struct {
 
 typedef struct {
     double level;
+    double robot, sensing, tissue;  // level times each group's scale
     double force[SA_NJ], friction[SA_NJ];
     double vib_amp[3][SA_VIB_COMPONENTS], vib_freq[3][SA_VIB_COMPONENTS], vib_phase[3][SA_VIB_COMPONENTS];
     double motion_amp[2][3], motion_freq[2], motion_phase[2];  // breathing, pulse
@@ -106,6 +116,7 @@ typedef struct {
     uint64_t rng, drng;
     double level_max;
     int level_mode;  // 0: every episode at level_max; 1: uniform in [0, level_max]
+    double group_scale[3];  // robot, sensing, tissue; 1 by default
     SADisturbance dist;
     double hist_tip[SA_HISTORY][3], hist_vel[SA_HISTORY][3];
     int hist_count;
@@ -187,6 +198,7 @@ static inline const mjModel* sa_load_model(const char* path) {
 
 static inline int sa_init(SACore* c, const char* path, uint64_t seed) {
     memset(c, 0, sizeof(*c));
+    c->group_scale[0] = c->group_scale[1] = c->group_scale[2] = 1;
     c->m = sa_load_model(path);
     const mjModel* m = c->m;
     if (m->nv > 16) {
@@ -257,11 +269,19 @@ static inline int sa_init(SACore* c, const char* path, uint64_t seed) {
     return 0;
 }
 
-// Disturbance strength: level_max in [0, 1]; mode 0 fixes every episode at
-// level_max, mode 1 draws each episode's level uniformly in [0, level_max].
+// Disturbance strength: level_max in [0, 2] (1 nominal, 2 stress); mode 0 fixes
+// every episode at level_max, mode 1 draws each episode's level uniformly in
+// [0, level_max].
 static inline void sa_set_disturbance(SACore* c, double level_max, int mode) {
-    c->level_max = sa_clip(level_max, 0, 1);
+    c->level_max = sa_clip(level_max, 0, SA_LEVEL_MAX);
     c->level_mode = mode;
+}
+
+// Per-group multipliers on top of the level, for ablations (default 1, 1, 1).
+static inline void sa_set_groups(SACore* c, double robot, double sensing, double tissue) {
+    c->group_scale[0] = robot;
+    c->group_scale[1] = sensing;
+    c->group_scale[2] = tissue;
 }
 
 static inline void sa_free(SACore* c) {
@@ -279,16 +299,19 @@ static inline void sa_draw_disturbance(SACore* c) {
     uint64_t* r = &c->drng;
     double level = c->level_mode ? sa_uniform(r, 0, c->level_max) : c->level_max;
     q->level = level;
+    q->robot = level * c->group_scale[0];
+    q->sensing = level * c->group_scale[1];
+    q->tissue = level * c->group_scale[2];
     if (level <= 0) {
         return;
     }
     for (int j = 0; j < SA_NJ; j++) {
-        q->force[j] = SA_FORCE_SIGMA[j] * level * sa_normal(r);  // start in the stationary distribution
-        q->friction[j] = SA_FRICTION_MAX[j] * level * sa_uniform(r, 0, 1);
+        q->force[j] = SA_FORCE_SIGMA[j] * q->robot * sa_normal(r);  // start in the stationary distribution
+        q->friction[j] = SA_FRICTION_MAX[j] * q->robot * sa_uniform(r, 0, 1);
     }
     for (int a = 0; a < 3; a++) {
         for (int k = 0; k < SA_VIB_COMPONENTS; k++) {
-            q->vib_amp[a][k] = SA_VIB_AMP * level * sa_uniform(r, 0, 1);
+            q->vib_amp[a][k] = SA_VIB_AMP * q->robot * sa_uniform(r, 0, 1);
             q->vib_freq[a][k] = sa_uniform(r, SA_VIB_FMIN, SA_VIB_FMAX);
             q->vib_phase[a][k] = sa_uniform(r, 0, 2 * M_PI);
         }
@@ -296,18 +319,18 @@ static inline void sa_draw_disturbance(SACore* c) {
     const double freq_lo[2] = {0.2, 1.0}, freq_hi[2] = {0.4, 2.0};
     const double amp_z[2] = {SA_BREATH_Z, SA_PULSE_Z}, amp_xy[2] = {SA_BREATH_XY, SA_PULSE_XY};
     for (int k = 0; k < 2; k++) {
-        double heading = sa_uniform(r, 0, 2 * M_PI), lateral = amp_xy[k] * level * sa_uniform(r, 0, 1);
+        double heading = sa_uniform(r, 0, 2 * M_PI), lateral = amp_xy[k] * q->tissue * sa_uniform(r, 0, 1);
         q->motion_amp[k][0] = lateral * cos(heading);
         q->motion_amp[k][1] = lateral * sin(heading);
-        q->motion_amp[k][2] = amp_z[k] * level * sa_uniform(r, 0, 1);
+        q->motion_amp[k][2] = amp_z[k] * q->tissue * sa_uniform(r, 0, 1);
         q->motion_freq[k] = sa_uniform(r, freq_lo[k], freq_hi[k]);
         q->motion_phase[k] = sa_uniform(r, 0, 2 * M_PI);
     }
     for (int a = 0; a < 3; a++) {
-        q->goal_bias[a] = SA_GOAL_BIAS * level * sa_normal(r);
+        q->goal_bias[a] = SA_GOAL_BIAS * q->sensing * sa_normal(r);
     }
-    q->latency = (int)floor(sa_uniform(r, 0, SA_LATENCY_MAX * level + 1));
-    if (q->latency > SA_LATENCY_MAX) q->latency = SA_LATENCY_MAX;
+    q->latency = (int)floor(sa_uniform(r, 0, SA_LATENCY_MAX * q->sensing + 1));
+    if (q->latency > SA_LATENCY_MAX * SA_LEVEL_MAX) q->latency = (int)(SA_LATENCY_MAX * SA_LEVEL_MAX);
 }
 
 // True target (moving with breathing and pulse) and its velocity at time t.
@@ -358,8 +381,8 @@ static inline void sa_measure(SACore* c, double* tip, double* vel) {
     }
     if (c->dist.level > 0) {
         for (int a = 0; a < 3; a++) {
-            tip[a] += SA_TIP_NOISE * c->dist.level * sa_normal(&c->drng);
-            vel[a] += SA_VEL_NOISE * c->dist.level * sa_normal(&c->drng);
+            tip[a] += SA_TIP_NOISE * c->dist.sensing * sa_normal(&c->drng);
+            vel[a] += SA_VEL_NOISE * c->dist.sensing * sa_normal(&c->drng);
         }
     }
 }
@@ -370,7 +393,7 @@ static inline void sa_observe(SACore* c, float* obs) {
     for (int a = 0; a < 3; a++) {
         goal[a] = c->goal[a];
         if (c->dist.level > 0) {
-            goal[a] += c->dist.goal_bias[a] + c->dist.goal_drift[a] + SA_GOAL_NOISE * c->dist.level * sa_normal(&c->drng);
+            goal[a] += c->dist.goal_bias[a] + c->dist.goal_drift[a] + SA_GOAL_NOISE * c->dist.sensing * sa_normal(&c->drng);
         }
     }
     memcpy(c->dbg_meas_tip, tip, sizeof(tip));
@@ -439,7 +462,13 @@ static inline void sa_servo(SACore* c, const double* a_ref) {
             + c->friction[j] * tanh(c->v_ref[j] / 1e-4);
         double limit = 2 * c->friction[j] + 1e-12;
         c->integral[j] = sa_clip(c->integral[j] + c->ki[j] * e * dt, -limit, limit);
-        double ctrl = c->q_ref[j] + (c->kv[j] * c->v_ref[j] + ff + c->integral[j]) / c->kp[j];
+        // Drive stiffness: G times the actuator's own stiffness, damping scaled by sqrt(G)
+        // (same damping ratio). The actuator applies kp*(ctrl-q) - kv*qdot, so the command
+        // carries the extra feedback: F = G*kp*e + sqrt(G)*kv*(v_ref-qdot) + ff + I.
+        double qdot = d->qvel[c->dof[j]];
+        double force = SA_DRIVE_GAIN * c->kp[j] * e + sqrt(SA_DRIVE_GAIN) * c->kv[j] * (c->v_ref[j] - qdot)
+            + ff + c->integral[j];
+        double ctrl = d->qpos[c->qadr[j]] + (force + c->kv[j] * qdot) / c->kp[j];
         d->ctrl[c->act[j]] = sa_clip(ctrl, c->clo[j], c->chi[j]);
     }
 }
@@ -464,7 +493,7 @@ static inline void sa_disturb(SACore* c) {
         }
     }
     for (int j = 0; j < SA_NJ; j++) {
-        double sigma = SA_FORCE_SIGMA[j] * q->level;
+        double sigma = SA_FORCE_SIGMA[j] * q->robot;
         q->force[j] += -q->force[j] * dt / SA_FORCE_TAU + sigma * sqrt(2 * dt / SA_FORCE_TAU) * sa_normal(&c->drng);
         double v = d->qvel[c->dof[j]];
         double inertial = -c->mass[j] * (a_base[0] * SA_AXIS[j][0] + a_base[1] * SA_AXIS[j][1] + a_base[2] * SA_AXIS[j][2]);
@@ -532,7 +561,7 @@ static inline int sa_step(SACore* c, const float* action, float* obs, float* rew
     if (c->dist.level > 0) {
         double step = SA_REPEAT * dt;
         for (int a = 0; a < 3; a++) {
-            c->dist.goal_drift[a] += SA_GOAL_DRIFT * c->dist.level * sqrt(step) * sa_normal(&c->drng);
+            c->dist.goal_drift[a] += SA_GOAL_DRIFT * c->dist.sensing * sqrt(step) * sa_normal(&c->drng);
         }
     }
     sa_update_goal(c, d->time);
