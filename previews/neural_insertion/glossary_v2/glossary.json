@@ -1,0 +1,125 @@
+{
+ "source": "thread-tube workcell, recorded state at t = 0.0745 s of L1_s1001 (thread stuck to the needle, entering the tissue)",
+ "parts": [
+  {
+   "id": "workcell",
+   "title": "The workcell",
+   "role": "A gantry robot that carries a needle and a thread tube to a tissue phantom and inserts threads, one site after another.",
+   "specs": "Deck 658 \u00d7 448 mm. Simulated in MuJoCo 3.12.",
+   "image": "00_workcell.png",
+   "geoms": 614
+  },
+  {
+   "id": "base",
+   "title": "Base and deck",
+   "role": "The rigid table everything mounts to. The disturbance model treats it as an isolation table that still vibrates a little.",
+   "specs": "Nominal table vibration up to 1 mm/s\u00b2 per component, 5\u201360 Hz.",
+   "image": "01_base.png",
+   "geoms": 16
+  },
+  {
+   "id": "gantry",
+   "title": "Gantry frame",
+   "role": "Two towers and a beam carry the X rail high above the work area.",
+   "specs": "Beam centre 465 mm above the deck.",
+   "image": "02_gantry.png",
+   "geoms": 19
+  },
+  {
+   "id": "stage_x",
+   "title": "X stage",
+   "role": "Carriage running along the beam: moves the whole tool left and right.",
+   "specs": "Travel \u00b1175 mm \u00b7 moving mass 2.4 kg \u00b7 force limit 100 N.",
+   "image": "03_stage_x.png",
+   "geoms": 3
+  },
+  {
+   "id": "stage_y",
+   "title": "Y stage",
+   "role": "Boom hanging from the X carriage: moves the tool toward and away from the viewer.",
+   "specs": "Travel \u00b175 mm \u00b7 1.3 kg \u00b7 80 N.",
+   "image": "04_stage_y.png",
+   "geoms": 6
+  },
+  {
+   "id": "stage_z",
+   "title": "Z stage (tool head)",
+   "role": "Raises and lowers the tool head with the thread tube; it carries the tool between sites and lifts it clear of the threads left standing.",
+   "specs": "Travel \u22128 to +50 mm \u00b7 0.65 kg \u00b7 40 N.",
+   "image": "05_stage_z.png",
+   "geoms": 4
+  },
+  {
+   "id": "microscope",
+   "title": "Microscope",
+   "role": "Optical head beside the needle with an oblique view of the work point. In these experiments its camera is for observers only; the controllers do not use pixels.",
+   "specs": "Camera field of view 23\u00b0.",
+   "image": "06_microscope.png",
+   "geoms": 4
+  },
+  {
+   "id": "carriage",
+   "title": "Needle carriage",
+   "role": "Fast vertical slide that drives the needle: it strokes the needle onto the waiting thread end and on into the tissue, then snaps back.",
+   "specs": "Travel 0\u201318 mm \u00b7 25 g \u00b7 2 N \u00b7 strokes at up to about 200 mm/s.",
+   "image": "07_carriage.png",
+   "geoms": 3
+  },
+  {
+   "id": "needle",
+   "title": "Needle",
+   "role": "A conical point, a thin tip section and a stiffer shaft. When its point reaches the thread's end the two stick (a stand-in for a chemical bond), and the needle carries the thread into the tissue through a puncture.",
+   "specs": "Tip section \u00d8 50 \u00b5m \u00b7 shaft \u00d8 100 \u00b5m.",
+   "image": "08_needle.png",
+   "geoms": 3
+  },
+  {
+   "id": "tube",
+   "title": "Thread tube",
+   "role": "Holds the next thread on an arm beside the needle, angled 15\u00b0 from vertical, with the thread's end on the needle's path. It moves with the tool head, not with the needle's stroke.",
+   "specs": "Bore \u00d8 200 \u00b5m \u00b7 9 mm long.",
+   "image": "09_tube.png",
+   "geoms": 4
+  },
+  {
+   "id": "thread",
+   "title": "Thread",
+   "role": "The implant: a flexible 40 \u00b5m thread, drawn in lime. It is simulated as a discrete elastic rod (a published model for MuJoCo, arXiv 2310.00911, ported with a corrected force projection): 18 segments with bending and twisting stiffness, stepped at 50 \u00b5s with added joint inertia and damping so it runs fast.",
+   "specs": "\u00d8 40 \u00b5m \u00b7 8.25 mm \u00b7 18 segments \u00b7 illustrative 100 MPa.",
+   "image": "10_thread.png",
+   "geoms": 54
+  },
+  {
+   "id": "support",
+   "title": "Specimen support",
+   "role": "Tray and clamps that hold the tissue phantom on the deck.",
+   "specs": "Tray 114 \u00d7 94 mm.",
+   "image": "11_support.png",
+   "geoms": 8
+  },
+  {
+   "id": "phantom",
+   "title": "Tissue phantom",
+   "role": "A domed block standing in for tissue, with a needle-tissue force model: dimpling to puncture at 2 mN, then cutting and shaft friction, and grip on the thread inside. It moves with breathing and pulse in the disturbed runs.",
+   "specs": "92 \u00d7 72 mm, dome 3 mm high.",
+   "image": "12_phantom.png",
+   "geoms": 1
+  },
+  {
+   "id": "targets",
+   "title": "Target sites",
+   "role": "Six marked insertion sites. A three-site run places threads at sites 0, 5 and 1.",
+   "specs": "Ring markers 2.5 mm across (markings, no collision).",
+   "image": "13_targets.png",
+   "geoms": 288
+  },
+  {
+   "id": "vessels",
+   "title": "Vessels",
+   "role": "Blood-vessel markings on the surface. They are markings for the task to avoid, not obstacles.",
+   "specs": "Main vessel \u00d8 1 mm, branches \u00d8 0.56 mm.",
+   "image": "14_vessels.png",
+   "geoms": 184
+  }
+ ]
+}

@@ -1062,3 +1062,12 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   at 08:33; yardstick baseline on evaluation seeds 1001-1010 at 08:38 (21 runs,
   10 in parallel, 159 s wall); journal rebuilt at 08:39 and checked in the
   browser at 08:40 UTC.
+- With the user (about 08:45 UTC): the fresh journal fell short of the previous
+  one. Restored the previous journal as the base and extended it: an Insertion
+  mode in the WebAssembly viewer (thread-tube replays with rotating thread
+  segments, translucent tube and tissue, bond, puncture and release effects,
+  insertion callouts and HUD) beside the Alignment mode; a parts gallery for the
+  thread-tube workcell; chapters 15-19 for the insertion and an updated chapter
+  20. Seven replay runs re-recorded with display fields by 08:57 (identical
+  placements to the baseline); first native viewer screenshots at 09:01; full
+  site built and checked in the browser by 09:08 UTC.

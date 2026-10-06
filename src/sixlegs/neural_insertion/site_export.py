@@ -36,6 +36,8 @@ THEME = {
     "thread": ("#F0C27A", 0.0, 0.40, 0.25, 0.2),
     "floor": ("#3A3557", 0.0, 0.85, 0.0, 0.0),
     "tray": ("#646DA0", 0.6, 0.38, 0.0, 0.0),
+    "thread_lime": ("#5CFF14", 0.0, 0.35, 1.4, 0.0),   # the thread, high contrast against everything else
+    "glass": ("#D6E4F7", 0.0, 0.05, 0.08, 0.0),         # thread tube (drawn translucent by the viewer)
 }
 
 
@@ -156,18 +158,26 @@ def tessellate(model, geom):
     raise ValueError(f"Unsupported geom type {kind}")
 
 
-def scene_chunks(model):
-    """Merged triangle meshes per (body, material) in body coordinates."""
+def scene_chunks(model, scale=1.0, material_override=None):
+    """Merged triangle meshes per (body, material) in body coordinates, lengths times scale.
+
+    material_override maps geom names without a material (for example a translucent tube drawn with rgba
+    in MuJoCo) to an extra material name appended to the list."""
     materials = [model.material(i).name for i in range(model.nmat)]
     groups = {}
     for g in range(model.ngeom):
         mat = int(model.geom_matid[g])
+        name = model.geom(g).name
+        if mat < 0 and material_override and name in material_override:
+            if material_override[name] not in materials:
+                materials.append(material_override[name])
+            mat = materials.index(material_override[name])
         if mat < 0:
             continue
         body = int(model.geom_bodyid[g])
         rot, pos = quat_matrix(model.geom_quat[g]), model.geom_pos[g]
         for v, n, i in tessellate(model, g):
-            groups.setdefault((body, mat), []).append((v@rot.T+pos, n@rot.T, i))
+            groups.setdefault((body, mat), []).append(((v@rot.T+pos)*scale, n@rot.T, i))
     chunks = []
     for (body, mat), parts in sorted(groups.items()):
         verts, norms, idx, count = [], [], [], 0
@@ -183,14 +193,14 @@ def scene_chunks(model):
     return chunks, materials
 
 
-def write_scene(path, model, data):
-    chunks, materials = scene_chunks(model)
+def write_scene(path, model, data, scale=1.0, moving=MOVING, material_override=None):
+    chunks, materials = scene_chunks(model, scale, material_override)
     with open(path, "wb") as f:
         f.write(b"NIS1")
         f.write(struct.pack("<III", model.nbody, len(materials), len(chunks)))
         for b in range(model.nbody):
             name = model.body(b).name.encode()[:31]
-            f.write(struct.pack("<i32s3f4fB", b, name, *data.xpos[b], *data.xquat[b], model.body(b).name in MOVING))
+            f.write(struct.pack("<i32s3f4fB", b, name, *(data.xpos[b]*scale), *data.xquat[b], model.body(b).name in moving))
         for name in materials:
             hex_color, metal, rough, emissive, wrap = THEME[name]
             f.write(struct.pack("<16s3f4f", name.encode(), *srgb_to_linear(hex_color), metal, rough, emissive, wrap))
@@ -252,3 +262,90 @@ def write_replays(path, model, data, episodes):
                                      s["force_noise"], s["friction"], s["vibration_force"], s["action_norm"]])
             frames = np.column_stack([s["time"], poses.reshape(len(poses), -1), tips, extra])
             f.write(frames.astype("<f4").tobytes())
+
+
+# ---------------------------------------------------------------------------- thread-tube insertion replays
+
+TUBE_SLIDES = ("stage_x", "stage_y", "stage_z", "insertion")
+TUBE_FIXED_MOVING = TUBE_SLIDES+("thread_tube", "specimen_support")
+TUBE_OVERRIDE = {"tube_glass": "glass"}
+PHASES = ("ready", "reload", "move to", "descend", "correct", "needle down", "insert", "release", "snap back", "lift")
+# Per-frame floats after time and the moving-body poses (position 3 + quaternion w x y z 4, metres):
+# needle point (3), current thread end (3), phase id, bond (0 waiting, 1 stuck, 2 released), thread index,
+# thread end depth below the tissue surface (m), needle axial tissue force (N), punctured flag, tissue
+# displacement (3), true target (3), last measured target (3), last measured needle point (3, NaN before the
+# first measurement), table acceleration (3, m/s^2), force noise, extra friction and vibration force on each
+# slide (3 x 4, N), thread end lateral distance to the true target (m), current site.
+TUBE_EXTRA = 3+3+1+1+1+1+1+1+3+3+3+3+3+3*len(TUBE_SLIDES)+1+1
+
+
+def tube_moving(model):
+    names = list(TUBE_FIXED_MOVING)+[model.body(b).name for b in range(model.nbody)
+                                     if model.body(b).name.startswith("thread_B")]
+    return names
+
+
+def write_tube_scene(path, model, data, units_length=1000.):
+    """The thread-tube workcell in SI (the cycle runs in millimetres)."""
+    return write_scene(path, model, data, scale=1/units_length, moving=tube_moving(model),
+                       material_override=TUBE_OVERRIDE)
+
+
+def phase_id(name):
+    return next((k for k, p in enumerate(PHASES) if str(name).startswith(p)), 0)
+
+
+def write_tube_replays(path, runs, units_length=1000., every_s=2e-3):
+    """runs: dicts with model, data, trace (tube_cycle trace), report, seed and level.
+
+    Format NIT1. Poses come from MuJoCo forward kinematics of the recorded joint positions with the
+    tissue (a mocap body) displaced by its recorded offset; replay of recorded states, not simulation.
+    """
+    L = units_length
+    first = runs[0]["model"]
+    moving = tube_moving(first)
+    with open(path, "wb") as f:
+        f.write(b"NIT1")
+        f.write(struct.pack("<III", len(runs), len(moving), TUBE_EXTRA))
+        f.write(struct.pack(f"<{len(moving)}i", *[first.body(n).id for n in moving]))
+        mujoco.mj_kinematics(first, runs[0]["data"])
+        for n in TUBE_SLIDES:
+            f.write(struct.pack("<3f", *runs[0]["data"].xaxis[first.joint(n).id]))
+        for run in runs:
+            m, d, tr, rep = run["model"], run["data"], run["trace"], run["report"]
+            ids = [m.body(n).id for n in moving]
+            spec = m.body("specimen_support").id
+            mocap = m.body_mocapid[spec]
+            spec0 = m.body_pos[spec].copy()
+            times = tr["time"]
+            keep = [0]
+            for k in range(1, len(times)):
+                if times[k]-times[keep[-1]] >= every_s-1e-9 or k == len(times)-1:
+                    keep.append(k)
+            placed = [e for e in rep["events"] if str(e.get("check", "")).endswith("thread left in tissue")]
+            sites = [int(e["check"].split()[1].rstrip(":")) for e in placed]
+            dist = rep.get("disturbances") or {}
+            f.write(struct.pack("<IfffII", run["seed"], run["level"], dist.get("latency_ms", 0.)/1e3 if dist != "none" else 0.,
+                                float(rep["simulated_s"]), int(rep["status"] == "completed"), len(placed)))
+            for k in range(3):
+                e = placed[k] if k < len(placed) else None
+                f.write(struct.pack("<iff", sites[k] if e else -1, e["end_depth_mm"]/L if e else 0.,
+                                    e["placement_lateral_mm"]/L if e else 0.))
+            f.write(struct.pack("<I", len(keep)))
+            rows = []
+            for k in keep:
+                d.qpos[:] = tr["qpos"][k]  # replay of a recorded state
+                d.mocap_pos[mocap] = spec0+tr["tissue_offset"][k]
+                mujoco.mj_kinematics(m, d)
+                pose = np.column_stack([d.xpos[ids]/L, d.xquat[ids]]).ravel()
+                force = tr["forces"][k]/1e6  # µN -> N, rows: slides; columns: noise, friction, vibration
+                end, target = tr["eyelet"][k], tr["true_target"][k]
+                extra = np.concatenate([
+                    tr["tip"][k]/L, end/L, [phase_id(tr["phase"][k]), tr["bond"][k], tr["thread"][k],
+                                            tr["depth"][k]/L, tr["needle_axial"][k]/1e6, tr["punctured"][k]],
+                    tr["tissue_offset"][k]/L, target/L, tr["measured_target"][k]/L, tr["measured_tip"][k]/L,
+                    tr["base_acc"][k]/L, force[:, 0], force[:, 1], force[:, 2],
+                    [np.linalg.norm(end[:2]-target[:2])/L, tr["site"][k]]])
+                rows.append(np.concatenate([[times[k]], pose, extra]))
+            f.write(np.array(rows, dtype="<f4").tobytes())
+    return {"runs": len(runs), "moving": len(moving), "bytes": Path(path).stat().st_size}

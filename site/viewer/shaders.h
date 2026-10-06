@@ -58,6 +58,7 @@ static const char* ni_fs = NI_GLSL
     "uniform mat4 lightVP;\n"
     "uniform float texel;\n"
     "uniform vec2 shadowBias;\n"  // normal offset in metres, depth bias in light depth units
+    "uniform float opacity;\n"  // 1 for solids; below 1 for glass and see-through tissue (blended pass)
     NI_ENV
     "float shadowAt(vec3 p, vec3 n){\n"
     "  vec4 q = lightVP*vec4(p + n*shadowBias.x, 1.0);\n"
@@ -109,7 +110,7 @@ static const char* ni_fs = NI_GLSL
     "  color += reflection*(f0*ab.x + ab.y)*mix(0.6, 1.0, sh);\n"
     "  color += albedo*emissive;\n"
     "  color = aces(color*exposure);\n"
-    "  finalColor = vec4(pow(color, vec3(1.0/2.2)), 1.0);\n"
+    "  finalColor = vec4(pow(color, vec3(1.0/2.2)), opacity);\n"
     "}\n";
 
 // Depth for the shadow pass, packed into two 8-bit channels (portable in WebGL 2).

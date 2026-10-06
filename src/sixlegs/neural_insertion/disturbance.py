@@ -54,6 +54,8 @@ class Disturbance:
         self.goal_drift = np.zeros(3)
         self.latency = float(np.floor(r.uniform(0, LATENCY_MAX*1e3*self.sensing+1)))*1e-3  # s, whole ms
         self.history = []  # (time, tip) for latency
+        self.components = {n: (0., 0., 0.) for n in FORCE_SIGMA}  # last applied force parts, for the record
+        self.base_acc = np.zeros(3)
 
     def summary(self):
         return {"level": self.level, "seed": self.seed, "robot": self.robot, "sensing": self.sensing,
@@ -75,14 +77,18 @@ class Disturbance:
             for k in range(3):
                 a[k] = sum(amp*np.sin(2*np.pi*f*t+ph) for amp, f, ph in self.vib[k])
         out = {}
+        self.base_acc = a  # mm/s², kept for the record
         for n in FORCE_SIGMA:
             if self.level <= 0:
                 out[n] = 0.
+                self.components[n] = (0., 0., 0.)
                 continue
             sigma = FORCE_SIGMA[n]*self.robot
             self.force[n] += -self.force[n]*dt/FORCE_TAU+sigma*np.sqrt(2*dt/FORCE_TAU)*self.rng.normal()
             friction = -self.friction[n]*np.tanh(qvel[n]/1e-1)  # 0.1 mm/s smoothing (1e-4 m/s in the core)
-            out[n] = self.force[n]+friction-carried_mass[n]*float(a@axes[n])
+            inertial = -carried_mass[n]*float(a@axes[n])
+            out[n] = self.force[n]+friction+inertial
+            self.components[n] = (self.force[n], friction, inertial)  # µN: noise, friction, vibration
         return out
 
     # ------------------------------------------------------------ sensing

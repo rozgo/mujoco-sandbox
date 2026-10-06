@@ -97,6 +97,10 @@ class TubeCycle(e2e.Cycle):
         self.pre_step = self.disturb
         self.last_target_t = 0.
         self.site_lift = {}
+        # Display record (replays): what the yardstick last measured, the bond state, the current site.
+        self.bond_state, self.current_site = 0, sites[0]  # bond: 0 waiting, 1 stuck to the needle, 2 released
+        self.last_target = np.full(3, np.nan)
+        self.last_tip_meas = np.full(3, np.nan)
         self.meta, self.sites, self.target = meta, tuple(sites), sites[0]
         self.threads = meta["threads"]
         self.qadr = np.array([self.m.jnt_qposadr[self.m.joint(n).id] for n in JOINTS])
@@ -112,7 +116,8 @@ class TubeCycle(e2e.Cycle):
         params = replace(base, k_anchor=base.k_anchor*scale, f_retain=base.f_retain*scale)
         self.tissue = TubeTissue(self.m, self.threads, params, INSERTED)
         self.trace = {k: [] for k in ("time", "qpos", "tip", "eyelet", "depth", "needle_axial", "act_force",
-                                       "ncon", "phase")}
+                                       "ncon", "phase", "tissue_offset", "forces", "base_acc", "measured_target",
+                                       "measured_tip", "true_target", "bond", "thread", "site", "punctured")}
         self.events, self.q_ref, self.prohibited, self.done = [], None, [], []
         self.robot = {self.m.body(n).id for n in (*JOINTS, "thread_tube")}
         self.phantom = self.m.geom("tissue_phantom").id
@@ -158,7 +163,22 @@ class TubeCycle(e2e.Cycle):
         """Target as the robot's sensing reports it (noise, bias, drift)."""
         dt = self.d.time-self.last_target_t
         self.last_target_t = self.d.time
-        return self.dist.measure_target(self.site(i), dt)
+        self.last_target = self.dist.measure_target(self.site(i), dt)
+        return self.last_target.copy()
+
+    def record(self, name):
+        super().record(name)
+        tr = self.trace
+        tr["tissue_offset"].append(np.array(self.tissue.offset, float))
+        tr["forces"].append(np.array([self.dist.components[n] for n in JOINTS], float))
+        tr["base_acc"].append(np.array(self.dist.base_acc, float))
+        tr["measured_target"].append(self.last_target.copy())
+        tr["measured_tip"].append(self.last_tip_meas.copy())
+        tr["true_target"].append(self.site(self.current_site))
+        tr["bond"].append(self.bond_state)
+        tr["thread"].append(self.k)
+        tr["site"].append(self.current_site)
+        tr["punctured"].append(int(self.tissue.state.punctured))
 
     def disturb(self):
         """Each physics step: move the tissue, apply robot disturbance forces, record the tip for latency."""
@@ -204,7 +224,7 @@ class TubeCycle(e2e.Cycle):
                 self.d.qpos[a:a+4] = (1., 0., 0., 0.)
             self.d.qvel[self.m.body_dofadr[b]:self.m.body_dofadr[b]+self.m.body_dofnum[b]] = 0.
         mujoco.mj_forward(self.m, self.d)
-        self.k, self.bonded_at = k, None
+        self.k, self.bonded_at, self.bond_state = k, None, 0
         self.tissue.current = k
         self.connect(self.eq("tube_hold"), self.d.xpos[self.m.body(self.threads[k][0]).id].copy())
         mujoco.mj_forward(self.m, self.d)
@@ -215,6 +235,7 @@ class TubeCycle(e2e.Cycle):
             self.connect(self.eq("needle_bond"), self.eyelet)
             self.d.eq_active[self.eq("tube_hold")] = 0  # the tube lets the thread go once the needle has it
             self.bonded_at = float(self.d.time)
+            self.bond_state = 1
 
     def steps(self):
         steps = []
@@ -246,6 +267,7 @@ class TubeCycle(e2e.Cycle):
                            {"largest_end_shift_mm": moved})
 
             def descend(i=i):
+                self.current_site = i
                 site = self.measured_site(i)
                 surface = site[2]-self.site_lift[i]  # surface estimated from the measured target marking
                 self.tissue.new_site()
@@ -254,6 +276,7 @@ class TubeCycle(e2e.Cycle):
             def correct(i=i):
                 # One correction from measurement: measured tip (delayed, noisy) against the measured target.
                 site, tip = self.measured_site(i), self.dist.measure_tip(self.d.time)
+                self.last_tip_meas = tip.copy()
                 q = self.q_ref.copy()
                 q[0] += site[0]-tip[0]
                 q[1] += site[1]-tip[1]
@@ -280,6 +303,7 @@ class TubeCycle(e2e.Cycle):
 
             def release(i=i):
                 self.d.eq_active[self.eq("needle_bond")] = 0  # abstracted release
+                self.bond_state = 2
                 self.move(f"release {i}", self.q_ref, 0., .01)
 
             def retract(i=i, k=k):
