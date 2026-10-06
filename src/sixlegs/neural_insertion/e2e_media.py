@@ -50,6 +50,8 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
     renderer = mujoco.Renderer(m, PANEL_H, PANEL_W)
     see_through = [m.geom("tissue_phantom").id]+[g for g in range(m.ngeom) if m.geom(g).name.startswith("tube_")]
     wide_distance, wide_drop = (22., 2.) if modern else (70., 8.)
+    ring, detail = (("loop", "loop, ledge needle and pincher, about 3 mm across") if modern else
+                    ("eyelet", "eyelet and slotted needle, about 2 mm across"))
     opaque = m.geom_rgba[see_through].copy()
     times = trace["time"]
     frames_t = np.arange(times[0], times[-1], speed/fps)
@@ -68,7 +70,8 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
         mujoco.mj_kinematics(m, d)
         tip, eyelet = trace["tip"][i], trace["eyelet"][i]
         wide = camera((tip+eyelet)/2+np.array((0, 0, -wide_drop)), wide_distance, 135, -22)
-        near = camera(eyelet, 2.2, 205, -18)
+        # Design v2 inserts 2 mm deep: a steeper, farther detail view keeps the camera above the surface.
+        near = camera(eyelet, 3.0, 205, -40) if modern else camera(eyelet, 2.2, 205, -18)
         canvas = Image.new("RGB", (W, H), "#17152b")
         for k, cam in enumerate((wide, near)):
             # Detail view only: phantom and channel drawn translucent (display only) to show the inserted thread.
@@ -82,10 +85,11 @@ def render(run, speed=1., fps=30, output=None, title=None, outcome=(), hold_s=3.
         draw.text((24, 20), title or "END-TO-END CYCLE  /  SCRIPTED YARDSTICK, NO DISTURBANCES", font=font(28),
                   fill="#f1ecfa")
         draw.text((24, 64), f"t = {trace['time'][i]:.3f} s    phase: {phase}    playback {speed:g}x    "
-                  f"eyelet depth {trace['depth'][i]:+.2f} mm    needle axial {trace['needle_axial'][i]/1e3:+.2f} mN",
+                  f"{ring} depth {trace['depth'][i]:+.2f} mm    needle axial {trace['needle_axial'][i]/1e3:+.2f} mN",
                   font=font(22), fill="#d9b8ff")
-        draw.text((24, 1000), "Wide: tool and thread   |   Detail: eyelet and slotted needle, about 2 mm across. "
-                  "Replay of recorded MuJoCo states; DER thread, provisional tissue model.", font=font(20), fill="#b9b3d6")
+        draw.text((24, 1000), f"Wide: tool and thread   |   Detail: {detail}. Tissue drawn translucent in the detail "
+                  "view. Replay of recorded MuJoCo states; DER thread, provisional tissue model.", font=font(20),
+                  fill="#b9b3d6")
         frame = np.asarray(canvas)
         writer.send(np.ascontiguousarray(frame))
         if phase != last_phase:

@@ -1027,3 +1027,16 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   slot into an eye) held it through the 44 mm lift (06:10 UTC). Full cycle with
   the latch running from the lift checkpoint. Review videos of three
   instructive failures and the latch kept locally; parts gallery added.
+- About 06:25 UTC, user direction: a modern interpretation of the machine
+  rather than the 2019 design. Design v2 (anchored short thread, ledge needle,
+  rotary pincher) built from about 06:29 UTC; seven cycle runs between 06:31 and
+  06:37 UTC (each one to two minutes wall on the Mac CPU) found the pinch,
+  contact-pair, slack and puncture-track problems. **First complete cycle at
+  06:38 UTC**: 0.9 s simulated in 38 s wall (about 40 s per simulated second,
+  against 600 for the first-pass scene). Video re-rendered at 06:47 UTC (25 s).
+- Old-design run v7A (latch, still air, 1.6 s lowering): no instability through
+  transport and lowering, but the eyelet ended 0.30 mm off the tip and failed
+  the alignment check. Superseded by design v2.
+- `align_v7` at 192 M steps (about 06:42 UTC): peaked at 84.6% training success
+  near 114 M steps, then a KL spike (1.05) at 118 M left 20-30% collisions;
+  still training.
