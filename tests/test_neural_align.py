@@ -75,3 +75,38 @@ def test_trained_checkpoint_succeeds_on_held_out_seeds():
     # A fresh episode starts at tick 0, which also zeroes the recurrent state.
     summary, _ = evaluate(lambda env, obs: policy.act(obs, env.state()["tick"] == 0), seeds=EVALUATION_SEEDS[:10])
     assert summary["success"] == 1 and summary["collision"] == 0
+
+
+def test_level_zero_reproduces_the_undisturbed_task_exactly():
+    a, b = AlignEnv(1000003), AlignEnv(1000003, level=0.)
+    assert np.array_equal(a.reset(), b.reset())
+    for _ in range(40):
+        action = np.array([.4, -.3, .2], np.float32)
+        ra, rb = a.step(action), b.step(action)
+        assert np.array_equal(ra[0], rb[0]) and ra[1] == rb[1]
+
+
+def test_disturbances_keep_start_states_and_change_the_world():
+    calm, rough = AlignEnv(1000005), AlignEnv(1000005, level=1.)
+    calm.reset(), rough.reset()
+    np.testing.assert_array_equal(calm.state()["qpos"], rough.state()["qpos"])  # same start, independent stream
+    assert calm.state()["target"] == rough.state()["target"]
+    for _ in range(50):
+        calm.step(np.zeros(3, np.float32))
+        rough.step(np.zeros(3, np.float32))
+    wander = np.abs(rough.state()["tip"] - calm.state()["tip"]).max()
+    assert 1e-7 < wander < 1e-4  # disturbances move the needle by microns, not millimetres
+
+
+def test_replay_rows_record_the_disturbance_components():
+    import ctypes
+    env = AlignEnv(1000001, level=1.)
+    env.reset()
+    for _ in range(10):
+        env.step(np.zeros(3, np.float32))
+    row = np.zeros(40)
+    env.lib.sa_replay_row_c.argtypes = [ctypes.c_void_p, ctypes.c_double, np.ctypeslib.ndpointer(np.float64, flags="C")]
+    env.lib.sa_replay_row_c(env.handle, 0., row)
+    assert row[14] == 1.0 and 0 <= row[39] <= .01  # level and latency
+    assert np.abs(row[24:29]).max() > 0 and np.abs(row[21:24]).max() > 0  # force noise, table acceleration
+    np.testing.assert_allclose(row[:3], env.state()["tip"], atol=0)

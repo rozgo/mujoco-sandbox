@@ -64,13 +64,13 @@ class Policy:
         return action
 
 
-def evaluate_checkpoint(weights, output, hidden=128, layers=2, record=()):
+def evaluate_checkpoint(weights, output, hidden=128, layers=2, record=(), level=0.):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     xml, _ = build_rl_scene(RL_SCENE)
     started = time.perf_counter()
     subprocess.run([str(EVALUATOR), str(xml), str(weights), str(hidden), str(layers), str(EVALUATION_SEEDS[0]),
-                    str(len(EVALUATION_SEEDS)), str(output), *map(str, record)], check=True)
+                    str(len(EVALUATION_SEEDS)), str(level), str(output), *map(str, record)], check=True)
     episodes = json.loads((output/"episodes.json").read_text())
     summary = {k: float(np.mean([e[k] for e in episodes])) for k in EPISODE_FIELDS}
     good = [e for e in episodes if e["success"]]
@@ -78,17 +78,23 @@ def evaluate_checkpoint(weights, output, hidden=128, layers=2, record=()):
                    mean_success_time_s=float(np.mean([e["episode_length"] for e in good])*.02) if good else None,
                    max_success_lateral_um=float(max(e["final_lateral_um"] for e in good)) if good else None,
                    max_success_vertical_um=float(max(e["final_vertical_um"] for e in good)) if good else None,
-                   weights_sha256=hashlib.sha256(Path(weights).read_bytes()).hexdigest(),
+                   level=level, weights_sha256=hashlib.sha256(Path(weights).read_bytes()).hexdigest(),
                    model_sha256=hashlib.sha256(xml.read_bytes()).hexdigest(),
                    evaluator="Puffer CPU PufferNet, deterministic mean action")
     (output/"summary.json").write_text(json.dumps(summary, indent=1)+"\n")
     return summary, episodes
 
 
+ROW = 40  # surgical_core.h SA_ROW
+
+
 def load_states(folder, seed):
-    rows = np.fromfile(Path(folder)/f"states_{seed}.bin", dtype=np.float64).reshape(-1, 14)
+    rows = np.fromfile(Path(folder)/f"states_{seed}.bin", dtype=np.float64).reshape(-1, ROW)
     return {"tip": rows[:, :3], "goal": rows[:, 3:6], "qpos": rows[:, 6:11], "time": rows[:, 11],
-            "target": int(rows[0, 12]), "action_norm": rows[:, 13]}
+            "target": int(rows[0, 12]), "action_norm": rows[:, 13], "level": rows[:, 14],
+            "measured_tip": rows[:, 15:18], "measured_goal": rows[:, 18:21], "base_acc": rows[:, 21:24],
+            "force_noise": rows[:, 24:29], "friction": rows[:, 29:34], "vibration_force": rows[:, 34:39],
+            "latency_s": rows[:, 39]}
 
 
 def panel(states, i, seed, episode, index, total, baseline):

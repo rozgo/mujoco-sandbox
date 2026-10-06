@@ -22,6 +22,7 @@ struct Log {
     float vessel_steps;
     float final_lateral_um;
     float final_vertical_um;
+    float level;             // disturbance level of finished episodes
     float n;                 // required last field
 };
 
@@ -46,6 +47,7 @@ void puf_init(Env* env, Dict* kwargs) {
     env->agents[0].policy = 0;
     uint64_t seed = (uint64_t)dict_get(kwargs, "seed") * 1000003ULL + env->rng;
     sa_init(&env->core, sa_model_path(), seed);
+    sa_set_disturbance(&env->core, dict_get(kwargs, "disturbance"), (int)dict_get(kwargs, "disturbance_mode"));
 }
 
 void puf_reset(Env* env) {
@@ -68,6 +70,7 @@ void puf_step(Env* env) {
         env->log.vessel_steps += e.vessel_steps;
         env->log.final_lateral_um += e.final_lateral_um;
         env->log.final_vertical_um += e.final_vertical_um;
+        env->log.level += e.level;
         env->log.n += 1;
         sa_reset(&env->core, env->agents[0].observations);
     }
@@ -91,5 +94,6 @@ void puf_log(Log* log, Dict* out) {
     dict_set(out, "vessel_steps", log->vessel_steps);
     dict_set(out, "final_lateral_um", log->final_lateral_um);
     dict_set(out, "final_vertical_um", log->final_vertical_um);
+    dict_set(out, "level", log->level);
     dict_set(out, "n", log->n);
 }

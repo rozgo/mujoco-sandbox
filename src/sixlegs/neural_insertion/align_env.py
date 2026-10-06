@@ -24,7 +24,7 @@ from .scene import ROOT
 NATIVE = Path(__file__).with_name("native")
 OBS, ACT = 16, 3
 EPISODE_FIELDS = ("success", "collision", "timeout", "vessel_steps", "final_lateral_um", "final_vertical_um",
-                  "episode_return", "episode_length")
+                  "episode_return", "episode_length", "level")
 # Predetermined, never used for training or tuning.
 EVALUATION_SEEDS = tuple(range(1_000_000, 1_000_200))
 _lib = None
@@ -53,6 +53,7 @@ def library():
     f32 = np.ctypeslib.ndpointer(np.float32, flags="C")
     f64 = np.ctypeslib.ndpointer(np.float64, flags="C")
     lib.sa_create.argtypes, lib.sa_create.restype = [ctypes.c_char_p, ctypes.c_ulonglong], ctypes.c_void_p
+    lib.sa_disturbance_c.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_int]
     lib.sa_destroy.argtypes = [ctypes.c_void_p]
     lib.sa_reset_c.argtypes = [ctypes.c_void_p, f32]
     lib.sa_step_c.argtypes, lib.sa_step_c.restype = [ctypes.c_void_p, f32, f32, f32, f32], ctypes.c_int
@@ -66,14 +67,16 @@ def library():
 class AlignEnv:
     """One native world. Observations and rewards come from the shared C core."""
 
-    def __init__(self, seed, xml=RL_SCENE):
+    def __init__(self, seed, xml=RL_SCENE, level=0., mode=0):
+        """level in [0, 1] scales the disturbance layer; mode 1 draws each episode's level in [0, level]."""
         if not Path(xml).exists():
             build_rl_scene(xml)
         self.lib = library()
         self.handle = self.lib.sa_create(str(xml).encode(), seed)
+        self.lib.sa_disturbance_c(self.handle, level, mode)
         self.obs = np.zeros(OBS, np.float32)
         self.reward = np.zeros(1, np.float32)
-        self.episode = np.zeros(8, np.float32)
+        self.episode = np.zeros(len(EPISODE_FIELDS), np.float32)
 
     def reset(self):
         self.lib.sa_reset_c(self.handle, self.obs)
@@ -105,11 +108,11 @@ class AlignEnv:
         self.close()
 
 
-def evaluate(policy, seeds=EVALUATION_SEEDS, record=None):
-    """One episode per predetermined seed. `policy(env, obs)` returns an action."""
+def evaluate(policy, seeds=EVALUATION_SEEDS, record=None, level=0.):
+    """One episode per predetermined seed at a fixed disturbance level. `policy(env, obs)` returns an action."""
     results, started = [], time.perf_counter()
     for seed in seeds:
-        env = AlignEnv(seed)
+        env = AlignEnv(seed, level=level)
         obs, done, states = env.reset(), False, [env.state()]
         while not done:
             obs, _, done, info = env.step(policy(env, obs))
