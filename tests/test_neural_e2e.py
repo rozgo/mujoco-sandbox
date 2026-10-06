@@ -53,10 +53,19 @@ def test_tissue_dimples_then_punctures():
     assert p.k_dimple*p.d_puncture == pytest.approx(2000.)  # 2 mN puncture force in uN
 
 
-def test_modern_scene_anchors_a_short_thread_without_initial_contact():
+def test_modern_scene_has_a_physical_cartridge_without_initial_contact():
     from sixlegs.neural_insertion.modern_scene import load_modern
     m, d, meta = load_modern()
-    assert len(meta["thread_bodies"]) == 6 and m.nv == 21  # 5 robot slides, pincher, 5 ball joints
+    assert len(meta["thread_bodies"]) == 6 and m.nv == 20  # 4 robot slides, latch, 5 ball joints
+    assert m.body("latch").parentid[0] == m.body("cartridge").id  # hinged on the cannula, not floating
     assert not [c for c in d.contact[:d.ncon] if c.dist < -1e-4]
-    pairs = {(m.geom(m.pair_geom1[i]).name, m.geom(m.pair_geom2[i]).name) for i in range(m.npair)}
-    assert ("needle", "pincher_jaw") in pairs  # the jaw must meet the needle it rides on
+
+
+def test_tube_scene_presents_the_thread_end_on_the_needle_path():
+    from sixlegs.neural_insertion.tube_scene import END_BELOW_POINT, review_pose
+    m, d, meta = review_pose()
+    point, end = d.site("needle_tip").xpos, d.site("thread_S_last").xpos
+    assert np.linalg.norm(end[:2]-point[:2]) < 1e-3  # on the needle's axis (mm)
+    assert point[2]-end[2] == pytest.approx(END_BELOW_POINT, abs=1e-3)
+    assert d.ncon == 0
+    assert not d.eq_active.any()  # hold, bond and grips are switched on by the cycle

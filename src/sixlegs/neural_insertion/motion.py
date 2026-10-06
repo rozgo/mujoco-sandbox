@@ -80,19 +80,19 @@ class Reference:
 
 
 class Servo:
-    def __init__(self, model, integral_time_s=INTEGRAL_TIME_S):
+    def __init__(self, model, integral_time_s=INTEGRAL_TIME_S, names=JOINT_NAMES):
         self.model = model
-        self.joint = np.array([model.joint(n).id for n in JOINT_NAMES])
+        self.joint = np.array([model.joint(n).id for n in names])
         self.dof = model.jnt_dofadr[self.joint]
         self.qadr = model.jnt_qposadr[self.joint]
-        self.act = np.array([model.actuator(n).id for n in JOINT_NAMES])
+        self.act = np.array([model.actuator(n).id for n in names])
         self.kp = model.actuator_gainprm[self.act, 0].copy()
         self.kv = -model.actuator_biasprm[self.act, 2].copy()
         self.damping = model.dof_damping[self.dof].copy()
         self.friction = model.dof_frictionloss[self.dof].copy()
         self.force_limit = model.actuator_forcerange[self.act, 1].copy()
         self.ki = self.kp/integral_time_s
-        self.integral = np.zeros(len(JOINT_NAMES))
+        self.integral = np.zeros(len(names))
         self._acc = np.zeros(model.nv)
         self._inertial = np.zeros(model.nv)
 

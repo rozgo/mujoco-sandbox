@@ -54,15 +54,17 @@ class TissueState:
 
 
 class Tissue:
-    def __init__(self, model, thread_bodies, params=TissueParams(), units_length=1000.):
+    def __init__(self, model, thread_bodies, params=TissueParams(), units_length=1000., end_site="eyelet_center",
+                 anchored=3, grip=True):
         self.m, self.p, self.L = model, params, units_length
         self.needle = model.body("insertion").id
         self.tip = model.site("needle_tip").id
-        self.eyelet = model.site("eyelet_center").id
+        self.eyelet = model.site(end_site).id
         self.last = model.body(thread_bodies[-1]).id
-        self.bodies = [model.body(n).id for n in thread_bodies[-3:]]  # bodies that may enter tissue
+        self.bodies = [model.body(n).id for n in thread_bodies[-anchored:]]  # bodies that may enter tissue
         self.mass = {b: model.body_subtreemass[b] if b == self.bodies[-1] else model.body_mass[b] for b in self.bodies}
         self.state = TissueState()
+        self.grip = grip  # False: the caller holds the thread (for example with constraints)
         self._vel = np.zeros(6)
 
     def surface(self, p):
@@ -115,6 +117,8 @@ class Tissue:
             s.peak_lateral = max(s.peak_lateral, float(np.linalg.norm(lateral)))
         elif s.entry is not None and not s.punctured:
             s.entry = None  # dimple released without puncture
+        if not self.grip:
+            return depth
         # Thread retention: bodies below the surface near the needle track.
         for b in self.bodies:
             point = data.site_xpos[self.eyelet] if b == self.last else data.xipos[b]

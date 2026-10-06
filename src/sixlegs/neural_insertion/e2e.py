@@ -18,6 +18,7 @@ import json
 import math
 from pathlib import Path
 import pickle
+import shutil
 import time
 
 import mujoco
@@ -66,10 +67,12 @@ class Cycle:
         self.q_ref = None
         self.robot = {self.m.body(n).id for n in ("stage_x", "stage_y", "stage_z", "insertion", "retainer")}
         self.phantom = self.m.geom("tissue_phantom").id
+        self.obstacles = {self.phantom}
         self.prohibited = []
         self.done = []
         self.clamp = None          # net clamp force (uN) while the keeper is in force mode
         self.on_step = None        # optional observer (live viewer); must not change state
+        self.aux = None            # optional extra command at each servo update, aux(t in move)
         self.ret = JOINT_NAMES.index("retainer")
         self.ret_dof = self.m.jnt_dofadr[self.m.joint("retainer").id]
         self.ret_qadr = self.m.jnt_qposadr[self.m.joint("retainer").id]
@@ -116,11 +119,13 @@ class Cycle:
         started = time.perf_counter()
         for k in range(steps):
             t = self.d.time-t0
-            if k % SERVO_EVERY == 0:
-                q, v, a = minimum_jerk(q0, q1, duration, t) if t < duration else (q1, np.zeros(5), np.zeros(5))
+            if k % getattr(self, "servo_every", SERVO_EVERY) == 0:
+                q, v, a = minimum_jerk(q0, q1, duration, t) if t < duration else (q1, 0*q1, 0*q1)
                 self.servo.command(self.d, q, v, a)
                 if self.clamp is not None:
                     self.clamp_command()
+                if self.aux is not None:
+                    self.aux(t)
             self.tissue.step(self.d)
             before = self.d.time
             mujoco.mj_step(self.m, self.d)
@@ -129,7 +134,7 @@ class Cycle:
                 raise FloatingPointError(f"MuJoCo instability (bad qacc) at t={before:.5f} s in {name}")
             if self.on_step is not None and k % 50 == 0:
                 self.on_step(name)
-            if k % RECORD_EVERY == 0:
+            if k % getattr(self, "record_every", RECORD_EVERY) == 0:
                 self.record(name)
                 if not np.isfinite(self.d.qpos).all():
                     raise FloatingPointError("nonfinite state")
@@ -157,7 +162,7 @@ class Cycle:
         tr["phase"].append(name)
         for c in d.contact[:d.ncon]:
             b1, b2 = self.m.geom_bodyid[c.geom1], self.m.geom_bodyid[c.geom2]
-            if self.phantom in (c.geom1, c.geom2) and (b1 in self.robot or b2 in self.robot):
+            if (c.geom1 in self.obstacles or c.geom2 in self.obstacles) and (b1 in self.robot or b2 in self.robot):
                 self.prohibited.append({"time_s": float(d.time), "geoms": [self.m.geom(c.geom1).name,
                                                                          self.m.geom(c.geom2).name]})
 
@@ -317,6 +322,8 @@ def save(cycle, output, status, started):
     state = np.zeros(mujoco.mj_stateSize(cycle.m, mujoco.mjtState.mjSTATE_INTEGRATION))
     mujoco.mj_getState(cycle.m, cycle.d, state, mujoco.mjtState.mjSTATE_INTEGRATION)
     np.save(output/"final_state.npy", state)
+    if cycle.meta.get("xml_path"):
+        shutil.copy(cycle.meta["xml_path"], output/"scene.xml")  # exact replay after the builder changes
     report = {"status": status, "variant": cycle.meta["variant"], "tube": cycle.meta["tube"], "started_utc": started, "finished_utc": datetime.now(timezone.utc).isoformat(),
               "simulated_s": float(cycle.d.time), "target": cycle.target, "units": UNITS.name,
               "timestep_s": cycle.m.opt.timestep, "scene_sha256": cycle.meta["xml_sha256"],

@@ -1040,3 +1040,13 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
 - `align_v7` at 192 M steps (about 06:42 UTC): peaked at 84.6% training success
   near 114 M steps, then a KL spike (1.05) at 118 M left 20-30% collisions;
   still training.
+- After the user found the pincher floating (about 06:50 UTC), design v3: a
+  cannula on a bracket, a spring-closed side jaw, then a fork latch; cycles of
+  0.9 s simulated in about 35 s wall each. Fast thread settings (50 µs step)
+  first tried at 07:54 UTC on that design: about 4 times slower than real time,
+  but the loop was lost in the peel.
+- With the user (about 07:55 to 08:00 UTC): abstract the thread handling. Thread
+  tube static review at 08:01 UTC, ring removed on request. Live viewer runs:
+  08:06 (needle missed the settled thread), jam at 45°, wrap at 45° with 18
+  segments, the 15° tube, then the tissue grip as constraints. **First complete
+  thread-tube cycle at 08:13 UTC**, 0.43 s simulated in about 5 s wall.

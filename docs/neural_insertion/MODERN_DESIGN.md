@@ -1,5 +1,9 @@
 # Insertion mechanism, modern interpretation (design v2)
 
+Superseded on October 6 by the thread-tube design ([TUBE_DESIGN.md](TUBE_DESIGN.md)); kept as
+history. The code (`modern_scene.py`, `modern.py`) now holds design v3: a cannula on a bracket from the
+tool socket and a spring-held fork latch under the loop.
+
 October 6, 2026. User direction: build a current machine, not a 2019 one. This
 is our educated guess at a present-day thread-insertion head, informed by what
 has been published since the 2019 Neuralink paper. It replaces the first-pass
