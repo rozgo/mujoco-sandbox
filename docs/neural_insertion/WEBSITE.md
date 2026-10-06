@@ -1,21 +1,29 @@
-# Project website pilot
+# Project website
 
-October 6, 2026. A journal page with an interactive replay at the top, built
-locally and not yet published. Source: [`site/`](../../site/); build:
-[`scripts/build_site.py`](../../scripts/build_site.py).
+October 6, 2026. A journal page with an interactive replay at the top, published
+on GitHub Pages at <https://rozgo.github.io/mujoco-sandbox/surgical/>. Source:
+[`site/`](../../site/); build: [`scripts/build_site.py`](../../scripts/build_site.py);
+publish: [`scripts/publish_pages.sh`](../../scripts/publish_pages.sh).
 
 - **Replay viewer:** raylib 6.0 compiled to WebAssembly with Emscripten 6.0.9.
-  It replays recorded MuJoCo states; it does not simulate. The page selects one
-  of three policies (robust learned, scripted yardstick, learned without
-  disturbances) at disturbance level 0, 0.5 or 1.0, on the first 30 of the 200
-  evaluation seeds each. Display interpolates between recorded 50 Hz states;
-  error readouts use recorded states.
-- **Disturbance overlays:** replays (format `NIR2`) carry every disturbance
-  component the core recorded at each policy step. The viewer draws them in the
-  scene: force arrows along each slide axis at 5 cm per 0.1 N (amber noise, cyan
-  friction, lilac vibration), the table acceleration with a 0.3 s trace, and the
-  moving true target with its path, a true-scale 10 µm tolerance cylinder, a
-  50 µm ruler, the target estimate and the late, noisy tip measurement. Values
+  It replays recorded MuJoCo states; it does not simulate. *Insertion* (format
+  `NIT2`): the final learned policy (insert_v2, deterministic) or the scripted
+  yardstick placing threads at sites 0, 5 and 1 on the first evaluation seeds
+  at each disturbance level, frames every 2 ms during the needle's work and
+  every 8 ms between. *Alignment*: one of three policies (robust learned,
+  scripted yardstick, learned without disturbances) at each disturbance level,
+  on the first 30 of the 200 evaluation seeds. The camera opens on the whole
+  workcell; zoom eases toward a clamped target from page-side wheel and pinch
+  input.
+- **Disturbance overlays:** replays carry every disturbance component the core
+  recorded. The viewer draws them in the scene, enlarged so they read at any
+  zoom: force arrows along each slide axis at 1 mN per 7 screen pixels (amber
+  noise, cyan friction, lilac vibration), the table acceleration at 1 mm/s² per
+  15 pixels with a trace, and micrometre offsets (the moving true target's path,
+  the target estimate, the late, noisy tip measurement) magnified about their
+  reference by a 1-2-5 factor, up to ×2000, chosen so 10 µm spans about 80
+  pixels; the legend states both scales. The alignment Micro view keeps a
+  true-scale 10 µm tolerance cylinder and a 50 µm ruler. Values
   sit in camera-facing panels in the scene with leader lines; panels have fixed
   sizes, avoid each other on screen and shrink with the scene beyond the
   workcell framing. The Micro camera (0.5 mm) shows micrometre quantities at
@@ -53,5 +61,7 @@ viewer files with a hash of the build, so a rebuild is never served from cache.
 Native screenshots: `build/site_native/viewer --screenshot OUT.png --camera 0-3
 --episode N --time T [--zoom F] [--overlays MASK]`.
 
-Publishing needs the user's go-ahead: push `main`, choose the Pages source, and
-commit the built artifacts outside Git LFS (or deploy them from CI).
+Publishing (with the user's go-ahead, given October 6): build from a committed
+source, then `scripts/publish_pages.sh` copies `build/site` into the `surgical/`
+folder of the `gh-pages` branch as plain files (Pages serves Git LFS pointers,
+not their content) and keeps any other folders there. Pages serves that branch.

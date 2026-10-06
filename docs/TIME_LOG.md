@@ -1131,3 +1131,6 @@ The scene-review pause was approximately 6 minutes 6 seconds. Total elapsed time
   buttons losing their highlight on any click in the viewer.
 - With the user (default camera, 15:42 UTC): the viewer opens on the Workcell camera, also
   after switching between insertion and alignment; offset magnification capped at x2000.
+- With the user (publish, 15:53 UTC): the surgical journal approved for publishing. Removed
+  a machine connection detail from the unpushed history, pushed main (54 commits, 109 LFS objects,
+  146 MB), added scripts/publish_pages.sh and deployed the journal to GitHub Pages under surgical/.
