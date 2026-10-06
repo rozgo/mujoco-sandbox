@@ -67,9 +67,9 @@
 <nav class="toc" aria-label="Chapters">
   <div class="wrap">
     <a href="#workcell">1 Workcell</a><a href="#units">2 Units</a><a href="#der">3 Rod model</a>
-    <a href="#contact">4 Contact</a><a href="#fixes">5 Two fixes</a><a href="#gates">6 The correction</a>
-    <a href="#motion">7 Motion</a><a href="#task">8 Learning task</a><a href="#network">9 Network</a>
-    <a href="#training">10 Training</a><a href="#results">11 Results</a><a href="#next">12 Next</a>
+    <a href="#contact-model">4 Contact model</a><a href="#thread">5 Thread in the task</a><a href="#motion">6 Motion</a>
+    <a href="#task">7 Learning task</a><a href="#network">8 Network</a><a href="#training">9 Training</a>
+    <a href="#results">10 Results</a><a href="#next">11 Next</a>
   </div>
 </nav>
 
@@ -127,9 +127,9 @@ class Units:
 
 MM_G = Units("mm_g_s", 1000, 1000)</code></pre>
     <p class="codecap"><code>src/sixlegs/neural_insertion/units.py</code>: forces scale by M·L, inertias and torques by M·L², moduli by M/L.</p>
-    <div class="prose"><p>Bending then matched the analytical cantilever within 2.4%. But a 6 mm drop onto a support changed by
-      <strong>35 µm</strong> when the timestep was halved, against a 1 µm convergence gate.</p></div>
-    <figure><img data-media="rescaling" alt="Rescaling study plots"><figcaption>Bending agrees across unit systems; contact rebound does not converge.</figcaption></figure>
+    <div class="prose"><p>The physical mass and dimensions are unchanged, and bending then matched the analytical
+      cantilever within 2.4%. The same conversion applies to every scene we build, so the robot and the thread share one
+      unit system.</p></div>
   </section>
 
   <section id="der">
@@ -158,43 +158,31 @@ mj_applyFT(m, d, zero, first.data(), r->nodes[0].pos.data(), r->i0, d->qfrc_pass
 mj_applyFT(m, d, zero, last.data(), r->nodes[r->nv+1].pos.data(),
            r->i0+r->nv, d->qfrc_passive);</code></pre>
     <p class="codecap"><code>src/sixlegs/neural_insertion/der_bridge.cc</code>, the corrected <code>direct</code> projection.</p>
-    <div class="failure"><strong>Still failing:</strong> contact refinement. Halving the step changed the drop by 14 µm, and
-      halving again by 42 µm. A better rod model did not fix contact.</div>
-    <figure><img data-media="der" alt="DER validation plots"><figcaption>Bending, relaxation and energy checks pass; contact refinement does not.</figcaption></figure>
+    <div class="prose"><p>Bending stayed within 2.4% of the analytical cantilever, an undamped bent rod relaxed with
+      energy drift falling from 0.075% to 0.038% as the step halved, and forces were identical after copy, restore and
+      reset. For sim-to-real this matters more than any single benchmark: a rod whose twist cannot push back would
+      mislead every later thread-handling result.</p></div>
   </section>
 
-  <section id="contact">
-    <h2>4 · Finding out why contact would not converge</h2>
-    <p class="when">October 5 · remove ingredients, then check the engine independently</p>
-    <div class="prose">
-      <p>We removed ingredients one at a time. A single rigid segment also failed, and a chain with no elastic
-        forces failed worse (165 µm), so elasticity was not the cause. Changing only the mass or length unit changed
-        chain trajectories by 3–12 µm, although the compiled physics agreed to 10<sup>−16</sup>.</p>
-      <p>Then we checked the engine against an independent calculation that never calls MuJoCo. Same-state contact
-        forces matched a closed-form solution to 10<sup>−11</sup>. An independent fixed-step recurrence reproduced
-        MuJoCo's rigid rebound error to 0.0002 µm. The engine was computing exactly what it was asked to; the problem was
-        what it was asked. In the chain, the first divergence was two trajectories landing
-        <strong>5.7 pm above and 2.6 pm below</strong> the contact activation threshold.</p>
-    </div>
-    <div class="grid2">
-      <figure><img data-media="isolation_fixtures" alt="Rigid, chain and rod contact fixtures"><figcaption>Controls: rigid segments, a chain without elasticity, the flexible rod.</figcaption></figure>
-      <figure><img data-media="audit" alt="Contact audit plots"><figcaption>Independent reference and picometre-scale divergence at contact entry.</figcaption></figure>
-    </div>
-  </section>
-
-  <section id="fixes">
-    <h2>5 · Two causes, two standard fixes</h2>
-    <p class="when">October 5 · contact impedance ramp and RK4</p>
+  <section id="contact-model">
+    <h2>4 · The contact model</h2>
+    <p class="when">October 5 · a continuous contact force and a fourth-order integrator</p>
     <div class="prose">
       <p>MuJoCo's soft contact computes a reference acceleration <code>a_ref = −B·v − K·d(r)·pos</code> with an
-        impedance <code>d(r)</code>. Our original law held <code>d</code> constant at 0.9999, so the damping force switched
-        on as a <em>step</em> at zero penetration: a grazing contact received a finite impulse. A penetration ramp makes
-        the force continuous. Separately, the default integrator is first order through a 5–10 µs impact; MuJoCo's RK4
-        evaluates collision and the constraint solve at four stages.</p>
+        impedance <code>d(r)</code>. With <code>d</code> held constant, as in our first law, the damping force switches on
+        as a <em>step</em> at zero penetration, so a grazing contact receives a finite impulse. A penetration ramp makes the
+        force continuous in the state. And because the default integrator is first order through a contact lasting a few
+        tens of microseconds, we step the thread with MuJoCo's RK4, which evaluates collision and the constraint solve at
+        four stages. Both are standard MuJoCo settings; the engine is unmodified.</p>
+      <p>Before relying on it we checked the engine against an independent calculation that never calls MuJoCo: same-state
+        contact forces match a closed-form solution to 10<sup>−11</sup>, and agree across unit systems to 10<sup>−9</sup>.</p>
     </div>
-    <pre><code class="language-python">ContactLaw("ramp_5us", d0=mujoco.mjMINIMP, power=1., time_constant_s=5e-6)
+    <pre><code class="language-python">def law_for(tau):
+    return ContactLaw(f"ramp_{tau*1e6:g}us", d0=mujoco.mjMINIMP, power=1., time_constant_s=tau)
+
+law = law_for(2e-5)  # thread contact in the task regime: 20 µs, stepped at 5 µs with RK4
 # solimp = (0.0001, 0.9999, 1 µm width, 0.5, 1): impedance rises linearly over 1 µm</code></pre>
-    <p class="codecap"><code>src/sixlegs/neural_insertion/contact_laws.py</code></p>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/task_fixtures.py</code> with <code>contact_laws.ContactLaw</code>.</p>
     <pre><code class="language-c">if (rk) {                 // same sequence as mj_step for RK4
   mj_checkPos(m, d);
   mj_checkVel(m, d);
@@ -206,28 +194,17 @@ mj_applyFT(m, d, zero, last.data(), r->nodes[r->nv+1].pos.data(),
 ...
 mj_RungeKutta(m, d, 4);</code></pre>
     <p class="codecap"><code>src/sixlegs/neural_insertion/contact_kernel.cc</code>: our batch stepping kernel with per-step contact telemetry; bit-identical to <code>mj_step</code>.</p>
-    <div class="table-wrap"><table>
-      <tr><th>Comparison (µm)</th><th class="num">Baseline</th><th class="num">Ramp + RK4</th><th class="num">Gate</th></tr>
-      <tr><td>Rigid drop, timestep</td><td class="num">2.234</td><td class="num">0.077</td><td class="num">&lt; 1</td></tr>
-      <tr><td>Rod drop, mass units</td><td class="num">3.502</td><td class="num">0.0031</td><td class="num">&lt; 0.01</td></tr>
-      <tr><td>Rod drop, timestep</td><td class="num">52.03</td><td class="num">8.03</td><td class="num">&lt; 1</td></tr>
-      <tr><td>Rod, 10<sup>−12</sup> rad perturbations</td><td class="num">3.6–16.5</td><td class="num">0.55</td><td class="num">—</td></tr>
-    </table></div>
-    <figure><img data-media="smoothing" alt="Contact smoothing plots"><figcaption>Rigid gates pass by 10–100×; the 6 mm rod drop still amplifies roundoff after impact.</figcaption></figure>
   </section>
 
-  <section id="gates">
-    <h2>6 · The correction: a stress test had become a gate</h2>
-    <p class="when">October 6 · derive gates from the task</p>
+  <section id="thread">
+    <h2>5 · Thread contact in the task regime</h2>
+    <p class="when">October 6 · gates derived from what the robot will actually do</p>
     <div class="prose">
-      <p>The rod drop still failed. Its error grew exponentially after impact whatever the timestep, and
-        perturbations of 10<sup>−12</sup> rad grew the same way: it measured the scenario's sensitivity, not solver error.
-        When asked whether that gate was real, we traced it back. It had been chosen as a convenient stress test and carried
-        through four studies as if it were a requirement. No task phase drops the thread 6 mm and needs a repeatable 1 µm landing.</p>
+      <p>Each phase of the mission touches the thread in its own way, at millimetres per second. We built one fixture per
+        phase, with a rigid 150 µm probe driven only by force-limited actuators, and required the thread's centreline to
+        agree within 1 µm when the timestep is halved and within 0.01 µm across unit systems, with penetration checked at
+        every step over every contact.</p>
     </div>
-    <div class="lesson"><strong>What changed in our process:</strong> derive gates from task phases first; when a gate fails
-      after refinement, test whether it measures error or sensitivity; change one numerical choice at a time; keep an
-      independent reference that never calls the engine under test.</div>
     <div class="table-wrap"><table>
       <tr><th>Task phase</th><th>Fixture</th><th class="num">Timestep, 5 → 2.5 µs</th><th class="num">Units</th></tr>
       <tr><td>Transport and align</td><td>Settle on the support</td><td class="num">0.13 µm</td><td class="num">≤ 1.5e−10 µm</td></tr>
@@ -235,13 +212,19 @@ mj_RungeKutta(m, d, 4);</code></pre>
       <tr><td>Pick and grasp</td><td>100 µN press, force balance ≤ 6.8e−5</td><td class="num">≤ 2.4e−7 µm</td><td class="num">≤ 9e−11 µm</td></tr>
       <tr><td>Release</td><td>Hook slides out, 150 µm fall</td><td class="num">0.19 µm</td><td class="num">≤ 7.3e−7 µm</td></tr>
     </table></div>
-    <div class="prose"><p>Every task-regime fixture passes at a <strong>5 µs</strong> step, 64× larger than the drop
-      required. Release failed at 10 µs (1.58 µm); we refined the step rather than relax the gate, and kept the failure on record.</p></div>
-    <figure><img data-media="task_regime" alt="Task regime plots"><figcaption>Clock ladder, penetration against contact time constant, probe fixtures and force balance.</figcaption></figure>
+    <div class="prose"><p>Every fixture passes at a <strong>5 µs</strong> RK4 step with a 20 µs contact time constant, for both
+      material presets. Release failed at 10 µs (1.58 µm), because its short fall lands faster than settling does; we refined
+      the step rather than relax the gate, and kept the failure on record.</p></div>
+    <div class="lesson"><strong>Sim-to-real gaps we know about.</strong> Thread materials are presets (100 MPa illustrative,
+      2.5 GPa polyimide), not measurements. Contact compliance under load, about 1 µm per contact at 100 µN, is a property of
+      MuJoCo's soft contact on a 2.4 µg segment, not a calibrated stiffness. The phantom's collision mesh has three rings, so its
+      facets sit up to about 190 µm below the analytic dome. The phantom cannot be punctured yet, and observations are exact
+      simulator state rather than sensor readings.</div>
+    <figure><img data-media="task_regime" alt="Task regime plots"><figcaption>Largest passing timestep, penetration against contact time constant, fixture agreement over time and the press force balance.</figcaption></figure>
   </section>
 
   <section id="motion">
-    <h2>7 · The robot's first motion</h2>
+    <h2>6 · The robot's first motion</h2>
     <p class="when">October 6 · programmed servo, gates fixed before the run</p>
     <div class="prose">
       <p>A programmed servo adds inertial, gravity, viscous and Coulomb feedforward and a bounded integral term to each
@@ -257,7 +240,7 @@ mj_RungeKutta(m, d, 4);</code></pre>
   </section>
 
   <section id="task">
-    <h2>8 · The learning task, exactly</h2>
+    <h2>7 · The learning task, exactly</h2>
     <p class="when">October 6 · trained task: needle alignment (robot only)</p>
     <div class="prose">
       <p>One C core (<code>native/surgical_core.h</code>) holds physics stepping, servo, observations and rewards. It is
@@ -323,7 +306,7 @@ for (int i = 0; i &lt; SA_ACT; i++) {
     c->prev_action[i] = (float)applied;
 }
 r -= 0.002 * smooth;</code></pre>
-    <p class="codecap"><code>src/sixlegs/neural_insertion/native/surgical_core.h</code>, after the fix described in chapter 10.</p>
+    <p class="codecap"><code>src/sixlegs/neural_insertion/native/surgical_core.h</code>, after the fix described in chapter 9.</p>
     <h3>Baselines on the evaluation seeds</h3>
     <div class="table-wrap"><table>
       <tr><th>Policy</th><th class="num">Success</th><th class="num">Collision</th><th class="num">Mean time</th></tr>
@@ -337,7 +320,7 @@ r -= 0.002 * smooth;</code></pre>
   </section>
 
   <section id="network" class="network">
-    <h2>9 · The network we train</h2>
+    <h2>8 · The network we train</h2>
     <p class="when">PufferLib 5.0 default recurrent policy, 128 hidden units, 2 MinGRU layers</p>
     <div class="prose"><p>Read from PufferLib's own code and the checkpoint's layout: 100,867 parameters, no biases.
       The same weights run on the GPU during training and on the CPU (deterministic mean action) for evaluation and this replay.</p></div>
@@ -416,7 +399,7 @@ r -= 0.002 * smooth;</code></pre>
   </section>
 
   <section id="training">
-    <h2>10 · Training on the RTX 4090: two failures, then success</h2>
+    <h2>9 · Training on the RTX 4090: two failures, then success</h2>
     <p class="when">October 6 · three runs, one change at a time</p>
     <div class="charts">
       <div class="chart"><h4>Final lateral error at episode end (training rollouts)</h4><svg id="chart-error" viewBox="0 0 520 300"></svg></div>
@@ -440,7 +423,7 @@ r -= 0.002 * smooth;</code></pre>
   </section>
 
   <section id="results">
-    <h2>11 · Results on 200 held-out episodes</h2>
+    <h2>10 · Results on 200 held-out episodes</h2>
     <p class="when">Deterministic actions, evaluated on CPU with PufferLib's own network code</p>
     <div class="table-wrap"><table>
       <tr><th>Policy</th><th class="num">Success</th><th class="num">Collisions</th><th class="num">Mean time</th><th class="num">Worst final error</th><th class="num">Low steps over vessels</th></tr>
@@ -455,7 +438,7 @@ r -= 0.002 * smooth;</code></pre>
   </section>
 
   <section id="next">
-    <h2>12 · What comes next</h2>
+    <h2>11 · What comes next</h2>
     <p class="when">The full mission is still ahead</p>
     <div class="prose">
       <ol>
