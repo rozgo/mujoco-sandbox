@@ -331,7 +331,8 @@ static void update_camera(void) {
         Vector3 right = Vector3Normalize(Vector3CrossProduct((Vector3){0, 0, 1}, forward));
         Vector3 up = Vector3CrossProduct(forward, right);
         float s = V.distance * 0.0016f;
-        V.target = Vector3Add(V.target, Vector3Add(Vector3Scale(right, delta.x * s), Vector3Scale(up, delta.y * s)));
+        // Grab-style pan: the scene follows the cursor on both axes.
+        V.target = Vector3Add(V.target, Vector3Add(Vector3Scale(right, -delta.x * s), Vector3Scale(up, delta.y * s)));
         V.follow = 0;
     }
     float wheel = GetMouseWheelMove();
