@@ -1,6 +1,6 @@
 {
  "source": "end-to-end scene (tube variant), recorded state with the eyelet clamped above the cassette",
- "scene_sha256": "bc19fe42d855f08cee1d93ee28e738165833277d2efa1c32baa78d93a59e17f4",
+ "scene_sha256": "f4b7b89f33985672f425e0d6cd44d3c85d8837b0eefdb584ad0a3ffa347e820f",
  "parts": [
   {
    "id": "workcell",
@@ -8,7 +8,7 @@
    "role": "A five-axis gantry robot that picks a thread, carries it to a tissue phantom and inserts it.",
    "specs": "Deck 658 \u00d7 448 mm. Simulated in MuJoCo; this view is the end-to-end scene.",
    "image": "00_workcell.png",
-   "geoms": 888
+   "geoms": 884
   },
   {
    "id": "base",
@@ -76,17 +76,17 @@
   },
   {
    "id": "keeper",
-   "title": "Keeper",
-   "role": "Rides on the needle carriage. During transport two prongs lower beside the slot and their pads clamp the eyelet rim onto the slot's lower lip; it lifts away before insertion.",
-   "specs": "Travel 0\u20136 mm \u00b7 prongs and pads 40 \u00b5m wire \u00b7 clamp about 1 mN.",
+   "title": "Keeper (latch)",
+   "role": "Rides on the needle carriage. During transport a single latch bar lowers just past the ends of the slot's lips, closing the slot into an eye: the eyelet can swing but cannot leave, as on a knitting machine's latch needle. It lifts away before insertion. Earlier clamp and cage designs lost the eyelet.",
+   "specs": "Travel 0\u20136 mm \u00b7 latch bar 40 \u00b5m wire, 10 \u00b5m past the lip ends \u00b7 flexure guided.",
    "image": "09_keeper.png",
-   "geoms": 9
+   "geoms": 5
   },
   {
    "id": "thread",
    "title": "Thread",
-   "role": "The implant: a flexible 40 \u00b5m thread simulated as a discrete elastic rod, so it bends, drapes and snags like a real filament.",
-   "specs": "\u00d8 40 \u00b5m \u00b7 44 mm \u00b7 32 segments \u00b7 illustrative 100 MPa material. Shown up close: at the scale of the machine it is thinner than a pixel.",
+   "role": "The implant: a flexible 40 \u00b5m thread, carried in by the needle rather than pushed. It is simulated as a discrete elastic rod (a published model for MuJoCo, arXiv 2310.00911, ported with a corrected force projection): 32 rigid segments joined by ball joints, 99 degrees of freedom, with bending and twisting forces from the rod's elastic energy. Its light, firm contacts settle in microseconds, so the whole simulation steps at 5 \u00b5s (200 kHz, RK4, four force evaluations per step); in the full workcell that costs about 3 ms per step, roughly 600 times slower than real time on one CPU core.",
+   "specs": "\u00d8 40 \u00b5m \u00b7 44 mm \u00b7 32 segments \u00b7 5 \u00b5s step (200 kHz) \u00b7 illustrative 100 MPa. Shown up close: at machine scale it is thinner than a pixel.",
    "image": "10_thread.png",
    "geoms": 32
   },
@@ -141,7 +141,7 @@
   {
    "id": "tube",
    "title": "Insertion tube",
-   "role": "A pre-formed tube at the target with real collision: it guides the needle and holds the thread by contact. Used in the end-to-end cycle instead of a puncture model.",
+   "role": "A pre-formed tube at the target with real collision: it guides the needle and holds the thread by contact. Tissue puncture is not modelled yet; inside the tube the needle meets an axial cutting and friction force.",
    "specs": "Bore radius 0.28 mm \u00b7 3 mm deep \u00b7 skin around the opening.",
    "image": "17_tube.png",
    "geoms": 21

@@ -24,7 +24,7 @@ sys.path.insert(0, str(ROOT/"src"))
 from sixlegs.neural_insertion.e2e_scene import load_e2e  # noqa: E402
 
 OUT = ROOT/"previews/neural_insertion/glossary_v1"
-STATE = ROOT/"outputs/neural_insertion/e2e/run_v2/checkpoints/05_keeper.pkl"
+STATE = ROOT/"outputs/neural_insertion/e2e/run_v6/checkpoints/05_keeper.pkl"  # latch closed on a picked eyelet
 W, H = 1200, 800
 GHOST = .22
 
@@ -51,12 +51,19 @@ PARTS = [
     ("needle", "Needle with slotted tip", "A 150 µm needle. Two small lips near the tip form a side slot that captures the "
      "thread's eyelet rim: lifting carries it up, inserting pushes it down, sliding sideways releases it.",
      "Ø 150 µm · lips 40 µm wire reaching 200 µm · slot opening 140 µm.", ("=needle", "slot_lip_"), (215, -12, ("tip", 1.5))),
-    ("keeper", "Keeper", "Rides on the needle carriage. During transport two prongs lower beside the slot and their pads "
-     "clamp the eyelet rim onto the slot's lower lip; it lifts away before insertion.",
-     "Travel 0–6 mm · prongs and pads 40 µm wire · clamp about 1 mN.", ("keeper_",), (235, -28, ("tip", 1.3))),
-    ("thread", "Thread", "The implant: a flexible 40 µm thread simulated as a discrete elastic rod, so it bends, drapes "
-     "and snags like a real filament.", "Ø 40 µm · 44 mm · 32 segments · illustrative 100 MPa material. Shown up close: at the scale "
-     "of the machine it is thinner than a pixel.", ("thread_G",), (150, -30, ("tip", 4.5))),
+    ("keeper", "Keeper (latch)", "Rides on the needle carriage. During transport a single latch bar lowers just past "
+     "the ends of the slot's lips, closing the slot into an eye: the eyelet can swing but cannot leave, as on a knitting "
+     "machine's latch needle. It lifts away before insertion. Earlier clamp and cage designs lost the eyelet.",
+     "Travel 0–6 mm · latch bar 40 µm wire, 10 µm past the lip ends · flexure guided.", ("keeper_",),
+     (235, -28, ("tip", 1.3))),
+    ("thread", "Thread", "The implant: a flexible 40 µm thread, carried in by the needle rather than pushed. It is "
+     "simulated as a discrete elastic rod (a published model for MuJoCo, arXiv 2310.00911, ported with a corrected "
+     "force projection): 32 rigid segments joined by ball joints, 99 degrees of freedom, with bending and twisting "
+     "forces from the rod's elastic energy. Its light, firm contacts settle in microseconds, so the whole simulation "
+     "steps at 5 µs (200 kHz, RK4, four force evaluations per step); in the full workcell that costs about 3 ms per "
+     "step, roughly 600 times slower than real time on one CPU core.",
+     "Ø 40 µm · 44 mm · 32 segments · 5 µs step (200 kHz) · illustrative 100 MPa. Shown up close: at machine scale "
+     "it is thinner than a pixel.", ("thread_G",), (150, -30, ("tip", 4.5))),
     ("eyelet", "Eyelet", "A small rigid ring on the thread's free end, the handle the needle picks up and pushes into "
      "tissue.", "Ring radius 180 µm · wire Ø 40 µm.", ("eyelet_",), (200, -35, ("tip", 1.2))),
     ("cassette", "Thread cassette", "Presents threads for pickup. A shallow trench under each eyelet lets the needle's "
@@ -74,7 +81,8 @@ PARTS = [
      "markings, scored by the task, not obstacles.", "Main vessel Ø 1 mm, branches Ø 0.56 mm.", ("vessel_",),
      (135, -40, 1.4)),
     ("tube", "Insertion tube", "A pre-formed tube at the target with real collision: it guides the needle and holds the "
-     "thread by contact. Used in the end-to-end cycle instead of a puncture model.",
+     "thread by contact. Tissue puncture is not modelled yet; inside the tube the needle meets an axial cutting and "
+     "friction force.",
      "Bore radius 0.28 mm · 3 mm deep · skin around the opening.", ("tube_",), (200, -14, 1.5)),
 ]
 
