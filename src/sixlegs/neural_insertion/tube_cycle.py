@@ -331,6 +331,18 @@ class TubeCycle(e2e.Cycle):
 
             if n == 0:
                 named(settle, "settle")
+                start = self.tip0[:2]+self.q_start[:2]
+                if np.linalg.norm(self.site(i)[:2]-start) > .1:
+                    # The tool starts over target 0; reach any other first site like every later one: lift,
+                    # move at that height, descend. (Without this, the 20 ms correction yanked the tool there and
+                    # the swinging thread was missed or blew up: tube_design/thread_stats, first sites 1-5.)
+                    def rise():
+                        q = self.q_ref.copy()
+                        q[2] += LIFT
+                        self.move("lift at start", q, .15, .02)
+                    named(rise, "lift_start")
+                    named(move_over, f"move_to_{i}")
+                    named(descend, f"descend_{i}")
             else:
                 named(reload, f"reload_{k}")
                 named(move_over, f"move_to_{i}")

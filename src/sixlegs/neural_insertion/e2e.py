@@ -131,10 +131,12 @@ class Cycle:
             self.tissue.step(self.d)
             before = self.d.time
             mujoco.mj_step(self.m, self.d)
-            if self.d.time < before:  # the state was reset from outside (Backspace in the native viewer resets it)
+            unstable = any(self.d.warning[w].number for w in (mujoco.mjtWarning.mjWARN_BADQACC,
+                                                              mujoco.mjtWarning.mjWARN_BADQVEL,
+                                                              mujoco.mjtWarning.mjWARN_BADQPOS))
+            if self.d.time < before and not unstable:  # reset from outside (Backspace in the native viewer)
                 raise RuntimeError(f"simulation state was reset externally at t={before:.5f} s in {name}")
-            if any(self.d.warning[w].number for w in (mujoco.mjtWarning.mjWARN_BADQACC, mujoco.mjtWarning.mjWARN_BADQVEL,
-                                                      mujoco.mjtWarning.mjWARN_BADQPOS)):
+            if unstable:
                 # MuJoCo resets the state after this warning; stop rather than continue from the reset.
                 raise FloatingPointError(f"MuJoCo instability (bad qacc) at t={before:.5f} s in {name}")
             if self.on_step is not None and k % 50 == 0:
