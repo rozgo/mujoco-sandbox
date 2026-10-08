@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MuJoCo Sandbox</title>
-  <meta name="description" content="Robots built and tested in MuJoCo: a surgical thread-insertion robot, a dog that walks on a damaged body, a drone flying through forecast wind, radio-linked rovers, an amphibious quadruped and a six-legged transporter. Each has an engineering journal.">
+  <meta name="description" content="Robots built and tested in MuJoCo: a surgical thread-insertion robot, a dog that walks on a damaged body, a drone flying through forecast wind, a drone learning its dynamics with JEPA world models, radio-linked rovers, an amphibious quadruped and a six-legged transporter. Each has an engineering journal.">
   <meta name="theme-color" content="#14161c">
   <link rel="stylesheet" href="hub.css?v=1194085fe053">
 </head>
@@ -13,7 +13,7 @@
   <div class="wrap">
     <p class="eyebrow">MuJoCo Sandbox · engineering journals · 2026</p>
     <h1>Robots built, broken and measured in simulation</h1>
-    <p class="lede">Six projects in MuJoCo, from a needle placing 40 µm threads to a dog walking on three legs. Each journal
+    <p class="lede">Seven projects in MuJoCo, from a needle placing 40 µm threads to a dog walking on three legs. Each journal
       tells what was built, what failed and what was measured, with the films of the recorded runs. Motion always comes
       from the physics; each journal says which parts are learned and which are programmed.</p>
   </div>
@@ -50,6 +50,16 @@
         <p class="go">Read the journal &rarr;</p>
       </div>
     </a>
+    <a class="card" href="https://rozgo.github.io/le-wm-nv/" style="--card-accent: #48dab7; --card-band: linear-gradient(125deg, #090c0f 0%, #0d1318 42%, #102a2e 76%, #16463f 100%);">
+      <div class="poster"><img src="hub_media/jepa.webp" alt="" loading="lazy"></div>
+      <div class="body">
+        <p class="kicker">World models · JEPA · RTX 4090</p>
+        <h2>JEPA drone world models</h2>
+        <p class="line">A drone world model rebuilt from a paper makes a hand-written controller track more accurately; then a MuJoCo gym puts new JEPA architectures to the test, with 1,344 learned-model flights and zero contacts.</p>
+        <p class="tags"><span>world models</span><span>JEPA</span><span>MPPI control</span><span>Rust + CUDA</span></p>
+        <p class="go">Read the journal &rarr;</p>
+      </div>
+    </a>
     <a class="card" href="rovers/" style="--card-accent: #3be2ac; --card-band: linear-gradient(120deg, #0f141c 0%, #101b24 45%, #133a33 100%);">
       <div class="poster"><img src="hub_media/rovers.webp" alt="" loading="lazy"></div>
       <div class="body">
@@ -83,7 +93,8 @@
   </div>
 </main>
 <footer class="wrap">
-  <p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>.
+  <p>Source, documentation and recorded results: <a href="https://github.com/rozgo/mujoco-sandbox">rozgo/mujoco-sandbox</a>;
+    the JEPA journal's source is in <a href="https://github.com/rozgo/le-wm-nv">rozgo/le-wm-nv</a>.
     Videos are renders of recorded MuJoCo simulations. Robot models from MuJoCo Menagerie keep their own licences,
     listed in each journal.</p>
 </footer>
